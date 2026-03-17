@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LF 5 – Innerbetriebliche Logistik | Böckler-Office GmbH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { font-family: 'Inter', sans-serif; }
+
+  :root {
+    --green-light: #ecfdf5;
+    --green-mid: #10b981;
+    --green-dark: #065f46;
+    --amber-light: #fffbeb;
+    --amber-mid: #f59e0b;
+    --indigo-light: #eef2ff;
+    --indigo-mid: #6366f1;
+  }
+
+  body { background: #f1f5f9; }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #34d399 100%);
+  }
+
+  .card-hover {
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  }
+
+  .pulse-dot {
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .step-active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(16,185,129,0.4);
+  }
+
+  .step-done {
+    background: #d1fae5;
+    border-color: #10b981;
+  }
+
+  .option-btn {
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .option-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .option-btn.correct {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    color: #065f46 !important;
+  }
+  .option-btn.wrong {
+    background: #fee2e2 !important;
+    border-color: #ef4444 !important;
+    color: #991b1b !important;
+  }
+
+  .scenario-card {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(to right, #ecfdf5, white);
+  }
+
+  .process-arrow {
+    color: #10b981;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .drop-zone {
+    border: 2px dashed #cbd5e1;
+    transition: all 0.2s;
+    min-height: 60px;
+  }
+  .drop-zone.over {
+    border-color: #10b981;
+    background: #ecfdf5;
+  }
+
+  .drag-item {
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .drag-item:active { cursor: grabbing; opacity: 0.7; }
+  .drag-item.dragging { opacity: 0.4; }
+
+  .progress-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .tab-active {
+    background: white;
+    border-bottom: 3px solid #10b981;
+    color: #065f46;
+    font-weight: 700;
+  }
+
+  .beleg-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    position: relative;
+    font-size: 0.8rem;
+  }
+  .beleg-stamp {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    text-align: center;
+    font-weight: 700;
+    color: #92400e;
+    transform: rotate(12deg);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+
+  .confetti-dot {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: confettiFall 1.5s ease forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0); opacity: 1; }
+    100% { transform: translateY(80vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======== HEADER / HERO ======== -->
+<header class="hero-gradient text-white shadow-xl">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">GPU · Lernfeld 5</span>
+          <span class="bg-emerald-800/50 text-emerald-200 text-xs px-3 py-1 rounded-full">AS 5.1</span>
+        </div>
+        <h1 class="text-3xl font-extrabold leading-tight mb-1">Innerbetriebliche Leistungen<br>& Logistik</h1>
+        <p class="text-emerald-200 text-sm">Böckler-Office GmbH · Oberhausen · Einstieg &amp; Aktivierung</p>
+      </div>
+      <div class="hidden md:block text-right">
+        <div class="text-5xl mb-1">🏭</div>
+        <p class="text-emerald-200 text-xs">Lager · Einkauf · Verkauf</p>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="mt-6">
+      <div class="flex justify-between text-xs text-emerald-200 mb-1">
+        <span>Fortschritt</span>
+        <span id="progress-label">0 / 4 Stationen</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Station Tabs -->
+    <nav class="flex gap-1 mt-4 overflow-x-auto">
+      <button onclick="showSection('intro')" id="tab-intro" class="tab-btn tab-active text-xs px-4 py-2 rounded-t-lg whitespace-nowrap transition-all">🚪 Einstieg</button>
+      <button onclick="showSection('prozess')" id="tab-prozess" class="tab-btn text-emerald-200 text-xs px-4 py-2 rounded-t-lg whitespace-nowrap transition-all hover:text-white">📦 Prozess-Puzzle</button>
+      <button onclick="showSection('quiz')" id="tab-quiz" class="tab-btn text-emerald-200 text-xs px-4 py-2 rounded-t-lg whitespace-nowrap transition-all hover:text-white">🧠 Quiz-Runde</button>
+      <button onclick="showSection('beleg')" id="tab-beleg" class="tab-btn text-emerald-200 text-xs px-4 py-2 rounded-t-lg whitespace-nowrap transition-all hover:text-white">📄 Belegchaos</button>
+      <button onclick="showSection('reflexion')" id="tab-reflexion" class="tab-btn text-emerald-200 text-xs px-4 py-2 rounded-t-lg whitespace-nowrap transition-all hover:text-white">💬 Reflexion</button>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-8 space-y-6">
+
+<!-- ======== STATION 0: EINSTIEG / SZENARIO ======== -->
+<section id="sec-intro" class="fade-in">
+
+  <!-- Szenario-Karte -->
+  <div class="scenario-card rounded-2xl p-6 shadow-sm mb-6">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">📋</span>
+      <div>
+        <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Anforderungssituation 5.1</p>
+        <h2 class="text-xl font-bold text-gray-800">Montag, 7:45 Uhr – Lager der Böckler-Office GmbH</h2>
+      </div>
+    </div>
+    <p class="text-gray-700 leading-relaxed mb-4">
+      Der LKW von Büromöbel Ruhr GmbH & Co. KG kommt auf das Betriebsgelände gerollt. 20 Paletten Bürostühle, Schreibtische und Aktenschränke sollen entladen werden. 
+      <strong>Du bist heute im Lager eingeteilt.</strong> Deine Chefin, Frau Klemm, sagt: 
+      <em>"Alles prüfen, alles dokumentieren – und bloß nichts falsch einlagern!"</em>
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+      <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm text-center card-hover">
+        <div class="text-3xl mb-2">📦</div>
+        <p class="font-semibold text-gray-700 text-sm">Wareneingang</p>
+        <p class="text-gray-400 text-xs mt-1">Prüfen, zählen, dokumentieren</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm text-center card-hover">
+        <div class="text-3xl mb-2">🏪</div>
+        <p class="font-semibold text-gray-700 text-sm">Lagerhaltung</p>
+        <p class="text-gray-400 text-xs mt-1">Sachgerecht einlagern & pflegen</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm text-center card-hover">
+        <div class="text-3xl mb-2">📊</div>
+        <p class="font-semibold text-gray-700 text-sm">Warenverkehr</p>
+        <p class="text-gray-400 text-xs mt-1">Bestände erfassen & melden</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aktivierungsfragen -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2">
+      <span class="text-xl">🤔</span> Warm-Up: Was wisst ihr schon?
+    </h3>
+    <p class="text-gray-500 text-sm mb-5">Diskutiert kurz in der Klasse – jede Antwort ist wertvoll!</p>
+
+    <div class="space-y-4" id="warmup-questions">
+      <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+        <p class="font-semibold text-indigo-800 text-sm">💡 Frage 1</p>
+        <p class="text-gray-700 mt-1">Stellt euch vor, ihr bestellt online etwas – was passiert hinter den Kulissen, bevor das Paket bei euch ankommt?</p>
+        <div class="mt-3" id="q1-reveal" style="display:none">
+          <div class="bg-white border border-indigo-200 rounded-lg p-3 text-sm text-gray-700">
+            ✅ <strong>Typischer Ablauf:</strong> Bestellung → Lagerentnahme → Kommissionierung → Verpackung → Versand → Zustellung. Jeder Schritt braucht Dokumentation!
+          </div>
+        </div>
+        <button onclick="toggleReveal('q1-reveal', this)" class="mt-2 text-xs text-indigo-600 font-semibold hover:underline">💡 Lösung einblenden</button>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+        <p class="font-semibold text-amber-800 text-sm">💡 Frage 2</p>
+        <p class="text-gray-700 mt-1">Welche Probleme könnten entstehen, wenn eine Lieferung <em>nicht</em> kontrolliert wird?</p>
+        <div class="mt-3" id="q2-reveal" style="display:none">
+          <div class="bg-white border border-amber-200 rounded-lg p-3 text-sm text-gray-700">
+            ✅ <strong>Mögliche Folgen:</strong> Falsche Ware eingelagert → Kundenbeschwerden / Fehlmengen im Lager → Produktionsstillstand / Schäden nicht dokumentiert → kein Anspruch auf Schadensersatz / Buchhaltungsfehler
+          </div>
+        </div>
+        <button onclick="toggleReveal('q2-reveal', this)" class="mt-2 text-xs text-amber-600 font-semibold hover:underline">💡 Lösung einblenden</button>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+        <p class="font-semibold text-emerald-800 text-sm">💡 Frage 3</p>
+        <p class="text-gray-700 mt-1">Kennt ihr Berufe, in denen Logistik eine zentrale Rolle spielt? Was machen diese Menschen konkret?</p>
+        <div class="mt-3" id="q3-reveal" style="display:none">
+          <div class="bg-white border border-emerald-200 rounded-lg p-3 text-sm text-gray-700">
+            ✅ <strong>Beispiele:</strong> Kaufmann/-frau im E-Commerce, Fachlagerist/-in, Speditionskaufmann/-frau, Industriekaufmann/-frau … alle arbeiten mit Belegen, Lagerbeständen und Warenbewegungen.
+          </div>
+        </div>
+        <button onclick="toggleReveal('q3-reveal', this)" class="mt-2 text-xs text-emerald-600 font-semibold hover:underline">💡 Lösung einblenden</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lernziele -->
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <span class="text-xl">🎯</span> Das lernen wir in LF 5
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex gap-3 items-start">
+        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0">Z1</div>
+        <div>
+          <p class="font-semibold text-gray-700 text-sm">Wareneingänge erfassen & prüfen</p>
+          <p class="text-gray-400 text-xs mt-1">Belege prüfen, Abweichungen melden, Weiterleitung regeln</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start">
+        <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shrink-0">Z2</div>
+        <div>
+          <p class="font-semibold text-gray-700 text-sm">Sachgerechte Lagerung & Pflege</p>
+          <p class="text-gray-400 text-xs mt-1">Rechtliche Vorschriften, Ökologie, Arbeitsschutz</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start">
+        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">Z3</div>
+        <div>
+          <p class="font-semibold text-gray-700 text-sm">Warenverkehr dokumentieren</p>
+          <p class="text-gray-400 text-xs mt-1">Belege lesen, Bestände erfassen, Wertströme nachvollziehen</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button onclick="completeStation('intro'); showSection('prozess')" 
+      class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow transition-all">
+      Weiter zum Prozess-Puzzle →
+    </button>
+  </div>
+</section>
+
+<!-- ======== STATION 1: PROZESS-PUZZLE (Drag & Drop) ======== -->
+<section id="sec-prozess" class="fade-in hidden">
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+      <span>📦</span> Station 1: Prozess-Puzzle
+    </h3>
+    <p class="text-gray-500 text-sm mb-6">Bringt die Schritte des Wareneingangs in die richtige Reihenfolge! <strong>Zieht die Karten</strong> in die richtige Position.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Ungeordnete Karten -->
+      <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">📌 Verfügbare Schritte</p>
+        <div id="source-pool" class="space-y-2 min-h-32">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Drop-Zone: geordnete Schritte -->
+      <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">✅ Richtige Reihenfolge (1→6)</p>
+        <div id="drop-container" class="space-y-2">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-3 flex-wrap">
+      <button onclick="checkPuzzle()" class="bg-emerald-600 text-white font-bold px-5 py-2 rounded-xl text-sm hover:bg-emerald-700 transition-all">
+        ✅ Lösung prüfen
+      </button>
+      <button onclick="resetPuzzle()" class="bg-gray-100 text-gray-600 font-bold px-5 py-2 rounded-xl text-sm hover:bg-gray-200 transition-all">
+        🔄 Neu mischen
+      </button>
+    </div>
+
+    <div id="puzzle-result" class="mt-4 hidden p-4 rounded-xl text-sm font-medium"></div>
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button onclick="completeStation('prozess'); showSection('quiz')"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow transition-all">
+      Weiter zur Quiz-Runde →
+    </button>
+  </div>
+</section>
+
+<!-- ======== STATION 2: QUIZ (Multiple Choice) ======== -->
+<section id="sec-quiz" class="fade-in hidden">
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+      <span>🧠</span> Station 2: Quiz-Runde
+    </h3>
+    <p class="text-gray-500 text-sm mb-6">6 Fragen – wählt gemeinsam die richtige Antwort. Abstimmen per Handzeichen!</p>
+
+    <div id="quiz-container" class="space-y-6"></div>
+
+    <div class="mt-6 flex items-center gap-4">
+      <button onclick="evaluateQuiz()" class="bg-emerald-600 text-white font-bold px-5 py-2 rounded-xl text-sm hover:bg-emerald-700 transition-all">
+        ✅ Alle Antworten auswerten
+      </button>
+      <div id="quiz-score" class="text-sm font-semibold text-gray-600 hidden"></div>
+    </div>
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button onclick="completeStation('quiz'); showSection('beleg')"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow transition-all">
+      Weiter zum Belegchaos →
+    </button>
+  </div>
+</section>
+
+<!-- ======== STATION 3: BELEGCHAOS ======== -->
+<section id="sec-beleg" class="fade-in hidden">
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+      <span>📄</span> Station 3: Das Belegchaos
+    </h3>
+    <p class="text-gray-500 text-sm mb-6">Im Lager liegen mehrere Dokumente. <strong>Welcher Beleg ist was?</strong> Ordnet die Bezeichnungen den Dokumenten zu.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="beleg-cards">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="bg-gray-50 rounded-xl p-4">
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Ziehe die Beleg-Bezeichnungen auf die passenden Dokumente:</p>
+      <div class="flex flex-wrap gap-2" id="beleg-labels">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div class="mt-4 flex gap-3">
+      <button onclick="checkBelege()" class="bg-emerald-600 text-white font-bold px-5 py-2 rounded-xl text-sm hover:bg-emerald-700 transition-all">
+        ✅ Zuordnung prüfen
+      </button>
+      <button onclick="resetBelege()" class="bg-gray-100 text-gray-600 font-bold px-5 py-2 rounded-xl text-sm hover:bg-gray-200 transition-all">
+        🔄 Zurücksetzen
+      </button>
+    </div>
+    <div id="beleg-result" class="mt-4 hidden p-4 rounded-xl text-sm font-medium"></div>
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button onclick="completeStation('beleg'); showSection('reflexion')"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow transition-all">
+      Zur Reflexion →
+    </button>
+  </div>
+</section>
+
+<!-- ======== STATION 4: REFLEXION ======== -->
+<section id="sec-reflexion" class="fade-in hidden">
+  <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+      <span>💬</span> Reflexion & Sicherung
+    </h3>
+    <p class="text-gray-500 text-sm mb-6">Besprecht die folgenden Punkte im Plenum. Fasst eure Ergebnisse zusammen.</p>
+
+    <div class="space-y-4">
+      <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
+        <p class="font-bold text-emerald-800 mb-2">🌱 Ökologische Dimension</p>
+        <p class="text-gray-700 text-sm">Die Böckler-Office GmbH lagert Drucker-Toner ein. Welche <strong>ökologischen Vorschriften</strong> müssen beim Lagern und Entsorgen beachtet werden?</p>
+        <textarea class="mt-3 w-full border border-emerald-200 rounded-lg p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-emerald-300" rows="3" placeholder="Eure Ideen hier ..."></textarea>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-100 rounded-xl p-5">
+        <p class="font-bold text-amber-800 mb-2">⚖️ Arbeitsschutz</p>
+        <p class="text-gray-700 text-sm">Ein Mitarbeiter soll alleine eine 80 kg schwere Palette umlagern. Was sagt das Arbeitschutzgesetz? Was würdet ihr als Vorgesetzte entscheiden?</p>
+        <textarea class="mt-3 w-full border border-amber-200 rounded-lg p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-300" rows="3" placeholder="Eure Ideen hier ..."></textarea>
+      </div>
+
+      <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+        <p class="font-bold text-indigo-800 mb-2">📊 Check-for-Understanding</p>
+        <p class="text-gray-700 text-sm">Was wäre die Konsequenz für die <strong>Böckler-Office GmbH</strong>, wenn Wareneingänge nicht überprüft würden und fehlerhafte Ware direkt ins Lager käme?</p>
+        <textarea class="mt-3 w-full border border-indigo-200 rounded-lg p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300" rows="3" placeholder="Eure Überlegungen hier ..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Abschlusskarte -->
+  <div id="completion-card" class="hidden bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl p-8 text-white text-center shadow-xl">
+    <div class="text-5xl mb-3">🎉</div>
+    <h3 class="text-2xl font-extrabold mb-2">Einstieg abgeschlossen!</h3>
+    <p class="text-emerald-100 mb-4">Alle 4 Stationen erledigt. Gut gemacht, Team Böckler-Office!</p>
+    <div class="grid grid-cols-3 gap-4 text-center mt-4">
+      <div class="bg-white/20 rounded-xl p-3">
+        <p class="text-2xl font-bold" id="summary-correct">–</p>
+        <p class="text-xs text-emerald-100">Quiz richtig</p>
+      </div>
+      <div class="bg-white/20 rounded-xl p-3">
+        <p class="text-2xl font-bold">4/4</p>
+        <p class="text-xs text-emerald-100">Stationen</p>
+      </div>
+      <div class="bg-white/20 rounded-xl p-3">
+        <p class="text-2xl font-bold">LF5</p>
+        <p class="text-xs text-emerald-100">Bereit für AB!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-4">
+    <button onclick="completeStation('reflexion'); showCompletion()"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl shadow transition-all text-lg">
+      🏁 Einstieg abschließen
+    </button>
+  </div>
+</section>
+
+</main>
+
+<footer class="text-center text-xs text-gray-400 py-6 mt-4">
+  Hans-Böckler-Berufskolleg Oberhausen · GPU Lernfeld 5 · Bildungsplan NRW 2023
+</footer>
+
+<script>
+// ============================
+// GLOBAL STATE
+// ============================
+const state = {
+  completed: { intro: false, prozess: false, quiz: false, beleg: false, reflexion: false },
+  quizAnswers: {},
+  quizScore: 0,
+  dragItem: null,
+  dragSource: null,
+};
+
+// ============================
+// TAB / SECTION NAVIGATION
+// ============================
+function showSection(name) {
+  document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
+  document.getElementById('sec-' + name).classList.remove('hidden');
+  document.getElementById('sec-' + name).classList.add('fade-in');
+
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-emerald-200');
+    b.classList.remove('text-gray-900');
+  });
+  const tab = document.getElementById('tab-' + name);
+  if (tab) {
+    tab.classList.add('tab-active');
+    tab.classList.remove('text-emerald-200');
+  }
+}
+
+function completeStation(name) {
+  state.completed[name] = true;
+  updateProgress();
+}
+
+function updateProgress() {
+  const keys = ['intro','prozess','quiz','beleg'];
+  const done = keys.filter(k => state.completed[k]).length;
+  const pct = (done / keys.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' / ' + keys.length + ' Stationen';
+}
+
+// ============================
+// WARM-UP TOGGLES
+// ============================
+function toggleReveal(id, btn) {
+  const el = document.getElementById(id);
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    btn.textContent = '🙈 Ausblenden';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = '💡 Lösung einblenden';
+  }
+}
+
+// ============================
+// PROZESS-PUZZLE (Drag & Drop)
+// ============================
+const correctOrder = [
+  { id:'p1', text: '📋 Lieferschein und Bestellunterlagen bereithalten', color: 'bg-purple-50 border-purple-200' },
+  { id:'p2', text: '📦 Ware entgegennehmen & Menge zählen', color: 'bg-blue-50 border-blue-200' },
+  { id:'p3', text: '🔍 Qualität & Beschaffenheit prüfen (Sichtprüfung)', color: 'bg-amber-50 border-amber-200' },
+  { id:'p4', text: '📝 Abweichungen schriftlich auf dem Lieferschein vermerken', color: 'bg-red-50 border-red-200' },
+  { id:'p5', text: '🏷️ Waren kennzeichnen & Lagerort zuweisen', color: 'bg-emerald-50 border-emerald-200' },
+  { id:'p6', text: '📊 Wareneingang im System buchen / Bestand aktualisieren', color: 'bg-indigo-50 border-indigo-200' },
+];
+
+let shuffled = [];
+let dropZoneContent = {};
+
+function initPuzzle() {
+  shuffled = [...correctOrder].sort(() => Math.random() - 0.5);
+  dropZoneContent = {};
+  correctOrder.forEach((_,i) => { dropZoneContent[i] = null; });
+
+  renderPuzzle();
+}
+
+function renderPuzzle() {
+  const pool = document.getElementById('source-pool');
+  pool.innerHTML = '';
+  shuffled.forEach(item => {
+    if (!Object.values(dropZoneContent).some(v => v && v.id === item.id)) {
+      const el = createDragItem(item);
+      pool.appendChild(el);
+    }
+  });
+
+  const container = document.getElementById('drop-container');
+  container.innerHTML = '';
+  correctOrder.forEach((_, i) => {
+    const zone = document.createElement('div');
+    zone.className = 'drop-zone rounded-xl p-2 flex items-center gap-2 border-2 border-dashed border-gray-200 min-h-12';
+    zone.dataset.index = i;
+    zone.innerHTML = `<span class="text-gray-300 font-bold w-6 text-center shrink-0">${i+1}</span>`;
+
+    if (dropZoneContent[i]) {
+      const filled = createDragItem(dropZoneContent[i], true);
+      zone.appendChild(filled);
+    } else {
+      zone.innerHTML += `<span class="text-gray-300 text-xs">Hierher ziehen ...</span>`;
+    }
+
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      const itemId = e.dataTransfer.getData('itemId');
+      const fromZone = e.dataTransfer.getData('fromZone');
+
+      // Remove from old zone
+      if (fromZone !== 'pool') {
+        dropZoneContent[parseInt(fromZone)] = null;
+      }
+      // Remove any existing item from this zone back to pool
+      if (dropZoneContent[i]) {
+        shuffled.push(dropZoneContent[i]);
+      }
+      dropZoneContent[i] = correctOrder.find(p => p.id === itemId) || shuffled.find(p => p.id === itemId);
+      shuffled = shuffled.filter(s => s.id !== itemId);
+      renderPuzzle();
+    });
+
+    container.appendChild(zone);
+  });
+}
+
+function createDragItem(item, inZone = false) {
+  const el = document.createElement('div');
+  el.className = `drag-item flex-1 text-xs font-medium px-3 py-2 rounded-lg border ${item.color} text-gray-700`;
+  el.draggable = true;
+  el.textContent = item.text;
+
+  el.addEventListener('dragstart', e => {
+    state.dragItem = item;
+    e.dataTransfer.setData('itemId', item.id);
+    e.dataTransfer.setData('fromZone', inZone ? getZoneIndex(item.id) : 'pool');
+    setTimeout(() => el.classList.add('dragging'), 0);
+  });
+  el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  return el;
+}
+
+function getZoneIndex(itemId) {
+  return Object.keys(dropZoneContent).find(k => dropZoneContent[k] && dropZoneContent[k].id === itemId) ?? 'pool';
+}
+
+function checkPuzzle() {
+  let correct = 0;
+  correctOrder.forEach((item, i) => {
+    if (dropZoneContent[i] && dropZoneContent[i].id === item.id) correct++;
+  });
+  const result = document.getElementById('puzzle-result');
+  result.classList.remove('hidden');
+  if (correct === correctOrder.length) {
+    result.className = 'mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+    result.innerHTML = '🎉 <strong>Perfekt!</strong> Alle 6 Schritte in der richtigen Reihenfolge! Das ist der korrekte Wareneingangsablauf.';
+    spawnConfetti();
+  } else {
+    result.className = 'mt-4 p-4 rounded-xl text-sm font-medium bg-red-50 text-red-800 border border-red-200';
+    result.innerHTML = `⚠️ <strong>${correct}/6 korrekt.</strong> Schaut nochmal genau – in welcher Reihenfolge würdet ihr wirklich vorgehen?`;
+  }
+}
+
+function resetPuzzle() {
+  document.getElementById('puzzle-result').classList.add('hidden');
+  initPuzzle();
+}
+
+// ============================
+// QUIZ
+// ============================
+const quizData = [
+  {
+    q: 'Was ist ein Lieferschein?',
+    options: [
+      'Ein Dokument, das die Zahlung bestätigt',
+      'Ein Begleitdokument, das Inhalt und Menge der gelieferten Ware auflistet',
+      'Eine Bestellung des Käufers an den Lieferanten',
+      'Ein Lagerplatz-Nachweis im Warenwirtschaftssystem'
+    ],
+    correct: 1,
+    hint: 'Der Lieferschein begleitet die Ware – er ist kein Zahlungsdokument!'
+  },
+  {
+    q: 'Was muss bei der Eingangsprüfung einer Lieferung überprüft werden?',
+    options: [
+      'Nur die Rechnung',
+      'Menge, Qualität und Übereinstimmung mit der Bestellung',
+      'Nur der Preis auf dem Lieferschein',
+      'Die Versicherungsunterlagen des Lieferanten'
+    ],
+    correct: 1,
+    hint: '3 Prüfschritte: Menge, Qualität, Übereinstimmung mit Bestellung!'
+  },
+  {
+    q: 'Was ist bei der FIFO-Methode der Lagerhaltung gemeint?',
+    options: [
+      'Zuerst eingelagerte Ware wird zuletzt entnommen',
+      'Zuerst eingelagerte Ware wird zuerst entnommen',
+      'Teuerste Ware wird zuerst entnommen',
+      'Leichteste Ware kommt nach oben ins Regal'
+    ],
+    correct: 1,
+    hint: 'FIFO = First In, First Out – wichtig bei verderblichen Waren!'
+  },
+  {
+    q: 'Welches Ziel verfolgt die sachgerechte Lagerung?',
+    options: [
+      'Möglichst viel Ware auf kleinstem Raum stapeln',
+      'Werterhalt der Ware, Sicherheit der Mitarbeitenden und Einhaltung rechtlicher Vorschriften',
+      'Schnellstmögliche Lieferung ohne Dokumentation',
+      'Reduzierung der Einkaufspreise durch Massenbestellung'
+    ],
+    correct: 1,
+    hint: 'Sachgerecht heißt: Ware schützen, Menschen schützen, Regeln beachten!'
+  },
+  {
+    q: 'Was ist ein Wareneingangsschein (WES)?',
+    options: [
+      'Ein Beleg, mit dem das Unternehmen Ware bestellt',
+      'Eine interne Bestätigung, dass Ware geprüft und eingelagert wurde',
+      'Ein Zahlungsbeleg für den Lieferanten',
+      'Ein Lagerplan für die Regalplatzzuweisung'
+    ],
+    correct: 1,
+    hint: 'Der WES ist ein internes Dokument – er bleibt im Unternehmen!'
+  },
+  {
+    q: 'Bei einer Lieferung fehlen 5 von 20 bestellten Bürostühlen. Was tut die Böckler-Office GmbH?',
+    options: [
+      'Alle 15 Stühle ohne Kommentar annehmen und weiterlagern',
+      'Die gesamte Lieferung ablehnen',
+      'Abweichung auf dem Lieferschein vermerken und den Lieferanten kontaktieren',
+      'Die 5 fehlenden Stühle beim nächsten Einkauf doppelt bestellen'
+    ],
+    correct: 2,
+    hint: 'Abweichungen schriftlich dokumentieren – das ist die Grundlage für Reklamationen!'
+  }
+];
+
+function initQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'bg-gray-50 rounded-xl p-5 border border-gray-100';
+    card.innerHTML = `
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Frage ${qi+1}</p>
+      <p class="font-semibold text-gray-800 mb-3">${q.q}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2" id="opts-${qi}">
+        ${q.options.map((opt,oi) => `
+          <button onclick="selectAnswer(${qi}, ${oi})"
+            id="opt-${qi}-${oi}"
+            class="option-btn text-left text-sm px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-700 hover:border-emerald-400">
+            <span class="font-semibold text-gray-400 mr-2">${['A','B','C','D'][oi]}.</span>${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div id="hint-${qi}" class="hidden mt-3 text-xs bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-amber-800">
+        💡 ${q.hint}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  // Deselect others
+  quizData[qi].options.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+    btn.classList.add('border-gray-200', 'bg-white', 'text-gray-700');
+  });
+  // Select this one
+  const btn = document.getElementById(`opt-${qi}-${oi}`);
+  btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+  btn.classList.remove('border-gray-200', 'bg-white', 'text-gray-700');
+  state.quizAnswers[qi] = oi;
+}
+
+function evaluateQuiz() {
+  let score = 0;
+  quizData.forEach((q, qi) => {
+    const sel = state.quizAnswers[qi];
+    q.options.forEach((_, oi) => {
+      const btn = document.getElementById(`opt-${qi}-${oi}`);
+      btn.classList.remove('correct','wrong','border-emerald-500','bg-emerald-50','border-gray-200','bg-white');
+      if (oi === q.correct) {
+        btn.classList.add('correct');
+      } else if (sel === oi) {
+        btn.classList.add('wrong');
+      } else {
+        btn.classList.add('border-gray-200', 'bg-white');
+      }
+    });
+    if (sel === q.correct) score++;
+    document.getElementById(`hint-${qi}`).classList.remove('hidden');
+  });
+  state.quizScore = score;
+  const scoreEl = document.getElementById('quiz-score');
+  scoreEl.classList.remove('hidden');
+  scoreEl.innerHTML = `Ergebnis: <span class="${score >= 4 ? 'text-emerald-700' : 'text-amber-700'} font-bold">${score}/6 richtig</span>`;
+  document.getElementById('summary-correct').textContent = score + '/6';
+  if (score >= 5) spawnConfetti();
+}
+
+// ============================
+// BELEGCHAOS
+// ============================
+const belegData = [
+  {
+    id: 'b1',
+    label: 'Lieferschein',
+    icon: '🚚',
+    description: 'Absender: Büromöbel Ruhr GmbH | Empfänger: Böckler-Office GmbH | Inhalt: 20 Bürostühle "Comfort Plus" | Unterschrift Fahrer',
+    correctLabel: 'Lieferschein'
+  },
+  {
+    id: 'b2',
+    label: 'Eingangsrechnung',
+    icon: '💶',
+    description: 'Rechnungsnr.: 2024-1189 | Betrag: 4.760,00 € netto | USt 19%: 904,40 € | Gesamt: 5.664,40 € | Zahlungsziel: 30 Tage',
+    correctLabel: 'Eingangsrechnung'
+  },
+  {
+    id: 'b3',
+    label: 'Bestellung (Beleg)',
+    icon: '📋',
+    description: 'Bestellnr.: B-2024-0447 | Datum: 12.11.2024 | Artikel: 20× Bürostuhl Comfort Plus | Einkäufer: M. Schulte',
+    correctLabel: 'Bestellung (Beleg)'
+  }
+];
+
+const belegLabels = ['Lieferschein', 'Eingangsrechnung', 'Bestellung (Beleg)'];
+let belegAssignments = {};
+
+function initBelege() {
+  belegAssignments = {};
+  belegData.forEach(b => belegAssignments[b.id] = null);
+
+  const cardsContainer = document.getElementById('beleg-cards');
+  cardsContainer.innerHTML = '';
+  belegData.forEach(b => {
+    const shuffledDescription = b.description;
+    const card = document.createElement('div');
+    card.className = 'beleg-card';
+    card.id = 'beleg-card-' + b.id;
+    card.innerHTML = `
+      <div class="text-2xl mb-2">${b.icon}</div>
+      <p class="text-gray-500 text-xs mb-3 leading-relaxed">${shuffledDescription}</p>
+      <div class="drop-zone rounded-lg p-2 border-2 border-dashed border-gray-200 min-h-10 flex items-center justify-center text-gray-400 text-xs"
+        id="beleg-drop-${b.id}"
+        ondragover="event.preventDefault(); this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="dropLabel(event, '${b.id}')">
+        <span id="beleg-label-placed-${b.id}">${belegAssignments[b.id] || 'Beleg-Typ hierher ziehen'}</span>
+      </div>
+    `;
+    cardsContainer.appendChild(card);
+  });
+
+  const labelsContainer = document.getElementById('beleg-labels');
+  labelsContainer.innerHTML = '';
+  belegLabels.forEach(lbl => {
+    const el = document.createElement('div');
+    el.className = 'drag-item bg-indigo-100 text-indigo-800 text-xs font-semibold px-4 py-2 rounded-full border border-indigo-200 cursor-grab';
+    el.draggable = true;
+    el.textContent = lbl;
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('label', lbl);
+    });
+    labelsContainer.appendChild(el);
+  });
+}
+
+function dropLabel(event, belegId) {
+  event.preventDefault();
+  const lbl = event.dataTransfer.getData('label');
+  belegAssignments[belegId] = lbl;
+  document.getElementById('beleg-label-placed-' + belegId).textContent = lbl;
+  document.getElementById('beleg-drop-' + belegId).classList.remove('over');
+  document.getElementById('beleg-drop-' + belegId).classList.add('border-emerald-400', 'bg-emerald-50');
+}
+
+function checkBelege() {
+  let correct = 0;
+  belegData.forEach(b => {
+    const drop = document.getElementById('beleg-drop-' + b.id);
+    if (belegAssignments[b.id] === b.correctLabel) {
+      drop.classList.add('border-emerald-500', 'bg-emerald-100');
+      drop.classList.remove('border-red-400', 'bg-red-50');
+      correct++;
+    } else {
+      drop.classList.add('border-red-400', 'bg-red-50');
+      drop.classList.remove('border-emerald-500', 'bg-emerald-100');
+    }
+  });
+  const result = document.getElementById('beleg-result');
+  result.classList.remove('hidden');
+  if (correct === belegData.length) {
+    result.className = 'mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+    result.innerHTML = '🎉 <strong>Super!</strong> Alle Belege richtig zugeordnet!';
+    spawnConfetti();
+  } else {
+    result.className = 'mt-4 p-4 rounded-xl text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200';
+    result.innerHTML = `⚠️ <strong>${correct}/3 korrekt.</strong> Schaut nochmal auf die Inhalte der Dokumente – welche Merkmale unterscheiden sie?`;
+  }
+}
+
+function resetBelege() {
+  document.getElementById('beleg-result').classList.add('hidden');
+  initBelege();
+}
+
+// ============================
+// COMPLETION
+// ============================
+function showCompletion() {
+  document.getElementById('completion-card').classList.remove('hidden');
+  document.getElementById('completion-card').classList.add('fade-in');
+  spawnConfetti();
+}
+
+function spawnConfetti() {
+  const colors = ['#10b981','#f59e0b','#6366f1','#34d399','#fbbf24'];
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const dot = document.createElement('div');
+      dot.className = 'confetti-dot';
+      dot.style.cssText = `
+        left: ${Math.random()*100}vw;
+        top: -20px;
+        background: ${colors[Math.floor(Math.random()*colors.length)]};
+        animation-delay: ${Math.random()*0.5}s;
+        animation-duration: ${1.2 + Math.random()}s;
+      `;
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 2500);
+    }, i * 50);
+  }
+}
+
+// ============================
+// INIT
+// ============================
+document.addEventListener('DOMContentLoaded', () => {
+  initPuzzle();
+  initQuiz();
+  initBelege();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(chmod +x \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/deploy.sh\")"
+    ]
+  }
+}
