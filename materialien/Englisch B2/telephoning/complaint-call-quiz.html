@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Call Quiz – Office Design Ltd.</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f8f7ff; min-height: 100vh; }
+
+  .opt-btn {
+    display: block; width: 100%; text-align: left;
+    background: #fff; border: 1px solid #e2e0f0;
+    border-radius: 10px; padding: 0.75rem 1rem;
+    font-size: 14px; color: #1e1b4b; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    line-height: 1.5;
+  }
+  .opt-btn:hover:not(:disabled) { background: #f0effe; border-color: #a5b4fc; }
+  .opt-btn.correct { background: #ecfdf5; border-color: #34d399; color: #065f46; font-weight: 500; }
+  .opt-btn.wrong   { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+  .opt-btn:disabled { cursor: default; }
+
+  .hud-box { background: #fff; border: 1px solid #e2e0f0; border-radius: 12px; padding: 0.6rem 0.8rem; text-align: center; flex: 1; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; }
+
+  .feedback-ok  { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+  .feedback-err { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+  .feedback-idle{ background: #f8f7ff; color: #6b7280; border: 1px solid #e2e0f0; }
+
+  .progress-fill { height: 6px; background: linear-gradient(90deg, #818cf8, #a78bfa); border-radius: 3px; transition: width 0.4s ease; }
+
+  .phase-chip { font-size: 12px; padding: 4px 12px; border-radius: 999px; border: 1px solid #e2e0f0; color: #6b7280; cursor: pointer; background: #fff; transition: all 0.15s; }
+  .phase-chip.sel { background: #eef2ff; border-color: #818cf8; color: #4338ca; font-weight: 500; }
+
+  .result-circle { width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 1rem; }
+
+  .hs-row { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; gap: 8px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  @keyframes pop { 0%{transform:scale(0.85);opacity:0} 70%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+  .pop { animation: pop 0.25s ease; }
+
+  @media (max-width: 480px) {
+    .hud-box { padding: 0.5rem; }
+    .opt-btn { font-size: 13px; padding: 0.65rem 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="max-w-xl mx-auto px-4 py-8">
+
+  <!-- ═══ START SCREEN ═══ -->
+  <div id="scr-start" class="screen active">
+    <div class="text-center mb-8">
+      <div style="font-size:52px; margin-bottom:0.75rem;">📞</div>
+      <h1 class="text-2xl font-semibold text-indigo-900 mb-2">Complaint Call Quiz</h1>
+      <p class="text-sm text-gray-500 leading-relaxed max-w-sm mx-auto mb-4">
+        A delivery from Office Design Ltd. has gone wrong.<br>
+        Do you have the right phrases to handle the call?
+      </p>
+      <div class="flex gap-2 justify-center flex-wrap mb-6">
+        <span class="badge" style="background:#eef2ff;color:#4338ca;">B2 · BMUD</span>
+        <span class="badge" style="background:#ecfdf5;color:#065f46;">15 questions</span>
+        <span class="badge" style="background:#fffbeb;color:#92400e;">30 sec / question</span>
+      </div>
+
+      <div class="mb-4">
+        <input id="player-name" type="text" placeholder="Enter your name" maxlength="20"
+          class="border border-gray-200 rounded-xl px-4 py-2 text-sm text-center w-56 focus:outline-none focus:border-indigo-400 bg-white" />
+      </div>
+
+      <p class="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Filter by phase</p>
+      <div class="flex gap-2 justify-center flex-wrap mb-6">
+        <button class="phase-chip sel" data-phase="all">All phases</button>
+        <button class="phase-chip" data-phase="Opening">Opening</button>
+        <button class="phase-chip" data-phase="Complaint">Complaint</button>
+        <button class="phase-chip" data-phase="Response">Response</button>
+        <button class="phase-chip" data-phase="Closing">Closing</button>
+      </div>
+
+      <button onclick="startGame()"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-8 py-3 rounded-xl text-sm transition-colors">
+        Start game
+      </button>
+      <div class="mt-3">
+        <button onclick="showScreen('scr-hs')"
+          class="text-indigo-400 hover:text-indigo-600 text-sm transition-colors">
+          View highscores →
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-indigo-100 p-4 text-xs text-gray-400 leading-relaxed">
+      <span class="font-medium text-gray-500">📘 How to play:</span>
+      Read the situation, then pick the most appropriate Business English phrase.
+      Answer quickly for bonus points. A correct streak multiplies your score.
+    </div>
+  </div>
+
+  <!-- ═══ GAME SCREEN ═══ -->
+  <div id="scr-game" class="screen">
+
+    <!-- HUD -->
+    <div class="flex gap-2 mb-3">
+      <div class="hud-box">
+        <div class="text-xs text-gray-400 mb-1">Score</div>
+        <div class="text-xl font-semibold text-indigo-900" id="hud-score">0</div>
+      </div>
+      <div class="hud-box">
+        <div class="text-xs text-gray-400 mb-1">Question</div>
+        <div class="text-xl font-semibold text-indigo-900" id="hud-q">1 / 15</div>
+      </div>
+      <div class="hud-box">
+        <div class="text-xs text-gray-400 mb-1">Time</div>
+        <div class="text-xl font-semibold" id="hud-timer">30</div>
+      </div>
+      <div class="hud-box">
+        <div class="text-xs text-gray-400 mb-1">Streak</div>
+        <div class="text-xl font-semibold text-purple-600" id="hud-streak">0</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="bg-gray-100 rounded-full h-1.5 mb-4">
+      <div class="progress-fill" id="prog" style="width:0%"></div>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 mb-3">
+      <div class="text-center mb-4">
+        <span class="text-xs text-indigo-400 font-medium uppercase tracking-wider" id="q-phase">Opening</span>
+        <p class="text-base font-medium text-gray-800 mt-2 leading-relaxed" id="q-text"></p>
+        <p class="text-xs text-gray-400 italic mt-1" id="q-hint"></p>
+      </div>
+
+      <div id="options" class="flex flex-col gap-2 mb-4"></div>
+
+      <div class="rounded-xl px-4 py-3 text-sm leading-relaxed feedback-idle" id="feedback">
+        Choose the best phrase for this situation.
+      </div>
+
+      <div class="flex justify-end mt-3">
+        <button id="btn-next" onclick="nextQuestion()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors"
+          style="display:none;">
+          Next →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ RESULT SCREEN ═══ -->
+  <div id="scr-result" class="screen">
+    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6 text-center">
+      <div class="result-circle" id="result-circle"></div>
+      <h2 class="text-xl font-semibold text-indigo-900 mb-1" id="result-title"></h2>
+      <p class="text-sm text-gray-500 mb-5" id="result-sub"></p>
+
+      <div class="flex gap-3 justify-center mb-5">
+        <div class="hud-box" style="min-width:90px;">
+          <div class="text-xs text-gray-400 mb-1">Final score</div>
+          <div class="text-2xl font-semibold text-indigo-900" id="res-score"></div>
+        </div>
+        <div class="hud-box" style="min-width:90px;">
+          <div class="text-xs text-gray-400 mb-1">Correct</div>
+          <div class="text-2xl font-semibold text-green-600" id="res-correct"></div>
+        </div>
+        <div class="hud-box" style="min-width:90px;">
+          <div class="text-xs text-gray-400 mb-1">Best streak</div>
+          <div class="text-2xl font-semibold text-purple-600" id="res-streak"></div>
+        </div>
+      </div>
+
+      <!-- Per-phase breakdown -->
+      <div id="phase-breakdown" class="text-left mb-5 bg-indigo-50 rounded-xl p-4"></div>
+
+      <div class="flex gap-2 justify-center flex-wrap">
+        <button onclick="startGame()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors">
+          Play again
+        </button>
+        <button onclick="showScreen('scr-hs')"
+          class="border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-sm font-medium px-5 py-2 rounded-xl transition-colors">
+          Highscores
+        </button>
+        <button onclick="showScreen('scr-start')"
+          class="border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm px-5 py-2 rounded-xl transition-colors">
+          Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HIGHSCORE SCREEN ═══ -->
+  <div id="scr-hs" class="screen">
+    <div class="flex items-center gap-3 mb-4">
+      <button onclick="showScreen('scr-start')"
+        class="border border-gray-200 text-gray-500 text-sm px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
+        ← Back
+      </button>
+      <h2 class="text-lg font-semibold text-indigo-900">Highscores</h2>
+    </div>
+    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4" id="hs-list"></div>
+  </div>
+
+</div><!-- /max-w-xl -->
+
+<script>
+const ALL_QUESTIONS = [
+  {
+    phase:"Opening",
+    text:"You receive a call at Office Design Ltd. How do you answer professionally?",
+    hint:"Wie hebt man professionell ab?",
+    correct:"Office Design Ltd., good morning. This is [Name] speaking. How can I help you?",
+    wrong:["Yes, who is it?","Office Design, what do you want?","Hello?"]
+  },
+  {
+    phase:"Opening",
+    text:"You need to connect the caller to the complaints department. What do you say?",
+    hint:"Weiterverbinden – die höfliche Formel",
+    correct:"One moment, please. I'll put you through to our complaints department.",
+    wrong:["Wait, I'll connect you.","Hold on.","Go ahead, I'm transferring you now."]
+  },
+  {
+    phase:"Opening",
+    text:"The line is bad and you didn't catch the caller's name. What do you say?",
+    hint:"Schlechte Verbindung – um Wiederholung bitten",
+    correct:"I'm sorry, this is a bad line. Could you repeat your name, please?",
+    wrong:["What? I can't hear you!","Say that again.","The connection is terrible, speak louder."]
+  },
+  {
+    phase:"Opening",
+    text:"The caller asks to speak to Ms Walker, who is out of the office. What do you say?",
+    hint:"Person nicht erreichbar – was anbieten?",
+    correct:"I'm afraid Ms Walker is out of the office today. Can I take a message or would you like her to call you back?",
+    wrong:["She's not here. Call back later.","Ms Walker is busy, try tomorrow.","I don't know where she is."]
+  },
+  {
+    phase:"Complaint",
+    text:"You are the caller from Müller GmbH. You want to make a complaint about a delivery. How do you open the topic?",
+    hint:"Beschwerde einleiten – höflich aber klar",
+    correct:"I'm calling to report a problem with our most recent delivery, order number 4471.",
+    wrong:["Your delivery was completely wrong!","I want to complain about everything.","You sent us the wrong items again."]
+  },
+  {
+    phase:"Complaint",
+    text:"Ten out of fifty desks arrived damaged. How do you describe this precisely?",
+    hint:"Schaden quantifizieren",
+    correct:"Unfortunately, ten of the fifty desks we ordered have arrived with visible damage.",
+    wrong:["Half the desks are broken, roughly.","Some desks are bad, maybe ten or so.","You sent us damaged goods – lots of them."]
+  },
+  {
+    phase:"Complaint",
+    text:"The wrong chair model was delivered instead of the one ordered. How do you express this?",
+    hint:"Falsche Ware – sachlich formulieren",
+    correct:"I'm afraid we received model B instead of model A, which is what we originally ordered.",
+    wrong:["You gave us the wrong chairs. Totally wrong.","This is not what we ordered at all!","The chairs don't match – you messed up the order."]
+  },
+  {
+    phase:"Complaint",
+    text:"The delivery arrived two weeks late. How do you raise this issue politely but firmly?",
+    hint:"Verspätung ansprechen – bestimmt, aber höflich",
+    correct:"I'd also like to point out that the delivery arrived two weeks behind schedule, which caused disruption on our end.",
+    wrong:["Two weeks late is completely unacceptable, you know.","Why was it so late? Nobody told us anything!","We were waiting forever for this delivery."]
+  },
+  {
+    phase:"Response",
+    text:"You are the Office Design representative. The customer has just described the damage. How do you respond?",
+    hint:"Empathisch reagieren – Fehler eingestehen",
+    correct:"I sincerely apologise for the inconvenience caused. I'll look into this immediately.",
+    wrong:["That's not our fault, it must be the courier.","Well, damage can happen in transit.","I'll check if that's even true first."]
+  },
+  {
+    phase:"Response",
+    text:"The customer asks for a replacement shipment. What is the best way to agree?",
+    hint:"Lösung anbieten – verbindlich",
+    correct:"Of course. We will arrange a replacement shipment at no additional cost as soon as possible.",
+    wrong:["OK, we'll send new ones. Probably.","I suppose we can try to sort something out.","You'll have to wait for our logistics team to decide."]
+  },
+  {
+    phase:"Response",
+    text:"The customer asks for a discount due to the inconvenience. How do you respond professionally?",
+    hint:"Preisnachlass – Verhandlungsformel",
+    correct:"Given the circumstances, we would like to offer you a 10% discount on your next order as a gesture of goodwill.",
+    wrong:["We don't usually do discounts.","Maybe we can do something, I'm not sure.","That's not my decision to make."]
+  },
+  {
+    phase:"Response",
+    text:"The customer wants everything in writing. What do you promise?",
+    hint:"Schriftliche Bestätigung zusagen",
+    correct:"I will send you a written confirmation of our agreement by email today.",
+    wrong:["Sure, someone will write to you at some point.","We'll try to get something to you this week.","You can write to us if you want a record."]
+  },
+  {
+    phase:"Response",
+    text:"You need to put the customer on hold briefly to check the order details. What do you say?",
+    hint:"Kurz in der Leitung halten – höfliche Formel",
+    correct:"Would you mind holding for just a moment while I pull up your order details?",
+    wrong:["Wait there, I need to check.","Don't hang up, I'm looking.","Hold on, this'll take a sec."]
+  },
+  {
+    phase:"Closing",
+    text:"The issue is resolved. How do you close the call professionally?",
+    hint:"Gespräch beenden – freundlich und verbindlich",
+    correct:"Thank you for bringing this to our attention. We'll make sure this doesn't happen again. Goodbye.",
+    wrong:["OK, bye then.","Right, that's sorted. Speak soon.","Alright, goodbye and good luck."]
+  },
+  {
+    phase:"Closing",
+    text:"Before hanging up, you want to confirm what was agreed. What do you say?",
+    hint:"Vereinbartes zusammenfassen",
+    correct:"Just to confirm: we'll send a replacement for the ten damaged desks and apply a 10% discount to your next order.",
+    wrong:["So we agreed on something about desks and money, right?","You'll get new desks. And a discount, I think.","As discussed, we'll fix the problems."]
+  },
+  {
+    phase:"Closing",
+    text:"The customer thanks you at the end of the call. How do you respond?",
+    hint:"Abschlussformel – Dank erwidern",
+    correct:"It was my pleasure. Please don't hesitate to contact us if there is anything else we can help you with.",
+    wrong:["No problem, see ya.","You're welcome. Bye.","OK, thanks for calling. Bye."]
+  }
+];
+
+const PHASE_COLORS = {
+  "Opening":  { bg:"#eef2ff", text:"#4338ca" },
+  "Complaint":{ bg:"#fef2f2", text:"#991b1b" },
+  "Response": { bg:"#ecfdf5", text:"#065f46" },
+  "Closing":  { bg:"#fffbeb", text:"#92400e" }
+};
+
+const PHASE_ICONS = { "Opening":"🟣","Complaint":"🔴","Response":"🟢","Closing":"🔵" };
+
+const FB_CORRECT = [
+  "Excellent! That's the ideal phrase for this situation.",
+  "Well done! Polite, clear and professional.",
+  "Perfect – that's exactly the right tone for B2.",
+  "Great choice! This phrase works perfectly in a business context.",
+  "Spot on! That's native-speaker level."
+];
+const FB_WRONG = [
+  "Not quite. The correct phrase is more formal and polite.",
+  "Careful – this sounds too direct or informal for a business call.",
+  "In Business English, register and phrasing really matter!",
+  "That tone would not be appropriate in a professional complaint call."
+];
+
+let questions=[], qIdx=0, score=0, streak=0, bestStreak=0, correctCount=0;
+let timerInterval=null, timeLeft=30, answered=false;
+let selectedPhase="all";
+let phaseStats={};
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+document.querySelectorAll('.phase-chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    selectedPhase=c.dataset.phase;
+    document.querySelectorAll('.phase-chip').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+  });
+});
+
+function getQuestions(){
+  let pool = selectedPhase==="all"
+    ? ALL_QUESTIONS
+    : ALL_QUESTIONS.filter(q=>q.phase===selectedPhase);
+  if(pool.length<5) pool=ALL_QUESTIONS;
+  return shuffle([...pool]).slice(0,15);
+}
+
+function startGame(){
+  const nameEl=document.getElementById('player-name');
+  if(!nameEl.value.trim()) nameEl.value='Student';
+  questions=getQuestions();
+  qIdx=0; score=0; streak=0; bestStreak=0; correctCount=0;
+  phaseStats={};
+  ALL_QUESTIONS.forEach(q=>{ if(!phaseStats[q.phase]) phaseStats[q.phase]={c:0,t:0}; });
+  showScreen('scr-game');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q=questions[qIdx];
+  answered=false;
+
+  document.getElementById('hud-score').textContent=score;
+  document.getElementById('hud-q').textContent=(qIdx+1)+' / '+questions.length;
+  document.getElementById('hud-streak').textContent=streak;
+  document.getElementById('prog').style.width=Math.round((qIdx/questions.length)*100)+'%';
+
+  const phaseEl=document.getElementById('q-phase');
+  phaseEl.textContent=(PHASE_ICONS[q.phase]||'')+'  '+q.phase;
+  const pc=PHASE_COLORS[q.phase]||{bg:'#f8f7ff',text:'#4338ca'};
+  phaseEl.style.background=pc.bg;
+  phaseEl.style.color=pc.text;
+  phaseEl.style.padding='3px 10px';
+  phaseEl.style.borderRadius='999px';
+  phaseEl.style.fontSize='11px';
+  phaseEl.style.fontWeight='500';
+
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('q-hint').textContent=q.hint;
+
+  const fb=document.getElementById('feedback');
+  fb.className='rounded-xl px-4 py-3 text-sm leading-relaxed feedback-idle';
+  fb.textContent='Choose the best phrase for this situation.';
+  document.getElementById('btn-next').style.display='none';
+
+  const opts=shuffle([q.correct,...q.wrong]);
+  const optDiv=document.getElementById('options');
+  optDiv.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt-btn pop';
+    b.textContent=o;
+    b.onclick=()=>selectAnswer(o,q.correct,q.phase);
+    optDiv.appendChild(b);
+  });
+
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft=30;
+  const el=document.getElementById('hud-timer');
+  el.textContent=timeLeft;
+  el.style.color='';
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    el.textContent=timeLeft;
+    if(timeLeft<=10) el.style.color='#dc2626';
+    if(timeLeft<=0){ clearInterval(timerInterval); timeUp(); }
+  },1000);
+}
+
+function timeUp(){
+  if(answered) return;
+  answered=true;
+  const q=questions[qIdx];
+  streak=0;
+  document.getElementById('hud-streak').textContent=0;
+  if(phaseStats[q.phase]) phaseStats[q.phase].t++;
+  const fb=document.getElementById('feedback');
+  fb.className='rounded-xl px-4 py-3 text-sm leading-relaxed feedback-err';
+  fb.textContent='⏱ Time\'s up! Correct phrase: "'+q.correct+'"';
+  highlightAnswers(null,q.correct);
+  document.getElementById('btn-next').style.display='inline-block';
+}
+
+function selectAnswer(chosen,correct,phase){
+  if(answered) return;
+  clearInterval(timerInterval);
+  answered=true;
+  if(phaseStats[phase]) phaseStats[phase].t++;
+  const isCorrect=chosen===correct;
+  const timeBonus=Math.max(0,timeLeft);
+  const fb=document.getElementById('feedback');
+
+  if(isCorrect){
+    const pts=100+timeBonus*3;
+    score+=pts;
+    streak++;
+    if(streak>bestStreak) bestStreak=streak;
+    correctCount++;
+    if(phaseStats[phase]) phaseStats[phase].c++;
+    document.getElementById('hud-score').textContent=score;
+    document.getElementById('hud-streak').textContent=streak;
+    fb.className='rounded-xl px-4 py-3 text-sm leading-relaxed feedback-ok';
+    fb.textContent='✓ '+FB_CORRECT[Math.floor(Math.random()*FB_CORRECT.length)]+' (+'+pts+' pts)';
+  } else {
+    streak=0;
+    document.getElementById('hud-streak').textContent=0;
+    fb.className='rounded-xl px-4 py-3 text-sm leading-relaxed feedback-err';
+    fb.textContent='✗ '+FB_WRONG[Math.floor(Math.random()*FB_WRONG.length)]+' → "'+correct+'"';
+  }
+  highlightAnswers(chosen,correct);
+  document.getElementById('btn-next').style.display='inline-block';
+}
+
+function highlightAnswers(chosen,correct){
+  document.querySelectorAll('.opt-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===correct) b.classList.add('correct');
+    else if(b.textContent===chosen) b.classList.add('wrong');
+  });
+}
+
+function nextQuestion(){
+  qIdx++;
+  if(qIdx>=questions.length){ endGame(); return; }
+  renderQuestion();
+}
+
+function endGame(){
+  clearInterval(timerInterval);
+  document.getElementById('prog').style.width='100%';
+  const pct=Math.round((correctCount/questions.length)*100);
+  document.getElementById('res-score').textContent=score;
+  document.getElementById('res-correct').textContent=correctCount+'/'+questions.length;
+  document.getElementById('res-streak').textContent=bestStreak;
+
+  const circle=document.getElementById('result-circle');
+  const title=document.getElementById('result-title');
+  const sub=document.getElementById('result-sub');
+
+  if(pct>=80){
+    circle.style.background='#ecfdf5'; circle.textContent='🏆';
+    title.textContent='Outstanding!';
+    sub.textContent='You\'re ready for any complaint call. B2 level achieved!';
+  } else if(pct>=60){
+    circle.style.background='#eef2ff'; circle.textContent='👍';
+    title.textContent='Good job!';
+    sub.textContent='Solid performance – review the phrases you missed and try again.';
+  } else {
+    circle.style.background='#fef2f2'; circle.textContent='📚';
+    title.textContent='Keep practising!';
+    sub.textContent='Review the phrase list and have another go – you\'ll get there!';
+  }
+
+  // Phase breakdown
+  const bd=document.getElementById('phase-breakdown');
+  const phases=Object.keys(phaseStats).filter(p=>phaseStats[p].t>0);
+  if(phases.length>0){
+    bd.innerHTML='<p class="text-xs font-medium text-indigo-800 mb-2 uppercase tracking-wide">Phase breakdown</p>'+
+    phases.map(p=>{
+      const s=phaseStats[p];
+      const pp=Math.round((s.c/s.t)*100);
+      const col=pp>=80?'#065f46':pp>=50?'#92400e':'#991b1b';
+      return `<div class="flex items-center gap-2 mb-1">
+        <span style="font-size:11px;color:#6b7280;width:72px;">${p}</span>
+        <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+          <div style="width:${pp}%;height:100%;background:${col};border-radius:3px;"></div>
+        </div>
+        <span style="font-size:11px;font-weight:500;color:${col};width:36px;text-align:right;">${pp}%</span>
+      </div>`;
+    }).join('');
+  } else {
+    bd.style.display='none';
+  }
+
+  saveHighscore();
+  showScreen('scr-result');
+}
+
+function saveHighscore(){
+  const name=document.getElementById('player-name').value.trim()||'Student';
+  let hs=JSON.parse(localStorage.getItem('ofl_complaint_hs')||'[]');
+  const pct=Math.round((correctCount/questions.length)*100);
+  hs.push({name,score,correct:correctCount,total:questions.length,pct,date:new Date().toLocaleDateString('de-DE')});
+  hs.sort((a,b)=>b.score-a.score);
+  hs=hs.slice(0,10);
+  localStorage.setItem('ofl_complaint_hs',JSON.stringify(hs));
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='scr-hs') renderHighscores();
+}
+
+function renderHighscores(){
+  const hs=JSON.parse(localStorage.getItem('ofl_complaint_hs')||'[]');
+  const el=document.getElementById('hs-list');
+  if(!hs.length){
+    el.innerHTML='<p class="text-center text-gray-400 text-sm py-4">No scores yet – play the game first!</p>';
+    return;
+  }
+  const medals=['🥇','🥈','🥉'];
+  el.innerHTML=hs.map((h,i)=>`
+    <div class="hs-row">
+      <span style="width:28px;font-size:14px;">${medals[i]||(i+1)+'.'}</span>
+      <span class="flex-1 font-medium text-gray-800">${h.name}</span>
+      <span class="text-gray-400 text-xs mr-3">${h.correct}/${h.total} · ${h.date}</span>
+      <span class="font-semibold text-indigo-600">${h.score} pts</span>
+    </div>`).join('');
+
+  const footer=document.createElement('div');
+  footer.className='text-right mt-3';
+  footer.innerHTML=`<button onclick="clearScores()"
+    class="text-xs text-gray-400 hover:text-red-400 transition-colors border border-gray-200 rounded-lg px-3 py-1">
+    Clear scores
+  </button>`;
+  el.appendChild(footer);
+}
+
+function clearScores(){
+  if(confirm('Delete all highscores?')){
+    localStorage.removeItem('ofl_complaint_hs');
+    renderHighscores();
+  }
+}
+</script>
+</body>
+</html>
