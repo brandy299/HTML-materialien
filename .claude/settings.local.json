@@ -4,7 +4,9 @@
       "Bash(gh auth:*)",
       "Bash(chmod +x \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/deploy.sh\")",
       "Bash(gh api:*)",
-      "Bash(osacompile -o \"/Users/yabrand/Desktop/Material hochladen.app\" \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/droplet.applescript\" 2>&1)"
+      "Bash(osacompile -o \"/Users/yabrand/Desktop/Material hochladen.app\" \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/droplet.applescript\" 2>&1)",
+      "Bash(chmod +x \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/verwalten.sh\")",
+      "Bash(osacompile -o \"/Users/yabrand/Desktop/Materialien verwalten.app\" \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/verwalten_app.applescript\" 2>&1)"
     ]
   }
 }

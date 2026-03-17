@@ -71,7 +71,7 @@
     }
     #search:focus { border-color: var(--blue); }
 
-    .btn-delete-toggle {
+    .btn-edit-toggle {
       margin-left: auto;
       padding: 0.45rem 1rem;
       border-radius: 8px;
@@ -83,8 +83,8 @@
       transition: all 0.15s;
       white-space: nowrap;
     }
-    .btn-delete-toggle:hover { border-color: var(--red); color: var(--red); }
-    .btn-delete-toggle.active { background: var(--red-light); border-color: var(--red); color: var(--red); font-weight: 600; }
+    .btn-edit-toggle:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-edit-toggle.active { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 600; }
 
     /* ── Stats ── */
     .stats {
@@ -181,27 +181,36 @@
     .card-title { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
     .card-meta { font-size: 0.75rem; color: var(--gray); margin-top: 3px; }
 
-    /* ── Delete Button ── */
-    .btn-delete {
+    /* ── Action Buttons (Edit Mode) ── */
+    .card-actions {
       display: none;
       position: absolute;
       top: 50%;
-      right: 10px;
+      right: 8px;
       transform: translateY(-50%);
-      background: var(--red-light);
-      border: 1px solid #ffc9c9;
-      color: var(--red);
+      gap: 4px;
+      flex-direction: column;
+    }
+    .edit-mode .card-actions { display: flex; }
+    .edit-mode .card { padding-right: 3rem; }
+    .edit-mode .card:hover { border-color: var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.06); transform: none; }
+
+    .btn-action {
       border-radius: 6px;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.75rem;
+      display: flex;
       align-items: center;
       justify-content: center;
       transition: background 0.15s;
+      border: 1px solid;
     }
-    .btn-delete:hover { background: #ffe3e3; }
-    .delete-mode .btn-delete { display: flex; }
+    .btn-action-rename { background: var(--blue-light); border-color: #bac8ff; color: var(--blue); }
+    .btn-action-rename:hover { background: #dbe4ff; }
+    .btn-action-delete { background: var(--red-light); border-color: #ffc9c9; color: var(--red); }
+    .btn-action-delete:hover { background: #ffe3e3; }
 
     /* ── Copy-Link Toast ── */
     .toast {
@@ -221,12 +230,12 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Delete Modal ── */
+    /* ── Modals ── */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.45);
       z-index: 100;
       align-items: center;
       justify-content: center;
@@ -237,32 +246,45 @@
       background: white;
       border-radius: var(--radius);
       padding: 1.5rem;
-      max-width: 480px;
+      max-width: 460px;
       width: 100%;
       box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     }
-    .modal h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
-    .modal p { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+    .modal h3 { font-size: 1.05rem; margin-bottom: 0.3rem; }
+    .modal .modal-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.1rem; }
+    .modal label { display: block; font-size: 0.8rem; font-weight: 600; color: #495057; margin-bottom: 0.3rem; }
+    .modal input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      margin-bottom: 0.75rem;
+    }
+    .modal input:focus { border-color: var(--blue); }
     .modal code {
       display: block;
       background: #f1f3f5;
       border-radius: 8px;
       padding: 0.75rem 1rem;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-family: "SF Mono", monospace;
       word-break: break-all;
       margin-bottom: 1rem;
       color: #c92a2a;
     }
-    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
     .modal-actions button {
       padding: 0.5rem 1rem;
       border-radius: 8px;
       border: 1px solid var(--border);
       cursor: pointer;
       font-size: 0.85rem;
+      background: white;
     }
-    .btn-copy-cmd { background: var(--blue); color: white; border-color: var(--blue); font-weight: 600; }
+    .btn-primary { background: var(--blue) !important; color: white; border-color: var(--blue) !important; font-weight: 600; }
+    .btn-danger  { background: var(--red)  !important; color: white; border-color: var(--red)  !important; font-weight: 600; }
 
     /* ── No results ── */
     .no-results { text-align: center; color: var(--gray); padding: 3rem 0; font-size: 0.95rem; }
@@ -281,22 +303,42 @@
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
   </div>
-  <button class="btn-delete-toggle" id="deleteToggle" onclick="toggleDeleteMode()">🗑 Löschen</button>
+  <button class="btn-edit-toggle" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
 </div>
 
 <div class="stats" id="stats"></div>
 <main id="app"></main>
-
 <div class="toast" id="toast"></div>
 
-<div class="modal-overlay" id="modal">
+<!-- Umbenennen/Verschieben Modal -->
+<div class="modal-overlay" id="modalRename">
+  <div class="modal">
+    <h3>Material bearbeiten</h3>
+    <p class="modal-sub">Ändere Titel, Fach oder Thema. Führe danach den Befehl im Terminal aus.</p>
+    <label>Titel</label>
+    <input type="text" id="inputTitel" placeholder="Titel des Materials">
+    <label>Fach</label>
+    <input type="text" id="inputFach" placeholder="z.B. GPU, Mathe">
+    <label>Thema / Lernfeld</label>
+    <input type="text" id="inputThema" placeholder="z.B. LF5, Algebra">
+    <label style="margin-top:0.5rem">Terminal-Befehl</label>
+    <code id="renameCmd"></code>
+    <div class="modal-actions">
+      <button onclick="closeModals()">Abbrechen</button>
+      <button class="btn-primary" onclick="copyRenameCmd()">Befehl kopieren</button>
+    </div>
+  </div>
+</div>
+
+<!-- Löschen Modal -->
+<div class="modal-overlay" id="modalDelete">
   <div class="modal">
     <h3>Material löschen</h3>
-    <p>Führe diesen Befehl im Terminal aus um das Material zu löschen und von GitHub zu entfernen:</p>
-    <code id="modalCmd"></code>
+    <p class="modal-sub" id="deleteDesc"></p>
+    <code id="deleteCmd"></code>
     <div class="modal-actions">
-      <button onclick="closeModal()">Abbrechen</button>
-      <button class="btn-copy-cmd" onclick="copyCmd()">Befehl kopieren</button>
+      <button onclick="closeModals()">Abbrechen</button>
+      <button class="btn-danger" onclick="copyDeleteCmd()">Befehl kopieren & löschen</button>
     </div>
   </div>
 </div>
@@ -310,8 +352,9 @@
   ];
   // ======================
 
-  let deleteMode = false;
-  let currentDeletePfad = '';
+  let editMode = false;
+  let currentMaterial = null;
+  const REPO = '/Users/yabrand/Desktop/Projekte/Github HTML Pipeline';
 
   function render(filter = '') {
     const q = filter.toLowerCase();
@@ -321,7 +364,6 @@
       m.thema.toLowerCase().includes(q)
     );
 
-    // Stats
     const fachSet = new Set(materialien.map(m => m.fach));
     document.getElementById('stats').innerHTML =
       `<span><strong>${materialien.length}</strong> Materialien</span>
@@ -333,7 +375,6 @@
       return;
     }
 
-    // Gruppieren
     const faecher = {};
     for (const m of filtered) {
       const f = m.fach.trim(), t = m.thema.trim();
@@ -341,8 +382,6 @@
       if (!faecher[f][t]) faecher[f][t] = [];
       faecher[f][t].push(m);
     }
-
-    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
 
     let html = '';
     for (const fach of Object.keys(faecher).sort()) {
@@ -356,7 +395,7 @@
       for (const thema of Object.keys(faecher[fach]).sort()) {
         html += `<div class="thema-block"><div class="thema-label">${thema}</div><div class="grid">`;
         for (const m of faecher[fach][thema]) {
-          const link = baseUrl + m.pfad;
+          const pfadSafe = m.pfad.replace(/'/g, "\\'");
           html += `<div class="card-wrap">
             <a class="card" href="${m.pfad}" target="_blank">
               <div class="card-icon">📄</div>
@@ -365,7 +404,12 @@
                 <div class="card-meta">${m.fach} · ${m.thema.trim()} · ${m.datum}</div>
               </div>
             </a>
-            <button class="btn-delete" title="Löschen" onclick="showDelete(event, '${m.pfad.replace(/'/g,"\\'")}')">✕</button>
+            <div class="card-actions">
+              <button class="btn-action btn-action-rename" title="Umbenennen / Verschieben"
+                onclick="showRename(event,'${pfadSafe}')">✏️</button>
+              <button class="btn-action btn-action-delete" title="Löschen"
+                onclick="showDelete(event,'${pfadSafe}')">✕</button>
+            </div>
           </div>`;
         }
         html += `</div></div>`;
@@ -373,46 +417,86 @@
       html += `</div>`;
     }
     app.innerHTML = html;
-    if (deleteMode) app.classList.add('delete-mode');
+    if (editMode) app.classList.add('edit-mode');
   }
 
-  function toggleDeleteMode() {
-    deleteMode = !deleteMode;
-    const btn = document.getElementById('deleteToggle');
-    const app = document.getElementById('app');
-    btn.classList.toggle('active', deleteMode);
-    btn.textContent = deleteMode ? '✓ Fertig' : '🗑 Löschen';
-    app.classList.toggle('delete-mode', deleteMode);
+  function toggleEditMode() {
+    editMode = !editMode;
+    const btn = document.getElementById('editToggle');
+    document.getElementById('app').classList.toggle('edit-mode', editMode);
+    btn.classList.toggle('active', editMode);
+    btn.textContent = editMode ? '✓ Fertig' : '✏️ Bearbeiten';
+  }
+
+  function getMaterial(pfad) {
+    return materialien.find(m => m.pfad === pfad);
+  }
+
+  function showRename(e, pfad) {
+    e.preventDefault(); e.stopPropagation();
+    const m = getMaterial(pfad);
+    if (!m) return;
+    currentMaterial = m;
+    document.getElementById('inputTitel').value = m.name;
+    document.getElementById('inputFach').value  = m.fach;
+    document.getElementById('inputThema').value = m.thema.trim();
+    updateRenameCmd();
+    document.getElementById('modalRename').classList.add('open');
+  }
+
+  function updateRenameCmd() {
+    if (!currentMaterial) return;
+    const titel = document.getElementById('inputTitel').value || currentMaterial.name;
+    const fach  = document.getElementById('inputFach').value  || currentMaterial.fach;
+    const thema = document.getElementById('inputThema').value || currentMaterial.thema;
+    const cmd = `cd "${REPO}" && ./verwalten.sh`;
+    document.getElementById('renameCmd').textContent =
+      `cd "${REPO}" && ./deploy.sh "${currentMaterial.pfad}" "${fach}" "${thema}" "${titel}"`;
   }
 
   function showDelete(e, pfad) {
-    e.preventDefault();
-    e.stopPropagation();
-    currentDeletePfad = pfad;
-    const cmd = `cd "/Users/yabrand/Desktop/Projekte/Github HTML Pipeline" && ./delete.sh "${pfad}"`;
-    document.getElementById('modalCmd').textContent = cmd;
-    document.getElementById('modal').classList.add('open');
+    e.preventDefault(); e.stopPropagation();
+    const m = getMaterial(pfad);
+    if (!m) return;
+    currentMaterial = m;
+    document.getElementById('deleteDesc').textContent =
+      `„${m.name}" (${m.fach} / ${m.thema.trim()}) wird dauerhaft gelöscht.`;
+    document.getElementById('deleteCmd').textContent =
+      `cd "${REPO}" && ./delete.sh "${m.pfad}"`;
+    document.getElementById('modalDelete').classList.add('open');
   }
 
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
+  function copyRenameCmd() {
+    navigator.clipboard.writeText(document.getElementById('renameCmd').textContent);
+    showToast('Befehl kopiert — jetzt im Terminal einfügen');
+    closeModals();
   }
 
-  function copyCmd() {
-    navigator.clipboard.writeText(document.getElementById('modalCmd').textContent);
-    showToast('Befehl kopiert!');
-    closeModal();
+  function copyDeleteCmd() {
+    navigator.clipboard.writeText(document.getElementById('deleteCmd').textContent);
+    showToast('Befehl kopiert — jetzt im Terminal einfügen');
+    closeModals();
+  }
+
+  function closeModals() {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
   }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
 
+  // Live-Vorschau des Befehls beim Tippen
+  ['inputTitel','inputFach','inputThema'].forEach(id =>
+    document.getElementById(id).addEventListener('input', updateRenameCmd)
+  );
   document.getElementById('search').addEventListener('input', e => render(e.target.value));
-  document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+  document.querySelectorAll('.modal-overlay').forEach(el =>
+    el.addEventListener('click', e => { if (e.target === el) closeModals(); })
+  );
 
   render();
 </script>
