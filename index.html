@@ -1368,10 +1368,7 @@
     let html = '';
 
     if (!q && !activeFilter) {
-      const recent = [...materialien].sort((a,b) => {
-        const pd = s => { const p=s.split('.'); return new Date(+p[2],+p[1]-1,+p[0]); };
-        return pd(b.datum) - pd(a.datum);
-      }).slice(0,3);
+      const recent = materialien.slice(-3).reverse();
       if (recent.length) {
         html += `<div class="section-block"><div class="section-label">Zuletzt hinzugefügt</div><div class="grid">${recent.map(cardHTML).join('')}</div></div>`;
       }
