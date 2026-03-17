@@ -38,6 +38,8 @@
     .btn-bar.active { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 600; }
     .btn-bar.token-ok::before { content: '🟢'; font-size: 0.6rem; }
     .btn-bar.token-missing::before { content: '🔴'; font-size: 0.6rem; }
+    .btn-upload { background: var(--blue) !important; color: white !important; border-color: var(--blue) !important; font-weight: 600; }
+    .btn-upload:hover { background: #3451c7 !important; border-color: #3451c7 !important; }
 
     /* ── Stats ── */
     .stats { max-width: 960px; margin: 1.4rem auto 0; padding: 0 1.5rem; display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--gray); }
@@ -103,6 +105,34 @@
     .token-hint a { color: var(--blue); }
     .no-results { text-align: center; color: var(--gray); padding: 3rem 0; font-size: 0.95rem; }
 
+    /* ── Upload Drop Zone ── */
+    .drop-zone {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 2rem; text-align: center; color: var(--gray);
+      cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
+      background: var(--white);
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--blue); background: var(--blue-light); color: var(--blue);
+    }
+    .drop-zone .dz-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .drop-zone .dz-text { font-size: 0.9rem; font-weight: 500; }
+    .drop-zone .dz-sub  { font-size: 0.78rem; margin-top: 0.25rem; opacity: 0.7; }
+    .drop-zone.has-file { border-color: var(--green); background: #ebfbee; color: var(--green); }
+
+    /* ── Page-level drag overlay ── */
+    #dragOverlay {
+      display: none; position: fixed; inset: 0; background: rgba(59,91,219,0.08);
+      border: 3px dashed var(--blue); z-index: 50; pointer-events: none;
+      align-items: center; justify-content: center; font-size: 1.4rem;
+      font-weight: 700; color: var(--blue);
+    }
+    #dragOverlay.visible { display: flex; }
+
+    /* ── Progress bar ── */
+    .progress-wrap { margin-top: 0.5rem; background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; }
+    .progress-bar  { height: 100%; background: var(--blue); border-radius: 99px; width: 0; transition: width 0.3s; }
+
     @media (max-width: 500px) {
       .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; order: 3; }
     }
@@ -119,12 +149,47 @@
   <div class="bar-btns">
     <button class="btn-bar" id="tokenBtn" onclick="openTokenModal()">⚙️ Token</button>
     <button class="btn-bar" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
+    <button class="btn-bar btn-upload" onclick="openUpload()">＋ Hochladen</button>
   </div>
 </div>
 
 <div class="stats" id="stats"></div>
 <main id="app"></main>
 <div class="toast" id="toast"></div>
+
+<!-- Drag Overlay (ganze Seite) -->
+<div id="dragOverlay">📄 Datei hier loslassen</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="modalUpload">
+  <div class="modal">
+    <h3>Material hochladen</h3>
+    <p class="modal-sub">HTML-Datei direkt auf GitHub hochladen.</p>
+
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="dz-icon">📄</div>
+      <div class="dz-text" id="dzText">Datei hierher ziehen oder klicken</div>
+      <div class="dz-sub">Nur .html Dateien</div>
+    </div>
+    <input type="file" id="fileInput" accept=".html" style="display:none">
+
+    <label>Titel</label>
+    <input type="text" id="uploadTitel" placeholder="z.B. Quiz Lernfeld 5">
+    <label>Fach</label>
+    <input type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch">
+    <label>Thema / Lernfeld</label>
+    <input type="text" id="uploadThema" placeholder="z.B. LF5, Algebra">
+
+    <div class="progress-wrap" id="progressWrap" style="display:none">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="closeModals()">Abbrechen</button>
+      <button class="btn-primary" id="btnUpload" onclick="doUpload()">Hochladen</button>
+    </div>
+  </div>
+</div>
 
 <!-- Token Modal -->
 <div class="modal-overlay" id="modalToken">
@@ -442,6 +507,118 @@
     if (editMode) app.classList.add('edit-mode');
   }
 
+  // ── Upload ────────────────────────────────────────
+  let uploadFile = null;
+
+  function openUpload() {
+    if (!checkToken()) return;
+    uploadFile = null;
+    document.getElementById('dzText').textContent = 'Datei hierher ziehen oder klicken';
+    document.getElementById('dropZone').classList.remove('has-file');
+    document.getElementById('uploadTitel').value = '';
+    document.getElementById('uploadFach').value  = localStorage.getItem('lastFach') || '';
+    document.getElementById('uploadThema').value = localStorage.getItem('lastThema') || '';
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0';
+    document.getElementById('modalUpload').classList.add('open');
+  }
+
+  function setUploadFile(file) {
+    if (!file || !file.name.endsWith('.html')) {
+      showToast('Nur .html Dateien erlaubt', 'error'); return;
+    }
+    uploadFile = file;
+    document.getElementById('dzText').textContent = '✓ ' + file.name;
+    document.getElementById('dropZone').classList.add('has-file');
+    if (!document.getElementById('uploadTitel').value) {
+      document.getElementById('uploadTitel').value =
+        file.name.replace(/\.html$/, '').replace(/[-_]/g, ' ');
+    }
+  }
+
+  async function doUpload() {
+    if (!uploadFile) { showToast('Bitte zuerst eine Datei auswählen', 'error'); return; }
+    const titel = document.getElementById('uploadTitel').value.trim();
+    const fach  = document.getElementById('uploadFach').value.trim();
+    const thema = document.getElementById('uploadThema').value.trim();
+    if (!titel || !fach || !thema) { showToast('Bitte alle Felder ausfüllen', 'error'); return; }
+
+    const btn = document.getElementById('btnUpload');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Hochladen…';
+    const pw = document.getElementById('progressWrap');
+    const pb = document.getElementById('progressBar');
+    pw.style.display = 'block';
+
+    try {
+      // Datei lesen
+      pb.style.width = '20%';
+      const content = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = e => res(e.target.result);
+        r.onerror = rej;
+        r.readAsText(uploadFile);
+      });
+
+      pb.style.width = '40%';
+      const pfad = `materialien/${fach}/${thema}/${uploadFile.name}`;
+      const datum = new Date().toLocaleDateString('de-DE');
+
+      // Datei auf GitHub hochladen
+      await ghPut(pfad, content, undefined, `Neu: ${titel} [${fach} / ${thema}]`);
+      pb.style.width = '70%';
+
+      // Materialien-Liste aktualisieren
+      const neuerEintrag = { name: titel, fach, thema, pfad, datum };
+      materialien.push(neuerEintrag);
+      await updateIndex(materialien, `Neu: ${titel} [${fach} / ${thema}]`);
+      pb.style.width = '100%';
+
+      // Merken für nächstes Mal
+      localStorage.setItem('lastFach',  fach);
+      localStorage.setItem('lastThema', thema);
+
+      closeModals();
+      render();
+      showToast(`„${titel}" hochgeladen ✓`, 'success');
+    } catch(err) {
+      showToast('Fehler: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Hochladen';
+    }
+  }
+
+  // File Input
+  document.getElementById('fileInput').addEventListener('change', e => {
+    setUploadFile(e.target.files[0]);
+  });
+
+  // Drop Zone im Modal
+  const dz = document.getElementById('dropZone');
+  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag-over');
+    setUploadFile(e.dataTransfer.files[0]);
+  });
+
+  // Drag & Drop auf die ganze Seite
+  const overlay = document.getElementById('dragOverlay');
+  let dragCounter = 0;
+  document.addEventListener('dragenter', e => {
+    if ([...e.dataTransfer.types].includes('Files')) { dragCounter++; overlay.classList.add('visible'); }
+  });
+  document.addEventListener('dragleave', () => { dragCounter--; if (dragCounter <= 0) { dragCounter = 0; overlay.classList.remove('visible'); } });
+  document.addEventListener('dragover', e => e.preventDefault());
+  document.addEventListener('drop', e => {
+    e.preventDefault(); dragCounter = 0; overlay.classList.remove('visible');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.html')) { openUpload(); setTimeout(() => setUploadFile(file), 50); }
+    else if (file) showToast('Nur .html Dateien erlaubt', 'error');
+  });
+
+  // ──────────────────────────────────────────────────
   document.getElementById('search').addEventListener('input', e => render(e.target.value));
   document.querySelectorAll('.modal-overlay').forEach(el =>
     el.addEventListener('click', e => { if (e.target === el) closeModals(); })
