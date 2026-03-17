@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor Reception – Office Design Ltd.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1814; --paper:#f5f0e8; --warm:#e8dcc8; --muted:#8a7d6b;
+  --gold:#c9a84c; --gold-l:#e8d5a0; --teal:#2a6b6b; --teal-l:#a8d4d4;
+  --red:#8b3a2f; --red-l:#d4a09a;
+  --s1:#2a2520; --s2:#322d27; --border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--paper);min-height:100vh;line-height:1.6;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.7;}
+.wrap{max-width:620px;margin:0 auto;padding:2rem 1.25rem;position:relative;z-index:1;}
+.screen{display:none;}.screen.active{display:block;}
+
+/* TYPE */
+.serif{font-family:'Playfair Display',serif;}
+.serif-italic{font-family:'Playfair Display',serif;font-style:italic;}
+.label{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem;}
+.logo{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:.08em;}
+.toggle{display:flex;gap:2px;background:var(--s1);border-radius:999px;padding:3px;}
+.t-btn{padding:4px 14px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;}
+.t-btn.on{background:var(--gold);color:var(--ink);}
+
+/* SCENE STRIP */
+.strip{display:flex;gap:6px;margin-bottom:2rem;}
+.sd{flex:1;height:3px;border-radius:2px;background:var(--s2);transition:background .4s;}
+.sd.done{background:var(--gold);}
+.sd.now{background:var(--gold-l);}
+
+/* SCENE CARD */
+.sc-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;}
+.sc-eye{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;}
+.sc-num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.sc-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--paper);}
+.sc-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* STEP DOTS */
+.sdots{display:flex;gap:5px;margin-bottom:1.25rem;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--s2);transition:all .3s;}
+.sdot.done{background:var(--gold);}
+.sdot.now{background:var(--gold-l);width:18px;border-radius:3px;}
+
+/* CHAT */
+.chat{margin-bottom:1.25rem;}
+.v-name{font-size:11px;color:var(--gold);font-weight:500;letter-spacing:.04em;margin-bottom:4px;}
+.bubble{display:inline-block;background:var(--s2);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:14px;color:var(--paper);line-height:1.6;max-width:90%;}
+.action{font-size:12px;color:var(--muted);font-style:italic;padding:6px 12px;border-left:2px solid var(--border);margin-bottom:.75rem;}
+
+/* HINT */
+.hint{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gold-l);line-height:1.55;margin-bottom:1rem;}
+.hint strong{color:var(--gold);}
+
+/* QUESTION */
+.question{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:var(--paper);margin-bottom:1rem;line-height:1.4;}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:.5rem;}
+.opt{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--paper);cursor:pointer;text-align:left;line-height:1.55;transition:border-color .15s,background .15s;position:relative;font-family:'DM Sans',sans-serif;}
+.opt:hover:not(:disabled){border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.05);}
+.opt:disabled{cursor:default;}
+.opt.best{background:rgba(42,107,107,.15);border-color:var(--teal);color:var(--teal-l);}
+.opt.good{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.35);color:var(--gold-l);}
+.opt.poor{background:rgba(139,58,47,.12);border-color:var(--red);color:var(--red-l);}
+.opt.chosen::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* REVEAL */
+.reveal{margin-top:.75rem;}
+.expl{border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.6;margin-bottom:6px;}
+.expl-best{background:rgba(42,107,107,.12);border-left:3px solid var(--teal);color:var(--teal-l);}
+.expl-good{background:rgba(201,168,76,.07);border-left:3px solid var(--gold);color:var(--gold-l);}
+.expl-poor{background:rgba(139,58,47,.1);border-left:3px solid var(--red);color:var(--red-l);}
+.expl .tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;opacity:.7;}
+.expl .q{font-style:italic;opacity:.65;font-size:12px;margin-bottom:4px;display:block;}
+
+/* NEXT BTN */
+.btn-next{background:var(--gold);color:var(--ink);border:none;border-radius:999px;padding:10px 28px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;letter-spacing:.02em;display:none;}
+.btn-next:hover{opacity:.85;transform:translateY(-1px);}
+
+/* ── START ── */
+.hero{padding:3rem 0 2rem;text-align:center;}
+.hero-tag{display:inline-block;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.22);border-radius:999px;padding:4px 14px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;line-height:1.15;margin-bottom:.5rem;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero .sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:340px;margin:0 auto 2rem;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem;}
+.itile{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.itile .n{font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:2px;}
+.itile .d{font-size:12px;color:var(--muted);}
+.name-in{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:14px;color:var(--paper);font-family:'DM Sans',sans-serif;text-align:center;width:220px;outline:none;transition:border-color .2s;}
+.name-in:focus{border-color:rgba(201,168,76,.4);}
+.name-in::placeholder{color:var(--muted);}
+.btn-start{background:var(--gold);color:var(--ink);border:none;border-radius:999px;padding:13px 40px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:opacity .15s,transform .1s;display:inline-block;}
+.btn-start:hover{opacity:.85;transform:translateY(-1px);}
+.how{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;font-size:13px;color:var(--muted);line-height:1.7;}
+.how strong{color:var(--paper);font-weight:500;}
+
+/* ── SUMMARY ── */
+.sum{text-align:center;padding:2.5rem 0 2rem;}
+.sum-icon{font-size:48px;margin-bottom:1rem;}
+.sum-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:.5rem;}
+.sum-sub{font-size:14px;color:var(--muted);margin-bottom:2rem;line-height:1.6;}
+.sum-stats{display:flex;gap:12px;justify-content:center;margin-bottom:2rem;}
+.sstat{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 20px;text-align:center;min-width:100px;}
+.sstat .n{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);}
+.sstat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.sum-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.btn-sec{background:var(--s2);color:var(--paper);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s;font-family:'DM Sans',sans-serif;}
+.btn-sec:hover{opacity:.7;}
+
+/* ── PHRASE BOOK ── */
+.pb-sec{margin-bottom:2rem;}
+.pb-cat{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.pb-p{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--paper);font-style:italic;margin-bottom:6px;line-height:1.55;}
+
+/* ANIMS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:none;}}
+.fi{animation:fadeUp .25s ease both;}
+.si{animation:slideIn .2s ease both;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="logo">Office Design Ltd.</span>
+    <div class="toggle">
+      <button class="t-btn on" data-lv="B1" onclick="pickLevel('B1')">B1</button>
+      <button class="t-btn" data-lv="B2" onclick="pickLevel('B2')">B2</button>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div id="scr-start" class="screen active">
+    <div class="hero">
+      <div class="hero-tag">Small Talk Simulator</div>
+      <h1>Visitor<br><em>Reception</em></h1>
+      <p class="sub">A client arrives at your office — and nothing goes quite to plan. How professional can you be?</p>
+      <div class="info-grid">
+        <div class="itile"><div class="n">4</div><div class="d">Scenarios</div></div>
+        <div class="itile"><div class="n">12</div><div class="d">Situations</div></div>
+        <div class="itile"><div class="n">B1/B2</div><div class="d">GER level</div></div>
+        <div class="itile"><div class="n">∞</div><div class="d">No time pressure</div></div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <input id="player-name" class="name-in" type="text" placeholder="Your name" maxlength="24"/>
+      </div>
+      <div style="margin-bottom:.75rem;">
+        <span class="label">Level: </span>
+        <span id="lvl-display" style="font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.06em;">B1 — with phrase hints</span>
+      </div>
+      <button class="btn-start" onclick="startGame()">Begin simulation →</button>
+    </div>
+    <div class="how">
+      <strong>How it works —</strong> Read each situation and pick your response. After answering, all options are revealed with explanations.
+      <strong>B1</strong> shows a phrase hint before you choose. <strong>B2</strong> doesn't. No timer. No pressure. Just learning.
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="scr-game" class="screen">
+    <div class="strip" id="strip"></div>
+    <div class="sc-card" id="sc-card">
+      <div class="sc-eye">
+        <div class="sc-num" id="sc-num">1</div>
+        <div><div class="sc-title" id="sc-title"></div><div class="label" id="sc-sub"></div></div>
+      </div>
+      <p class="sc-desc" id="sc-desc"></p>
+    </div>
+    <div class="sdots" id="sdots"></div>
+    <div id="chat" class="chat"></div>
+    <div id="hint-area"></div>
+    <p class="question fi" id="question"></p>
+    <div class="opts" id="opts"></div>
+    <div class="reveal" id="reveal" style="display:none;"></div>
+    <div style="display:flex;justify-content:flex-end;padding-top:10px;">
+      <button class="btn-next" id="btn-next" onclick="nextStep()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div id="scr-summary" class="screen">
+    <div class="sum">
+      <div class="sum-icon" id="sum-icon"></div>
+      <div class="sum-title" id="sum-title"></div>
+      <div class="sum-sub" id="sum-sub"></div>
+      <div class="sum-stats">
+        <div class="sstat"><div class="n" id="sum-best"></div><div class="l">Best answers</div></div>
+        <div class="sstat"><div class="n" id="sum-total"></div><div class="l">Total steps</div></div>
+      </div>
+      <div class="sum-btns">
+        <button class="btn-start" onclick="startGame()">Play again →</button>
+        <button class="btn-sec" onclick="showScreen('scr-phrases')">Phrase book</button>
+        <button class="btn-sec" onclick="showScreen('scr-start')">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHRASE BOOK -->
+  <div id="scr-phrases" class="screen">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.75rem;">
+      <button onclick="showScreen('scr-summary')" class="btn-sec" style="padding:6px 14px;font-size:12px;">← Back</button>
+      <div>
+        <div class="serif" style="font-size:22px;">Phrase book</div>
+        <div class="label" style="margin-top:2px;">All best answers by category</div>
+      </div>
+    </div>
+    <div id="pb"></div>
+  </div>
+
+</div>
+<script>
+const SC=[
+  {num:1,title:"The early visitor",sub:"Scene one",
+   desc:"Mr James Harper from DataTech Solutions has arrived for his 10:00 appointment with Ms Clarke. It is only 9:40 — Ms Clarke is still in a meeting.",
+   steps:[
+    {v:"Good morning. My name is James Harper from DataTech Solutions. I have an appointment with Ms Clarke at ten o'clock.",
+     q:"How do you greet Mr Harper and explain the situation?",
+     h:"Try: 'Welcome to...', 'I'm afraid Ms Clarke is still...', 'She should be free in about...'",
+     opts:[
+      {t:"Good morning, Mr Harper. Welcome to Office Design Ltd. I'm afraid Ms Clarke is still in a meeting, but she should be free in about twenty minutes. May I take your coat?",r:"best",l:"Best answer",e:"Perfect — warm welcome, name used, clear explanation, and a hospitable offer. Exactly right."},
+      {t:"Good morning. Ms Clarke is in a meeting. Please take a seat and she'll be with you shortly.",r:"good",l:"Good answer",e:"Polite and clear, but no personal welcome using his name and no offer to take his coat."},
+      {t:"Hello. She's in a meeting. You'll have to wait.",r:"poor",l:"Too blunt",e:"No welcome, no name, no offer. Always greet a visitor personally and explain the situation warmly."},
+      {t:"Hi James! Ms Clarke is running a bit late. Take a seat!",r:"poor",l:"Too casual",e:"Using first names is inappropriate here. In a professional reception, always use Mr/Ms + surname."}
+     ]},
+    {v:"Oh, I see. That's fine — I'm actually a little early myself.",
+     q:"Mr Harper is relaxed about the wait. What do you offer?",
+     h:"Try: 'Please make yourself comfortable.', 'Can I offer you...?', 'Would you prefer... or...?'",
+     opts:[
+      {t:"That's very kind of you. Please make yourself comfortable. Can I offer you a tea or coffee while you wait? Would you prefer milk or lemon with your tea?",r:"best",l:"Best answer",e:"Excellent — put him at ease, offered specific choices, and asked a natural follow-up. Very professional."},
+      {t:"Would you like to sit down? I can get you something to drink.",r:"good",l:"Good answer",e:"Right idea, but vague. Always offer specific options: 'tea, coffee or water?' sounds much more professional."},
+      {t:"OK. There are some chairs over there.",r:"poor",l:"No hospitality",e:"You pointed at chairs but offered nothing. Hospitality is central to visitor reception — always offer refreshments."},
+      {t:"Great. Do you want a coffee or what?",r:"poor",l:"Too casual",e:"'Or what?' is far too casual. Offer clear polite alternatives using full sentences."}
+     ]},
+    {v:"A coffee would be lovely, thank you. White, no sugar, please.",
+     q:"You noted his preference. How do you confirm and open a small talk topic?",
+     h:"Try: 'I'll get that for you straight away.', 'Did you have a good journey?'",
+     opts:[
+      {t:"I'll get that for you straight away. Did you have a good journey, Mr Harper? The traffic can be quite unpredictable at this time of day.",r:"best",l:"Best answer",e:"Great — confirmed the order, used his name, and opened a natural small talk topic about the journey."},
+      {t:"One moment please. How was the drive here?",r:"good",l:"Good answer",e:"Functional and polite. 'Did you have a good journey?' is more open-ended and therefore better."},
+      {t:"White, no sugar — got it. Was the motorway busy?",r:"good",l:"Good answer",e:"Good order confirmation. 'Got it' is slightly informal and the motorway question assumes too much."},
+      {t:"OK, back in a sec. Did it take long to get here?",r:"poor",l:"Too casual",e:"'Back in a sec' is far too informal. Confirm the order properly first using full polite sentences."}
+     ]}
+   ]},
+  {num:2,title:"Manager stuck in traffic",sub:"Scene two",
+   desc:"Ms Clarke has just called — she is stuck in traffic and will be approximately 15 minutes late. Mr Harper has his coffee and is waiting at reception.",
+   steps:[
+    {a:"You need to approach Mr Harper and update him.",
+     q:"How do you inform Mr Harper about the delay?",
+     h:"Try: 'I've just heard from Ms Clarke...', 'I'm afraid she's been held up...', 'I do apologise for the inconvenience.'",
+     opts:[
+      {t:"Mr Harper, I've just had a message from Ms Clarke. I'm afraid she's been held up in traffic and will be with you in about fifteen minutes. I do apologise for the inconvenience.",r:"best",l:"Best answer",e:"Perfect — used his name, clear explanation, specific time estimate, and a warm formal apology."},
+      {t:"I'm sorry Mr Harper, Ms Clarke is going to be a little late — about fifteen minutes. She's caught in traffic.",r:"good",l:"Good answer",e:"Clear, polite, specific. A formal phrase like 'I do apologise for the inconvenience' would elevate it further."},
+      {t:"Bad news — Ms Clarke is stuck in traffic. Could be a while.",r:"poor",l:"Creates anxiety",e:"'Bad news' and 'could be a while' are unhelpful. Stay calm, be specific, and apologise warmly."},
+      {t:"Ms Clarke just rang. She'll be here at some point — traffic is terrible.",r:"poor",l:"Too vague",e:"'At some point' is unprofessional. Always provide your best time estimate when you have one."}
+     ]},
+    {v:"Oh, not to worry. These things happen. What a lovely office, by the way!",
+     q:"Mr Harper compliments the office. How do you respond and keep the conversation going?",
+     h:"Try: 'Thank you — we moved in last year...', 'Do you know this part of town?'",
+     opts:[
+      {t:"Thank you very much — we moved in last year and we're all very happy with it. Do you know this part of town well, Mr Harper?",r:"best",l:"Best answer",e:"Gracious acceptance, a personal detail, and a question to continue the conversation. Textbook small talk."},
+      {t:"Thank you! It's a great space. Is this your first time visiting us?",r:"good",l:"Good answer",e:"Warm and natural. 'Is this your first time visiting?' shows genuine interest in the visitor."},
+      {t:"Yes, it's alright. The old office was much better though.",r:"poor",l:"Negative response",e:"Never contradict a compliment with negativity. Keep small talk positive and forward-looking."},
+      {t:"Thanks! It was quite expensive to renovate, actually.",r:"poor",l:"Inappropriate topic",e:"Mentioning renovation costs to a client is awkward. Keep small talk light and positive."}
+     ]},
+    {v:"Actually, this is my first time in Dortmund! Any recommendations for this evening?",
+     q:"Mr Harper asks for local tips. What do you suggest?",
+     h:"Suggest specific places: old town, restaurants, football stadium, market square.",
+     opts:[
+      {t:"Definitely explore the old town in the evening — there are some excellent restaurants around the market square. If you enjoy football, the Signal Iduna Park is worth a visit even just from the outside.",r:"best",l:"Best answer",e:"Two specific suggestions with brief descriptions. Genuinely helpful and makes a great impression."},
+      {t:"There's quite a lot to do! The Westfalenhallen area has events, and the Marktplatz is nice for food and drink.",r:"good",l:"Good answer",e:"Good specific recommendations. A little more enthusiasm would make it even better."},
+      {t:"I don't really know, to be honest. I don't go out much.",r:"poor",l:"Unprepared",e:"As a company representative, always have two or three standard recommendations ready for visiting clients."},
+      {t:"Dortmund is great! There's loads to do.",r:"poor",l:"Too vague",e:"Enthusiasm is good but you need to name specific places. 'Loads to do' tells Mr Harper nothing useful."}
+     ]}
+   ]},
+  {num:3,title:"Showing the visitor around",sub:"Scene three",
+   desc:"Ms Clarke has arrived and is freshening up. She has asked you to give Mr Harper a brief tour and show him to the meeting room on the second floor.",
+   steps:[
+    {a:"You need to invite Mr Harper to follow you for the tour.",
+     q:"How do you invite Mr Harper to come with you?",
+     h:"Try: 'If you'd like to follow me...', 'Please come this way...', 'I'll show you to...'",
+     opts:[
+      {t:"Mr Harper, Ms Clarke will be with you shortly. If you'd like to follow me, I'll show you to our meeting room on the second floor.",r:"best",l:"Best answer",e:"Smooth and professional — name used, destination explained, polite invitation with 'if you'd like to'."},
+      {t:"Please come this way, Mr Harper. I'll take you up to the meeting room.",r:"good",l:"Good answer",e:"Clear and polite. Adding a brief note about what he'll see would make it feel more like a guided tour."},
+      {t:"Follow me, I'll take you to the meeting room.",r:"good",l:"Acceptable",e:"Fine, but 'follow me' without 'please' sounds slightly commanding. Softer phrasing is more welcoming."},
+      {t:"Come on, I'll take you upstairs.",r:"poor",l:"Too casual",e:"'Come on' sounds like you're directing a child. Use polite professional language even for short directions."}
+     ]},
+    {v:"What a great space! Is all this furniture from Office Design?",
+     q:"Mr Harper asks about the furniture. How do you answer and promote the company?",
+     h:"Try: 'Yes, everything is from our own range.', 'We designed it in-house.', 'This doubles as a showroom.'",
+     opts:[
+      {t:"Yes, everything you see here is from our own range — we designed and manufactured it in-house. In fact, the reception doubles as a small showroom. Ms Clarke would be happy to tell you more.",r:"best",l:"Best answer",e:"Informative, enthusiastic, and naturally hands the sales opportunity to Ms Clarke. Perfect company representation."},
+      {t:"It is, yes! Our design team created the whole collection. Very popular with clients.",r:"good",l:"Good answer",e:"Positive and promotional. Mentioning it as a showroom would add an extra layer."},
+      {t:"Most of it, yes. Some pieces we ordered from outside.",r:"poor",l:"Missed opportunity",e:"This is a sales moment — focus on what Office Design makes, not what it doesn't."},
+      {t:"Yep, it's all ours. We make furniture.",r:"poor",l:"Too casual",e:"'Yep' and the blunt phrasing are far too informal for a client interaction. Show enthusiasm for the company."}
+     ]},
+    {v:"Impressive — I had no idea you did your own manufacturing!",
+     q:"You've arrived at the meeting room. How do you wrap up the tour?",
+     h:"Try: 'We're very proud of it.', 'Here we are...', 'Please make yourself comfortable.', 'Is there anything else I can get you?'",
+     opts:[
+      {t:"We're very proud of it, yes. Here we are — our main meeting room. Please make yourself comfortable, Mr Harper. Ms Clarke will be with you shortly. Is there anything else I can get you?",r:"best",l:"Best answer",e:"Perfect wrap-up — company pride, smooth arrival, personal touch, and a final hospitality offer."},
+      {t:"It's one of our strengths. Here's your room — do take a seat and I'll let Ms Clarke know you're ready.",r:"best",l:"Also excellent",e:"Confident, clear, and proactive. 'One of our strengths' is a great phrase for a company representative."},
+      {t:"Thank you. This is the meeting room. Please come in.",r:"good",l:"Good answer",e:"Polite and clear, but misses the chance to offer further help or express company pride."},
+      {t:"Yeah it's cool. Here's the room. She'll be here soon.",r:"poor",l:"Too casual",e:"Every element is too informal. Maintain professional language throughout — even at the end of a tour."}
+     ]}
+   ]},
+  {num:4,title:"Hospitality & farewell",sub:"Scene four",
+   desc:"The meeting has gone very well. Mr Harper is now leaving and stops at reception to say goodbye.",
+   steps:[
+    {v:"Thank you so much for looking after me earlier! That coffee was excellent, by the way.",
+     q:"Mr Harper thanks you warmly. How do you respond?",
+     h:"Try: 'It was a pleasure to have you with us.', 'I'm glad the coffee was to your taste.'",
+     opts:[
+      {t:"It was a pleasure to have you with us, Mr Harper. I'm glad the coffee was to your taste! I hope your meeting with Ms Clarke went well.",r:"best",l:"Best answer",e:"Warm, genuine, and you subtly showed interest in his meeting. Using his name makes it personal."},
+      {t:"You're very welcome! It was nice to meet you, Mr Harper.",r:"good",l:"Good answer",e:"Polite and warm. Adding a forward-looking phrase would make it even more professional."},
+      {t:"No problem at all. Glad it went OK.",r:"poor",l:"Too casual",e:"'No problem' and 'went OK' are both too informal. Use fuller, warmer phrases for a professional farewell."},
+      {t:"Thanks! We have a really good coffee machine.",r:"poor",l:"Awkward deflection",e:"Deflecting to the coffee machine is awkward. Accept personal thanks graciously and warmly."}
+     ]},
+    {v:"Very well indeed — I think we'll definitely be in touch soon!",
+     q:"Great news! How do you close the visit professionally?",
+     h:"Try: 'We look forward to working with you.', 'Have a safe journey.', 'Please don't hesitate to contact us.'",
+     opts:[
+      {t:"That's wonderful to hear! We look forward to working with you. Have a safe journey back, Mr Harper — and please don't hesitate to contact us if there's anything we can help with.",r:"best",l:"Best answer",e:"Enthusiastic, forward-looking, personal, and leaves the door open. The perfect professional farewell."},
+      {t:"Excellent! We hope to see you again soon. Take care on the road, Mr Harper.",r:"good",l:"Good answer",e:"Warm and personal. Adding 'please don't hesitate to contact us' would complete the professional farewell."},
+      {t:"Great. Safe travels.",r:"poor",l:"Too brief",e:"Polite but too brief for such positive news. Show genuine enthusiasm and add a forward-looking phrase."},
+      {t:"Cool, brilliant! Speak soon then. Bye!",r:"poor",l:"Too casual",e:"Far too casual for a professional farewell to a potential business partner."}
+     ]},
+    {v:"Thank you. Just one more thing — could you possibly arrange a taxi to the main station?",
+     q:"Mr Harper needs a taxi. How do you handle this final request?",
+     h:"Try: 'Of course, I'll arrange that straight away.', 'The station is about... minutes away.'",
+     opts:[
+      {t:"Of course, Mr Harper. I'll arrange that for you straight away. The main station is roughly fifteen minutes from here. May I ask which entrance you need?",r:"best",l:"Best answer",e:"Efficient, reassuring, and you asked a smart follow-up question. 'Straight away' shows professionalism."},
+      {t:"No problem at all. Let me phone our regular firm — they're usually here within ten minutes.",r:"best",l:"Also excellent",e:"'Our regular firm' sounds professional and reassuring. Giving an arrival estimate is very helpful."},
+      {t:"Sure. I'll call one now. It takes about fifteen minutes to the station.",r:"good",l:"Good answer",e:"Helpful and informative. 'Sure' is slightly informal — 'of course' or 'certainly' would be more professional."},
+      {t:"We usually ask visitors to book their own taxis, but I can give you the number.",r:"poor",l:"Unwilling to help",e:"This sounds reluctant. Always offer to arrange a taxi personally for a visiting client."}
+     ]}
+   ]}
+];
+const PHRASES={"Greeting & welcoming":["Good morning, Mr/Ms [Name]. Welcome to Office Design Ltd.","I'm afraid Ms Clarke is still in a meeting, but she should be free in about twenty minutes.","Please make yourself comfortable.","May I take your coat?"],"Offering refreshments":["Can I offer you a tea or coffee while you wait?","Would you prefer milk or lemon with your tea?","I'll get that for you straight away."],"Journey small talk":["Did you have a good journey, Mr Harper?","The traffic can be quite unpredictable at this time of day.","How was your trip from [city]?"],"Local recommendations":["I'd definitely recommend exploring the old town in the evening.","There are some excellent restaurants around the market square.","If you enjoy football, the stadium is well worth a visit."],"Informing about a delay":["I've just had a message from Ms Clarke.","I'm afraid she's been held up in traffic.","She will be with you in about fifteen minutes.","I do apologise for the inconvenience."],"Giving directions & tour":["If you'd like to follow me, I'll show you to our meeting room.","Here we are — our main meeting room.","Please make yourself comfortable. Ms Clarke should be with you in just a moment."],"Promoting the company":["Everything you see here is from our own range — we designed and manufactured it in-house.","The reception area doubles as a small showroom.","Ms Clarke would be happy to tell you more about our collections."],"Professional farewell":["It was a pleasure to have you with us.","We look forward to working with you.","Have a safe journey back, Mr Harper.","Please don't hesitate to contact us if there's anything we can help with."]};
+
+let level='B1',scIdx=0,stIdx=0,best=0,total=0,ans=false;
+
+function pickLevel(lv){
+  level=lv;
+  document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelector('[data-lv="'+lv+'"]').classList.add('on');
+  document.getElementById('lvl-display').textContent=lv==='B1'?'B1 — with phrase hints':'B2 — no hints';
+}
+function startGame(){
+  scIdx=0;stIdx=0;best=0;total=0;ans=false;
+  showScreen('scr-game');
+  buildStrip();renderStep();
+}
+function buildStrip(){
+  document.getElementById('strip').innerHTML=SC.map((_,i)=>'<div class="sd" id="sd'+i+'"></div>').join('');
+  updStrip();
+}
+function updStrip(){SC.forEach((_,i)=>{const d=document.getElementById('sd'+i);if(!d)return;d.className='sd'+(i<scIdx?' done':i===scIdx?' now':'');});}
+function renderStep(){
+  ans=false;
+  const sc=SC[scIdx],st=sc.steps[stIdx];
+  document.getElementById('sc-num').textContent=sc.num;
+  document.getElementById('sc-title').textContent=sc.title;
+  document.getElementById('sc-sub').textContent=sc.sub;
+  document.getElementById('sc-desc').textContent=sc.desc;
+  document.getElementById('sdots').innerHTML=sc.steps.map((_,i)=>'<div class="sdot'+(i<stIdx?' done':i===stIdx?' now':'')+'"></div>').join('');
+  const chat=document.getElementById('chat');
+  chat.innerHTML='';
+  if(st.a){chat.innerHTML='<div class="action fi">'+st.a+'</div>';}
+  else if(st.v){chat.innerHTML='<div class="fi"><div class="v-name">Mr Harper</div><span class="bubble">'+st.v+'</span></div><div style="height:12px;"></div>';}
+  document.getElementById('hint-area').innerHTML=level==='B1'?'<div class="hint fi"><strong>Phrase hint:</strong> '+st.h+'</div>':'';
+  const qel=document.getElementById('question');
+  qel.textContent=st.q;qel.className='question fi';
+  document.getElementById('reveal').style.display='none';
+  document.getElementById('reveal').innerHTML='';
+  document.getElementById('btn-next').style.display='none';
+  const od=document.getElementById('opts');od.innerHTML='';
+  const sh=[...st.opts].sort(()=>Math.random()-.5);
+  sh.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt fi';b.style.animationDelay=(i*.05)+'s';b.textContent=o.t;
+    b.onclick=()=>pick(o,st.opts,b);od.appendChild(b);
+  });
+  updStrip();
+}
+function pick(chosen,all,btn){
+  if(ans)return;ans=true;total++;
+  if(chosen.r==='best')best++;
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    const o=all.find(x=>x.t===b.textContent);if(!o)return;
+    b.classList.add(o.r);if(b.textContent===chosen.t)b.classList.add('chosen');
+  });
+  const rv=document.getElementById('reveal');rv.style.display='block';
+  const icons={best:'★',good:'◎',poor:'✕'};
+  const sorted=[...all].sort((a,b)=>({best:0,good:1,poor:2}[a.r]-{best:0,good:1,poor:2}[b.r]));
+  rv.innerHTML='<div class="label" style="margin-bottom:10px;margin-top:4px;">All options explained</div>'+
+    sorted.map(o=>'<div class="expl expl-'+o.r+' si"><span class="tag">'+icons[o.r]+' '+o.l+'</span><span class="q">"'+(o.t.length>65?o.t.substring(0,65)+'…':o.t)+'"</span>'+o.e+'</div>').join('');
+  document.getElementById('btn-next').style.display='inline-block';
+}
+function nextStep(){
+  stIdx++;
+  if(stIdx>=SC[scIdx].steps.length){scIdx++;stIdx=0;if(scIdx>=SC.length){endGame();return;}}
+  renderStep();window.scrollTo({top:0,behavior:'smooth'});
+}
+function endGame(){
+  const p=Math.round((best/total)*100);
+  document.getElementById('sum-best').textContent=best;
+  document.getElementById('sum-total').textContent=total;
+  const icon=document.getElementById('sum-icon'),title=document.getElementById('sum-title'),sub=document.getElementById('sum-sub');
+  if(p>=80){icon.textContent='🏆';title.textContent='Outstanding host';sub.textContent='Your visitor felt right at home. Excellent B2 Small Talk throughout.';}
+  else if(p>=55){icon.textContent='👍';title.textContent='Good performance';sub.textContent='Solid work — open the phrase book and polish the remaining areas.';}
+  else{icon.textContent='📚';title.textContent='Keep practising';sub.textContent='Study the phrase book and try again — you will get there!';}
+  showScreen('scr-summary');
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='scr-phrases')buildPB();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function buildPB(){
+  document.getElementById('pb').innerHTML=Object.entries(PHRASES).map(([c,ps])=>'<div class="pb-sec"><div class="pb-cat">'+c+'</div>'+ps.map(p=>'<div class="pb-p">"'+p+'"</div>').join('')+'</div>').join('');
+}
+</script>
+</body>
+</html>
