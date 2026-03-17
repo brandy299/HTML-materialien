@@ -1,30 +1,40 @@
 #!/bin/bash
 # deploy.sh – HTML-Materialien auf GitHub Pages hochladen
-# Nutzung: ./deploy.sh meine-datei.html
-#    oder: ./deploy.sh meine-datei.html "Titel der Datei"
+#
+# Nutzung:
+#   ./deploy.sh <datei.html> <Fach> <Thema> [Titel]
+#
+# Beispiele:
+#   ./deploy.sh ~/Desktop/quiz.html "GPU" "LF5"
+#   ./deploy.sh ~/Desktop/quiz.html "GPU" "LF5" "Interaktives Quiz Lernfeld 5"
+#   ./deploy.sh ~/Desktop/aufgabe.html "Mathe" "Algebra" "Gleichungen Übung"
 
 set -e
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
-MATERIALIEN_DIR="$REPO_DIR/materialien"
 
 # Argumente
 DATEI="$1"
-TITEL="${2:-}"
+FACH="$2"
+THEMA="$3"
+TITEL="${4:-}"
 
-if [ -z "$DATEI" ]; then
-  echo "Nutzung: ./deploy.sh <datei.html> [\"Optionaler Titel\"]"
+if [ -z "$DATEI" ] || [ -z "$FACH" ] || [ -z "$THEMA" ]; then
+  echo "Nutzung: ./deploy.sh <datei.html> <Fach> <Thema> [\"Titel\"]"
+  echo ""
+  echo "Beispiel: ./deploy.sh quiz.html \"GPU\" \"LF5\" \"Quiz Lernfeld 5\""
   exit 1
 fi
 
-# Datei existiert?
 if [ ! -f "$DATEI" ]; then
   echo "Fehler: Datei '$DATEI' nicht gefunden."
   exit 1
 fi
 
 BASENAME=$(basename "$DATEI")
-ZIEL="$MATERIALIEN_DIR/$BASENAME"
+ZIEL_DIR="$REPO_DIR/materialien/$FACH/$THEMA"
+mkdir -p "$ZIEL_DIR"
+ZIEL="$ZIEL_DIR/$BASENAME"
 
 # Titel ableiten
 if [ -z "$TITEL" ]; then
@@ -35,51 +45,68 @@ fi
 
 DATUM=$(date "+%d.%m.%Y")
 
-echo "→ Kopiere '$BASENAME' nach materialien/..."
+echo "→ Fach: $FACH | Thema: $THEMA | Titel: $TITEL"
+echo "→ Kopiere '$BASENAME' nach materialien/$FACH/$THEMA/..."
 cp "$DATEI" "$ZIEL"
 
 echo "→ Aktualisiere Übersichtsseite..."
 
-# Alle HTML-Dateien im materialien-Ordner einlesen und Liste neu aufbauen
+# Alle HTML-Dateien rekursiv einlesen und Liste aufbauen
 LISTE=""
-for f in "$MATERIALIEN_DIR"/*.html; do
-  [ -f "$f" ] || continue
+while IFS= read -r -d '' f; do
   fname=$(basename "$f")
+  # Relativen Pfad ab materialien/
+  relpath="${f#$REPO_DIR/}"
+
+  # Fach und Thema aus Pfad extrahieren
+  # Struktur: materialien/FACH/THEMA/datei.html
+  fach_dir=$(echo "$relpath" | cut -d'/' -f2)
+  thema_dir=$(echo "$relpath" | cut -d'/' -f3)
+
   ftitle="${fname%.html}"
   ftitle="${ftitle//-/ }"
   ftitle="${ftitle//_/ }"
 
-  # Bestehenden Titel aus index.html holen falls vorhanden
-  existing=$(grep -o "\"name\":\"[^\"]*\",\"pfad\":\"materialien/$fname\"" "$REPO_DIR/index.html" | grep -o '"name":"[^"]*"' | cut -d'"' -f4 || true)
-  if [ -n "$existing" ]; then
+  # Für die gerade hochgeladene Datei den Titel verwenden
+  if [ "$f" = "$ZIEL" ]; then
+    ftitle="$TITEL"
+    fach_dir="$FACH"
+    thema_dir="$THEMA"
+  fi
+
+  # Bestehenden Titel aus index.html wiederherstellen falls vorhanden
+  existing=$(python3 -c "
+import re, json
+with open('$REPO_DIR/index.html') as fh:
+    m = re.search(r'\\{[^}]*\"pfad\":\"${relpath//\//\\/}\"[^}]*\\}', fh.read())
+    if m:
+        d = json.loads(m.group())
+        print(d.get('name',''))
+" 2>/dev/null || true)
+  if [ -n "$existing" ] && [ "$f" != "$ZIEL" ]; then
     ftitle="$existing"
   fi
 
-  # Für die neue Datei den übergebenen Titel nutzen
-  if [ "$fname" = "$BASENAME" ]; then
-    ftitle="$TITEL"
-  fi
-
   fdate=$(stat -f "%Sm" -t "%d.%m.%Y" "$f" 2>/dev/null || date "+%d.%m.%Y")
-  LISTE="${LISTE}      {\"name\":\"${ftitle}\",\"pfad\":\"materialien/${fname}\",\"datum\":\"${fdate}\"},\n"
-done
+  escaped_title=$(echo "$ftitle" | sed 's/"/\\"/g')
+  LISTE="${LISTE}      {\"name\":\"${escaped_title}\",\"fach\":\"${fach_dir}\",\"thema\":\"${thema_dir}\",\"pfad\":\"${relpath}\",\"datum\":\"${fdate}\"},\n"
+done < <(find "$REPO_DIR/materialien" -name "*.html" -print0 | sort -z)
 
 # Trailing comma entfernen
-LISTE=$(echo -e "$LISTE" | sed '$ s/,$//')
+LISTE=$(printf "%b" "$LISTE" | sed '$ s/,$//')
 
-# index.html aktualisieren (zwischen // MATERIALIEN_LISTE)
+# index.html aktualisieren
 python3 - <<PYEOF
 import re
 
 with open("$REPO_DIR/index.html", "r") as fh:
     content = fh.read()
 
-new_list = """$LISTE"""
+new_list = r"""$LISTE"""
 
-# Ersetze alles zwischen den Array-Klammern
 new_content = re.sub(
     r'(const materialien = \[)[^\]]*(\];)',
-    r'\1\n' + new_list + r'\n    \2',
+    lambda m: m.group(1) + '\n' + new_list + '\n    ' + m.group(2),
     content,
     flags=re.DOTALL
 )
@@ -92,13 +119,13 @@ PYEOF
 
 echo "→ Git commit & push..."
 cd "$REPO_DIR"
-git add materialien/"$BASENAME" index.html
-git commit -m "Neu: $TITEL ($DATUM)"
+git add materialien/ index.html
+git commit -m "[$FACH / $THEMA] $TITEL ($DATUM)"
 git push origin main
 
 echo ""
 echo "✅ Fertig! Deine Datei ist online:"
-echo "   https://brandy299.github.io/HTML-materialien/materialien/$BASENAME"
+echo "   https://brandy299.github.io/HTML-materialien/materialien/$FACH/$THEMA/$BASENAME"
 echo ""
 echo "📋 Übersichtsseite:"
 echo "   https://brandy299.github.io/HTML-materialien/"
