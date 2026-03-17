@@ -3,7 +3,8 @@
     "allow": [
       "Bash(gh auth:*)",
       "Bash(chmod +x \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/deploy.sh\")",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(osacompile -o \"/Users/yabrand/Desktop/Material hochladen.app\" \"/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/droplet.applescript\" 2>&1)"
     ]
   }
 }

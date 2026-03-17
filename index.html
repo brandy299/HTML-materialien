@@ -6,133 +6,415 @@
   <title>Lernmaterialien</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #3b5bdb;
+      --blue-light: #eef2ff;
+      --red: #e03131;
+      --red-light: #fff5f5;
+      --gray: #868e96;
+      --border: #e9ecef;
+      --bg: #f8f9fa;
+      --white: #fff;
+      --radius: 12px;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f0f2f5;
-      color: #333;
-      padding: 2rem 1rem;
+      background: var(--bg);
+      color: #212529;
+      min-height: 100vh;
     }
-    header {
-      max-width: 960px;
-      margin: 0 auto 2rem;
-    }
-    h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-    .subtitle { color: #666; font-size: 0.95rem; }
 
-    .fach-block {
-      max-width: 960px;
-      margin: 0 auto 2.5rem;
-    }
-    .fach-titel {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 2px solid #ddd;
+    /* ── Header ── */
+    .top-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-    .fach-badge {
-      background: #3b5bdb;
-      color: white;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 600;
+    .top-bar h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .top-bar h1 span { color: var(--blue); }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 180px;
+      max-width: 380px;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2.2rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #search:focus { border-color: var(--blue); }
+
+    .btn-delete-toggle {
+      margin-left: auto;
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-delete-toggle:hover { border-color: var(--red); color: var(--red); }
+    .btn-delete-toggle.active { background: var(--red-light); border-color: var(--red); color: var(--red); font-weight: 600; }
+
+    /* ── Stats ── */
+    .stats {
+      max-width: 960px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.82rem;
+      color: var(--gray);
+    }
+    .stats strong { color: #212529; }
+
+    /* ── Main ── */
+    main {
+      max-width: 960px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.5rem;
     }
 
+    /* ── Fach-Block ── */
+    .fach-block { margin-bottom: 2.5rem; }
+    .fach-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .fach-badge {
+      background: var(--blue);
+      color: white;
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .fach-name { font-size: 1.1rem; font-weight: 700; }
+    .fach-count { font-size: 0.8rem; color: var(--gray); margin-left: auto; }
+
+    /* ── Thema-Block ── */
     .thema-block { margin-bottom: 1.2rem; }
-    .thema-titel {
-      font-size: 0.85rem;
+    .thema-label {
+      font-size: 0.78rem;
       font-weight: 600;
-      color: #888;
+      color: var(--gray);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       margin-bottom: 0.5rem;
     }
 
+    /* ── Grid & Cards ── */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 0.75rem;
     }
+    .card-wrap { position: relative; }
+
     .card {
-      background: white;
-      border-radius: 10px;
-      padding: 1rem 1.2rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
       text-decoration: none;
       color: inherit;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       transition: box-shadow 0.15s, transform 0.15s;
       display: flex;
       align-items: center;
       gap: 0.8rem;
+      border: 1px solid transparent;
     }
     .card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
       transform: translateY(-2px);
+      border-color: var(--blue-light);
     }
-    .card-icon { font-size: 1.5rem; flex-shrink: 0; }
-    .card-title { font-weight: 600; font-size: 0.95rem; }
-    .card-meta { font-size: 0.78rem; color: #999; margin-top: 2px; }
+    .delete-mode .card { padding-right: 2.8rem; }
+    .delete-mode .card:hover { border-color: var(--red); box-shadow: 0 4px 14px rgba(224,49,49,0.1); transform: none; }
 
-    .empty { color: #aaa; font-style: italic; margin-top: 1rem; }
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--blue-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .card-title { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
+    .card-meta { font-size: 0.75rem; color: var(--gray); margin-top: 3px; }
+
+    /* ── Delete Button ── */
+    .btn-delete {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: var(--red-light);
+      border: 1px solid #ffc9c9;
+      color: var(--red);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 1rem;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .btn-delete:hover { background: #ffe3e3; }
+    .delete-mode .btn-delete { display: flex; }
+
+    /* ── Copy-Link Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #212529;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Delete Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .modal p { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+    .modal code {
+      display: block;
+      background: #f1f3f5;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      font-family: "SF Mono", monospace;
+      word-break: break-all;
+      margin-bottom: 1rem;
+      color: #c92a2a;
+    }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .modal-actions button {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .btn-copy-cmd { background: var(--blue); color: white; border-color: var(--blue); font-weight: 600; }
+
+    /* ── No results ── */
+    .no-results { text-align: center; color: var(--gray); padding: 3rem 0; font-size: 0.95rem; }
+
+    @media (max-width: 500px) {
+      .top-bar { gap: 0.6rem; }
+      .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; order: 3; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Lernmaterialien</h1>
-    <p class="subtitle">Interaktive Übungen und Materialien</p>
-  </header>
 
-  <div id="app"></div>
+<div class="top-bar">
+  <h1>Lern<span>materialien</span></h1>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
+  </div>
+  <button class="btn-delete-toggle" id="deleteToggle" onclick="toggleDeleteMode()">🗑 Löschen</button>
+</div>
 
-  <script>
-    // ===== MATERIALIEN =====
-    const materialien = [
-      {"name":"LF5 Praesentation","fach":"GPU","thema":"LF5 ","pfad":"materialien/GPU/LF5 /LF5_Praesentation_1.html","datum":"17.03.2026"},
-      {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
-      {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation.html","datum":"17.03.2026"}
-    ];
-    // ======================
+<div class="stats" id="stats"></div>
+<main id="app"></main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Material löschen</h3>
+    <p>Führe diesen Befehl im Terminal aus um das Material zu löschen und von GitHub zu entfernen:</p>
+    <code id="modalCmd"></code>
+    <div class="modal-actions">
+      <button onclick="closeModal()">Abbrechen</button>
+      <button class="btn-copy-cmd" onclick="copyCmd()">Befehl kopieren</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== MATERIALIEN =====
+  const materialien = [
+    {"name":"LF5 Praesentation","fach":"GPU","thema":"LF5 ","pfad":"materialien/GPU/LF5 /LF5_Praesentation_1.html","datum":"17.03.2026"},
+    {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
+    {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation.html","datum":"17.03.2026"}
+  ];
+  // ======================
+
+  let deleteMode = false;
+  let currentDeletePfad = '';
+
+  function render(filter = '') {
+    const q = filter.toLowerCase();
+    const filtered = materialien.filter(m =>
+      !q || m.name.toLowerCase().includes(q) ||
+      m.fach.toLowerCase().includes(q) ||
+      m.thema.toLowerCase().includes(q)
+    );
+
+    // Stats
+    const fachSet = new Set(materialien.map(m => m.fach));
+    document.getElementById('stats').innerHTML =
+      `<span><strong>${materialien.length}</strong> Materialien</span>
+       <span><strong>${fachSet.size}</strong> ${fachSet.size === 1 ? 'Fach' : 'Fächer'}</span>`;
 
     const app = document.getElementById('app');
+    if (filtered.length === 0) {
+      app.innerHTML = `<div class="no-results">Keine Ergebnisse für „${filter}"</div>`;
+      return;
+    }
 
-    if (materialien.length === 0) {
-      app.innerHTML = '<p class="empty">Noch keine Materialien vorhanden.</p>';
-    } else {
-      // Gruppieren nach Fach → Thema
-      const faecher = {};
-      for (const m of materialien) {
-        if (!faecher[m.fach]) faecher[m.fach] = {};
-        if (!faecher[m.fach][m.thema]) faecher[m.fach][m.thema] = [];
-        faecher[m.fach][m.thema].push(m);
-      }
+    // Gruppieren
+    const faecher = {};
+    for (const m of filtered) {
+      const f = m.fach.trim(), t = m.thema.trim();
+      if (!faecher[f]) faecher[f] = {};
+      if (!faecher[f][t]) faecher[f][t] = [];
+      faecher[f][t].push(m);
+    }
 
-      let html = '';
-      for (const fach of Object.keys(faecher).sort()) {
-        html += `<div class="fach-block">
-          <div class="fach-titel"><span class="fach-badge">${fach}</span>${fach}</div>`;
-        for (const thema of Object.keys(faecher[fach]).sort()) {
-          html += `<div class="thema-block">
-            <div class="thema-titel">${thema}</div>
-            <div class="grid">`;
-          for (const m of faecher[fach][thema]) {
-            html += `<a class="card" href="${m.pfad}">
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+
+    let html = '';
+    for (const fach of Object.keys(faecher).sort()) {
+      const total = Object.values(faecher[fach]).flat().length;
+      html += `<div class="fach-block">
+        <div class="fach-header">
+          <span class="fach-badge">${fach}</span>
+          <span class="fach-name">${fach}</span>
+          <span class="fach-count">${total} Material${total !== 1 ? 'ien' : ''}</span>
+        </div>`;
+      for (const thema of Object.keys(faecher[fach]).sort()) {
+        html += `<div class="thema-block"><div class="thema-label">${thema}</div><div class="grid">`;
+        for (const m of faecher[fach][thema]) {
+          const link = baseUrl + m.pfad;
+          html += `<div class="card-wrap">
+            <a class="card" href="${m.pfad}" target="_blank">
               <div class="card-icon">📄</div>
               <div>
                 <div class="card-title">${m.name}</div>
-                <div class="card-meta">${m.datum}</div>
+                <div class="card-meta">${m.fach} · ${m.thema.trim()} · ${m.datum}</div>
               </div>
-            </a>`;
-          }
-          html += `</div></div>`;
+            </a>
+            <button class="btn-delete" title="Löschen" onclick="showDelete(event, '${m.pfad.replace(/'/g,"\\'")}')">✕</button>
+          </div>`;
         }
-        html += `</div>`;
+        html += `</div></div>`;
       }
-      app.innerHTML = html;
+      html += `</div>`;
     }
-  </script>
+    app.innerHTML = html;
+    if (deleteMode) app.classList.add('delete-mode');
+  }
+
+  function toggleDeleteMode() {
+    deleteMode = !deleteMode;
+    const btn = document.getElementById('deleteToggle');
+    const app = document.getElementById('app');
+    btn.classList.toggle('active', deleteMode);
+    btn.textContent = deleteMode ? '✓ Fertig' : '🗑 Löschen';
+    app.classList.toggle('delete-mode', deleteMode);
+  }
+
+  function showDelete(e, pfad) {
+    e.preventDefault();
+    e.stopPropagation();
+    currentDeletePfad = pfad;
+    const cmd = `cd "/Users/yabrand/Desktop/Projekte/Github HTML Pipeline" && ./delete.sh "${pfad}"`;
+    document.getElementById('modalCmd').textContent = cmd;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function copyCmd() {
+    navigator.clipboard.writeText(document.getElementById('modalCmd').textContent);
+    showToast('Befehl kopiert!');
+    closeModal();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  document.getElementById('search').addEventListener('input', e => render(e.target.value));
+  document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+  render();
+</script>
 </body>
 </html>
