@@ -1,1431 +1,1916 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digitale Unterrichtsmaterialien</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitale Unterrichtsmaterialien</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    /* ===== RESET & BASE ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: #F5F6FA;
-      color: #1a1d23;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-    a { text-decoration: none; color: inherit; }
-    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ===== FACH COLOR CLASSES ===== */
-    .fc-0 { --fc: #4F6EF7; --fc-light: #eef1fe; --fc-bg: #f0f3ff; }
-    .fc-1 { --fc: #10b981; --fc-light: #d1fae5; --fc-bg: #ecfdf5; }
-    .fc-2 { --fc: #f59e0b; --fc-light: #fef3c7; --fc-bg: #fffbeb; }
-    .fc-3 { --fc: #ef4444; --fc-light: #fee2e2; --fc-bg: #fff5f5; }
-    .fc-4 { --fc: #8b5cf6; --fc-light: #ede9fe; --fc-bg: #f5f3ff; }
-    .fc-5 { --fc: #06b6d4; --fc-light: #cffafe; --fc-bg: #ecfeff; }
-    .fc-6 { --fc: #f97316; --fc-light: #ffedd5; --fc-bg: #fff7ed; }
-    .fc-7 { --fc: #ec4899; --fc-light: #fce7f3; --fc-bg: #fdf2f8; }
+:root {
+  --fc-0: #4F6EF7; --fc-0-light: #EEF2FF; --fc-0-bg: #F5F7FF;
+  --fc-1: #0CA678; --fc-1-light: #E6FCF5; --fc-1-bg: #F0FBF8;
+  --fc-2: #E8590C; --fc-2-light: #FFF4E6; --fc-2-bg: #FFF8F2;
+  --fc-3: #AE3EC9; --fc-3-light: #F8F0FC; --fc-3-bg: #FCF5FE;
+  --fc-4: #1971C2; --fc-4-light: #E7F5FF; --fc-4-bg: #F0F8FF;
+  --fc-5: #C2255C; --fc-5-light: #FFF0F6; --fc-5-bg: #FFF5FA;
+  --fc-6: #5C7CFA; --fc-6-light: #EDF2FF; --fc-6-bg: #F3F6FF;
+  --fc-7: #F59F00; --fc-7-light: #FFF9DB; --fc-7-bg: #FFFCF0;
+}
 
-    /* ===== STICKY HEADER ===== */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #ffffff;
-      border-bottom: 1px solid #e8eaf0;
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
-    }
-    .header-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+.fc-0 { --fc: var(--fc-0); --fc-light: var(--fc-0-light); --fc-bg: var(--fc-0-bg); }
+.fc-1 { --fc: var(--fc-1); --fc-light: var(--fc-1-light); --fc-bg: var(--fc-1-bg); }
+.fc-2 { --fc: var(--fc-2); --fc-light: var(--fc-2-light); --fc-bg: var(--fc-2-bg); }
+.fc-3 { --fc: var(--fc-3); --fc-light: var(--fc-3-light); --fc-bg: var(--fc-3-bg); }
+.fc-4 { --fc: var(--fc-4); --fc-light: var(--fc-4-light); --fc-bg: var(--fc-4-bg); }
+.fc-5 { --fc: var(--fc-5); --fc-light: var(--fc-5-light); --fc-bg: var(--fc-5-bg); }
+.fc-6 { --fc: var(--fc-6); --fc-light: var(--fc-6-light); --fc-bg: var(--fc-6-bg); }
+.fc-7 { --fc: var(--fc-7); --fc-light: var(--fc-7-light); --fc-bg: var(--fc-7-bg); }
 
-    /* Logo */
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-    .logo-icon {
-      width: 38px;
-      height: 38px;
-      background: #4F6EF7;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 19px;
-      flex-shrink: 0;
-    }
-    .logo-text {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1a1d23;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-    .logo-sub {
-      font-size: 11px;
-      font-weight: 400;
-      color: #9ca0b4;
-    }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #F4F6FA;
+  color: #1a1a2e;
+  min-height: 100vh;
+  overflow: hidden;
+}
 
-    /* Search */
-    .search-wrap {
-      flex: 1;
-      max-width: 380px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .search-wrap svg {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #9ca0b4;
-      pointer-events: none;
-      flex-shrink: 0;
-    }
-    #search {
-      width: 100%;
-      height: 40px;
-      border: 1.5px solid #e2e5ef;
-      border-radius: 10px;
-      padding: 0 14px 0 38px;
-      font-size: 14px;
-      font-family: inherit;
-      color: #1a1d23;
-      background: #F5F6FA;
-      outline: none;
-      transition: border-color 150ms, box-shadow 150ms, background 150ms;
-    }
-    #search:focus {
-      border-color: #4F6EF7;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
-    }
-    #search::placeholder { color: #b0b5c8; }
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+#app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #E5E9F2;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.6rem;
+  z-index: 30;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
 
-    /* Header action buttons */
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .btn-upload-header {
-      height: 38px;
-      padding: 0 16px;
-      border-radius: 9px;
-      background: #4F6EF7;
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 150ms;
-      border: none;
-      white-space: nowrap;
-    }
-    .btn-upload-header:hover { background: #3d5ce6; }
-    #editToggle {
-      height: 38px;
-      padding: 0 14px;
-      border-radius: 9px;
-      font-size: 13px;
-      font-weight: 600;
-      background: #F5F6FA;
-      color: #555b72;
-      border: 1.5px solid #e2e5ef;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 150ms;
-      white-space: nowrap;
-    }
-    #editToggle:hover { background: #eaecf5; }
-    #editToggle.active {
-      background: #eef1fe;
-      color: #4F6EF7;
-      border-color: #4F6EF7;
-    }
-    #tokenBtn {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      font-size: 17px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 150ms;
-      position: relative;
-      flex-shrink: 0;
-    }
-    #tokenBtn:hover { background: #F5F6FA; }
-    #tokenBtn.token-ok::after {
-      content: '';
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-      border: 2px solid #fff;
-    }
-    #tokenBtn.token-missing::after {
-      content: '';
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      width: 8px;
-      height: 8px;
-      background: #ef4444;
-      border-radius: 50%;
-      border: 2px solid #fff;
-    }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  font-size: 0.93rem;
+  color: #1a1a2e;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.logo-icon { font-size: 1.15rem; }
 
-    /* ===== PAGE LAYOUT ===== */
-    .main-content {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
+.header-spacer { flex: 1; min-width: 0; }
 
-    /* ===== FILTER BAR ===== */
-    .filter-wrap {
-      padding: 14px 0 2px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .filter-wrap::-webkit-scrollbar { display: none; }
-    #filterBar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-    }
-    .pill {
-      height: 34px;
-      padding: 0 14px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #fff;
-      color: #555b72;
-      border: 1.5px solid #e2e5ef;
-      transition: all 150ms;
-      cursor: pointer;
-      white-space: nowrap;
-      min-height: 34px;
-    }
-    .pill:hover {
-      background: #F5F6FA;
-      border-color: #c6c9d8;
-    }
-    .pill-active {
-      font-weight: 600;
-    }
-    /* Colored pill states per fach */
-    .fc-0.pill { color: #555b72; }
-    .fc-0.pill-active, .fc-0.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-1.pill-active, .fc-1.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-2.pill-active, .fc-2.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-3.pill-active, .fc-3.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-4.pill-active, .fc-4.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-5.pill-active, .fc-5.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-6.pill-active, .fc-6.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .fc-7.pill-active, .fc-7.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
-    .pill-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.07);
-      border-radius: 100px;
-      padding: 1px 7px;
-      font-size: 11px;
-      font-weight: 600;
-      min-width: 20px;
-    }
+#searchWrap {
+  display: flex;
+  align-items: center;
+  background: #F4F6FA;
+  border: 1px solid #E5E9F2;
+  border-radius: 8px;
+  padding: 0 0.7rem;
+  gap: 0.35rem;
+  height: 36px;
+  width: 220px;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+#searchWrap:focus-within {
+  border-color: #4F6EF7;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(79,110,247,0.1);
+  width: 260px;
+}
+#searchWrap svg { color: #9ba3c0; flex-shrink: 0; }
+#search {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  width: 100%;
+}
+#search::placeholder { color: #9ba3c0; }
 
-    /* ===== STATS ROW ===== */
-    #statsRow {
-      display: flex;
-      gap: 12px;
-      margin: 16px 0 28px;
-    }
-    .stat-card {
-      background: #fff;
-      border: 1px solid #e8eaf0;
-      border-radius: 12px;
-      padding: 14px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      flex: 1;
-      min-width: 80px;
-    }
-    .stat-num {
-      font-size: 28px;
-      font-weight: 700;
-      color: #4F6EF7;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .stat-lbl {
-      font-size: 11px;
-      font-weight: 600;
-      color: #9ca0b4;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
+.hbtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.7rem;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  transition: all 200ms ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hbtn:hover { background: #F4F6FA; border-color: #d0d7e8; }
+.hbtn.primary { background: #4F6EF7; color: #fff; border-color: #4F6EF7; }
+.hbtn.primary:hover { background: #3d5ce0; border-color: #3d5ce0; }
 
-    /* ===== SECTIONS ===== */
-    .section-block {
-      margin-bottom: 34px;
-    }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #b0b5c8;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e8eaf0;
-    }
+#hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 
-    /* Fach header */
-    .fach-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--fc-light, #e8eaf0);
-    }
-    .fach-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--fc, #4F6EF7);
-      flex-shrink: 0;
-    }
-    .fach-name {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1a1d23;
-      flex: 1;
-    }
-    .fach-count {
-      font-size: 12px;
-      font-weight: 600;
-      background: var(--fc-light, #eef1fe);
-      color: var(--fc, #4F6EF7);
-      border-radius: 100px;
-      padding: 3px 11px;
-    }
+/* ─────────────────────────────────────────
+   APP LAYOUT
+───────────────────────────────────────── */
+.app-layout {
+  display: flex;
+  height: calc(100vh - 56px);
+  margin-top: 56px;
+  overflow: hidden;
+}
 
-    /* Thema block */
-    .thema-block {
-      margin-bottom: 20px;
-    }
-    .thema-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #9ca0b4;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .thema-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e8eaf0;
-    }
+/* ─────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────── */
+#sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #E5E9F2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 200ms ease;
+}
 
-    /* ===== GRID ===== */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 14px;
-    }
+#sidebar-inner {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0.65rem 0 1rem;
+}
+#sidebar-inner::-webkit-scrollbar { width: 4px; }
+#sidebar-inner::-webkit-scrollbar-track { background: transparent; }
+#sidebar-inner::-webkit-scrollbar-thumb { background: #d0d7e8; border-radius: 2px; }
 
-    /* ===== CARDS ===== */
-    .card-wrap {
-      position: relative;
-      border-radius: 13px;
-      transition: transform 150ms, box-shadow 150ms;
-    }
-    .card-wrap:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
-    }
-    .card {
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      border-radius: 13px;
-      border: 1.5px solid #e8eaf0;
-      overflow: hidden;
-      height: 100%;
-      transition: border-color 150ms;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover { border-color: var(--fc, #4F6EF7); }
+.sidebar-label {
+  font-size: 0.63rem;
+  font-weight: 600;
+  color: #9ba3c0;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 0 1rem 0.5rem;
+}
 
-    /* Colored top strip */
-    .card-top {
-      background: var(--fc-bg, #f0f3ff);
-      padding: 9px 13px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      border-bottom: 2px solid var(--fc-light, #e0e5fe);
-      min-height: 38px;
-    }
-    .card-fach {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--fc, #4F6EF7);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .badge-new {
-      font-size: 10px;
-      font-weight: 700;
-      background: var(--fc, #4F6EF7);
-      color: #fff;
-      border-radius: 100px;
-      padding: 2px 8px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
+.sidebar-all {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 1rem;
+  cursor: pointer;
+  transition: background 200ms ease;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #1a1a2e;
+}
+.sidebar-all:hover { background: #F4F6FA; }
+.sidebar-all.active { background: #EEF2FF; color: #4F6EF7; }
 
-    /* Card body */
-    .card-body {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px;
-      flex: 1;
-    }
-    .card-icon {
-      font-size: 22px;
-      line-height: 1;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .card-info { flex: 1; min-width: 0; }
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1d23;
-      line-height: 1.4;
-      word-break: break-word;
-      margin-bottom: 4px;
-    }
-    .card-meta {
-      font-size: 12px;
-      color: #9ca0b4;
-      font-weight: 400;
-    }
+.all-icon {
+  width: 22px; height: 22px;
+  background: #EEF2FF;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
 
-    /* Copy link button */
-    .btn-copy-link {
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.88);
-      color: #9ca0b4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 150ms, background 150ms, color 150ms;
-      z-index: 2;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(0,0,0,0.06);
-      cursor: pointer;
-    }
-    .card-wrap:hover .btn-copy-link { opacity: 1; }
-    .btn-copy-link:hover { background: #fff; color: #4F6EF7; }
+.sb-count {
+  margin-left: auto;
+  font-size: 0.68rem;
+  background: #F4F6FA;
+  color: #666;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+.sidebar-all.active .sb-count { background: #4F6EF7; color: #fff; }
 
-    /* Edit-mode action buttons */
-    .card-actions {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      display: none;
-      gap: 6px;
-      z-index: 3;
-    }
-    .btn-action {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 150ms;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(4px);
-      border: 1px solid #e2e5ef;
-      cursor: pointer;
-    }
-    .btn-action:hover { transform: scale(1.1); }
-    .btn-action-rename:hover { background: #eef1fe; border-color: #4F6EF7; }
-    .btn-action-delete:hover { background: #fee2e2; border-color: #ef4444; color: #ef4444; }
+.sb-divider { height: 1px; background: #E5E9F2; margin: 0.45rem 0; }
 
-    .edit-mode .card-actions { display: flex; }
-    .edit-mode .card-wrap { outline: 2px dashed #f0b429; outline-offset: 2px; border-radius: 13px; }
+.fach-group { margin-bottom: 1px; }
 
-    /* ===== NO RESULTS ===== */
-    .no-results {
-      text-align: center;
-      padding: 80px 20px;
-    }
-    .no-results-icon { font-size: 52px; margin-bottom: 14px; }
-    .no-results-text { font-size: 16px; color: #9ca0b4; font-weight: 500; }
+.fach-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 1rem;
+  cursor: pointer;
+  transition: background 200ms ease;
+  user-select: none;
+}
+.fach-header:hover { background: #F4F6FA; }
+.fach-header.active { background: #EEF2FF; }
 
-    /* ===== MODALS ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(12, 15, 28, 0.48);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 20px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #fff;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 460px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
-      overflow: hidden;
-    }
-    .modal-head {
-      padding: 24px 24px 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-    .modal-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .modal-icon-blue   { background: #eef1fe; }
-    .modal-icon-yellow { background: #fef3c7; }
-    .modal-icon-red    { background: #fee2e2; }
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1d23;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .modal-sub {
-      font-size: 13px;
-      color: #9ca0b4;
-      line-height: 1.6;
-    }
-    .modal-body {
-      padding: 20px 24px 0;
-    }
-    .modal-actions {
-      padding: 20px 24px 24px;
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
+.fach-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--fc);
+  flex-shrink: 0;
+}
 
-    /* Form elements */
-    .form-group { margin-bottom: 14px; }
-    .form-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: #555b72;
-      margin-bottom: 5px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .form-input {
-      width: 100%;
-      height: 42px;
-      border: 1.5px solid #e2e5ef;
-      border-radius: 9px;
-      padding: 0 13px;
-      font-size: 14px;
-      font-family: inherit;
-      color: #1a1d23;
-      background: #F5F6FA;
-      outline: none;
-      transition: border-color 150ms, box-shadow 150ms, background 150ms;
-    }
-    .form-input:focus {
-      border-color: #4F6EF7;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
-    }
-    .form-input::placeholder { color: #b0b5c8; }
+.fach-name {
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fach-header.active .fach-name { color: #4F6EF7; }
 
-    /* Modal buttons */
-    .btn-primary {
-      height: 42px;
-      padding: 0 20px;
-      border-radius: 10px;
-      background: #4F6EF7;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 150ms;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-primary:hover { background: #3d5ce6; }
-    .btn-primary:disabled { opacity: 0.65; cursor: not-allowed; }
-    .btn-danger {
-      height: 42px;
-      padding: 0 20px;
-      border-radius: 10px;
-      background: #ef4444;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 150ms;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-danger:disabled { opacity: 0.65; cursor: not-allowed; }
-    .btn-secondary {
-      height: 42px;
-      padding: 0 20px;
-      border-radius: 10px;
-      background: #F5F6FA;
-      color: #555b72;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 150ms;
-      cursor: pointer;
-      border: 1.5px solid #e2e5ef;
-    }
-    .btn-secondary:hover { background: #eaecf5; }
+.fach-chevron {
+  color: #9ba3c0;
+  transition: transform 200ms ease;
+  flex-shrink: 0;
+}
+.fach-chevron.open { transform: rotate(90deg); }
 
-    /* Delete description box */
-    #deleteDesc {
-      font-size: 14px;
-      color: #555b72;
-      background: #fff5f5;
-      border: 1px solid #fecaca;
-      border-radius: 9px;
-      padding: 12px 14px;
-      line-height: 1.6;
-    }
+.thema-list { display: none; }
+.thema-list.open { display: block; }
 
-    /* Token hint */
-    .token-hint {
-      font-size: 12px;
-      color: #9ca0b4;
-      margin-top: 8px;
-      line-height: 1.7;
-    }
-    .token-hint a { color: #4F6EF7; text-decoration: underline; }
+.thema-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 1rem 0.32rem 2.3rem;
+  cursor: pointer;
+  font-size: 0.77rem;
+  color: #555;
+  transition: background 200ms ease;
+}
+.thema-item:hover { background: #F4F6FA; color: #1a1a2e; }
+.thema-item.active { background: #EEF2FF; color: #4F6EF7; font-weight: 500; }
 
-    /* Drop zone */
-    .drop-zone {
-      border: 2px dashed #d0d3e0;
-      border-radius: 11px;
-      padding: 28px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 150ms;
-      background: #fafbfc;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .drop-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-    .drop-zone:hover, .drop-zone.drag-over {
-      border-color: #4F6EF7;
-      background: #f0f3ff;
-    }
-    .drop-zone.has-file {
-      border-color: #10b981;
-      background: #ecfdf5;
-    }
-    .dz-icon { font-size: 32px; margin-bottom: 8px; }
-    #dzText {
-      font-size: 13px;
-      font-weight: 600;
-      color: #555b72;
-    }
-    .dz-sub {
-      font-size: 12px;
-      color: #b0b5c8;
-      margin-top: 4px;
-    }
+.thema-item-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-    /* Progress */
-    .progress-wrap {
-      height: 6px;
-      background: #e8eaf0;
-      border-radius: 100px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #4F6EF7, #8b5cf6);
-      border-radius: 100px;
-      transition: width 300ms ease;
-      width: 0;
-    }
+.thema-item-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--fc);
+  flex-shrink: 0;
+}
 
-    /* ===== PAGE DRAG OVERLAY ===== */
-    #dragOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(79, 110, 247, 0.08);
-      border: 3px dashed #4F6EF7;
-      z-index: 500;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-      font-size: 20px;
-      font-weight: 700;
-      color: #4F6EF7;
-      pointer-events: none;
-      backdrop-filter: blur(2px);
-    }
-    #dragOverlay.visible { display: flex; }
-    #dragOverlay .overlay-emoji { font-size: 52px; }
+.ti-count {
+  font-size: 0.67rem;
+  color: #9ba3c0;
+  flex-shrink: 0;
+}
+.thema-item.active .ti-count { color: #4F6EF7; }
 
-    /* ===== TOAST ===== */
-    #toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1d23;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 100px;
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 0;
-      transition: opacity 200ms, transform 200ms;
-      z-index: 1000;
-      pointer-events: none;
-      white-space: nowrap;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-    }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.success { background: #10b981; }
-    #toast.error   { background: #ef4444; }
+/* ─────────────────────────────────────────
+   MAIN AREA
+───────────────────────────────────────── */
+#mainArea {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+#mainArea::-webkit-scrollbar { width: 6px; }
+#mainArea::-webkit-scrollbar-track { background: transparent; }
+#mainArea::-webkit-scrollbar-thumb { background: #d0d7e8; border-radius: 3px; }
 
-    /* ===== SPINNER ===== */
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 600ms linear infinite;
-      flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+.main-inner { padding: 1.5rem; }
 
-    /* ===== FOOTER ===== */
-    .site-footer {
-      text-align: center;
-      padding: 22px 20px;
-      font-size: 12px;
-      color: #b0b5c8;
-      border-top: 1px solid #e8eaf0;
-      background: #fff;
-      margin-top: 40px;
-    }
+/* Breadcrumb */
+#breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.79rem;
+  color: #9ba3c0;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+#breadcrumb .bc-item {
+  cursor: pointer;
+  color: #4F6EF7;
+  font-weight: 500;
+  transition: color 200ms ease;
+}
+#breadcrumb .bc-item:hover { color: #3d5ce0; text-decoration: underline; }
+#breadcrumb .bc-sep { color: #d0d7e8; }
+#breadcrumb .bc-cur { color: #1a1a2e; font-weight: 600; }
 
-    /* ===== MOBILE ===== */
-    @media (max-width: 600px) {
-      .header-inner {
-        padding: 0 14px;
-        height: 58px;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-      .logo-sub { display: none; }
-      .search-wrap {
-        order: 3;
-        flex: 1 1 100%;
-        max-width: 100%;
-        margin: 0;
-        padding-bottom: 10px;
-      }
-      .header-inner {
-        height: auto;
-        padding-top: 10px;
-        padding-bottom: 0;
-      }
-      .btn-upload-header .btn-label { display: none; }
-      .main-content { padding: 0 14px 60px; }
-      .grid { grid-template-columns: 1fr; }
-      #statsRow { gap: 8px; }
-      .stat-card { padding: 12px 10px; }
-      .stat-num { font-size: 22px; }
-      .pill { min-height: 44px; height: auto; padding: 0 16px; }
-      .btn-action { width: 44px; height: 44px; }
-      .modal { border-radius: 14px; }
-      .modal-actions { flex-direction: column-reverse; }
-      .btn-primary, .btn-danger, .btn-secondary {
-        width: 100%;
-        justify-content: center;
-        height: 48px;
-      }
-    }
-  </style>
+/* Stats row */
+#statsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.65rem;
+  background: #fff;
+  border: 1px solid #E5E9F2;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: #555;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.stat-chip strong { color: #1a1a2e; }
+
+/* Section headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 1.2rem 0 0.55rem;
+}
+.section-header:first-child { margin-top: 0; }
+
+.section-dot {
+  width: 9px; height: 9px;
+  border-radius: 3px;
+  background: var(--fc);
+  flex-shrink: 0;
+}
+.section-title { font-size: 0.84rem; font-weight: 700; color: #1a1a2e; }
+.section-sub { font-size: 0.73rem; color: #9ba3c0; font-weight: 400; }
+.section-line { flex: 1; height: 1px; background: #E5E9F2; }
+
+.thema-section { margin-bottom: 0.2rem; }
+
+.thema-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0 0.35rem;
+  margin-bottom: 0.35rem;
+}
+.thema-badge {
+  font-size: 0.71rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--fc-light);
+  color: var(--fc);
+}
+.thema-count-badge { font-size: 0.69rem; color: #9ba3c0; }
+
+/* File grid */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.6rem;
+}
+
+/* File card */
+.file-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  background: #fff;
+  border: 1px solid #E5E9F2;
+  border-left: 3px solid var(--fc);
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 200ms ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.file-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  border-color: var(--fc);
+}
+.file-card.active-preview {
+  background: var(--fc-bg);
+  border-color: var(--fc);
+}
+
+.file-icon {
+  width: 36px; height: 36px;
+  background: var(--fc-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--fc);
+  font-size: 0.95rem;
+}
+
+.file-info { flex: 1; min-width: 0; }
+
+.file-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.18rem;
+}
+
+.file-meta {
+  font-size: 0.71rem;
+  color: #9ba3c0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-copy-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 27px; height: 27px;
+  border-radius: 6px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  cursor: pointer;
+  color: #666;
+  flex-shrink: 0;
+  transition: all 200ms ease;
+}
+.card-copy-btn:hover { background: #EEF2FF; color: #4F6EF7; border-color: #4F6EF7; }
+.file-card:hover .card-copy-btn { display: flex; }
+
+/* Recent section */
+.recent-section { margin-bottom: 1.4rem; }
+.recent-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.55rem; }
+.recent-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #9ba3c0;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ─────────────────────────────────────────
+   PREVIEW PANEL
+───────────────────────────────────────── */
+#previewPanel {
+  width: 0;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #E5E9F2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 200ms ease;
+}
+#previewPanel.open { width: 380px; }
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #E5E9F2;
+  flex-shrink: 0;
+}
+
+.preview-title {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #1a1a2e;
+}
+
+.preview-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: #666;
+  flex-shrink: 0;
+  transition: all 200ms ease;
+}
+.preview-close:hover { background: #FFF0F0; border-color: #ffc0c0; color: #e53e3e; }
+
+.preview-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid #E5E9F2;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.preview-fach-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.preview-thema-txt { font-size: 0.74rem; color: #555; }
+
+.preview-date-txt { font-size: 0.71rem; color: #9ba3c0; margin-left: auto; }
+
+.preview-iframe-wrap {
+  flex: 1;
+  padding: 0.7rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#previewFrame {
+  flex: 1;
+  width: 100%;
+  border: 1px solid #E5E9F2;
+  border-radius: 8px;
+  background: #F4F6FA;
+  min-height: 0;
+}
+
+.preview-footer {
+  padding: 0.65rem 0.85rem;
+  border-top: 1px solid #E5E9F2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.pv-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.32rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.73rem;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.pv-btn:hover { background: #F4F6FA; border-color: #d0d7e8; }
+.pv-btn.danger { color: #e53e3e; border-color: #ffc0c0; }
+.pv-btn.danger:hover { background: #FFF0F0; }
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #9ba3c0;
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 0.7rem; }
+.empty-state h3 { font-size: 0.93rem; color: #555; margin-bottom: 0.2rem; }
+.empty-state p { font-size: 0.79rem; }
+
+/* ─────────────────────────────────────────
+   FILTER BAR (hidden, kept for DOM compat)
+───────────────────────────────────────── */
+#filterBar { display: none; }
+
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 0.55rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 300ms ease;
+  z-index: 200;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─────────────────────────────────────────
+   DRAG OVERLAY
+───────────────────────────────────────── */
+#dragOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(79,110,247,0.07);
+  border: 3px dashed #4F6EF7;
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #4F6EF7;
+  gap: 0.5rem;
+}
+#dragOverlay.active { display: flex; }
+
+/* ─────────────────────────────────────────
+   MODALS
+───────────────────────────────────────── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.32);
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.4rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  animation: modalIn 200ms ease;
+}
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.modal h2 { font-size: 0.98rem; font-weight: 700; margin-bottom: 1rem; color: #1a1a2e; }
+
+.modal label {
+  display: block;
+  font-size: 0.77rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.28rem;
+  margin-top: 0.7rem;
+}
+.modal label:first-of-type { margin-top: 0; }
+
+.modal input, .modal select {
+  width: 100%;
+  padding: 0.48rem 0.7rem;
+  border: 1px solid #E5E9F2;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  background: #F4F6FA;
+  outline: none;
+  transition: all 200ms ease;
+}
+.modal input:focus, .modal select:focus {
+  border-color: #4F6EF7;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(79,110,247,0.1);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 1.15rem;
+  justify-content: flex-end;
+}
+
+.btn-secondary {
+  padding: 0.48rem 0.95rem;
+  border-radius: 8px;
+  border: 1px solid #E5E9F2;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.btn-secondary:hover { background: #F4F6FA; }
+
+.btn-primary {
+  padding: 0.48rem 1.15rem;
+  border-radius: 8px;
+  border: none;
+  background: #4F6EF7;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.btn-primary:hover { background: #3d5ce0; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-danger {
+  padding: 0.48rem 1.15rem;
+  border-radius: 8px;
+  border: none;
+  background: #e53e3e;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.btn-danger:hover { background: #c53030; }
+
+/* Drop zone */
+#dropZone {
+  border: 2px dashed #E5E9F2;
+  border-radius: 10px;
+  padding: 1.4rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+  margin-bottom: 0.7rem;
+}
+#dropZone:hover, #dropZone.drag-over { border-color: #4F6EF7; background: #EEF2FF; }
+#dzText { font-size: 0.81rem; color: #9ba3c0; }
+#fileInput { display: none; }
+
+#progressWrap {
+  display: none;
+  background: #F4F6FA;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 7px;
+  margin-top: 0.5rem;
+}
+#progressBar {
+  height: 100%;
+  background: #4F6EF7;
+  border-radius: 6px;
+  width: 0%;
+  transition: width 300ms ease;
+}
+
+.token-info { font-size: 0.79rem; color: #666; margin-bottom: 0.7rem; line-height: 1.55; }
+
+/* Edit mode overlay hint */
+body.edit-mode .file-card { outline: 2px dashed rgba(79,110,247,0.25); outline-offset: -2px; }
+
+/* ─────────────────────────────────────────
+   MOBILE SIDEBAR OVERLAY
+───────────────────────────────────────── */
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 19;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 767px) {
+  body { overflow: auto; }
+
+  #hamburger { display: flex; }
+
+  .logo-text { display: none; }
+
+  #searchWrap { width: 140px; }
+  #searchWrap:focus-within { width: 160px; }
+
+  /* Hide some header buttons on mobile */
+  #tokenBtn { display: none; }
+
+  #sidebar {
+    position: fixed;
+    top: 56px; left: 0; bottom: 0;
+    z-index: 20;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.1);
+  }
+  #sidebar.mobile-open { transform: translateX(0); }
+  #sidebar-overlay.visible { display: block; }
+
+  /* Preview as bottom sheet */
+  #previewPanel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100% !important;
+    height: 0;
+    border-left: none;
+    border-top: 1px solid #E5E9F2;
+    border-radius: 16px 16px 0 0;
+    z-index: 25;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+    transition: height 200ms ease;
+  }
+  #previewPanel.open { height: 70vh; }
+
+  .drag-handle {
+    width: 38px; height: 4px;
+    background: #d0d7e8;
+    border-radius: 2px;
+    margin: 0.5rem auto 0;
+  }
+
+  .main-inner { padding: 1rem; }
+  .app-layout { height: calc(100vh - 56px); overflow-y: auto; }
+}
+
+@media (min-width: 768px) {
+  .drag-handle { display: none; }
+  #sidebar-overlay { display: none !important; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <div class="logo-icon">📚</div>
-        <div>
-          <div class="logo-text">Unterrichtsmaterialien</div>
-          <div class="logo-sub">Digitale Sammlung</div>
-        </div>
+<!-- HEADER -->
+<header id="app-header">
+  <button id="hamburger" onclick="toggleSidebar()" aria-label="Menü öffnen">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <div class="logo">
+    <span class="logo-icon">📚</span>
+    <span class="logo-text">Digitale Unterrichtsmaterialien</span>
+  </div>
+
+  <div class="header-spacer"></div>
+
+  <div id="searchWrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="search" placeholder="Suchen…" oninput="render(this.value)" autocomplete="off">
+  </div>
+
+  <button class="hbtn" id="tokenBtn" onclick="showToken()" title="GitHub Token konfigurieren">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+    </svg>
+    ⚙️
+  </button>
+
+  <button class="hbtn" id="editToggle" onclick="toggleEdit()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    ✏️ Bearbeiten
+  </button>
+
+  <button class="hbtn primary" onclick="showUpload()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+    + Hochladen
+  </button>
+</header>
+
+<!-- Mobile sidebar backdrop -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- Drag overlay -->
+<div id="dragOverlay">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </svg>
+  Datei hier ablegen
+</div>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div id="sidebar-inner">
+      <div class="sidebar-label">Ordner</div>
+
+      <div class="sidebar-all active" id="sidebarAll" onclick="selectFolder(null, null)">
+        <span class="all-icon">📁</span>
+        Alle Materialien
+        <span class="sb-count" id="sidebarAllCount">0</span>
       </div>
 
-      <div class="search-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
-      </div>
+      <div class="sb-divider"></div>
 
-      <div class="header-actions">
-        <button class="btn-upload-header" onclick="openUpload()" aria-label="Material hochladen">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          <span class="btn-label">Hochladen</span>
-        </button>
-        <button id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
-        <button id="tokenBtn" onclick="openTokenModal()" title="GitHub Token einrichten" aria-label="GitHub Token einrichten">⚙️</button>
-      </div>
+      <div id="sidebar-tree"></div>
     </div>
-  </header>
+  </aside>
 
-  <!-- ===== MAIN ===== -->
-  <main class="main-content">
-
-    <!-- Filter Bar -->
-    <div class="filter-wrap">
+  <!-- MAIN AREA -->
+  <main id="mainArea">
+    <div class="main-inner">
+      <div id="breadcrumb"></div>
+      <div id="statsRow"></div>
       <div id="filterBar"></div>
+      <div id="fileList"></div>
     </div>
-
-    <!-- Stats Row -->
-    <div id="statsRow"></div>
-
-    <!-- Card Grid / App -->
-    <div id="app"></div>
-
   </main>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="site-footer">
-    Digitale Unterrichtsmaterialien &nbsp;&middot;&nbsp; &copy; <span id="footerYear"></span>
-  </footer>
+  <!-- PREVIEW PANEL -->
+  <aside id="previewPanel">
+    <div class="drag-handle"></div>
 
-  <!-- ===== DRAG OVERLAY ===== -->
-  <div id="dragOverlay" aria-hidden="true">
-    <div class="overlay-emoji">📂</div>
-    HTML-Datei hier ablegen&hellip;
-  </div>
+    <div class="preview-header">
+      <div class="preview-title" id="previewTitle">Vorschau</div>
+      <button class="preview-close" onclick="closePreview()" title="Schließen">×</button>
+    </div>
 
-  <!-- ===== TOAST ===== -->
-  <div id="toast" role="status" aria-live="polite"></div>
+    <div class="preview-meta" id="previewMeta"></div>
 
-  <!-- ===== MODAL: UPLOAD ===== -->
-  <div class="modal-overlay" id="modalUpload" role="dialog" aria-modal="true" aria-label="Material hochladen">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-icon modal-icon-blue">📤</div>
-        <div>
-          <div class="modal-title">Material hochladen</div>
-          <div class="modal-sub">HTML-Datei direkt auf GitHub hochladen.</div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="drop-zone" id="dropZone">
-          <input type="file" id="fileInput" accept=".html">
-          <div class="dz-icon">📄</div>
-          <div id="dzText">Datei hierher ziehen oder klicken</div>
-          <div class="dz-sub">Nur .html Dateien</div>
-        </div>
-        <div class="progress-wrap" id="progressWrap" style="display:none">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="uploadTitel">Titel</label>
-          <input class="form-input" type="text" id="uploadTitel" placeholder="z.B. Quiz Lernfeld 5">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="uploadFach">Fach</label>
-          <input class="form-input" type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch" list="fachList">
-          <datalist id="fachList"></datalist>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="uploadThema">Thema / Lernfeld</label>
-          <input class="form-input" type="text" id="uploadThema" placeholder="z.B. LF5, Algebra" list="themaList">
-          <datalist id="themaList"></datalist>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
-        <button class="btn-primary" id="btnUpload" onclick="doUpload()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          Hochladen
-        </button>
-      </div>
+    <div class="preview-iframe-wrap">
+      <iframe id="previewFrame" src="about:blank" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="preview-footer">
+      <button class="pv-btn" onclick="previewOpenNew()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Öffnen in neuem Tab
+      </button>
+      <button class="pv-btn" onclick="previewCopyLink()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        🔗 Link kopieren
+      </button>
+      <button class="pv-btn" id="previewEditBtn" onclick="previewEdit()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        ✏️ Bearbeiten
+      </button>
+      <button class="pv-btn danger" id="previewDeleteBtn" onclick="previewDelete()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        🗑️ Löschen
+      </button>
+    </div>
+  </aside>
+
+</div><!-- /.app-layout -->
+
+<!-- ══════ MODALS ══════ -->
+
+<!-- UPLOAD -->
+<div class="modal-backdrop" id="modalUpload">
+  <div class="modal">
+    <h2>📤 Datei hochladen</h2>
+    <div id="dropZone"
+         onclick="document.getElementById('fileInput').click()"
+         ondragover="dzDragOver(event)"
+         ondragleave="dzDragLeave(event)"
+         ondrop="dzDrop(event)">
+      <input type="file" id="fileInput" accept=".html" onchange="fileChosen(event)">
+      <div id="dzText">HTML-Datei hierher ziehen oder klicken</div>
+    </div>
+    <label>Titel</label>
+    <input type="text" id="uploadTitel" placeholder="z.B. LF5 Einstieg">
+    <label>Fach</label>
+    <input type="text" id="uploadFach" list="fachList" placeholder="z.B. GPU">
+    <datalist id="fachList"></datalist>
+    <label>Thema</label>
+    <input type="text" id="uploadThema" list="themaList" placeholder="z.B. LF5">
+    <datalist id="themaList"></datalist>
+    <div id="progressWrap"><div id="progressBar"></div></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalUpload')">Abbrechen</button>
+      <button class="btn-primary" id="btnUpload" onclick="doUpload()">Hochladen</button>
     </div>
   </div>
+</div>
 
-  <!-- ===== MODAL: TOKEN ===== -->
-  <div class="modal-overlay" id="modalToken" role="dialog" aria-modal="true" aria-label="GitHub Token einrichten">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-icon modal-icon-yellow">🔑</div>
-        <div>
-          <div class="modal-title">GitHub Token</div>
-          <div class="modal-sub">Einmalig eingeben &mdash; wird nur lokal im Browser gespeichert.</div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="inputToken">Personal Access Token</label>
-          <input class="form-input" type="password" id="inputToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-        </div>
-        <p class="token-hint">
-          Token mit <strong>repo</strong>-Berechtigung erstellen unter
-          <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank" rel="noopener">github.com/settings/tokens</a>.
-        </p>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
-        <button class="btn-primary" onclick="saveToken()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/>
-            <polyline points="7 3 7 8 15 8"/>
-          </svg>
-          Speichern
-        </button>
-      </div>
+<!-- TOKEN -->
+<div class="modal-backdrop" id="modalToken">
+  <div class="modal">
+    <h2>⚙️ GitHub Token</h2>
+    <p class="token-info">
+      Persönliches GitHub Access Token (klassisch) mit <strong>repo</strong>-Scope für Schreibzugriff auf das Repository.
+    </p>
+    <label>Token</label>
+    <input type="password" id="inputToken" placeholder="ghp_…">
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalToken')">Abbrechen</button>
+      <button class="btn-primary" onclick="saveToken()">Speichern</button>
     </div>
   </div>
+</div>
 
-  <!-- ===== MODAL: RENAME / EDIT ===== -->
-  <div class="modal-overlay" id="modalRename" role="dialog" aria-modal="true" aria-label="Material bearbeiten">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-icon modal-icon-blue">✏️</div>
-        <div>
-          <div class="modal-title">Material bearbeiten</div>
-          <div class="modal-sub">Änderungen werden direkt auf GitHub gespeichert.</div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="inputTitel">Titel</label>
-          <input class="form-input" type="text" id="inputTitel" placeholder="Titel des Materials">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="inputFach">Fach</label>
-          <input class="form-input" type="text" id="inputFach" placeholder="z.B. GPU, Mathe">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="inputThema">Thema / Lernfeld</label>
-          <input class="form-input" type="text" id="inputThema" placeholder="z.B. LF5, Algebra">
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
-        <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
-      </div>
+<!-- RENAME -->
+<div class="modal-backdrop" id="modalRename">
+  <div class="modal">
+    <h2>✏️ Material umbenennen</h2>
+    <label>Titel</label>
+    <input type="text" id="inputTitel" placeholder="Titel">
+    <label>Fach</label>
+    <input type="text" id="inputFach" list="fachList" placeholder="Fach">
+    <label>Thema</label>
+    <input type="text" id="inputThema" list="themaList" placeholder="Thema">
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalRename')">Abbrechen</button>
+      <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
     </div>
   </div>
+</div>
 
-  <!-- ===== MODAL: DELETE ===== -->
-  <div class="modal-overlay" id="modalDelete" role="dialog" aria-modal="true" aria-label="Material löschen">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-icon modal-icon-red">🗑️</div>
-        <div>
-          <div class="modal-title">Material löschen?</div>
-          <div class="modal-sub">Diese Aktion kann nicht rückgängig gemacht werden.</div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div id="deleteDesc"></div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
-        <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Endgültig löschen</button>
-      </div>
+<!-- DELETE -->
+<div class="modal-backdrop" id="modalDelete">
+  <div class="modal">
+    <h2>🗑️ Material löschen</h2>
+    <p id="deleteDesc" style="font-size:0.84rem;color:#555;line-height:1.55;"></p>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalDelete')">Abbrechen</button>
+      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
     </div>
   </div>
+</div>
 
-  <script>
-  // ===== MATERIALIEN =====
-  const materialien = [
-    {"name":"business letters lernpfad","fach":"Englisch B2","thema":"Business Letters","pfad":"materialien/Englisch B2/Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
-    {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
-    {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation_1.html","datum":"17.03.2026"},
-    {"name":"adjectives vs adverbs","fach":"Englisch B1","thema":"adjectives vs adverbs","pfad":"materialien/Englisch B1/adjectives vs adverbs/adjectives-vs-adverbs.html","datum":"17.3.2026"},
-    {"name":"Preiskalkulation Lernseite","fach":"GPU","thema":"Preiskalkulation","pfad":"materialien/GPU/Preiskalkulation/Preiskalkulation_Lernseite.html","datum":"17.3.2026"},
-    {"name":"LF8 Interaktiv","fach":"PBP","thema":"Personalmaßnahmen","pfad":"materialien/PBP/Personalmaßnahmen/LF8_Interaktiv.html","datum":"17.3.2026"},
-    {"name":"LF8 Präsentation","fach":"PBP","thema":"Personalmaßnahmen","pfad":"materialien/PBP/Personalmaßnahmen/LF8_Praesentation.html","datum":"17.3.2026"},
-    {"name":"telephoning Lernpfad","fach":"Englisch B2","thema":"telephoning","pfad":"materialien/Englisch B2/telephoning/telephoning-lernpfad.html","datum":"17.3.2026"},
-    {"name":"complaint call quiz","fach":"Englisch B2","thema":"telephoning","pfad":"materialien/Englisch B2/telephoning/complaint-call-quiz.html","datum":"17.3.2026"},
-    {"name":"visitor reception simulator","fach":"Englisch B2","thema":"small talk","pfad":"materialien/Englisch B2/small talk/visitor-reception-simulator_1.html","datum":"17.3.2026"}
-  ];
-  // ======================
+<!-- TOAST -->
+<div id="toast"></div>
 
-  const OWNER = 'brandy299';
-  const REPO  = 'HTML-materialien';
-  const API   = `https://api.github.com/repos/${OWNER}/${REPO}`;
-  const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
+<script>
+/* ═══════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════ */
+const OWNER   = 'brandy299';
+const REPO    = 'HTML-materialien';
+const API     = `https://api.github.com/repos/${OWNER}/${REPO}`;
+const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
 
-  const fachColorMap = {};
-  let colorIdx = 0;
-  function getFachClass(fach) {
-    if (!(fach in fachColorMap)) fachColorMap[fach] = colorIdx++ % 8;
-    return `fc-${fachColorMap[fach]}`;
-  }
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const materialien = [
+  {"name":"business letters lernpfad","fach":"Englisch B2","thema":"Business Letters","pfad":"materialien/Englisch B2/Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
+  {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
+  {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation_1.html","datum":"17.03.2026"},
+  {"name":"adjectives vs adverbs","fach":"Englisch B1","thema":"adjectives vs adverbs","pfad":"materialien/Englisch B1/adjectives vs adverbs/adjectives-vs-adverbs.html","datum":"17.3.2026"},
+  {"name":"Preiskalkulation Lernseite","fach":"GPU","thema":"Preiskalkulation","pfad":"materialien/GPU/Preiskalkulation/Preiskalkulation_Lernseite.html","datum":"17.3.2026"},
+  {"name":"LF8 Interaktiv","fach":"PBP","thema":"Personalmaßnahmen","pfad":"materialien/PBP/Personalmaßnahmen/LF8_Interaktiv.html","datum":"17.3.2026"},
+  {"name":"LF8 Präsentation","fach":"PBP","thema":"Personalmaßnahmen","pfad":"materialien/PBP/Personalmaßnahmen/LF8_Praesentation.html","datum":"17.3.2026"},
+  {"name":"telephoning Lernpfad","fach":"Englisch B2","thema":"telephoning","pfad":"materialien/Englisch B2/telephoning/telephoning-lernpfad.html","datum":"17.3.2026"},
+  {"name":"complaint call quiz","fach":"Englisch B2","thema":"telephoning","pfad":"materialien/Englisch B2/telephoning/complaint-call-quiz.html","datum":"17.3.2026"},
+  {"name":"visitor reception simulator","fach":"Englisch B2","thema":"small talk","pfad":"materialien/Englisch B2/small talk/visitor-reception-simulator_1.html","datum":"17.3.2026"}
+];
 
-  let editMode = false;
-  let currentMaterial = null;
-  let activeFilter = null;
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let editMode      = false;
+let renameTarget  = null;
+let deleteTarget  = null;
+let uploadFile    = null;
+let activeFilter  = null;
 
-  function getToken() { return localStorage.getItem('gh_token') || ''; }
-  function saveToken() {
-    const t = document.getElementById('inputToken').value.trim();
-    if (!t) return;
-    localStorage.setItem('gh_token', t);
-    closeModals(); updateTokenBtn();
-    showToast('Token gespeichert', 'success');
-  }
-  function openTokenModal() {
-    document.getElementById('inputToken').value = getToken();
-    document.getElementById('modalToken').classList.add('open');
-  }
-  function updateTokenBtn() {
-    const btn = document.getElementById('tokenBtn');
-    btn.classList.toggle('token-ok',      !!getToken());
-    btn.classList.toggle('token-missing', !getToken());
-  }
-  function checkToken() {
-    if (getToken()) return true;
-    showToast('Bitte zuerst GitHub Token einrichten (⚙️)', 'error');
-    openTokenModal(); return false;
-  }
+let selectedFach    = null;
+let selectedThema   = null;
+let previewMaterial = null;
 
-  async function ghGet(path) {
-    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
-      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json' }
-    });
-    if (!r.ok) throw new Error(`GitHub Fehler: ${r.status}`);
-    return r.json();
-  }
-  async function ghPut(path, content, sha, message) {
-    const body = { message, content: btoa(unescape(encodeURIComponent(content))) };
-    if (sha) body.sha = sha;
-    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
-      method: 'PUT', headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
-    return r.json();
-  }
-  async function ghDelete(path, sha, message) {
-    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
-      method: 'DELETE', headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, sha })
-    });
-    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
-  }
-  async function updateIndex(list, msg) {
-    const file = await ghGet('index.html');
-    const cur = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
-    const listStr = list.map(m => `    ${JSON.stringify(m)}`).join(',\n');
-    const next = cur.replace(/(const materialien = \[)[^\]]*(\];)/s, `$1\n${listStr}\n  $2`);
-    await ghPut('index.html', next, file.sha, msg);
-  }
+/* ═══════════════════════════════════════════
+   FACH COLOR MAP
+═══════════════════════════════════════════ */
+const _fachColorMap = {};
 
-  function showDelete(e, pfad) {
-    e.preventDefault(); e.stopPropagation();
-    if (!checkToken()) return;
-    currentMaterial = materialien.find(m => m.pfad === pfad);
-    if (!currentMaterial) return;
-    document.getElementById('deleteDesc').textContent =
-      `„${currentMaterial.name}" (${currentMaterial.fach} / ${currentMaterial.thema.trim()}) wird dauerhaft gelöscht.`;
-    document.getElementById('modalDelete').classList.add('open');
+function getFachClass(fach) {
+  if (!_fachColorMap[fach]) {
+    const n = Object.keys(_fachColorMap).length;
+    _fachColorMap[fach] = 'fc-' + (n % 8);
   }
-  async function doDelete() {
-    if (!currentMaterial) return;
-    const btn = document.getElementById('btnConfirmDelete');
-    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Löschen…';
-    try {
-      const file = await ghGet(currentMaterial.pfad);
-      await ghDelete(currentMaterial.pfad, file.sha, `Gelöscht: ${currentMaterial.name}`);
-      const updated = materialien.filter(m => m.pfad !== currentMaterial.pfad);
-      await updateIndex(updated, `Gelöscht: ${currentMaterial.name}`);
-      materialien.splice(materialien.indexOf(currentMaterial), 1);
-      closeModals(); render();
-      showToast(`„${currentMaterial.name}" gelöscht`, 'success');
-      currentMaterial = null;
-    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
-    finally { btn.disabled = false; btn.innerHTML = 'Endgültig löschen'; }
-  }
+  return _fachColorMap[fach];
+}
 
-  function showRename(e, pfad) {
-    e.preventDefault(); e.stopPropagation();
-    if (!checkToken()) return;
-    currentMaterial = materialien.find(m => m.pfad === pfad);
-    if (!currentMaterial) return;
-    document.getElementById('inputTitel').value = currentMaterial.name;
-    document.getElementById('inputFach').value  = currentMaterial.fach;
-    document.getElementById('inputThema').value = currentMaterial.thema.trim();
-    document.getElementById('modalRename').classList.add('open');
-  }
-  async function doRename() {
-    if (!currentMaterial) return;
-    const neuerTitel = document.getElementById('inputTitel').value.trim();
-    const neuesFach  = document.getElementById('inputFach').value.trim();
-    const neuesThema = document.getElementById('inputThema').value.trim();
-    if (!neuerTitel || !neuesFach || !neuesThema) return;
-    const btn = document.getElementById('btnSaveRename');
-    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Speichern…';
-    try {
-      const oldPfad = currentMaterial.pfad;
-      const filename = oldPfad.split('/').pop();
-      const neuerPfad = `materialien/${neuesFach}/${neuesThema}/${filename}`;
-      if (neuerPfad !== oldPfad) {
-        const oldFile = await ghGet(oldPfad);
-        const fc = decodeURIComponent(escape(atob(oldFile.content.replace(/\n/g,''))));
-        await ghPut(neuerPfad, fc, undefined, `Verschoben: ${neuerTitel}`);
-        await ghDelete(oldPfad, oldFile.sha, `Entfernt nach Verschieben: ${currentMaterial.name}`);
-      }
-      const idx = materialien.indexOf(currentMaterial);
-      materialien[idx] = { ...currentMaterial, name: neuerTitel, fach: neuesFach, thema: neuesThema, pfad: neuerPfad };
-      await updateIndex(materialien, `Bearbeitet: ${neuerTitel}`);
-      closeModals(); render();
-      showToast(`„${neuerTitel}" gespeichert`, 'success');
-      currentMaterial = null;
-    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
-    finally { btn.disabled = false; btn.innerHTML = 'Speichern'; }
-  }
+// Stable color seeding in data order
+(function () {
+  const seen = [];
+  materialien.forEach(m => { if (!seen.includes(m.fach)) seen.push(m.fach); });
+  seen.forEach(f => getFachClass(f));
+})();
 
-  let uploadFile = null;
-  function openUpload() {
-    if (!checkToken()) return;
-    uploadFile = null;
-    document.getElementById('dzText').textContent = 'Datei hierher ziehen oder klicken';
-    document.getElementById('dropZone').classList.remove('has-file');
-    document.getElementById('uploadTitel').value = '';
-    document.getElementById('uploadFach').value  = localStorage.getItem('lastFach') || '';
-    document.getElementById('uploadThema').value = localStorage.getItem('lastThema') || '';
-    document.getElementById('progressWrap').style.display = 'none';
-    document.getElementById('progressBar').style.width = '0';
-    const faecher = [...new Set(materialien.map(m => m.fach))];
-    const themen  = [...new Set(materialien.map(m => m.thema.trim()))];
-    document.getElementById('fachList').innerHTML  = faecher.map(f => `<option value="${f}">`).join('');
-    document.getElementById('themaList').innerHTML = themen.map(t => `<option value="${t}">`).join('');
-    document.getElementById('modalUpload').classList.add('open');
-  }
-  function setUploadFile(file) {
-    if (!file || !file.name.endsWith('.html')) { showToast('Nur .html Dateien erlaubt', 'error'); return; }
-    uploadFile = file;
-    document.getElementById('dzText').textContent = '✓ ' + file.name;
-    document.getElementById('dropZone').classList.add('has-file');
-    if (!document.getElementById('uploadTitel').value)
-      document.getElementById('uploadTitel').value = file.name.replace(/\.html$/, '').replace(/[-_]/g, ' ');
-  }
-  async function doUpload() {
-    if (!uploadFile) { showToast('Bitte zuerst eine Datei auswählen', 'error'); return; }
-    const titel = document.getElementById('uploadTitel').value.trim();
-    const fach  = document.getElementById('uploadFach').value.trim();
-    const thema = document.getElementById('uploadThema').value.trim();
-    if (!titel || !fach || !thema) { showToast('Bitte alle Felder ausfüllen', 'error'); return; }
-    const btn = document.getElementById('btnUpload');
-    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Hochladen…';
-    const pb = document.getElementById('progressBar');
-    document.getElementById('progressWrap').style.display = 'block';
-    try {
-      pb.style.width = '20%';
-      const content = await new Promise((res, rej) => {
-        const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = rej; r.readAsText(uploadFile);
-      });
-      pb.style.width = '45%';
-      const pfad = `materialien/${fach}/${thema}/${uploadFile.name}`;
-      const datum = new Date().toLocaleDateString('de-DE');
-      await ghPut(pfad, content, undefined, `Neu: ${titel} [${fach} / ${thema}]`);
-      pb.style.width = '75%';
-      const neuerEintrag = { name: titel, fach, thema, pfad, datum };
-      materialien.push(neuerEintrag);
-      await updateIndex(materialien, `Neu: ${titel} [${fach} / ${thema}]`);
-      pb.style.width = '100%';
-      localStorage.setItem('lastFach', fach);
-      localStorage.setItem('lastThema', thema);
-      closeModals(); render();
-      showToast(`„${titel}" hochgeladen ✓`, 'success');
-    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
-    finally { btn.disabled = false; btn.innerHTML = 'Hochladen'; }
-  }
+const COLOR_VALUES = {
+  'fc-0': { color: '#4F6EF7', light: '#EEF2FF', bg: '#F5F7FF' },
+  'fc-1': { color: '#0CA678', light: '#E6FCF5', bg: '#F0FBF8' },
+  'fc-2': { color: '#E8590C', light: '#FFF4E6', bg: '#FFF8F2' },
+  'fc-3': { color: '#AE3EC9', light: '#F8F0FC', bg: '#FCF5FE' },
+  'fc-4': { color: '#1971C2', light: '#E7F5FF', bg: '#F0F8FF' },
+  'fc-5': { color: '#C2255C', light: '#FFF0F6', bg: '#FFF5FA' },
+  'fc-6': { color: '#5C7CFA', light: '#EDF2FF', bg: '#F3F6FF' },
+  'fc-7': { color: '#F59F00', light: '#FFF9DB', bg: '#FFFCF0' },
+};
 
-  function copyLink(e, pfad) {
-    e.preventDefault(); e.stopPropagation();
-    navigator.clipboard.writeText(BASE_URL + pfad);
-    showToast('Link kopiert!', 'success');
-  }
-  function toggleEditMode() {
-    editMode = !editMode;
-    const btn = document.getElementById('editToggle');
-    document.getElementById('app').classList.toggle('edit-mode', editMode);
-    btn.classList.toggle('active', editMode);
-    btn.textContent = editMode ? '✓ Fertig' : '✏️ Bearbeiten';
-  }
-  function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
-  function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
-    clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3000);
-  }
-  function isNew(datum) {
-    const parts = datum.split('.');
-    if (parts.length !== 3) return false;
-    const d = new Date(+parts[2], +parts[1]-1, +parts[0]);
-    return (Date.now() - d) < 7 * 24 * 60 * 60 * 1000;
-  }
+function cv(cls) { return COLOR_VALUES[cls] || COLOR_VALUES['fc-0']; }
 
-  function buildFilterBar() {
-    const faecher = [...new Set(materialien.map(m => m.fach.trim()))].sort();
-    const bar = document.getElementById('filterBar');
-    const allActive = !activeFilter;
-    const allPill = `<button class="pill${allActive ? ' pill-active' : ''}" onclick="setFilter(null)">Alle <span class="pill-count">${materialien.length}</span></button>`;
-    const pills = faecher.map(f => {
-      const cls = getFachClass(f);
-      const count = materialien.filter(m => m.fach.trim() === f).length;
-      const isActive = activeFilter === f;
-      return `<button class="pill ${cls}${isActive ? ' pill-active' : ''}" onclick="setFilter('${f.replace(/'/g,"\\'")}')">
-        ${f} <span class="pill-count">${count}</span>
-      </button>`;
-    }).join('');
-    bar.innerHTML = allPill + pills;
-  }
-  function setFilter(fach) {
-    activeFilter = fach;
-    buildFilterBar();
-    render(document.getElementById('search').value);
-  }
+/* ═══════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════ */
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
-  function render(filter = '') {
-    const q = filter.toLowerCase();
-    let filtered = materialien.filter(m =>
-      !q || m.name.toLowerCase().includes(q) ||
-      m.fach.toLowerCase().includes(q) ||
-      m.thema.toLowerCase().includes(q)
-    );
-    if (activeFilter) filtered = filtered.filter(m => m.fach.trim() === activeFilter);
+/* ═══════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════ */
+function buildSidebar() {
+  const tree = document.getElementById('sidebar-tree');
+  document.getElementById('sidebarAllCount').textContent = materialien.length;
 
-    const fachSet = new Set(materialien.map(m => m.fach.trim()));
-    const themaSet = new Set(materialien.map(m => m.fach.trim() + '|' + m.thema.trim()));
-    document.getElementById('statsRow').innerHTML = `
-      <div class="stat-card"><div class="stat-num">${materialien.length}</div><div class="stat-lbl">Materialien</div></div>
-      <div class="stat-card"><div class="stat-num">${fachSet.size}</div><div class="stat-lbl">${fachSet.size === 1 ? 'Fach' : 'Fächer'}</div></div>
-      <div class="stat-card"><div class="stat-num">${themaSet.size}</div><div class="stat-lbl">Themen</div></div>`;
+  const allEl = document.getElementById('sidebarAll');
+  allEl.classList.toggle('active', selectedFach === null && selectedThema === null);
 
-    const app = document.getElementById('app');
-    if (filtered.length === 0) {
-      app.innerHTML = `<div class="no-results"><div class="no-results-icon">🔍</div><div class="no-results-text">Keine Ergebnisse${filter ? ` für „${filter}"` : ''}</div></div>`;
-      return;
-    }
-
-    const faecher = {};
-    for (const m of filtered) {
-      const f = m.fach.trim(), t = m.thema.trim();
-      if (!faecher[f]) faecher[f] = {};
-      if (!faecher[f][t]) faecher[f][t] = [];
-      faecher[f][t].push(m);
-    }
-
-    function cardHTML(m) {
-      const ps = m.pfad.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      const fc = getFachClass(m.fach.trim());
-      const newBadge = isNew(m.datum) ? '<span class="badge-new">Neu</span>' : '';
-      return `<div class="card-wrap ${fc}">
-        <a class="card ${fc}" href="${m.pfad}" target="_blank">
-          <div class="card-top">
-            <span class="card-fach">${m.fach}</span>
-            ${newBadge}
-          </div>
-          <div class="card-body">
-            <div class="card-icon">📄</div>
-            <div class="card-info">
-              <div class="card-title">${m.name}</div>
-              <div class="card-meta">${m.thema.trim()} · ${m.datum}</div>
-            </div>
-          </div>
-        </a>
-        <button class="btn-copy-link" title="Link kopieren" onclick="copyLink(event,'${ps}')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        </button>
-        <div class="card-actions">
-          <button class="btn-action btn-action-rename" title="Bearbeiten" onclick="showRename(event,'${ps}')">✏️</button>
-          <button class="btn-action btn-action-delete" title="Löschen"    onclick="showDelete(event,'${ps}')">✕</button>
-        </div>
-      </div>`;
-    }
-
-    let html = '';
-
-    if (!q && !activeFilter) {
-      const recent = materialien.slice(-3).reverse();
-      if (recent.length) {
-        html += `<div class="section-block"><div class="section-label">Zuletzt hinzugefügt</div><div class="grid">${recent.map(cardHTML).join('')}</div></div>`;
-      }
-    }
-
-    for (const fach of Object.keys(faecher).sort()) {
-      const fc = getFachClass(fach);
-      const total = Object.values(faecher[fach]).flat().length;
-      html += `<div class="section-block ${fc}">
-        <div class="fach-header">
-          <div class="fach-dot"></div>
-          <span class="fach-name">${fach}</span>
-          <span class="fach-count">${total}</span>
-        </div>`;
-      for (const thema of Object.keys(faecher[fach]).sort()) {
-        html += `<div class="thema-block">
-          <div class="thema-label">${thema}</div>
-          <div class="grid">${faecher[fach][thema].map(cardHTML).join('')}</div>
-        </div>`;
-      }
-      html += `</div>`;
-    }
-
-    app.innerHTML = html;
-    if (editMode) app.classList.add('edit-mode');
-  }
-
-  document.getElementById('fileInput').addEventListener('change', e => setUploadFile(e.target.files[0]));
-  const dz = document.getElementById('dropZone');
-  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
-  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); setUploadFile(e.dataTransfer.files[0]); });
-
-  const overlay = document.getElementById('dragOverlay');
-  let dragCounter = 0;
-  document.addEventListener('dragenter', e => { if ([...e.dataTransfer.types].includes('Files')) { dragCounter++; overlay.classList.add('visible'); } });
-  document.addEventListener('dragleave', () => { dragCounter--; if (dragCounter <= 0) { dragCounter = 0; overlay.classList.remove('visible'); } });
-  document.addEventListener('dragover', e => e.preventDefault());
-  document.addEventListener('drop', e => {
-    e.preventDefault(); dragCounter = 0; overlay.classList.remove('visible');
-    const file = e.dataTransfer.files[0];
-    if (file?.name.endsWith('.html')) { openUpload(); setTimeout(() => setUploadFile(file), 50); }
-    else if (file) showToast('Nur .html Dateien erlaubt', 'error');
+  // Build fach → thema → count map
+  const fachMap = {};
+  materialien.forEach(m => {
+    if (!fachMap[m.fach]) fachMap[m.fach] = {};
+    fachMap[m.fach][m.thema] = (fachMap[m.fach][m.thema] || 0) + 1;
   });
 
-  document.getElementById('search').addEventListener('input', e => render(e.target.value));
-  document.querySelectorAll('.modal-overlay').forEach(el =>
-    el.addEventListener('click', e => { if (e.target === el) closeModals(); })
+  tree.innerHTML = '';
+
+  Object.entries(fachMap).forEach(([fach, themen]) => {
+    const cls = getFachClass(fach);
+    const fachTotal = Object.values(themen).reduce((a, b) => a + b, 0);
+    const isFachActive = selectedFach === fach && !selectedThema;
+    const isExpanded = selectedFach === fach;
+
+    const group = document.createElement('div');
+    group.className = 'fach-group ' + cls;
+
+    const header = document.createElement('div');
+    header.className = 'fach-header' + (isFachActive ? ' active' : '');
+    header.innerHTML =
+      '<span class="fach-dot"></span>' +
+      '<span class="fach-name">' + esc(fach) + '</span>' +
+      '<span class="sb-count">' + fachTotal + '</span>' +
+      '<svg class="fach-chevron' + (isExpanded ? ' open' : '') + '" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
+
+    header.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const list = group.querySelector('.thema-list');
+      const chevron = header.querySelector('.fach-chevron');
+      const opening = !list.classList.contains('open');
+      list.classList.toggle('open', opening);
+      chevron.classList.toggle('open', opening);
+      selectFolder(opening ? fach : null, null);
+    });
+
+    const themaListEl = document.createElement('div');
+    themaListEl.className = 'thema-list' + (isExpanded ? ' open' : '');
+
+    Object.entries(themen).forEach(([thema, count]) => {
+      const isThemaActive = selectedFach === fach && selectedThema === thema;
+      const item = document.createElement('div');
+      item.className = 'thema-item' + (isThemaActive ? ' active' : '');
+      item.innerHTML =
+        '<span class="thema-item-dot"></span>' +
+        '<span class="thema-item-label">' + esc(thema) + '</span>' +
+        '<span class="ti-count">' + count + '</span>';
+      item.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectFolder(fach, thema);
+      });
+      themaListEl.appendChild(item);
+    });
+
+    group.appendChild(header);
+    group.appendChild(themaListEl);
+    tree.appendChild(group);
+  });
+
+  // Populate datalists
+  const fachDL = document.getElementById('fachList');
+  fachDL.innerHTML = '';
+  Object.keys(fachMap).forEach(f => {
+    const o = document.createElement('option');
+    o.value = f;
+    fachDL.appendChild(o);
+  });
+
+  const themaDL = document.getElementById('themaList');
+  themaDL.innerHTML = '';
+  const allThemen = [...new Set(materialien.map(m => m.thema))];
+  allThemen.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t;
+    themaDL.appendChild(o);
+  });
+}
+
+function selectFolder(fach, thema) {
+  selectedFach = fach;
+  selectedThema = thema;
+  buildSidebar();
+  render(document.getElementById('search').value);
+  updateBreadcrumb();
+  closePreview();
+  // Close mobile sidebar after selection
+  if (window.innerWidth < 768) closeSidebar();
+}
+
+function updateBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  let html = '<span class="bc-item" onclick="selectFolder(null,null)">Alle</span>';
+  if (selectedFach) {
+    html += '<span class="bc-sep">›</span>';
+    if (selectedThema) {
+      html += '<span class="bc-item" onclick="selectFolder(\'' + esc(selectedFach) + '\',null)">' + esc(selectedFach) + '</span>';
+      html += '<span class="bc-sep">›</span>';
+      html += '<span class="bc-cur">' + esc(selectedThema) + '</span>';
+    } else {
+      html += '<span class="bc-cur">' + esc(selectedFach) + '</span>';
+    }
+  }
+  bc.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   PREVIEW PANEL
+═══════════════════════════════════════════ */
+function showPreview(m) {
+  previewMaterial = m;
+  const cls = getFachClass(m.fach);
+  const c   = cv(cls);
+
+  document.getElementById('previewTitle').textContent = m.name;
+
+  document.getElementById('previewMeta').innerHTML =
+    '<span class="preview-fach-badge" style="background:' + c.light + ';color:' + c.color + '">' + esc(m.fach) + '</span>' +
+    '<span class="preview-thema-txt">' + esc(m.thema) + '</span>' +
+    '<span class="preview-date-txt">' + esc(m.datum) + '</span>';
+
+  document.getElementById('previewFrame').src = m.pfad;
+
+  document.querySelectorAll('.file-card').forEach(function (card) {
+    card.classList.toggle('active-preview', card.dataset.pfad === m.pfad);
+  });
+
+  document.getElementById('previewPanel').classList.add('open');
+  document.querySelector('.app-layout').classList.add('preview-open');
+}
+
+function closePreview() {
+  previewMaterial = null;
+  document.getElementById('previewFrame').src = 'about:blank';
+  document.getElementById('previewPanel').classList.remove('open');
+  document.querySelector('.app-layout').classList.remove('preview-open');
+  document.querySelectorAll('.file-card').forEach(function (c) {
+    c.classList.remove('active-preview');
+  });
+}
+
+function previewOpenNew() {
+  if (previewMaterial) window.open(previewMaterial.pfad, '_blank');
+}
+
+function previewCopyLink() {
+  if (!previewMaterial) return;
+  navigator.clipboard.writeText(BASE_URL + previewMaterial.pfad)
+    .then(function () { showToast('Link kopiert!'); });
+}
+
+function previewEdit() {
+  if (previewMaterial) showRename(previewMaterial);
+}
+
+function previewDelete() {
+  if (previewMaterial) showDelete(previewMaterial);
+}
+
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
+function render(query) {
+  if (query === undefined) query = '';
+  const q = query.toLowerCase().trim();
+
+  const list     = document.getElementById('fileList');
+  const statsRow = document.getElementById('statsRow');
+
+  // Filter items
+  const items = materialien.filter(function (m) {
+    const matchSearch = !q ||
+      m.name.toLowerCase().includes(q) ||
+      m.fach.toLowerCase().includes(q) ||
+      m.thema.toLowerCase().includes(q);
+    const matchFach  = !selectedFach  || m.fach  === selectedFach;
+    const matchThema = !selectedThema || m.thema === selectedThema;
+    return matchSearch && matchFach && matchThema;
+  });
+
+  // Stats
+  const uFaecher = [...new Set(items.map(function (m) { return m.fach; }))].length;
+  const uThemen  = [...new Set(items.map(function (m) { return m.thema; }))].length;
+  statsRow.innerHTML =
+    '<div class="stat-chip"><strong>' + items.length + '</strong>&nbsp;Materialien</div>' +
+    '<div class="stat-chip"><strong>' + uFaecher + '</strong>&nbsp;Fächer</div>' +
+    '<div class="stat-chip"><strong>' + uThemen  + '</strong>&nbsp;Themen</div>';
+
+  list.innerHTML = '';
+
+  if (items.length === 0) {
+    list.innerHTML =
+      '<div class="empty-state">' +
+      '<div class="empty-icon">🔍</div>' +
+      '<h3>Keine Materialien gefunden</h3>' +
+      '<p>Anderen Suchbegriff versuchen oder anderen Ordner wählen.</p>' +
+      '</div>';
+    return;
+  }
+
+  // "Zuletzt hinzugefügt" — only when viewing all without search
+  if (!selectedFach && !selectedThema && !q) {
+    const recent = materialien.slice(-3).reverse();
+    const recSec = document.createElement('div');
+    recSec.className = 'recent-section';
+    recSec.innerHTML = '<div class="recent-header"><span class="recent-title">Zuletzt hinzugefügt</span></div>';
+    const grid = document.createElement('div');
+    grid.className = 'file-grid';
+    recent.forEach(function (m) { grid.appendChild(makeCard(m)); });
+    recSec.appendChild(grid);
+    list.appendChild(recSec);
+  }
+
+  if (selectedThema) {
+    // Flat list
+    const grid = document.createElement('div');
+    grid.className = 'file-grid';
+    items.forEach(function (m) { grid.appendChild(makeCard(m)); });
+    list.appendChild(grid);
+
+  } else if (selectedFach) {
+    // Group by thema
+    const themaMap = {};
+    items.forEach(function (m) {
+      if (!themaMap[m.thema]) themaMap[m.thema] = [];
+      themaMap[m.thema].push(m);
+    });
+    const cls = getFachClass(selectedFach);
+    Object.entries(themaMap).forEach(function ([thema, ms]) {
+      const sec = document.createElement('div');
+      sec.className = 'thema-section';
+      sec.innerHTML =
+        '<div class="thema-header ' + cls + '">' +
+        '<span class="thema-badge">' + esc(thema) + '</span>' +
+        '<span class="thema-count-badge">' + ms.length + ' Material' + (ms.length !== 1 ? 'ien' : '') + '</span>' +
+        '</div>';
+      const grid = document.createElement('div');
+      grid.className = 'file-grid';
+      ms.forEach(function (m) { grid.appendChild(makeCard(m)); });
+      sec.appendChild(grid);
+      list.appendChild(sec);
+    });
+
+  } else {
+    // Group by fach then thema
+    const fachMap = {};
+    items.forEach(function (m) {
+      if (!fachMap[m.fach]) fachMap[m.fach] = {};
+      if (!fachMap[m.fach][m.thema]) fachMap[m.fach][m.thema] = [];
+      fachMap[m.fach][m.thema].push(m);
+    });
+
+    Object.entries(fachMap).forEach(function ([fach, themen]) {
+      const cls   = getFachClass(fach);
+      const total = Object.values(themen).flat().length;
+
+      const fachSec  = document.createElement('div');
+      const secHead  = document.createElement('div');
+      secHead.className = 'section-header ' + cls;
+      secHead.innerHTML =
+        '<span class="section-dot"></span>' +
+        '<span class="section-title">' + esc(fach) + '</span>' +
+        '<span class="section-sub">' + total + ' Material' + (total !== 1 ? 'ien' : '') + '</span>' +
+        '<span class="section-line"></span>';
+      fachSec.appendChild(secHead);
+
+      Object.entries(themen).forEach(function ([thema, ms]) {
+        const sec = document.createElement('div');
+        sec.className = 'thema-section';
+        sec.innerHTML =
+          '<div class="thema-header ' + cls + '">' +
+          '<span class="thema-badge">' + esc(thema) + '</span>' +
+          '<span class="thema-count-badge">' + ms.length + ' Material' + (ms.length !== 1 ? 'ien' : '') + '</span>' +
+          '</div>';
+        const grid = document.createElement('div');
+        grid.className = 'file-grid';
+        ms.forEach(function (m) { grid.appendChild(makeCard(m)); });
+        sec.appendChild(grid);
+        fachSec.appendChild(sec);
+      });
+
+      list.appendChild(fachSec);
+    });
+  }
+}
+
+function makeCard(m) {
+  const cls = getFachClass(m.fach);
+
+  const card = document.createElement('a');
+  card.className = 'file-card ' + cls;
+  card.href = m.pfad;
+  card.dataset.pfad = m.pfad;
+
+  card.innerHTML =
+    '<div class="file-icon">📄</div>' +
+    '<div class="file-info">' +
+    '  <div class="file-title">' + esc(m.name) + '</div>' +
+    '  <div class="file-meta">' + esc(m.fach) + ' · ' + esc(m.thema) + ' · ' + esc(m.datum) + '</div>' +
+    '</div>' +
+    '<button class="card-copy-btn" title="Link kopieren" onclick="copyLink(event,\'' + esc(m.pfad) + '\')">' +
+    '  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+    '    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>' +
+    '    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>' +
+    '  </svg>' +
+    '</button>';
+
+  // Edit-mode inline actions
+  if (editMode) {
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;gap:3px;flex-shrink:0;margin-left:4px;';
+    const pfadSafe = m.pfad.replace(/'/g, "\\'");
+    actions.innerHTML =
+      '<button style="padding:3px 7px;border-radius:6px;border:1px solid #E5E9F2;background:#fff;font-size:0.7rem;cursor:pointer;color:#444;" ' +
+      'onclick="event.preventDefault();event.stopPropagation();showRename(materialien.find(x=>x.pfad===\'' + pfadSafe + '\'))">✏️</button>' +
+      '<button style="padding:3px 7px;border-radius:6px;border:1px solid #ffc0c0;background:#fff;font-size:0.7rem;cursor:pointer;color:#e53e3e;" ' +
+      'onclick="event.preventDefault();event.stopPropagation();showDelete(materialien.find(x=>x.pfad===\'' + pfadSafe + '\'))">🗑️</button>';
+    card.appendChild(actions);
+  }
+
+  card.addEventListener('click', function (e) {
+    e.preventDefault();
+    showPreview(m);
+  });
+
+  if (previewMaterial && previewMaterial.pfad === m.pfad) {
+    card.classList.add('active-preview');
+  }
+
+  return card;
+}
+
+function copyLink(e, pfad) {
+  e.preventDefault();
+  e.stopPropagation();
+  navigator.clipboard.writeText(BASE_URL + pfad)
+    .then(function () { showToast('Link kopiert!'); });
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE SIDEBAR
+═══════════════════════════════════════════ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebar-overlay').classList.toggle('visible');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════════
+   EDIT MODE
+═══════════════════════════════════════════ */
+function toggleEdit() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('editToggle');
+  btn.style.background     = editMode ? '#EEF2FF' : '';
+  btn.style.color          = editMode ? '#4F6EF7' : '';
+  btn.style.borderColor    = editMode ? '#4F6EF7' : '';
+  render(document.getElementById('search').value);
+  showToast(editMode ? 'Bearbeitungsmodus aktiv' : 'Bearbeitungsmodus beendet');
+}
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+let _toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+}
+
+/* ═══════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════ */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-backdrop').forEach(function (bd) {
+  bd.addEventListener('click', function (e) {
+    if (e.target === bd) bd.classList.remove('open');
+  });
+});
+
+/* ═══════════════════════════════════════════
+   TOKEN
+═══════════════════════════════════════════ */
+function showToken() {
+  document.getElementById('inputToken').value = getToken();
+  openModal('modalToken');
+}
+function saveToken() {
+  const t = document.getElementById('inputToken').value.trim();
+  if (t) { localStorage.setItem('gh_token', t); showToast('Token gespeichert'); }
+  closeModal('modalToken');
+}
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+
+/* ═══════════════════════════════════════════
+   GITHUB API
+═══════════════════════════════════════════ */
+async function ghGet(path) {
+  const r = await fetch(API + '/contents/' + path, {
+    headers: {
+      Authorization: 'token ' + getToken(),
+      Accept: 'application/vnd.github.v3+json'
+    }
+  });
+  if (!r.ok) throw new Error('GitHub GET ' + path + ': ' + r.status + ' ' + r.statusText);
+  return r.json();
+}
+
+async function ghPut(path, body) {
+  const r = await fetch(API + '/contents/' + path, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'token ' + getToken(),
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const err = await r.json().catch(function () { return {}; });
+    throw new Error(err.message || 'GitHub PUT ' + path + ': ' + r.status);
+  }
+  return r.json();
+}
+
+async function ghDelete(path, sha, message) {
+  const r = await fetch(API + '/contents/' + path, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'token ' + getToken(),
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: message, sha: sha })
+  });
+  if (!r.ok) throw new Error('GitHub DELETE ' + path + ': ' + r.status);
+}
+
+async function updateIndex(newData) {
+  const fileInfo    = await ghGet('index.html');
+  const rawContent  = atob(fileInfo.content.replace(/\n/g, ''));
+  const updated     = rawContent.replace(
+    /const materialien\s*=\s*\[[\s\S]*?\];/,
+    'const materialien = ' + JSON.stringify(newData, null, 2) + ';'
   );
+  await ghPut('index.html', {
+    message: 'Update materialien index',
+    content: btoa(unescape(encodeURIComponent(updated))),
+    sha: fileInfo.sha
+  });
+}
 
-  [...new Set(materialien.map(m => m.fach.trim()))].sort().forEach(f => getFachClass(f));
-  updateTokenBtn();
-  buildFilterBar();
-  render();
+/* ═══════════════════════════════════════════
+   UPLOAD
+═══════════════════════════════════════════ */
+function showUpload() {
+  uploadFile = null;
+  document.getElementById('uploadTitel').value = '';
+  document.getElementById('uploadFach').value  = '';
+  document.getElementById('uploadThema').value = '';
+  document.getElementById('dzText').textContent = 'HTML-Datei hierher ziehen oder klicken';
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('progressBar').style.width    = '0%';
+  document.getElementById('btnUpload').disabled         = false;
+  document.getElementById('btnUpload').textContent      = 'Hochladen';
+  openModal('modalUpload');
+}
 
-  // Footer year
-  document.getElementById('footerYear').textContent = new Date().getFullYear();
-  </script>
+function fileChosen(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  uploadFile = f;
+  document.getElementById('dzText').textContent = '✅ ' + f.name;
+  if (!document.getElementById('uploadTitel').value)
+    document.getElementById('uploadTitel').value = f.name.replace(/\.html?$/i, '');
+}
+
+function dzDragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.add('drag-over');
+}
+function dzDragLeave() {
+  document.getElementById('dropZone').classList.remove('drag-over');
+}
+function dzDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f && f.name.toLowerCase().endsWith('.html')) {
+    uploadFile = f;
+    document.getElementById('dzText').textContent = '✅ ' + f.name;
+    if (!document.getElementById('uploadTitel').value)
+      document.getElementById('uploadTitel').value = f.name.replace(/\.html?$/i, '');
+  } else if (f) {
+    showToast('Nur HTML-Dateien erlaubt');
+  }
+}
+
+async function doUpload() {
+  if (!uploadFile)   return showToast('Keine Datei ausgewählt');
+  const titel = document.getElementById('uploadTitel').value.trim();
+  const fach  = document.getElementById('uploadFach').value.trim();
+  const thema = document.getElementById('uploadThema').value.trim();
+  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
+
+  const btn = document.getElementById('btnUpload');
+  btn.disabled = true;
+  btn.textContent = 'Hochladen…';
+
+  const pfad = 'materialien/' + fach + '/' + thema + '/' + uploadFile.name;
+  const pw = document.getElementById('progressWrap');
+  const pb = document.getElementById('progressBar');
+  pw.style.display = 'block';
+  pb.style.width = '25%';
+
+  try {
+    const content = await new Promise(function (res, rej) {
+      const reader = new FileReader();
+      reader.onload = function (e) { res(btoa(unescape(encodeURIComponent(e.target.result)))); };
+      reader.onerror = rej;
+      reader.readAsText(uploadFile);
+    });
+    pb.style.width = '55%';
+
+    await ghPut(pfad, { message: 'Upload: ' + titel, content: content });
+    pb.style.width = '75%';
+
+    const today = new Date();
+    const datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+    materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum });
+    await updateIndex(materialien);
+    pb.style.width = '100%';
+
+    setTimeout(function () {
+      closeModal('modalUpload');
+      buildSidebar();
+      render(document.getElementById('search').value);
+      showToast('"' + titel + '" hochgeladen');
+      btn.disabled    = false;
+      btn.textContent = 'Hochladen';
+      pw.style.display = 'none';
+      pb.style.width   = '0%';
+    }, 400);
+  } catch (e) {
+    showToast('Fehler: ' + e.message);
+    btn.disabled    = false;
+    btn.textContent = 'Hochladen';
+    pb.style.width  = '0%';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   RENAME
+═══════════════════════════════════════════ */
+function showRename(m) {
+  if (!m) return;
+  renameTarget = m;
+  document.getElementById('inputTitel').value = m.name;
+  document.getElementById('inputFach').value  = m.fach;
+  document.getElementById('inputThema').value = m.thema;
+  openModal('modalRename');
+}
+
+async function doRename() {
+  if (!renameTarget) return;
+  const titel = document.getElementById('inputTitel').value.trim();
+  const fach  = document.getElementById('inputFach').value.trim();
+  const thema = document.getElementById('inputThema').value.trim();
+  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
+
+  const btn = document.getElementById('btnSaveRename');
+  btn.disabled = true;
+  btn.textContent = 'Speichern…';
+
+  const idx = materialien.indexOf(renameTarget);
+  if (idx < 0) { btn.disabled = false; btn.textContent = 'Speichern'; return; }
+
+  const oldPfad = renameTarget.pfad;
+  const fileName = oldPfad.split('/').pop();
+  const newPfad  = 'materialien/' + fach + '/' + thema + '/' + fileName;
+
+  try {
+    if (newPfad !== oldPfad) {
+      const old = await ghGet(oldPfad);
+      await ghPut(newPfad, {
+        message: 'Move: ' + renameTarget.name + ' → ' + titel,
+        content: old.content.replace(/\n/g, '')
+      });
+      await ghDelete(oldPfad, old.sha, 'Remove old: ' + oldPfad);
+    }
+
+    const updated = { name: titel, fach: fach, thema: thema, pfad: newPfad, datum: renameTarget.datum };
+    materialien[idx] = updated;
+    await updateIndex(materialien);
+
+    closeModal('modalRename');
+    buildSidebar();
+    render(document.getElementById('search').value);
+    if (previewMaterial && previewMaterial.pfad === oldPfad) showPreview(updated);
+    renameTarget = null;
+    showToast('Umbenannt zu "' + titel + '"');
+  } catch (e) {
+    showToast('Fehler: ' + e.message);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Speichern';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DELETE
+═══════════════════════════════════════════ */
+function showDelete(m) {
+  if (!m) return;
+  deleteTarget = m;
+  document.getElementById('deleteDesc').textContent =
+    'Möchtest du "' + m.name + '" (' + m.fach + ' / ' + m.thema + ') wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
+  openModal('modalDelete');
+}
+
+async function doDelete() {
+  if (!deleteTarget) return;
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
+
+  const btn = document.getElementById('btnConfirmDelete');
+  btn.disabled    = true;
+  btn.textContent = 'Löschen…';
+
+  try {
+    const fileInfo = await ghGet(deleteTarget.pfad);
+    await ghDelete(deleteTarget.pfad, fileInfo.sha, 'Delete: ' + deleteTarget.name);
+
+    const idx = materialien.indexOf(deleteTarget);
+    if (idx >= 0) materialien.splice(idx, 1);
+    await updateIndex(materialien);
+
+    if (previewMaterial && previewMaterial.pfad === deleteTarget.pfad) closePreview();
+
+    closeModal('modalDelete');
+    buildSidebar();
+    render(document.getElementById('search').value);
+    showToast('"' + deleteTarget.name + '" gelöscht');
+    deleteTarget = null;
+  } catch (e) {
+    showToast('Fehler: ' + e.message);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Löschen';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   GLOBAL DRAG & DROP
+═══════════════════════════════════════════ */
+let _dragCounter = 0;
+
+document.addEventListener('dragenter', function (e) {
+  if (e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types.includes('Files')) {
+    _dragCounter++;
+    document.getElementById('dragOverlay').classList.add('active');
+  }
+});
+document.addEventListener('dragleave', function () {
+  _dragCounter--;
+  if (_dragCounter <= 0) {
+    _dragCounter = 0;
+    document.getElementById('dragOverlay').classList.remove('active');
+  }
+});
+document.addEventListener('dragover', function (e) { e.preventDefault(); });
+document.addEventListener('drop', function (e) {
+  e.preventDefault();
+  _dragCounter = 0;
+  document.getElementById('dragOverlay').classList.remove('active');
+  const f = e.dataTransfer.files[0];
+  if (f && f.name.toLowerCase().endsWith('.html')) {
+    uploadFile = f;
+    showUpload();
+    // Re-apply file info after modal opens
+    document.getElementById('dzText').textContent = '✅ ' + f.name;
+    document.getElementById('uploadTitel').value  = f.name.replace(/\.html?$/i, '');
+  } else if (f) {
+    showToast('Nur HTML-Dateien erlaubt');
+  }
+});
+
+/* ═══════════════════════════════════════════
+   KEYBOARD
+═══════════════════════════════════════════ */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.open').forEach(function (m) {
+      m.classList.remove('open');
+    });
+    closePreview();
+    closeSidebar();
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search').focus();
+  }
+});
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+buildSidebar();
+render('');
+updateBreadcrumb();
+</script>
 </body>
 </html>
