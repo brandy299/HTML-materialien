@@ -7,183 +7,240 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --blue: #3b5bdb; --blue-light: #eef2ff;
-      --red: #e03131;  --red-light: #fff5f5;
-      --green: #2f9e44;
-      --gray: #868e96; --border: #e9ecef;
-      --bg: #f8f9fa;   --white: #fff;
       --radius: 12px;
+      --white: #fff;
+      --bg: #f4f6fb;
+      --border: #e5e9f0;
+      --gray: #8892a4;
+      --text: #1a2035;
+      --green: #2f9e44;
+      --red: #e03131; --red-light: #fff5f5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.09);
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: #212529; min-height: 100vh; }
 
-    /* ── Top Bar ── */
-    .top-bar {
-      background: var(--white); border-bottom: 1px solid var(--border);
-      padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 10;
+    /* Fach-Farben */
+    .fc-0 { --fc: #3b5bdb; --fc-light: #eef2ff; --fc-border: #bac8ff; }
+    .fc-1 { --fc: #0ca678; --fc-light: #e6fcf5; --fc-border: #96f2d7; }
+    .fc-2 { --fc: #e8590c; --fc-light: #fff4e6; --fc-border: #ffc078; }
+    .fc-3 { --fc: #ae3ec9; --fc-light: #f8f0fc; --fc-border: #e599f7; }
+    .fc-4 { --fc: #1971c2; --fc-light: #e7f5ff; --fc-border: #74c0fc; }
+    .fc-5 { --fc: #c2255c; --fc-light: #fff0f6; --fc-border: #faa2c1; }
+    .fc-6 { --fc: #5c7cfa; --fc-light: #edf2ff; --fc-border: #bac8ff; }
+    .fc-7 { --fc: #f59f00; --fc-light: #fff9db; --fc-border: #ffe066; }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .header-top {
+      max-width: 1040px; margin: 0 auto;
+      padding: 0.85rem 1.5rem;
       display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
     }
-    .top-bar h1 { font-size: 1.2rem; font-weight: 700; flex-shrink: 0; }
-    .top-bar h1 span { color: var(--blue); }
-    .search-wrap { flex: 1; min-width: 160px; max-width: 360px; position: relative; }
-    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray); pointer-events: none; }
-    #search { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
-    #search:focus { border-color: var(--blue); }
-    .bar-btns { margin-left: auto; display: flex; gap: 0.5rem; }
-    .btn-bar {
-      padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--white); font-size: 0.82rem; cursor: pointer; color: var(--gray);
-      transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem;
-    }
-    .btn-bar:hover { border-color: var(--blue); color: var(--blue); }
-    .btn-bar.active { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 600; }
-    .btn-bar.token-ok::before { content: '🟢'; font-size: 0.6rem; }
-    .btn-bar.token-missing::before { content: '🔴'; font-size: 0.6rem; }
-    .btn-upload { background: var(--blue) !important; color: white !important; border-color: var(--blue) !important; font-weight: 600; }
-    .btn-upload:hover { background: #3451c7 !important; border-color: #3451c7 !important; }
+    .logo { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .logo-icon { width: 32px; height: 32px; background: #3b5bdb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .logo h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+    .logo h1 span { color: #3b5bdb; }
 
-    /* ── Stats ── */
-    .stats { max-width: 960px; margin: 1.4rem auto 0; padding: 0 1.5rem; display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--gray); }
-    .stats strong { color: #212529; }
+    .search-wrap { flex: 1; min-width: 160px; max-width: 340px; position: relative; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray); pointer-events: none; }
+    #search { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; outline: none; background: var(--bg); transition: border-color 0.15s, background 0.15s; }
+    #search:focus { border-color: #3b5bdb; background: var(--white); }
+
+    .bar-btns { margin-left: auto; display: flex; gap: 0.4rem; flex-shrink: 0; }
+    .btn-bar { padding: 0.42rem 0.85rem; border-radius: 8px; border: 1px solid var(--border); background: var(--white); font-size: 0.8rem; cursor: pointer; color: var(--gray); transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; }
+    .btn-bar:hover { border-color: #3b5bdb; color: #3b5bdb; }
+    .btn-bar.active { background: #eef2ff; border-color: #3b5bdb; color: #3b5bdb; font-weight: 600; }
+    .btn-bar.token-ok::before  { content: '●'; font-size: 0.5rem; color: var(--green); }
+    .btn-bar.token-missing::before { content: '●'; font-size: 0.5rem; color: var(--red); }
+    .btn-upload { background: #3b5bdb !important; color: white !important; border-color: #3b5bdb !important; font-weight: 600; }
+    .btn-upload:hover { background: #3451c7 !important; }
+
+    /* ── Filter Pills ── */
+    .filter-bar { border-top: 1px solid var(--border); padding: 0.55rem 1.5rem; max-width: 1040px; margin: 0 auto; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+    .filter-label { font-size: 0.75rem; color: var(--gray); margin-right: 0.2rem; font-weight: 500; }
+    .pill { padding: 0.28rem 0.8rem; border-radius: 99px; border: 1px solid var(--border); background: var(--white); font-size: 0.78rem; cursor: pointer; color: var(--gray); transition: all 0.15s; white-space: nowrap; }
+    .pill:hover { border-color: #3b5bdb; color: #3b5bdb; }
+    .pill.active { color: white; border-color: transparent; font-weight: 600; }
 
     /* ── Main ── */
-    main { max-width: 960px; margin: 1.5rem auto 3rem; padding: 0 1.5rem; }
-    .fach-block { margin-bottom: 2.5rem; }
-    .fach-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .fach-badge { background: var(--blue); color: white; font-size: 0.72rem; padding: 3px 9px; border-radius: 20px; font-weight: 700; }
-    .fach-name { font-size: 1.1rem; font-weight: 700; }
-    .fach-count { font-size: 0.8rem; color: var(--gray); margin-left: auto; }
-    .thema-block { margin-bottom: 1.2rem; }
-    .thema-label { font-size: 0.78rem; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+    main { max-width: 1040px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+    /* ── Stats ── */
+    .stats-row { display: flex; gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+    .stat-card { background: var(--white); border-radius: var(--radius); padding: 0.9rem 1.2rem; border: 1px solid var(--border); min-width: 120px; }
+    .stat-card .stat-num { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-card .stat-lbl { font-size: 0.75rem; color: var(--gray); margin-top: 1px; }
+
+    /* ── Neueste Sektion ── */
+    .section-label { font-size: 0.75rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Fach-Block ── */
+    .fach-block { margin-bottom: 2.2rem; }
+    .fach-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
+    .fach-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--fc, #3b5bdb); flex-shrink: 0; }
+    .fach-name { font-size: 1rem; font-weight: 700; }
+    .fach-count { font-size: 0.78rem; color: var(--gray); margin-left: auto; background: var(--bg); border: 1px solid var(--border); padding: 2px 8px; border-radius: 99px; }
+
+    /* ── Thema ── */
+    .thema-block { margin-bottom: 1rem; }
+    .thema-label { font-size: 0.72rem; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; padding-left: 0.2rem; }
+
+    /* ── Grid & Cards ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.6rem; }
     .card-wrap { position: relative; }
     .card {
-      background: var(--white); border-radius: var(--radius); padding: 0.9rem 1.1rem;
-      text-decoration: none; color: inherit; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      transition: box-shadow 0.15s, transform 0.15s; display: flex; align-items: center;
-      gap: 0.8rem; border: 1px solid transparent;
+      background: var(--white); border-radius: var(--radius);
+      padding: 0.85rem 1rem; text-decoration: none; color: inherit;
+      box-shadow: var(--shadow-sm); transition: box-shadow 0.15s, transform 0.15s;
+      display: flex; align-items: center; gap: 0.75rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--fc, #3b5bdb);
     }
-    .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: var(--blue-light); }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--fc-border, #bac8ff); border-left-color: var(--fc, #3b5bdb); }
     .edit-mode .card { padding-right: 3rem; }
-    .edit-mode .card:hover { transform: none; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-color: var(--border); }
-    .card-icon { width: 36px; height: 36px; background: var(--blue-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .card-title { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
-    .card-meta { font-size: 0.75rem; color: var(--gray); margin-top: 3px; }
+    .edit-mode .card:hover { transform: none; box-shadow: var(--shadow-sm); }
 
-    /* ── Card Action Buttons ── */
+    .card-icon { width: 34px; height: 34px; background: var(--fc-light, #eef2ff); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .card-body { min-width: 0; flex: 1; }
+    .card-title { font-weight: 600; font-size: 0.88rem; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-meta { font-size: 0.72rem; color: var(--gray); margin-top: 3px; }
+    .badge-new { display: inline-block; background: #e6fcf5; color: #0ca678; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; text-transform: uppercase; }
+
+    /* Copy-link button (visible on hover) */
+    .btn-copy-link {
+      position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      width: 28px; height: 28px; cursor: pointer; font-size: 0.8rem;
+      display: none; align-items: center; justify-content: center;
+      color: var(--gray); transition: all 0.15s;
+    }
+    .card-wrap:hover .btn-copy-link { display: flex; }
+    .btn-copy-link:hover { background: var(--white); border-color: #3b5bdb; color: #3b5bdb; }
+    .edit-mode .btn-copy-link { display: none !important; }
+
+    /* Edit action buttons */
     .card-actions { display: none; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); gap: 4px; flex-direction: column; }
     .edit-mode .card-actions { display: flex; }
-    .btn-action { border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; border: 1px solid; }
-    .btn-action-rename { background: var(--blue-light); border-color: #bac8ff; color: var(--blue); }
+    .btn-action { border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; border: 1px solid; transition: background 0.15s; }
+    .btn-action-rename { background: #eef2ff; border-color: #bac8ff; color: #3b5bdb; }
     .btn-action-rename:hover { background: #dbe4ff; }
     .btn-action-delete { background: var(--red-light); border-color: #ffc9c9; color: var(--red); }
     .btn-action-delete:hover { background: #ffe3e3; }
 
     /* ── Toast ── */
-    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: #212529; color: white; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200; }
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a2035; color: white; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.84rem; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 300; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .toast.success { background: var(--green); }
-    .toast.error   { background: var(--red); }
+    .toast.success { background: #1a7f4b; }
+    .toast.error   { background: #c92a2a; }
 
     /* ── Modals ── */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,20,40,0.5); z-index: 100; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(2px); }
     .modal-overlay.open { display: flex; }
-    .modal { background: white; border-radius: var(--radius); padding: 1.5rem; max-width: 460px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-    .modal h3 { font-size: 1.05rem; margin-bottom: 0.3rem; }
-    .modal .modal-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.1rem; }
-    .modal label { display: block; font-size: 0.8rem; font-weight: 600; color: #495057; margin-bottom: 0.3rem; }
-    .modal input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; margin-bottom: 0.75rem; transition: border-color 0.15s; }
-    .modal input:focus { border-color: var(--blue); }
-    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
-    .modal-actions button { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; background: white; transition: opacity 0.15s; }
+    .modal { background: white; border-radius: 16px; padding: 1.6rem; max-width: 460px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,0.18); }
+    .modal-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .modal h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .modal .modal-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.2rem; line-height: 1.5; }
+    .modal label { display: block; font-size: 0.78rem; font-weight: 600; color: #495057; margin-bottom: 0.3rem; }
+    .modal input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; margin-bottom: 0.7rem; background: var(--bg); transition: border-color 0.15s, background 0.15s; }
+    .modal input:focus { border-color: #3b5bdb; background: var(--white); }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.2rem; }
+    .modal-actions button { padding: 0.5rem 1.1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; background: white; transition: all 0.15s; }
+    .modal-actions button:hover { border-color: #adb5bd; }
     .modal-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary { background: var(--blue) !important; color: white; border-color: var(--blue) !important; font-weight: 600; }
-    .btn-danger  { background: var(--red)  !important; color: white; border-color: var(--red)  !important; font-weight: 600; }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 0.3rem; vertical-align: middle; }
+    .btn-primary { background: #3b5bdb !important; color: white !important; border-color: #3b5bdb !important; font-weight: 600; }
+    .btn-primary:hover { background: #3451c7 !important; }
+    .btn-danger  { background: var(--red) !important; color: white !important; border-color: var(--red) !important; font-weight: 600; }
+    .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.35); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 0.3rem; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .token-hint { font-size: 0.78rem; color: var(--gray); margin-top: -0.4rem; margin-bottom: 0.75rem; }
-    .token-hint a { color: var(--blue); }
-    .no-results { text-align: center; color: var(--gray); padding: 3rem 0; font-size: 0.95rem; }
+    /* ── Token hint ── */
+    .token-hint { font-size: 0.77rem; color: var(--gray); margin-top: -0.3rem; margin-bottom: 0.75rem; }
+    .token-hint a { color: #3b5bdb; }
 
-    /* ── Upload Drop Zone ── */
-    .drop-zone {
-      border: 2px dashed var(--border); border-radius: var(--radius);
-      padding: 2rem; text-align: center; color: var(--gray);
-      cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
-      background: var(--white);
-    }
-    .drop-zone:hover, .drop-zone.drag-over {
-      border-color: var(--blue); background: var(--blue-light); color: var(--blue);
-    }
-    .drop-zone .dz-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .drop-zone .dz-text { font-size: 0.9rem; font-weight: 500; }
-    .drop-zone .dz-sub  { font-size: 0.78rem; margin-top: 0.25rem; opacity: 0.7; }
+    /* ── Upload drop zone ── */
+    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 1.6rem; text-align: center; color: var(--gray); cursor: pointer; transition: all 0.2s; margin-bottom: 1rem; background: var(--bg); }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: #3b5bdb; background: #eef2ff; color: #3b5bdb; }
+    .drop-zone .dz-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .drop-zone .dz-text { font-size: 0.88rem; font-weight: 500; }
+    .drop-zone .dz-sub  { font-size: 0.76rem; margin-top: 0.2rem; opacity: 0.7; }
     .drop-zone.has-file { border-color: var(--green); background: #ebfbee; color: var(--green); }
 
-    /* ── Page-level drag overlay ── */
-    #dragOverlay {
-      display: none; position: fixed; inset: 0; background: rgba(59,91,219,0.08);
-      border: 3px dashed var(--blue); z-index: 50; pointer-events: none;
-      align-items: center; justify-content: center; font-size: 1.4rem;
-      font-weight: 700; color: var(--blue);
-    }
+    /* ── Page drag overlay ── */
+    #dragOverlay { display: none; position: fixed; inset: 0; background: rgba(59,91,219,0.07); border: 3px dashed #3b5bdb; z-index: 50; pointer-events: none; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: #3b5bdb; }
     #dragOverlay.visible { display: flex; }
 
-    /* ── Progress bar ── */
-    .progress-wrap { margin-top: 0.5rem; background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; }
-    .progress-bar  { height: 100%; background: var(--blue); border-radius: 99px; width: 0; transition: width 0.3s; }
+    .progress-wrap { margin-top: 0.5rem; background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
+    .progress-bar  { height: 100%; background: #3b5bdb; border-radius: 99px; width: 0; transition: width 0.3s; }
 
-    @media (max-width: 500px) {
-      .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; order: 3; }
+    .no-results { text-align: center; color: var(--gray); padding: 4rem 0; }
+    .no-results-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .no-results-text { font-size: 0.95rem; }
+
+    @media (max-width: 560px) {
+      .search-wrap { min-width: 0; flex: 1 1 100%; order: 3; max-width: 100%; }
+      .stats-row .stat-card { flex: 1; }
     }
   </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <h1>Lern<span>materialien</span></h1>
-  <div class="search-wrap">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📚</div>
+      <h1>Lern<span>materialien</span></h1>
+    </div>
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
+    </div>
+    <div class="bar-btns">
+      <button class="btn-bar" id="tokenBtn" onclick="openTokenModal()">⚙️ Token</button>
+      <button class="btn-bar" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
+      <button class="btn-bar btn-upload" onclick="openUpload()">＋ Hochladen</button>
+    </div>
   </div>
-  <div class="bar-btns">
-    <button class="btn-bar" id="tokenBtn" onclick="openTokenModal()">⚙️ Token</button>
-    <button class="btn-bar" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
-    <button class="btn-bar btn-upload" onclick="openUpload()">＋ Hochladen</button>
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-label">Fach:</span>
   </div>
 </div>
 
-<div class="stats" id="stats"></div>
-<main id="app"></main>
-<div class="toast" id="toast"></div>
+<main>
+  <div class="stats-row" id="statsRow"></div>
+  <div id="app"></div>
+</main>
 
-<!-- Drag Overlay (ganze Seite) -->
+<div class="toast" id="toast"></div>
 <div id="dragOverlay">📄 Datei hier loslassen</div>
 
 <!-- Upload Modal -->
 <div class="modal-overlay" id="modalUpload">
   <div class="modal">
+    <div class="modal-icon">⬆️</div>
     <h3>Material hochladen</h3>
     <p class="modal-sub">HTML-Datei direkt auf GitHub hochladen.</p>
-
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <div class="dz-icon">📄</div>
       <div class="dz-text" id="dzText">Datei hierher ziehen oder klicken</div>
       <div class="dz-sub">Nur .html Dateien</div>
     </div>
     <input type="file" id="fileInput" accept=".html" style="display:none">
-
     <label>Titel</label>
     <input type="text" id="uploadTitel" placeholder="z.B. Quiz Lernfeld 5">
     <label>Fach</label>
-    <input type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch">
+    <input type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch" list="fachList">
+    <datalist id="fachList"></datalist>
     <label>Thema / Lernfeld</label>
-    <input type="text" id="uploadThema" placeholder="z.B. LF5, Algebra">
-
-    <div class="progress-wrap" id="progressWrap" style="display:none">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
+    <input type="text" id="uploadThema" placeholder="z.B. LF5, Algebra" list="themaList">
+    <datalist id="themaList"></datalist>
+    <div class="progress-wrap" id="progressWrap" style="display:none"><div class="progress-bar" id="progressBar"></div></div>
     <div class="modal-actions">
       <button onclick="closeModals()">Abbrechen</button>
       <button class="btn-primary" id="btnUpload" onclick="doUpload()">Hochladen</button>
@@ -194,14 +251,12 @@
 <!-- Token Modal -->
 <div class="modal-overlay" id="modalToken">
   <div class="modal">
+    <div class="modal-icon">🔑</div>
     <h3>GitHub Token einrichten</h3>
     <p class="modal-sub">Einmalig eingeben — wird nur lokal in deinem Browser gespeichert.</p>
     <label>Personal Access Token</label>
     <input type="password" id="inputToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-    <p class="token-hint">
-      Token erstellen: <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank">github.com/settings/tokens</a>
-      → Scope „repo" aktivieren.
-    </p>
+    <p class="token-hint">Token erstellen: <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank">github.com/settings/tokens</a> → Scope „repo" aktivieren.</p>
     <div class="modal-actions">
       <button onclick="closeModals()">Abbrechen</button>
       <button class="btn-primary" onclick="saveToken()">Speichern</button>
@@ -209,11 +264,12 @@
   </div>
 </div>
 
-<!-- Umbenennen/Verschieben Modal -->
+<!-- Bearbeiten Modal -->
 <div class="modal-overlay" id="modalRename">
   <div class="modal">
+    <div class="modal-icon">✏️</div>
     <h3>Material bearbeiten</h3>
-    <p class="modal-sub">Titel, Fach oder Thema ändern — wird direkt auf GitHub gespeichert.</p>
+    <p class="modal-sub">Änderungen werden direkt auf GitHub gespeichert.</p>
     <label>Titel</label>
     <input type="text" id="inputTitel" placeholder="Titel des Materials">
     <label>Fach</label>
@@ -230,11 +286,12 @@
 <!-- Löschen Modal -->
 <div class="modal-overlay" id="modalDelete">
   <div class="modal">
+    <div class="modal-icon">🗑️</div>
     <h3>Material löschen?</h3>
     <p class="modal-sub" id="deleteDesc"></p>
     <div class="modal-actions">
       <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
+      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Endgültig löschen</button>
     </div>
   </div>
 </div>
@@ -242,29 +299,38 @@
 <script>
   // ===== MATERIALIEN =====
   const materialien = [
-      {"name":"business letters lernpfad","fach":"Englisch B2","thema":"Business Letters","pfad":"materialien/Englisch B2/Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
-      {"name":"business letters lernpfad","fach":"Englisch","thema":"B2 Business Letters","pfad":"materialien/Englisch/B2 Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
-      {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
-      {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation_1.html","datum":"17.03.2026"},
-      {"name":"Preiskalkulation Lernseite","fach":"GPU","thema":"Preiskalkulation","pfad":"materialien/GPU/Preiskalkulation/Preiskalkulation_Lernseite.html","datum":"17.03.2026"}
-    ];
+    {"name":"business letters lernpfad","fach":"Englisch B2","thema":"Business Letters","pfad":"materialien/Englisch B2/Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
+    {"name":"business letters lernpfad","fach":"Englisch","thema":"B2 Business Letters","pfad":"materialien/Englisch/B2 Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
+    {"name":"LF5 Einstieg Interaktiv","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Einstieg_Interaktiv.html","datum":"16.03.2026"},
+    {"name":"LF5 Präsentation","fach":"GPU","thema":"LF5","pfad":"materialien/GPU/LF5/LF5_Praesentation_1.html","datum":"17.03.2026"},
+    {"name":"Preiskalkulation Lernseite","fach":"GPU","thema":"Preiskalkulation","pfad":"materialien/GPU/Preiskalkulation/Preiskalkulation_Lernseite.html","datum":"17.03.2026"}
+  ];
   // ======================
 
   const OWNER = 'brandy299';
   const REPO  = 'HTML-materialien';
   const API   = `https://api.github.com/repos/${OWNER}/${REPO}`;
+  const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
+
+  // Fach → Farb-Index
+  const fachColorMap = {};
+  let colorIdx = 0;
+  function getFachClass(fach) {
+    if (!(fach in fachColorMap)) fachColorMap[fach] = colorIdx++ % 8;
+    return `fc-${fachColorMap[fach]}`;
+  }
 
   let editMode = false;
   let currentMaterial = null;
+  let activeFilter = null;
 
-  // ── Token ──────────────────────────────────────────
+  // ── Token ────────────────────────────────────────
   function getToken() { return localStorage.getItem('gh_token') || ''; }
   function saveToken() {
     const t = document.getElementById('inputToken').value.trim();
     if (!t) return;
     localStorage.setItem('gh_token', t);
-    closeModals();
-    updateTokenBtn();
+    closeModals(); updateTokenBtn();
     showToast('Token gespeichert', 'success');
   }
   function openTokenModal() {
@@ -273,55 +339,49 @@
   }
   function updateTokenBtn() {
     const btn = document.getElementById('tokenBtn');
-    if (getToken()) { btn.classList.add('token-ok'); btn.classList.remove('token-missing'); }
-    else            { btn.classList.add('token-missing'); btn.classList.remove('token-ok'); }
+    btn.classList.toggle('token-ok',      !!getToken());
+    btn.classList.toggle('token-missing', !getToken());
+  }
+  function checkToken() {
+    if (getToken()) return true;
+    showToast('Bitte zuerst GitHub Token einrichten (⚙️)', 'error');
+    openTokenModal(); return false;
   }
 
-  // ── GitHub API helpers ─────────────────────────────
+  // ── GitHub API ───────────────────────────────────
   async function ghGet(path) {
     const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
       headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json' }
     });
-    if (!r.ok) throw new Error(`GitHub API Fehler: ${r.status}`);
+    if (!r.ok) throw new Error(`GitHub Fehler: ${r.status}`);
     return r.json();
   }
-
   async function ghPut(path, content, sha, message) {
+    const body = { message, content: btoa(unescape(encodeURIComponent(content))) };
+    if (sha) body.sha = sha;
     const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), sha })
+      method: 'PUT', headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
     if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
     return r.json();
   }
-
   async function ghDelete(path, sha, message) {
     const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
-      method: 'DELETE',
-      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      method: 'DELETE', headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, sha })
     });
     if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
   }
-
-  // ── index.html auf GitHub aktualisieren ────────────
-  async function updateIndex(newMaterialien, commitMsg) {
+  async function updateIndex(list, msg) {
     const file = await ghGet('index.html');
-    const currentContent = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
-
-    const listStr = newMaterialien.map(m =>
-      `    ${JSON.stringify(m)}`
-    ).join(',\n');
-
-    const newContent = currentContent.replace(
-      /(const materialien = \[)[^\]]*(\];)/s,
-      `$1\n${listStr}\n  $2`
-    );
-    await ghPut('index.html', newContent, file.sha, commitMsg);
+    const cur = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+    const listStr = list.map(m => `    ${JSON.stringify(m)}`).join(',\n');
+    const next = cur.replace(/(const materialien = \[)[^\]]*(\];)/s, `$1\n${listStr}\n  $2`);
+    await ghPut('index.html', next, file.sha, msg);
   }
 
-  // ── Löschen ────────────────────────────────────────
+  // ── Löschen ─────────────────────────────────────
   function showDelete(e, pfad) {
     e.preventDefault(); e.stopPropagation();
     if (!checkToken()) return;
@@ -331,36 +391,24 @@
       `„${currentMaterial.name}" (${currentMaterial.fach} / ${currentMaterial.thema.trim()}) wird dauerhaft gelöscht.`;
     document.getElementById('modalDelete').classList.add('open');
   }
-
   async function doDelete() {
     if (!currentMaterial) return;
     const btn = document.getElementById('btnConfirmDelete');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Löschen…';
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Löschen…';
     try {
-      // 1. Datei auf GitHub löschen
       const file = await ghGet(currentMaterial.pfad);
       await ghDelete(currentMaterial.pfad, file.sha, `Gelöscht: ${currentMaterial.name}`);
-
-      // 2. index.html aktualisieren
       const updated = materialien.filter(m => m.pfad !== currentMaterial.pfad);
       await updateIndex(updated, `Gelöscht: ${currentMaterial.name}`);
-
-      // 3. Lokal entfernen & neu rendern
       materialien.splice(materialien.indexOf(currentMaterial), 1);
-      closeModals();
-      render();
+      closeModals(); render();
       showToast(`„${currentMaterial.name}" gelöscht`, 'success');
       currentMaterial = null;
-    } catch(err) {
-      showToast('Fehler: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = 'Löschen';
-    }
+    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = 'Endgültig löschen'; }
   }
 
-  // ── Umbenennen / Verschieben ────────────────────────
+  // ── Umbenennen ───────────────────────────────────
   function showRename(e, pfad) {
     e.preventDefault(); e.stopPropagation();
     if (!checkToken()) return;
@@ -371,62 +419,99 @@
     document.getElementById('inputThema').value = currentMaterial.thema.trim();
     document.getElementById('modalRename').classList.add('open');
   }
-
   async function doRename() {
     if (!currentMaterial) return;
     const neuerTitel = document.getElementById('inputTitel').value.trim();
     const neuesFach  = document.getElementById('inputFach').value.trim();
     const neuesThema = document.getElementById('inputThema').value.trim();
     if (!neuerTitel || !neuesFach || !neuesThema) return;
-
     const btn = document.getElementById('btnSaveRename');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Speichern…';
-
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Speichern…';
     try {
       const oldPfad = currentMaterial.pfad;
       const filename = oldPfad.split('/').pop();
       const neuerPfad = `materialien/${neuesFach}/${neuesThema}/${filename}`;
-      const moved = neuerPfad !== oldPfad;
-
-      if (moved) {
-        // Datei verschieben: erst neue erstellen, dann alte löschen
+      if (neuerPfad !== oldPfad) {
         const oldFile = await ghGet(oldPfad);
-        const fileContent = decodeURIComponent(escape(atob(oldFile.content.replace(/\n/g,''))));
-        await ghPut(neuerPfad, fileContent, undefined,
-          `Verschoben: ${neuerTitel} → ${neuesFach}/${neuesThema}`);
-        await ghDelete(oldPfad, oldFile.sha,
-          `Alte Datei entfernt nach Verschieben: ${currentMaterial.name}`);
+        const fc = decodeURIComponent(escape(atob(oldFile.content.replace(/\n/g,''))));
+        await ghPut(neuerPfad, fc, undefined, `Verschoben: ${neuerTitel}`);
+        await ghDelete(oldPfad, oldFile.sha, `Entfernt nach Verschieben: ${currentMaterial.name}`);
       }
-
-      // Eintrag aktualisieren
       const idx = materialien.indexOf(currentMaterial);
-      const updated = { ...currentMaterial, name: neuerTitel, fach: neuesFach, thema: neuesThema, pfad: neuerPfad };
-      materialien[idx] = updated;
-
-      await updateIndex(materialien,
-        `Bearbeitet: ${neuerTitel} [${neuesFach} / ${neuesThema}]`);
-
-      closeModals();
-      render();
+      materialien[idx] = { ...currentMaterial, name: neuerTitel, fach: neuesFach, thema: neuesThema, pfad: neuerPfad };
+      await updateIndex(materialien, `Bearbeitet: ${neuerTitel}`);
+      closeModals(); render();
       showToast(`„${neuerTitel}" gespeichert`, 'success');
       currentMaterial = null;
-    } catch(err) {
-      showToast('Fehler: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = 'Speichern';
-    }
+    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = 'Speichern'; }
   }
 
-  // ── Hilfsfunktionen ────────────────────────────────
-  function checkToken() {
-    if (getToken()) return true;
-    showToast('Bitte zuerst GitHub Token einrichten (⚙️)', 'error');
-    openTokenModal();
-    return false;
+  // ── Upload ───────────────────────────────────────
+  let uploadFile = null;
+  function openUpload() {
+    if (!checkToken()) return;
+    uploadFile = null;
+    document.getElementById('dzText').textContent = 'Datei hierher ziehen oder klicken';
+    document.getElementById('dropZone').classList.remove('has-file');
+    document.getElementById('uploadTitel').value = '';
+    document.getElementById('uploadFach').value  = localStorage.getItem('lastFach') || '';
+    document.getElementById('uploadThema').value = localStorage.getItem('lastThema') || '';
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0';
+    // Autocomplete befüllen
+    const faecher = [...new Set(materialien.map(m => m.fach))];
+    const themen  = [...new Set(materialien.map(m => m.thema.trim()))];
+    document.getElementById('fachList').innerHTML  = faecher.map(f => `<option value="${f}">`).join('');
+    document.getElementById('themaList').innerHTML = themen.map(t => `<option value="${t}">`).join('');
+    document.getElementById('modalUpload').classList.add('open');
+  }
+  function setUploadFile(file) {
+    if (!file || !file.name.endsWith('.html')) { showToast('Nur .html Dateien erlaubt', 'error'); return; }
+    uploadFile = file;
+    document.getElementById('dzText').textContent = '✓ ' + file.name;
+    document.getElementById('dropZone').classList.add('has-file');
+    if (!document.getElementById('uploadTitel').value)
+      document.getElementById('uploadTitel').value = file.name.replace(/\.html$/, '').replace(/[-_]/g, ' ');
+  }
+  async function doUpload() {
+    if (!uploadFile) { showToast('Bitte zuerst eine Datei auswählen', 'error'); return; }
+    const titel = document.getElementById('uploadTitel').value.trim();
+    const fach  = document.getElementById('uploadFach').value.trim();
+    const thema = document.getElementById('uploadThema').value.trim();
+    if (!titel || !fach || !thema) { showToast('Bitte alle Felder ausfüllen', 'error'); return; }
+    const btn = document.getElementById('btnUpload');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Hochladen…';
+    const pb = document.getElementById('progressBar');
+    document.getElementById('progressWrap').style.display = 'block';
+    try {
+      pb.style.width = '20%';
+      const content = await new Promise((res, rej) => {
+        const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = rej; r.readAsText(uploadFile);
+      });
+      pb.style.width = '45%';
+      const pfad = `materialien/${fach}/${thema}/${uploadFile.name}`;
+      const datum = new Date().toLocaleDateString('de-DE');
+      await ghPut(pfad, content, undefined, `Neu: ${titel} [${fach} / ${thema}]`);
+      pb.style.width = '75%';
+      const neuerEintrag = { name: titel, fach, thema, pfad, datum };
+      materialien.push(neuerEintrag);
+      await updateIndex(materialien, `Neu: ${titel} [${fach} / ${thema}]`);
+      pb.style.width = '100%';
+      localStorage.setItem('lastFach', fach);
+      localStorage.setItem('lastThema', thema);
+      closeModals(); render();
+      showToast(`„${titel}" hochgeladen ✓`, 'success');
+    } catch(err) { showToast('Fehler: ' + err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = 'Hochladen'; }
   }
 
+  // ── Hilfe ────────────────────────────────────────
+  function copyLink(e, pfad) {
+    e.preventDefault(); e.stopPropagation();
+    navigator.clipboard.writeText(BASE_URL + pfad);
+    showToast('Link kopiert!', 'success');
+  }
   function toggleEditMode() {
     editMode = !editMode;
     const btn = document.getElementById('editToggle');
@@ -434,36 +519,60 @@
     btn.classList.toggle('active', editMode);
     btn.textContent = editMode ? '✓ Fertig' : '✏️ Bearbeiten';
   }
-
-  function closeModals() {
-    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
-  }
-
+  function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show' + (type ? ' ' + type : '');
-    clearTimeout(t._t);
-    t._t = setTimeout(() => t.classList.remove('show'), 3000);
+    t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  function isNew(datum) {
+    const parts = datum.split('.');
+    if (parts.length !== 3) return false;
+    const d = new Date(+parts[2], +parts[1]-1, +parts[0]);
+    return (Date.now() - d) < 7 * 24 * 60 * 60 * 1000;
   }
 
-  // ── Rendern ────────────────────────────────────────
+  // ── Filter Pills ─────────────────────────────────
+  function buildFilterBar() {
+    const faecher = [...new Set(materialien.map(m => m.fach.trim()))].sort();
+    const bar = document.getElementById('filterBar');
+    const allPill = `<button class="pill${!activeFilter ? ' active fc-0' : ''}" style="${!activeFilter ? 'background:#3b5bdb' : ''}" onclick="setFilter(null)">Alle</button>`;
+    const pills = faecher.map(f => {
+      const cls = getFachClass(f);
+      const isActive = activeFilter === f;
+      return `<button class="pill ${cls}${isActive ? ' active' : ''}" style="${isActive ? 'background:var(--fc);' : ''}" onclick="setFilter('${f.replace(/'/g,"\\'")}')">
+        ${f}
+      </button>`;
+    }).join('');
+    bar.innerHTML = `<span class="filter-label">Fach:</span>${allPill}${pills}`;
+  }
+  function setFilter(fach) {
+    activeFilter = fach;
+    buildFilterBar();
+    render(document.getElementById('search').value);
+  }
+
+  // ── Render ───────────────────────────────────────
   function render(filter = '') {
     const q = filter.toLowerCase();
-    const filtered = materialien.filter(m =>
+    let filtered = materialien.filter(m =>
       !q || m.name.toLowerCase().includes(q) ||
       m.fach.toLowerCase().includes(q) ||
       m.thema.toLowerCase().includes(q)
     );
+    if (activeFilter) filtered = filtered.filter(m => m.fach.trim() === activeFilter);
 
-    const fachSet = new Set(materialien.map(m => m.fach));
-    document.getElementById('stats').innerHTML =
-      `<span><strong>${materialien.length}</strong> Materialien</span>
-       <span><strong>${fachSet.size}</strong> ${fachSet.size === 1 ? 'Fach' : 'Fächer'}</span>`;
+    // Stats
+    const fachSet = new Set(materialien.map(m => m.fach.trim()));
+    const themaSet = new Set(materialien.map(m => m.fach.trim() + '|' + m.thema.trim()));
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat-card"><div class="stat-num">${materialien.length}</div><div class="stat-lbl">Materialien</div></div>
+      <div class="stat-card"><div class="stat-num">${fachSet.size}</div><div class="stat-lbl">${fachSet.size === 1 ? 'Fach' : 'Fächer'}</div></div>
+      <div class="stat-card"><div class="stat-num">${themaSet.size}</div><div class="stat-lbl">Themen</div></div>`;
 
     const app = document.getElementById('app');
     if (filtered.length === 0) {
-      app.innerHTML = `<div class="no-results">Keine Ergebnisse für „${filter}"</div>`;
+      app.innerHTML = `<div class="no-results"><div class="no-results-icon">🔍</div><div class="no-results-text">Keine Ergebnisse${filter ? ` für „${filter}"` : ''}</div></div>`;
       return;
     }
 
@@ -475,159 +584,92 @@
       faecher[f][t].push(m);
     }
 
+    function cardHTML(m) {
+      const ps = m.pfad.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      const fc = getFachClass(m.fach.trim());
+      const newBadge = isNew(m.datum) ? '<span class="badge-new">Neu</span>' : '';
+      return `<div class="card-wrap ${fc}">
+        <a class="card ${fc}" href="${m.pfad}" target="_blank">
+          <div class="card-icon">📄</div>
+          <div class="card-body">
+            <div class="card-title">${m.name}${newBadge}</div>
+            <div class="card-meta">${m.thema.trim()} · ${m.datum}</div>
+          </div>
+        </a>
+        <button class="btn-copy-link" title="Link kopieren" onclick="copyLink(event,'${ps}')">🔗</button>
+        <div class="card-actions">
+          <button class="btn-action btn-action-rename" title="Bearbeiten" onclick="showRename(event,'${ps}')">✏️</button>
+          <button class="btn-action btn-action-delete" title="Löschen"    onclick="showDelete(event,'${ps}')">✕</button>
+        </div>
+      </div>`;
+    }
+
     let html = '';
+
+    // Zuletzt hinzugefügt (top 3, nur wenn kein Filter/Suche)
+    if (!q && !activeFilter) {
+      const recent = [...materialien]
+        .sort((a,b) => {
+          const pd = s => { const p=s.split('.'); return new Date(+p[2],+p[1]-1,+p[0]); };
+          return pd(b.datum) - pd(a.datum);
+        }).slice(0,3);
+      if (recent.length) {
+        html += `<div class="fach-block"><div class="section-label">Zuletzt hinzugefügt</div><div class="grid">`;
+        html += recent.map(cardHTML).join('');
+        html += `</div></div>`;
+      }
+    }
+
     for (const fach of Object.keys(faecher).sort()) {
+      const fc = getFachClass(fach);
       const total = Object.values(faecher[fach]).flat().length;
-      html += `<div class="fach-block">
+      html += `<div class="fach-block ${fc}">
         <div class="fach-header">
-          <span class="fach-badge">${fach}</span>
+          <div class="fach-dot" style="background:var(--fc)"></div>
           <span class="fach-name">${fach}</span>
-          <span class="fach-count">${total} Material${total !== 1 ? 'ien' : ''}</span>
+          <span class="fach-count">${total}</span>
         </div>`;
       for (const thema of Object.keys(faecher[fach]).sort()) {
         html += `<div class="thema-block"><div class="thema-label">${thema}</div><div class="grid">`;
-        for (const m of faecher[fach][thema]) {
-          const ps = m.pfad.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-          html += `<div class="card-wrap">
-            <a class="card" href="${m.pfad}" target="_blank">
-              <div class="card-icon">📄</div>
-              <div>
-                <div class="card-title">${m.name}</div>
-                <div class="card-meta">${m.fach} · ${m.thema.trim()} · ${m.datum}</div>
-              </div>
-            </a>
-            <div class="card-actions">
-              <button class="btn-action btn-action-rename" title="Bearbeiten" onclick="showRename(event,'${ps}')">✏️</button>
-              <button class="btn-action btn-action-delete" title="Löschen"    onclick="showDelete(event,'${ps}')">✕</button>
-            </div>
-          </div>`;
-        }
+        html += faecher[fach][thema].map(cardHTML).join('');
         html += `</div></div>`;
       }
       html += `</div>`;
     }
+
     app.innerHTML = html;
     if (editMode) app.classList.add('edit-mode');
   }
 
-  // ── Upload ────────────────────────────────────────
-  let uploadFile = null;
-
-  function openUpload() {
-    if (!checkToken()) return;
-    uploadFile = null;
-    document.getElementById('dzText').textContent = 'Datei hierher ziehen oder klicken';
-    document.getElementById('dropZone').classList.remove('has-file');
-    document.getElementById('uploadTitel').value = '';
-    document.getElementById('uploadFach').value  = localStorage.getItem('lastFach') || '';
-    document.getElementById('uploadThema').value = localStorage.getItem('lastThema') || '';
-    document.getElementById('progressWrap').style.display = 'none';
-    document.getElementById('progressBar').style.width = '0';
-    document.getElementById('modalUpload').classList.add('open');
-  }
-
-  function setUploadFile(file) {
-    if (!file || !file.name.endsWith('.html')) {
-      showToast('Nur .html Dateien erlaubt', 'error'); return;
-    }
-    uploadFile = file;
-    document.getElementById('dzText').textContent = '✓ ' + file.name;
-    document.getElementById('dropZone').classList.add('has-file');
-    if (!document.getElementById('uploadTitel').value) {
-      document.getElementById('uploadTitel').value =
-        file.name.replace(/\.html$/, '').replace(/[-_]/g, ' ');
-    }
-  }
-
-  async function doUpload() {
-    if (!uploadFile) { showToast('Bitte zuerst eine Datei auswählen', 'error'); return; }
-    const titel = document.getElementById('uploadTitel').value.trim();
-    const fach  = document.getElementById('uploadFach').value.trim();
-    const thema = document.getElementById('uploadThema').value.trim();
-    if (!titel || !fach || !thema) { showToast('Bitte alle Felder ausfüllen', 'error'); return; }
-
-    const btn = document.getElementById('btnUpload');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Hochladen…';
-    const pw = document.getElementById('progressWrap');
-    const pb = document.getElementById('progressBar');
-    pw.style.display = 'block';
-
-    try {
-      // Datei lesen
-      pb.style.width = '20%';
-      const content = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload  = e => res(e.target.result);
-        r.onerror = rej;
-        r.readAsText(uploadFile);
-      });
-
-      pb.style.width = '40%';
-      const pfad = `materialien/${fach}/${thema}/${uploadFile.name}`;
-      const datum = new Date().toLocaleDateString('de-DE');
-
-      // Datei auf GitHub hochladen
-      await ghPut(pfad, content, undefined, `Neu: ${titel} [${fach} / ${thema}]`);
-      pb.style.width = '70%';
-
-      // Materialien-Liste aktualisieren
-      const neuerEintrag = { name: titel, fach, thema, pfad, datum };
-      materialien.push(neuerEintrag);
-      await updateIndex(materialien, `Neu: ${titel} [${fach} / ${thema}]`);
-      pb.style.width = '100%';
-
-      // Merken für nächstes Mal
-      localStorage.setItem('lastFach',  fach);
-      localStorage.setItem('lastThema', thema);
-
-      closeModals();
-      render();
-      showToast(`„${titel}" hochgeladen ✓`, 'success');
-    } catch(err) {
-      showToast('Fehler: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = 'Hochladen';
-    }
-  }
-
-  // File Input
-  document.getElementById('fileInput').addEventListener('change', e => {
-    setUploadFile(e.target.files[0]);
-  });
-
-  // Drop Zone im Modal
+  // ── Events ───────────────────────────────────────
+  document.getElementById('fileInput').addEventListener('change', e => setUploadFile(e.target.files[0]));
   const dz = document.getElementById('dropZone');
-  dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
   dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-  dz.addEventListener('drop', e => {
-    e.preventDefault(); dz.classList.remove('drag-over');
-    setUploadFile(e.dataTransfer.files[0]);
-  });
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); setUploadFile(e.dataTransfer.files[0]); });
 
-  // Drag & Drop auf die ganze Seite
   const overlay = document.getElementById('dragOverlay');
   let dragCounter = 0;
-  document.addEventListener('dragenter', e => {
-    if ([...e.dataTransfer.types].includes('Files')) { dragCounter++; overlay.classList.add('visible'); }
-  });
+  document.addEventListener('dragenter', e => { if ([...e.dataTransfer.types].includes('Files')) { dragCounter++; overlay.classList.add('visible'); } });
   document.addEventListener('dragleave', () => { dragCounter--; if (dragCounter <= 0) { dragCounter = 0; overlay.classList.remove('visible'); } });
   document.addEventListener('dragover', e => e.preventDefault());
   document.addEventListener('drop', e => {
     e.preventDefault(); dragCounter = 0; overlay.classList.remove('visible');
     const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith('.html')) { openUpload(); setTimeout(() => setUploadFile(file), 50); }
+    if (file?.name.endsWith('.html')) { openUpload(); setTimeout(() => setUploadFile(file), 50); }
     else if (file) showToast('Nur .html Dateien erlaubt', 'error');
   });
 
-  // ──────────────────────────────────────────────────
   document.getElementById('search').addEventListener('input', e => render(e.target.value));
   document.querySelectorAll('.modal-overlay').forEach(el =>
     el.addEventListener('click', e => { if (e.target === el) closeModals(); })
   );
 
+  // ── Init ─────────────────────────────────────────
+  // Farbzuweisung vorab initialisieren
+  [...new Set(materialien.map(m => m.fach.trim()))].sort().forEach(f => getFachClass(f));
   updateTokenBtn();
+  buildFilterBar();
   render();
 </script>
 </body>
