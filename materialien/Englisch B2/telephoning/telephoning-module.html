@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Business Telephoning | Office Design Ltd.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    .shake { animation: shake 0.35s ease-in-out; }
+    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+    .pop { animation: pop 0.25s ease-in-out; }
+    .phase { display:none; }
+    .phase.active { display:block; }
+    .mc-btn:disabled { cursor:not-allowed; opacity:0.85; }
+    .phase-dot { transition: background-color 0.3s; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    .vocab-pill { cursor:pointer; transition: all 0.2s; }
+    .vocab-pill:hover { transform: translateY(-1px); }
+    /* Smooth scrolling on mobile */
+    html { scroll-behavior: smooth; }
+    /* Larger tap targets on mobile */
+    .mc-btn { min-height: 52px; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .bubble { border-radius: 18px; position:relative; }
+    .bubble-left::before { content:''; position:absolute; left:-8px; top:14px; width:0; height:0; border-top:8px solid transparent; border-right:12px solid #e0e7ff; border-bottom:8px solid transparent; }
+    .bubble-right::before { content:''; position:absolute; right:-8px; top:14px; width:0; height:0; border-top:8px solid transparent; border-left:12px solid #f0fdf4; border-bottom:8px solid transparent; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+
+  <!-- PROGRESS BAR -->
+  <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-200 z-50">
+    <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500 ease-out" style="width:0%"></div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="fixed top-1.5 left-0 right-0 bg-white/90 backdrop-blur-sm z-40 px-4 py-3 flex items-center justify-between border-b border-slate-100">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center">
+        <i data-lucide="phone" class="w-3.5 h-3.5 text-indigo-600"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-800 leading-none">Business Telephoning</p>
+        <p class="text-xs text-slate-400">Office Design Ltd. · B1</p>
+      </div>
+    </div>
+    <!-- Phase Dots -->
+    <div class="flex items-center gap-1.5">
+      <div class="phase-dot w-2.5 h-2.5 rounded-full bg-indigo-600" id="dot-0"></div>
+      <div class="phase-dot w-2.5 h-2.5 rounded-full bg-slate-300" id="dot-1"></div>
+      <div class="phase-dot w-2.5 h-2.5 rounded-full bg-slate-300" id="dot-2"></div>
+      <div class="phase-dot w-2.5 h-2.5 rounded-full bg-slate-300" id="dot-3"></div>
+    </div>
+  </div>
+
+  <!-- SPACER for fixed header -->
+  <div class="h-16"></div>
+
+  <!-- ============================================================ -->
+  <!-- PHASE 0: HOOK                                               -->
+  <!-- ============================================================ -->
+  <div id="phase-0" class="phase active fade-in max-w-lg mx-auto px-4 py-6">
+
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+        <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+      </div>
+      <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Warm Up</span>
+    </div>
+
+    <!-- Scenario card -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4 border-l-4 border-amber-400">
+      <p class="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">📱 Your situation</p>
+      <p class="text-slate-700 text-sm leading-relaxed">
+        It's Monday morning at <strong>Office Design Ltd.</strong> in Düsseldorf. You are a customer service assistant. 
+        Your phone rings – it's a client from London. Your colleague Julia, who normally handles UK accounts, is in a meeting.
+      </p>
+    </div>
+
+    <!-- Chat bubble simulation -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">What happens next?</p>
+      <div class="space-y-3">
+        <div class="flex gap-2 items-start">
+          <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">C</div>
+          <div class="bubble bubble-left bg-indigo-100 text-slate-700 text-sm px-4 py-2.5 max-w-xs">
+            "Hello? Can I speak to Julia, please? It's about our order."
+          </div>
+        </div>
+        <div class="flex gap-2 items-start justify-end">
+          <div class="bubble bubble-right bg-green-50 text-slate-700 text-sm px-4 py-2.5 max-w-xs">
+            You: <span class="text-slate-400 italic">???</span>
+          </div>
+          <div class="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold text-green-600 flex-shrink-0">Y</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Think question -->
+    <div class="bg-amber-50 rounded-2xl p-5 mb-5 border border-amber-200">
+      <p class="text-sm font-semibold text-slate-700 mb-2">💭 Think about it:</p>
+      <p class="text-sm text-slate-600">What would you say? Have you ever had to take a business call in English? What made it tricky?</p>
+      <textarea id="hook-thoughts" class="w-full mt-3 p-3 rounded-xl border border-amber-200 text-slate-700 text-sm resize-none h-16 bg-white focus:outline-none focus:ring-2 focus:ring-amber-300" placeholder="Your thoughts... (optional)"></textarea>
+    </div>
+
+    <button onclick="goToPhase(1)" class="w-full bg-indigo-600 text-white py-3.5 rounded-2xl font-semibold text-sm hover:bg-indigo-700 active:scale-95 transition-all">
+      Let's learn how to handle this → 
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PHASE 1: INPUT                                              -->
+  <!-- ============================================================ -->
+  <div id="phase-1" class="phase fade-in max-w-lg mx-auto px-4 py-6">
+
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+        <i data-lucide="book-open" class="w-4 h-4 text-blue-600"></i>
+      </div>
+      <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Learn</span>
+    </div>
+
+    <h2 class="text-lg font-bold text-slate-800 mb-1">The 5 Stages of a Business Call</h2>
+    <p class="text-slate-500 text-sm mb-4">Every professional phone call follows a clear structure. Tap each stage to see key phrases.</p>
+
+    <!-- Accordion stages -->
+    <div class="space-y-2 mb-5" id="stages-accordion">
+
+      <!-- Stage 1 -->
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group" open>
+        <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center text-xs font-bold text-indigo-600">1</div>
+            <div>
+              <p class="text-sm font-bold text-slate-800">Answering the Phone</p>
+              <p class="text-xs text-slate-400">Opening the call professionally</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 border-t border-slate-50">
+          <div class="mt-3 space-y-2">
+            <div class="bg-indigo-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-indigo-500 font-medium mb-0.5">Company + Name + Offer help</p>
+              <p class="text-sm text-slate-700 font-medium">"Office Design Ltd., good morning. This is <em>[name]</em> speaking. How can I help you?"</p>
+            </div>
+            <div class="bg-indigo-50 rounded-xl px-3 py-2">
+              <p class="text-sm text-slate-700">"<em>[Department]</em>, good afternoon. What can I do for you?"</p>
+            </div>
+            <div class="bg-red-50 rounded-xl px-3 py-2 border border-red-100">
+              <p class="text-xs text-red-500 font-medium mb-0.5">❌ Never say:</p>
+              <p class="text-sm text-slate-600">"Yes?" / "Hello?" / "What do you want?"</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Stage 2 -->
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
+        <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-violet-100 rounded-full flex items-center justify-center text-xs font-bold text-violet-600">2</div>
+            <div>
+              <p class="text-sm font-bold text-slate-800">Saying Who You Are & Why</p>
+              <p class="text-xs text-slate-400">Identifying yourself + purpose</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 border-t border-slate-50">
+          <div class="mt-3 space-y-2">
+            <div class="bg-violet-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-violet-500 font-medium mb-0.5">Identifying yourself</p>
+              <p class="text-sm text-slate-700">"This is <em>[name]</em> from <em>[company]</em>."</p>
+              <p class="text-sm text-slate-700">"It's <em>[first name]</em> calling."</p>
+            </div>
+            <div class="bg-violet-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-violet-500 font-medium mb-0.5">Stating your purpose</p>
+              <p class="text-sm text-slate-700">"I'd like to speak to <em>[name]</em>, please."</p>
+              <p class="text-sm text-slate-700">"I'm calling about <em>[topic]</em>."</p>
+              <p class="text-sm text-slate-700">"Could you tell me <em>[question]</em>?"</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Stage 3 -->
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
+        <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-emerald-100 rounded-full flex items-center justify-center text-xs font-bold text-emerald-600">3</div>
+            <div>
+              <p class="text-sm font-bold text-slate-800">Transferring & Dealing with Problems</p>
+              <p class="text-xs text-slate-400">Hold, transfer, bad line</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 border-t border-slate-50">
+          <div class="mt-3 space-y-2">
+            <div class="bg-emerald-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-emerald-600 font-medium mb-0.5">Transferring</p>
+              <p class="text-sm text-slate-700">"Please hold the line."</p>
+              <p class="text-sm text-slate-700">"Just a moment. I'll put you through."</p>
+            </div>
+            <div class="bg-emerald-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-emerald-600 font-medium mb-0.5">Person not available</p>
+              <p class="text-sm text-slate-700">"I'm afraid she's in a meeting right now."</p>
+              <p class="text-sm text-slate-700">"He's out of the office today. Can I take a message?"</p>
+              <p class="text-sm text-slate-700">"Would you like to phone back later?"</p>
+            </div>
+            <div class="bg-emerald-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-emerald-600 font-medium mb-0.5">Bad connection</p>
+              <p class="text-sm text-slate-700">"I'm sorry, I didn't catch that. This is a bad line."</p>
+              <p class="text-sm text-slate-700">"Could you repeat/spell that, please?"</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Stage 4 -->
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
+        <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center text-xs font-bold text-orange-600">4</div>
+            <div>
+              <p class="text-sm font-bold text-slate-800">Leaving & Taking a Message</p>
+              <p class="text-xs text-slate-400">Note-taking + promises</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 border-t border-slate-50">
+          <div class="mt-3 space-y-2">
+            <div class="bg-orange-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-orange-600 font-medium mb-0.5">Leaving a message</p>
+              <p class="text-sm text-slate-700">"Could you ask her to call me back, please?"</p>
+              <p class="text-sm text-slate-700">"Please tell him I called."</p>
+            </div>
+            <div class="bg-orange-50 rounded-xl px-3 py-2">
+              <p class="text-xs text-orange-600 font-medium mb-0.5">Taking a message</p>
+              <p class="text-sm text-slate-700">"I'll pass your message on to her."</p>
+              <p class="text-sm text-slate-700">"We'll get back to you as soon as possible."</p>
+              <p class="text-sm text-slate-700">"Could I have your number, please?"</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Stage 5 -->
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
+        <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-rose-100 rounded-full flex items-center justify-center text-xs font-bold text-rose-600">5</div>
+            <div>
+              <p class="text-sm font-bold text-slate-800">Finishing the Call</p>
+              <p class="text-xs text-slate-400">Polite endings</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 border-t border-slate-50">
+          <div class="mt-3 space-y-2">
+            <div class="bg-rose-50 rounded-xl px-3 py-2 space-y-1">
+              <p class="text-sm text-slate-700">"Is there anything else I can do for you?"</p>
+              <p class="text-sm text-slate-700">"Thanks for calling. Have a nice day."</p>
+              <p class="text-sm text-slate-700">"Nice talking to you. Goodbye."</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- Vocabulary pills -->
+    <div class="bg-white rounded-2xl shadow-sm p-4 mb-5">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">
+        <i data-lucide="book" class="w-3.5 h-3.5 inline -mt-0.5 mr-1"></i>Key Vocabulary
+      </p>
+      <p class="text-xs text-slate-400 mb-2">Tap a word to see its meaning:</p>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="showVocab('hold the line')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">hold the line</button>
+        <button onclick="showVocab('put through')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">put through</button>
+        <button onclick="showVocab('catch')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">catch (sth.)</button>
+        <button onclick="showVocab('pass on')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">pass on</button>
+        <button onclick="showVocab('get back')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">get back to sb.</button>
+        <button onclick="showVocab('extension')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">extension</button>
+        <button onclick="showVocab('urgent')" class="vocab-pill px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-100">urgent</button>
+      </div>
+      <!-- Vocab display box -->
+      <div id="vocab-box" class="hidden mt-3 bg-blue-50 rounded-xl p-3 fade-in">
+        <p id="vocab-term" class="text-xs font-bold text-blue-600 mb-1"></p>
+        <p id="vocab-def" class="text-sm text-slate-700"></p>
+        <p id="vocab-example" class="text-xs text-slate-400 italic mt-1"></p>
+      </div>
+    </div>
+
+    <!-- Dialogue model -->
+    <div class="bg-white rounded-2xl shadow-sm p-4 mb-5">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">📞 Model Dialogue</p>
+      <div class="space-y-2 text-sm">
+        <div class="flex gap-2"><span class="font-bold text-indigo-600 w-7 flex-shrink-0">L:</span><span class="text-slate-700"><em>Office Design Ltd., good morning. This is Leon speaking. How can I help?</em></span></div>
+        <div class="flex gap-2"><span class="font-bold text-emerald-600 w-7 flex-shrink-0">C:</span><span class="text-slate-700">Good morning. It's Emma Fielding from LitewriteU. I'd like to speak to Julia Blake, please.</span></div>
+        <div class="flex gap-2"><span class="font-bold text-indigo-600 w-7 flex-shrink-0">L:</span><span class="text-slate-700"><em>Certainly. Who's calling, please? ... Just a moment, I'll put you through. Please hold the line.</em></span></div>
+        <div class="flex gap-2"><span class="font-bold text-indigo-600 w-7 flex-shrink-0">L:</span><span class="text-slate-700"><em>I'm afraid Ms Blake is in a meeting right now. Would you like to leave a message?</em></span></div>
+        <div class="flex gap-2"><span class="font-bold text-emerald-600 w-7 flex-shrink-0">C:</span><span class="text-slate-700">Yes, please. Could you ask her to call me back as soon as possible?</span></div>
+        <div class="flex gap-2"><span class="font-bold text-indigo-600 w-7 flex-shrink-0">L:</span><span class="text-slate-700"><em>Of course. I'll pass your message on to her. Is there anything else I can do for you?</em></span></div>
+        <div class="flex gap-2"><span class="font-bold text-emerald-600 w-7 flex-shrink-0">C:</span><span class="text-slate-700">No, thank you. Goodbye.</span></div>
+        <div class="flex gap-2"><span class="font-bold text-indigo-600 w-7 flex-shrink-0">L:</span><span class="text-slate-700"><em>Thanks for calling. Have a nice day. Goodbye.</em></span></div>
+      </div>
+      <p class="text-xs text-slate-400 mt-3">L = Leon (Office Design) · C = Caller · <em>Italic</em> = your role</p>
+    </div>
+
+    <button onclick="goToPhase(2)" class="w-full bg-indigo-600 text-white py-3.5 rounded-2xl font-semibold text-sm hover:bg-indigo-700 active:scale-95 transition-all">
+      Ready to check your knowledge →
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PHASE 2: CHECK                                              -->
+  <!-- ============================================================ -->
+  <div id="phase-2" class="phase fade-in max-w-lg mx-auto px-4 py-6">
+
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+        </div>
+        <span class="text-xs font-bold uppercase tracking-widest text-emerald-600">Check</span>
+      </div>
+      <div class="bg-white rounded-xl px-3 py-1.5 shadow-sm">
+        <span class="text-xs text-slate-400">Score: </span>
+        <span id="score-display" class="text-sm font-bold text-indigo-600">0 / 7</span>
+      </div>
+    </div>
+
+    <p class="text-slate-500 text-sm mb-4">Choose the best professional response for each situation.</p>
+
+    <!-- Q1 -->
+    <div id="q1" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Situation 1</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">You pick up the phone at work. How do you answer it?</p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this,false,'q1','❌ Too informal – always include your name and company.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 active:scale-98 transition-all">"Hello?"</button>
+        <button onclick="checkMC(this,true,'q1','✅ Perfect! Company + name + offer to help = the golden formula.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 active:scale-98 transition-all">"Office Design Ltd., good morning. This is <em>[name]</em> speaking. How can I help you?"</button>
+        <button onclick="checkMC(this,false,'q1','❌ Way too rude! Never use one-word answers in a business call.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 active:scale-98 transition-all">"Yes?"</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div id="q2" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Situation 2</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">The caller wants to speak to Ms Blake, who is in a meeting. What do you say?</p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this,false,'q2','❌ Too blunt. Use "I\'m afraid" to soften bad news.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">"She's busy. Call back later."</button>
+        <button onclick="checkMC(this,false,'q2','❌ Close, but don\'t say you don\'t know – that sounds unprofessional.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">"I don't know where she is. Can you wait?"</button>
+        <button onclick="checkMC(this,true,'q2','✅ Correct! "I\'m afraid" softens the message, and you offer an alternative.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">"I'm afraid Ms Blake is in a meeting right now. Would you like to leave a message?"</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div id="q3" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Situation 3</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">You couldn't hear the caller's name clearly. What do you say?</p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this,true,'q3','✅ Great! Both phrases are professional and polite.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">"I'm sorry, I didn't catch that. Could you repeat your name, please?"</button>
+        <button onclick="checkMC(this,false,'q3','❌ Too rude! Never say "What?" alone in a business call.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">"What? I can't hear you."</button>
+        <button onclick="checkMC(this,false,'q3','❌ Saying nothing would leave the caller confused and is unprofessional.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">Say nothing and hope you remember.</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q4: Gap fill -->
+    <div id="q4" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Gap Fill</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">Complete the sentence with the correct word:</p>
+      <p class="text-sm text-slate-600 leading-relaxed">"Just a moment. I'll <input type="text" id="gap-q4" placeholder="???" class="border-b-2 border-indigo-300 bg-transparent px-1 text-indigo-700 font-medium focus:outline-none w-20 text-sm"> you through to Ms Blake."</p>
+      <button onclick="checkGap('gap-q4',['put'],'q4','✅ Correct! "I\'ll put you through" = I will connect/transfer you.')" class="mt-3 px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q5: Gap fill -->
+    <div id="q5" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Gap Fill</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">Complete the message-taking phrase:</p>
+      <p class="text-sm text-slate-600 leading-relaxed">"I'll <input type="text" id="gap-q5" placeholder="???" class="border-b-2 border-indigo-300 bg-transparent px-1 text-indigo-700 font-medium focus:outline-none w-24 text-sm"> your message on to her."</p>
+      <button onclick="checkGap('gap-q5',['pass'],'q5','✅ Right! "Pass on" means weitergeben – you relay the message to the colleague.')" class="mt-3 px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q6: True/False -->
+    <div id="q6" class="bg-white rounded-2xl shadow-sm p-4 mb-3">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">True or False?</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">It is polite to say "Wait a moment" when you need to transfer a call.</p>
+      <div class="flex gap-2">
+        <button onclick="checkMC(this,false,'q6','❌ False! "Wait" is too abrupt. Say "Please hold the line" or "Just a moment, please."')" class="mc-btn flex-1 text-center px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm font-medium hover:border-indigo-300 transition-all">✓ True</button>
+        <button onclick="checkMC(this,true,'q6','✅ Correct! "Wait" sounds rude. Always say "Please hold the line" or "Just a moment, please."')" class="mc-btn flex-1 text-center px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm font-medium hover:border-indigo-300 transition-all">✗ False</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q7: Match function -->
+    <div id="q7" class="bg-white rounded-2xl shadow-sm p-4 mb-4">
+      <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide mb-1">Match the function</p>
+      <p class="text-sm font-semibold text-slate-700 mb-3">What is the function of: <strong>"Is there anything else I can do for you?"</strong></p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this,false,'q7','❌ Not quite – this phrase comes at the end of a call, not when opening it.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">Opening the call</button>
+        <button onclick="checkMC(this,false,'q7','❌ No – this is used to leave a message, not to offer general help.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">Leaving a message</button>
+        <button onclick="checkMC(this,true,'q7','✅ Correct! This phrase politely checks if the caller needs anything else before ending the call.')" class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 transition-all">Closing / offering further help</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Next button (hidden until all answered) -->
+    <div id="check-to-transfer" class="hidden">
+      <div id="score-summary" class="bg-indigo-50 rounded-2xl p-4 mb-3 text-center">
+        <p class="text-lg font-bold text-indigo-700" id="final-score-text"></p>
+        <p class="text-sm text-slate-500" id="score-feedback-text"></p>
+      </div>
+      <button onclick="goToPhase(3)" class="w-full bg-indigo-600 text-white py-3.5 rounded-2xl font-semibold text-sm hover:bg-indigo-700 active:scale-95 transition-all">
+        Now let's put it into practice →
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PHASE 3: TRANSFER                                           -->
+  <!-- ============================================================ -->
+  <div id="phase-3" class="phase fade-in max-w-lg mx-auto px-4 py-6">
+
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center">
+        <i data-lucide="star" class="w-4 h-4 text-violet-600"></i>
+      </div>
+      <span class="text-xs font-bold uppercase tracking-widest text-violet-600">Apply</span>
+    </div>
+
+    <!-- Scenario -->
+    <div class="bg-violet-50 rounded-2xl p-4 mb-4 border-l-4 border-violet-400">
+      <p class="text-xs font-bold text-violet-600 uppercase tracking-wide mb-2">🏢 Office Design Ltd. – Your Task</p>
+      <p class="text-sm text-slate-700 leading-relaxed">
+        You receive a call from Mr David Turner from <strong>FurniMax UK</strong>. He wants to speak to your colleague 
+        <strong>Anna Schreiber</strong> (Sales Manager) about a delayed shipment. Anna is currently out of the office and 
+        won't be back until tomorrow.
+      </p>
+      <div class="mt-3 bg-white rounded-xl p-3 text-xs text-slate-500 space-y-1">
+        <p><strong>Caller:</strong> Mr David Turner, FurniMax UK, +44 20 7946 0312</p>
+        <p><strong>Topic:</strong> Delayed shipment, order #OD-2024-887</p>
+        <p><strong>Anna back:</strong> Tomorrow, 9am</p>
+      </div>
+    </div>
+
+    <!-- Task instructions -->
+    <div class="bg-white rounded-2xl shadow-sm p-4 mb-4">
+      <p class="text-sm font-bold text-slate-700 mb-2">📋 Your task (AFB II):</p>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">Write out the key parts of your side of the telephone conversation. Cover <strong>all 5 stages</strong>: answering, identifying, explaining the situation, taking a message, and closing.</p>
+      <p class="text-xs text-slate-400">Aim for 6–8 sentences. Use phrases from the "Learn" section.</p>
+    </div>
+
+    <!-- Phrase accordion -->
+    <details class="mb-4 bg-white rounded-2xl shadow-sm overflow-hidden">
+      <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer">
+        <div class="flex items-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i>
+          <span class="text-sm font-semibold text-slate-700">Useful Phrases (tap to expand)</span>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+      </summary>
+      <div class="px-4 pb-4 border-t border-slate-50">
+        <div class="mt-3 grid grid-cols-1 gap-1.5 text-xs text-slate-600">
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Answering:</strong> "Office Design Ltd., good morning. This is [name]. How can I help?"</span></div>
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Not available:</strong> "I'm afraid Ms Schreiber is out of the office today."</span></div>
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Back tomorrow:</strong> "She'll be back tomorrow at 9am."</span></div>
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Message:</strong> "Certainly. Could I take your name and number, please?"</span></div>
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Confirm:</strong> "I'll pass your message on to her first thing tomorrow."</span></div>
+          <div class="flex gap-2"><span class="text-violet-500 font-bold w-4">→</span><span><strong>Closing:</strong> "Thanks for calling, Mr Turner. Goodbye."</span></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Writing area -->
+    <div class="bg-white rounded-2xl shadow-sm p-4 mb-4">
+      <label class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">Your telephone response:</label>
+      <textarea id="transfer-text" oninput="updateWordCount()" class="w-full p-3 rounded-xl border border-slate-200 text-slate-700 text-sm resize-none h-44 focus:outline-none focus:ring-2 focus:ring-violet-300 leading-relaxed" placeholder="Start with answering the phone...&#10;&#10;'Office Design Ltd., good morning...'"></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span id="word-count" class="text-xs text-slate-400">0 words</span>
+        <span class="text-xs text-slate-300">Target: 6–8 sentences</span>
+      </div>
+    </div>
+
+    <!-- Self-check -->
+    <div class="bg-white rounded-2xl shadow-sm p-4 mb-5">
+      <p class="text-sm font-bold text-slate-700 mb-3">✅ Self-check before handing in:</p>
+      <div class="space-y-2.5">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="mt-0.5 w-4 h-4 rounded text-indigo-600 flex-shrink-0">
+          <span class="text-sm text-slate-600">I answered the phone with company name + my name + offer to help</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="mt-0.5 w-4 h-4 rounded text-indigo-600 flex-shrink-0">
+          <span class="text-sm text-slate-600">I explained why Ms Schreiber can't take the call (politely)</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="mt-0.5 w-4 h-4 rounded text-indigo-600 flex-shrink-0">
+          <span class="text-sm text-slate-600">I took the caller's name, number and reason for calling</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="mt-0.5 w-4 h-4 rounded text-indigo-600 flex-shrink-0">
+          <span class="text-sm text-slate-600">I used at least 3 key phrases from the "Learn" section</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" class="mt-0.5 w-4 h-4 rounded text-indigo-600 flex-shrink-0">
+          <span class="text-sm text-slate-600">I closed the call politely</span>
+        </label>
+      </div>
+    </div>
+
+    <button onclick="completeModule()" class="w-full py-4 rounded-2xl font-bold text-sm text-white active:scale-95 transition-all" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+      🎉 Complete Module
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- COMPLETE SCREEN                                             -->
+  <!-- ============================================================ -->
+  <div id="complete-screen" class="hidden fade-in max-w-lg mx-auto px-4 py-10 text-center">
+    <div class="text-6xl mb-4">🎉</div>
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Well done!</h2>
+    <p class="text-slate-500 text-sm mb-6">You've completed the <strong>Business Telephoning</strong> module.</p>
+
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-5 text-left">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">✅ I can now...</p>
+      <div class="space-y-2 text-sm text-slate-600">
+        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-400"></div>Answer the phone professionally in a business context (B1)</div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-400"></div>Transfer a call or explain someone is unavailable (B1)</div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-400"></div>Take and leave a message politely (B1)</div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-400"></div>Deal with a bad connection or unclear information (B1)</div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-400"></div>Close a call with professional phrases (B1)</div>
+      </div>
+    </div>
+
+    <div class="bg-indigo-50 rounded-2xl p-4 mb-6">
+      <p class="text-sm font-semibold text-indigo-700 mb-1">📌 Next step:</p>
+      <p class="text-sm text-slate-600">Practice the role-play with a partner using the scenario from the Transfer section. Try to do it without looking at the phrase list!</p>
+    </div>
+
+    <button onclick="restartModule()" class="w-full py-3 rounded-2xl border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+      ↩ Restart Module
+    </button>
+  </div>
+
+  <!-- VOCAB MODAL -->
+  <div id="vocab-modal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-end justify-center p-4" onclick="closeVocabModal(event)">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-5 fade-in" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between mb-3">
+        <p id="modal-term" class="font-bold text-indigo-600 text-base"></p>
+        <button onclick="closeVocabModal()" class="w-7 h-7 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+      <p id="modal-def" class="text-slate-700 text-sm mb-2"></p>
+      <p id="modal-example" class="text-slate-400 text-xs italic"></p>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────────
+    let score = 0;
+    let answeredCount = 0;
+    const TOTAL_Q = 7;
+
+    // ── Vocabulary ─────────────────────────────────────
+    const vocab = {
+      'hold the line': {
+        def: 'To wait on the phone without hanging up.',
+        example: '"Please hold the line – I\'ll put you through."'
+      },
+      'put through': {
+        def: 'To connect a caller to another person or department.',
+        example: '"Just a moment. I\'ll put you through to Ms Blake."'
+      },
+      'catch': {
+        def: 'To hear or understand clearly (often used in negatives).',
+        example: '"I\'m sorry, I didn\'t catch your name. Could you repeat it?"'
+      },
+      'pass on': {
+        def: 'To give a message or information to someone else.',
+        example: '"I\'ll pass your message on to her right away."'
+      },
+      'get back': {
+        def: 'To contact someone again later.',
+        example: '"We\'ll get back to you as soon as possible."'
+      },
+      'extension': {
+        def: 'An internal phone number within a company.',
+        example: '"Could I have Ms Blake\'s extension number, please?"'
+      },
+      'urgent': {
+        def: 'Needing immediate attention; very important.',
+        example: '"It\'s quite urgent – could she call me back today?"'
+      }
+    };
+
+    function showVocab(term) {
+      const v = vocab[term];
+      if (!v) return;
+      document.getElementById('vocab-box').classList.remove('hidden');
+      document.getElementById('vocab-box').classList.add('fade-in');
+      document.getElementById('vocab-term').textContent = term;
+      document.getElementById('vocab-def').textContent = v.def;
+      document.getElementById('vocab-example').textContent = v.example;
+    }
+
+    function closeVocabModal(e) {
+      document.getElementById('vocab-modal').classList.add('hidden');
+    }
+
+    // ── Phase Navigation ───────────────────────────────
+    function goToPhase(index) {
+      document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('phase-' + index);
+      target.classList.add('active');
+      target.classList.add('fade-in');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      updateProgress(index);
+
+      // Re-init lucide for new phase
+      lucide.createIcons();
+    }
+
+    function updateProgress(index) {
+      const pct = ((index) / 4) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById('dot-' + i);
+        dot.className = `phase-dot w-2.5 h-2.5 rounded-full transition-all ${i <= index ? 'bg-indigo-600 scale-110' : 'bg-slate-300'}`;
+      }
+    }
+
+    // ── MC Check ───────────────────────────────────────
+    function checkMC(btn, isCorrect, questionId, feedbackText) {
+      const container = document.getElementById(questionId);
+      if (container.dataset.answered) return;
+      container.dataset.answered = 'true';
+
+      container.querySelectorAll('.mc-btn').forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:border-indigo-300');
+      });
+
+      if (isCorrect) {
+        btn.classList.add('bg-green-50', 'border-green-400', 'text-green-700', 'pop');
+        score++;
+        answeredCount++;
+        document.getElementById('score-display').textContent = score + ' / ' + TOTAL_Q;
+      } else {
+        btn.classList.add('bg-red-50', 'border-red-400', 'text-red-700', 'shake');
+        answeredCount++;
+      }
+
+      container.querySelector('.feedback').innerHTML =
+        `<div class="mt-2 p-3 rounded-xl text-sm fade-in ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}">${feedbackText}</div>`;
+
+      checkAllAnswered();
+    }
+
+    // ── Gap Fill ───────────────────────────────────────
+    function checkGap(inputId, correct, questionId, successMsg) {
+      const input = document.getElementById(inputId);
+      if (input.disabled) return;
+      const container = document.getElementById(questionId);
+      const userAns = input.value.trim().toLowerCase();
+      const isCorrect = correct.map(c => c.toLowerCase()).includes(userAns);
+
+      input.disabled = true;
+      answeredCount++;
+
+      if (isCorrect) {
+        input.classList.add('border-green-400', 'text-green-700');
+        score++;
+        document.getElementById('score-display').textContent = score + ' / ' + TOTAL_Q;
+      } else {
+        input.classList.add('border-red-400', 'text-red-700', 'shake');
+      }
+
+      container.querySelector('.feedback').innerHTML =
+        `<div class="mt-2 p-3 rounded-xl text-sm fade-in ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}">
+          ${isCorrect ? successMsg : '❌ Not quite. Correct: <strong>' + correct[0] + '</strong>'}
+        </div>`;
+
+      checkAllAnswered();
+    }
+
+    function checkAllAnswered() {
+      if (answeredCount >= TOTAL_Q) {
+        const btn = document.getElementById('check-to-transfer');
+        btn.classList.remove('hidden');
+        btn.classList.add('fade-in');
+
+        const pct = Math.round((score / TOTAL_Q) * 100);
+        document.getElementById('final-score-text').textContent = score + ' / ' + TOTAL_Q + ' correct (' + pct + '%)';
+
+        let msg = '';
+        if (pct === 100) {
+          msg = '🎉 Perfect score! You\'re ready for real business calls!';
+          confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#6366f1','#8b5cf6','#fbbf24','#34d399'] });
+        } else if (pct >= 70) {
+          msg = '👍 Good job! Review the phrases you missed before moving on.';
+        } else {
+          msg = '💪 Keep going! Read through the "Learn" section again and try the transfer task.';
+        }
+        document.getElementById('score-feedback-text').textContent = msg;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    // ── Word Counter ───────────────────────────────────
+    function updateWordCount() {
+      const text = document.getElementById('transfer-text').value.trim();
+      const words = text ? text.split(/\s+/).filter(w => w).length : 0;
+      const el = document.getElementById('word-count');
+      el.textContent = words + ' words';
+      el.className = words >= 40 ? 'text-xs text-green-500 font-medium' : 'text-xs text-slate-400';
+    }
+
+    // ── Complete ───────────────────────────────────────
+    function completeModule() {
+      confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#6366f1','#8b5cf6','#fbbf24','#34d399','#f472b6'] });
+      document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+      const cs = document.getElementById('complete-screen');
+      cs.classList.remove('hidden');
+      cs.classList.add('fade-in');
+      updateProgress(4);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function restartModule() {
+      score = 0;
+      answeredCount = 0;
+      document.getElementById('score-display').textContent = '0 / 7';
+      document.getElementById('complete-screen').classList.add('hidden');
+
+      // Reset questions
+      for (let q of ['q1','q2','q3','q4','q5','q6','q7']) {
+        const el = document.getElementById(q);
+        delete el.dataset.answered;
+        el.querySelectorAll('.mc-btn, input').forEach(b => {
+          b.disabled = false;
+          b.classList.remove('bg-green-50','border-green-400','text-green-700','bg-red-50','border-red-400','text-red-700','pop','shake');
+        });
+        el.querySelector('.feedback').innerHTML = '';
+      }
+      document.getElementById('check-to-transfer').classList.add('hidden');
+      document.getElementById('transfer-text').value = '';
+      document.getElementById('word-count').textContent = '0 words';
+      document.getElementById('hook-thoughts').value = '';
+
+      goToPhase(0);
+    }
+
+    // ── Init ───────────────────────────────────────────
+    lucide.createIcons();
+    updateProgress(0);
+  </script>
+</body>
+</html>
