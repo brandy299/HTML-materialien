@@ -6,291 +6,104 @@
   <title>Lernmaterialien</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --blue: #3b5bdb;
-      --blue-light: #eef2ff;
-      --red: #e03131;
-      --red-light: #fff5f5;
-      --gray: #868e96;
-      --border: #e9ecef;
-      --bg: #f8f9fa;
-      --white: #fff;
+      --blue: #3b5bdb; --blue-light: #eef2ff;
+      --red: #e03131;  --red-light: #fff5f5;
+      --green: #2f9e44;
+      --gray: #868e96; --border: #e9ecef;
+      --bg: #f8f9fa;   --white: #fff;
       --radius: 12px;
     }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: #212529; min-height: 100vh; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: #212529;
-      min-height: 100vh;
-    }
-
-    /* ── Header ── */
+    /* ── Top Bar ── */
     .top-bar {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 1.2rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+      background: var(--white); border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
     }
-    .top-bar h1 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
+    .top-bar h1 { font-size: 1.2rem; font-weight: 700; flex-shrink: 0; }
     .top-bar h1 span { color: var(--blue); }
-
-    .search-wrap {
-      flex: 1;
-      min-width: 180px;
-      max-width: 380px;
-      position: relative;
-    }
-    .search-wrap svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--gray);
-      pointer-events: none;
-    }
-    #search {
-      width: 100%;
-      padding: 0.5rem 0.75rem 0.5rem 2.2rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+    .search-wrap { flex: 1; min-width: 160px; max-width: 360px; position: relative; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray); pointer-events: none; }
+    #search { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
     #search:focus { border-color: var(--blue); }
-
-    .btn-edit-toggle {
-      margin-left: auto;
-      padding: 0.45rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--white);
-      font-size: 0.85rem;
-      cursor: pointer;
-      color: var(--gray);
-      transition: all 0.15s;
-      white-space: nowrap;
+    .bar-btns { margin-left: auto; display: flex; gap: 0.5rem; }
+    .btn-bar {
+      padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); font-size: 0.82rem; cursor: pointer; color: var(--gray);
+      transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem;
     }
-    .btn-edit-toggle:hover { border-color: var(--blue); color: var(--blue); }
-    .btn-edit-toggle.active { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 600; }
+    .btn-bar:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-bar.active { background: var(--blue-light); border-color: var(--blue); color: var(--blue); font-weight: 600; }
+    .btn-bar.token-ok::before { content: '🟢'; font-size: 0.6rem; }
+    .btn-bar.token-missing::before { content: '🔴'; font-size: 0.6rem; }
 
     /* ── Stats ── */
-    .stats {
-      max-width: 960px;
-      margin: 1.5rem auto 0;
-      padding: 0 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.82rem;
-      color: var(--gray);
-    }
+    .stats { max-width: 960px; margin: 1.4rem auto 0; padding: 0 1.5rem; display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--gray); }
     .stats strong { color: #212529; }
 
     /* ── Main ── */
-    main {
-      max-width: 960px;
-      margin: 1.5rem auto 3rem;
-      padding: 0 1.5rem;
-    }
-
-    /* ── Fach-Block ── */
+    main { max-width: 960px; margin: 1.5rem auto 3rem; padding: 0 1.5rem; }
     .fach-block { margin-bottom: 2.5rem; }
-    .fach-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--border);
-    }
-    .fach-badge {
-      background: var(--blue);
-      color: white;
-      font-size: 0.72rem;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
+    .fach-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .fach-badge { background: var(--blue); color: white; font-size: 0.72rem; padding: 3px 9px; border-radius: 20px; font-weight: 700; }
     .fach-name { font-size: 1.1rem; font-weight: 700; }
     .fach-count { font-size: 0.8rem; color: var(--gray); margin-left: auto; }
-
-    /* ── Thema-Block ── */
     .thema-block { margin-bottom: 1.2rem; }
-    .thema-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gray);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── Grid & Cards ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 0.75rem;
-    }
+    .thema-label { font-size: 0.78rem; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
     .card-wrap { position: relative; }
-
     .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
-      text-decoration: none;
-      color: inherit;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      transition: box-shadow 0.15s, transform 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      border: 1px solid transparent;
+      background: var(--white); border-radius: var(--radius); padding: 0.9rem 1.1rem;
+      text-decoration: none; color: inherit; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.15s, transform 0.15s; display: flex; align-items: center;
+      gap: 0.8rem; border: 1px solid transparent;
     }
-    .card:hover {
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-      transform: translateY(-2px);
-      border-color: var(--blue-light);
-    }
-    .delete-mode .card { padding-right: 2.8rem; }
-    .delete-mode .card:hover { border-color: var(--red); box-shadow: 0 4px 14px rgba(224,49,49,0.1); transform: none; }
-
-    .card-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--blue-light);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
+    .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: var(--blue-light); }
+    .edit-mode .card { padding-right: 3rem; }
+    .edit-mode .card:hover { transform: none; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-color: var(--border); }
+    .card-icon { width: 36px; height: 36px; background: var(--blue-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
     .card-title { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
     .card-meta { font-size: 0.75rem; color: var(--gray); margin-top: 3px; }
 
-    /* ── Action Buttons (Edit Mode) ── */
-    .card-actions {
-      display: none;
-      position: absolute;
-      top: 50%;
-      right: 8px;
-      transform: translateY(-50%);
-      gap: 4px;
-      flex-direction: column;
-    }
+    /* ── Card Action Buttons ── */
+    .card-actions { display: none; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); gap: 4px; flex-direction: column; }
     .edit-mode .card-actions { display: flex; }
-    .edit-mode .card { padding-right: 3rem; }
-    .edit-mode .card:hover { border-color: var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.06); transform: none; }
-
-    .btn-action {
-      border-radius: 6px;
-      width: 26px;
-      height: 26px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s;
-      border: 1px solid;
-    }
+    .btn-action { border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; border: 1px solid; }
     .btn-action-rename { background: var(--blue-light); border-color: #bac8ff; color: var(--blue); }
     .btn-action-rename:hover { background: #dbe4ff; }
     .btn-action-delete { background: var(--red-light); border-color: #ffc9c9; color: var(--red); }
     .btn-action-delete:hover { background: #ffe3e3; }
 
-    /* ── Copy-Link Toast ── */
-    .toast {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: #212529;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      opacity: 0;
-      transition: all 0.3s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+    /* ── Toast ── */
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: #212529; color: white; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error   { background: var(--red); }
 
     /* ── Modals ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.open { display: flex; }
-    .modal {
-      background: white;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      max-width: 460px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    }
+    .modal { background: white; border-radius: var(--radius); padding: 1.5rem; max-width: 460px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
     .modal h3 { font-size: 1.05rem; margin-bottom: 0.3rem; }
     .modal .modal-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.1rem; }
     .modal label { display: block; font-size: 0.8rem; font-weight: 600; color: #495057; margin-bottom: 0.3rem; }
-    .modal input {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      margin-bottom: 0.75rem;
-    }
+    .modal input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; margin-bottom: 0.75rem; transition: border-color 0.15s; }
     .modal input:focus { border-color: var(--blue); }
-    .modal code {
-      display: block;
-      background: #f1f3f5;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.78rem;
-      font-family: "SF Mono", monospace;
-      word-break: break-all;
-      margin-bottom: 1rem;
-      color: #c92a2a;
-    }
     .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
-    .modal-actions button {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      font-size: 0.85rem;
-      background: white;
-    }
+    .modal-actions button { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; background: white; transition: opacity 0.15s; }
+    .modal-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-primary { background: var(--blue) !important; color: white; border-color: var(--blue) !important; font-weight: 600; }
     .btn-danger  { background: var(--red)  !important; color: white; border-color: var(--red)  !important; font-weight: 600; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 0.3rem; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── No results ── */
+    .token-hint { font-size: 0.78rem; color: var(--gray); margin-top: -0.4rem; margin-bottom: 0.75rem; }
+    .token-hint a { color: var(--blue); }
     .no-results { text-align: center; color: var(--gray); padding: 3rem 0; font-size: 0.95rem; }
 
     @media (max-width: 500px) {
-      .top-bar { gap: 0.6rem; }
       .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; order: 3; }
     }
   </style>
@@ -303,29 +116,48 @@
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
   </div>
-  <button class="btn-edit-toggle" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
+  <div class="bar-btns">
+    <button class="btn-bar" id="tokenBtn" onclick="openTokenModal()">⚙️ Token</button>
+    <button class="btn-bar" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
+  </div>
 </div>
 
 <div class="stats" id="stats"></div>
 <main id="app"></main>
 <div class="toast" id="toast"></div>
 
+<!-- Token Modal -->
+<div class="modal-overlay" id="modalToken">
+  <div class="modal">
+    <h3>GitHub Token einrichten</h3>
+    <p class="modal-sub">Einmalig eingeben — wird nur lokal in deinem Browser gespeichert.</p>
+    <label>Personal Access Token</label>
+    <input type="password" id="inputToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+    <p class="token-hint">
+      Token erstellen: <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank">github.com/settings/tokens</a>
+      → Scope „repo" aktivieren.
+    </p>
+    <div class="modal-actions">
+      <button onclick="closeModals()">Abbrechen</button>
+      <button class="btn-primary" onclick="saveToken()">Speichern</button>
+    </div>
+  </div>
+</div>
+
 <!-- Umbenennen/Verschieben Modal -->
 <div class="modal-overlay" id="modalRename">
   <div class="modal">
     <h3>Material bearbeiten</h3>
-    <p class="modal-sub">Ändere Titel, Fach oder Thema. Führe danach den Befehl im Terminal aus.</p>
+    <p class="modal-sub">Titel, Fach oder Thema ändern — wird direkt auf GitHub gespeichert.</p>
     <label>Titel</label>
     <input type="text" id="inputTitel" placeholder="Titel des Materials">
     <label>Fach</label>
     <input type="text" id="inputFach" placeholder="z.B. GPU, Mathe">
     <label>Thema / Lernfeld</label>
     <input type="text" id="inputThema" placeholder="z.B. LF5, Algebra">
-    <label style="margin-top:0.5rem">Terminal-Befehl</label>
-    <code id="renameCmd"></code>
     <div class="modal-actions">
       <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-primary" onclick="copyRenameCmd()">Befehl kopieren</button>
+      <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
     </div>
   </div>
 </div>
@@ -333,12 +165,11 @@
 <!-- Löschen Modal -->
 <div class="modal-overlay" id="modalDelete">
   <div class="modal">
-    <h3>Material löschen</h3>
+    <h3>Material löschen?</h3>
     <p class="modal-sub" id="deleteDesc"></p>
-    <code id="deleteCmd"></code>
     <div class="modal-actions">
       <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-danger" onclick="copyDeleteCmd()">Befehl kopieren & löschen</button>
+      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
     </div>
   </div>
 </div>
@@ -352,10 +183,204 @@
   ];
   // ======================
 
+  const OWNER = 'brandy299';
+  const REPO  = 'HTML-materialien';
+  const API   = `https://api.github.com/repos/${OWNER}/${REPO}`;
+
   let editMode = false;
   let currentMaterial = null;
-  const REPO = '/Users/yabrand/Desktop/Projekte/Github HTML Pipeline';
 
+  // ── Token ──────────────────────────────────────────
+  function getToken() { return localStorage.getItem('gh_token') || ''; }
+  function saveToken() {
+    const t = document.getElementById('inputToken').value.trim();
+    if (!t) return;
+    localStorage.setItem('gh_token', t);
+    closeModals();
+    updateTokenBtn();
+    showToast('Token gespeichert', 'success');
+  }
+  function openTokenModal() {
+    document.getElementById('inputToken').value = getToken();
+    document.getElementById('modalToken').classList.add('open');
+  }
+  function updateTokenBtn() {
+    const btn = document.getElementById('tokenBtn');
+    if (getToken()) { btn.classList.add('token-ok'); btn.classList.remove('token-missing'); }
+    else            { btn.classList.add('token-missing'); btn.classList.remove('token-ok'); }
+  }
+
+  // ── GitHub API helpers ─────────────────────────────
+  async function ghGet(path) {
+    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
+      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json' }
+    });
+    if (!r.ok) throw new Error(`GitHub API Fehler: ${r.status}`);
+    return r.json();
+  }
+
+  async function ghPut(path, content, sha, message) {
+    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), sha })
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+    return r.json();
+  }
+
+  async function ghDelete(path, sha, message) {
+    const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, sha })
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+  }
+
+  // ── index.html auf GitHub aktualisieren ────────────
+  async function updateIndex(newMaterialien, commitMsg) {
+    const file = await ghGet('index.html');
+    const currentContent = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+
+    const listStr = newMaterialien.map(m =>
+      `    ${JSON.stringify(m)}`
+    ).join(',\n');
+
+    const newContent = currentContent.replace(
+      /(const materialien = \[)[^\]]*(\];)/s,
+      `$1\n${listStr}\n  $2`
+    );
+    await ghPut('index.html', newContent, file.sha, commitMsg);
+  }
+
+  // ── Löschen ────────────────────────────────────────
+  function showDelete(e, pfad) {
+    e.preventDefault(); e.stopPropagation();
+    if (!checkToken()) return;
+    currentMaterial = materialien.find(m => m.pfad === pfad);
+    if (!currentMaterial) return;
+    document.getElementById('deleteDesc').textContent =
+      `„${currentMaterial.name}" (${currentMaterial.fach} / ${currentMaterial.thema.trim()}) wird dauerhaft gelöscht.`;
+    document.getElementById('modalDelete').classList.add('open');
+  }
+
+  async function doDelete() {
+    if (!currentMaterial) return;
+    const btn = document.getElementById('btnConfirmDelete');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Löschen…';
+    try {
+      // 1. Datei auf GitHub löschen
+      const file = await ghGet(currentMaterial.pfad);
+      await ghDelete(currentMaterial.pfad, file.sha, `Gelöscht: ${currentMaterial.name}`);
+
+      // 2. index.html aktualisieren
+      const updated = materialien.filter(m => m.pfad !== currentMaterial.pfad);
+      await updateIndex(updated, `Gelöscht: ${currentMaterial.name}`);
+
+      // 3. Lokal entfernen & neu rendern
+      materialien.splice(materialien.indexOf(currentMaterial), 1);
+      closeModals();
+      render();
+      showToast(`„${currentMaterial.name}" gelöscht`, 'success');
+      currentMaterial = null;
+    } catch(err) {
+      showToast('Fehler: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Löschen';
+    }
+  }
+
+  // ── Umbenennen / Verschieben ────────────────────────
+  function showRename(e, pfad) {
+    e.preventDefault(); e.stopPropagation();
+    if (!checkToken()) return;
+    currentMaterial = materialien.find(m => m.pfad === pfad);
+    if (!currentMaterial) return;
+    document.getElementById('inputTitel').value = currentMaterial.name;
+    document.getElementById('inputFach').value  = currentMaterial.fach;
+    document.getElementById('inputThema').value = currentMaterial.thema.trim();
+    document.getElementById('modalRename').classList.add('open');
+  }
+
+  async function doRename() {
+    if (!currentMaterial) return;
+    const neuerTitel = document.getElementById('inputTitel').value.trim();
+    const neuesFach  = document.getElementById('inputFach').value.trim();
+    const neuesThema = document.getElementById('inputThema').value.trim();
+    if (!neuerTitel || !neuesFach || !neuesThema) return;
+
+    const btn = document.getElementById('btnSaveRename');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Speichern…';
+
+    try {
+      const oldPfad = currentMaterial.pfad;
+      const filename = oldPfad.split('/').pop();
+      const neuerPfad = `materialien/${neuesFach}/${neuesThema}/${filename}`;
+      const moved = neuerPfad !== oldPfad;
+
+      if (moved) {
+        // Datei verschieben: erst neue erstellen, dann alte löschen
+        const oldFile = await ghGet(oldPfad);
+        const fileContent = decodeURIComponent(escape(atob(oldFile.content.replace(/\n/g,''))));
+        await ghPut(neuerPfad, fileContent, undefined,
+          `Verschoben: ${neuerTitel} → ${neuesFach}/${neuesThema}`);
+        await ghDelete(oldPfad, oldFile.sha,
+          `Alte Datei entfernt nach Verschieben: ${currentMaterial.name}`);
+      }
+
+      // Eintrag aktualisieren
+      const idx = materialien.indexOf(currentMaterial);
+      const updated = { ...currentMaterial, name: neuerTitel, fach: neuesFach, thema: neuesThema, pfad: neuerPfad };
+      materialien[idx] = updated;
+
+      await updateIndex(materialien,
+        `Bearbeitet: ${neuerTitel} [${neuesFach} / ${neuesThema}]`);
+
+      closeModals();
+      render();
+      showToast(`„${neuerTitel}" gespeichert`, 'success');
+      currentMaterial = null;
+    } catch(err) {
+      showToast('Fehler: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Speichern';
+    }
+  }
+
+  // ── Hilfsfunktionen ────────────────────────────────
+  function checkToken() {
+    if (getToken()) return true;
+    showToast('Bitte zuerst GitHub Token einrichten (⚙️)', 'error');
+    openTokenModal();
+    return false;
+  }
+
+  function toggleEditMode() {
+    editMode = !editMode;
+    const btn = document.getElementById('editToggle');
+    document.getElementById('app').classList.toggle('edit-mode', editMode);
+    btn.classList.toggle('active', editMode);
+    btn.textContent = editMode ? '✓ Fertig' : '✏️ Bearbeiten';
+  }
+
+  function closeModals() {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+  }
+
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── Rendern ────────────────────────────────────────
   function render(filter = '') {
     const q = filter.toLowerCase();
     const filtered = materialien.filter(m =>
@@ -395,7 +420,7 @@
       for (const thema of Object.keys(faecher[fach]).sort()) {
         html += `<div class="thema-block"><div class="thema-label">${thema}</div><div class="grid">`;
         for (const m of faecher[fach][thema]) {
-          const pfadSafe = m.pfad.replace(/'/g, "\\'");
+          const ps = m.pfad.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
           html += `<div class="card-wrap">
             <a class="card" href="${m.pfad}" target="_blank">
               <div class="card-icon">📄</div>
@@ -405,10 +430,8 @@
               </div>
             </a>
             <div class="card-actions">
-              <button class="btn-action btn-action-rename" title="Umbenennen / Verschieben"
-                onclick="showRename(event,'${pfadSafe}')">✏️</button>
-              <button class="btn-action btn-action-delete" title="Löschen"
-                onclick="showDelete(event,'${pfadSafe}')">✕</button>
+              <button class="btn-action btn-action-rename" title="Bearbeiten" onclick="showRename(event,'${ps}')">✏️</button>
+              <button class="btn-action btn-action-delete" title="Löschen"    onclick="showDelete(event,'${ps}')">✕</button>
             </div>
           </div>`;
         }
@@ -420,84 +443,12 @@
     if (editMode) app.classList.add('edit-mode');
   }
 
-  function toggleEditMode() {
-    editMode = !editMode;
-    const btn = document.getElementById('editToggle');
-    document.getElementById('app').classList.toggle('edit-mode', editMode);
-    btn.classList.toggle('active', editMode);
-    btn.textContent = editMode ? '✓ Fertig' : '✏️ Bearbeiten';
-  }
-
-  function getMaterial(pfad) {
-    return materialien.find(m => m.pfad === pfad);
-  }
-
-  function showRename(e, pfad) {
-    e.preventDefault(); e.stopPropagation();
-    const m = getMaterial(pfad);
-    if (!m) return;
-    currentMaterial = m;
-    document.getElementById('inputTitel').value = m.name;
-    document.getElementById('inputFach').value  = m.fach;
-    document.getElementById('inputThema').value = m.thema.trim();
-    updateRenameCmd();
-    document.getElementById('modalRename').classList.add('open');
-  }
-
-  function updateRenameCmd() {
-    if (!currentMaterial) return;
-    const titel = document.getElementById('inputTitel').value || currentMaterial.name;
-    const fach  = document.getElementById('inputFach').value  || currentMaterial.fach;
-    const thema = document.getElementById('inputThema').value || currentMaterial.thema;
-    const cmd = `cd "${REPO}" && ./verwalten.sh`;
-    document.getElementById('renameCmd').textContent =
-      `cd "${REPO}" && ./deploy.sh "${currentMaterial.pfad}" "${fach}" "${thema}" "${titel}"`;
-  }
-
-  function showDelete(e, pfad) {
-    e.preventDefault(); e.stopPropagation();
-    const m = getMaterial(pfad);
-    if (!m) return;
-    currentMaterial = m;
-    document.getElementById('deleteDesc').textContent =
-      `„${m.name}" (${m.fach} / ${m.thema.trim()}) wird dauerhaft gelöscht.`;
-    document.getElementById('deleteCmd').textContent =
-      `cd "${REPO}" && ./delete.sh "${m.pfad}"`;
-    document.getElementById('modalDelete').classList.add('open');
-  }
-
-  function copyRenameCmd() {
-    navigator.clipboard.writeText(document.getElementById('renameCmd').textContent);
-    showToast('Befehl kopiert — jetzt im Terminal einfügen');
-    closeModals();
-  }
-
-  function copyDeleteCmd() {
-    navigator.clipboard.writeText(document.getElementById('deleteCmd').textContent);
-    showToast('Befehl kopiert — jetzt im Terminal einfügen');
-    closeModals();
-  }
-
-  function closeModals() {
-    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // Live-Vorschau des Befehls beim Tippen
-  ['inputTitel','inputFach','inputThema'].forEach(id =>
-    document.getElementById(id).addEventListener('input', updateRenameCmd)
-  );
   document.getElementById('search').addEventListener('input', e => render(e.target.value));
   document.querySelectorAll('.modal-overlay').forEach(el =>
     el.addEventListener('click', e => { if (e.target === el) closeModals(); })
   );
 
+  updateTokenBtn();
   render();
 </script>
 </body>
