@@ -5,298 +5,1055 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digitale Unterrichtsmaterialien</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --radius: 12px;
-      --white: #fff;
-      --bg: #f4f6fb;
-      --border: #e5e9f0;
-      --gray: #8892a4;
-      --text: #1a2035;
-      --green: #2f9e44;
-      --red: #e03131; --red-light: #fff5f5;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.09);
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #F5F6FA;
+      color: #1a1d23;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ===== FACH COLOR CLASSES ===== */
+    .fc-0 { --fc: #4F6EF7; --fc-light: #eef1fe; --fc-bg: #f0f3ff; }
+    .fc-1 { --fc: #10b981; --fc-light: #d1fae5; --fc-bg: #ecfdf5; }
+    .fc-2 { --fc: #f59e0b; --fc-light: #fef3c7; --fc-bg: #fffbeb; }
+    .fc-3 { --fc: #ef4444; --fc-light: #fee2e2; --fc-bg: #fff5f5; }
+    .fc-4 { --fc: #8b5cf6; --fc-light: #ede9fe; --fc-bg: #f5f3ff; }
+    .fc-5 { --fc: #06b6d4; --fc-light: #cffafe; --fc-bg: #ecfeff; }
+    .fc-6 { --fc: #f97316; --fc-light: #ffedd5; --fc-bg: #fff7ed; }
+    .fc-7 { --fc: #ec4899; --fc-light: #fce7f3; --fc-bg: #fdf2f8; }
+
+    /* ===== STICKY HEADER ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid #e8eaf0;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    /* Fach-Farben */
-    .fc-0 { --fc: #3b5bdb; --fc-light: #eef2ff; --fc-border: #bac8ff; }
-    .fc-1 { --fc: #0ca678; --fc-light: #e6fcf5; --fc-border: #96f2d7; }
-    .fc-2 { --fc: #e8590c; --fc-light: #fff4e6; --fc-border: #ffc078; }
-    .fc-3 { --fc: #ae3ec9; --fc-light: #f8f0fc; --fc-border: #e599f7; }
-    .fc-4 { --fc: #1971c2; --fc-light: #e7f5ff; --fc-border: #74c0fc; }
-    .fc-5 { --fc: #c2255c; --fc-light: #fff0f6; --fc-border: #faa2c1; }
-    .fc-6 { --fc: #5c7cfa; --fc-light: #edf2ff; --fc-border: #bac8ff; }
-    .fc-7 { --fc: #f59f00; --fc-light: #fff9db; --fc-border: #ffe066; }
-
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* ── Header ── */
-    .header {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 20;
+    /* Logo */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      text-decoration: none;
     }
-    .header-top {
-      max-width: 1040px; margin: 0 auto;
-      padding: 0.85rem 1.5rem;
-      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: #4F6EF7;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
     }
-    .logo { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-    .logo-icon { width: 32px; height: 32px; background: #3b5bdb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-    .logo h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
-    .logo h1 span { color: #3b5bdb; }
+    .logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1d23;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: #9ca0b4;
+    }
 
-    .search-wrap { flex: 1; min-width: 160px; max-width: 340px; position: relative; }
-    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray); pointer-events: none; }
-    #search { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; outline: none; background: var(--bg); transition: border-color 0.15s, background 0.15s; }
-    #search:focus { border-color: #3b5bdb; background: var(--white); }
+    /* Search */
+    .search-wrap {
+      flex: 1;
+      max-width: 380px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca0b4;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+    #search {
+      width: 100%;
+      height: 40px;
+      border: 1.5px solid #e2e5ef;
+      border-radius: 10px;
+      padding: 0 14px 0 38px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1d23;
+      background: #F5F6FA;
+      outline: none;
+      transition: border-color 150ms, box-shadow 150ms, background 150ms;
+    }
+    #search:focus {
+      border-color: #4F6EF7;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
+    }
+    #search::placeholder { color: #b0b5c8; }
 
-    .bar-btns { margin-left: auto; display: flex; gap: 0.4rem; flex-shrink: 0; }
-    .btn-bar { padding: 0.42rem 0.85rem; border-radius: 8px; border: 1px solid var(--border); background: var(--white); font-size: 0.8rem; cursor: pointer; color: var(--gray); transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; }
-    .btn-bar:hover { border-color: #3b5bdb; color: #3b5bdb; }
-    .btn-bar.active { background: #eef2ff; border-color: #3b5bdb; color: #3b5bdb; font-weight: 600; }
-    .btn-bar.token-ok::before  { content: '●'; font-size: 0.5rem; color: var(--green); }
-    .btn-bar.token-missing::before { content: '●'; font-size: 0.5rem; color: var(--red); }
-    .btn-upload { background: #3b5bdb !important; color: white !important; border-color: #3b5bdb !important; font-weight: 600; }
-    .btn-upload:hover { background: #3451c7 !important; }
+    /* Header action buttons */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-upload-header {
+      height: 38px;
+      padding: 0 16px;
+      border-radius: 9px;
+      background: #4F6EF7;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 150ms;
+      border: none;
+      white-space: nowrap;
+    }
+    .btn-upload-header:hover { background: #3d5ce6; }
+    #editToggle {
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #F5F6FA;
+      color: #555b72;
+      border: 1.5px solid #e2e5ef;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 150ms;
+      white-space: nowrap;
+    }
+    #editToggle:hover { background: #eaecf5; }
+    #editToggle.active {
+      background: #eef1fe;
+      color: #4F6EF7;
+      border-color: #4F6EF7;
+    }
+    #tokenBtn {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      font-size: 17px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 150ms;
+      position: relative;
+      flex-shrink: 0;
+    }
+    #tokenBtn:hover { background: #F5F6FA; }
+    #tokenBtn.token-ok::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+    #tokenBtn.token-missing::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
 
-    /* ── Filter Pills ── */
-    .filter-bar { border-top: 1px solid var(--border); padding: 0.55rem 1.5rem; max-width: 1040px; margin: 0 auto; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-    .filter-label { font-size: 0.75rem; color: var(--gray); margin-right: 0.2rem; font-weight: 500; }
-    .pill { padding: 0.28rem 0.8rem; border-radius: 99px; border: 1px solid var(--border); background: var(--white); font-size: 0.78rem; cursor: pointer; color: var(--gray); transition: all 0.15s; white-space: nowrap; }
-    .pill:hover { border-color: #3b5bdb; color: #3b5bdb; }
-    .pill.active { color: white; border-color: transparent; font-weight: 600; }
+    /* ===== PAGE LAYOUT ===== */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
 
-    /* ── Main ── */
-    main { max-width: 1040px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+    /* ===== FILTER BAR ===== */
+    .filter-wrap {
+      padding: 14px 0 2px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-wrap::-webkit-scrollbar { display: none; }
+    #filterBar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+    .pill {
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: #555b72;
+      border: 1.5px solid #e2e5ef;
+      transition: all 150ms;
+      cursor: pointer;
+      white-space: nowrap;
+      min-height: 34px;
+    }
+    .pill:hover {
+      background: #F5F6FA;
+      border-color: #c6c9d8;
+    }
+    .pill-active {
+      font-weight: 600;
+    }
+    /* Colored pill states per fach */
+    .fc-0.pill { color: #555b72; }
+    .fc-0.pill-active, .fc-0.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-1.pill-active, .fc-1.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-2.pill-active, .fc-2.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-3.pill-active, .fc-3.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-4.pill-active, .fc-4.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-5.pill-active, .fc-5.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-6.pill-active, .fc-6.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .fc-7.pill-active, .fc-7.pill:hover { background: var(--fc-light); border-color: var(--fc); color: var(--fc); }
+    .pill-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.07);
+      border-radius: 100px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 20px;
+    }
 
-    /* ── Stats ── */
-    .stats-row { display: flex; gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
-    .stat-card { background: var(--white); border-radius: var(--radius); padding: 0.9rem 1.2rem; border: 1px solid var(--border); min-width: 120px; }
-    .stat-card .stat-num { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-    .stat-card .stat-lbl { font-size: 0.75rem; color: var(--gray); margin-top: 1px; }
+    /* ===== STATS ROW ===== */
+    #statsRow {
+      display: flex;
+      gap: 12px;
+      margin: 16px 0 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e8eaf0;
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      flex: 1;
+      min-width: 80px;
+    }
+    .stat-num {
+      font-size: 28px;
+      font-weight: 700;
+      color: #4F6EF7;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9ca0b4;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
 
-    /* ── Neueste Sektion ── */
-    .section-label { font-size: 0.75rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    /* ===== SECTIONS ===== */
+    .section-block {
+      margin-bottom: 34px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b0b5c8;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e8eaf0;
+    }
 
-    /* ── Fach-Block ── */
-    .fach-block { margin-bottom: 2.2rem; }
-    .fach-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
-    .fach-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--fc, #3b5bdb); flex-shrink: 0; }
-    .fach-name { font-size: 1rem; font-weight: 700; }
-    .fach-count { font-size: 0.78rem; color: var(--gray); margin-left: auto; background: var(--bg); border: 1px solid var(--border); padding: 2px 8px; border-radius: 99px; }
+    /* Fach header */
+    .fach-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--fc-light, #e8eaf0);
+    }
+    .fach-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--fc, #4F6EF7);
+      flex-shrink: 0;
+    }
+    .fach-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1d23;
+      flex: 1;
+    }
+    .fach-count {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--fc-light, #eef1fe);
+      color: var(--fc, #4F6EF7);
+      border-radius: 100px;
+      padding: 3px 11px;
+    }
 
-    /* ── Thema ── */
-    .thema-block { margin-bottom: 1rem; }
-    .thema-label { font-size: 0.72rem; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; padding-left: 0.2rem; }
+    /* Thema block */
+    .thema-block {
+      margin-bottom: 20px;
+    }
+    .thema-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca0b4;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .thema-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e8eaf0;
+    }
 
-    /* ── Grid & Cards ── */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.6rem; }
-    .card-wrap { position: relative; }
+    /* ===== GRID ===== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    /* ===== CARDS ===== */
+    .card-wrap {
+      position: relative;
+      border-radius: 13px;
+      transition: transform 150ms, box-shadow 150ms;
+    }
+    .card-wrap:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+    }
     .card {
-      background: var(--white); border-radius: var(--radius);
-      padding: 0.85rem 1rem; text-decoration: none; color: inherit;
-      box-shadow: var(--shadow-sm); transition: box-shadow 0.15s, transform 0.15s;
-      display: flex; align-items: center; gap: 0.75rem;
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--fc, #3b5bdb);
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 13px;
+      border: 1.5px solid #e8eaf0;
+      overflow: hidden;
+      height: 100%;
+      transition: border-color 150ms;
+      text-decoration: none;
+      color: inherit;
     }
-    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--fc-border, #bac8ff); border-left-color: var(--fc, #3b5bdb); }
-    .edit-mode .card { padding-right: 3rem; }
-    .edit-mode .card:hover { transform: none; box-shadow: var(--shadow-sm); }
+    .card:hover { border-color: var(--fc, #4F6EF7); }
 
-    .card-icon { width: 34px; height: 34px; background: var(--fc-light, #eef2ff); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-    .card-body { min-width: 0; flex: 1; }
-    .card-title { font-weight: 600; font-size: 0.88rem; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-meta { font-size: 0.72rem; color: var(--gray); margin-top: 3px; }
-    .badge-new { display: inline-block; background: #e6fcf5; color: #0ca678; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; text-transform: uppercase; }
+    /* Colored top strip */
+    .card-top {
+      background: var(--fc-bg, #f0f3ff);
+      padding: 9px 13px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 2px solid var(--fc-light, #e0e5fe);
+      min-height: 38px;
+    }
+    .card-fach {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--fc, #4F6EF7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-new {
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--fc, #4F6EF7);
+      color: #fff;
+      border-radius: 100px;
+      padding: 2px 8px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
 
-    /* Copy-link button (visible on hover) */
+    /* Card body */
+    .card-body {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      flex: 1;
+    }
+    .card-icon {
+      font-size: 22px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1d23;
+      line-height: 1.4;
+      word-break: break-word;
+      margin-bottom: 4px;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: #9ca0b4;
+      font-weight: 400;
+    }
+
+    /* Copy link button */
     .btn-copy-link {
-      position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
-      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-      width: 28px; height: 28px; cursor: pointer; font-size: 0.8rem;
-      display: none; align-items: center; justify-content: center;
-      color: var(--gray); transition: all 0.15s;
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.88);
+      color: #9ca0b4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 150ms, background 150ms, color 150ms;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(0,0,0,0.06);
+      cursor: pointer;
     }
-    .card-wrap:hover .btn-copy-link { display: flex; }
-    .btn-copy-link:hover { background: var(--white); border-color: #3b5bdb; color: #3b5bdb; }
-    .edit-mode .btn-copy-link { display: none !important; }
+    .card-wrap:hover .btn-copy-link { opacity: 1; }
+    .btn-copy-link:hover { background: #fff; color: #4F6EF7; }
 
-    /* Edit action buttons */
-    .card-actions { display: none; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); gap: 4px; flex-direction: column; }
+    /* Edit-mode action buttons */
+    .card-actions {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      display: none;
+      gap: 6px;
+      z-index: 3;
+    }
+    .btn-action {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 150ms;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      border: 1px solid #e2e5ef;
+      cursor: pointer;
+    }
+    .btn-action:hover { transform: scale(1.1); }
+    .btn-action-rename:hover { background: #eef1fe; border-color: #4F6EF7; }
+    .btn-action-delete:hover { background: #fee2e2; border-color: #ef4444; color: #ef4444; }
+
     .edit-mode .card-actions { display: flex; }
-    .btn-action { border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; border: 1px solid; transition: background 0.15s; }
-    .btn-action-rename { background: #eef2ff; border-color: #bac8ff; color: #3b5bdb; }
-    .btn-action-rename:hover { background: #dbe4ff; }
-    .btn-action-delete { background: var(--red-light); border-color: #ffc9c9; color: var(--red); }
-    .btn-action-delete:hover { background: #ffe3e3; }
+    .edit-mode .card-wrap { outline: 2px dashed #f0b429; outline-offset: 2px; border-radius: 13px; }
 
-    /* ── Toast ── */
-    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a2035; color: white; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.84rem; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 300; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .toast.success { background: #1a7f4b; }
-    .toast.error   { background: #c92a2a; }
+    /* ===== NO RESULTS ===== */
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .no-results-icon { font-size: 52px; margin-bottom: 14px; }
+    .no-results-text { font-size: 16px; color: #9ca0b4; font-weight: 500; }
 
-    /* ── Modals ── */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,20,40,0.5); z-index: 100; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(2px); }
+    /* ===== MODALS ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(12, 15, 28, 0.48);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
     .modal-overlay.open { display: flex; }
-    .modal { background: white; border-radius: 16px; padding: 1.6rem; max-width: 460px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,0.18); }
-    .modal-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
-    .modal h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .modal .modal-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.2rem; line-height: 1.5; }
-    .modal label { display: block; font-size: 0.78rem; font-weight: 600; color: #495057; margin-bottom: 0.3rem; }
-    .modal input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; margin-bottom: 0.7rem; background: var(--bg); transition: border-color 0.15s, background 0.15s; }
-    .modal input:focus { border-color: #3b5bdb; background: var(--white); }
-    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.2rem; }
-    .modal-actions button { padding: 0.5rem 1.1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; background: white; transition: all 0.15s; }
-    .modal-actions button:hover { border-color: #adb5bd; }
-    .modal-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary { background: #3b5bdb !important; color: white !important; border-color: #3b5bdb !important; font-weight: 600; }
-    .btn-primary:hover { background: #3451c7 !important; }
-    .btn-danger  { background: var(--red) !important; color: white !important; border-color: var(--red) !important; font-weight: 600; }
-    .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.35); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 0.3rem; vertical-align: middle; }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+    }
+    .modal-head {
+      padding: 24px 24px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .modal-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .modal-icon-blue   { background: #eef1fe; }
+    .modal-icon-yellow { background: #fef3c7; }
+    .modal-icon-red    { background: #fee2e2; }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1d23;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .modal-sub {
+      font-size: 13px;
+      color: #9ca0b4;
+      line-height: 1.6;
+    }
+    .modal-body {
+      padding: 20px 24px 0;
+    }
+    .modal-actions {
+      padding: 20px 24px 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* Form elements */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555b72;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input {
+      width: 100%;
+      height: 42px;
+      border: 1.5px solid #e2e5ef;
+      border-radius: 9px;
+      padding: 0 13px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1d23;
+      background: #F5F6FA;
+      outline: none;
+      transition: border-color 150ms, box-shadow 150ms, background 150ms;
+    }
+    .form-input:focus {
+      border-color: #4F6EF7;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
+    }
+    .form-input::placeholder { color: #b0b5c8; }
+
+    /* Modal buttons */
+    .btn-primary {
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 10px;
+      background: #4F6EF7;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 150ms;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary:hover { background: #3d5ce6; }
+    .btn-primary:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-danger {
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 10px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 150ms;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-danger:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-secondary {
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 10px;
+      background: #F5F6FA;
+      color: #555b72;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 150ms;
+      cursor: pointer;
+      border: 1.5px solid #e2e5ef;
+    }
+    .btn-secondary:hover { background: #eaecf5; }
+
+    /* Delete description box */
+    #deleteDesc {
+      font-size: 14px;
+      color: #555b72;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-radius: 9px;
+      padding: 12px 14px;
+      line-height: 1.6;
+    }
+
+    /* Token hint */
+    .token-hint {
+      font-size: 12px;
+      color: #9ca0b4;
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+    .token-hint a { color: #4F6EF7; text-decoration: underline; }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed #d0d3e0;
+      border-radius: 11px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 150ms;
+      background: #fafbfc;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: #4F6EF7;
+      background: #f0f3ff;
+    }
+    .drop-zone.has-file {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+    .dz-icon { font-size: 32px; margin-bottom: 8px; }
+    #dzText {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555b72;
+    }
+    .dz-sub {
+      font-size: 12px;
+      color: #b0b5c8;
+      margin-top: 4px;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      height: 6px;
+      background: #e8eaf0;
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4F6EF7, #8b5cf6);
+      border-radius: 100px;
+      transition: width 300ms ease;
+      width: 0;
+    }
+
+    /* ===== PAGE DRAG OVERLAY ===== */
+    #dragOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(79, 110, 247, 0.08);
+      border: 3px dashed #4F6EF7;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #4F6EF7;
+      pointer-events: none;
+      backdrop-filter: blur(2px);
+    }
+    #dragOverlay.visible { display: flex; }
+    #dragOverlay .overlay-emoji { font-size: 52px; }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1d23;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 200ms, transform 200ms;
+      z-index: 1000;
+      pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.success { background: #10b981; }
+    #toast.error   { background: #ef4444; }
+
+    /* ===== SPINNER ===== */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 600ms linear infinite;
+      flex-shrink: 0;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Token hint ── */
-    .token-hint { font-size: 0.77rem; color: var(--gray); margin-top: -0.3rem; margin-bottom: 0.75rem; }
-    .token-hint a { color: #3b5bdb; }
+    /* ===== FOOTER ===== */
+    .site-footer {
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 12px;
+      color: #b0b5c8;
+      border-top: 1px solid #e8eaf0;
+      background: #fff;
+      margin-top: 40px;
+    }
 
-    /* ── Upload drop zone ── */
-    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 1.6rem; text-align: center; color: var(--gray); cursor: pointer; transition: all 0.2s; margin-bottom: 1rem; background: var(--bg); }
-    .drop-zone:hover, .drop-zone.drag-over { border-color: #3b5bdb; background: #eef2ff; color: #3b5bdb; }
-    .drop-zone .dz-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
-    .drop-zone .dz-text { font-size: 0.88rem; font-weight: 500; }
-    .drop-zone .dz-sub  { font-size: 0.76rem; margin-top: 0.2rem; opacity: 0.7; }
-    .drop-zone.has-file { border-color: var(--green); background: #ebfbee; color: var(--green); }
-
-    /* ── Page drag overlay ── */
-    #dragOverlay { display: none; position: fixed; inset: 0; background: rgba(59,91,219,0.07); border: 3px dashed #3b5bdb; z-index: 50; pointer-events: none; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: #3b5bdb; }
-    #dragOverlay.visible { display: flex; }
-
-    .progress-wrap { margin-top: 0.5rem; background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
-    .progress-bar  { height: 100%; background: #3b5bdb; border-radius: 99px; width: 0; transition: width 0.3s; }
-
-    .no-results { text-align: center; color: var(--gray); padding: 4rem 0; }
-    .no-results-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
-    .no-results-text { font-size: 0.95rem; }
-
-    @media (max-width: 560px) {
-      .search-wrap { min-width: 0; flex: 1 1 100%; order: 3; max-width: 100%; }
-      .stats-row .stat-card { flex: 1; }
+    /* ===== MOBILE ===== */
+    @media (max-width: 600px) {
+      .header-inner {
+        padding: 0 14px;
+        height: 58px;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .logo-sub { display: none; }
+      .search-wrap {
+        order: 3;
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin: 0;
+        padding-bottom: 10px;
+      }
+      .header-inner {
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 0;
+      }
+      .btn-upload-header .btn-label { display: none; }
+      .main-content { padding: 0 14px 60px; }
+      .grid { grid-template-columns: 1fr; }
+      #statsRow { gap: 8px; }
+      .stat-card { padding: 12px 10px; }
+      .stat-num { font-size: 22px; }
+      .pill { min-height: 44px; height: auto; padding: 0 16px; }
+      .btn-action { width: 44px; height: 44px; }
+      .modal { border-radius: 14px; }
+      .modal-actions { flex-direction: column-reverse; }
+      .btn-primary, .btn-danger, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        height: 48px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
-    <div class="logo">
-      <div class="logo-icon">📚</div>
-      <h1>Digitale <span>Unterrichtsmaterialien</span></h1>
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <div>
+          <div class="logo-text">Unterrichtsmaterialien</div>
+          <div class="logo-sub">Digitale Sammlung</div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-upload-header" onclick="openUpload()" aria-label="Material hochladen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span class="btn-label">Hochladen</span>
+        </button>
+        <button id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
+        <button id="tokenBtn" onclick="openTokenModal()" title="GitHub Token einrichten" aria-label="GitHub Token einrichten">⚙️</button>
+      </div>
     </div>
-    <div class="search-wrap">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="search" id="search" placeholder="Suchen nach Titel, Fach, Thema…" autocomplete="off">
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-content">
+
+    <!-- Filter Bar -->
+    <div class="filter-wrap">
+      <div id="filterBar"></div>
     </div>
-    <div class="bar-btns">
-      <button class="btn-bar" id="tokenBtn" onclick="openTokenModal()">⚙️ Token</button>
-      <button class="btn-bar" id="editToggle" onclick="toggleEditMode()">✏️ Bearbeiten</button>
-      <button class="btn-bar btn-upload" onclick="openUpload()">＋ Hochladen</button>
+
+    <!-- Stats Row -->
+    <div id="statsRow"></div>
+
+    <!-- Card Grid / App -->
+    <div id="app"></div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    Digitale Unterrichtsmaterialien &nbsp;&middot;&nbsp; &copy; <span id="footerYear"></span>
+  </footer>
+
+  <!-- ===== DRAG OVERLAY ===== -->
+  <div id="dragOverlay" aria-hidden="true">
+    <div class="overlay-emoji">📂</div>
+    HTML-Datei hier ablegen&hellip;
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ===== MODAL: UPLOAD ===== -->
+  <div class="modal-overlay" id="modalUpload" role="dialog" aria-modal="true" aria-label="Material hochladen">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-icon modal-icon-blue">📤</div>
+        <div>
+          <div class="modal-title">Material hochladen</div>
+          <div class="modal-sub">HTML-Datei direkt auf GitHub hochladen.</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" accept=".html">
+          <div class="dz-icon">📄</div>
+          <div id="dzText">Datei hierher ziehen oder klicken</div>
+          <div class="dz-sub">Nur .html Dateien</div>
+        </div>
+        <div class="progress-wrap" id="progressWrap" style="display:none">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uploadTitel">Titel</label>
+          <input class="form-input" type="text" id="uploadTitel" placeholder="z.B. Quiz Lernfeld 5">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uploadFach">Fach</label>
+          <input class="form-input" type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch" list="fachList">
+          <datalist id="fachList"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uploadThema">Thema / Lernfeld</label>
+          <input class="form-input" type="text" id="uploadThema" placeholder="z.B. LF5, Algebra" list="themaList">
+          <datalist id="themaList"></datalist>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
+        <button class="btn-primary" id="btnUpload" onclick="doUpload()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Hochladen
+        </button>
+      </div>
     </div>
   </div>
-  <div class="filter-bar" id="filterBar">
-    <span class="filter-label">Fach:</span>
-  </div>
-</div>
 
-<main>
-  <div class="stats-row" id="statsRow"></div>
-  <div id="app"></div>
-</main>
-
-<div class="toast" id="toast"></div>
-<div id="dragOverlay">📄 Datei hier loslassen</div>
-
-<!-- Upload Modal -->
-<div class="modal-overlay" id="modalUpload">
-  <div class="modal">
-    <div class="modal-icon">⬆️</div>
-    <h3>Material hochladen</h3>
-    <p class="modal-sub">HTML-Datei direkt auf GitHub hochladen.</p>
-    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-      <div class="dz-icon">📄</div>
-      <div class="dz-text" id="dzText">Datei hierher ziehen oder klicken</div>
-      <div class="dz-sub">Nur .html Dateien</div>
-    </div>
-    <input type="file" id="fileInput" accept=".html" style="display:none">
-    <label>Titel</label>
-    <input type="text" id="uploadTitel" placeholder="z.B. Quiz Lernfeld 5">
-    <label>Fach</label>
-    <input type="text" id="uploadFach" placeholder="z.B. GPU, Mathe, Deutsch" list="fachList">
-    <datalist id="fachList"></datalist>
-    <label>Thema / Lernfeld</label>
-    <input type="text" id="uploadThema" placeholder="z.B. LF5, Algebra" list="themaList">
-    <datalist id="themaList"></datalist>
-    <div class="progress-wrap" id="progressWrap" style="display:none"><div class="progress-bar" id="progressBar"></div></div>
-    <div class="modal-actions">
-      <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-primary" id="btnUpload" onclick="doUpload()">Hochladen</button>
+  <!-- ===== MODAL: TOKEN ===== -->
+  <div class="modal-overlay" id="modalToken" role="dialog" aria-modal="true" aria-label="GitHub Token einrichten">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-icon modal-icon-yellow">🔑</div>
+        <div>
+          <div class="modal-title">GitHub Token</div>
+          <div class="modal-sub">Einmalig eingeben &mdash; wird nur lokal im Browser gespeichert.</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="inputToken">Personal Access Token</label>
+          <input class="form-input" type="password" id="inputToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+        </div>
+        <p class="token-hint">
+          Token mit <strong>repo</strong>-Berechtigung erstellen unter
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank" rel="noopener">github.com/settings/tokens</a>.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
+        <button class="btn-primary" onclick="saveToken()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Speichern
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Token Modal -->
-<div class="modal-overlay" id="modalToken">
-  <div class="modal">
-    <div class="modal-icon">🔑</div>
-    <h3>GitHub Token einrichten</h3>
-    <p class="modal-sub">Einmalig eingeben — wird nur lokal in deinem Browser gespeichert.</p>
-    <label>Personal Access Token</label>
-    <input type="password" id="inputToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-    <p class="token-hint">Token erstellen: <a href="https://github.com/settings/tokens/new?scopes=repo&description=Lernmaterialien" target="_blank">github.com/settings/tokens</a> → Scope „repo" aktivieren.</p>
-    <div class="modal-actions">
-      <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-primary" onclick="saveToken()">Speichern</button>
+  <!-- ===== MODAL: RENAME / EDIT ===== -->
+  <div class="modal-overlay" id="modalRename" role="dialog" aria-modal="true" aria-label="Material bearbeiten">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-icon modal-icon-blue">✏️</div>
+        <div>
+          <div class="modal-title">Material bearbeiten</div>
+          <div class="modal-sub">Änderungen werden direkt auf GitHub gespeichert.</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="inputTitel">Titel</label>
+          <input class="form-input" type="text" id="inputTitel" placeholder="Titel des Materials">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inputFach">Fach</label>
+          <input class="form-input" type="text" id="inputFach" placeholder="z.B. GPU, Mathe">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inputThema">Thema / Lernfeld</label>
+          <input class="form-input" type="text" id="inputThema" placeholder="z.B. LF5, Algebra">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
+        <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Bearbeiten Modal -->
-<div class="modal-overlay" id="modalRename">
-  <div class="modal">
-    <div class="modal-icon">✏️</div>
-    <h3>Material bearbeiten</h3>
-    <p class="modal-sub">Änderungen werden direkt auf GitHub gespeichert.</p>
-    <label>Titel</label>
-    <input type="text" id="inputTitel" placeholder="Titel des Materials">
-    <label>Fach</label>
-    <input type="text" id="inputFach" placeholder="z.B. GPU, Mathe">
-    <label>Thema / Lernfeld</label>
-    <input type="text" id="inputThema" placeholder="z.B. LF5, Algebra">
-    <div class="modal-actions">
-      <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
+  <!-- ===== MODAL: DELETE ===== -->
+  <div class="modal-overlay" id="modalDelete" role="dialog" aria-modal="true" aria-label="Material löschen">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-icon modal-icon-red">🗑️</div>
+        <div>
+          <div class="modal-title">Material löschen?</div>
+          <div class="modal-sub">Diese Aktion kann nicht rückgängig gemacht werden.</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div id="deleteDesc"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModals()">Abbrechen</button>
+        <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Endgültig löschen</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Löschen Modal -->
-<div class="modal-overlay" id="modalDelete">
-  <div class="modal">
-    <div class="modal-icon">🗑️</div>
-    <h3>Material löschen?</h3>
-    <p class="modal-sub" id="deleteDesc"></p>
-    <div class="modal-actions">
-      <button onclick="closeModals()">Abbrechen</button>
-      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Endgültig löschen</button>
-    </div>
-  </div>
-</div>
-
-<script>
+  <script>
   // ===== MATERIALIEN =====
   const materialien = [
     {"name":"business letters lernpfad","fach":"Englisch B2","thema":"Business Letters","pfad":"materialien/Englisch B2/Business Letters/business-letters-lernpfad.html","datum":"17.03.2026"},
@@ -315,7 +1072,6 @@
   const API   = `https://api.github.com/repos/${OWNER}/${REPO}`;
   const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
 
-  // Fach → Farb-Index
   const fachColorMap = {};
   let colorIdx = 0;
   function getFachClass(fach) {
@@ -327,7 +1083,6 @@
   let currentMaterial = null;
   let activeFilter = null;
 
-  // ── Token ────────────────────────────────────────
   function getToken() { return localStorage.getItem('gh_token') || ''; }
   function saveToken() {
     const t = document.getElementById('inputToken').value.trim();
@@ -351,7 +1106,6 @@
     openTokenModal(); return false;
   }
 
-  // ── GitHub API ───────────────────────────────────
   async function ghGet(path) {
     const r = await fetch(`${API}/contents/${encodeURI(path)}`, {
       headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json' }
@@ -384,7 +1138,6 @@
     await ghPut('index.html', next, file.sha, msg);
   }
 
-  // ── Löschen ─────────────────────────────────────
   function showDelete(e, pfad) {
     e.preventDefault(); e.stopPropagation();
     if (!checkToken()) return;
@@ -411,7 +1164,6 @@
     finally { btn.disabled = false; btn.innerHTML = 'Endgültig löschen'; }
   }
 
-  // ── Umbenennen ───────────────────────────────────
   function showRename(e, pfad) {
     e.preventDefault(); e.stopPropagation();
     if (!checkToken()) return;
@@ -450,7 +1202,6 @@
     finally { btn.disabled = false; btn.innerHTML = 'Speichern'; }
   }
 
-  // ── Upload ───────────────────────────────────────
   let uploadFile = null;
   function openUpload() {
     if (!checkToken()) return;
@@ -462,7 +1213,6 @@
     document.getElementById('uploadThema').value = localStorage.getItem('lastThema') || '';
     document.getElementById('progressWrap').style.display = 'none';
     document.getElementById('progressBar').style.width = '0';
-    // Autocomplete befüllen
     const faecher = [...new Set(materialien.map(m => m.fach))];
     const themen  = [...new Set(materialien.map(m => m.thema.trim()))];
     document.getElementById('fachList').innerHTML  = faecher.map(f => `<option value="${f}">`).join('');
@@ -509,7 +1259,6 @@
     finally { btn.disabled = false; btn.innerHTML = 'Hochladen'; }
   }
 
-  // ── Hilfe ────────────────────────────────────────
   function copyLink(e, pfad) {
     e.preventDefault(); e.stopPropagation();
     navigator.clipboard.writeText(BASE_URL + pfad);
@@ -535,19 +1284,20 @@
     return (Date.now() - d) < 7 * 24 * 60 * 60 * 1000;
   }
 
-  // ── Filter Pills ─────────────────────────────────
   function buildFilterBar() {
     const faecher = [...new Set(materialien.map(m => m.fach.trim()))].sort();
     const bar = document.getElementById('filterBar');
-    const allPill = `<button class="pill${!activeFilter ? ' active fc-0' : ''}" style="${!activeFilter ? 'background:#3b5bdb' : ''}" onclick="setFilter(null)">Alle</button>`;
+    const allActive = !activeFilter;
+    const allPill = `<button class="pill${allActive ? ' pill-active' : ''}" onclick="setFilter(null)">Alle <span class="pill-count">${materialien.length}</span></button>`;
     const pills = faecher.map(f => {
       const cls = getFachClass(f);
+      const count = materialien.filter(m => m.fach.trim() === f).length;
       const isActive = activeFilter === f;
-      return `<button class="pill ${cls}${isActive ? ' active' : ''}" style="${isActive ? 'background:var(--fc);' : ''}" onclick="setFilter('${f.replace(/'/g,"\\'")}')">
-        ${f}
+      return `<button class="pill ${cls}${isActive ? ' pill-active' : ''}" onclick="setFilter('${f.replace(/'/g,"\\'")}')">
+        ${f} <span class="pill-count">${count}</span>
       </button>`;
     }).join('');
-    bar.innerHTML = `<span class="filter-label">Fach:</span>${allPill}${pills}`;
+    bar.innerHTML = allPill + pills;
   }
   function setFilter(fach) {
     activeFilter = fach;
@@ -555,7 +1305,6 @@
     render(document.getElementById('search').value);
   }
 
-  // ── Render ───────────────────────────────────────
   function render(filter = '') {
     const q = filter.toLowerCase();
     let filtered = materialien.filter(m =>
@@ -565,7 +1314,6 @@
     );
     if (activeFilter) filtered = filtered.filter(m => m.fach.trim() === activeFilter);
 
-    // Stats
     const fachSet = new Set(materialien.map(m => m.fach.trim()));
     const themaSet = new Set(materialien.map(m => m.fach.trim() + '|' + m.thema.trim()));
     document.getElementById('statsRow').innerHTML = `
@@ -593,13 +1341,21 @@
       const newBadge = isNew(m.datum) ? '<span class="badge-new">Neu</span>' : '';
       return `<div class="card-wrap ${fc}">
         <a class="card ${fc}" href="${m.pfad}" target="_blank">
-          <div class="card-icon">📄</div>
+          <div class="card-top">
+            <span class="card-fach">${m.fach}</span>
+            ${newBadge}
+          </div>
           <div class="card-body">
-            <div class="card-title">${m.name}${newBadge}</div>
-            <div class="card-meta">${m.thema.trim()} · ${m.datum}</div>
+            <div class="card-icon">📄</div>
+            <div class="card-info">
+              <div class="card-title">${m.name}</div>
+              <div class="card-meta">${m.thema.trim()} · ${m.datum}</div>
+            </div>
           </div>
         </a>
-        <button class="btn-copy-link" title="Link kopieren" onclick="copyLink(event,'${ps}')">🔗</button>
+        <button class="btn-copy-link" title="Link kopieren" onclick="copyLink(event,'${ps}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </button>
         <div class="card-actions">
           <button class="btn-action btn-action-rename" title="Bearbeiten" onclick="showRename(event,'${ps}')">✏️</button>
           <button class="btn-action btn-action-delete" title="Löschen"    onclick="showDelete(event,'${ps}')">✕</button>
@@ -609,33 +1365,30 @@
 
     let html = '';
 
-    // Zuletzt hinzugefügt (top 3, nur wenn kein Filter/Suche)
     if (!q && !activeFilter) {
-      const recent = [...materialien]
-        .sort((a,b) => {
-          const pd = s => { const p=s.split('.'); return new Date(+p[2],+p[1]-1,+p[0]); };
-          return pd(b.datum) - pd(a.datum);
-        }).slice(0,3);
+      const recent = [...materialien].sort((a,b) => {
+        const pd = s => { const p=s.split('.'); return new Date(+p[2],+p[1]-1,+p[0]); };
+        return pd(b.datum) - pd(a.datum);
+      }).slice(0,3);
       if (recent.length) {
-        html += `<div class="fach-block"><div class="section-label">Zuletzt hinzugefügt</div><div class="grid">`;
-        html += recent.map(cardHTML).join('');
-        html += `</div></div>`;
+        html += `<div class="section-block"><div class="section-label">Zuletzt hinzugefügt</div><div class="grid">${recent.map(cardHTML).join('')}</div></div>`;
       }
     }
 
     for (const fach of Object.keys(faecher).sort()) {
       const fc = getFachClass(fach);
       const total = Object.values(faecher[fach]).flat().length;
-      html += `<div class="fach-block ${fc}">
+      html += `<div class="section-block ${fc}">
         <div class="fach-header">
-          <div class="fach-dot" style="background:var(--fc)"></div>
+          <div class="fach-dot"></div>
           <span class="fach-name">${fach}</span>
           <span class="fach-count">${total}</span>
         </div>`;
       for (const thema of Object.keys(faecher[fach]).sort()) {
-        html += `<div class="thema-block"><div class="thema-label">${thema}</div><div class="grid">`;
-        html += faecher[fach][thema].map(cardHTML).join('');
-        html += `</div></div>`;
+        html += `<div class="thema-block">
+          <div class="thema-label">${thema}</div>
+          <div class="grid">${faecher[fach][thema].map(cardHTML).join('')}</div>
+        </div>`;
       }
       html += `</div>`;
     }
@@ -644,7 +1397,6 @@
     if (editMode) app.classList.add('edit-mode');
   }
 
-  // ── Events ───────────────────────────────────────
   document.getElementById('fileInput').addEventListener('change', e => setUploadFile(e.target.files[0]));
   const dz = document.getElementById('dropZone');
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
@@ -668,12 +1420,13 @@
     el.addEventListener('click', e => { if (e.target === el) closeModals(); })
   );
 
-  // ── Init ─────────────────────────────────────────
-  // Farbzuweisung vorab initialisieren
   [...new Set(materialien.map(m => m.fach.trim()))].sort().forEach(f => getFachClass(f));
   updateTokenBtn();
   buildFilterBar();
   render();
-</script>
+
+  // Footer year
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
