@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preiskalkulation – Bürodesign GmbH</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #faf9f6;
+    --cream: #f0ede4;
+    --accent: #c94040;
+    --accent-soft: #f5e8e8;
+    --gold: #c89b3c;
+    --gold-soft: #fdf4e0;
+    --green: #2d7a4f;
+    --green-soft: #e6f4ec;
+    --blue: #1e4d8c;
+    --blue-soft: #e8f0fb;
+    --grey: #6b6b7a;
+    --rule: #d8d4ca;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--ink);
+    color: white;
+    padding: 2rem 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(200,155,60,0.12);
+  }
+  .header-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .site-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.15;
+    color: white;
+  }
+  .site-header p {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--cream);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+    white-space: nowrap;
+  }
+  .progress-steps {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--rule);
+    background: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--grey);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .step-dot.active { border-color: var(--accent); background: var(--accent); color: white; }
+  .step-dot.done { border-color: var(--green); background: var(--green); color: white; }
+
+  /* LAYOUT */
+  .main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 2.5rem;
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+  .section.visible { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADER */
+  .section-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+  .section-intro {
+    font-size: 1rem;
+    color: var(--grey);
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--rule);
+    padding-left: 1rem;
+  }
+
+  /* STORY BOX */
+  .story-box {
+    background: var(--gold-soft);
+    border: 1px solid rgba(200,155,60,0.3);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .story-box::before {
+    content: '📦';
+    position: absolute;
+    top: 1rem; right: 1.2rem;
+    font-size: 1.5rem;
+    opacity: 0.5;
+  }
+  .story-box strong { color: var(--gold); }
+
+  /* INFO CARD */
+  .info-card {
+    background: var(--blue-soft);
+    border: 1px solid rgba(30,77,140,0.2);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .info-card .card-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+
+  /* KALKULATION SCHEMA */
+  .schema-wrap {
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .schema-title {
+    background: var(--ink);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.6rem 1rem;
+  }
+  .schema-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.93rem;
+    transition: background 0.15s;
+    background: white;
+  }
+  .schema-row:last-child { border-bottom: none; }
+  .schema-row:hover { background: #f5f3ef; }
+  .schema-row.minus { border-left: 3px solid var(--accent); }
+  .schema-row.plus  { border-left: 3px solid var(--green); }
+  .schema-row.result { background: var(--ink); color: white; font-weight: 600; }
+  .schema-row.result:hover { background: #2a2a42; }
+  .schema-row.subresult { background: var(--cream); font-weight: 600; }
+  .schema-label { display: flex; align-items: center; gap: 0.5rem; }
+  .schema-op {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .op-minus { background: var(--accent-soft); color: var(--accent); }
+  .op-plus  { background: var(--green-soft); color: var(--green); }
+  .op-eq    { background: var(--ink); color: white; }
+  .schema-value { font-family: monospace; font-weight: 600; white-space: nowrap; padding-left: 1rem; }
+  .schema-pct { font-size: 0.8rem; color: var(--grey); margin-left: 0.4rem; }
+
+  /* HIGHLIGHT TOOLTIP */
+  .tooltip-wrap { position: relative; display: inline; }
+  .tooltip-trigger {
+    border-bottom: 2px dashed var(--gold);
+    cursor: help;
+    color: var(--ink);
+  }
+  .tooltip-box {
+    display: none;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    width: 200px;
+    z-index: 200;
+    line-height: 1.4;
+  }
+  .tooltip-wrap:hover .tooltip-box { display: block; }
+
+  /* STEP EXPLAINER */
+  .steps-list { list-style: none; counter-reset: step-counter; margin: 1rem 0; }
+  .steps-list li {
+    counter-increment: step-counter;
+    padding: 0.8rem 1rem 0.8rem 3.5rem;
+    margin-bottom: 0.6rem;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    position: relative;
+    font-size: 0.93rem;
+  }
+  .steps-list li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    background: var(--ink);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* QUIZ */
+  .quiz-box {
+    background: white;
+    border: 2px solid var(--rule);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .quiz-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+  .quiz-subtitle { font-size: 0.82rem; color: var(--grey); margin-bottom: 1.2rem; }
+
+  .quiz-task {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.93rem;
+  }
+  .quiz-task strong { display: block; margin-bottom: 0.3rem; }
+
+  .answer-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .answer-row label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--grey);
+    white-space: nowrap;
+  }
+  .answer-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    border: 2px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    background: white;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .answer-input:focus { border-color: var(--blue); }
+  .answer-input.correct { border-color: var(--green); background: var(--green-soft); }
+  .answer-input.wrong { border-color: var(--accent); background: var(--accent-soft); }
+
+  .check-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .check-btn:hover { background: #2e2e4a; }
+
+  .feedback {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); }
+  .feedback.fail { background: var(--accent-soft); color: var(--accent); }
+
+  /* FORMULA */
+  .formula-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--ink);
+    color: white;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-family: monospace;
+    font-size: 1.05rem;
+    flex-wrap: wrap;
+  }
+  .formula-box .f-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 2rem 0;
+  }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.65rem 1.5rem;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn.primary { background: var(--accent); color: white; }
+  .nav-btn.primary:hover { background: #b03030; }
+  .nav-btn.secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--rule); }
+  .nav-btn.secondary:hover { background: var(--rule); }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.9rem;
+  }
+  .compare-table th {
+    background: var(--ink);
+    color: white;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .compare-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .compare-table tr:nth-child(even) td { background: #f9f7f2; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .tag-vk { background: var(--blue-soft); color: var(--blue); }
+  .tag-rk { background: var(--accent-soft); color: var(--accent); }
+
+  /* MEMORY AID */
+  .memory-card {
+    background: var(--gold-soft);
+    border: 1.5px solid rgba(200,155,60,0.4);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .memory-card .mc-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .memory-card p { font-size: 0.9rem; }
+
+  /* BADGE */
+  .badge-row {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: white;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    flex: 1;
+    min-width: 160px;
+    text-align: center;
+  }
+  .badge .b-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .badge .b-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); }
+  .badge .b-val { font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+
+  /* FINAL SUMMARY */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 560px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .nav-btn { width: 100%; text-align: center; }
+  }
+  .summary-card {
+    border-radius: 10px;
+    padding: 1.2rem;
+    border: 1.5px solid;
+  }
+  .summary-card.vk { border-color: rgba(30,77,140,0.3); background: var(--blue-soft); }
+  .summary-card.rk { border-color: rgba(201,64,64,0.3); background: var(--accent-soft); }
+  .summary-card h4 { font-family: 'DM Serif Display', serif; font-size: 1rem; margin-bottom: 0.5rem; }
+  .summary-card ul { list-style: none; font-size: 0.85rem; }
+  .summary-card ul li { padding: 0.15rem 0; }
+  .summary-card ul li::before { content: '→ '; font-weight: 700; }
+
+  /* CONFETTI */
+  #confetti-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* SCORE */
+  .score-display {
+    font-size: 0.82rem;
+    color: var(--grey);
+    margin-left: auto;
+    font-weight: 600;
+  }
+  .score-highlight { color: var(--green); }
+
+  /* SCROLL TO TOP */
+  .all-sections { display: none; }
+  .all-sections.show-all { display: block; }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<header class="site-header">
+  <p class="header-tag">Lernfeld 4 · GPU · Bürodesign GmbH, Köln</p>
+  <h1>Preiskalkulation</h1>
+  <p>Vorwärtskalkulation &amp; Rückwärtskalkulation – Schritt für Schritt erklärt</p>
+</header>
+
+<nav class="progress-bar-wrap">
+  <span class="progress-label">Lernschritte</span>
+  <div class="progress-steps" id="stepDots"></div>
+  <span class="score-display">Punkte: <span class="score-highlight" id="scoreCount">0</span></span>
+</nav>
+
+<main class="main">
+
+<!-- ============ SECTION 0: EINLEITUNG ============ -->
+<div class="section visible" id="sec-0">
+  <p class="section-num">Einleitung</p>
+  <h2>Warum kalkulieren wir?</h2>
+  <p class="section-intro">Bevor du einen Preis festsetzt oder prüfst, musst du verstehen: <em>Was kostet uns die Ware wirklich – und was wollen wir dafür verlangen?</em></p>
+
+  <div class="story-box">
+    <strong>Situation bei der Bürodesign GmbH</strong><br>
+    Du arbeitest als Auszubildender bei der <strong>Bürodesign GmbH</strong> in Köln. Das Unternehmen stellt Büromöbel her und kauft Zubehör von Lieferanten ein. Dein Chef fragt dich: <em>„Was sollen wir für diesen Schreibtischstuhl verlangen?"</em><br><br>
+    Um das zu beantworten, brauchst du die <strong>Preiskalkulation</strong>.
+  </div>
+
+  <div class="info-card">
+    <div class="card-title">Was lernst du heute?</div>
+    <ol style="padding-left:1.2rem; font-size:0.9rem; line-height:2;">
+      <li><strong>Vorwärtskalkulation</strong> – vom Einkaufspreis zum Verkaufspreis</li>
+      <li><strong>Rückwärtskalkulation</strong> – vom Marktpreis zum maximal erlaubten Einkaufspreis</li>
+      <li><strong>Übungsaufgaben</strong> mit sofortiger Kontrolle</li>
+    </ol>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn primary" onclick="goTo(1)">Los geht's →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 1: KALKULATIONS-SCHEMA ============ -->
+<div class="section" id="sec-1">
+  <p class="section-num">Schritt 1</p>
+  <h2>Das Kalkulationsschema</h2>
+  <p class="section-intro">Das Schema ist wie ein Fahrplan: Jede Zeile baut auf der vorherigen auf. Lerne zuerst die Zeilen – dann rechnen wir damit.</p>
+
+  <div class="memory-card">
+    <div class="mc-title">💡 Merksatz</div>
+    <p><strong>Listenpreis</strong> → abzüglich Rabatt → abzüglich Skonto → plus Bezugskosten → das ist der <strong>Bezugspreis</strong> (= Einstandspreis). Danach kommen die Handlungskosten und der Gewinn. Am Ende steht der <strong>Nettoverkaufspreis</strong>.</p>
+  </div>
+
+  <div class="schema-wrap">
+    <div class="schema-title">Kalkulationsschema – Überblick</div>
+    <div class="schema-row">
+      <div class="schema-label">Listeneinkaufspreis (LEP)</div>
+      <div class="schema-value">= Preis laut Katalog des Lieferers</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Liefererrabatt</div>
+      <div class="schema-value">% vom LEP</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= <strong>Zieleinkaufspreis</strong></div>
+      <div class="schema-value">LEP − Rabatt</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Liefererskonto</div>
+      <div class="schema-value">% vom Zieleinkaufspreis</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= <strong>Bareinkaufspreis</strong></div>
+      <div class="schema-value">ZEP − Skonto</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Bezugskosten (Fracht, Verpackung)</div>
+      <div class="schema-value">fester Betrag in €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= <strong>Bezugspreis / Einstandspreis</strong></div>
+      <div class="schema-value">BEP + Bezugskosten</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Handlungskosten (HK)</div>
+      <div class="schema-value">% vom Bezugspreis</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= <strong>Selbstkostenpreis</strong></div>
+      <div class="schema-value">Bezugspreis + HK</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Gewinnzuschlag</div>
+      <div class="schema-value">% vom Selbstkostenpreis</div>
+    </div>
+    <div class="schema-row result">
+      <div class="schema-label"><span class="schema-op op-eq">=</span> <strong>Nettoverkaufspreis</strong></div>
+      <div class="schema-value">→ Das verlangen wir!</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="card-title">Wichtige Begriffe</div>
+    <table style="width:100%; font-size:0.86rem; border-collapse:collapse;">
+      <tr><td style="padding:0.3rem 0.5rem; font-weight:600;">Rabatt</td><td style="padding:0.3rem 0.5rem;">Preisnachlass, weil wir viel bestellen oder Stammkunde sind</td></tr>
+      <tr style="background:rgba(0,0,0,0.03)"><td style="padding:0.3rem 0.5rem; font-weight:600;">Skonto</td><td style="padding:0.3rem 0.5rem;">Preisnachlass, wenn wir <em>schnell</em> bezahlen (innerhalb z.B. 10 Tage)</td></tr>
+      <tr><td style="padding:0.3rem 0.5rem; font-weight:600;">Bezugskosten</td><td style="padding:0.3rem 0.5rem;">Transport, Verpackung, Versicherung – was wir extra zahlen</td></tr>
+      <tr style="background:rgba(0,0,0,0.03)"><td style="padding:0.3rem 0.5rem; font-weight:600;">Handlungskosten</td><td style="padding:0.3rem 0.5rem;">Unsere eigenen Kosten: Miete, Strom, Gehälter, Werbung...</td></tr>
+      <tr><td style="padding:0.3rem 0.5rem; font-weight:600;">Gewinnzuschlag</td><td style="padding:0.3rem 0.5rem;">Der Gewinn, den wir erzielen wollen</td></tr>
+    </table>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(0)">← Zurück</button>
+    <button class="nav-btn primary" onclick="goTo(2)">Weiter: Vorwärtskalkulation →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 2: VORWÄRTSKALKULATION ============ -->
+<div class="section" id="sec-2">
+  <p class="section-num">Schritt 2</p>
+  <h2>Vorwärtskalkulation</h2>
+  <p class="section-intro">Bei der <strong>Vorwärtskalkulation</strong> kennen wir den Einkaufspreis und rechnen uns Schritt für Schritt <em>vorwärts</em> bis zum Verkaufspreis.</p>
+
+  <div class="story-box">
+    <strong>Aufgabe für dich:</strong> Die Bürodesign GmbH kauft einen Bürostuhl <em>„ErgoMax 300"</em> bei einem Lieferer ein. Du sollst den Nettoverkaufspreis berechnen.
+  </div>
+
+  <div class="badge-row">
+    <div class="badge"><div class="b-icon">📋</div><div class="b-label">Listeneinkaufspreis</div><div class="b-val">400,00 €</div></div>
+    <div class="badge"><div class="b-icon">🏷️</div><div class="b-label">Liefererrabatt</div><div class="b-val">10 %</div></div>
+    <div class="badge"><div class="b-icon">💳</div><div class="b-label">Liefererskonto</div><div class="b-val">2 %</div></div>
+    <div class="badge"><div class="b-icon">🚚</div><div class="b-label">Bezugskosten</div><div class="b-val">12,00 €</div></div>
+    <div class="badge"><div class="b-icon">🏢</div><div class="b-label">Handlungskosten</div><div class="b-val">25 %</div></div>
+    <div class="badge"><div class="b-icon">💰</div><div class="b-label">Gewinnzuschlag</div><div class="b-val">20 %</div></div>
+  </div>
+
+  <div class="schema-wrap">
+    <div class="schema-title">Vorwärtskalkulation – Bürostuhl "ErgoMax 300"</div>
+    <div class="schema-row">
+      <div class="schema-label">Listeneinkaufspreis</div>
+      <div class="schema-value">400,00 €</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Liefererrabatt (10 % von 400,00 €)</div>
+      <div class="schema-value">− 40,00 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Zieleinkaufspreis</div>
+      <div class="schema-value">360,00 €</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Liefererskonto (2 % von 360,00 €)</div>
+      <div class="schema-value">− 7,20 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Bareinkaufspreis</div>
+      <div class="schema-value">352,80 €</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Bezugskosten</div>
+      <div class="schema-value">+ 12,00 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Bezugspreis (Einstandspreis)</div>
+      <div class="schema-value">364,80 €</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Handlungskosten (25 % von 364,80 €)</div>
+      <div class="schema-value">+ 91,20 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Selbstkostenpreis</div>
+      <div class="schema-value">456,00 €</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Gewinnzuschlag (20 % von 456,00 €)</div>
+      <div class="schema-value">+ 91,20 €</div>
+    </div>
+    <div class="schema-row result">
+      <div class="schema-label"><span class="schema-op op-eq">=</span> <strong>Nettoverkaufspreis</strong></div>
+      <div class="schema-value">547,20 €</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="card-title">Rechenweg – wie rechnet man Prozent ab?</div>
+    <ul style="list-style:none; font-size:0.88rem; line-height:2.2;">
+      <li>📌 <strong>Rabatt abziehen:</strong> 400 × 0,10 = 40 → 400 − 40 = 360</li>
+      <li>📌 <strong>Skonto abziehen:</strong> 360 × 0,02 = 7,20 → 360 − 7,20 = 352,80</li>
+      <li>📌 <strong>HK aufschlagen:</strong> 364,80 × 0,25 = 91,20 → 364,80 + 91,20 = 456,00</li>
+      <li>📌 <strong>Gewinn aufschlagen:</strong> 456 × 0,20 = 91,20 → 456 + 91,20 = 547,20</li>
+    </ul>
+  </div>
+
+  <!-- MINI QUIZ 1 -->
+  <div class="quiz-box">
+    <h3>✏️ Schnell-Überprüfung</h3>
+    <p class="quiz-subtitle">Beantworte die Fragen zum Beispiel oben. Du kannst sofort prüfen, ob du richtig liegst.</p>
+
+    <div class="quiz-task">
+      <strong>Frage 1:</strong> Wie hoch ist der Zieleinkaufspreis? (LEP − Rabatt)
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q1" placeholder="z.B. 360,00">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q1', ['360','360,00','360.00'], 'fb1')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Frage 2:</strong> Wie hoch ist der Bezugspreis (Einstandspreis)?
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q2" placeholder="z.B. 364,80">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q2', ['364,80','364.80','364,8'], 'fb2')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Frage 3:</strong> Wie hoch ist der Nettoverkaufspreis?
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q3" placeholder="z.B. 547,20">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q3', ['547,20','547.20','547,2'], 'fb3')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(1)">← Zurück</button>
+    <button class="nav-btn primary" onclick="goTo(3)">Weiter: Rückwärtskalkulation →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 3: RÜCKWÄRTSKALKULATION ============ -->
+<div class="section" id="sec-3">
+  <p class="section-num">Schritt 3</p>
+  <h2>Rückwärtskalkulation</h2>
+  <p class="section-intro">Bei der <strong>Rückwärtskalkulation</strong> ist der Marktpreis vorgegeben – wir rechnen <em>rückwärts</em>, um den maximal erlaubten Einkaufspreis zu ermitteln.</p>
+
+  <div class="story-box">
+    <strong>Neue Situation:</strong> Die Bürodesign GmbH möchte einen Schreibtisch „DeskPro 200" verkaufen. Der Marktpreis (was Kunden höchstens zahlen) beträgt <strong>600,00 €</strong>. Du sollst berechnen, wie viel der Stuhl beim Einkauf maximal kosten darf.
+  </div>
+
+  <div class="memory-card">
+    <div class="mc-title">💡 Wichtige Regel</div>
+    <p>Bei der Rückwärtskalkulation dreht sich alles um: <strong>Rauf-Rechnen statt Runter-Rechnen.</strong><br>
+    Wenn z.B. der Gewinn 20 % <em>auf den Selbstkostenpreis</em> ist:<br>
+    → Der Selbstkostenpreis = Nettoverkaufspreis ÷ 1,20</p>
+  </div>
+
+  <div class="formula-box">
+    <span class="f-label">Formel:</span>
+    Vorwert = Nachwert ÷ (1 + Prozentsatz)
+  </div>
+
+  <div class="badge-row">
+    <div class="badge"><div class="b-icon">🏪</div><div class="b-label">Nettoverkaufspreis (vorgegeben)</div><div class="b-val">600,00 €</div></div>
+    <div class="badge"><div class="b-icon">💰</div><div class="b-label">Gewinnzuschlag</div><div class="b-val">20 %</div></div>
+    <div class="badge"><div class="b-icon">🏢</div><div class="b-label">Handlungskosten</div><div class="b-val">25 %</div></div>
+    <div class="badge"><div class="b-icon">🚚</div><div class="b-label">Bezugskosten</div><div class="b-val">15,00 €</div></div>
+    <div class="badge"><div class="b-icon">💳</div><div class="b-label">Liefererskonto</div><div class="b-val">2 %</div></div>
+    <div class="badge"><div class="b-icon">🏷️</div><div class="b-label">Liefererrabatt</div><div class="b-val">15 %</div></div>
+  </div>
+
+  <div class="schema-wrap">
+    <div class="schema-title">Rückwärtskalkulation – Schreibtisch "DeskPro 200"</div>
+    <div class="schema-row result">
+      <div class="schema-label"><span class="schema-op op-eq">=</span> <strong>Nettoverkaufspreis (vorgegeben)</strong></div>
+      <div class="schema-value">600,00 €</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Gewinnzuschlag rückwärts (÷ 1,20)</div>
+      <div class="schema-value">500,00 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Selbstkostenpreis</div>
+      <div class="schema-value">500,00 €</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Handlungskosten rückwärts (÷ 1,25)</div>
+      <div class="schema-value">400,00 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Bezugspreis (Einstandspreis max.)</div>
+      <div class="schema-value">400,00 €</div>
+    </div>
+    <div class="schema-row minus">
+      <div class="schema-label"><span class="schema-op op-minus">−</span> Bezugskosten abziehen</div>
+      <div class="schema-value">− 15,00 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Bareinkaufspreis (max.)</div>
+      <div class="schema-value">385,00 €</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Skonto rückwärts (÷ 0,98)</div>
+      <div class="schema-value">392,86 €</div>
+    </div>
+    <div class="schema-row subresult">
+      <div class="schema-label">= Zieleinkaufspreis (max.)</div>
+      <div class="schema-value">392,86 €</div>
+    </div>
+    <div class="schema-row plus">
+      <div class="schema-label"><span class="schema-op op-plus">+</span> Rabatt rückwärts (÷ 0,85)</div>
+      <div class="schema-value">462,19 €</div>
+    </div>
+    <div class="schema-row result">
+      <div class="schema-label"><span class="schema-op op-eq">=</span> <strong>Listeneinkaufspreis (maximal)</strong></div>
+      <div class="schema-value">≤ 462,19 €</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="card-title">Warum ÷ und nicht ×?</div>
+    <p style="font-size:0.88rem; line-height:1.8;">
+      Wenn HK <strong>25 % auf den Bezugspreis</strong> aufgeschlagen wurden:<br>
+      → Selbstkostenpreis = Bezugspreis × 1,25<br>
+      → Also: Bezugspreis = Selbstkostenpreis <strong>÷ 1,25</strong><br><br>
+      Wenn Skonto <strong>2 % vom Zieleinkaufspreis</strong> abgezogen wurde:<br>
+      → Bareinkaufspreis = Zieleinkaufspreis × 0,98<br>
+      → Also: Zieleinkaufspreis = Bareinkaufspreis <strong>÷ 0,98</strong>
+    </p>
+  </div>
+
+  <!-- MINI QUIZ 2 -->
+  <div class="quiz-box">
+    <h3>✏️ Schnell-Überprüfung</h3>
+    <p class="quiz-subtitle">Teste dein Verständnis der Rückwärtskalkulation.</p>
+
+    <div class="quiz-task">
+      <strong>Frage 4:</strong> Der Nettoverkaufspreis beträgt 600 €. Der Gewinnzuschlag ist 20 %. Wie hoch ist der Selbstkostenpreis?<br>
+      <small style="color:var(--grey)">(Tipp: 600 ÷ 1,20 = ?)</small>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q4" placeholder="z.B. 500,00">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q4', ['500','500,00','500.00'], 'fb4')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Frage 5:</strong> Der Bareinkaufspreis beträgt 385,00 €. Der Skonto beträgt 2 %. Wie hoch ist der Zieleinkaufspreis?<br>
+      <small style="color:var(--grey)">(Tipp: 385 ÷ 0,98 = ?)</small>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q5" placeholder="z.B. 392,86">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q5', ['392,86','392.86','392,857','392.857'], 'fb5')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb5"></div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(2)">← Zurück</button>
+    <button class="nav-btn primary" onclick="goTo(4)">Weiter: Vergleich →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 4: VERGLEICH ============ -->
+<div class="section" id="sec-4">
+  <p class="section-num">Schritt 4</p>
+  <h2>Vergleich: Vorwärts vs. Rückwärts</h2>
+  <p class="section-intro">Jetzt weißt du beide Methoden – lass sie uns direkt vergleichen.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Merkmal</th>
+        <th><span class="tag tag-vk">Vorwärts</span></th>
+        <th><span class="tag tag-rk">Rückwärts</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Bekannt ist...</strong></td>
+        <td>Listeneinkaufspreis</td>
+        <td>Nettoverkaufspreis (Marktpreis)</td>
+      </tr>
+      <tr>
+        <td><strong>Gesucht ist...</strong></td>
+        <td>Nettoverkaufspreis</td>
+        <td>Maximaler Listeneinkaufspreis</td>
+      </tr>
+      <tr>
+        <td><strong>Rechenrichtung</strong></td>
+        <td>Von oben nach unten ↓</td>
+        <td>Von unten nach oben ↑</td>
+      </tr>
+      <tr>
+        <td><strong>Prozentrechnung</strong></td>
+        <td>× (mal) – aufschlagen / abziehen</td>
+        <td>÷ (durch) – zurückrechnen</td>
+      </tr>
+      <tr>
+        <td><strong>Typische Frage</strong></td>
+        <td>"Was müssen wir verlangen?"</td>
+        <td>"Was darf die Ware maximal kosten?"</td>
+      </tr>
+      <tr>
+        <td><strong>Beispiel</strong></td>
+        <td>LEP 400 € → NVP 547,20 €</td>
+        <td>NVP 600 € → LEP max. 462,19 €</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="summary-grid">
+    <div class="summary-card vk">
+      <h4>🔵 Vorwärtskalkulation</h4>
+      <ul>
+        <li>LEP gegeben</li>
+        <li>Aufschläge drauf</li>
+        <li>Rabatt/Skonto runter</li>
+        <li>NVP = Ergebnis</li>
+      </ul>
+    </div>
+    <div class="summary-card rk">
+      <h4>🔴 Rückwärtskalkulation</h4>
+      <ul>
+        <li>NVP gegeben</li>
+        <li>÷ 1,xx rückwärts</li>
+        <li>Bezugskosten abziehen</li>
+        <li>LEP = Ergebnis</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(3)">← Zurück</button>
+    <button class="nav-btn primary" onclick="goTo(5)">Weiter: Übungsaufgaben →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 5: GROSSE ÜBUNG ============ -->
+<div class="section" id="sec-5">
+  <p class="section-num">Schritt 5</p>
+  <h2>Übungsaufgaben</h2>
+  <p class="section-intro">Jetzt bist du dran! Rechne selbst – das Schema oben darf als Hilfe benutzt werden.</p>
+
+  <div class="story-box">
+    <strong>Aufgabe A – Vorwärtskalkulation:</strong> Die Bürodesign GmbH kauft eine Schreibtischlampe „LightPro 50" für 80,00 € (LEP). Liefererrabatt 5 %, Skonto 2 %, Bezugskosten 3,00 €, Handlungskosten 30 %, Gewinnzuschlag 10 %.
+  </div>
+
+  <div class="steps-list">
+    <li>LEP: <strong>80,00 €</strong></li>
+    <li>Rabatt (5 %): 80 × 0,05 = 4,00 → Zieleinkaufspreis = <strong>76,00 €</strong></li>
+    <li>Skonto (2 %): 76 × 0,02 = 1,52 → Bareinkaufspreis = <strong>74,48 €</strong></li>
+    <li>Bezugskosten: + 3,00 → Bezugspreis = <strong>77,48 €</strong></li>
+    <li>HK (30 %): 77,48 × 0,30 = 23,24 → Selbstkostenpreis = <strong>100,72 €</strong></li>
+    <li>Gewinn (10 %): 100,72 × 0,10 = 10,07 → NVP = <strong>110,79 €</strong></li>
+  </div>
+
+  <div class="quiz-box">
+    <h3>✏️ Prüfe deine Rechnung</h3>
+    <p class="quiz-subtitle">Gib deine Antworten ein und prüfe sie sofort.</p>
+
+    <div class="quiz-task">
+      <strong>Aufgabe A – Was ist der Zieleinkaufspreis?</strong>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q6" placeholder="z.B. 76,00">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q6', ['76','76,00','76.00'], 'fb6')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Aufgabe A – Was ist der Bezugspreis (Einstandspreis)?</strong>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q7" placeholder="z.B. 77,48">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q7', ['77,48','77.48'], 'fb7')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Aufgabe A – Was ist der Nettoverkaufspreis?</strong>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q8" placeholder="z.B. 110,79">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q8', ['110,79','110.79'], 'fb8')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb8"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="story-box">
+    <strong>Aufgabe B – Rückwärtskalkulation:</strong> Der Marktpreis für einen Aktenschrank "FilePro X" beträgt <strong>500,00 €</strong>. Gewinnzuschlag 10 %, Handlungskosten 25 %, Bezugskosten 20,00 €, Skonto 3 %, Rabatt 10 %. Was darf der Listeneinkaufspreis maximal betragen?
+  </div>
+
+  <div class="quiz-box">
+    <h3>✏️ Aufgabe B – Rückwärtskalkulation</h3>
+
+    <div class="quiz-task">
+      <strong>Was ist der Selbstkostenpreis?</strong><br>
+      <small style="color:var(--grey)">(500 ÷ 1,10 = ?)</small>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q9" placeholder="z.B. 454,55">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q9', ['454,55','454.55','454,545','454.545'], 'fb9')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Was ist der Bezugspreis?</strong><br>
+      <small style="color:var(--grey)">(454,55 ÷ 1,25 = ?)</small>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q10" placeholder="z.B. 363,64">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q10', ['363,64','363.64','363,636','363.636'], 'fb10')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <div class="quiz-task">
+      <strong>Was ist der Bareinkaufspreis?</strong><br>
+      <small style="color:var(--grey)">(Bezugspreis − Bezugskosten = ?)</small>
+      <div class="answer-row">
+        <label>Antwort:</label>
+        <input type="text" class="answer-input" id="q11" placeholder="z.B. 343,64">
+        <span style="font-size:0.88rem; color:var(--grey)">€</span>
+        <button class="check-btn" onclick="checkAnswer('q11', ['343,64','343.64'], 'fb11')">Prüfen</button>
+      </div>
+      <div class="feedback" id="fb11"></div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(4)">← Zurück</button>
+    <button class="nav-btn primary" onclick="goTo(6)">Abschluss →</button>
+  </div>
+</div>
+
+<!-- ============ SECTION 6: ABSCHLUSS ============ -->
+<div class="section" id="sec-6">
+  <p class="section-num">Fertig! 🎉</p>
+  <h2>Das hast du gelernt</h2>
+  <p class="section-intro">Du kannst jetzt beide Kalkulationsmethoden anwenden. Hier ist deine Zusammenfassung als Spickzettel.</p>
+
+  <div class="schema-wrap">
+    <div class="schema-title">📋 Spickzettel – Kalkulationsschema</div>
+    <div class="schema-row"><div class="schema-label">Listeneinkaufspreis (LEP)</div><div class="schema-value">= 100 %</div></div>
+    <div class="schema-row minus"><div class="schema-label"><span class="schema-op op-minus">−</span> Liefererrabatt</div><div class="schema-value">% vom LEP</div></div>
+    <div class="schema-row subresult"><div class="schema-label">= Zieleinkaufspreis (ZEP)</div><div class="schema-value"></div></div>
+    <div class="schema-row minus"><div class="schema-label"><span class="schema-op op-minus">−</span> Liefererskonto</div><div class="schema-value">% vom ZEP</div></div>
+    <div class="schema-row subresult"><div class="schema-label">= Bareinkaufspreis (BEP)</div><div class="schema-value"></div></div>
+    <div class="schema-row plus"><div class="schema-label"><span class="schema-op op-plus">+</span> Bezugskosten</div><div class="schema-value">fester €-Betrag</div></div>
+    <div class="schema-row subresult"><div class="schema-label">= Bezugspreis / Einstandspreis</div><div class="schema-value"></div></div>
+    <div class="schema-row plus"><div class="schema-label"><span class="schema-op op-plus">+</span> Handlungskosten</div><div class="schema-value">% vom Bezugspreis</div></div>
+    <div class="schema-row subresult"><div class="schema-label">= Selbstkostenpreis</div><div class="schema-value"></div></div>
+    <div class="schema-row plus"><div class="schema-label"><span class="schema-op op-plus">+</span> Gewinnzuschlag</div><div class="schema-value">% vom Selbstkostenpreis</div></div>
+    <div class="schema-row result"><div class="schema-label"><span class="schema-op op-eq">=</span> Nettoverkaufspreis (NVP)</div><div class="schema-value">→ Ziel!</div></div>
+  </div>
+
+  <div class="info-card">
+    <div class="card-title">Rückwärtskalkulation – Kurzformel</div>
+    <p style="font-size:0.88rem; line-height:2;">
+      NVP ÷ (1 + Gewinn%) = Selbstkostenpreis<br>
+      Selbstkostenpreis ÷ (1 + HK%) = Bezugspreis<br>
+      Bezugspreis − Bezugskosten = Bareinkaufspreis<br>
+      Bareinkaufspreis ÷ (1 − Skonto%) = Zieleinkaufspreis<br>
+      Zieleinkaufspreis ÷ (1 − Rabatt%) = Listeneinkaufspreis
+    </p>
+  </div>
+
+  <div style="text-align:center; padding: 2rem 0 1rem;">
+    <div style="font-size:3rem;">🏆</div>
+    <div style="font-family:'DM Serif Display',serif; font-size:1.5rem; margin-top:0.5rem;">Gut gemacht!</div>
+    <div style="color:var(--grey); font-size:0.9rem; margin-top:0.3rem;">
+      Du hast <strong id="finalScore">0</strong> Punkte gesammelt.
+    </div>
+  </div>
+
+  <div class="nav-row" style="justify-content:center;">
+    <button class="nav-btn secondary" onclick="goTo(5)">← Zurück zu Aufgaben</button>
+    <button class="nav-btn primary" onclick="restartAll()">↺ Nochmal von vorne</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+  // ── STATE ──────────────────────────────────────
+  let currentSection = 0;
+  const totalSections = 7;
+  let score = 0;
+  const answered = {};
+
+  // ── DOTS ──────────────────────────────────────
+  const dotLabels = ['Intro','Schema','Vorwärts','Rückwärts','Vergleich','Aufgaben','Ende'];
+  const dotsEl = document.getElementById('stepDots');
+  for (let i = 0; i < totalSections; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    d.textContent = i + 1;
+    d.title = dotLabels[i];
+    d.onclick = () => goTo(i);
+    d.id = 'dot-' + i;
+    dotsEl.appendChild(d);
+  }
+
+  function updateDots() {
+    for (let i = 0; i < totalSections; i++) {
+      const d = document.getElementById('dot-' + i);
+      d.className = 'step-dot';
+      if (i < currentSection) d.classList.add('done');
+      else if (i === currentSection) d.classList.add('active');
+    }
+  }
+
+  // ── NAVIGATION ─────────────────────────────────
+  function goTo(n) {
+    document.getElementById('sec-' + currentSection).classList.remove('visible');
+    currentSection = n;
+    const target = document.getElementById('sec-' + n);
+    target.classList.add('visible');
+    updateDots();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 6) {
+      document.getElementById('finalScore').textContent = score;
+      triggerConfetti();
+    }
+  }
+
+  // ── QUIZ ───────────────────────────────────────
+  function checkAnswer(inputId, validAnswers, feedbackId) {
+    if (answered[inputId]) return;
+    const input = document.getElementById(inputId);
+    const fb = document.getElementById(feedbackId);
+    const val = input.value.trim().replace(/\s/g, '');
+    const correct = validAnswers.some(a => a.replace(/\s/g, '') === val);
+    if (correct) {
+      input.classList.add('correct');
+      fb.textContent = '✅ Richtig! Sehr gut!';
+      fb.className = 'feedback show ok';
+      if (!answered[inputId]) {
+        score++;
+        document.getElementById('scoreCount').textContent = score;
+      }
+      answered[inputId] = true;
+    } else {
+      input.classList.add('wrong');
+      fb.textContent = '❌ Nicht ganz – schau nochmal ins Schema. Tipp: ' + validAnswers[0];
+      fb.className = 'feedback show fail';
+      setTimeout(() => {
+        input.classList.remove('wrong');
+        fb.className = 'feedback';
+      }, 2500);
+    }
+  }
+
+  // ── CONFETTI ───────────────────────────────────
+  function triggerConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const pieces = Array.from({length: 80}, () => ({
+      x: Math.random() * canvas.width,
+      y: -20,
+      r: 6 + Math.random() * 6,
+      c: ['#c94040','#c89b3c','#2d7a4f','#1e4d8c','#1a1a2e'][Math.floor(Math.random()*5)],
+      s: 2 + Math.random() * 3,
+      rot: Math.random() * 360,
+      dr: (Math.random()-0.5)*4
+    }));
+    let frame = 0;
+    function draw() {
+      if (frame++ > 120) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(p => {
+        p.y += p.s; p.rot += p.dr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI/180);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r/2);
+        ctx.restore();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function restartAll() {
+    score = 0;
+    document.getElementById('scoreCount').textContent = 0;
+    Object.keys(answered).forEach(k => delete answered[k]);
+    document.querySelectorAll('.answer-input').forEach(i => {
+      i.value = '';
+      i.className = 'answer-input';
+    });
+    document.querySelectorAll('.feedback').forEach(f => {
+      f.className = 'feedback';
+    });
+    goTo(0);
+  }
+
+  // ── INIT ──────────────────────────────────────
+  updateDots();
+</script>
+</body>
+</html>
