@@ -423,12 +423,10 @@ const supabase = createClient(
   'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
 );
 
-const { data: { session } } = await supabase.auth.getSession();
-if (!session) {
-  window.location.href = 'login.html';
-} else {
-  document.getElementById('main-content').style.display = 'block';
-}
+// Auth temporär deaktiviert
+// const { data: { session } } = await supabase.auth.getSession();
+// if (!session) { window.location.href = 'login.html'; }
+document.getElementById('main-content').style.display = 'block';
 
 document.getElementById('btn-logout').onclick = async () => {
   await supabase.auth.signOut();
