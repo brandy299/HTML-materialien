@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Phrase Trainer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <!-- ── APP SHELL ─────────────────────────────────────────────── -->
+  <div id="app">
+
+    <!-- NAV -->
+    <nav class="nav">
+      <div class="nav-inner">
+        <div class="nav-brand">
+          <span class="nav-logo">📚</span>
+          <div>
+            <div class="nav-title">Phrase Trainer</div>
+            <div class="nav-sub">Office Design Ltd. · B1/B2</div>
+          </div>
+        </div>
+        <div class="nav-streak" id="nav-streak" title="Lernserie">🔥 <span id="streak-count">0</span></div>
+      </div>
+    </nav>
+
+    <!-- ── SCREEN: HOME ──────────────────────────────────────── -->
+    <div id="screen-home" class="screen active">
+      <div class="home-header">
+        <h1>Wähle ein Thema</h1>
+        <p class="home-sub">Lerne Business-Phrasen mit Spaced Repetition</p>
+      </div>
+
+      <!-- Mode selector -->
+      <div class="mode-toggle" id="mode-toggle">
+        <button class="mode-btn active" data-mode="de-en" onclick="setMode('de-en')">
+          🇩🇪 → 🇬🇧 Deutsch → Englisch
+        </button>
+        <button class="mode-btn" data-mode="en-func" onclick="setMode('en-func')">
+          🇬🇧 → 💡 Phrase → Funktion
+        </button>
+      </div>
+
+      <!-- Topic grid -->
+      <div class="topic-grid" id="topic-grid"></div>
+
+      <!-- Overall stats -->
+      <div class="stats-bar" id="stats-bar">
+        <div class="stat-item">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">Karten gesamt</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-due">0</div>
+          <div class="stat-label">Fällig heute</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-mastered">0</div>
+          <div class="stat-label">Gemeistert</div>
+        </div>
+      </div>
+
+      <!-- Reset button -->
+      <div style="text-align:center; margin-top: 1rem;">
+        <button class="btn-ghost" onclick="confirmReset()">↩ Fortschritt zurücksetzen</button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN: STUDY ──────────────────────────────────────── -->
+    <div id="screen-study" class="screen">
+
+      <!-- Study header -->
+      <div class="study-header">
+        <button class="btn-back" onclick="goHome()">← Zurück</button>
+        <div class="study-meta">
+          <span id="study-topic-label"></span>
+          <span class="study-progress-text"><span id="study-done">0</span> / <span id="study-total">0</span></span>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <!-- Card area -->
+      <div class="card-area" id="card-area">
+
+        <!-- Flashcard -->
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="card-inner" id="card-inner">
+
+            <div class="card-front" id="card-front">
+              <div class="card-tag" id="card-mode-tag"></div>
+              <div class="card-prompt" id="card-prompt"></div>
+              <div class="card-hint">Tippen zum Umdrehen</div>
+            </div>
+
+            <div class="card-back" id="card-back">
+              <div class="card-answer" id="card-answer"></div>
+              <div class="card-function" id="card-function"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Rating buttons (hidden until flip) -->
+        <div class="rating-area" id="rating-area" style="display:none">
+          <p class="rating-label">Wie gut kannte ich das?</p>
+          <div class="rating-btns">
+            <button class="rating-btn btn-again" onclick="rate(0)">
+              <span class="rating-icon">😬</span>
+              <span class="rating-text">Nochmal</span>
+              <span class="rating-interval" id="int-0"></span>
+            </button>
+            <button class="rating-btn btn-hard" onclick="rate(1)">
+              <span class="rating-icon">😐</span>
+              <span class="rating-text">Schwer</span>
+              <span class="rating-interval" id="int-1"></span>
+            </button>
+            <button class="rating-btn btn-good" onclick="rate(2)">
+              <span class="rating-icon">🙂</span>
+              <span class="rating-text">Gut</span>
+              <span class="rating-interval" id="int-2"></span>
+            </button>
+            <button class="rating-btn btn-easy" onclick="rate(3)">
+              <span class="rating-icon">😄</span>
+              <span class="rating-text">Leicht</span>
+              <span class="rating-interval" id="int-3"></span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SCREEN: SESSION COMPLETE ─────────────────────────── -->
+    <div id="screen-done" class="screen">
+      <div class="done-wrap">
+        <div class="done-emoji" id="done-emoji">🎉</div>
+        <h2 id="done-title">Session abgeschlossen!</h2>
+        <p class="done-sub" id="done-sub"></p>
+
+        <div class="done-stats">
+          <div class="done-stat">
+            <div class="done-stat-num" id="done-cards">0</div>
+            <div class="done-stat-label">Karten gelernt</div>
+          </div>
+          <div class="done-stat">
+            <div class="done-stat-num" id="done-streak">0</div>
+            <div class="done-stat-label">🔥 Lernserie</div>
+          </div>
+        </div>
+
+        <div class="done-actions">
+          <button class="btn-primary" onclick="goHome()">← Alle Themen</button>
+          <button class="btn-secondary" id="btn-study-more" onclick="studyMoreToday()">+ Mehr lernen</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+  <script src="data/phrases.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
