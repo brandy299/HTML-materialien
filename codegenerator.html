@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codegenerator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --text: #1E1B4B;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+  --bg: #F8F7FF;
+  --white: #fff;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(79,70,229,0.1);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.page { max-width: 680px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
+
+label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 200ms;
+}
+
+input:focus { border-color: var(--primary); }
+
+.hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+.btn-row { display: flex; gap: 0.75rem; }
+
+.btn {
+  flex: 1;
+  padding: 0.8rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.btn:hover { background: var(--primary-hover); }
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn-outline:hover { background: #EEF2FF; }
+
+/* Preview label list */
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.preview-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.count-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #EEF2FF;
+  color: var(--primary);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* ── PRINT LAYOUT ── */
+#print-area { display: none; }
+
+@media print {
+  body > * { display: none !important; }
+  #print-area {
+    display: block !important;
+    font-family: 'Inter', Arial, sans-serif;
+  }
+
+  .print-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #000;
+  }
+
+  .print-header h2 { font-size: 14pt; font-weight: 700; }
+  .print-header p  { font-size: 9pt; color: #555; margin-top: 3px; }
+
+  .slips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .slip {
+    border: 1px dashed #999;
+    padding: 12pt 10pt;
+    text-align: center;
+    page-break-inside: avoid;
+    min-height: 80pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4pt;
+  }
+
+  .slip-label {
+    font-size: 7pt;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .slip-code {
+    font-size: 16pt;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-family: 'Courier New', monospace;
+  }
+
+  .slip-info {
+    font-size: 7pt;
+    color: #888;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .slip-url {
+    font-size: 6.5pt;
+    color: #555;
+    font-style: italic;
+    margin-top: 2pt;
+  }
+
+  /* Name list on second page */
+  .name-list-page {
+    page-break-before: always;
+    padding-top: 1rem;
+  }
+
+  .name-list-page h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    margin-bottom: 4pt;
+    border-bottom: 1.5px solid #000;
+    padding-bottom: 6pt;
+  }
+
+  .name-list-page p {
+    font-size: 8pt;
+    color: #888;
+    margin-bottom: 12pt;
+  }
+
+  .name-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  .name-table th {
+    border-bottom: 1.5px solid #000;
+    padding: 5pt 8pt;
+    text-align: left;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #444;
+  }
+
+  .name-table td {
+    padding: 7pt 8pt;
+    border-bottom: 0.5pt solid #ddd;
+  }
+
+  .name-table tr:nth-child(even) td { background: #f9f9f9; }
+}
+
+/* Screen preview of slips */
+.screen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.screen-slip {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  background: white;
+}
+
+.screen-slip-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.screen-slip-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+#preview-section { display: none; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <h1>Codegenerator</h1>
+  <p class="subtitle">Erstelle Schüler-Codes für eine Klasse. Die Zuordnung Code → Name bleibt bei dir — wird nie gespeichert.</p>
+
+  <div class="card">
+    <div class="form-grid">
+      <div>
+        <label for="klasse">Klasse</label>
+        <input type="text" id="klasse" placeholder="z.B. BK24a" maxlength="12" autocomplete="off">
+        <div class="hint">Kürzel deiner Klasse</div>
+      </div>
+      <div>
+        <label for="anzahl">Anzahl SuS</label>
+        <input type="number" id="anzahl" placeholder="z.B. 28" min="1" max="60" value="28">
+        <div class="hint">Wie viele Codes?</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="generate()">Codes generieren</button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div id="preview-section" class="card">
+    <div class="preview-header">
+      <span class="preview-title">Vorschau</span>
+      <span class="count-badge" id="count-badge">0 Codes</span>
+    </div>
+    <div class="screen-grid" id="screen-grid"></div>
+    <div class="btn-row" style="margin-top:1.25rem">
+      <button class="btn btn-outline" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px">
+          <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Drucken / Als PDF speichern
+      </button>
+    </div>
+    <p style="font-size:0.74rem;color:var(--text-muted);margin-top:0.75rem;text-align:center">
+      Beim Drucken: Seite 1 = Zettel zum Ausschneiden &nbsp;·&nbsp; Seite 2 = Namensliste für dich
+    </p>
+  </div>
+
+</div>
+
+<!-- Print area (hidden on screen, visible when printing) -->
+<div id="print-area">
+  <div class="print-header">
+    <h2 id="print-title">Schüler-Codes</h2>
+    <p id="print-sub"></p>
+  </div>
+  <div class="slips-grid" id="slips-grid"></div>
+
+  <div class="name-list-page">
+    <h2>Namensliste – <span id="nl-klasse"></span></h2>
+    <p>Diese Seite bleibt bei der Lehrkraft. Bitte Namen eintragen und sicher aufbewahren.</p>
+    <table class="name-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Bemerkung</th>
+        </tr>
+      </thead>
+      <tbody id="name-table-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const BASE_URL = 'https://brandy299.github.io/HTML-materialien/';
+
+function generate() {
+  const klasse = document.getElementById('klasse').value.trim();
+  const anzahl = parseInt(document.getElementById('anzahl').value);
+
+  if (!klasse) { document.getElementById('klasse').focus(); return; }
+  if (!anzahl || anzahl < 1) { document.getElementById('anzahl').focus(); return; }
+
+  // Screen preview
+  const screenGrid = document.getElementById('screen-grid');
+  screenGrid.innerHTML = '';
+  for (let i = 1; i <= anzahl; i++) {
+    const code = klasse + '-' + String(i).padStart(2, '0');
+    const slip = document.createElement('div');
+    slip.className = 'screen-slip';
+    slip.innerHTML = `<div class="screen-slip-label">Dein Code</div><div class="screen-slip-code">${code}</div>`;
+    screenGrid.appendChild(slip);
+  }
+  document.getElementById('count-badge').textContent = anzahl + ' Codes';
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth' });
+
+  // Print slips
+  const slipsGrid = document.getElementById('slips-grid');
+  slipsGrid.innerHTML = '';
+  for (let i = 1; i <= anzahl; i++) {
+    const code = klasse + '-' + String(i).padStart(2, '0');
+    slipsGrid.innerHTML += `
+      <div class="slip">
+        <div class="slip-label">Dein persönlicher Code</div>
+        <div class="slip-code">${code}</div>
+        <div class="slip-info">Gib diesen Code ein wenn du<br>eine Online-Aufgabe bearbeitest.</div>
+        <div class="slip-url">${BASE_URL}</div>
+      </div>`;
+  }
+
+  // Name list
+  const tbody = document.getElementById('name-table-body');
+  tbody.innerHTML = '';
+  for (let i = 1; i <= anzahl; i++) {
+    const code = klasse + '-' + String(i).padStart(2, '0');
+    tbody.innerHTML += `<tr><td><strong>${code}</strong></td><td></td><td></td></tr>`;
+  }
+
+  document.getElementById('print-title').textContent = `Schüler-Codes – Klasse ${klasse}`;
+  document.getElementById('print-sub').textContent   = `${anzahl} Codes · Erstellt am ${new Date().toLocaleDateString('de-DE')}`;
+  document.getElementById('nl-klasse').textContent   = klasse;
+}
+
+// Allow Enter key
+document.addEventListener('DOMContentLoaded', () => {
+  ['klasse', 'anzahl'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') generate();
+    });
+  });
+});
+</script>
+</body>
+</html>
