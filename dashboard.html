@@ -364,9 +364,79 @@ tbody tr:hover { background: #FAFAFE; }
 /* Section */
 .sec { display: none; }
 .sec.active { display: block; }
+
+/* ── Namen-Modal ── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.modal h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.modal p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+.modal textarea {
+  width: 100%;
+  height: 200px;
+  padding: 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  outline: none;
+  line-height: 1.6;
+}
+.modal textarea:focus { border-color: var(--primary); }
+.modal-btns { display: flex; gap: 0.75rem; margin-top: 1rem; }
+.modal-btns .btn { flex: 1; padding: 0.7rem; font-size: 0.85rem; }
+
+.btn-names {
+  padding: 0.3rem 0.7rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  color: var(--primary);
+  transition: all 180ms;
+}
+.btn-names:hover { border-color: var(--primary); background: #EEF2FF; }
 </style>
 </head>
 <body>
+
+<!-- Namen-Modal -->
+<div class="modal-backdrop" id="names-modal">
+  <div class="modal">
+    <h3>Namen eingeben – <span id="modal-class-title"></span></h3>
+    <p>Ein Name pro Zeile, in Reihenfolge der Nummern (01, 02, 03 …).<br>Wird nur in diesem Browser gespeichert — nie hochgeladen.</p>
+    <textarea id="names-textarea" placeholder="Max M.&#10;Anna K.&#10;Lena S.&#10;..."></textarea>
+    <div class="modal-btns">
+      <button class="btn" style="background:white;color:var(--text-muted);border:1.5px solid var(--border)" onclick="closeNamesModal()">Abbrechen</button>
+      <button class="btn" onclick="saveNames()">Speichern</button>
+    </div>
+  </div>
+</div>
 
 <!-- Dashboard (shown after auth check) -->
 <div id="dashboard" style="display:none">
@@ -508,16 +578,71 @@ function updateFilters() {
   const classes = [...new Set(allData.map(r => r.code.split('-')[0]))].sort();
   const container = document.getElementById('class-filters');
 
-  // Keep "Alle" button, rebuild class buttons
   container.innerHTML = `<button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-class="all" onclick="setFilter('all', this)">Alle</button>`;
   classes.forEach(cls => {
+    const wrap = document.createElement('span');
+    wrap.style.cssText = 'display:inline-flex;align-items:center;gap:4px';
+
     const btn = document.createElement('button');
     btn.className = `filter-btn ${activeFilter === cls ? 'active' : ''}`;
-    btn.dataset.class = cls;
     btn.textContent = cls;
     btn.onclick = () => setFilter(cls, btn);
-    container.appendChild(btn);
+
+    const edit = document.createElement('button');
+    edit.className = 'btn-names';
+    edit.title = 'Namen eingeben';
+    edit.textContent = '✏️';
+    edit.onclick = () => openNamesModal(cls);
+
+    wrap.appendChild(btn);
+    wrap.appendChild(edit);
+    container.appendChild(wrap);
   });
+}
+
+/* ── Namen localStorage ── */
+function getNamesForClass(cls) {
+  try { return JSON.parse(localStorage.getItem('names_' + cls) || '{}'); } catch { return {}; }
+}
+
+function resolveName(code) {
+  const parts = code.split('-');
+  if (parts.length < 2) return code;
+  const cls = parts[0];
+  const num = parts[1].replace(/^0+/, '') || '0';
+  const names = getNamesForClass(cls);
+  return names[num] || code;
+}
+
+let _modalClass = '';
+
+function openNamesModal(cls) {
+  _modalClass = cls;
+  document.getElementById('modal-class-title').textContent = cls;
+  const names = getNamesForClass(cls);
+  // Find max number in data for this class
+  const nums = allData
+    .filter(r => r.code.startsWith(cls + '-'))
+    .map(r => parseInt(r.code.split('-')[1]) || 0);
+  const max = nums.length ? Math.max(...nums) : 30;
+  const lines = [];
+  for (let i = 1; i <= max; i++) lines.push(names[i] || '');
+  document.getElementById('names-textarea').value = lines.join('\n');
+  document.getElementById('names-modal').classList.add('open');
+  setTimeout(() => document.getElementById('names-textarea').focus(), 50);
+}
+
+function closeNamesModal() {
+  document.getElementById('names-modal').classList.remove('open');
+}
+
+function saveNames() {
+  const lines = document.getElementById('names-textarea').value.split('\n');
+  const map = {};
+  lines.forEach((name, i) => { if (name.trim()) map[i + 1] = name.trim(); });
+  localStorage.setItem('names_' + _modalClass, JSON.stringify(map));
+  closeNamesModal();
+  renderTable();
 }
 
 function setFilter(cls, btn) {
@@ -546,9 +671,9 @@ function renderTable() {
   }
 
   tbody.innerHTML = filtered.map(r => {
-    const score     = r.score !== null ? r.score : null;
+    const score      = r.score !== null ? r.score : null;
     const scoreColor = score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : '#EF4444';
-    const scoreBar  = score !== null
+    const scoreBar   = score !== null
       ? `<div class="score-wrap">
            <div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${scoreColor}"></div></div>
            <span class="score-text" style="color:${scoreColor}">${score}%</span>
@@ -564,8 +689,13 @@ function renderTable() {
       hour: '2-digit', minute: '2-digit'
     });
 
+    const displayName = resolveName(r.code);
+    const nameHtml = displayName !== r.code
+      ? `<span style="font-weight:600">${esc(displayName)}</span> <span class="code-chip" style="font-size:0.68rem">${esc(r.code)}</span>`
+      : `<span class="code-chip">${esc(r.code)}</span>`;
+
     return `<tr>
-      <td><span class="code-chip">${esc(r.code)}</span></td>
+      <td>${nameHtml}</td>
       <td><span class="material-name">${esc(r.material)}</span></td>
       <td>${scoreBar}</td>
       <td>${pill}</td>
@@ -578,9 +708,16 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// expose setFilter for inline onclick
-window.setFilter  = setFilter;
-window.loadData   = loadData;
+// expose for inline onclick
+window.setFilter       = setFilter;
+window.loadData        = loadData;
+window.closeNamesModal = closeNamesModal;
+window.saveNames       = saveNames;
+
+// close modal on backdrop click
+document.getElementById('names-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeNamesModal();
+});
 </script>
 </body>
 </html>
