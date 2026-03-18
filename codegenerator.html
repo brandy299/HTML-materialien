@@ -289,9 +289,16 @@ input:focus { border-color: var(--primary); }
 </head>
 <body>
 
-<div class="page">
+<div class="page" id="main-content" style="display:none">
 
-  <h1>Codegenerator</h1>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem">
+    <h1>Codegenerator</h1>
+    <div style="display:flex;gap:0.5rem">
+      <a href="dashboard.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;font-weight:600">← Dashboard</a>
+      <span style="color:var(--border)">|</span>
+      <button id="btn-logout" style="font-size:0.8rem;color:var(--text-muted);background:none;border:none;cursor:pointer;font-family:inherit">Abmelden</button>
+    </div>
+  </div>
   <p class="subtitle">Erstelle Schüler-Codes für eine Klasse. Die Zuordnung Code → Name bleibt bei dir — wird nie gespeichert.</p>
 
   <div class="card">
@@ -358,10 +365,10 @@ input:focus { border-color: var(--primary); }
   </div>
 </div>
 
-<script>
+<script type="module">
 const BASE_URL = 'https://brandy299.github.io/HTML-materialien/';
 
-function generate() {
+window.generate = function generate() {
   const klasse = document.getElementById('klasse').value.trim();
   const anzahl = parseInt(document.getElementById('anzahl').value);
 
@@ -409,12 +416,28 @@ function generate() {
   document.getElementById('nl-klasse').textContent   = klasse;
 }
 
-// Allow Enter key
-document.addEventListener('DOMContentLoaded', () => {
-  ['klasse', 'anzahl'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => {
-      if (e.key === 'Enter') generate();
-    });
+// Auth check
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const supabase = createClient(
+  'https://yodanvzkkhlqemlvtvey.supabase.co',
+  'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
+);
+
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) {
+  window.location.href = 'login.html';
+} else {
+  document.getElementById('main-content').style.display = 'block';
+}
+
+document.getElementById('btn-logout').onclick = async () => {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+};
+
+['klasse', 'anzahl'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') generate();
   });
 });
 </script>
