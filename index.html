@@ -1029,7 +1029,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 <!-- HEADER -->
 <header id="app-header">
-  <button id="hamburger" onclick="toggleSidebar()" aria-label="MenÃ¼ Ã¶ffnen">
+  <button id="hamburger" onclick="toggleSidebar()" aria-label="Menü öffnen">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
       <line x1="3" y1="6" x2="21" y2="6"/>
       <line x1="3" y1="12" x2="21" y2="12"/>
@@ -1178,7 +1178,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
     <div class="preview-header">
       <div class="preview-title" id="previewTitle">Vorschau</div>
-      <button class="preview-close" onclick="closePreview()" title="SchlieÃen">Ã</button>
+      <button class="preview-close" onclick="closePreview()" title="Schließen">×</button>
     </div>
 
     <div class="preview-meta" id="previewMeta"></div>
@@ -1194,7 +1194,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
           <polyline points="15 3 21 3 21 9"/>
           <line x1="10" y1="14" x2="21" y2="3"/>
         </svg>
-        Ãffnen in neuem Tab
+        Öffnen in neuem Tab
       </button>
       <button class="pv-btn" onclick="previewCopyLink()">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1217,7 +1217,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
           <path d="M10 11v6"/><path d="M14 11v6"/>
           <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
         </svg>
-        LÃ¶schen
+        Löschen
       </button>
     </div>
   </aside>
@@ -1259,7 +1259,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
   <div class="modal">
     <h2>GitHub Token</h2>
     <p class="token-info">
-      PersÃ¶nliches GitHub Access Token (klassisch) mit <strong>repo</strong>-Scope fÃ¼r Schreibzugriff auf das Repository.
+      Persönliches GitHub Access Token (klassisch) mit <strong>repo</strong>-Scope für Schreibzugriff auf das Repository.
     </p>
     <label>Token</label>
     <input type="password" id="inputToken" placeholder="ghp_â¦">
@@ -1290,11 +1290,11 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 <!-- DELETE -->
 <div class="modal-backdrop" id="modalDelete">
   <div class="modal">
-    <h2>Material lÃ¶schen</h2>
+    <h2>Material löschen</h2>
     <p id="deleteDesc" style="font-size:0.84rem;color:#555;line-height:1.55;"></p>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalDelete')">Abbrechen</button>
-      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">LÃ¶schen</button>
+      <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
     </div>
   </div>
 </div>
@@ -1663,7 +1663,7 @@ function render(query) {
   const uThemen  = [...new Set(items.map(function (m) { return m.thema; }))].length;
   statsRow.innerHTML =
     '<div class="stat-chip"><strong>' + items.length + '</strong>&nbsp;Materialien</div>' +
-    '<div class="stat-chip"><strong>' + uFaecher + '</strong>&nbsp;FÃ¤cher</div>' +
+    '<div class="stat-chip"><strong>' + uFaecher + '</strong>&nbsp;Fächer</div>' +
     '<div class="stat-chip"><strong>' + uThemen  + '</strong>&nbsp;Themen</div>';
 
   list.innerHTML = '';
@@ -1673,17 +1673,17 @@ function render(query) {
       '<div class="empty-state">' +
       '<div class="empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>' +
       '<h3>Keine Materialien gefunden</h3>' +
-      '<p>Anderen Suchbegriff versuchen oder anderen Ordner wÃ¤hlen.</p>' +
+      '<p>Anderen Suchbegriff versuchen oder anderen Ordner wählen.</p>' +
       '</div>';
     return;
   }
 
-  // "Zuletzt hinzugefÃ¼gt" â only when viewing all without search
+  // "Zuletzt hinzugefügt" â only when viewing all without search
   if (!selectedFach && !selectedThema && !q) {
     const recent = materialien.slice(-3).reverse();
     const recSec = document.createElement('div');
     recSec.className = 'recent-section';
-    recSec.innerHTML = '<div class="recent-header"><span class="recent-title">Zuletzt hinzugefÃ¼gt</span></div>';
+    recSec.innerHTML = '<div class="recent-header"><span class="recent-title">Zuletzt hinzugefügt</span></div>';
     const grid = document.createElement('div');
     grid.className = 'file-grid';
     recent.forEach(function (m) { grid.appendChild(makeCard(m)); });
@@ -1776,7 +1776,7 @@ function makeCard(m) {
     '<div class="file-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>' +
     '<div class="file-info">' +
     '  <div class="file-title">' + esc(m.name) + '</div>' +
-    '  <div class="file-meta">' + esc(m.fach) + ' Â· ' + esc(m.thema) + ' Â· ' + esc(m.datum) + '</div>' +
+    '  <div class="file-meta">' + esc(m.fach) + ' · ' + esc(m.thema) + ' · ' + esc(m.datum) + '</div>' +
     '</div>' +
     '<button class="card-copy-btn" title="Link kopieren" onclick="copyLink(event,\'' + esc(m.pfad) + '\')">' +
     '  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
@@ -1794,7 +1794,7 @@ function makeCard(m) {
       '<button style="padding:3px 7px;border-radius:6px;border:1px solid #E5E9F2;background:#fff;font-size:0.7rem;cursor:pointer;color:#444;" ' +
       'onclick="event.preventDefault();event.stopPropagation();showRename(materialien.find(x=>x.pfad===\'' + pfadSafe + '\'))">Bearb.</button>' +
       '<button style="padding:3px 7px;border-radius:6px;border:1.5px solid #FECACA;background:#fff;font-size:0.7rem;cursor:pointer;color:#DC2626;" ' +
-      'onclick="event.preventDefault();event.stopPropagation();showDelete(materialien.find(x=>x.pfad===\'' + pfadSafe + '\'))">LÃ¶schen</button>';
+      'onclick="event.preventDefault();event.stopPropagation();showDelete(materialien.find(x=>x.pfad===\'' + pfadSafe + '\'))">Löschen</button>';
     card.appendChild(actions);
   }
 
@@ -1991,11 +1991,11 @@ function dzDrop(e) {
 }
 
 async function doUpload() {
-  if (!uploadFile)   return showToast('Keine Datei ausgewÃ¤hlt');
+  if (!uploadFile)   return showToast('Keine Datei ausgewählt');
   const titel = document.getElementById('uploadTitel').value.trim();
   const fach  = document.getElementById('uploadFach').value.trim();
   const thema = document.getElementById('uploadThema').value.trim();
-  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfÃ¼llen');
+  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
   if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (âï¸)');
 
   const btn = document.getElementById('btnUpload');
@@ -2061,7 +2061,7 @@ async function doRename() {
   const titel = document.getElementById('inputTitel').value.trim();
   const fach  = document.getElementById('inputFach').value.trim();
   const thema = document.getElementById('inputThema').value.trim();
-  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfÃ¼llen');
+  if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
   if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (âï¸)');
 
   const btn = document.getElementById('btnSaveRename');
@@ -2110,7 +2110,7 @@ function showDelete(m) {
   if (!m) return;
   deleteTarget = m;
   document.getElementById('deleteDesc').textContent =
-    'MÃ¶chtest du "' + m.name + '" (' + m.fach + ' / ' + m.thema + ') wirklich lÃ¶schen? Diese Aktion kann nicht rÃ¼ckgÃ¤ngig gemacht werden.';
+    'Möchtest du "' + m.name + '" (' + m.fach + ' / ' + m.thema + ') wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
   openModal('modalDelete');
 }
 
@@ -2120,7 +2120,7 @@ async function doDelete() {
 
   const btn = document.getElementById('btnConfirmDelete');
   btn.disabled    = true;
-  btn.textContent = 'LÃ¶schenâ¦';
+  btn.textContent = 'Löschenâ¦';
 
   try {
     const fileInfo = await ghGet(deleteTarget.pfad);
@@ -2135,13 +2135,13 @@ async function doDelete() {
     closeModal('modalDelete');
     buildSidebar();
     render(document.getElementById('search').value);
-    showToast('"' + deleteTarget.name + '" gelÃ¶scht');
+    showToast('"' + deleteTarget.name + '" gelöscht');
     deleteTarget = null;
   } catch (e) {
     showToast('Fehler: ' + e.message);
   } finally {
     btn.disabled    = false;
-    btn.textContent = 'LÃ¶schen';
+    btn.textContent = 'Löschen';
   }
 }
 
