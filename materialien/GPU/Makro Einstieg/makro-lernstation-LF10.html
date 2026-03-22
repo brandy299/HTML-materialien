@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makroökonomie — Lernstation LF 10</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg:       #f5f0e8;
+  --paper:    #fffef9;
+  --border:   #d6cebd;
+  --ink:      #1a1713;
+  --ink2:     #5a5349;
+  --ink3:     #8c8278;
+
+  --blue:     #1d4ed8;
+  --blue-bg:  #eff6ff;
+  --blue-bd:  #bfdbfe;
+
+  --green:    #166534;
+  --green-bg: #f0fdf4;
+  --green-bd: #bbf7d0;
+
+  --amber:    #92400e;
+  --amber-bg: #fffbeb;
+  --amber-bd: #fde68a;
+
+  --red:      #991b1b;
+  --red-bg:   #fef2f2;
+  --red-bd:   #fecaca;
+
+  --purple:   #5b21b6;
+  --purple-bg:#f5f3ff;
+  --purple-bd:#ddd6fe;
+
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── PAPER TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5f0e8'/%3E%3Ccircle cx='1' cy='1' r='.5' fill='rgba(0,0,0,.03)'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+.wrapper {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  padding: 36px 0 28px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-left {}
+.header-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 6px;
+}
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.1;
+  color: var(--ink);
+}
+.header-title em {
+  font-style: italic;
+  color: var(--blue);
+}
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.lf-badge {
+  background: var(--blue);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.time-badge {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+/* ── PROGRESS NAV ── */
+.progress-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--paper);
+}
+.nav-step {
+  flex: 1;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink3);
+  border-right: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+}
+.nav-step:last-child { border-right: none; }
+.nav-step:hover { background: var(--bg); }
+.nav-step.active {
+  background: var(--blue);
+  color: white;
+}
+.nav-step.done {
+  background: var(--green-bg);
+  color: var(--green);
+}
+.nav-step .step-num {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: .7;
+  margin-bottom: 2px;
+}
+
+/* ── SCREEN ── */
+.screen { display: none; animation: fadeUp .4s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+@media(max-width:600px) { .card { padding: 20px 18px; } }
+
+.card-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.card-sub {
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* ── SCENARIO BOX ── */
+.scenario {
+  background: var(--blue-bg);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.scenario strong { color: var(--blue); }
+
+/* ── CONTENT TEXT ── */
+.content-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.content-text h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  margin: 24px 0 8px;
+  color: var(--ink);
+}
+.content-text p { margin-bottom: 12px; }
+
+/* ── INFO BOXES ── */
+.def-box {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.def-box.blue   { background: var(--blue-bg);   border: 1.5px solid var(--blue-bd);   color: var(--blue);   }
+.def-box.green  { background: var(--green-bg);  border: 1.5px solid var(--green-bd);  color: var(--green);  }
+.def-box.amber  { background: var(--amber-bg);  border: 1.5px solid var(--amber-bd);  color: var(--amber);  }
+.def-box.purple { background: var(--purple-bg); border: 1.5px solid var(--purple-bd); color: var(--purple); }
+.def-box strong { display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+
+/* ── GRID INFOGRAPHIC ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.info-tile {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.info-tile .tile-icon { font-size: 32px; margin-bottom: 8px; }
+.info-tile .tile-label { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.info-tile .tile-desc  { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+
+/* ── KREISLAUF DIAGRAM ── */
+.kreislauf-wrap {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.kreislauf-wrap svg { display: block; margin: 0 auto; }
+
+/* ── QUIZ ── */
+.quiz-question {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.q-text {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.q-hint {
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.q-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: all .15s;
+  background: var(--paper);
+}
+.q-option:hover { border-color: var(--blue); background: var(--blue-bg); }
+.q-option.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); pointer-events: none; }
+.q-option.wrong   { border-color: var(--red);   background: var(--red-bg);   color: var(--red);   pointer-events: none; }
+.q-option.disabled{ pointer-events: none; opacity: .5; }
+.q-option .opt-letter {
+  min-width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0; margin-top: 1px;
+}
+.q-feedback {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  display: none;
+}
+.q-feedback.show { display: block; }
+.q-feedback.correct-fb { background: var(--green-bg); border: 1px solid var(--green-bd); color: var(--green); }
+.q-feedback.wrong-fb   { background: var(--red-bg);   border: 1px solid var(--red-bd);   color: var(--red);   }
+
+/* ── DRAG & DROP ── */
+.drag-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+  background: var(--bg);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  min-height: 60px;
+  margin-bottom: 12px;
+}
+.drag-item {
+  padding: 7px 14px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: grab;
+  user-select: none;
+  transition: all .15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.drag-item:hover { border-color: var(--blue); transform: translateY(-1px); }
+.drag-item.dragging { opacity: .4; }
+
+.drop-zone-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media(max-width:600px) { .drop-zone-row { grid-template-columns: 1fr; } }
+
+.drop-zone {
+  background: var(--paper);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 80px;
+  transition: border-color .2s;
+}
+.drop-zone.over { border-color: var(--blue); background: var(--blue-bg); }
+.drop-zone .zone-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+.drop-zone .zone-icon { font-size: 20px; margin-bottom: 4px; }
+
+/* ── RECHENAUFGABE ── */
+.rechner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+@media(max-width:600px) { .rechner-grid { grid-template-columns: 1fr; } }
+.rechner-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink3);
+  margin-bottom: 6px;
+}
+.rechner-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s;
+}
+.rechner-field input:focus { border-color: var(--blue); }
+.rechner-field input.correct { border-color: var(--green); background: var(--green-bg); }
+.rechner-field input.wrong   { border-color: var(--red);   background: var(--red-bg);   }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+  border: none;
+  text-decoration: none;
+}
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: #1e40af; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(29,78,216,.25); }
+.btn-secondary { background: var(--paper); border: 1.5px solid var(--border); color: var(--ink2); }
+.btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+.btn-check { background: var(--amber-bg); border: 1.5px solid var(--amber-bd); color: var(--amber); }
+.btn-check:hover { background: #fef3c7; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+/* ── SCORE BAR ── */
+.score-bar {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.score-val { font-size: 24px; font-weight: 700; color: var(--blue); min-width: 60px; }
+.score-label { font-size: 13px; color: var(--ink2); }
+.score-stars { font-size: 20px; letter-spacing: 2px; }
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 16px 0;
+}
+.data-table th {
+  background: var(--bg);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink3);
+  border-bottom: 2px solid var(--border);
+}
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .highlight { background: var(--blue-bg); font-weight: 600; }
+
+/* ── FINAL SCREEN ── */
+.final-hero {
+  text-align: center;
+  padding: 40px 0 32px;
+}
+.final-hero .trophy { font-size: 72px; margin-bottom: 12px; }
+.final-hero h2 { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 8px; }
+.final-hero p  { color: var(--ink2); font-size: 15px; max-width: 500px; margin: 0 auto; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+.summary-tile {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+}
+.summary-tile .s-icon  { font-size: 28px; margin-bottom: 6px; }
+.summary-tile .s-label { font-size: 12px; color: var(--ink3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.summary-tile .s-val   { font-size: 20px; font-weight: 700; color: var(--blue); }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-left">
+      <div class="header-eyebrow">GPU · LF 10 · AS 10.1 · HS1Y</div>
+      <h1 class="header-title">Einführung in die<br><em>Makroökonomie</em></h1>
+    </div>
+    <div class="header-meta">
+      <span class="lf-badge">GWP · NRW 2023</span>
+      <span class="time-badge">⏱ ca. 90 Minuten</span>
+    </div>
+  </header>
+
+  <!-- SCORE BAR -->
+  <div class="score-bar">
+    <div class="score-val" id="score-display">0</div>
+    <div>
+      <div style="font-weight:600; font-size:14px;">Punkte gesammelt</div>
+      <div class="score-label">Korrekte Antworten bringen Punkte · <span id="score-max">?</span> Punkte möglich</div>
+    </div>
+    <div class="score-stars" id="score-stars">☆☆☆☆☆</div>
+  </div>
+
+  <!-- PROGRESS NAV -->
+  <nav class="progress-nav" id="progress-nav">
+    <div class="nav-step active" data-screen="0" onclick="jumpTo(0)"><span class="step-num">1</span>Einstieg</div>
+    <div class="nav-step" data-screen="1" onclick="jumpTo(1)"><span class="step-num">2</span>Akteure</div>
+    <div class="nav-step" data-screen="2" onclick="jumpTo(2)"><span class="step-num">3</span>Kreislauf</div>
+    <div class="nav-step" data-screen="3" onclick="jumpTo(3)"><span class="step-num">4</span>BIP</div>
+    <div class="nav-step" data-screen="4" onclick="jumpTo(4)"><span class="step-num">5</span>Markt</div>
+    <div class="nav-step" data-screen="5" onclick="jumpTo(5)"><span class="step-num">6</span>Quiz</div>
+    <div class="nav-step" data-screen="6" onclick="jumpTo(6)"><span class="step-num">✓</span>Ergebnis</div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 0: EINSTIEG
+  ═══════════════════════════════════════ -->
+  <div class="screen active" id="screen-0">
+    <div class="card">
+      <div class="card-eyebrow">Lernsituation · Böckler-Office GmbH</div>
+      <h2 class="card-title">Was hat mein Job mit der Gesamtwirtschaft zu tun?</h2>
+      <p class="card-sub">Lernfeld 10 · Anforderungssituation 10.1 — Wertschöpfung</p>
+
+      <div class="scenario">
+        📰 <strong>Situation:</strong> Auszubildende Lena Kowalski (1. Lehrjahr, Böckler-Office GmbH) liest in der Pausenzeitung eine Schlagzeile: <em>„Deutschlands BIP wächst um 1,8 % — Experten warnen vor Fachkräftemangel."</em> Ihr Ausbilder Herr Dönmez fragt sie: <strong>„Lena, weißt du eigentlich, was das Bruttoinlandsprodukt ist — und warum das für uns als Unternehmen wichtig ist?"</strong> Lena zuckt die Schultern. Am Ende dieser Lernstation kannst du ihm antworten.
+      </div>
+
+      <div class="content-text">
+        <h3>Was ist Makroökonomie?</h3>
+        <p>Die <strong>Volkswirtschaftslehre (VWL)</strong> beschäftigt sich mit den wirtschaftlichen Beziehungen aller Akteure in einer Volkswirtschaft. Sie teilt sich in zwei Bereiche:</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="tile-icon">🔍</div>
+          <div class="tile-label">Mikroökonomie</div>
+          <div class="tile-desc">Betrachtet einzelne Akteure: ein Unternehmen, ein Haushalt, ein Markt. → Angebot &amp; Nachfrage, Preisbildung</div>
+        </div>
+        <div class="info-tile">
+          <div class="tile-icon">🌍</div>
+          <div class="tile-label">Makroökonomie</div>
+          <div class="tile-desc">Betrachtet die Gesamtwirtschaft: alle Unternehmen, alle Haushalte, den Staat. → BIP, Konjunktur, Beschäftigung</div>
+        </div>
+      </div>
+
+      <div class="def-box blue">
+        <strong>📖 Definition</strong>
+        Die <strong>Makroökonomie</strong> untersucht gesamtwirtschaftliche Zusammenhänge wie Wirtschaftskreislauf, Bruttoinlandsprodukt (BIP), Konjunktur, Geld und Beschäftigung.
+      </div>
+
+      <div class="content-text">
+        <h3>Warum ist das für Kaufleute relevant?</h3>
+        <p>Als Kaufmann/-frau bist du Teil der Gesamtwirtschaft. Wenn das BIP wächst, kaufen Kunden mehr — das Lager der Böckler-Office GmbH wird schneller leer. Wenn die Konjunktur einbricht, stagnieren Bestellungen. Makroökonomisches Wissen hilft dir, wirtschaftliche Signale zu lesen.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goNext()">Weiter: Wirtschaftsakteure →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 1: WIRTSCHAFTSAKTEURE & PRODUKTIONSFAKTOREN
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-1">
+    <div class="card">
+      <div class="card-eyebrow">Lerneinheit 2</div>
+      <h2 class="card-title">Wirtschaftssubjekte &amp; Produktionsfaktoren</h2>
+      <p class="card-sub">Wer handelt in der Volkswirtschaft? Was braucht man, um zu produzieren?</p>
+
+      <div class="scenario">
+        🏢 <strong>Kontext:</strong> Herr Dönmez erklärt Lena: „Wir bei der Böckler-Office GmbH sind ein <em>Unternehmen</em>. Unsere Mitarbeiter gehören zu <em>privaten Haushalten</em>. Und der Staat — der Oberhausener Haushalt, die Bundesregierung — regelt die Spielregeln. Alle drei zusammen bilden die Volkswirtschaft."
+      </div>
+
+      <div class="content-text">
+        <h3>Die drei Wirtschaftssubjekte</h3>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="tile-icon">🏠</div>
+          <div class="tile-label">Private Haushalte</div>
+          <div class="tile-desc">Stellen Arbeit bereit, empfangen Lohn. Kaufen Güter und Dienstleistungen. <em>Familie Kowalski</em></div>
+        </div>
+        <div class="info-tile">
+          <div class="tile-icon">🏭</div>
+          <div class="tile-label">Unternehmen</div>
+          <div class="tile-desc">Produzieren Güter/DL, zahlen Löhne, zahlen Steuern. <em>Böckler-Office GmbH</em></div>
+        </div>
+        <div class="info-tile">
+          <div class="tile-icon">🏛️</div>
+          <div class="tile-label">Staat</div>
+          <div class="tile-desc">Erhebt Steuern, stellt öffentliche Güter bereit, setzt Regeln. <em>Stadt Oberhausen, BRD</em></div>
+        </div>
+      </div>
+
+      <div class="content-text">
+        <h3>Die drei volkswirtschaftlichen Produktionsfaktoren</h3>
+        <p>Um Güter herzustellen oder Dienstleistungen anzubieten, braucht jedes Unternehmen Produktionsfaktoren. Die klassische VWL unterscheidet drei:</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Produktionsfaktor</th>
+            <th>Beschreibung</th>
+            <th>Beispiel Böckler-Office</th>
+            <th>Entlohnung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🌱 Boden</strong></td>
+            <td>Natürliche Ressourcen, Grundstücke, Bodenschätze</td>
+            <td>Lagergrundstück in Oberhausen, Holz für Schreibtische</td>
+            <td>Pacht / Miete</td>
+          </tr>
+          <tr>
+            <td><strong>💪 Arbeit</strong></td>
+            <td>Körperliche &amp; geistige Leistung von Menschen</td>
+            <td>Lena und ihre Kollegen im Lager und Büro</td>
+            <td>Lohn / Gehalt</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>⚙️ Kapital</strong></td>
+            <td>Produzierte Produktionsmittel (Maschinen, Gebäude, Geld)</td>
+            <td>Gabelstapler, Computersystem, Lagerhalle</td>
+            <td>Zins / Gewinn</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="def-box green">
+        <strong>📖 Wertschöpfung</strong>
+        <strong>Wertschöpfung</strong> = der Mehrwert, den ein Unternehmen durch die Kombination von Produktionsfaktoren schafft.<br>
+        <br>Formel: <strong>Wertschöpfung = Produktionswert − Vorleistungen</strong><br>
+        <br>Beispiel: Böckler-Office kauft Bürostühle für 80 € ein (Vorleistung) und verkauft sie für 150 €. Wertschöpfung = <strong>70 € pro Stuhl</strong> (Beratung, Lagerung, Lieferung).
+      </div>
+
+      <!-- AUFGABE: DRAG & DROP Produktionsfaktoren -->
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 8px;">
+        <div class="card-eyebrow">✏️ Aufgabe 1 — Zuordnung (Drag &amp; Drop)</div>
+        <p style="font-size:14px; color:var(--ink2); margin-bottom:16px; line-height:1.6;">
+          Zieht die Begriffe in die richtige Kategorie. Welchem Produktionsfaktor gehört es jeweils?
+        </p>
+
+        <div class="drag-area" id="drag-pool">
+          <div class="drag-item" draggable="true" data-category="arbeit">Auszubildende Lena</div>
+          <div class="drag-item" draggable="true" data-category="kapital">Gabelstapler</div>
+          <div class="drag-item" draggable="true" data-category="boden">Lagerhalle Oberhausen</div>
+          <div class="drag-item" draggable="true" data-category="arbeit">Herr Dönmez (Geschäftsführer)</div>
+          <div class="drag-item" draggable="true" data-category="kapital">Computersystem</div>
+          <div class="drag-item" draggable="true" data-category="boden">Rohholz für Schreibtische</div>
+          <div class="drag-item" draggable="true" data-category="kapital">Bankguthaben der GmbH</div>
+          <div class="drag-item" draggable="true" data-category="arbeit">LKW-Fahrer im Auslieferteam</div>
+        </div>
+
+        <div class="drop-zone-row">
+          <div class="drop-zone" id="drop-boden" data-accept="boden" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <div class="zone-icon">🌱</div>
+            <div class="zone-label">Boden</div>
+          </div>
+          <div class="drop-zone" id="drop-arbeit" data-accept="arbeit" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <div class="zone-icon">💪</div>
+            <div class="zone-label">Arbeit</div>
+          </div>
+          <div class="drop-zone" id="drop-kapital" data-accept="kapital" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <div class="zone-icon">⚙️</div>
+            <div class="zone-label">Kapital</div>
+          </div>
+        </div>
+
+        <div id="drag-feedback" class="q-feedback hidden"></div>
+        <div class="btn-row">
+          <button class="btn btn-check" onclick="checkDrag()">✔ Zuordnung prüfen</button>
+          <button class="btn btn-secondary" onclick="resetDrag()">↺ Zurücksetzen</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goPrev()">← Zurück</button>
+        <button class="btn btn-primary" onclick="goNext()">Weiter: Wirtschaftskreislauf →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 2: WIRTSCHAFTSKREISLAUF
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-2">
+    <div class="card">
+      <div class="card-eyebrow">Lerneinheit 3</div>
+      <h2 class="card-title">Der einfache Wirtschaftskreislauf</h2>
+      <p class="card-sub">Wie hängen Haushalte und Unternehmen zusammen?</p>
+
+      <div class="scenario">
+        💡 <strong>Idee:</strong> Lena überlegt: „Ich arbeite bei Böckler-Office und bekomme Gehalt. Davon kaufe ich mir neue Schuhe — vielleicht sogar Bürobedarf für mein Home-Office. Das Geld fließt also wieder in die Wirtschaft..." Herr Dönmez nickt: „Genau das nennen wir den Wirtschaftskreislauf."
+      </div>
+
+      <div class="kreislauf-wrap">
+        <svg viewBox="0 0 640 320" width="100%" style="max-width:620px;">
+          <!-- Hintergrund -->
+          <rect width="640" height="320" fill="#fffef9" rx="12"/>
+
+          <!-- Haushalt Box -->
+          <rect x="30" y="110" width="150" height="100" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
+          <text x="105" y="152" text-anchor="middle" font-family="DM Serif Display, serif" font-size="15" fill="#1d4ed8">Private</text>
+          <text x="105" y="170" text-anchor="middle" font-family="DM Serif Display, serif" font-size="15" fill="#1d4ed8">Haushalte</text>
+          <text x="105" y="188" text-anchor="middle" font-size="11" fill="#60a5fa">🏠 Familie Kowalski</text>
+
+          <!-- Unternehmen Box -->
+          <rect x="460" y="110" width="150" height="100" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="2"/>
+          <text x="535" y="152" text-anchor="middle" font-family="DM Serif Display, serif" font-size="15" fill="#166534">Unter-</text>
+          <text x="535" y="170" text-anchor="middle" font-family="DM Serif Display, serif" font-size="15" fill="#166534">nehmen</text>
+          <text x="535" y="188" text-anchor="middle" font-size="11" fill="#4ade80">🏭 Böckler-Office</text>
+
+          <!-- Staat Box (small, center) -->
+          <rect x="255" y="125" width="130" height="70" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+          <text x="320" y="155" text-anchor="middle" font-family="DM Serif Display, serif" font-size="14" fill="#92400e">Staat</text>
+          <text x="320" y="172" text-anchor="middle" font-size="10" fill="#d97706">🏛️ Steuern · Transfers</text>
+          <text x="320" y="186" text-anchor="middle" font-size="10" fill="#d97706">öffentl. Leistungen</text>
+
+          <!-- OBEN: Gütermarkt — Pfeile von Unternehmen → Haushalt -->
+          <defs>
+            <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+            </marker>
+            <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/>
+            </marker>
+            <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/>
+            </marker>
+          </defs>
+
+          <!-- OBEN PFEIL: Güter/DL → Haushalte (von rechts nach links, oben) -->
+          <path d="M460,140 Q320,60 180,140" fill="none" stroke="#22c55e" stroke-width="2.5" marker-end="url(#arrowGreen)" stroke-dasharray="6,3"/>
+          <rect x="270" y="52" width="100" height="22" rx="5" fill="white" stroke="#bbf7d0"/>
+          <text x="320" y="67" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">Güter &amp; DL</text>
+
+          <!-- UNTEN PFEIL: Arbeit → Unternehmen (von links nach rechts, unten) -->
+          <path d="M180,180 Q320,260 460,180" fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrowBlue)" stroke-dasharray="6,3"/>
+          <rect x="270" y="248" width="100" height="22" rx="5" fill="white" stroke="#bfdbfe"/>
+          <text x="320" y="263" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Arbeit (Prod.fakt.)</text>
+
+          <!-- Geldstrom oben andersrum: Zahlung für Güter → Unternehmen (kleiner Pfeil) -->
+          <path d="M200,125 Q320,45 450,125" fill="none" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+          <text x="320" y="40" text-anchor="middle" font-size="10" fill="#d97706">💰 Geld (Ausgaben)</text>
+
+          <!-- Geldstrom unten: Lohn → Haushalte -->
+          <path d="M450,195 Q320,278 200,195" fill="none" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+          <text x="320" y="290" text-anchor="middle" font-size="10" fill="#d97706">💰 Lohn / Gehalt</text>
+
+          <!-- Steuerpfeile -->
+          <line x1="180" y1="160" x2="255" y2="160" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowAmber)"/>
+          <line x1="460" y1="160" x2="385" y2="160" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowAmber)"/>
+        </svg>
+      </div>
+
+      <div class="def-box blue">
+        <strong>📖 Einfacher Wirtschaftskreislauf</strong>
+        Haushalte stellen Unternehmen <strong>Produktionsfaktoren</strong> (v.a. Arbeit) zur Verfügung und erhalten dafür <strong>Lohn/Gehalt</strong>. Damit kaufen sie <strong>Güter und Dienstleistungen</strong> von Unternehmen. Der Staat erhebt bei beiden <strong>Steuern</strong> und stellt <strong>öffentliche Leistungen</strong> bereit.
+      </div>
+
+      <!-- QUIZ zur Grafik -->
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 8px;">
+        <div class="card-eyebrow">✏️ Aufgabe 2 — Beschreiben</div>
+        <div class="quiz-question" id="q-kreislauf">
+          <div class="q-text">Was fließt im Wirtschaftskreislauf vom Haushalt zum Unternehmen?</div>
+          <div class="q-options" id="qo-kreislauf">
+            <div class="q-option" onclick="answerQ('kreislauf', 'a', false)"><div class="opt-letter">A</div>Güter und Dienstleistungen</div>
+            <div class="q-option" onclick="answerQ('kreislauf', 'b', true)"><div class="opt-letter">B</div>Arbeit als Produktionsfaktor</div>
+            <div class="q-option" onclick="answerQ('kreislauf', 'c', false)"><div class="opt-letter">C</div>Steuern und Abgaben</div>
+            <div class="q-option" onclick="answerQ('kreislauf', 'd', false)"><div class="opt-letter">D</div>Bankdarlehen</div>
+          </div>
+          <div class="q-feedback" id="qf-kreislauf"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goPrev()">← Zurück</button>
+        <button class="btn btn-primary" onclick="goNext()">Weiter: BIP →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 3: BIP
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-3">
+    <div class="card">
+      <div class="card-eyebrow">Lerneinheit 4</div>
+      <h2 class="card-title">Bruttoinlandsprodukt (BIP)</h2>
+      <p class="card-sub">Wie messen wir, wie viel eine Volkswirtschaft leistet?</p>
+
+      <div class="scenario">
+        📊 <strong>Lena fragt:</strong> „Herr Dönmez, das BIP — das ist doch so eine Zahl, die man im Fernsehen immer hört. Was bedeutet die eigentlich genau?" — „Gute Frage! Stell dir vor, wir addieren alles, was in Deutschland in einem Jahr produziert wird — jeden Stuhl von uns, jedes Auto von VW, jeden Haarschnitt — und dann bekommen wir das BIP."
+      </div>
+
+      <div class="def-box blue">
+        <strong>📖 Definition</strong>
+        Das <strong>Bruttoinlandsprodukt (BIP)</strong> ist der Gesamtwert aller Güter und Dienstleistungen, die innerhalb eines Landes in einem Jahr produziert wurden — <em>unabhängig von der Nationalität</em> der Produzenten.<br>
+        <br>
+        <strong>Wichtig:</strong> Nur der <em>Endwert</em> zählt (keine Doppelzählung der Vorleistungen).
+      </div>
+
+      <div class="content-text">
+        <h3>BIP als Wohlstandsmaßstab</h3>
+        <p>Das BIP ist der wichtigste Indikator für wirtschaftliche Leistung. Man unterscheidet:</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Begriff</th><th>Bedeutung</th><th>Beispiel</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Reales BIP-Wachstum</strong></td>
+            <td>Zuwachs der Wirtschaftsleistung, bereinigt um Inflation</td>
+            <td>DE 2023: ca. −0,3 % (leichte Rezession)</td>
+          </tr>
+          <tr>
+            <td><strong>BIP pro Kopf</strong></td>
+            <td>BIP ÷ Einwohnerzahl — Vergleichbarkeit zwischen Ländern</td>
+            <td>Deutschland ca. 45.000 € / Kopf</td>
+          </tr>
+          <tr>
+            <td><strong>Nominales BIP</strong></td>
+            <td>Zu aktuellen Preisen gemessen</td>
+            <td>DE 2023: ca. 4,1 Billionen €</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="def-box amber">
+        <strong>⚠️ Kritik am BIP als Wohlstandsmaß</strong>
+        Das BIP misst <em>Menge</em>, nicht <em>Qualität</em>: Umweltschäden, unbezahlte Hausarbeit, Ehrenamt und Lebensqualität fehlen. Deshalb gibt es ergänzende Indikatoren wie den <strong>Human Development Index (HDI)</strong>.
+      </div>
+
+      <!-- RECHENAUFGABE -->
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 8px;">
+        <div class="card-eyebrow">✏️ Aufgabe 3 — Berechnen</div>
+        <p style="font-size:14px; color:var(--ink2); margin-bottom:16px; line-height:1.6;">
+          Die Region Ruhrgebiet hat folgende vereinfachte Wirtschaftsdaten. Berechnet ausgewählte Kennzahlen.
+        </p>
+
+        <div class="def-box purple" style="margin-bottom:16px;">
+          <strong>📋 Ausgangsdaten (vereinfacht, fiktiv)</strong>
+          Gesamte Produktion (Endwerte): <strong>820 Mrd. €</strong> &nbsp;|&nbsp;
+          Vorleistungen: <strong>310 Mrd. €</strong> &nbsp;|&nbsp;
+          Einwohner: <strong>5,1 Mio.</strong>
+        </div>
+
+        <div class="rechner-grid">
+          <div class="rechner-field">
+            <label>Bruttowertschöpfung (Mrd. €)<br><small style="font-weight:400; color:var(--ink3)">= Gesamtproduktion − Vorleistungen</small></label>
+            <input type="number" id="r-bws" placeholder="? Mrd. €" step="1">
+          </div>
+          <div class="rechner-field">
+            <label>BIP pro Kopf (€ gerundet)<br><small style="font-weight:400; color:var(--ink3)">= BWS ÷ Einwohner × 1.000.000.000</small></label>
+            <input type="number" id="r-kopf" placeholder="? €" step="1000">
+          </div>
+        </div>
+
+        <div id="rechner-feedback" class="q-feedback hidden"></div>
+        <div class="btn-row">
+          <button class="btn btn-check" onclick="checkRechner()">✔ Rechenergebnis prüfen</button>
+        </div>
+      </div>
+
+      <!-- Quiz BIP -->
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 16px;">
+        <div class="card-eyebrow">✏️ Aufgabe 4 — Erläutern</div>
+        <div class="quiz-question" id="q-bip">
+          <div class="q-text">Warum wird beim BIP nur der <em>Endwert</em> gezählt und nicht die Vorleistungen?</div>
+          <div class="q-options" id="qo-bip">
+            <div class="q-option" onclick="answerQ('bip', 'a', false)"><div class="opt-letter">A</div>Weil Vorleistungen zu teuer zu erfassen sind.</div>
+            <div class="q-option" onclick="answerQ('bip', 'b', false)"><div class="opt-letter">B</div>Weil nur importierte Güter zählen.</div>
+            <div class="q-option" onclick="answerQ('bip', 'c', true)"><div class="opt-letter">C</div>Um Doppelzählung zu vermeiden — der Wert des Holzes steckt bereits im Preis des Schreibtisches.</div>
+            <div class="q-option" onclick="answerQ('bip', 'd', false)"><div class="opt-letter">D</div>Weil der Staat Vorleistungen bereits besteuert.</div>
+          </div>
+          <div class="q-feedback" id="qf-bip"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goPrev()">← Zurück</button>
+        <button class="btn btn-primary" onclick="goNext()">Weiter: Soziale Marktwirtschaft →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 4: SOZIALE MARKTWIRTSCHAFT
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-4">
+    <div class="card">
+      <div class="card-eyebrow">Lerneinheit 5</div>
+      <h2 class="card-title">Märkte &amp; Soziale Marktwirtschaft</h2>
+      <p class="card-sub">Was ist eine soziale Marktwirtschaft — und warum hat Deutschland dieses System?</p>
+
+      <div class="scenario">
+        🗳️ <strong>Lena denkt nach:</strong> „In der Zeitung steht auch was vom Mindestlohn. Das ist doch staatliche Einmischung in den Markt? Gehört das zum BIP-Thema?" — Herr Dönmez: „Genau — das ist die soziale Marktwirtschaft. Der Staat greift ein, aber nicht zu viel. Das ist die deutsche Balance."
+      </div>
+
+      <div class="content-text">
+        <h3>Markt und Preisbildung (Mikro-Basis)</h3>
+        <p>Auf <strong>Märkten</strong> treffen Angebot und Nachfrage aufeinander. Der <strong>Gleichgewichtspreis</strong> entsteht dort, wo angebotene und nachgefragte Menge übereinstimmen. Steigt die Nachfrage nach Bürostühlen (z.B. durch Home-Office-Boom), steigt der Preis — Böckler-Office kann mehr verdienen.</p>
+      </div>
+
+      <div class="info-grid" style="margin-bottom:20px;">
+        <div class="info-tile">
+          <div class="tile-icon">📈</div>
+          <div class="tile-label">Nachfrageanstieg</div>
+          <div class="tile-desc">Mehr Käufer → Preis steigt → Unternehmen produzieren mehr → Wertschöpfung ↑</div>
+        </div>
+        <div class="info-tile">
+          <div class="tile-icon">📉</div>
+          <div class="tile-label">Angebotsrückgang</div>
+          <div class="tile-desc">Lieferengpass (z.B. Holzkrise) → Weniger Angebot → Preis steigt trotz gleicher Nachfrage</div>
+        </div>
+      </div>
+
+      <div class="def-box green">
+        <strong>📖 Soziale Marktwirtschaft</strong>
+        Deutschland kombiniert <strong>Marktfreiheit</strong> (Wettbewerb, Preismechanismus) mit <strong>sozialer Absicherung</strong> (Mindestlohn, Sozialversicherung, Wettbewerbsrecht). Ziel: Effizienz + Gerechtigkeit.<br><br>
+        Kernprinzipien: Eigenverantwortung · Wettbewerb · Sozialer Ausgleich · Stabiles Geld · Außenwirtschaftsfreiheit
+      </div>
+
+      <div class="content-text">
+        <h3>Staatsaufgaben in der sozialen Marktwirtschaft</h3>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Staatsaufgabe</th><th>Instrument</th><th>Beispiel</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Ordnungsrahmen setzen</strong></td><td>Gesetze, Regulierung</td><td>GWB (Kartellrecht), Verbraucherschutz</td></tr>
+          <tr><td><strong>Soziale Sicherung</strong></td><td>Transferleistungen</td><td>ALG, Rente, Kindergeld</td></tr>
+          <tr><td><strong>Konjunktursteuerung</strong></td><td>Fiskalpolitik</td><td>Konjunkturprogramme, Steuerpolitik</td></tr>
+          <tr><td><strong>Öffentliche Güter</strong></td><td>Staatliche Bereitstellung</td><td>Straßen, Schulen, Polizei</td></tr>
+        </tbody>
+      </table>
+
+      <!-- QUIZ Soziale Marktwirtschaft -->
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 8px;">
+        <div class="card-eyebrow">✏️ Aufgabe 5 — Beurteilen</div>
+        <div class="quiz-question" id="q-markt">
+          <div class="q-text">Der Mindestlohn verhindert, dass der Marktpreis für Arbeit unter einen bestimmten Wert fällt. Welche Aussage beschreibt das am besten?</div>
+          <div class="q-options" id="qo-markt">
+            <div class="q-option" onclick="answerQ('markt', 'a', false)"><div class="opt-letter">A</div>Der Staat ersetzt den Markt komplett — das ist Planwirtschaft.</div>
+            <div class="q-option" onclick="answerQ('markt', 'b', false)"><div class="opt-letter">B</div>Der Mindestlohn schadet immer der Wirtschaft, weil Unternehmen weniger Leute einstellen.</div>
+            <div class="q-option" onclick="answerQ('markt', 'c', true)"><div class="opt-letter">C</div>Der Staat greift gezielt korrigierend ein, um soziale Mindeststandards zu sichern — typisch für die soziale Marktwirtschaft.</div>
+            <div class="q-option" onclick="answerQ('markt', 'd', false)"><div class="opt-letter">D</div>Nur Gewerkschaften dürfen Mindestlöhne festlegen.</div>
+          </div>
+          <div class="q-feedback" id="qf-markt"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goPrev()">← Zurück</button>
+        <button class="btn btn-primary" onclick="goNext()">Weiter: Abschluss-Quiz →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 5: ABSCHLUSS-QUIZ
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-5">
+    <div class="card">
+      <div class="card-eyebrow">Lerneinheit 6 · Abschlussaufgaben</div>
+      <h2 class="card-title">Alles zusammen — Böckler-Office Briefing</h2>
+      <p class="card-sub">Lena soll Herrn Dönmez jetzt ein Mini-Briefing geben. Helft ihr!</p>
+
+      <div class="scenario">
+        📋 <strong>Auftrag (Operator: <em>erläutern</em>):</strong> Herr Dönmez fragt sein Team: „Erklärt mir kurz — warum müssen wir als Unternehmen volkswirtschaftliche Kennzahlen im Blick haben?" Beantwortet die folgenden Fragen, die er stellt.
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-question" id="q-final1">
+        <div class="q-text">1 · Böckler-Office kauft Rohstoffe für 200.000 €, verarbeitet/lagert sie und verkauft die Produkte für 350.000 €. Was ist die Wertschöpfung?</div>
+        <div class="q-hint">Tipp: Wertschöpfung = Produktionswert − Vorleistungen</div>
+        <div class="q-options" id="qo-final1">
+          <div class="q-option" onclick="answerQ('final1','a',false)"><div class="opt-letter">A</div>550.000 €</div>
+          <div class="q-option" onclick="answerQ('final1','b',true)"><div class="opt-letter">B</div>150.000 €</div>
+          <div class="q-option" onclick="answerQ('final1','c',false)"><div class="opt-letter">C</div>200.000 €</div>
+          <div class="q-option" onclick="answerQ('final1','d',false)"><div class="opt-letter">D</div>350.000 €</div>
+        </div>
+        <div class="q-feedback" id="qf-final1"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" id="q-final2">
+        <div class="q-text">2 · Das BIP Deutschlands sinkt. Was bedeutet das für ein Handelsunternehmen wie Böckler-Office wahrscheinlich?</div>
+        <div class="q-options" id="qo-final2">
+          <div class="q-option" onclick="answerQ('final2','a',true)"><div class="opt-letter">A</div>Die Kaufkraft sinkt, Unternehmen und Haushalte kaufen weniger — der Umsatz könnte zurückgehen.</div>
+          <div class="q-option" onclick="answerQ('final2','b',false)"><div class="opt-letter">B</div>Das hat keine Auswirkungen auf einzelne Unternehmen.</div>
+          <div class="q-option" onclick="answerQ('final2','c',false)"><div class="opt-letter">C</div>Der Staat gibt mehr Aufträge an Unternehmen — der Umsatz steigt.</div>
+          <div class="q-option" onclick="answerQ('final2','d',false)"><div class="opt-letter">D</div>Das BIP ist irrelevant, weil nur der Börsenkurs zählt.</div>
+        </div>
+        <div class="q-feedback" id="qf-final2"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" id="q-final3">
+        <div class="q-text">3 · Welcher Produktionsfaktor wird mit <em>Gehalt</em> entlohnt?</div>
+        <div class="q-options" id="qo-final3">
+          <div class="q-option" onclick="answerQ('final3','a',false)"><div class="opt-letter">A</div>Kapital → Zins</div>
+          <div class="q-option" onclick="answerQ('final3','b',false)"><div class="opt-letter">B</div>Boden → Pacht</div>
+          <div class="q-option" onclick="answerQ('final3','c',true)"><div class="opt-letter">C</div>Arbeit → Lohn/Gehalt</div>
+          <div class="q-option" onclick="answerQ('final3','d',false)"><div class="opt-letter">D</div>Unternehmerinitiative → Dividende</div>
+        </div>
+        <div class="q-feedback" id="qf-final3"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" id="q-final4">
+        <div class="q-text">4 · Was unterscheidet die soziale Marktwirtschaft von einer reinen Marktwirtschaft?</div>
+        <div class="q-options" id="qo-final4">
+          <div class="q-option" onclick="answerQ('final4','a',false)"><div class="opt-letter">A</div>In der sozialen Marktwirtschaft gibt es keine freien Preise.</div>
+          <div class="q-option" onclick="answerQ('final4','b',true)"><div class="opt-letter">B</div>Der Staat greift gezielt ein, um soziale Mindeststandards zu sichern und Marktversagen zu korrigieren.</div>
+          <div class="q-option" onclick="answerQ('final4','c',false)"><div class="opt-letter">C</div>Unternehmen gehören dem Staat.</div>
+          <div class="q-option" onclick="answerQ('final4','d',false)"><div class="opt-letter">D</div>Es gibt keinen Unterschied, das sind Synonyme.</div>
+        </div>
+        <div class="q-feedback" id="qf-final4"></div>
+      </div>
+
+      <!-- OFFENE AUFGABE -->
+      <div class="quiz-question">
+        <div class="q-text">5 · Offene Aufgabe (Operator: <em>diskutieren</em> — 4 Punkte)</div>
+        <div class="q-hint">Sprecht zu zweit: „Das BIP ist kein gutes Maß für den Wohlstand einer Gesellschaft." Beurteilt diese Aussage. Nennt je ein Argument dafür und dagegen. Notiert eure Argumente.</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+          <div style="background:var(--green-bg); border:1.5px solid var(--green-bd); border-radius:8px; padding:14px;">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--green); margin-bottom:8px;">✓ Dafür (BIP unzureichend)</div>
+            <textarea style="width:100%; background:transparent; border:none; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--ink); resize:vertical; min-height:60px; outline:none;" placeholder="Euer Argument..."></textarea>
+          </div>
+          <div style="background:var(--red-bg); border:1.5px solid var(--red-bd); border-radius:8px; padding:14px;">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--red); margin-bottom:8px;">✗ Dagegen (BIP sinnvoll)</div>
+            <textarea style="width:100%; background:transparent; border:none; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--ink); resize:vertical; min-height:60px; outline:none;" placeholder="Euer Argument..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goPrev()">← Zurück</button>
+        <button class="btn btn-primary" onclick="showFinal()">🏁 Ergebnis anzeigen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 6: ERGEBNIS
+  ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-6">
+    <div class="card">
+      <div class="final-hero">
+        <div class="trophy" id="final-trophy">🎓</div>
+        <h2 id="final-title">Lernstation abgeschlossen!</h2>
+        <p id="final-text">Ihr habt die Einführung in die Makroökonomie abgeschlossen.</p>
+      </div>
+
+      <div class="summary-grid" id="summary-grid"></div>
+
+      <div style="border-top: 2px solid var(--border); padding-top: 24px; margin-top: 8px;">
+        <div class="card-eyebrow">📚 Lernziel-Checkliste (LF 10 · AS 10.1)</div>
+        <div id="checklist" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="def-box amber" style="margin-top:20px;">
+        <strong>💬 Lenas Antwort an Herrn Dönmez</strong>
+        „Das BIP misst die gesamte Wertschöpfung aller Unternehmen in Deutschland. Wenn das BIP wächst, bedeutet das: mehr Kaufkraft bei Haushalten und Unternehmen — also mehr Aufträge für Böckler-Office. Als Produktionsfaktor stellen wir Arbeit (unsere Mitarbeit) und Kapital (Lagerhalle, Geräte) bereit. Wir sind Teil des Wirtschaftskreislaufs!"
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="jumpTo(0)">🔄 Von vorne</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Drucken / Speichern</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let currentScreen = 0;
+const totalScreens = 7;
+let score = 0;
+let maxScore = 0;
+const answeredQ = {};
+const TOTAL_QUIZ_POINTS = 7; // 1 per MC + 2 rechner
+
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+function goNext() {
+  jumpTo(currentScreen + 1);
+}
+function goPrev() {
+  jumpTo(currentScreen - 1);
+}
+function jumpTo(idx) {
+  if (idx < 0 || idx >= totalScreens) return;
+
+  document.getElementById('screen-' + currentScreen).classList.remove('active');
+  document.querySelectorAll('.nav-step').forEach((el, i) => {
+    el.classList.remove('active');
+    if (i < idx) el.classList.add('done');
+    else el.classList.remove('done');
+  });
+
+  currentScreen = idx;
+  document.getElementById('screen-' + currentScreen).classList.add('active');
+  document.querySelectorAll('.nav-step')[currentScreen]?.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════
+const FEEDBACKS = {
+  kreislauf: {
+    correct: "✓ Richtig! Haushalte stellen Unternehmen Arbeit (und andere Produktionsfaktoren) zur Verfügung — im Gegenzug erhalten sie Lohn/Gehalt.",
+    wrong:   "✗ Nicht ganz. Güter und DL fließen vom Unternehmen zum Haushalt. Steuern fließen an den Staat. Arbeit fließt vom Haushalt zum Unternehmen."
+  },
+  bip: {
+    correct: "✓ Korrekt! Das Prinzip der Vermeidung von Doppelzählung ist zentral: Wenn Böckler-Office Holz kauft und Schreibtische verkauft, zählt nur der Schreibtisch — das Holz steckt schon drin.",
+    wrong:   "✗ Der Grund ist die Vermeidung von Doppelzählung. Der Wert der Vorleistung ist bereits im Endprodukt enthalten."
+  },
+  markt: {
+    correct: "✓ Sehr gut! Das ist das Kernprinzip der sozialen Marktwirtschaft: gezielter Staatseingriff zum Schutz sozialer Standards, ohne den Marktmechanismus grundsätzlich aufzuheben.",
+    wrong:   "✗ Die soziale Marktwirtschaft lässt Märkte grundsätzlich frei, greift aber gezielt ein — z.B. durch Mindestlohn, Kartellrecht, Sozialversicherung."
+  },
+  final1: {
+    correct: "✓ Richtig! 350.000 − 200.000 = 150.000 € Wertschöpfung. Dieser Mehrwert entsteht durch Lagerung, Beratung und Lieferung der Böckler-Office GmbH.",
+    wrong:   "✗ Schau nochmal: Wertschöpfung = Produktionswert − Vorleistungen = 350.000 − 200.000 = 150.000 €."
+  },
+  final2: {
+    correct: "✓ Richtig! Ein sinkendes BIP signalisiert weniger wirtschaftliche Aktivität → weniger Kaufkraft → potenziell sinkende Umsätze. Gute makroökonomische Kenntnisse helfen Unternehmen, sich darauf vorzubereiten.",
+    wrong:   "✗ Ein sinkendes BIP hat sehr wohl Auswirkungen auf Einzelunternehmen: weniger Nachfrage, mögliche Umsatzrückgänge."
+  },
+  final3: {
+    correct: "✓ Korrekt! Arbeit → Lohn/Gehalt · Boden → Pacht · Kapital → Zins/Gewinn. Diese Zuordnung ist klassisches VWL-Grundwissen.",
+    wrong:   "✗ Schau nochmal in die Tabelle: Arbeit wird mit Lohn/Gehalt entlohnt."
+  },
+  final4: {
+    correct: "✓ Genau! Die soziale Marktwirtschaft verbindet Marktfreiheit mit staatlichem Korrektiv — das ist das deutsche Wirtschaftsmodell seit 1949.",
+    wrong:   "✗ In der sozialen Marktwirtschaft gibt es Marktfreiheit + staatliche Eingriffe für sozialen Ausgleich. Weder reine Planwirtschaft noch ungezügelter Kapitalismus."
+  }
+};
+
+function answerQ(qId, chosen, isCorrect) {
+  if (answeredQ[qId]) return;
+  answeredQ[qId] = true;
+  maxScore++;
+
+  const opts = document.getElementById('qo-' + qId).querySelectorAll('.q-option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  const clickedOpts = document.getElementById('qo-' + qId).querySelectorAll('.q-option');
+  // Find the right one and mark it
+  clickedOpts.forEach(o => {
+    if (o.getAttribute('onclick').includes("'" + chosen + "'")) {
+      o.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+    // Always show correct answer
+    if (!isCorrect) {
+      const code = o.getAttribute('onclick');
+      // find correct by re-evaluating... we just show feedback instead
+    }
+  });
+
+  if (isCorrect) score++;
+
+  const fb = document.getElementById('qf-' + qId);
+  fb.textContent = isCorrect ? FEEDBACKS[qId].correct : FEEDBACKS[qId].wrong;
+  fb.className = 'q-feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+
+  updateScoreDisplay();
+}
+
+// ═══════════════════════════════════════════
+//  RECHNER
+// ═══════════════════════════════════════════
+function checkRechner() {
+  if (answeredQ['rechner']) return;
+
+  const bwsInput  = document.getElementById('r-bws');
+  const kopfInput = document.getElementById('r-kopf');
+  const bws  = parseFloat(bwsInput.value);
+  const kopf = parseFloat(kopfInput.value);
+
+  const correctBws  = 510;   // 820 - 310
+  const correctKopf = 100000; // 510 Mrd / 5.1 Mio ≈ 100.000 €
+
+  let correct = 0;
+  if (Math.abs(bws - correctBws) < 5)    { bwsInput.classList.add('correct');  correct++; }
+  else                                    { bwsInput.classList.add('wrong'); }
+
+  if (Math.abs(kopf - correctKopf) < 5000) { kopfInput.classList.add('correct'); correct++; }
+  else                                      { kopfInput.classList.add('wrong'); }
+
+  answeredQ['rechner'] = true;
+  score += correct;
+  maxScore += 2;
+
+  const fb = document.getElementById('rechner-feedback');
+  if (correct === 2) {
+    fb.textContent = '✓ Beide Ergebnisse korrekt! BWS = 820 − 310 = 510 Mrd. € · BIP/Kopf = 510.000.000.000 ÷ 5.100.000 ≈ 100.000 €';
+    fb.className = 'q-feedback show correct-fb';
+  } else {
+    fb.textContent = `✗ ${correct}/2 korrekt. Lösung: BWS = 820 − 310 = 510 Mrd. € · BIP/Kopf = 510 Mrd. ÷ 5,1 Mio. = 100.000 €`;
+    fb.className = 'q-feedback show wrong-fb';
+  }
+  updateScoreDisplay();
+}
+
+// ═══════════════════════════════════════════
+//  DRAG & DROP
+// ═══════════════════════════════════════════
+let dragItem = null;
+
+document.addEventListener('dragstart', e => {
+  if (e.target.classList.contains('drag-item')) {
+    dragItem = e.target;
+    setTimeout(() => e.target.classList.add('dragging'), 0);
+  }
+});
+document.addEventListener('dragend', e => {
+  if (e.target.classList.contains('drag-item')) {
+    e.target.classList.remove('dragging');
+  }
+});
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('over');
+}
+document.addEventListener('dragleave', e => {
+  if (e.target.classList.contains('drop-zone')) e.target.classList.remove('over');
+});
+function onDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  if (dragItem) e.currentTarget.appendChild(dragItem);
+  dragItem = null;
+}
+
+function checkDrag() {
+  if (answeredQ['drag']) return;
+  answeredQ['drag'] = true;
+
+  let correct = 0; let total = 0;
+  ['drop-boden','drop-arbeit','drop-kapital'].forEach(zoneId => {
+    const zone = document.getElementById(zoneId);
+    const accept = zone.dataset.accept;
+    zone.querySelectorAll('.drag-item').forEach(item => {
+      total++;
+      if (item.dataset.category === accept) {
+        item.style.background = '#f0fdf4';
+        item.style.borderColor = '#22c55e';
+        item.style.color = '#166534';
+        correct++;
+      } else {
+        item.style.background = '#fef2f2';
+        item.style.borderColor = '#ef4444';
+        item.style.color = '#991b1b';
+      }
+    });
+  });
+  // Also check items left in pool
+  document.getElementById('drag-pool').querySelectorAll('.drag-item').forEach(item => {
+    total++;
+    item.style.background = '#fef2f2';
+    item.style.borderColor = '#ef4444';
+  });
+
+  score += Math.round((correct / 8) * 2); // 2 points for drag
+  maxScore += 2;
+
+  const fb = document.getElementById('drag-feedback');
+  fb.textContent = correct === 8
+    ? `✓ Perfekt! Alle ${correct} Begriffe korrekt zugeordnet.`
+    : `${correct}/8 korrekt. Boden = natürliche Ressourcen/Grundstücke · Arbeit = Menschen · Kapital = produzierte Produktionsmittel`;
+  fb.className = 'q-feedback show ' + (correct >= 6 ? 'correct-fb' : 'wrong-fb');
+  fb.classList.remove('hidden');
+
+  updateScoreDisplay();
+}
+
+function resetDrag() {
+  const pool = document.getElementById('drag-pool');
+  document.querySelectorAll('.drag-item').forEach(item => {
+    item.style.background = '';
+    item.style.borderColor = '';
+    item.style.color = '';
+    pool.appendChild(item);
+  });
+  document.getElementById('drag-feedback').classList.add('hidden');
+  delete answeredQ['drag'];
+}
+
+// ═══════════════════════════════════════════
+//  SCORE DISPLAY
+// ═══════════════════════════════════════════
+function updateScoreDisplay() {
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('score-max').textContent = maxScore || '?';
+  const ratio = maxScore ? score / maxScore : 0;
+  const stars = ratio >= .9 ? '★★★★★' : ratio >= .7 ? '★★★★☆' : ratio >= .5 ? '★★★☆☆' : ratio >= .3 ? '★★☆☆☆' : '★☆☆☆☆';
+  document.getElementById('score-stars').textContent = stars;
+}
+
+// ═══════════════════════════════════════════
+//  FINAL SCREEN
+// ═══════════════════════════════════════════
+function showFinal() {
+  const totalPossible = 11; // 6 MC + 2 rechner + 2 drag + 1 bonus
+  const ratio = score / Math.max(maxScore, 1);
+
+  let trophy, title, text;
+  if (ratio >= .85)      { trophy='🏆'; title='Ausgezeichnet!'; text='Ihr habt die Makro-Grundlagen sehr gut verstanden. Herr Dönmez ist beeindruckt!'; }
+  else if (ratio >= .65) { trophy='🎓'; title='Gut gemacht!'; text='Solides Ergebnis! Schaut nochmal bei den falsch beantworteten Fragen rein.'; }
+  else if (ratio >= .45) { trophy='📚'; title='Auf dem richtigen Weg!'; text='Ihr habt die Grundideen verstanden — aber einige Konzepte brauchen noch Wiederholung.'; }
+  else                   { trophy='💡'; title='Weiter üben!'; text='Keine Sorge — Makroökonomie ist komplex. Lest die Erklärtexte nochmal durch und wiederholt die Aufgaben.'; }
+
+  document.getElementById('final-trophy').textContent = trophy;
+  document.getElementById('final-title').textContent = title;
+  document.getElementById('final-text').textContent = text;
+
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="summary-tile"><div class="s-icon">✅</div><div class="s-label">Punkte</div><div class="s-val">${score} / ${maxScore}</div></div>
+    <div class="summary-tile"><div class="s-icon">📊</div><div class="s-label">Quote</div><div class="s-val">${Math.round(ratio*100)} %</div></div>
+    <div class="summary-tile"><div class="s-icon">⭐</div><div class="s-label">Bewertung</div><div class="s-val">${ratio>=.85?'Sehr gut':ratio>=.65?'Gut':ratio>=.45?'Befriedigend':'Weiter üben'}</div></div>
+    <div class="summary-tile"><div class="s-icon">🔢</div><div class="s-label">Aufgaben</div><div class="s-val">${Object.keys(answeredQ).length}</div></div>
+  `;
+
+  const checks = [
+    { done: !!answeredQ['kreislauf'],  label: 'Wirtschaftskreislauf: Rolle von Haushalt und Unternehmen beschreiben (Z 3)' },
+    { done: !!answeredQ['drag'],       label: 'Produktionsfaktoren strukturiert darstellen (Z 1)' },
+    { done: !!answeredQ['rechner'],    label: 'Bruttowertschöpfung berechnen (Z 2 / Z 4)' },
+    { done: !!answeredQ['bip'],        label: 'BIP als Maßstab zur Wohlstandsmessung erläutern (Z 5)' },
+    { done: !!answeredQ['markt'],      label: 'Rolle des Staates in der sozialen Marktwirtschaft erklären (Z 6)' },
+    { done: !!answeredQ['final1'],     label: 'Wertschöpfung konkret berechnen (Z 2)' },
+    { done: !!answeredQ['final4'],     label: 'Soziale Marktwirtschaft von reiner Marktwirtschaft unterscheiden (Z 6)' },
+  ];
+
+  document.getElementById('checklist').innerHTML = checks.map(c => `
+    <div style="display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; line-height:1.5; color:${c.done?'var(--green)':'var(--ink2)'}">
+      <span style="font-size:16px; flex-shrink:0;">${c.done ? '✅' : '⬜'}</span>
+      <span>${c.label}</span>
+    </div>
+  `).join('');
+
+  jumpTo(6);
+}
+
+// init
+updateScoreDisplay();
+</script>
+</body>
+</html>
