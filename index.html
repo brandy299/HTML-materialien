@@ -3,27 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digitale Unterrichtsmaterialien</title>
+<title>Unterricht.Digital – Materialien</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #4F46E5;
-  --primary-hover: #3730A3;
-  --text: #111827;
-  --text-muted: #6B7280;
-  --text-light: #9CA3AF;
-  --border: #E5E7EB;
-  --border-strong: #D1D5DB;
-  --bg: #F9FAFB;
-  --sidebar-bg: #111827;
-  --white: #ffffff;
-  --success: #10B981;
-  --error: #EF4444;
-  --radius: 6px;
-  --sidebar-w: 220px;
+  /* Brand */
+  --primary:        #1D4ED8;
+  --primary-hover:  #1E40AF;
+  --primary-pale:   #EFF6FF;
+  --accent:         #D97706;
+  --accent-pale:    #FFFBEB;
+
+  /* Text */
+  --text:           #0F172A;
+  --text-muted:     #475569;
+  --text-light:     #94A3B8;
+
+  /* Surface */
+  --bg:             #F8FAFC;
+  --white:          #FFFFFF;
+  --border:         #E2E8F0;
+  --border-strong:  #CBD5E1;
+
+  /* Sidebar */
+  --sidebar-bg:     #0F172A;
+  --sidebar-w:      224px;
+
+  /* State */
+  --success:        #059669;
+  --error:          #DC2626;
+
+  /* Shape */
+  --radius:         7px;
+  --radius-lg:      12px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.08);
+  --shadow:    0 4px 16px rgba(15,23,42,0.10);
 }
 
 body {
@@ -1099,15 +1118,15 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
   <aside id="sidebar">
     <div id="sidebar-inner">
       <div class="sidebar-logo-area">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:28px;height:28px;background:#4F46E5;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <a href="landing.html" style="display:flex;align-items:center;gap:9px;text-decoration:none">
+          <div style="width:30px;height:30px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,0.35)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           </div>
           <div>
-            <div style="font-size:13px;font-weight:700;color:#F9FAFB;line-height:1.2">Materialien</div>
-            <div style="font-size:10px;color:#4B5563">Digitale Unterrichtsmaterialien</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#F1F5F9;line-height:1.2;letter-spacing:-0.02em">Unterricht<span style="color:var(--primary)">.</span>Digital</div>
+            <div style="font-size:10px;color:#475569;margin-top:1px">Materialien</div>
           </div>
-        </div>
+        </a>
       </div>
       <div class="sidebar-label" style="margin-top:12px">Ordner</div>
 
