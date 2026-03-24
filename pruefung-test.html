@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probelauf – Systemtest</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #0891B2;
+  --primary-dark: #0E7490;
+  --text: #111827;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --bg: #F0FDFF;
+  --white: #fff;
+  --success: #10B981;
+  --error: #EF4444;
+  --radius: 10px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── DEMO BANNER ─── */
+#demo-banner {
+  background: #0891B2;
+  color: white;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+#demo-banner span { opacity: 0.75; font-weight: 400; margin-left: 8px; }
+
+.screen { display: none; }
+.screen.active { display: flex; }
+
+.wrap {
+  min-height: calc(100vh - 36px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.card {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 2.25rem 2rem;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.exam-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ECFEFF;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  border: 1px solid #A5F3FC;
+}
+
+h1.exam-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+  line-height: 1.25;
+}
+
+.exam-meta {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1.75rem;
+}
+
+.info-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.info-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+label.field-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+input.code-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: 'Inter', monospace;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  margin-bottom: 0.5rem;
+  transition: border-color 200ms;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+input.code-input:focus  { border-color: var(--primary); }
+input.code-input.error  { border-color: var(--error); }
+
+.field-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.field-hint.err { color: var(--error); font-weight: 500; }
+
+.rules {
+  background: #ECFEFF;
+  border: 1px solid #A5F3FC;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  color: #164E63;
+  line-height: 1.6;
+}
+.rules strong { font-weight: 700; display: block; margin-bottom: 4px; }
+
+.btn {
+  display: block; width: 100%; padding: 0.9rem;
+  background: var(--primary); color: white; border: none;
+  border-radius: var(--radius); font-size: 0.95rem; font-weight: 600;
+  font-family: 'Inter', sans-serif; cursor: pointer;
+  transition: background 200ms, opacity 200ms; text-align: center;
+}
+.btn:hover:not(:disabled) { background: var(--primary-dark); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+.btn-ghost:hover:not(:disabled) { background: var(--bg); color: var(--text); }
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#scr-quiz { flex-direction: column; min-height: calc(100vh - 36px); }
+
+.quiz-header {
+  background: #0C4A6E;
+  color: white;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 36px;
+  z-index: 10;
+}
+
+.quiz-title { font-size: 0.85rem; font-weight: 600; opacity: 0.85; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timer-box { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 5px 12px; font-size: 0.88rem; font-weight: 700; white-space: nowrap; min-width: 76px; justify-content: center; }
+.timer-box.warn { background: rgba(239,68,68,0.25); color: #FCA5A5; }
+.q-counter { font-size: 0.78rem; opacity: 0.7; white-space: nowrap; }
+.progress-bar-bg { background: rgba(255,255,255,0.15); height: 3px; width: 100%; }
+.progress-bar-fill { background: #67E8F9; height: 3px; transition: width 400ms ease; }
+
+.quiz-body { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1.5rem; }
+
+.q-card {
+  background: var(--white); border-radius: 14px; border: 1px solid var(--border);
+  padding: 2rem; width: 100%; max-width: 580px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.q-number { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.6rem; }
+.q-text { font-size: 1.05rem; font-weight: 500; color: var(--text); margin-bottom: 1.5rem; line-height: 1.55; }
+.options { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.opt {
+  display: block; width: 100%; text-align: left; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: 9px; padding: 0.8rem 1rem;
+  font-size: 0.92rem; color: var(--text); cursor: pointer; font-family: 'Inter', sans-serif;
+  line-height: 1.5; transition: background 150ms, border-color 150ms;
+}
+.opt:hover:not(:disabled):not(.selected) { background: #ECFEFF; border-color: #67E8F9; }
+.opt.selected { background: #ECFEFF; border-color: var(--primary); font-weight: 600; }
+.opt:disabled { cursor: default; }
+
+.q-nav { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+.q-nav .btn { flex: 1; }
+
+#warn-banner {
+  display: none; position: fixed; top: 36px; left: 0; right: 0;
+  background: var(--error); color: white; padding: 10px 16px;
+  font-size: 0.85rem; font-weight: 600; text-align: center; z-index: 1000;
+}
+
+.result-ring {
+  width: 96px; height: 96px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; margin: 0 auto 1.25rem; font-weight: 700;
+}
+.result-ring.good { background: #ECFDF5; color: #065F46; border: 2px solid #6EE7B7; }
+.result-ring.ok   { background: #FFFBEB; color: #78350F; border: 2px solid #FCD34D; }
+.result-ring.low  { background: #FEF2F2; color: #7F1D1D; border: 2px solid #FCA5A5; }
+
+.result-title { font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 0.4rem; }
+.result-sub   { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 1.75rem; }
+
+.answer-review { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; max-height: 280px; overflow-y: auto; }
+.review-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.65rem 0.85rem; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
+.review-item.correct-item { background: #ECFDF5; border: 1px solid #A7F3D0; }
+.review-item.wrong-item   { background: #FEF2F2; border: 1px solid #FCA5A5; }
+.review-icon { flex-shrink: 0; font-size: 0.85rem; margin-top: 1px; }
+.review-q { font-weight: 500; color: var(--text); }
+.review-a { color: var(--text-muted); font-size: 0.77rem; margin-top: 2px; }
+
+.blocked-icon  { font-size: 3.5rem; text-align: center; margin-bottom: 1rem; }
+.blocked-title { font-size: 1.2rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; }
+.blocked-sub   { font-size: 0.85rem; color: var(--text-muted); text-align: center; line-height: 1.55; white-space: pre-line; }
+
+.reset-note {
+  margin-top: 1.25rem;
+  background: #ECFEFF;
+  border: 1px solid #A5F3FC;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: #164E63;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .card { padding: 1.5rem 1.25rem; }
+  .q-card { padding: 1.5rem 1.25rem; }
+  .info-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Demo-Banner -->
+<div id="demo-banner">
+  PROBELAUF / SYSTEMTEST
+  <span>Kein echter Prüfungsversuch — nur zum Testen des Systems</span>
+</div>
+
+<div id="warn-banner">⚠ Achtung: Bitte bleibe während der Prüfung auf dieser Seite!</div>
+
+<!-- ════ START ════ -->
+<div id="scr-start" class="screen active wrap">
+  <div class="card">
+    <div class="exam-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      Demo · Systemtest
+    </div>
+    <h1 class="exam-title" id="start-title">—</h1>
+    <div class="exam-meta">
+      <span id="start-subject">—</span>
+      <span id="start-class">—</span>
+    </div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">Fragen</div><div class="info-value" id="start-qcount">—</div></div>
+      <div class="info-item"><div class="info-label">Zeit</div><div class="info-value" id="start-time">—</div></div>
+      <div class="info-item"><div class="info-label">Typ</div><div class="info-value">Multiple Choice</div></div>
+      <div class="info-item"><div class="info-label">Modus</div><div class="info-value" style="color:var(--primary)">Probelauf</div></div>
+    </div>
+
+    <label class="field-label" for="code-input">Dein Schülercode</label>
+    <input id="code-input" class="code-input" type="text" placeholder="z.B. TEST-01" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div id="code-hint" class="field-hint">Format: Klasse-Nummer, z.B. TEST-01 oder BK24a-07</div>
+
+    <div class="rules">
+      <strong>ℹ Probelauf-Hinweis</strong>
+      Dies ist kein echter Test. Nutze diesen Probelauf, um die Bedienung zu üben oder das System zu testen.<br>
+      Der Ablauf ist identisch mit einer echten Prüfung.
+    </div>
+
+    <button class="btn" id="btn-start">Probelauf starten</button>
+  </div>
+</div>
+
+<!-- ════ LOADING ════ -->
+<div id="scr-loading" class="screen wrap">
+  <div class="card" style="text-align:center;padding:3rem 2rem">
+    <div class="spinner"></div>
+    <div style="font-size:0.9rem;color:var(--text-muted)" id="loading-msg">Wird geladen…</div>
+  </div>
+</div>
+
+<!-- ════ BLOCKED ════ -->
+<div id="scr-blocked" class="screen wrap">
+  <div class="card">
+    <div class="blocked-icon">🔒</div>
+    <div class="blocked-title">Probelauf bereits abgegeben</div>
+    <div class="blocked-sub" id="blocked-msg">Dieser Code hat den Probelauf bereits abgeschlossen.</div>
+    <div class="reset-note">
+      Für einen neuen Probelauf einfach einen anderen Code verwenden (z.B. TEST-02, TEST-03…)
+    </div>
+  </div>
+</div>
+
+<!-- ════ QUIZ ════ -->
+<div id="scr-quiz" class="screen">
+  <div class="quiz-header">
+    <span class="quiz-title" id="quiz-title-bar">Probelauf</span>
+    <span class="q-counter" id="q-counter">Frage 1 / 5</span>
+    <div class="timer-box" id="timer-box">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span id="timer-display">03:00</span>
+    </div>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="q-card">
+      <div class="q-number" id="q-number">Frage 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()" style="display:none">Zurück</button>
+        <button class="btn" id="btn-next" onclick="nextQ()">Weiter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ RESULT ════ -->
+<div id="scr-result" class="screen wrap">
+  <div class="card">
+    <div class="result-ring" id="result-ring">—%</div>
+    <div class="result-title" id="result-title">Probelauf abgeschlossen</div>
+    <div class="result-sub" id="result-sub">—</div>
+    <div class="answer-review" id="answer-review"></div>
+    <div style="font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:0.5rem">
+      Ergebnis wurde gespeichert · Probelauf beendet
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* ══════════════════════════════════════════════════════════
+   PRÜFUNGS-KONFIGURATION
+   ══════════════════════════════════════════════════════════ */
+const EXAM = {
+  id:          'probelauf-v1',
+  title:       'Probelauf – Systemtest',
+  subject:     'Demo',
+  classFilter: null,
+  timeLimit:   180,   // 3 Minuten
+  questions: [
+    {
+      text: 'Was zeigt dir das Prüfungssystem an, wenn du die Prüfung bereits abgegeben hast?',
+      options: [
+        'Die Fragen nochmals zum Wiederholen',
+        'Eine Sperrseite – eine erneute Teilnahme ist nicht möglich',
+        'Einen leeren Bildschirm',
+        'Die Ergebnisse der anderen SuS'
+      ],
+      correct: 1
+    },
+    {
+      text: 'Wie wird dein Schülercode im System gespeichert?',
+      options: [
+        'Gar nicht – der Code ist anonym',
+        'In einer Datenbank, verknüpft mit deinen Antworten',
+        'Nur auf diesem Gerät, nie auf einem Server',
+        'Im Browser-Verlauf'
+      ],
+      correct: 1
+    },
+    {
+      text: 'Was passiert, wenn die Zeit abläuft?',
+      options: [
+        'Du bekommst 5 Minuten Verlängerung',
+        'Nichts – du kannst weitermachen',
+        'Die Prüfung wird automatisch mit deinen bisherigen Antworten abgegeben',
+        'Die Seite lädt neu und du kannst von vorne beginnen'
+      ],
+      correct: 2
+    },
+    {
+      text: 'Welche Aussage über das Prüfungssystem ist korrekt?',
+      options: [
+        'Man kann die Prüfung beliebig oft wiederholen',
+        'Die Ergebnisse sieht nur die Lehrkraft im Dashboard',
+        'Man kann bei jeder Frage zurück und Antworten ändern (nach Abgabe)',
+        'Codes werden nach der Prüfung ungültig'
+      ],
+      correct: 1
+    },
+    {
+      text: 'Wofür dient der Probelauf?',
+      options: [
+        'Als echte Prüfung, die benotet wird',
+        'Zum Üben der Bedienung und Testen des Systems',
+        'Zum Anzeigen der richtigen Antworten für echte Prüfungen',
+        'Als Ersatz für die Registrierung'
+      ],
+      correct: 1
+    }
+  ]
+};
+/* ══════════════════════════════════════════════════════════ */
+
+const SUPABASE_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let studentCode = '';
+let currentQ    = 0;
+let answers     = [];
+let timerSecs   = EXAM.timeLimit;
+let timerInterval = null;
+
+/* ── Init ── */
+document.getElementById('start-title').textContent   = EXAM.title;
+document.getElementById('start-subject').textContent = EXAM.subject;
+document.getElementById('start-qcount').textContent  = EXAM.questions.length + ' Fragen';
+document.getElementById('start-time').textContent    = formatTime(EXAM.timeLimit);
+document.getElementById('start-class').textContent   = EXAM.classFilter ? 'Klasse: ' + EXAM.classFilter : 'Alle Klassen';
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ── Start ── */
+document.getElementById('btn-start').onclick = async () => {
+  const raw    = document.getElementById('code-input').value.trim().toUpperCase();
+  const codeEl = document.getElementById('code-input');
+  const hintEl = document.getElementById('code-hint');
+
+  if (!/^[A-Z0-9]+-\d{1,3}$/i.test(raw)) {
+    codeEl.classList.add('error');
+    hintEl.textContent = 'Ungültiges Format. Beispiel: TEST-01';
+    hintEl.classList.add('err');
+    codeEl.focus();
+    return;
+  }
+
+  codeEl.classList.remove('error');
+  hintEl.classList.remove('err');
+  studentCode = raw;
+
+  show('scr-loading');
+  document.getElementById('loading-msg').textContent = 'Code wird geprüft…';
+
+  const { data, error } = await sb
+    .from('exam_results')
+    .select('id, submitted_at')
+    .eq('code', studentCode)
+    .eq('exam_id', EXAM.id)
+    .maybeSingle();
+
+  if (error) {
+    document.getElementById('loading-msg').textContent = 'Verbindungsfehler. Bitte Seite neu laden.';
+    return;
+  }
+
+  if (data) {
+    const when = data.submitted_at
+      ? new Date(data.submitted_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' })
+      : '—';
+    document.getElementById('blocked-msg').textContent =
+      `Code ${studentCode} hat diesen Probelauf bereits am ${when} abgeschlossen.`;
+    show('scr-blocked');
+    return;
+  }
+
+  const { error: insertErr } = await sb.from('exam_results').insert({
+    code:         studentCode,
+    exam_id:      EXAM.id,
+    started_at:   new Date().toISOString(),
+    submitted_at: null
+  });
+
+  if (insertErr?.code === '23505') { show('scr-blocked'); return; }
+  if (insertErr) {
+    document.getElementById('loading-msg').textContent = 'Fehler beim Starten. Bitte Seite neu laden.';
+    return;
+  }
+
+  answers = new Array(EXAM.questions.length).fill(null);
+  currentQ = 0;
+  document.getElementById('quiz-title-bar').textContent = EXAM.title;
+  show('scr-quiz');
+  renderQuestion();
+  startTimer();
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && document.getElementById('scr-quiz').classList.contains('active')) {
+      const b = document.getElementById('warn-banner');
+      b.style.display = 'block';
+      setTimeout(() => { b.style.display = 'none'; }, 4000);
+    }
+  });
+};
+
+function renderQuestion() {
+  const q     = EXAM.questions[currentQ];
+  const total = EXAM.questions.length;
+
+  document.getElementById('q-number').textContent  = `Frage ${currentQ + 1}`;
+  document.getElementById('q-counter').textContent = `Frage ${currentQ + 1} / ${total}`;
+  document.getElementById('q-text').textContent    = q.text;
+  document.getElementById('progress-fill').style.width = ((currentQ / total) * 100) + '%';
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[currentQ] === i ? ' selected' : '');
+    btn.textContent = opt;
+    btn.onclick = () => {
+      answers[currentQ] = i;
+      document.querySelectorAll('.opt').forEach((b, j) => b.classList.toggle('selected', j === i));
+    };
+    container.appendChild(btn);
+  });
+
+  document.getElementById('btn-prev').style.display = currentQ > 0 ? 'block' : 'none';
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = currentQ === total - 1 ? 'Abgeben' : 'Weiter';
+  nextBtn.style.background = currentQ === total - 1 ? '#10B981' : '';
+}
+
+window.nextQ = function () {
+  if (answers[currentQ] === null) {
+    document.getElementById('q-options').style.outline = '2px solid var(--error)';
+    setTimeout(() => document.getElementById('q-options').style.outline = '', 800);
+    return;
+  }
+  if (currentQ < EXAM.questions.length - 1) { currentQ++; renderQuestion(); }
+  else submitExam('manual');
+};
+
+window.prevQ = function () {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+};
+
+function startTimer() {
+  timerSecs = EXAM.timeLimit;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSecs--;
+    updateTimerDisplay();
+    if (timerSecs <= 0) { clearInterval(timerInterval); submitExam('timeout'); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timer-display').textContent = formatTime(timerSecs);
+  document.getElementById('timer-box').classList.toggle('warn', timerSecs <= 30);
+}
+
+function formatTime(s) {
+  return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+}
+
+async function submitExam(reason) {
+  clearInterval(timerInterval);
+  show('scr-loading');
+  document.getElementById('loading-msg').textContent =
+    reason === 'timeout' ? 'Zeit abgelaufen – wird gespeichert…' : 'Wird gespeichert…';
+
+  let correct = 0;
+  const answerLog = answers.map((a, i) => {
+    const ok = a === EXAM.questions[i].correct;
+    if (ok) correct++;
+    return { q: i, selected: a, correct: EXAM.questions[i].correct, ok };
+  });
+  const score = Math.round((correct / EXAM.questions.length) * 100);
+
+  const { error } = await sb.from('exam_results')
+    .update({ score, total: EXAM.questions.length, answers: answerLog, submitted_at: new Date().toISOString() })
+    .eq('code', studentCode)
+    .eq('exam_id', EXAM.id);
+
+  if (error) {
+    document.getElementById('loading-msg').textContent = 'Fehler beim Speichern!';
+    return;
+  }
+
+  const ring  = document.getElementById('result-ring');
+  const title = document.getElementById('result-title');
+  const sub   = document.getElementById('result-sub');
+  ring.textContent = score + '%';
+  ring.className   = 'result-ring ' + (score >= 75 ? 'good' : score >= 50 ? 'ok' : 'low');
+  title.textContent = reason === 'timeout' ? 'Zeit abgelaufen!' : score >= 75 ? 'Sehr gut!' : score >= 50 ? 'Bestanden' : 'Knapp daneben';
+  sub.textContent   = `${correct} von ${EXAM.questions.length} richtig (${score}%). Probelauf erfolgreich abgeschlossen.`;
+
+  const review = document.getElementById('answer-review');
+  review.innerHTML = answerLog.map(({ q, selected, correct: ci, ok }) => {
+    const qt  = EXAM.questions[q].text.substring(0, 60) + (EXAM.questions[q].text.length > 60 ? '…' : '');
+    const sel = selected !== null ? EXAM.questions[q].options[selected] : '(keine Antwort)';
+    const cor = EXAM.questions[q].options[ci];
+    return `<div class="review-item ${ok ? 'correct-item' : 'wrong-item'}">
+      <span class="review-icon">${ok ? '✓' : '✗'}</span>
+      <div>
+        <div class="review-q">${esc(qt)}</div>
+        <div class="review-a">${ok ? 'Richtig: ' + esc(sel) : 'Du: ' + esc(sel) + ' · Richtig: ' + esc(cor)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  show('scr-result');
+}
+
+document.getElementById('code-input').addEventListener('input', function () {
+  this.classList.remove('error');
+  document.getElementById('code-hint').classList.remove('err');
+  document.getElementById('code-hint').textContent = 'Format: Klasse-Nummer, z.B. TEST-01 oder BK24a-07';
+});
+document.getElementById('code-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-start').click();
+});
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

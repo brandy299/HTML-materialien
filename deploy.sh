@@ -1,5 +1,7 @@
 #!/bin/bash
 # deploy.sh – HTML-Materialien auf GitHub Pages hochladen
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 #
 # Nutzung:
 #   ./deploy.sh <datei.html> <Fach> <Thema> [Titel]
@@ -77,7 +79,7 @@ while IFS= read -r -d '' f; do
   # Bestehenden Titel aus index.html wiederherstellen falls vorhanden
   existing=$(python3 -c "
 import re, json
-with open('$REPO_DIR/index.html') as fh:
+with open('$REPO_DIR/index.html', encoding='utf-8') as fh:
     m = re.search(r'\\{[^}]*\"pfad\":\"${relpath//\//\\/}\"[^}]*\\}', fh.read())
     if m:
         d = json.loads(m.group())
@@ -99,7 +101,7 @@ LISTE=$(printf "%b" "$LISTE" | sed '$ s/,$//')
 python3 - <<PYEOF
 import re
 
-with open("$REPO_DIR/index.html", "r") as fh:
+with open("$REPO_DIR/index.html", "r", encoding="utf-8") as fh:
     content = fh.read()
 
 new_list = r"""$LISTE"""
@@ -111,7 +113,7 @@ new_content = re.sub(
     flags=re.DOTALL
 )
 
-with open("$REPO_DIR/index.html", "w") as fh:
+with open("$REPO_DIR/index.html", "w", encoding="utf-8") as fh:
     fh.write(new_content)
 
 print("  index.html aktualisiert.")

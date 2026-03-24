@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prüfungs-Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #4F46E5;
+  --text: #111827;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --bg: #F9FAFB;
+  --white: #fff;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --sidebar: #111827;
+  --radius: 8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── Header ── */
+header {
+  background: var(--sidebar);
+  color: white;
+  padding: 0 1.5rem;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.header-logo {
+  width: 28px; height: 28px;
+  background: var(--primary);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+}
+
+#last-refresh { font-variant-numeric: tabular-nums; }
+
+.btn-sm {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 150ms;
+}
+.btn-sm:hover { background: rgba(255,255,255,0.1); }
+.btn-sm.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+/* ── Exam selector ── */
+#exam-bar {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0.65rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+#exam-bar label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+#exam-select {
+  padding: 5px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.83rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  cursor: pointer;
+  min-width: 220px;
+}
+#exam-select:focus { border-color: var(--primary); }
+
+#class-filter-wrap {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.filter-chip {
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 150ms;
+}
+.filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+.filter-chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+/* ── Stats bar ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text);
+}
+
+.stat-value.green { color: var(--success); }
+.stat-value.amber { color: var(--warning); }
+
+/* ── Main grid ── */
+.main { padding: 0 1.5rem 1.5rem; }
+
+.section-head {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-head .count-badge {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.68rem;
+  padding: 1px 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ── Card grid ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.sus-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  padding: 0.85rem 1rem;
+  position: relative;
+  transition: box-shadow 200ms;
+}
+.sus-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+.sus-card.status-done    { border-color: #A7F3D0; }
+.sus-card.status-active  { border-color: #93C5FD; }
+.sus-card.status-pending { border-color: var(--border); opacity: 0.7; }
+
+/* Active pulse ring */
+.sus-card.status-active::before {
+  content: '';
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #3B82F6;
+  animation: pulse 1.5s infinite;
+}
+
+.sus-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  padding-right: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sus-code {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-bottom: 0.55rem;
+}
+
+.sus-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.pill-done    { background: #ECFDF5; color: #065F46; }
+.pill-active  { background: #EFF6FF; color: #1D4ED8; }
+.pill-pending { background: #F3F4F6; color: #6B7280; }
+
+.score-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.score-val.high { color: var(--success); }
+.score-val.mid  { color: var(--warning); }
+.score-val.low  { color: var(--error); }
+
+.time-ago {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Empty ── */
+.empty-state {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* ── Score distribution ── */
+.dist-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+}
+.dist-label { width: 58px; color: var(--text-muted); flex-shrink: 0; }
+.dist-bar-bg { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+.dist-bar-fill { height: 100%; border-radius: 4px; transition: width 600ms ease; }
+.dist-count { width: 24px; text-align: right; font-weight: 600; color: var(--text); flex-shrink: 0; }
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.panel-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.1rem 1.25rem;
+}
+
+.panel-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+/* ── Table view (alternative) ── */
+.tbl-wrap { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); border-bottom: 1.5px solid var(--border); }
+th { padding: 0.6rem 0.9rem; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); text-align: left; white-space: nowrap; }
+td { padding: 0.7rem 0.9rem; font-size: 0.82rem; border-bottom: 1px solid rgba(229,231,235,0.6); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFE; }
+.code-chip { font-family: monospace; font-size: 0.78rem; font-weight: 700; background: #EEF2FF; color: var(--primary); padding: 2px 8px; border-radius: 5px; }
+
+/* ── View toggle ── */
+.view-toggle { display: flex; gap: 4px; }
+.view-btn {
+  padding: 4px 10px; border-radius: 5px; border: 1px solid var(--border);
+  background: white; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; color: var(--text-muted); transition: all 150ms;
+}
+.view-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+@media (max-width: 768px) {
+  .panel-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  header { padding: 0 1rem; }
+  .stats-row, .main { padding-left: 1rem; padding-right: 1rem; }
+  #exam-bar { padding: 0.65rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+      <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+    </svg>
+  </div>
+  <span class="header-title">Prüfungs-Dashboard</span>
+  <div class="live-dot"></div>
+  <div class="header-right">
+    <span id="last-refresh">—</span>
+    <button class="btn-sm" id="btn-refresh" onclick="loadData()">Aktualisieren</button>
+    <a href="dashboard.html" class="btn-sm" style="text-decoration:none">← Haupt-Dashboard</a>
+  </div>
+</header>
+
+<!-- Exam selector + class filter -->
+<div id="exam-bar">
+  <label for="exam-select">Prüfung</label>
+  <select id="exam-select" onchange="onExamChange()">
+    <option value="">Alle Prüfungen</option>
+    <option value="telephoning-b2-v1">Telephoning – Complaint Calls (B2)</option>
+    <option value="probelauf-v1">Probelauf – Systemtest</option>
+  </select>
+  <div id="class-filter-wrap">
+    <button class="filter-chip active" data-class="all" onclick="setClass('all',this)">Alle</button>
+  </div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="vbtn-cards" onclick="setView('cards')">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="10" y="0" width="6" height="6" rx="1"/><rect x="0" y="10" width="6" height="6" rx="1"/><rect x="10" y="10" width="6" height="6" rx="1"/></svg>
+      Karten
+    </button>
+    <button class="view-btn" id="vbtn-table" onclick="setView('table')">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="16" height="3" rx="1"/><rect x="0" y="6" width="16" height="3" rx="1"/><rect x="0" y="12" width="16" height="3" rx="1"/></svg>
+      Tabelle
+    </button>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Gestartet</div>
+    <div class="stat-value" id="stat-started">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Fertig</div>
+    <div class="stat-value green" id="stat-done">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Läuft noch</div>
+    <div class="stat-value amber" id="stat-active">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Ø Score</div>
+    <div class="stat-value" id="stat-avg">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Bestanden ≥75%</div>
+    <div class="stat-value green" id="stat-passed">—</div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="main">
+
+  <!-- Panel row: cards/table + score dist -->
+  <div class="panel-grid">
+
+    <!-- Left: SuS cards or table -->
+    <div>
+      <!-- Cards view -->
+      <div id="view-cards">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;flex-wrap:wrap;gap:0.5rem">
+          <div class="section-head" style="margin:0">
+            Aktiv / Laufend <span class="count-badge" id="cnt-active">0</span>
+          </div>
+        </div>
+        <div class="cards-grid" id="cards-active"></div>
+
+        <div class="section-head" style="margin-top:0.25rem">
+          Abgegeben <span class="count-badge" id="cnt-done">0</span>
+        </div>
+        <div class="cards-grid" id="cards-done"></div>
+
+        <div class="section-head" style="margin-top:0.25rem">
+          Noch nicht gestartet <span class="count-badge" id="cnt-pending">0</span>
+        </div>
+        <div class="cards-grid" id="cards-pending"></div>
+      </div>
+
+      <!-- Table view -->
+      <div id="view-table" style="display:none">
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Prüfung</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Gestartet</th>
+                <th>Abgegeben</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Score distribution -->
+    <div>
+      <div class="panel-card">
+        <div class="panel-title">Score-Verteilung</div>
+        <div id="score-dist">
+          <div style="color:var(--text-muted);font-size:0.8rem">Keine Daten</div>
+        </div>
+      </div>
+
+      <div class="panel-card" style="margin-top:0.75rem">
+        <div class="panel-title">Fortschritt</div>
+        <div id="progress-ring-wrap" style="text-align:center;padding:0.5rem 0">
+          <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+            <circle id="ring-fill" cx="50" cy="50" r="42" fill="none" stroke="#10B981" stroke-width="10"
+              stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round"
+              style="transition: stroke-dashoffset 700ms ease"/>
+          </svg>
+          <div style="margin-top:-60px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800" id="ring-pct">0%</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:36px" id="ring-label">Abgegeben</div>
+        </div>
+      </div>
+
+      <div class="panel-card" style="margin-top:0.75rem">
+        <div class="panel-title">Auto-Refresh</div>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <button class="filter-chip" id="ar-off"   onclick="setAutoRefresh(0)">Aus</button>
+          <button class="filter-chip active" id="ar-10s" onclick="setAutoRefresh(10)">10s</button>
+          <button class="filter-chip" id="ar-30s" onclick="setAutoRefresh(30)">30s</button>
+          <button class="filter-chip" id="ar-60s" onclick="setAutoRefresh(60)">60s</button>
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem" id="next-refresh-txt">Nächste Aktualisierung in 10s</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* Exam display names */
+const EXAM_NAMES = {
+  'telephoning-b2-v1': 'Telephoning B2',
+  'probelauf-v1': 'Probelauf',
+};
+
+let allData      = [];
+let activeClass  = 'all';
+let activeExam   = '';
+let currentView  = 'cards';
+let refreshSecs  = 10;
+let refreshTimer = null;
+let countdown    = 10;
+let countdownTimer = null;
+
+/* ─── Load ─── */
+window.loadData = async function () {
+  try {
+    let query = sb.from('exam_results').select('*').order('started_at', { ascending: false });
+    if (activeExam) query = query.eq('exam_id', activeExam);
+    const { data, error } = await query;
+    if (error) throw error;
+    allData = data || [];
+    render();
+    document.getElementById('last-refresh').textContent =
+      'Zuletzt: ' + new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/* ─── Render ─── */
+function render() {
+  const rows = activeClass === 'all'
+    ? allData
+    : allData.filter(r => r.code.startsWith(activeClass + '-'));
+
+  // Stats
+  const done    = rows.filter(r => r.submitted_at);
+  const active  = rows.filter(r => !r.submitted_at && r.started_at);
+  const scores  = done.filter(r => r.score !== null).map(r => r.score);
+  const avg     = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+  const passed  = scores.filter(s => s >= 75).length;
+
+  document.getElementById('stat-started').textContent = rows.length;
+  document.getElementById('stat-done').textContent    = done.length;
+  document.getElementById('stat-active').textContent  = active.length;
+  document.getElementById('stat-avg').textContent     = avg !== null ? avg + '%' : '—';
+  document.getElementById('stat-passed').textContent  = passed + (scores.length ? ' / ' + scores.length : '');
+
+  // Progress ring
+  const pct = rows.length ? Math.round((done.length / rows.length) * 100) : 0;
+  const circ = 263.9;
+  document.getElementById('ring-fill').style.strokeDashoffset = circ - (pct / 100 * circ);
+  document.getElementById('ring-pct').textContent   = pct + '%';
+  document.getElementById('ring-label').textContent = `${done.length} von ${rows.length} abgegeben`;
+
+  // Class filter chips
+  updateClassFilter(allData);
+
+  // Score distribution
+  renderScoreDist(scores);
+
+  // Cards / Table
+  if (currentView === 'cards') renderCards(rows);
+  else renderTable(rows);
+}
+
+function renderCards(rows) {
+  const activeRows  = rows.filter(r => !r.submitted_at && r.started_at);
+  const doneRows    = rows.filter(r => r.submitted_at).sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+
+  document.getElementById('cnt-active').textContent = activeRows.length;
+  document.getElementById('cnt-done').textContent   = doneRows.length;
+  document.getElementById('cnt-pending').textContent = '–';
+
+  document.getElementById('cards-active').innerHTML =
+    activeRows.length ? activeRows.map(cardHtml).join('') : emptyHtml('Niemand aktiv');
+
+  document.getElementById('cards-done').innerHTML =
+    doneRows.length ? doneRows.map(cardHtml).join('') : emptyHtml('Noch keine Abgaben');
+
+  document.getElementById('cards-pending').innerHTML =
+    emptyHtml('Wird automatisch befüllt, sobald Codes registriert sind');
+}
+
+function cardHtml(r) {
+  const isDone = !!r.submitted_at;
+  const cls    = isDone ? 'status-done' : 'status-active';
+  const pill   = isDone
+    ? '<span class="status-pill pill-done">✓ Abgegeben</span>'
+    : '<span class="status-pill pill-active">● Läuft</span>';
+
+  const scorePart = r.score !== null
+    ? `<span class="score-val ${r.score>=75?'high':r.score>=50?'mid':'low'}">${r.score}%</span>`
+    : '';
+
+  const name   = resolveName(r.code);
+  const nameHtml = name !== r.code
+    ? `<div class="sus-name">${esc(name)}</div><div class="sus-code">${esc(r.code)}</div>`
+    : `<div class="sus-name">${esc(r.code)}</div>`;
+
+  const timeRef = isDone ? r.submitted_at : r.started_at;
+  const ago = timeRef ? timeAgo(new Date(timeRef)) : '';
+  const examLabel = EXAM_NAMES[r.exam_id] || r.exam_id;
+
+  return `<div class="sus-card ${cls}">
+    ${nameHtml}
+    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:0.5rem">${esc(examLabel)}</div>
+    <div class="sus-status-row">
+      ${pill}
+      ${scorePart}
+    </div>
+    <div class="time-ago">${ago}</div>
+  </div>`;
+}
+
+function renderTable(rows) {
+  const tbody = document.getElementById('tbl-body');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Keine Daten</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => {
+    const isDone = !!r.submitted_at;
+    const pill   = isDone
+      ? '<span class="status-pill pill-done">✓ Fertig</span>'
+      : '<span class="status-pill pill-active">● Aktiv</span>';
+    const score = r.score !== null
+      ? `<span class="score-val ${r.score>=75?'high':r.score>=50?'mid':'low'}">${r.score}%</span>`
+      : '—';
+    const name  = resolveName(r.code);
+    const examLabel = EXAM_NAMES[r.exam_id] || r.exam_id;
+    return `<tr>
+      <td>
+        ${name !== r.code ? `<span style="font-weight:600">${esc(name)}</span> ` : ''}
+        <span class="code-chip">${esc(r.code)}</span>
+      </td>
+      <td style="font-size:0.78rem;color:var(--text-muted)">${esc(examLabel)}</td>
+      <td>${pill}</td>
+      <td>${score}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${fmtTime(r.started_at)}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${r.submitted_at ? fmtTime(r.submitted_at) : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderScoreDist(scores) {
+  const el = document.getElementById('score-dist');
+  if (!scores.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem">Noch keine Abgaben</div>'; return; }
+  const bands = [
+    { label: '90–100%', color: '#10B981', min: 90, max: 100 },
+    { label: '75–89%',  color: '#34D399', min: 75, max: 89 },
+    { label: '50–74%',  color: '#F59E0B', min: 50, max: 74 },
+    { label: '0–49%',   color: '#EF4444', min: 0,  max: 49 },
+  ];
+  const maxCount = Math.max(1, ...bands.map(b => scores.filter(s => s >= b.min && s <= b.max).length));
+  el.innerHTML = bands.map(b => {
+    const cnt = scores.filter(s => s >= b.min && s <= b.max).length;
+    const w   = Math.round((cnt / maxCount) * 100);
+    return `<div class="dist-row">
+      <span class="dist-label">${b.label}</span>
+      <div class="dist-bar-bg"><div class="dist-bar-fill" style="width:${w}%;background:${b.color}"></div></div>
+      <span class="dist-count">${cnt}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateClassFilter(data) {
+  const classes  = [...new Set(data.map(r => r.code.split('-')[0]))].sort();
+  const wrap     = document.getElementById('class-filter-wrap');
+  const current  = wrap.innerHTML;
+  const newHtml  = [
+    `<button class="filter-chip ${activeClass==='all'?'active':''}" data-class="all" onclick="setClass('all',this)">Alle</button>`,
+    ...classes.map(c =>
+      `<button class="filter-chip ${activeClass===c?'active':''}" data-class="${c}" onclick="setClass('${c}',this)">${c}</button>`)
+  ].join('');
+  if (current !== newHtml) wrap.innerHTML = newHtml;
+}
+
+/* ─── Helpers ─── */
+function resolveName(code) {
+  const parts = code.split('-');
+  if (parts.length < 2) return code;
+  const cls = parts[0];
+  const num = parseInt(parts[1]) || 0;
+  try {
+    const map = JSON.parse(localStorage.getItem('names_' + cls) || '{}');
+    return map[num] || code;
+  } catch { return code; }
+}
+
+function timeAgo(date) {
+  const diff = Math.floor((Date.now() - date) / 1000);
+  if (diff < 60) return 'Vor ' + diff + 's';
+  if (diff < 3600) return 'Vor ' + Math.floor(diff/60) + ' Min';
+  return 'Vor ' + Math.floor(diff/3600) + ' Std';
+}
+
+function fmtTime(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function emptyHtml(msg) {
+  return `<div class="empty-state" style="grid-column:1/-1">${msg}</div>`;
+}
+
+/* ─── Controls ─── */
+window.setClass = function(cls, btn) {
+  activeClass = cls;
+  document.querySelectorAll('#class-filter-wrap .filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+};
+
+window.onExamChange = function() {
+  activeExam = document.getElementById('exam-select').value;
+  loadData();
+};
+
+window.setView = function(v) {
+  currentView = v;
+  document.getElementById('view-cards').style.display = v === 'cards' ? 'block' : 'none';
+  document.getElementById('view-table').style.display = v === 'table' ? 'block' : 'none';
+  document.getElementById('vbtn-cards').classList.toggle('active', v === 'cards');
+  document.getElementById('vbtn-table').classList.toggle('active', v === 'table');
+  render();
+};
+
+/* ─── Auto-refresh ─── */
+window.setAutoRefresh = function(secs) {
+  refreshSecs = secs;
+  clearInterval(refreshTimer);
+  clearInterval(countdownTimer);
+  ['ar-off','ar-10s','ar-30s','ar-60s'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(secs===0?'ar-off':secs===10?'ar-10s':secs===30?'ar-30s':'ar-60s').classList.add('active');
+
+  if (secs === 0) {
+    document.getElementById('next-refresh-txt').textContent = 'Auto-Refresh deaktiviert';
+    return;
+  }
+
+  countdown = secs;
+  countdownTimer = setInterval(() => {
+    countdown--;
+    document.getElementById('next-refresh-txt').textContent = `Nächste Aktualisierung in ${countdown}s`;
+    if (countdown <= 0) {
+      countdown = secs;
+      loadData();
+    }
+  }, 1000);
+};
+
+/* ─── Init ─── */
+loadData();
+setAutoRefresh(10);
+
+/* ─── Realtime subscription ─── */
+sb.channel('exam-results-changes')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'exam_results' }, () => {
+    loadData();
+  })
+  .subscribe();
+</script>
+</body>
+</html>

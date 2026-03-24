@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prüfungs-Editor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --text: #111827;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --bg: #F9FAFB;
+  --white: #fff;
+  --success: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --radius: 8px;
+  --sidebar: #111827;
+}
+
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+/* ── Header ── */
+header {
+  background: var(--sidebar);
+  color: white;
+  padding: 0 1.5rem;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.logo { width: 28px; height: 28px; background: var(--primary); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.header-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 700; flex: 1; }
+.header-right { display: flex; gap: 0.6rem; align-items: center; }
+
+.btn {
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 150ms;
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: var(--primary-hover); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); }
+.btn-ghost:hover { background: rgba(255,255,255,0.14); }
+.btn-light { background: white; color: var(--text); border: 1.5px solid var(--border); }
+.btn-light:hover { background: var(--bg); }
+.btn-danger { background: white; color: var(--error); border: 1.5px solid #FECACA; }
+.btn-danger:hover { background: #FEF2F2; }
+.btn-success { background: #10B981; }
+.btn-success:hover { background: #059669; }
+
+/* ── Layout ── */
+.layout { display: grid; grid-template-columns: 400px 1fr; min-height: calc(100vh - 54px); }
+
+/* ── Left: Exam list ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-head {
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sidebar-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 700; }
+
+.exam-list { flex: 1; overflow-y: auto; }
+
+.exam-item {
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 120ms;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.exam-item:hover { background: var(--bg); }
+.exam-item.active { background: #EEF2FF; border-right: 2px solid var(--primary); }
+
+.exam-item-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: #EEF2FF;
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.exam-item.active .exam-item-icon { background: var(--primary); color: white; }
+
+.exam-item-body { flex: 1; min-width: 0; }
+.exam-item-title { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.exam-item-meta  { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+.exam-item-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 1px 7px; border-radius: 100px; }
+.badge-active   { background: #ECFDF5; color: #065F46; }
+.badge-inactive { background: #F3F4F6; color: #6B7280; }
+.badge-q        { background: #EEF2FF; color: var(--primary); }
+.badge-time     { background: #FFFBEB; color: #92400E; }
+
+.exam-empty { padding: 2.5rem 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.83rem; }
+
+/* ── Right: Editor ── */
+.editor {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.editor-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  gap: 0.75rem;
+  padding: 2rem;
+}
+.editor-placeholder svg { opacity: 0.2; }
+.editor-placeholder p { font-size: 0.88rem; }
+
+.editor-content { padding: 1.5rem; }
+
+.editor-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.editor-head-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+.form-full  { grid-column: 1 / -1; }
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+.field input, .field select {
+  padding: 0.6rem 0.8rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  transition: border-color 150ms;
+}
+.field input:focus, .field select:focus { border-color: var(--primary); }
+
+.link-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  overflow: hidden;
+}
+.link-box span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Questions ── */
+.q-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.q-section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 700; }
+
+.q-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+
+.q-block {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  position: relative;
+}
+.q-block:focus-within { border-color: var(--primary); }
+
+.q-block-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.q-num { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--primary); flex: 1; }
+.q-del { background: none; border: none; color: #CBD5E1; cursor: pointer; padding: 3px; border-radius: 5px; transition: color 120ms, background 120ms; line-height: 1; }
+.q-del:hover { color: var(--error); background: #FEF2F2; }
+
+.q-text-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  outline: none;
+  margin-bottom: 0.65rem;
+  transition: border-color 150ms;
+  resize: vertical;
+  min-height: 60px;
+}
+.q-text-input:focus { border-color: var(--primary); }
+
+.opts-grid { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.opt-row { display: flex; align-items: center; gap: 0.5rem; }
+.opt-radio { accent-color: var(--success); cursor: pointer; flex-shrink: 0; }
+.opt-input {
+  flex: 1;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.83rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 150ms;
+}
+.opt-input:focus { border-color: var(--primary); }
+.opt-row.is-correct .opt-input { border-color: #6EE7B7; background: #F0FDF4; }
+.opt-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); width: 18px; flex-shrink: 0; }
+
+/* ── Save bar ── */
+.save-bar {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.save-status { font-size: 0.78rem; color: var(--text-muted); flex: 1; }
+.save-status.ok  { color: var(--success); }
+.save-status.err { color: var(--error); }
+
+/* ── Import modal ── */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+.modal-backdrop.open { display: flex; }
+.modal { background: white; border-radius: 14px; padding: 1.75rem; width: 100%; max-width: 560px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.modal h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.modal p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.55; }
+.modal textarea { width: 100%; height: 220px; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 0.8rem; font-family: monospace; resize: vertical; outline: none; line-height: 1.5; }
+.modal textarea:focus { border-color: var(--primary); }
+.modal-btns { display: flex; gap: 0.75rem; margin-top: 1rem; }
+.modal-btns .btn { flex: 1; padding: 0.7rem; font-size: 0.85rem; }
+.modal-err { font-size: 0.78rem; color: var(--error); margin-top: 0.5rem; min-height: 1rem; }
+
+.schema-hint {
+  background: #F8F7FF;
+  border: 1px solid #E0E7FF;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.72rem;
+  font-family: monospace;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── Link modal ── */
+#link-modal .link-display {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+  font-family: monospace;
+  word-break: break-all;
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { max-height: 35vh; }
+}
+</style>
+</head>
+<body>
+
+<!-- Import JSON Modal -->
+<div class="modal-backdrop" id="import-modal">
+  <div class="modal">
+    <h3>JSON importieren</h3>
+    <p>Füge eine Prüfungs-JSON ein (von Claude oder extern erstellt). Das Format muss dem Schema entsprechen:</p>
+    <div class="schema-hint">{
+  "exam_id":     "eindeutige-id-v1",       // Pflicht, nur Kleinbuchstaben/Zahlen/-
+  "title":       "Titel der Prüfung",      // Pflicht
+  "subject":     "Fach",                  // Optional
+  "class_filter": "BK24a",               // Optional, null = alle
+  "time_limit":  600,                     // Sekunden, Standard: 600
+  "questions": [                          // Mind. 1 Frage
+    {
+      "text":    "Fragetext",             // Pflicht
+      "options": ["A","B","C","D"],       // Genau 4 Optionen
+      "correct": 0                        // Index der richtigen Antwort (0-3)
+    }
+  ]
+}</div>
+    <textarea id="import-textarea" placeholder='{"exam_id":"meine-pruefung-v1","title":"...","questions":[...]}'></textarea>
+    <div class="modal-err" id="import-err"></div>
+    <div class="modal-btns">
+      <button class="btn btn-light" onclick="closeImport()">Abbrechen</button>
+      <button class="btn" onclick="doImport()">Importieren & speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Link Modal -->
+<div class="modal-backdrop" id="link-modal">
+  <div class="modal" style="max-width:480px">
+    <h3>Prüfungs-Link</h3>
+    <p>Teile diesen Link mit deinen Schülern:</p>
+    <div class="link-display" id="link-display"></div>
+    <div class="modal-btns">
+      <button class="btn btn-light" onclick="closeLinkModal()">Schließen</button>
+      <button class="btn" onclick="copyLink()">Link kopieren</button>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+      <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+    </svg>
+  </div>
+  <span class="header-title">Prüfungs-Editor</span>
+  <div class="header-right">
+    <button class="btn btn-ghost" onclick="openImport()">⬆ JSON importieren</button>
+    <button class="btn" onclick="newExam()">+ Neue Prüfung</button>
+    <a href="dashboard.html" class="btn btn-ghost" style="text-decoration:none">← Dashboard</a>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── Exam list ── -->
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <span class="sidebar-title">Prüfungen</span>
+      <span id="exam-count" style="font-size:0.72rem;color:var(--text-muted)"></span>
+    </div>
+    <div class="exam-list" id="exam-list">
+      <div class="exam-empty">Wird geladen…</div>
+    </div>
+  </div>
+
+  <!-- ── Editor ── -->
+  <div class="editor" id="editor">
+
+    <!-- Placeholder -->
+    <div class="editor-placeholder" id="editor-placeholder">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+      </svg>
+      <p>Prüfung auswählen oder neue erstellen</p>
+    </div>
+
+    <!-- Editor content (hidden until exam selected) -->
+    <div id="editor-content" style="display:none">
+      <div class="editor-content">
+
+        <!-- Head -->
+        <div class="editor-head">
+          <span class="editor-head-title" id="editor-title">Neue Prüfung</span>
+          <button class="btn btn-light" id="btn-link" onclick="showLink()" style="font-size:0.78rem;padding:0.4rem 0.85rem">🔗 Link</button>
+          <button class="btn btn-danger" id="btn-delete" onclick="deleteExam()" style="font-size:0.78rem;padding:0.4rem 0.85rem">Löschen</button>
+          <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:600;cursor:pointer">
+            <input type="checkbox" id="toggle-active" onchange="toggleActive()" style="accent-color:var(--success)">
+            Aktiv
+          </label>
+        </div>
+
+        <!-- Metadata form -->
+        <div class="form-grid">
+          <div class="field form-full">
+            <label>Titel *</label>
+            <input id="f-title" type="text" placeholder="z.B. Algebra Grundlagen" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label>Prüfungs-ID *</label>
+            <input id="f-id" type="text" placeholder="algebra-grundlagen-v1" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label>Fach</label>
+            <input id="f-subject" type="text" placeholder="z.B. Mathematik" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label>Zeit (Minuten)</label>
+            <input id="f-time" type="number" min="1" max="120" value="10" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label>Klassen-Filter</label>
+            <input id="f-class" type="text" placeholder="leer = alle Klassen" oninput="markDirty()">
+          </div>
+          <div class="field form-full">
+            <label>Prüfungs-Link</label>
+            <div class="link-box">
+              <span id="link-preview">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="q-section-head">
+          <span class="q-section-title">Fragen <span id="q-count-label" style="font-weight:400;color:var(--text-muted)"></span></span>
+          <button class="btn" onclick="addQuestion()" style="font-size:0.78rem;padding:0.4rem 0.85rem">+ Frage</button>
+        </div>
+
+        <div class="q-list" id="q-list"></div>
+
+        <button class="btn btn-light" onclick="addQuestion()" style="width:100%;font-size:0.83rem;margin-bottom:4rem">+ Weitere Frage hinzufügen</button>
+
+      </div>
+
+      <!-- Save bar -->
+      <div class="save-bar">
+        <span class="save-status" id="save-status"></span>
+        <button class="btn btn-light" onclick="exportJSON()" style="font-size:0.78rem;padding:0.4rem 0.85rem">⬇ JSON exportieren</button>
+        <button class="btn btn-success" id="btn-save" onclick="saveExam()">Speichern</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const sb = createClient(
+  'https://yodanvzkkhlqemlvtvey.supabase.co',
+  'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
+);
+
+const BASE_URL = location.origin + location.pathname.replace('pruefung-erstellen.html', 'pruefung.html');
+
+let exams       = [];
+let currentExam = null;
+let dirty       = false;
+
+/* ═══════════ LIST ═══════════ */
+async function loadList() {
+  const { data } = await sb.from('exams').select('*').order('created_at', { ascending: false });
+  exams = data || [];
+  renderList();
+}
+
+function renderList() {
+  const el = document.getElementById('exam-list');
+  document.getElementById('exam-count').textContent = exams.length + ' Prüfungen';
+  if (!exams.length) {
+    el.innerHTML = '<div class="exam-empty">Noch keine Prüfungen.<br>Erstelle eine neue oder importiere JSON.</div>';
+    return;
+  }
+  el.innerHTML = exams.map(e => `
+    <div class="exam-item ${currentExam?.id === e.id ? 'active' : ''}" onclick="selectExam('${e.id}')">
+      <div class="exam-item-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+      </div>
+      <div class="exam-item-body">
+        <div class="exam-item-title">${esc(e.title)}</div>
+        <div class="exam-item-meta">${esc(e.exam_id)}${e.subject ? ' · ' + esc(e.subject) : ''}</div>
+        <div class="exam-item-badges">
+          <span class="badge ${e.active ? 'badge-active' : 'badge-inactive'}">${e.active ? 'Aktiv' : 'Inaktiv'}</span>
+          <span class="badge badge-q">${(e.questions||[]).length} Fragen</span>
+          <span class="badge badge-time">${Math.round((e.time_limit||600)/60)} Min</span>
+          ${e.class_filter ? `<span class="badge" style="background:#F0FDF4;color:#065F46">${esc(e.class_filter)}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════ SELECT / NEW ═══════════ */
+window.selectExam = function (id) {
+  if (dirty && !confirm('Ungespeicherte Änderungen verwerfen?')) return;
+  currentExam = exams.find(e => e.id === id) || null;
+  dirty = false;
+  renderEditor();
+  renderList();
+};
+
+window.newExam = function () {
+  if (dirty && !confirm('Ungespeicherte Änderungen verwerfen?')) return;
+  currentExam = {
+    id: null,
+    exam_id: '',
+    title: '',
+    subject: '',
+    class_filter: null,
+    time_limit: 600,
+    active: true,
+    questions: [emptyQ()]
+  };
+  dirty = false;
+  renderEditor();
+  renderList();
+  setTimeout(() => document.getElementById('f-title')?.focus(), 50);
+};
+
+function emptyQ() {
+  return { text: '', options: ['', '', '', ''], correct: 0 };
+}
+
+/* ═══════════ EDITOR ═══════════ */
+function renderEditor() {
+  if (!currentExam) {
+    document.getElementById('editor-placeholder').style.display = 'flex';
+    document.getElementById('editor-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('editor-placeholder').style.display = 'none';
+  document.getElementById('editor-content').style.display = 'block';
+
+  document.getElementById('editor-title').textContent = currentExam.title || 'Neue Prüfung';
+  document.getElementById('f-title').value    = currentExam.title || '';
+  document.getElementById('f-id').value       = currentExam.exam_id || '';
+  document.getElementById('f-subject').value  = currentExam.subject || '';
+  document.getElementById('f-time').value     = Math.round((currentExam.time_limit || 600) / 60);
+  document.getElementById('f-class').value    = currentExam.class_filter || '';
+  document.getElementById('toggle-active').checked = currentExam.active !== false;
+  document.getElementById('btn-link').style.display = currentExam.id ? 'inline-flex' : 'none';
+  document.getElementById('btn-delete').style.display = currentExam.id ? 'inline-flex' : 'none';
+  document.getElementById('save-status').textContent = '';
+  document.getElementById('save-status').className = 'save-status';
+  updateLinkPreview();
+  renderQuestions();
+}
+
+function updateLinkPreview() {
+  const id = document.getElementById('f-id').value.trim();
+  const url = id ? BASE_URL + '?id=' + encodeURIComponent(id) : '—';
+  document.getElementById('link-preview').textContent = url;
+}
+
+document.getElementById('f-id').addEventListener('input', updateLinkPreview);
+document.getElementById('f-title').addEventListener('input', () => {
+  document.getElementById('editor-title').textContent = document.getElementById('f-title').value || 'Neue Prüfung';
+  // Auto-generate ID if not yet set
+  const idEl = document.getElementById('f-id');
+  if (!currentExam?.id) {
+    idEl.value = slugify(document.getElementById('f-title').value);
+    updateLinkPreview();
+  }
+});
+
+function slugify(s) {
+  return s.toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 50) + '-v1';
+}
+
+/* ═══════════ QUESTIONS ═══════════ */
+function renderQuestions() {
+  const list = document.getElementById('q-list');
+  const qs   = currentExam.questions || [];
+  document.getElementById('q-count-label').textContent = '(' + qs.length + ')';
+  list.innerHTML = qs.map((q, qi) => `
+    <div class="q-block" id="qb-${qi}">
+      <div class="q-block-head">
+        <span class="q-num">Frage ${qi + 1}</span>
+        <button class="q-del" onclick="removeQuestion(${qi})" title="Frage löschen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        </button>
+      </div>
+      <textarea class="q-text-input" placeholder="Fragetext" oninput="updateQ(${qi},'text',this.value)">${esc(q.text)}</textarea>
+      <div class="opts-grid">
+        ${['A','B','C','D'].map((lbl, oi) => `
+          <div class="opt-row ${q.correct === oi ? 'is-correct' : ''}">
+            <input type="radio" class="opt-radio" name="q${qi}" ${q.correct===oi?'checked':''} onchange="updateQ(${qi},'correct',${oi})">
+            <span class="opt-label">${lbl}</span>
+            <input class="opt-input" type="text" placeholder="Option ${lbl}" value="${esc(q.options[oi]||'')}" oninput="updateQ(${qi},'option_${oi}',this.value)">
+          </div>`).join('')}
+      </div>
+      <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px">
+        ● = richtige Antwort markieren
+      </div>
+    </div>`).join('');
+}
+
+window.addQuestion = function () {
+  currentExam.questions.push(emptyQ());
+  markDirty();
+  renderQuestions();
+  // scroll to new question
+  setTimeout(() => {
+    const last = document.getElementById('qb-' + (currentExam.questions.length - 1));
+    last?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    last?.querySelector('.q-text-input')?.focus();
+  }, 50);
+};
+
+window.removeQuestion = function (qi) {
+  if (currentExam.questions.length <= 1) { alert('Mindestens 1 Frage erforderlich.'); return; }
+  currentExam.questions.splice(qi, 1);
+  markDirty();
+  renderQuestions();
+};
+
+window.updateQ = function (qi, field, value) {
+  if (field === 'text') {
+    currentExam.questions[qi].text = value;
+  } else if (field === 'correct') {
+    currentExam.questions[qi].correct = parseInt(value);
+    // Re-render to update highlight
+    renderQuestions();
+  } else if (field.startsWith('option_')) {
+    const oi = parseInt(field.split('_')[1]);
+    currentExam.questions[qi].options[oi] = value;
+  }
+  markDirty();
+};
+
+window.markDirty = function () {
+  dirty = true;
+  document.getElementById('save-status').textContent = 'Ungespeicherte Änderungen';
+  document.getElementById('save-status').className   = 'save-status';
+};
+
+window.toggleActive = function () {
+  currentExam.active = document.getElementById('toggle-active').checked;
+  markDirty();
+};
+
+/* ═══════════ SAVE ═══════════ */
+window.saveExam = async function () {
+  const title   = document.getElementById('f-title').value.trim();
+  const exam_id = document.getElementById('f-id').value.trim();
+  const subject = document.getElementById('f-subject').value.trim();
+  const timeMin = parseInt(document.getElementById('f-time').value) || 10;
+  const cfRaw   = document.getElementById('f-class').value.trim();
+
+  if (!title)   { alert('Titel ist erforderlich.'); return; }
+  if (!exam_id || !/^[a-z0-9-]+$/.test(exam_id)) {
+    alert('Prüfungs-ID darf nur Kleinbuchstaben, Zahlen und - enthalten.');
+    return;
+  }
+
+  // Validate questions
+  for (let i = 0; i < currentExam.questions.length; i++) {
+    const q = currentExam.questions[i];
+    if (!q.text.trim()) { alert(`Frage ${i+1}: Fragetext fehlt.`); return; }
+    if (q.options.some(o => !o.trim())) { alert(`Frage ${i+1}: Alle 4 Optionen müssen ausgefüllt sein.`); return; }
+  }
+
+  const payload = {
+    exam_id,
+    title,
+    subject,
+    class_filter: cfRaw || null,
+    time_limit:   timeMin * 60,
+    questions:    currentExam.questions,
+    active:       currentExam.active !== false,
+    updated_at:   new Date().toISOString()
+  };
+
+  document.getElementById('save-status').textContent = 'Speichern…';
+  document.getElementById('btn-save').disabled = true;
+
+  let error;
+  if (currentExam.id) {
+    ({ error } = await sb.from('exams').update(payload).eq('id', currentExam.id));
+  } else {
+    const res = await sb.from('exams').insert(payload).select().single();
+    error = res.error;
+    if (!error) { currentExam.id = res.data.id; }
+  }
+
+  document.getElementById('btn-save').disabled = false;
+
+  if (error) {
+    const msg = error.code === '23505' ? 'Diese Prüfungs-ID ist bereits vergeben.' : error.message;
+    document.getElementById('save-status').textContent = '✗ Fehler: ' + msg;
+    document.getElementById('save-status').className = 'save-status err';
+    return;
+  }
+
+  dirty = false;
+  document.getElementById('save-status').textContent = '✓ Gespeichert';
+  document.getElementById('save-status').className = 'save-status ok';
+  document.getElementById('editor-title').textContent = title;
+  document.getElementById('btn-link').style.display   = 'inline-flex';
+  document.getElementById('btn-delete').style.display = 'inline-flex';
+  updateLinkPreview();
+  await loadList();
+};
+
+/* ═══════════ DELETE ═══════════ */
+window.deleteExam = async function () {
+  if (!currentExam.id) return;
+  if (!confirm(`Prüfung "${currentExam.title}" endgültig löschen?\n\nAlle Prüfungsergebnisse bleiben erhalten.`)) return;
+  await sb.from('exams').delete().eq('id', currentExam.id);
+  currentExam = null; dirty = false;
+  renderEditor(); renderList();
+  await loadList();
+};
+
+/* ═══════════ LINK ═══════════ */
+window.showLink = function () {
+  const id  = document.getElementById('f-id').value.trim() || currentExam?.exam_id;
+  const url = BASE_URL + '?id=' + encodeURIComponent(id);
+  document.getElementById('link-display').textContent = url;
+  document.getElementById('link-modal').classList.add('open');
+};
+window.closeLinkModal = function () { document.getElementById('link-modal').classList.remove('open'); };
+window.copyLink = function () {
+  const url = document.getElementById('link-display').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.querySelector('#link-modal .btn-success, #link-modal .btn:last-child');
+    const orig = document.querySelector('#link-modal .modal-btns .btn:last-child').textContent;
+    document.querySelector('#link-modal .modal-btns .btn:last-child').textContent = '✓ Kopiert!';
+    setTimeout(() => { document.querySelector('#link-modal .modal-btns .btn:last-child').textContent = orig; }, 2000);
+  });
+};
+document.getElementById('link-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLinkModal(); });
+
+/* ═══════════ IMPORT ═══════════ */
+window.openImport = function () {
+  document.getElementById('import-textarea').value = '';
+  document.getElementById('import-err').textContent = '';
+  document.getElementById('import-modal').classList.add('open');
+  setTimeout(() => document.getElementById('import-textarea').focus(), 50);
+};
+window.closeImport = function () { document.getElementById('import-modal').classList.remove('open'); };
+document.getElementById('import-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeImport(); });
+
+window.doImport = async function () {
+  const raw = document.getElementById('import-textarea').value.trim();
+  const errEl = document.getElementById('import-err');
+  errEl.textContent = '';
+
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch (e) { errEl.textContent = 'Ungültiges JSON: ' + e.message; return; }
+
+  // Validate
+  const errs = validateExamJSON(parsed);
+  if (errs.length) { errEl.textContent = errs.join(' | '); return; }
+
+  const payload = {
+    exam_id:      parsed.exam_id,
+    title:        parsed.title,
+    subject:      parsed.subject || '',
+    class_filter: parsed.class_filter || null,
+    time_limit:   parsed.time_limit || 600,
+    questions:    parsed.questions,
+    active:       parsed.active !== false,
+    updated_at:   new Date().toISOString()
+  };
+
+  // Upsert by exam_id
+  const { data, error } = await sb.from('exams')
+    .upsert(payload, { onConflict: 'exam_id' })
+    .select().single();
+
+  if (error) { errEl.textContent = 'Fehler: ' + error.message; return; }
+
+  closeImport();
+  await loadList();
+  selectExam(data.id);
+};
+
+function validateExamJSON(d) {
+  const errors = [];
+  if (!d.exam_id || !/^[a-z0-9-]+$/.test(d.exam_id)) errors.push('exam_id: nur a-z, 0-9, - erlaubt');
+  if (!d.title) errors.push('title fehlt');
+  if (!Array.isArray(d.questions) || d.questions.length === 0) errors.push('questions: min. 1 Frage');
+  (d.questions || []).forEach((q, i) => {
+    if (!q.text) errors.push(`Frage ${i+1}: text fehlt`);
+    if (!Array.isArray(q.options) || q.options.length !== 4) errors.push(`Frage ${i+1}: genau 4 options benötigt`);
+    if (typeof q.correct !== 'number' || q.correct < 0 || q.correct > 3) errors.push(`Frage ${i+1}: correct muss 0-3 sein`);
+  });
+  return errors;
+}
+
+/* ═══════════ EXPORT ═══════════ */
+window.exportJSON = function () {
+  if (!currentExam) return;
+  const data = {
+    exam_id:      document.getElementById('f-id').value.trim(),
+    title:        document.getElementById('f-title').value.trim(),
+    subject:      document.getElementById('f-subject').value.trim(),
+    class_filter: document.getElementById('f-class').value.trim() || null,
+    time_limit:   (parseInt(document.getElementById('f-time').value) || 10) * 60,
+    questions:    currentExam.questions
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = (data.exam_id || 'pruefung') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+/* ═══════════ UTILS ═══════════ */
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ═══════════ INIT ═══════════ */
+loadList();
+</script>
+</body>
+</html>

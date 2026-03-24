@@ -25,96 +25,9 @@
   --shadow: 0 4px 20px rgba(79,70,229,0.1);
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ── Login ── */
-#login-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.login-card {
-  background: white;
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 380px;
-  box-shadow: var(--shadow);
-  text-align: center;
-}
-
-.login-icon {
-  width: 56px; height: 56px;
-  background: #EEF2FF;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
-  color: var(--primary);
-}
-
-.login-card h1 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1.35rem;
-  font-weight: 800;
-  margin-bottom: 0.3rem;
-}
-
-.login-card p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 1.75rem;
-}
-
-.login-card input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  margin-bottom: 0.75rem;
-  transition: border-color 200ms;
-}
-
-.login-card input:focus { border-color: var(--primary); }
-
-.login-card .err {
-  font-size: 0.8rem;
-  color: var(--error);
-  margin-bottom: 0.75rem;
-  min-height: 1rem;
-}
-
-.btn {
-  width: 100%;
-  padding: 0.85rem;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  transition: background 200ms;
-}
-
-.btn:hover { background: var(--primary-hover); }
-
-/* ── Dashboard ── */
-#dashboard { display: none; }
-
+/* ── Header ── */
 header {
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
@@ -129,59 +42,92 @@ header {
   z-index: 10;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.logo-badge { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.header-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700; }
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
 
-.logo-badge {
-  width: 32px; height: 32px;
+.refresh-info { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; }
+.refresh-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.btn {
+  padding: 0.85rem;
   background: var(--primary);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 200ms;
 }
-
-.header-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-.header-right { display: flex; align-items: center; gap: 1rem; }
-
-.refresh-info {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.refresh-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+.btn:hover { background: var(--primary-hover); }
 
 .btn-sm {
   padding: 0.4rem 0.85rem;
   font-size: 0.78rem;
-  width: auto;
   border-radius: 8px;
 }
 
-.main { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.btn-ghost {
+  background: white;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg); }
 
-/* Stats */
+.btn-danger {
+  background: white;
+  color: var(--error);
+  border: 1.5px solid #FECACA;
+}
+.btn-danger:hover { background: #FEF2F2; }
+
+/* ── Tabs ── */
+.tabs-bar {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--primary); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.tab-count {
+  background: #EEF2FF;
+  color: var(--primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 100px;
+}
+
+/* ── Main ── */
+.main { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* ── Stats ── */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -189,53 +135,14 @@ header {
   margin-bottom: 1.75rem;
 }
 
-.stat-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(226,232,240,0.8);
-}
+.stat-card { background: white; border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow-sm); border: 1px solid rgba(226,232,240,0.8); }
+.stat-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; }
+.stat-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; }
 
-.stat-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.4rem;
-}
-
-.stat-value {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--text);
-  line-height: 1;
-}
-
-.stat-sub {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 0.3rem;
-}
-
-/* Filters */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-.toolbar-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  flex: 1;
-}
-
+/* ── Toolbar ── */
+.toolbar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.toolbar-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700; flex: 1; }
 .filter-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
 .filter-btn {
@@ -250,122 +157,68 @@ header {
   color: var(--text-muted);
   transition: all 180ms;
 }
-
 .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
 .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
 
-/* Table */
-.table-wrap {
+.toggle-chip {
+  padding: 0.32rem 0.75rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
   background: white;
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(226,232,240,0.8);
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead tr {
-  background: #F8F7FF;
-  border-bottom: 1.5px solid var(--border);
-}
-
-th {
-  padding: 0.75rem 1rem;
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  text-align: left;
-  white-space: nowrap;
+  transition: all 180ms;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
+.toggle-chip.on { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
 
-td {
-  padding: 0.85rem 1rem;
-  font-size: 0.85rem;
-  border-bottom: 1px solid rgba(226,232,240,0.6);
-  vertical-align: middle;
-}
-
+/* ── Table ── */
+.table-wrap { background: white; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid rgba(226,232,240,0.8); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #F8F7FF; border-bottom: 1.5px solid var(--border); }
+th { padding: 0.75rem 1rem; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; text-align: left; white-space: nowrap; }
+td { padding: 0.85rem 1rem; font-size: 0.85rem; border-bottom: 1px solid rgba(226,232,240,0.6); vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: #FAFAFE; }
 
-.code-chip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  font-weight: 700;
-  background: #EEF2FF;
-  color: var(--primary);
-  padding: 3px 10px;
-  border-radius: 6px;
-  display: inline-block;
-}
+.code-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; background: #EEF2FF; color: var(--primary); padding: 3px 10px; border-radius: 6px; display: inline-block; }
+.material-name { font-size: 0.83rem; color: var(--text); font-weight: 500; }
 
-.material-name {
-  font-size: 0.83rem;
-  color: var(--text);
-  font-weight: 500;
-}
-
-/* Score bar */
 .score-wrap { display: flex; align-items: center; gap: 0.6rem; min-width: 120px; }
+.score-bar-bg { flex: 1; height: 6px; background: #E2E8F0; border-radius: 100px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 100px; transition: width 400ms ease; }
+.score-text { font-size: 0.82rem; font-weight: 700; min-width: 38px; text-align: right; }
 
-.score-bar-bg {
-  flex: 1;
-  height: 6px;
-  background: #E2E8F0;
-  border-radius: 100px;
-  overflow: hidden;
-}
-
-.score-bar-fill {
-  height: 100%;
-  border-radius: 100px;
-  transition: width 400ms ease;
-}
-
-.score-text {
-  font-size: 0.82rem;
-  font-weight: 700;
-  min-width: 38px;
-  text-align: right;
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 100px;
-}
-
+.status-pill { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
 .pill-done { background: #ECFDF5; color: #065F46; }
 .pill-open { background: #FEF3C7; color: #92400E; }
+.pill-active { background: #EFF6FF; color: #1D4ED8; }
 
 .time-text { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
 
-.empty-state {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--text-muted);
+.delete-btn {
+  background: none;
+  border: none;
+  color: #CBD5E1;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 5px;
+  line-height: 1;
+  transition: color 150ms, background 150ms;
 }
+.delete-btn:hover { color: var(--error); background: #FEF2F2; }
 
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
 .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .empty-text { font-size: 0.9rem; }
-
 .loading-row td { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; }
 
-/* Section */
-.sec { display: none; }
-.sec.active { display: block; }
-
-/* ── Namen-Modal ── */
+/* ── Modals ── */
 .modal-backdrop {
   display: none;
   position: fixed;
@@ -377,95 +230,164 @@ tbody tr:hover { background: #FAFAFE; }
   padding: 1rem;
 }
 .modal-backdrop.open { display: flex; }
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 1.75rem;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-}
-.modal h3 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
-}
+.modal { background: white; border-radius: 16px; padding: 1.75rem; width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.modal h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
 .modal p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
-.modal textarea {
-  width: 100%;
-  height: 200px;
-  padding: 0.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 0.85rem;
-  font-family: 'Inter', sans-serif;
-  resize: vertical;
-  outline: none;
-  line-height: 1.6;
-}
+.modal textarea { width: 100%; height: 200px; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-family: 'Inter', sans-serif; resize: vertical; outline: none; line-height: 1.6; }
 .modal textarea:focus { border-color: var(--primary); }
 .modal-btns { display: flex; gap: 0.75rem; margin-top: 1rem; }
 .modal-btns .btn { flex: 1; padding: 0.7rem; font-size: 0.85rem; }
 
-.btn-names {
-  padding: 0.3rem 0.7rem;
-  border-radius: 100px;
+/* Cleanup modal */
+.clean-section {
   border: 1.5px solid var(--border);
-  background: white;
-  font-size: 0.72rem;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
   cursor: pointer;
-  color: var(--primary);
-  transition: all 180ms;
+  transition: border-color 150ms, background 150ms;
 }
+.clean-section:hover { border-color: var(--primary); background: #FAFAFE; }
+.clean-section.danger:hover { border-color: var(--error); background: #FEF2F2; }
+.clean-section h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
+.clean-section p { font-size: 0.76rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
+.clean-section .clean-count { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: inline-block; margin-top: 5px; }
+.clean-section .cnt-warn { background: #FEF3C7; color: #92400E; }
+.clean-section .cnt-err  { background: #FEF2F2; color: #7F1D1D; }
+
+.code-check-list { max-height: 180px; overflow-y: auto; margin: 0.75rem 0; border: 1px solid var(--border); border-radius: 8px; }
+.code-check-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--border); font-size: 0.83rem; cursor: pointer; }
+.code-check-item:last-child { border-bottom: none; }
+.code-check-item:hover { background: #F8F7FF; }
+.code-check-item input[type=checkbox] { accent-color: var(--primary); }
+.code-check-count { margin-left: auto; font-size: 0.72rem; color: var(--text-muted); }
+
+/* ── Namen ── */
+.btn-names { padding: 0.3rem 0.7rem; border-radius: 100px; border: 1.5px solid var(--border); background: white; font-size: 0.72rem; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; color: var(--primary); transition: all 180ms; }
 .btn-names:hover { border-color: var(--primary); background: #EEF2FF; }
+
+/* ── Prüfungen tab ── */
+.exam-card {
+  background: white;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.exam-card.done   { border-color: #A7F3D0; }
+.exam-card.active { border-color: #93C5FD; }
+
+.exam-ring {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.ring-good { background: #ECFDF5; color: #065F46; }
+.ring-ok   { background: #FFFBEB; color: #78350F; }
+.ring-low  { background: #FEF2F2; color: #7F1D1D; }
+.ring-grey { background: #F3F4F6; color: #9CA3AF; }
 </style>
 </head>
 <body>
 
-<!-- Namen-Modal -->
+<!-- ── Namen-Modal ── -->
 <div class="modal-backdrop" id="names-modal">
   <div class="modal">
     <h3>Namen eingeben – <span id="modal-class-title"></span></h3>
-    <p>Ein Name pro Zeile, in Reihenfolge der Nummern (01, 02, 03 …).<br>Wird nur in diesem Browser gespeichert — nie hochgeladen.</p>
+    <p>Ein Name pro Zeile, in Reihenfolge der Nummern (01, 02, 03 …).<br>Wird nur in diesem Browser gespeichert.</p>
     <textarea id="names-textarea" placeholder="Max M.&#10;Anna K.&#10;Lena S.&#10;..."></textarea>
     <div class="modal-btns">
-      <button class="btn" style="background:white;color:var(--text-muted);border:1.5px solid var(--border)" onclick="closeNamesModal()">Abbrechen</button>
+      <button class="btn btn-ghost" onclick="closeNamesModal()">Abbrechen</button>
       <button class="btn" onclick="saveNames()">Speichern</button>
     </div>
   </div>
 </div>
 
-<!-- Dashboard (shown after auth check) -->
-<div id="dashboard" style="display:none">
-  <header>
-    <div class="header-left">
-      <div class="logo-badge">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-          <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
-        </svg>
-      </div>
-      <span class="header-title">Teacher Dashboard</span>
-    </div>
-    <div class="header-right">
-      <div class="refresh-info">
-        <div class="refresh-dot"></div>
-        <span id="last-update">—</span>
-      </div>
-      <a href="codegenerator.html" class="btn btn-sm" style="text-decoration:none">Codegenerator</a>
-      <button class="btn btn-sm" onclick="loadData()">Aktualisieren</button>
-      <button class="btn btn-sm" id="btn-logout" style="background:white;color:var(--text-muted);border:1.5px solid var(--border);">Abmelden</button>
-    </div>
-  </header>
+<!-- ── Bereinigen-Modal ── -->
+<div class="modal-backdrop" id="clean-modal">
+  <div class="modal" style="max-width:480px">
+    <h3>🧹 Daten bereinigen</h3>
+    <p>Wähle eine Aktion um Test- oder Duplikat-Einträge zu löschen.</p>
 
-  <div class="main">
+    <!-- Codes löschen -->
+    <div class="clean-section" id="cs-codes" onclick="toggleCleanStep('codes')">
+      <h4>Codes löschen</h4>
+      <p>Lösche alle Einträge für ausgewählte Codes (z.B. deine eigenen Test-Codes).</p>
+      <div class="code-check-list" id="code-check-list" style="display:none" onclick="event.stopPropagation()"></div>
+      <div id="cs-codes-btn" style="display:none;margin-top:0.75rem">
+        <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteByCodes()">Ausgewählte Codes löschen</button>
+      </div>
+    </div>
 
-    <!-- Stats -->
+    <!-- Nur-geöffnet löschen -->
+    <div class="clean-section danger" id="cs-opened">
+      <h4>„Nur geöffnet"-Einträge löschen</h4>
+      <p>Löscht alle Einträge, bei denen SuS ein Material nur geöffnet, aber nichts abgegeben haben.</p>
+      <span class="clean-count cnt-warn" id="cnt-opened">— Einträge</span>
+    </div>
+
+    <!-- Duplikate löschen -->
+    <div class="clean-section danger" id="cs-dupes">
+      <h4>Duplikate entfernen</h4>
+      <p>Behält pro Code + Material nur den neuesten Eintrag, löscht alle älteren Doppeleinträge.</p>
+      <span class="clean-count cnt-warn" id="cnt-dupes">— Duplikate</span>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:0.75rem">
+      <button class="btn btn-ghost btn-sm" style="flex:1" onclick="closeCleanModal()">Schließen</button>
+    </div>
+    <div id="clean-status" style="font-size:0.78rem;text-align:center;margin-top:0.75rem;min-height:1rem;color:var(--text-muted)"></div>
+  </div>
+</div>
+
+<!-- ── Dashboard ── -->
+<header>
+  <div class="header-left">
+    <div class="logo-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
+      </svg>
+    </div>
+    <span class="header-title">Teacher Dashboard</span>
+  </div>
+  <div class="header-right">
+    <div class="refresh-info">
+      <div class="refresh-dot"></div>
+      <span id="last-update">—</span>
+    </div>
+    <a href="codegenerator.html" class="btn btn-sm btn-ghost" style="text-decoration:none">Codegenerator</a>
+    <button class="btn btn-sm btn-danger" onclick="openCleanModal()">🧹 Bereinigen</button>
+    <button class="btn btn-sm" onclick="loadData()">Aktualisieren</button>
+    <button class="btn btn-sm btn-ghost" id="btn-logout">Abmelden</button>
+  </div>
+</header>
+
+<!-- ── Tabs ── -->
+<div class="tabs-bar">
+  <button class="tab-btn active" id="tab-lernen" onclick="switchTab('lernen')">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    Lernmaterialien
+    <span class="tab-count" id="tab-count-lernen">—</span>
+  </button>
+  <button class="tab-btn" id="tab-pruefung" onclick="switchTab('pruefung')">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+    Prüfungen
+    <span class="tab-count" id="tab-count-pruefung">—</span>
+  </button>
+</div>
+
+<div class="main">
+
+  <!-- ══════════ TAB: LERNMATERIALIEN ══════════ -->
+  <div class="tab-section active" id="sec-lernen">
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Einreichungen</div>
+        <div class="stat-label">Einträge</div>
         <div class="stat-value" id="stat-total">—</div>
         <div class="stat-sub">gesamt</div>
       </div>
@@ -477,7 +399,7 @@ tbody tr:hover { background: #FAFAFE; }
       <div class="stat-card">
         <div class="stat-label">Ø Score</div>
         <div class="stat-value" id="stat-avg">—</div>
-        <div class="stat-sub">Klassendurchschnitt</div>
+        <div class="stat-sub">Quiz-Durchschnitt</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Materialien</div>
@@ -486,12 +408,15 @@ tbody tr:hover { background: #FAFAFE; }
       </div>
     </div>
 
-    <!-- Table -->
     <div class="toolbar">
-      <div class="toolbar-title">Alle Ergebnisse</div>
+      <div class="toolbar-title">Alle Einträge</div>
       <div class="filter-group" id="class-filters">
         <button class="filter-btn active" data-class="all" onclick="setFilter('all', this)">Alle</button>
       </div>
+      <button class="toggle-chip" id="toggle-completed" onclick="toggleCompleted()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Nur abgeschlossen
+      </button>
     </div>
 
     <div class="table-wrap">
@@ -503,16 +428,75 @@ tbody tr:hover { background: #FAFAFE; }
             <th>Score</th>
             <th>Status</th>
             <th>Zeitpunkt</th>
+            <th style="width:40px"></th>
           </tr>
         </thead>
         <tbody id="results-body">
-          <tr class="loading-row"><td colspan="5">Lade Daten...</td></tr>
+          <tr class="loading-row"><td colspan="6">Lade Daten...</td></tr>
         </tbody>
       </table>
     </div>
-
   </div>
-</div>
+
+  <!-- ══════════ TAB: PRÜFUNGEN ══════════ -->
+  <div class="tab-section" id="sec-pruefung">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Abgaben</div>
+        <div class="stat-value" id="exam-stat-total">—</div>
+        <div class="stat-sub">gesamt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Abgegeben</div>
+        <div class="stat-value" id="exam-stat-done">—</div>
+        <div class="stat-sub">vollständig</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ø Score</div>
+        <div class="stat-value" id="exam-stat-avg">—</div>
+        <div class="stat-sub">Klassendurchschnitt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Bestanden ≥75%</div>
+        <div class="stat-value" id="exam-stat-passed">—</div>
+        <div class="stat-sub">von Abgaben</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-title">Prüfungsergebnisse</div>
+      <div class="filter-group" id="exam-filters">
+        <button class="filter-btn active" data-exam="all" onclick="setExamFilter('all', this)">Alle Prüfungen</button>
+      </div>
+      <div class="filter-group" id="exam-class-filters">
+        <button class="filter-btn active" data-class="all" onclick="setExamClassFilter('all', this)">Alle Klassen</button>
+      </div>
+      <a href="pruefungs-dashboard.html" class="toggle-chip" style="text-decoration:none">
+        Live-Ansicht →
+      </a>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Prüfung</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Gestartet</th>
+            <th>Abgegeben</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="exam-body">
+          <tr class="loading-row"><td colspan="7">Lade Prüfungsdaten...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /main -->
 
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -522,173 +506,153 @@ const supabase = createClient(
   'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
 );
 
+const EXAM_NAMES = {
+  'telephoning-b2-v1': 'Telephoning – Complaint Calls (B2)',
+  'probelauf-v1':      'Probelauf – Systemtest',
+};
+
 let allData      = [];
+let examData     = [];
 let activeFilter = 'all';
+let activeExamFilter      = 'all';
+let activeExamClassFilter = 'all';
+let showOnlyCompleted = false;
 let refreshTimer = null;
 
-/* ── Auth ── */
-// Auth temporär deaktiviert
-// const { data: { session } } = await supabase.auth.getSession();
-// if (!session) { window.location.href = 'login.html'; }
-document.getElementById('dashboard').style.display = 'block';
-loadData();
-refreshTimer = setInterval(loadData, 30000);
-
+/* ── Auth (temporarily disabled) ── */
+document.getElementById('dashboard')?.remove();
 document.getElementById('btn-logout').onclick = async () => {
   clearInterval(refreshTimer);
   await supabase.auth.signOut();
   window.location.href = 'login.html';
 };
 
-/* ── Data ── */
-async function loadData() {
+/* ── Load ── */
+window.loadData = async function () {
   try {
-    const { data, error } = await supabase
-      .from('progress')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(200);
+    const [progRes, examRes] = await Promise.all([
+      supabase.from('progress').select('*').order('created_at', { ascending: false }).limit(500),
+      supabase.from('exam_results').select('*').order('started_at', { ascending: false }).limit(500)
+    ]);
+    if (!progRes.error) allData  = progRes.data || [];
+    if (!examRes.error) examData = examRes.data || [];
 
-    if (error) throw error;
-    allData = data;
     updateStats();
+    updateExamStats();
     updateFilters();
+    updateExamFilters();
     renderTable();
-    document.getElementById('last-update').textContent =
-      'Zuletzt: ' + new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  } catch (e) {
-    document.getElementById('results-body').innerHTML =
-      '<tr class="loading-row"><td colspan="5">Fehler beim Laden der Daten.</td></tr>';
-  }
-}
+    renderExamTable();
 
+    document.getElementById('last-update').textContent =
+      'Zuletzt: ' + new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+
+    // Update tab counts
+    document.getElementById('tab-count-lernen').textContent   = allData.length;
+    document.getElementById('tab-count-pruefung').textContent = examData.length;
+
+    // Update cleanup counts
+    refreshCleanCounts();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/* ── Stats: Lernmaterialien ── */
 function updateStats() {
   const scores   = allData.filter(r => r.score !== null).map(r => r.score);
-  const avg      = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : '—';
+  const avg      = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '—';
   const students = new Set(allData.map(r => r.code)).size;
   const mats     = new Set(allData.map(r => r.material)).size;
 
-  document.getElementById('stat-total').textContent     = allData.length;
-  document.getElementById('stat-students').textContent  = students;
-  document.getElementById('stat-avg').textContent       = avg + (scores.length ? '%' : '');
-  document.getElementById('stat-materials').textContent = mats;
+  document.getElementById('stat-total').textContent    = allData.length;
+  document.getElementById('stat-students').textContent = students;
+  document.getElementById('stat-avg').textContent      = avg + (scores.length ? '%' : '');
+  document.getElementById('stat-materials').textContent= mats;
 }
 
-function updateFilters() {
-  const classes = [...new Set(allData.map(r => r.code.split('-')[0]))].sort();
-  const container = document.getElementById('class-filters');
+/* ── Stats: Prüfungen ── */
+function updateExamStats() {
+  const done   = examData.filter(r => r.submitted_at);
+  const scores = done.filter(r => r.score !== null).map(r => r.score);
+  const avg    = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '—';
+  const passed = scores.filter(s => s >= 75).length;
 
-  container.innerHTML = `<button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-class="all" onclick="setFilter('all', this)">Alle</button>`;
+  document.getElementById('exam-stat-total').textContent  = examData.length;
+  document.getElementById('exam-stat-done').textContent   = done.length;
+  document.getElementById('exam-stat-avg').textContent    = avg + (scores.length ? '%' : '');
+  document.getElementById('exam-stat-passed').textContent = passed + (scores.length ? ' / ' + scores.length : '');
+}
+
+/* ── Filters: Lernmaterialien ── */
+function updateFilters() {
+  const classes   = [...new Set(allData.map(r => r.code.split('-')[0]))].sort();
+  const container = document.getElementById('class-filters');
+  container.innerHTML = `<button class="filter-btn ${activeFilter==='all'?'active':''}" data-class="all" onclick="setFilter('all',this)">Alle</button>`;
   classes.forEach(cls => {
     const wrap = document.createElement('span');
     wrap.style.cssText = 'display:inline-flex;align-items:center;gap:4px';
-
     const btn = document.createElement('button');
-    btn.className = `filter-btn ${activeFilter === cls ? 'active' : ''}`;
+    btn.className = `filter-btn ${activeFilter===cls?'active':''}`;
     btn.textContent = cls;
     btn.onclick = () => setFilter(cls, btn);
-
     const edit = document.createElement('button');
     edit.className = 'btn-names';
     edit.title = 'Namen eingeben';
     edit.textContent = '✏️';
     edit.onclick = () => openNamesModal(cls);
-
-    wrap.appendChild(btn);
-    wrap.appendChild(edit);
+    wrap.appendChild(btn); wrap.appendChild(edit);
     container.appendChild(wrap);
   });
 }
 
-/* ── Namen localStorage ── */
-function getNamesForClass(cls) {
-  try { return JSON.parse(localStorage.getItem('names_' + cls) || '{}'); } catch { return {}; }
+/* ── Filters: Prüfungen ── */
+function updateExamFilters() {
+  const exams   = [...new Set(examData.map(r => r.exam_id))].sort();
+  const classes = [...new Set(examData.map(r => r.code.split('-')[0]))].sort();
+
+  const ef = document.getElementById('exam-filters');
+  ef.innerHTML = `<button class="filter-btn ${activeExamFilter==='all'?'active':''}" data-exam="all" onclick="setExamFilter('all',this)">Alle Prüfungen</button>`;
+  exams.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = `filter-btn ${activeExamFilter===e?'active':''}`;
+    btn.textContent = EXAM_NAMES[e] || e;
+    btn.onclick = () => setExamFilter(e, btn);
+    ef.appendChild(btn);
+  });
+
+  const ecf = document.getElementById('exam-class-filters');
+  ecf.innerHTML = `<button class="filter-btn ${activeExamClassFilter==='all'?'active':''}" data-class="all" onclick="setExamClassFilter('all',this)">Alle Klassen</button>`;
+  classes.forEach(cls => {
+    const btn = document.createElement('button');
+    btn.className = `filter-btn ${activeExamClassFilter===cls?'active':''}`;
+    btn.textContent = cls;
+    btn.onclick = () => setExamClassFilter(cls, btn);
+    ecf.appendChild(btn);
+  });
 }
 
-function resolveName(code) {
-  const parts = code.split('-');
-  if (parts.length < 2) return code;
-  const cls = parts[0];
-  const num = parts[1].replace(/^0+/, '') || '0';
-  const names = getNamesForClass(cls);
-  return names[num] || code;
-}
-
-let _modalClass = '';
-
-function openNamesModal(cls) {
-  _modalClass = cls;
-  document.getElementById('modal-class-title').textContent = cls;
-  const names = getNamesForClass(cls);
-  // Find max number in data for this class
-  const nums = allData
-    .filter(r => r.code.startsWith(cls + '-'))
-    .map(r => parseInt(r.code.split('-')[1]) || 0);
-  const max = nums.length ? Math.max(...nums) : 30;
-  const lines = [];
-  for (let i = 1; i <= max; i++) lines.push(names[i] || '');
-  document.getElementById('names-textarea').value = lines.join('\n');
-  document.getElementById('names-modal').classList.add('open');
-  setTimeout(() => document.getElementById('names-textarea').focus(), 50);
-}
-
-function closeNamesModal() {
-  document.getElementById('names-modal').classList.remove('open');
-}
-
-function saveNames() {
-  const lines = document.getElementById('names-textarea').value.split('\n');
-  const map = {};
-  lines.forEach((name, i) => { if (name.trim()) map[i + 1] = name.trim(); });
-  localStorage.setItem('names_' + _modalClass, JSON.stringify(map));
-  closeNamesModal();
-  renderTable();
-}
-
-function setFilter(cls, btn) {
-  activeFilter = cls;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTable();
-}
-
+/* ── Render: Lernmaterialien ── */
 function renderTable() {
-  const filtered = activeFilter === 'all'
-    ? allData
-    : allData.filter(r => r.code.startsWith(activeFilter));
+  let rows = activeFilter === 'all' ? allData : allData.filter(r => r.code.startsWith(activeFilter));
+  if (showOnlyCompleted) rows = rows.filter(r => r.completed);
 
   const tbody = document.getElementById('results-body');
-
-  if (!filtered.length) {
-    tbody.innerHTML = `
-      <tr><td colspan="5">
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <div class="empty-text">Noch keine Einreichungen</div>
-        </div>
-      </td></tr>`;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Keine Einträge</div></div></td></tr>`;
     return;
   }
 
-  tbody.innerHTML = filtered.map(r => {
-    const score      = r.score !== null ? r.score : null;
+  tbody.innerHTML = rows.map(r => {
+    const score = r.score !== null ? r.score : null;
     const scoreColor = score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : '#EF4444';
-    const scoreBar   = score !== null
-      ? `<div class="score-wrap">
-           <div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${scoreColor}"></div></div>
-           <span class="score-text" style="color:${scoreColor}">${score}%</span>
-         </div>`
+    const scoreBar = score !== null
+      ? `<div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${scoreColor}"></div></div><span class="score-text" style="color:${scoreColor}">${score}%</span></div>`
       : '<span style="color:var(--text-muted);font-size:0.78rem">—</span>';
-
     const pill = r.completed
       ? '<span class="status-pill pill-done">✓ Fertig</span>'
       : '<span class="status-pill pill-open">In Bearbeitung</span>';
-
-    const time = new Date(r.created_at).toLocaleString('de-DE', {
-      day: '2-digit', month: '2-digit', year: '2-digit',
-      hour: '2-digit', minute: '2-digit'
-    });
-
+    const time = new Date(r.created_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
     const displayName = resolveName(r.code);
     const nameHtml = displayName !== r.code
       ? `<span style="font-weight:600">${esc(displayName)}</span> <span class="code-chip" style="font-size:0.68rem">${esc(r.code)}</span>`
@@ -700,24 +664,240 @@ function renderTable() {
       <td>${scoreBar}</td>
       <td>${pill}</td>
       <td><span class="time-text">${time}</span></td>
+      <td><button class="delete-btn" title="Eintrag löschen" onclick="deleteRow('${r.id}', 'progress')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button></td>
     </tr>`;
   }).join('');
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ── Render: Prüfungen ── */
+function renderExamTable() {
+  let rows = examData;
+  if (activeExamFilter !== 'all') rows = rows.filter(r => r.exam_id === activeExamFilter);
+  if (activeExamClassFilter !== 'all') rows = rows.filter(r => r.code.startsWith(activeExamClassFilter));
+
+  const tbody = document.getElementById('exam-body');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Keine Prüfungsdaten</div></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const done  = !!r.submitted_at;
+    const score = r.score !== null ? r.score : null;
+    const scoreColor = score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : '#EF4444';
+    const scoreBar = score !== null
+      ? `<div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" style="width:${score}%;background:${scoreColor}"></div></div><span class="score-text" style="color:${scoreColor}">${score}%</span></div>`
+      : '<span style="color:var(--text-muted);font-size:0.78rem">—</span>';
+    const pill = done
+      ? '<span class="status-pill pill-done">✓ Abgegeben</span>'
+      : '<span class="status-pill pill-active">● Läuft</span>';
+    const tStart = r.started_at   ? new Date(r.started_at).toLocaleString('de-DE',   { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
+    const tDone  = r.submitted_at ? new Date(r.submitted_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
+    const examLabel = EXAM_NAMES[r.exam_id] || r.exam_id;
+    const displayName = resolveName(r.code);
+    const nameHtml = displayName !== r.code
+      ? `<span style="font-weight:600">${esc(displayName)}</span> <span class="code-chip" style="font-size:0.68rem">${esc(r.code)}</span>`
+      : `<span class="code-chip">${esc(r.code)}</span>`;
+
+    return `<tr>
+      <td>${nameHtml}</td>
+      <td><span class="material-name" style="font-size:0.78rem">${esc(examLabel)}</span></td>
+      <td>${scoreBar}</td>
+      <td>${pill}</td>
+      <td><span class="time-text">${tStart}</span></td>
+      <td><span class="time-text">${tDone}</span></td>
+      <td><button class="delete-btn" title="Eintrag löschen" onclick="deleteRow('${r.id}', 'exam_results')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button></td>
+    </tr>`;
+  }).join('');
 }
 
-// expose for inline onclick
-window.setFilter       = setFilter;
-window.loadData        = loadData;
-window.closeNamesModal = closeNamesModal;
-window.saveNames       = saveNames;
+/* ── Delete single row ── */
+window.deleteRow = async function (id, table) {
+  if (!confirm('Diesen Eintrag löschen?')) return;
+  await supabase.from(table).delete().eq('id', id);
+  await loadData();
+};
 
-// close modal on backdrop click
-document.getElementById('names-modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeNamesModal();
-});
+/* ── Tab switching ── */
+window.switchTab = function (tab) {
+  ['lernen','pruefung'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('sec-' + t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'pruefung') renderExamTable();
+};
+
+/* ── Filter controls ── */
+window.setFilter = function (cls, btn) {
+  activeFilter = cls;
+  document.querySelectorAll('#class-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+};
+
+window.setExamFilter = function (val, btn) {
+  activeExamFilter = val;
+  document.querySelectorAll('#exam-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderExamTable();
+};
+
+window.setExamClassFilter = function (val, btn) {
+  activeExamClassFilter = val;
+  document.querySelectorAll('#exam-class-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderExamTable();
+};
+
+window.toggleCompleted = function () {
+  showOnlyCompleted = !showOnlyCompleted;
+  document.getElementById('toggle-completed').classList.toggle('on', showOnlyCompleted);
+  renderTable();
+};
+
+/* ── Namen ── */
+function getNamesForClass(cls) { try { return JSON.parse(localStorage.getItem('names_' + cls) || '{}'); } catch { return {}; } }
+function resolveName(code) {
+  const parts = code.split('-');
+  if (parts.length < 2) return code;
+  const cls = parts[0]; const num = parseInt(parts[1]) || 0;
+  const names = getNamesForClass(cls);
+  return names[num] || code;
+}
+
+let _modalClass = '';
+function openNamesModal(cls) {
+  _modalClass = cls;
+  document.getElementById('modal-class-title').textContent = cls;
+  const names = getNamesForClass(cls);
+  const nums  = allData.filter(r => r.code.startsWith(cls + '-')).map(r => parseInt(r.code.split('-')[1]) || 0);
+  const max   = nums.length ? Math.max(...nums) : 30;
+  const lines = [];
+  for (let i = 1; i <= max; i++) lines.push(names[i] || '');
+  document.getElementById('names-textarea').value = lines.join('\n');
+  document.getElementById('names-modal').classList.add('open');
+  setTimeout(() => document.getElementById('names-textarea').focus(), 50);
+}
+window.closeNamesModal = function () { document.getElementById('names-modal').classList.remove('open'); };
+window.saveNames = function () {
+  const lines = document.getElementById('names-textarea').value.split('\n');
+  const map = {};
+  lines.forEach((name, i) => { if (name.trim()) map[i + 1] = name.trim(); });
+  localStorage.setItem('names_' + _modalClass, JSON.stringify(map));
+  closeNamesModal(); renderTable();
+};
+document.getElementById('names-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeNamesModal(); });
+
+/* ═══════════════════════════════════════
+   BEREINIGEN
+   ═══════════════════════════════════════ */
+function refreshCleanCounts() {
+  const openedCount = allData.filter(r => !r.completed).length;
+  document.getElementById('cnt-opened').textContent = openedCount + ' Einträge';
+
+  // Duplikate: group by code+material, count extras
+  const seen = {};
+  let dupeCount = 0;
+  // Sort by created_at desc so we keep the newest
+  const sorted = [...allData].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  for (const r of sorted) {
+    const key = r.code + '|' + r.material;
+    if (seen[key]) dupeCount++;
+    else seen[key] = true;
+  }
+  document.getElementById('cnt-dupes').textContent = dupeCount + ' Duplikate';
+
+  // Code checklist
+  const codes = [...new Set(allData.map(r => r.code))].sort();
+  const list  = document.getElementById('code-check-list');
+  list.innerHTML = codes.map(c => {
+    const cnt = allData.filter(r => r.code === c).length;
+    return `<label class="code-check-item">
+      <input type="checkbox" class="code-check" value="${esc(c)}">
+      <span class="code-chip" style="font-size:0.75rem">${esc(c)}</span>
+      <span class="code-check-count">${cnt} Einträge</span>
+    </label>`;
+  }).join('');
+}
+
+window.openCleanModal = function () {
+  refreshCleanCounts();
+  document.getElementById('clean-modal').classList.add('open');
+  document.getElementById('clean-status').textContent = '';
+};
+window.closeCleanModal = function () { document.getElementById('clean-modal').classList.remove('open'); };
+document.getElementById('clean-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCleanModal(); });
+
+let _cleanStep = null;
+window.toggleCleanStep = function (step) {
+  const list = document.getElementById('code-check-list');
+  const btn  = document.getElementById('cs-codes-btn');
+  if (_cleanStep === step) {
+    _cleanStep = null; list.style.display = 'none'; btn.style.display = 'none';
+  } else {
+    _cleanStep = step; list.style.display = 'block'; btn.style.display = 'block';
+  }
+};
+
+window.deleteByCodes = async function () {
+  const checked = [...document.querySelectorAll('.code-check:checked')].map(c => c.value);
+  if (!checked.length) { setCleanStatus('Keine Codes ausgewählt.'); return; }
+  if (!confirm(`Alle Einträge für ${checked.length} Code(s) löschen?\n\n${checked.join(', ')}`)) return;
+  setCleanStatus('Lösche…');
+  for (const code of checked) {
+    await supabase.from('progress').delete().eq('code', code);
+  }
+  setCleanStatus('✓ ' + checked.length + ' Code(s) gelöscht.');
+  await loadData();
+};
+
+// "Nur geöffnet" löschen
+document.getElementById('cs-opened').onclick = async function () {
+  const cnt = allData.filter(r => !r.completed).length;
+  if (!cnt) { setCleanStatus('Keine "nur geöffnet"-Einträge vorhanden.'); return; }
+  if (!confirm(`${cnt} Einträge löschen, bei denen kein Quiz abgeschlossen wurde?`)) return;
+  setCleanStatus('Lösche…');
+  await supabase.from('progress').delete().eq('completed', false);
+  setCleanStatus(`✓ ${cnt} Einträge gelöscht.`);
+  await loadData();
+};
+
+// Duplikate löschen
+document.getElementById('cs-dupes').onclick = async function () {
+  // Find IDs to delete (keep newest per code+material)
+  const sorted = [...allData].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  const seen = {};
+  const toDelete = [];
+  for (const r of sorted) {
+    const key = r.code + '|' + r.material;
+    if (seen[key]) toDelete.push(r.id);
+    else seen[key] = r.id;
+  }
+  if (!toDelete.length) { setCleanStatus('Keine Duplikate gefunden.'); return; }
+  if (!confirm(`${toDelete.length} Duplikat-Einträge löschen? (Neuester Eintrag pro Code+Material bleibt erhalten.)`)) return;
+  setCleanStatus('Lösche…');
+  // Delete in batches
+  for (let i = 0; i < toDelete.length; i += 50) {
+    await supabase.from('progress').delete().in('id', toDelete.slice(i, i + 50));
+  }
+  setCleanStatus(`✓ ${toDelete.length} Duplikate gelöscht.`);
+  await loadData();
+};
+
+function setCleanStatus(msg) {
+  document.getElementById('clean-status').textContent = msg;
+}
+
+/* ── Helpers ── */
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── Init ── */
+loadData();
+refreshTimer = setInterval(loadData, 30000);
 </script>
 </body>
 </html>
