@@ -316,6 +316,32 @@ header {
 </head>
 <body>
 
+<!-- ── NAVIGATION ── -->
+<nav style="background:#111827;padding:0 16px;display:flex;align-items:center;gap:4px;height:44px;border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:100">
+  <a href="index.html" style="display:flex;align-items:center;gap:6px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;padding:5px 8px;border-radius:5px;transition:all .15s;white-space:nowrap" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Materialien
+  </a>
+  <div style="width:1px;height:16px;background:rgba(255,255,255,0.1);margin:0 2px"></div>
+  <a href="dashboard.html" style="display:flex;align-items:center;gap:6px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;padding:5px 8px;border-radius:5px;background:;transition:all .15s;white-space:nowrap" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Tracking
+  </a>
+  <a href="pruefung-erstellen.html" style="display:flex;align-items:center;gap:6px;color:#F9FAFB;text-decoration:none;font-size:12px;font-weight:500;padding:5px 8px;border-radius:5px;background:rgba(255,255,255,0.1);transition:all .15s;white-space:nowrap" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#F9FAFB'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='#F9FAFB'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+    Prüfung erstellen
+  </a>
+  <a href="pruefungs-dashboard.html" style="display:flex;align-items:center;gap:6px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;padding:5px 8px;border-radius:5px;background:;transition:all .15s;white-space:nowrap" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    Live-Monitoring
+  </a>
+  <a href="codegenerator.html" style="display:flex;align-items:center;gap:6px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;padding:5px 8px;border-radius:5px;transition:all .15s;white-space:nowrap" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Codes
+  </a>
+</nav>
+
+
 <!-- Import JSON Modal -->
 <div class="modal-backdrop" id="import-modal">
   <div class="modal">

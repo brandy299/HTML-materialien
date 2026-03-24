@@ -10,7 +10,7 @@ INDEX="$REPO_DIR/index.html"
 MATERIALIEN=$(python3 - <<'PYEOF'
 import re, json, sys
 
-with open("/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/index.html") as fh:
+with open("/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/index.html", encoding="utf-8") as fh:
     content = fh.read()
 
 m = re.search(r'const materialien = \[(.*?)\];', content, re.DOTALL)
@@ -77,11 +77,11 @@ case "$AKTION" in
 
     python3 - <<PYEOF
 import re
-with open("$INDEX") as fh:
+with open("$INDEX", encoding="utf-8") as fh:
     c = fh.read()
 c = re.sub(r'\s*\{[^}]*"pfad":"' + re.escape("$PFAD") + r'"[^}]*\},?\n?', '\n', c)
 c = re.sub(r',(\s*\n\s*\])', r'\1', c)
-with open("$INDEX", "w") as fh:
+with open("$INDEX", "w", encoding="utf-8") as fh:
     fh.write(c)
 PYEOF
 
@@ -121,7 +121,7 @@ PYEOF
     python3 - <<PYEOF
 import re, json
 
-with open("$INDEX") as fh:
+with open("$INDEX", encoding="utf-8") as fh:
     c = fh.read()
 
 def replacer(m):
@@ -138,7 +138,7 @@ def replacer(m):
     return m.group()
 
 c = re.sub(r'\{[^}]+\}', replacer, c)
-with open("$INDEX", "w") as fh:
+with open("$INDEX", "w", encoding="utf-8") as fh:
     fh.write(c)
 PYEOF
 
