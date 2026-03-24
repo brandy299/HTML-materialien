@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travelling for Work – Office Design Ltd.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .shake { animation: shake 0.4s ease-in-out; }
+    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+    .pop { animation: pop 0.25s ease-in-out; }
+    .phase-section { display: none; }
+    .phase-section.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans pb-16">
+
+  <!-- Progress Bar -->
+  <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-200 z-50">
+    <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 25%"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="bg-white shadow-sm pt-3 pb-2 px-4 mb-1">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <i data-lucide="plane" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="text-sm font-semibold text-slate-700">Travelling for Work</span>
+        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">B1 · HS2D</span>
+      </div>
+      <span id="score-display" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full hidden">Score: 0 / 0</span>
+    </div>
+  </div>
+
+  <!-- Phase Dots -->
+  <div class="flex justify-center gap-3 py-3">
+    <div class="flex flex-col items-center gap-1">
+      <span id="dot-0" class="w-3 h-3 rounded-full bg-indigo-600 transition-all"></span>
+      <span class="text-xs text-indigo-600 font-medium">Warm Up</span>
+    </div>
+    <div class="w-8 h-px bg-slate-200 mt-1.5"></div>
+    <div class="flex flex-col items-center gap-1">
+      <span id="dot-1" class="w-3 h-3 rounded-full bg-slate-300 transition-all"></span>
+      <span class="text-xs text-slate-400">Learn</span>
+    </div>
+    <div class="w-8 h-px bg-slate-200 mt-1.5"></div>
+    <div class="flex flex-col items-center gap-1">
+      <span id="dot-2" class="w-3 h-3 rounded-full bg-slate-300 transition-all"></span>
+      <span class="text-xs text-slate-400">Check</span>
+    </div>
+    <div class="w-8 h-px bg-slate-200 mt-1.5"></div>
+    <div class="flex flex-col items-center gap-1">
+      <span id="dot-3" class="w-3 h-3 rounded-full bg-slate-300 transition-all"></span>
+      <span class="text-xs text-slate-400">Apply</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PHASE 0: HOOK ═══════════════════════════════ -->
+  <section id="phase-0" class="phase-section active max-w-2xl mx-auto px-4 py-4 fade-in">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+        <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+      </div>
+      <span class="text-xs font-semibold uppercase tracking-widest text-amber-600">Warm Up</span>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm p-6 mb-4 border-l-4 border-amber-400">
+      <p class="text-slate-400 text-xs uppercase tracking-wide mb-2">Scenario</p>
+      <p class="text-slate-800 text-base leading-relaxed font-medium">
+        It's Monday morning at <strong>Office Design Ltd.</strong>, Düsseldorf. Your manager, Sarah Keane, rushes into the office:
+      </p>
+      <blockquote class="mt-3 pl-4 border-l-2 border-amber-300 text-slate-600 italic text-sm">
+        "I need you to organise a business trip to our London head office next week. You'll need to book a hotel, arrange a flight and confirm the meeting schedule. Can you handle it?"
+      </blockquote>
+    </div>
+
+    <div class="bg-amber-50 rounded-2xl p-5 mb-4">
+      <p class="font-semibold text-slate-700 mb-0.5 flex items-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4 text-amber-500"></i>
+        Discuss with a partner:
+      </p>
+      <p class="text-xs text-slate-400 mb-3">(Sprich mit einer Partnerin / einem Partner über die Fragen unten.)</p>
+      <div class="space-y-3 mb-4">
+        <div class="bg-white rounded-xl p-3 border border-amber-100">
+          <p class="text-slate-600 text-sm">🏨 You need to book a hotel room. Do you call the hotel or use a website? What information do you give?</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-amber-100">
+          <p class="text-slate-600 text-sm">✉️ Your manager wants written confirmation. How do you inform her about the arrangements?</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-amber-100">
+          <p class="text-slate-600 text-sm">🗣️ What English phrases do you already know for booking a hotel room or a flight?</p>
+        </div>
+      </div>
+      <p class="text-sm font-semibold text-slate-600 mb-0.5">
+        👆 Which of these phrases do you already know? Tap all that apply.
+      </p>
+      <p class="text-xs text-slate-400 mb-3">(Welche dieser Phrasen kennst du schon? Tippe auf alle, die du kennst.)</p>
+      <div class="flex flex-wrap gap-2" id="known-phrases">
+        <button onclick="togglePhrase(this)" class="phrase-btn px-4 py-2.5 rounded-xl text-sm border border-amber-200 text-slate-600 bg-white transition-colors text-left">"I would like to book a room."</button>
+        <button onclick="togglePhrase(this)" class="phrase-btn px-4 py-2.5 rounded-xl text-sm border border-amber-200 text-slate-600 bg-white transition-colors text-left">"Could I have a single room, please?"</button>
+        <button onclick="togglePhrase(this)" class="phrase-btn px-4 py-2.5 rounded-xl text-sm border border-amber-200 text-slate-600 bg-white transition-colors text-left">"How much is it per night?"</button>
+        <button onclick="togglePhrase(this)" class="phrase-btn px-4 py-2.5 rounded-xl text-sm border border-amber-200 text-slate-600 bg-white transition-colors text-left">"I have a reservation."</button>
+        <button onclick="togglePhrase(this)" class="phrase-btn px-4 py-2.5 rounded-xl text-sm border border-amber-200 text-slate-600 bg-white transition-colors text-left">"I don't know any of these."</button>
+      </div>
+    </div>
+
+    <!-- Quick Poll -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
+      <p class="font-semibold text-slate-700 mb-0.5 text-sm">Quick poll: Have you ever booked something in English?</p>
+      <p class="text-xs text-slate-400 mb-3">(Hast du schon einmal etwas auf Englisch gebucht? Wähle eine Antwort aus.)</p>
+      <div class="flex flex-wrap gap-2" id="poll-btns">
+        <button onclick="pollAnswer(this)" class="poll-btn px-4 py-2 rounded-xl text-sm border border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">Yes, a hotel</button>
+        <button onclick="pollAnswer(this)" class="poll-btn px-4 py-2 rounded-xl text-sm border border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">Yes, a flight</button>
+        <button onclick="pollAnswer(this)" class="poll-btn px-4 py-2 rounded-xl text-sm border border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">Yes, something else</button>
+        <button onclick="pollAnswer(this)" class="poll-btn px-4 py-2 rounded-xl text-sm border border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">Not yet!</button>
+      </div>
+    </div>
+
+    <button onclick="showPhase(1)" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+      Let's learn the key language <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </section>
+
+  <!-- ═══════════════════════════════ PHASE 1: INPUT ═══════════════════════════════ -->
+  <section id="phase-1" class="phase-section max-w-2xl mx-auto px-4 py-4 fade-in">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+        <i data-lucide="book-open" class="w-4 h-4 text-blue-600"></i>
+      </div>
+      <span class="text-xs font-semibold uppercase tracking-widest text-blue-600">Learn</span>
+    </div>
+
+    <!-- Tab switcher: Basic / Expert -->
+    <div class="flex border-b border-slate-200 mb-4 bg-white rounded-t-xl overflow-hidden shadow-sm">
+      <button id="tab-basic" onclick="switchTab('basic')" class="flex-1 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600">
+        📗 Essential Phrases
+      </button>
+      <button id="tab-expert" onclick="switchTab('expert')" class="flex-1 py-3 text-sm font-medium text-slate-400 hover:text-slate-600">
+        📘 Vocabulary
+      </button>
+    </div>
+
+    <!-- BASIC TAB -->
+    <div id="content-basic">
+
+      <!-- Chunk 1: Hotel booking on the phone -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="phone" class="w-4 h-4 text-blue-500"></i>
+          <h3 class="font-bold text-slate-800">Booking a hotel room – on the phone</h3>
+        </div>
+        <p class="text-slate-500 text-sm mb-0.5">When calling a hotel, you need to give specific information and make polite requests.</p>
+        <p class="text-xs text-slate-400 mb-4">(Wenn du ein Hotel anrufst, musst du bestimmte Informationen angeben und höfliche Anfragen stellen.)</p>
+
+        <div class="bg-blue-50 rounded-xl p-4 mb-3">
+          <p class="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-3">📞 Key Phrases</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">I'd like to reserve a room…</span><span class="text-slate-500">→ making a reservation</span></div>
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">…for three nights, from [date] to [date].</span><span class="text-slate-500">→ specifying dates</span></div>
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">Could you please confirm the booking?</span><span class="text-slate-500">→ asking for confirmation</span></div>
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">I have a special request – I would need…</span><span class="text-slate-500">→ individual requests</span></div>
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">Would it be possible to have an early check-in?</span><span class="text-slate-500">→ polite question</span></div>
+            <div class="flex gap-3"><span class="font-medium text-indigo-700 min-w-[200px]">Could you arrange an airport transfer?</span><span class="text-slate-500">→ additional service</span></div>
+          </div>
+        </div>
+
+        <!-- Mini-dialogue -->
+        <div class="bg-slate-50 rounded-xl p-4 text-sm">
+          <p class="text-xs font-semibold text-slate-400 uppercase mb-3">Sample dialogue</p>
+          <div class="space-y-2">
+            <div class="flex gap-2"><span class="font-semibold text-slate-500 w-16 shrink-0">Hotel:</span><span class="text-slate-600">Good morning, The Grand Hotel, how may I help you?</span></div>
+            <div class="flex gap-2"><span class="font-semibold text-indigo-600 w-16 shrink-0">You:</span><span class="text-slate-700">Good morning. I'd like to reserve a single room for three nights, from the 14th to the 17th of March, please.</span></div>
+            <div class="flex gap-2"><span class="font-semibold text-slate-500 w-16 shrink-0">Hotel:</span><span class="text-slate-600">Of course. Could I take your name and company, please?</span></div>
+            <div class="flex gap-2"><span class="font-semibold text-indigo-600 w-16 shrink-0">You:</span><span class="text-slate-700">Yes, it's [your name], calling on behalf of Office Design Ltd. I also have a special request – would it be possible to arrange an airport transfer?</span></div>
+            <div class="flex gap-2"><span class="font-semibold text-slate-500 w-16 shrink-0">Hotel:</span><span class="text-slate-600">Certainly, we can arrange that. Could you confirm your arrival flight?</span></div>
+            <div class="flex gap-2"><span class="font-semibold text-indigo-600 w-16 shrink-0">You:</span><span class="text-slate-700">Of course. Flight BA 245, arriving at 4:30 pm. Could you please confirm the whole booking by email?</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chunk 2: Cancelling a booking -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="x-circle" class="w-4 h-4 text-rose-500"></i>
+          <h3 class="font-bold text-slate-800">Cancelling or changing a booking</h3>
+        </div>
+        <div class="bg-rose-50 rounded-xl p-4 text-sm">
+          <p class="text-xs font-semibold text-rose-600 uppercase tracking-wide mb-3">Key Phrases</p>
+          <div class="space-y-2">
+            <div class="flex gap-3"><span class="font-medium text-rose-700 min-w-[220px]">I'm calling to cancel my reservation.</span><span class="text-slate-500">→ stating the reason</span></div>
+            <div class="flex gap-3"><span class="font-medium text-rose-700 min-w-[220px]">I'm afraid I need to change my booking.</span><span class="text-slate-500">→ polite apology + change</span></div>
+            <div class="flex gap-3"><span class="font-medium text-rose-700 min-w-[220px]">Will there be a cancellation fee?</span><span class="text-slate-500">→ asking about costs</span></div>
+            <div class="flex gap-3"><span class="font-medium text-rose-700 min-w-[220px]">Could I get a refund, please?</span><span class="text-slate-500">→ requesting money back</span></div>
+            <div class="flex gap-3"><span class="font-medium text-rose-700 min-w-[220px]">I'd prefer a refund to a voucher.</span><span class="text-slate-500">→ stating a preference</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chunk 3: Email to inform about arrangements -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="mail" class="w-4 h-4 text-emerald-500"></i>
+          <h3 class="font-bold text-slate-800">Writing an email – travel arrangements</h3>
+        </div>
+        <p class="text-slate-500 text-sm mb-3">After booking, you often send a follow-up email to confirm arrangements or inform colleagues.</p>
+        <div class="bg-emerald-50 rounded-xl p-4 text-sm">
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-3">Email Structure</p>
+          <div class="space-y-1.5">
+            <div class="flex gap-2 items-start"><span class="text-emerald-600 font-semibold w-24 shrink-0">Subject:</span><span class="text-slate-700">Travel Arrangements – London Visit, 14–17 March</span></div>
+            <div class="flex gap-2 items-start"><span class="text-emerald-600 font-semibold w-24 shrink-0">Opening:</span><span class="text-slate-700">I am writing to confirm the travel arrangements for your upcoming visit to our London office.</span></div>
+            <div class="flex gap-2 items-start"><span class="text-emerald-600 font-semibold w-24 shrink-0">Details:</span><span class="text-slate-700">I have booked a single room at The Grand Hotel for three nights (14–17 March), including breakfast. An airport transfer has also been arranged.</span></div>
+            <div class="flex gap-2 items-start"><span class="text-emerald-600 font-semibold w-24 shrink-0">Action:</span><span class="text-slate-700">Please find the hotel confirmation attached. Could you confirm your flight details so I can arrange the transfer?</span></div>
+            <div class="flex gap-2 items-start"><span class="text-emerald-600 font-semibold w-24 shrink-0">Closing:</span><span class="text-slate-700">Please do not hesitate to contact me if you have any questions.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERT TAB: Vocabulary -->
+    <div id="content-expert" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="book-open" class="w-4 h-4 text-blue-500"></i>
+          <h3 class="font-bold text-slate-800">Key Vocabulary – Travelling for Work</h3>
+        </div>
+        <div class="grid grid-cols-1 gap-2" id="vocab-grid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <button onclick="showPhase(2)" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 mt-2">
+      Time to check your knowledge <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </section>
+
+  <!-- ═══════════════════════════════ PHASE 2: CHECK ═══════════════════════════════ -->
+  <section id="phase-2" class="phase-section max-w-2xl mx-auto px-4 py-4 fade-in">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+      </div>
+      <span class="text-xs font-semibold uppercase tracking-widest text-emerald-600">Check</span>
+    </div>
+
+    <div class="bg-emerald-50 rounded-xl p-4 mb-5 text-sm text-slate-600 border-l-4 border-emerald-400">
+      <strong>AFB I – Identify &amp; complete.</strong> Answer the questions below to check your understanding of today's phrases and vocabulary.<br><span class="text-slate-400 text-xs">(Beantworte die Fragen, um dein Verständnis der Phrasen und Vokabeln zu überprüfen.)</span>
+    </div>
+
+    <!-- Q1: Multiple Choice -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4" id="q1">
+      <p class="font-semibold text-slate-800 mb-1 text-sm text-slate-400">Q1 · Multiple choice</p>
+      <p class="font-medium text-slate-800 mb-0.5">You call a hotel to book a room. Which phrase is the most appropriate opening?</p>
+      <p class="text-xs text-slate-400 mb-4">(Du rufst ein Hotel an. Welche Formulierung ist am besten geeignet?)</p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this, false, 'q1', 'Not quite – this sounds too informal for a business booking.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          A) "Hey, I want a room."
+        </button>
+        <button onclick="checkMC(this, true, 'q1', '✓ Correct! This is formal, polite and gives the necessary information right away.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          B) "Good morning, I'd like to reserve a single room for three nights, please."
+        </button>
+        <button onclick="checkMC(this, false, 'q1', 'Not quite – \'I want\' is grammatically correct but too direct and not polite enough in a professional context.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          C) "I want to make a booking for a room."
+        </button>
+      </div>
+      <div class="feedback mt-1"></div>
+    </div>
+
+    <!-- Q2: MC (replaced gap-fill) -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4" id="q2">
+      <p class="font-semibold text-slate-800 mb-1 text-sm text-slate-400">Q2 · Multiple choice</p>
+      <p class="font-medium text-slate-800 mb-0.5">You need to cancel your hotel booking. Which sentence is correct?</p>
+      <p class="text-xs text-slate-400 mb-4">(Du musst dein Hotel stornieren. Welcher Satz ist richtig?)</p>
+      <div class="space-y-2">
+        <button onclick="checkMC(this, false, 'q2', 'Not quite – &quot;I want to cancel&quot; is too direct and informal for a business call.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          A) "I want to cancel my room."
+        </button>
+        <button onclick="checkMC(this, true, 'q2', '✓ Correct! This is polite and gives a clear reason – ideal for a business call.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          B) "I'm calling to cancel my reservation. Will there be a cancellation fee?"
+        </button>
+        <button onclick="checkMC(this, false, 'q2', 'Not quite – this mixes up the wrong phrases. Always state the reason first, then ask about fees.')"
+          class="mc-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 text-slate-600 text-sm hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+          C) "I have a cancellation. Can I get a reservation fee?"
+        </button>
+      </div>
+      <div class="feedback mt-1"></div>
+    </div>
+
+    <!-- Q3: True / False -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+      <p class="font-semibold text-slate-800 mb-1 text-sm text-slate-400">Q3 · True or False?</p>
+      <p class="font-medium text-slate-800 mb-0.5">Decide if each statement is <strong>True</strong> or <strong>False</strong>.</p>
+      <p class="text-xs text-slate-400 mb-4">(Entscheide, ob jede Aussage richtig oder falsch ist.)</p>
+      <div class="space-y-3" id="tf-container">
+        <div class="bg-slate-50 rounded-xl p-4" id="tf1">
+          <p class="text-sm text-slate-700 mb-2">"Could you arrange an airport transfer?" is a polite way to make a request.</p>
+          <div class="flex gap-2">
+            <button onclick="checkTF(this, true, 'tf1', 'Correct! \'Could you...\' is a polite modal question used for requests.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">True</button>
+            <button onclick="checkTF(this, false, 'tf1', 'Not quite. \'Could you...\' is indeed a polite, formal request structure.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">False</button>
+          </div>
+          <div class="tf-feedback mt-1"></div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4" id="tf2">
+          <p class="text-sm text-slate-700 mb-2">When you cancel a booking, it is always too late to get a refund.</p>
+          <div class="flex gap-2">
+            <button onclick="checkTF(this, false, 'tf2', 'Correct! A cancellation fee only applies for late cancellations. Early cancellations are often free.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">True</button>
+            <button onclick="checkTF(this, true, 'tf2', 'Correct! A cancellation fee only applies for late cancellations. Early cancellations are often free.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">False</button>
+          </div>
+          <div class="tf-feedback mt-1"></div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4" id="tf3">
+          <p class="text-sm text-slate-700 mb-2">The subject line of a business email should clearly show the content of the email.</p>
+          <div class="flex gap-2">
+            <button onclick="checkTF(this, true, 'tf3', 'Correct! A good subject line helps the reader understand what the email is about immediately.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">True</button>
+            <button onclick="checkTF(this, false, 'tf3', 'Not quite. A clear subject line is essential in business email communication.')" class="tf-btn px-4 py-1.5 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-indigo-300 hover:bg-indigo-50">False</button>
+          </div>
+          <div class="tf-feedback mt-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4: Matching -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4" id="q4-section">
+      <p class="font-semibold text-slate-800 mb-1 text-sm text-slate-400">Q4 · Matching</p>
+      <p class="font-medium text-slate-800 mb-0.5">Match each phrase (1–4) to its function (A–D).</p>
+      <p class="text-xs text-slate-400 mb-4">(Ordne jede Phrase (1–4) ihrer Funktion (A–D) zu. Wähle aus dem Dropdown-Menü.)</p>
+      <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+        <div class="space-y-2">
+          <p class="text-xs text-slate-400 font-semibold uppercase">Phrases</p>
+          <div class="bg-indigo-50 rounded-lg p-2.5 border border-indigo-100">1. "I'd like to reserve a room…"</div>
+          <div class="bg-indigo-50 rounded-lg p-2.5 border border-indigo-100">2. "Will there be a cancellation fee?"</div>
+          <div class="bg-indigo-50 rounded-lg p-2.5 border border-indigo-100">3. "Please find the confirmation attached."</div>
+          <div class="bg-indigo-50 rounded-lg p-2.5 border border-indigo-100">4. "Could you repeat that, please?"</div>
+        </div>
+        <div class="space-y-2">
+          <p class="text-xs text-slate-400 font-semibold uppercase">Functions</p>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-100">A. Asking for clarification</div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-100">B. Making a reservation</div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-100">C. Referring to an attachment</div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-100">D. Asking about costs</div>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-slate-600 w-6">1 →</span>
+          <select id="match1" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <option value="">Select…</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-slate-600 w-6">2 →</span>
+          <select id="match2" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <option value="">Select…</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-slate-600 w-6">3 →</span>
+          <select id="match3" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <option value="">Select…</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-slate-600 w-6">4 →</span>
+          <select id="match4" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <option value="">Select…</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="checkMatching()" class="mt-3 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700 transition-colors">Check Matching</button>
+      <div id="match-feedback" class="mt-2"></div>
+    </div>
+
+    <button id="check-to-transfer" onclick="showPhase(3)" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+      Now apply what you've learned <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </section>
+
+  <!-- ═══════════════════════════════ PHASE 3: TRANSFER ═══════════════════════════════ -->
+  <section id="phase-3" class="phase-section max-w-2xl mx-auto px-4 py-4 fade-in">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center">
+        <i data-lucide="star" class="w-4 h-4 text-violet-600"></i>
+      </div>
+      <span class="text-xs font-semibold uppercase tracking-widest text-violet-600">Apply · AFB II/III</span>
+    </div>
+
+    <!-- Task: Gapped email -->
+    <div class="bg-violet-50 rounded-2xl p-5 mb-4 border-l-4 border-violet-400">
+      <p class="text-xs font-semibold text-violet-600 uppercase mb-2">🏢 Office Design Ltd. – Your Task</p>
+      <p class="text-slate-700 text-sm leading-relaxed">
+        Complete the email to Sarah Keane. Choose the correct option from each dropdown.
+      </p>
+      <p class="text-xs text-slate-400 mt-1">(Vervollständige die E-Mail. Wähle jeweils die richtige Option aus dem Dropdown-Menü.)</p>
+    </div>
+
+    <!-- Gapped email -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4" id="email-gap-section">
+      <div class="bg-slate-50 rounded-lg px-4 py-2 mb-4 text-xs text-slate-400 font-mono space-y-0.5">
+        <div><span class="text-slate-500">To:</span> s.keane@officedesign.co.uk</div>
+        <div><span class="text-slate-500">From:</span> j.morgan@officedesign.de</div>
+        <div><span class="text-slate-500 font-semibold">Subject:</span>
+          <select id="eg-subject" class="ml-1 border border-indigo-200 rounded-lg px-2 py-1 text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white">
+            <option value="">– select –</option>
+            <option value="wrong1">RE: Monday Meeting</option>
+            <option value="correct">Travel Arrangements – London Visit, 14–17 March</option>
+            <option value="wrong2">Hotel London</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="text-sm text-slate-700 leading-relaxed space-y-3">
+        <p>Dear Ms Keane,</p>
+        <p>
+          <select id="eg-opening" class="border border-indigo-200 rounded-lg px-2 py-1.5 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white w-full">
+            <option value="">– select opening –</option>
+            <option value="wrong1">I am emailing because of your trip.</option>
+            <option value="correct">I am writing to confirm the travel arrangements for your upcoming visit to our London head office.</option>
+            <option value="wrong2">Here is some information about London.</option>
+          </select>
+        </p>
+        <p>
+          <select id="eg-booking" class="border border-indigo-200 rounded-lg px-2 py-1.5 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white w-full">
+            <option value="">– select booking details –</option>
+            <option value="wrong1">There is a hotel called The Strand Hotel in London.</option>
+            <option value="wrong2">I booked you a room. It costs money and has a bed.</option>
+            <option value="correct">I have booked a single room at The Strand Hotel, London, for three nights (14–17 March), including breakfast. The rate is £120 per night. An airport transfer has also been arranged.</option>
+          </select>
+        </p>
+        <p>
+          <select id="eg-request" class="border border-indigo-200 rounded-lg px-2 py-1.5 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white w-full">
+            <option value="">– select request –</option>
+            <option value="correct">Could you please confirm your flight details so that the hotel can arrange the transfer?</option>
+            <option value="wrong1">Tell me your flight number when you know it.</option>
+            <option value="wrong2">The hotel needs your name and passport number.</option>
+          </select>
+        </p>
+        <p>
+          <select id="eg-closing" class="border border-indigo-200 rounded-lg px-2 py-1.5 text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white w-full">
+            <option value="">– select closing –</option>
+            <option value="wrong1">See you soon, bye!</option>
+            <option value="wrong2">I hope this is okay for you.</option>
+            <option value="correct">Please do not hesitate to contact me if you have any questions.</option>
+          </select>
+        </p>
+        <p class="text-slate-500">Best regards,<br>James Morgan</p>
+      </div>
+
+      <button onclick="checkEmailGaps()" class="mt-5 w-full py-3 bg-emerald-600 text-white rounded-xl font-semibold text-sm hover:bg-emerald-700 transition-colors">
+        Check my email ✓
+      </button>
+      <div id="email-gap-feedback" class="mt-3"></div>
+    </div>
+
+    <!-- Reflection -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+      <p class="text-sm font-semibold text-slate-700 mb-0.5">💭 Reflect:</p>
+      <p class="text-xs text-slate-400 mb-3">(Denk kurz nach: Was hast du heute gelernt?)</p>
+      <div class="space-y-2">
+        <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded accent-indigo-600">
+          I can say how to book a hotel room in English.
+          <span class="text-xs text-slate-400">(Ich kann auf Englisch ein Hotelzimmer buchen.)</span>
+        </label>
+        <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded accent-indigo-600">
+          I know how to cancel a booking politely.
+          <span class="text-xs text-slate-400">(Ich weiß, wie man höflich storniert.)</span>
+        </label>
+        <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded accent-indigo-600">
+          I understand the structure of a business email.
+          <span class="text-xs text-slate-400">(Ich verstehe den Aufbau einer Geschäfts-E-Mail.)</span>
+        </label>
+      </div>
+    </div>
+
+    <button onclick="completeModule()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+      🎉 Complete Module
+    </button>
+  </section>
+
+  <!-- COMPLETION SCREEN -->
+  <section id="phase-complete" class="phase-section max-w-2xl mx-auto px-4 py-8 text-center fade-in">
+    <div class="bg-white rounded-2xl shadow-sm p-8">
+      <div class="text-5xl mb-4">🎉</div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">Well done!</h2>
+      <p class="text-slate-500 mb-4">You've completed the <em>Travelling for Work</em> module.</p>
+      <div id="final-score" class="inline-block bg-indigo-50 text-indigo-700 font-bold px-6 py-2 rounded-full text-lg mb-6"></div>
+      <p class="text-sm text-slate-400">Next: check your email with your teacher and practise the role-play with a partner.</p>
+    </div>
+  </section>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ──────── STATE ────────
+    let score = 0;
+    let totalQuestions = 7; // Q1(1) + Q2(2) + Q3(3) + Q4(4) → adjusted below
+    let answeredQuestions = 0;
+
+    // ──────── VOCAB DATA ────────
+    const vocab = [
+      { word: "to reserve / to book", def: "to arrange to have something (room, ticket) in advance", example: "I'd like to reserve a single room." },
+      { word: "reservation / booking", def: "an arrangement made in advance", example: "Can you confirm my booking?" },
+      { word: "single / double room", def: "a room for one / two people", example: "I need a single room with a desk." },
+      { word: "check-in / check-out", def: "arrival / departure at a hotel", example: "Check-in is at 3 pm; check-out is at 11 am." },
+      { word: "early check-in", def: "arriving before the standard check-in time", example: "Would it be possible to have an early check-in?" },
+      { word: "airport transfer", def: "transport arranged between airport and hotel", example: "Could you arrange an airport transfer?" },
+      { word: "cancellation fee", def: "a charge for cancelling a booking", example: "Will there be a cancellation fee?" },
+      { word: "refund", def: "money paid back after cancellation", example: "I'd prefer a refund to a voucher." },
+      { word: "itinerary", def: "a detailed plan of a trip including dates, flights and hotels", example: "I'll send you the full itinerary by email." },
+      { word: "confirmation", def: "written proof that a booking is complete", example: "Please send a written confirmation." },
+    ];
+
+    function buildVocabGrid() {
+      const grid = document.getElementById('vocab-grid');
+      grid.innerHTML = vocab.map(v => `
+        <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+          <div class="flex items-start gap-2">
+            <span class="font-semibold text-indigo-700 text-sm">${v.word}</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">${v.def}</p>
+          <p class="text-xs text-slate-400 italic mt-0.5">"${v.example}"</p>
+        </div>`).join('');
+    }
+    buildVocabGrid();
+
+    // ──────── PHASE MANAGEMENT ────────
+    function showPhase(index) {
+      document.querySelectorAll('.phase-section').forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+      });
+      // Update dots
+      ['dot-0','dot-1','dot-2','dot-3'].forEach((id, i) => {
+        const dot = document.getElementById(id);
+        dot.className = `w-3 h-3 rounded-full transition-all ${i <= index ? 'bg-indigo-600' : 'bg-slate-300'}`;
+        const label = dot.nextElementSibling;
+        if (label) label.className = `text-xs font-medium ${i <= index ? 'text-indigo-600' : 'text-slate-400'}`;
+      });
+      // Progress bar
+      const pct = ((index + 1) / 5) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      // Score display
+      if (index >= 2) document.getElementById('score-display').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ──────── TAB SWITCHER ────────
+    function switchTab(tab) {
+      ['basic','expert'].forEach(t => {
+        document.getElementById(`content-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`tab-${t}`).className = t === tab
+          ? 'flex-1 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600'
+          : 'flex-1 py-3 text-sm font-medium text-slate-400 hover:text-slate-600';
+      });
+    }
+
+    // ──────── POLL ────────
+    function pollAnswer(btn) {
+      document.querySelectorAll('.poll-btn').forEach(b => b.classList.remove('bg-indigo-600','text-white','border-indigo-600'));
+      btn.classList.add('bg-indigo-600','text-white','border-indigo-600');
+    }
+
+    // ──────── PHRASE TOGGLE ────────
+    function togglePhrase(btn) {
+      btn.classList.toggle('bg-amber-400');
+      btn.classList.toggle('border-amber-400');
+      btn.classList.toggle('text-white');
+      btn.classList.toggle('text-slate-600');
+    }
+
+    // ──────── MC CHECK ────────
+    function checkMC(btn, isCorrect, questionId, feedbackText) {
+      const container = document.getElementById(questionId);
+      container.querySelectorAll('.mc-btn').forEach(b => { b.disabled = true; b.classList.add('opacity-70'); });
+      if (isCorrect) {
+        btn.classList.add('bg-green-50','border-green-400','text-green-700');
+        btn.classList.remove('opacity-70');
+        score++;
+        updateScore();
+      } else {
+        btn.classList.add('bg-red-50','border-red-400','text-red-700');
+        // highlight correct
+        container.querySelectorAll('.mc-btn').forEach(b => {
+          if (b.onclick.toString().includes('true')) b.classList.add('bg-green-50','border-green-300','text-green-700','opacity-100');
+        });
+      }
+      container.querySelector('.feedback').innerHTML =
+        `<p class="mt-2 text-sm ${isCorrect ? 'text-green-600' : 'text-red-600'} fade-in">${feedbackText}</p>`;
+    }
+
+    // ──────── EMAIL GAP CHECK ────────
+    function checkEmailGaps() {
+      const fields = [
+        { id: 'eg-subject',  label: 'Subject line',    de: 'Betreffzeile' },
+        { id: 'eg-opening',  label: 'Opening sentence', de: 'Eröffnungssatz' },
+        { id: 'eg-booking',  label: 'Booking details',  de: 'Buchungsdetails' },
+        { id: 'eg-request',  label: 'Request',          de: 'Bitte / Anfrage' },
+        { id: 'eg-closing',  label: 'Closing sentence', de: 'Schluss' },
+      ];
+      let correct = 0;
+      let fb = '<div class="space-y-2 fade-in">';
+      fields.forEach(f => {
+        const val = document.getElementById(f.id).value;
+        const ok = val === 'correct';
+        if (ok) correct++;
+        document.getElementById(f.id).disabled = true;
+        if (ok) {
+          document.getElementById(f.id).classList.add('border-green-400','bg-green-50');
+        } else {
+          document.getElementById(f.id).classList.add('border-red-300','bg-red-50');
+        }
+        fb += `<p class="text-sm ${ok ? 'text-green-600' : 'text-red-600'}">${ok ? '✓' : '✗'} ${f.label} <span class="text-xs opacity-70">(${f.de})</span></p>`;
+      });
+      fb += '</div>';
+      const allCorrect = correct === fields.length;
+      if (allCorrect) {
+        fb += `<p class="mt-3 text-sm font-semibold text-green-700 fade-in">🎉 Perfect email! All 5 parts are correct.</p>`;
+        score += 5; updateScore();
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ['#6366f1','#8b5cf6','#34d399'] });
+      } else {
+        fb += `<p class="mt-3 text-sm text-slate-500 fade-in">${correct}/5 correct – check the red fields and try again if you like.</p>`;
+        score += correct; updateScore();
+      }
+      document.getElementById('email-gap-feedback').innerHTML = fb;
+      }
+    }
+
+    // ──────── TRUE/FALSE ────────
+    function checkTF(btn, isCorrect, containerId, feedbackText) {
+      const container = document.getElementById(containerId);
+      container.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+      btn.classList.add(isCorrect ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700');
+      container.querySelector('.tf-feedback').innerHTML =
+        `<p class="mt-1 text-xs ${isCorrect ? 'text-green-600' : 'text-red-600'} fade-in">${feedbackText}</p>`;
+      if (isCorrect) { score++; updateScore(); }
+    }
+
+    // ──────── MATCHING ────────
+    function checkMatching() {
+      const correct = { match1: 'B', match2: 'D', match3: 'C', match4: 'A' };
+      let matchScore = 0;
+      let feedbackHtml = '<div class="mt-2 space-y-1 text-xs fade-in">';
+      Object.entries(correct).forEach(([id, ans]) => {
+        const val = document.getElementById(id).value;
+        const ok = val === ans;
+        if (ok) matchScore++;
+        feedbackHtml += `<p class="${ok ? 'text-green-600' : 'text-red-600'}">${id.replace('match','Phrase ')} → ${ok ? `✓ ${ans}` : `✗ You chose ${val || '–'}, correct: ${ans}`}</p>`;
+      });
+      feedbackHtml += '</div>';
+      document.getElementById('match-feedback').innerHTML = feedbackHtml;
+      score += matchScore;
+      updateScore();
+      document.querySelectorAll('#q4-section select').forEach(s => s.disabled = true);
+    }
+
+    // ──────── SCORE ────────
+    function updateScore() {
+      document.getElementById('score-display').textContent = `Score: ${score} pts`;
+    }
+
+    // word counter removed (no free-text field)
+
+    // ──────── COMPLETE ────────
+    function completeModule() {
+      showPhase(4);
+      document.getElementById('final-score').textContent = `Your score: ${score} points`;
+      confetti({ particleCount: 160, spread: 80, origin: { y: 0.5 }, colors: ['#6366f1','#8b5cf6','#fbbf24','#34d399'] });
+      setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#6366f1','#fbbf24'] }), 400);
+      setTimeout(() =
