@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travelling for Work – Office Design Ltd.</title>
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f1f5f9; color: #1e293b; min-height: 100vh; padding-bottom: 60px; }
+
+/* ── PROGRESS BAR ── */
+#progress-bar-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 5px; background: #e2e8f0; z-index: 999; }
+#progress-bar { height: 100%; background: #4f46e5; width: 25%; transition: width 0.4s ease; }
+
+/* ── HEADER ── */
+.header { background: #fff; padding: 14px 16px 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-top: 5px; }
+.header-inner { max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+.header-icon { width: 30px; height: 30px; background: #4f46e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0; }
+.header-title { font-weight: 700; font-size: 15px; color: #1e293b; }
+.header-badge { font-size: 11px; background: #f1f5f9; color: #64748b; padding: 2px 8px; border-radius: 99px; margin-left: auto; }
+
+/* ── PHASE DOTS ── */
+.dots-row { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 16px; }
+.dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #cbd5e1; transition: background 0.3s; }
+.dot.active { background: #4f46e5; }
+.dot-label { font-size: 10px; color: #94a3b8; font-weight: 500; }
+.dot-label.active { color: #4f46e5; }
+.dot-line { width: 24px; height: 1px; background: #e2e8f0; margin-bottom: 16px; }
+
+/* ── PHASE SECTIONS ── */
+.phase { display: none; max-width: 640px; margin: 0 auto; padding: 16px; }
+.phase.active { display: block; }
+
+/* ── CARDS ── */
+.card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.card-amber { background: #fffbeb; border-left: 4px solid #fbbf24; }
+.card-blue  { background: #eff6ff; border-left: 4px solid #3b82f6; }
+.card-green { background: #f0fdf4; border-left: 4px solid #22c55e; }
+.card-violet{ background: #f5f3ff; border-left: 4px solid #8b5cf6; }
+.card-red   { background: #fef2f2; border-left: 4px solid #ef4444; }
+.card-rose  { background: #fff1f2; border-left: 4px solid #f43f5e; }
+
+/* ── PHASE LABEL ── */
+.phase-label { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.phase-label-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.phase-label-text { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.amber-label .phase-label-icon { background: #fef3c7; } .amber-label .phase-label-text { color: #d97706; }
+.blue-label  .phase-label-icon { background: #dbeafe; } .blue-label  .phase-label-text { color: #2563eb; }
+.green-label .phase-label-icon { background: #dcfce7; } .green-label .phase-label-text { color: #16a34a; }
+.violet-label.phase-label .phase-label-icon { background: #ede9fe; } .violet-label .phase-label-text { color: #7c3aed; }
+
+/* ── TYPOGRAPHY ── */
+h2 { font-size: 17px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+h3 { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+p  { font-size: 14px; line-height: 1.6; color: #475569; }
+.de { font-size: 12px; color: #94a3b8; margin-top: 2px; margin-bottom: 10px; }
+.label-sm { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; margin-bottom: 6px; }
+blockquote { border-left: 3px solid #fbbf24; padding-left: 12px; font-style: italic; color: #64748b; font-size: 14px; margin-top: 10px; }
+
+/* ── BUTTONS ── */
+.btn-primary { display: block; width: 100%; background: #4f46e5; color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 14px; text-align: center; }
+.btn-primary:active { background: #4338ca; }
+.btn-check { background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+.btn-check:active { background: #15803d; }
+
+/* ── MC BUTTONS ── */
+.mc-btn { display: block; width: 100%; text-align: left; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 13px 16px; font-size: 14px; color: #475569; margin-bottom: 8px; cursor: pointer; transition: border-color .2s, background .2s; }
+.mc-btn:active { background: #f1f5f9; }
+.mc-btn.correct { background: #f0fdf4; border-color: #22c55e; color: #15803d; font-weight: 600; }
+.mc-btn.wrong   { background: #fef2f2; border-color: #ef4444; color: #dc2626; }
+.mc-btn:disabled { cursor: default; opacity: 0.8; }
+
+/* ── FEEDBACK ── */
+.feedback { font-size: 13px; margin-top: 8px; padding: 8px 12px; border-radius: 8px; }
+.feedback.correct { background: #f0fdf4; color: #15803d; }
+.feedback.wrong   { background: #fef2f2; color: #dc2626; }
+.feedback.hidden  { display: none; }
+
+/* ── TF BUTTONS ── */
+.tf-row { display: flex; gap: 8px; margin-top: 8px; }
+.tf-btn { flex: 1; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.tf-btn.correct { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
+.tf-btn.wrong   { background: #fef2f2; border-color: #ef4444; color: #dc2626; }
+.tf-btn:disabled { cursor: default; }
+
+/* ── PHRASE TOGGLE BUTTONS ── */
+.phrase-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.phrase-btn { padding: 10px 14px; border: 1.5px solid #fde68a; border-radius: 10px; background: #fff; font-size: 13px; color: #475569; cursor: pointer; text-align: left; }
+.phrase-btn.selected { background: #fbbf24; border-color: #f59e0b; color: #fff; font-weight: 600; }
+
+/* ── POLL BUTTONS ── */
+.poll-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.poll-btn { padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; color: #475569; cursor: pointer; }
+.poll-btn.selected { background: #4f46e5; border-color: #4f46e5; color: #fff; font-weight: 600; }
+
+/* ── PHRASE BOX ── */
+.phrase-box { background: #eff6ff; border-radius: 10px; padding: 14px; margin-top: 8px; }
+.phrase-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-size: 13px; }
+.phrase-row:last-child { margin-bottom: 0; }
+.phrase-en { font-weight: 700; color: #4f46e5; flex: 0 0 55%; }
+.phrase-fn { color: #64748b; }
+
+/* ── TABS ── */
+.tabs { display: flex; background: #fff; border-radius: 12px 12px 0 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.tab-btn { flex: 1; padding: 13px; font-size: 14px; font-weight: 600; background: none; border: none; border-bottom: 2px solid transparent; color: #94a3b8; cursor: pointer; }
+.tab-btn.active { color: #4f46e5; border-bottom-color: #4f46e5; }
+.tab-content { background: #fff; border-radius: 0 0 12px 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── DIALOGUE ── */
+.dialogue { background: #f8fafc; border-radius: 10px; padding: 14px; font-size: 13px; }
+.dialogue-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.dialogue-row:last-child { margin-bottom: 0; }
+.sp { font-weight: 700; width: 52px; flex-shrink: 0; }
+.sp.hotel { color: #64748b; }
+.sp.you   { color: #4f46e5; }
+
+/* ── VOCAB GRID ── */
+.vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.vocab-item { background: #f8fafc; border-radius: 10px; padding: 12px; border: 1px solid #e2e8f0; }
+.vocab-word { font-weight: 700; color: #4f46e5; font-size: 14px; }
+.vocab-def  { font-size: 12px; color: #64748b; margin-top: 3px; }
+.vocab-ex   { font-size: 12px; color: #94a3b8; font-style: italic; margin-top: 2px; }
+
+/* ── MATCHING / SELECTS ── */
+.match-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+.match-num { color: #64748b; font-weight: 600; width: 24px; flex-shrink: 0; }
+select { flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #475569; background: #fff; appearance: auto; }
+select:focus { outline: 2px solid #6366f1; border-color: #6366f1; }
+select.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
+select.wrong   { border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+select:disabled { opacity: 0.8; }
+
+/* ── EMAIL FRAME ── */
+.email-meta { background: #f8fafc; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 13px; color: #64748b; font-family: monospace; }
+.email-meta div { margin-bottom: 3px; }
+.email-meta span { color: #1e293b; font-weight: 600; }
+.email-body { font-size: 14px; color: #1e293b; line-height: 1.8; }
+.email-body select { width: 100%; margin: 4px 0; }
+
+/* ── SELF-CHECK ── */
+.check-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: #475569; }
+.check-item input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; accent-color: #4f46e5; cursor: pointer; }
+
+/* ── COMPLETION ── */
+#phase-complete { text-align: center; }
+.complete-card { background: #fff; border-radius: 16px; padding: 32px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.complete-emoji { font-size: 52px; margin-bottom: 12px; }
+.complete-title { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+.complete-sub { font-size: 14px; color: #64748b; }
+.score-badge { display: inline-block; background: #ede9fe; color: #7c3aed; font-weight: 700; font-size: 18px; padding: 8px 24px; border-radius: 99px; margin: 16px 0; }
+
+/* ── SECTION DIVIDER ── */
+.section-sep { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+
+/* ── UTILITY ── */
+.mt4 { margin-top: 4px; }
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+.mb8  { margin-bottom: 8px; }
+.bold { font-weight: 700; }
+.text-indigo { color: #4f46e5; }
+.text-small { font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-icon">✈</div>
+    <span class="header-title">Travelling for Work</span>
+    <span class="header-badge" id="score-badge" style="display:none">Score: 0</span>
+  </div>
+</div>
+
+<!-- DOTS -->
+<div class="dots-row">
+  <div class="dot-wrap"><div class="dot active" id="dot-0"></div><div class="dot-label active" id="lbl-0">Warm Up</div></div>
+  <div class="dot-line"></div>
+  <div class="dot-wrap"><div class="dot" id="dot-1"></div><div class="dot-label" id="lbl-1">Learn</div></div>
+  <div class="dot-line"></div>
+  <div class="dot-wrap"><div class="dot" id="dot-2"></div><div class="dot-label" id="lbl-2">Check</div></div>
+  <div class="dot-line"></div>
+  <div class="dot-wrap"><div class="dot" id="dot-3"></div><div class="dot-label" id="lbl-3">Apply</div></div>
+</div>
+
+<!-- ══════════════════ PHASE 0: HOOK ══════════════════ -->
+<div class="phase active" id="phase-0">
+
+  <div class="phase-label amber-label">
+    <div class="phase-label-icon">⚡</div>
+    <div class="phase-label-text">Warm Up</div>
+  </div>
+
+  <div class="card card-amber">
+    <p class="label-sm">Scenario</p>
+    <p class="bold mt4">It's Monday morning at <span class="text-indigo">Office Design Ltd.</span>, Düsseldorf. Your manager, Sarah Keane, says:</p>
+    <blockquote>"I need you to organise a business trip to our London head office next week. Book a hotel, arrange a flight and confirm the meeting. Can you handle it?"</blockquote>
+  </div>
+
+  <div class="card">
+    <h3>Discuss with a partner:</h3>
+    <p class="de">(Sprich mit einem Partner über die Fragen unten.)</p>
+    <div class="card card-amber mt8" style="margin-bottom:8px">
+      <p>🏨 You need to book a hotel room. Do you call the hotel or use a website? What information do you give?</p>
+    </div>
+    <div class="card card-amber mt8" style="margin-bottom:8px">
+      <p>✉️ Your manager wants written confirmation. How do you inform her about the arrangements?</p>
+    </div>
+    <div class="card card-amber mt8" style="margin-bottom:0">
+      <p>🗣️ What English phrases do you already know for booking a hotel?</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>👆 Which phrases do you already know? Tap all that apply.</h3>
+    <p class="de">(Welche Phrasen kennst du schon? Tippe auf alle, die du kennst.)</p>
+    <div class="phrase-grid">
+      <button class="phrase-btn" onclick="this.classList.toggle('selected')">"I would like to book a room."</button>
+      <button class="phrase-btn" onclick="this.classList.toggle('selected')">"Could I have a single room, please?"</button>
+      <button class="phrase-btn" onclick="this.classList.toggle('selected')">"How much is it per night?"</button>
+      <button class="phrase-btn" onclick="this.classList.toggle('selected')">"I have a reservation."</button>
+      <button class="phrase-btn" onclick="this.classList.toggle('selected')">None of these yet!</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Quick poll: Have you ever booked something in English?</h3>
+    <p class="de">(Hast du schon einmal etwas auf Englisch gebucht?)</p>
+    <div class="poll-grid" id="poll-btns">
+      <button class="poll-btn" onclick="selectPoll(this)">Yes, a hotel</button>
+      <button class="poll-btn" onclick="selectPoll(this)">Yes, a flight</button>
+      <button class="poll-btn" onclick="selectPoll(this)">Yes, something else</button>
+      <button class="poll-btn" onclick="selectPoll(this)">Not yet!</button>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="goTo(1)">Let's learn the key language →</button>
+</div>
+
+<!-- ══════════════════ PHASE 1: INPUT ══════════════════ -->
+<div class="phase" id="phase-1">
+
+  <div class="phase-label blue-label">
+    <div class="phase-label-icon">📖</div>
+    <div class="phase-label-text">Learn</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-phrases" onclick="switchTab('phrases')">📗 Key Phrases</button>
+    <button class="tab-btn" id="tab-vocab" onclick="switchTab('vocab')">📘 Vocabulary</button>
+  </div>
+  <div class="tab-content">
+
+    <!-- PHRASES TAB -->
+    <div class="tab-pane active" id="pane-phrases">
+
+      <div class="card card-blue" style="margin-bottom:12px">
+        <h3>📞 Booking a hotel room – on the phone</h3>
+        <p class="de">(Ein Hotelzimmer telefonisch buchen)</p>
+        <div class="phrase-box">
+          <div class="phrase-row"><span class="phrase-en">I'd like to reserve a room…</span><span class="phrase-fn">→ making a reservation</span></div>
+          <div class="phrase-row"><span class="phrase-en">…for three nights, from [date] to [date].</span><span class="phrase-fn">→ specifying dates</span></div>
+          <div class="phrase-row"><span class="phrase-en">Could you please confirm the booking?</span><span class="phrase-fn">→ asking for confirmation</span></div>
+          <div class="phrase-row"><span class="phrase-en">Would it be possible to have an early check-in?</span><span class="phrase-fn">→ polite request</span></div>
+          <div class="phrase-row"><span class="phrase-en">Could you arrange an airport transfer?</span><span class="phrase-fn">→ extra service</span></div>
+        </div>
+        <hr class="section-sep">
+        <p class="label-sm">Sample dialogue</p>
+        <p class="de">(Beispieldialog)</p>
+        <div class="dialogue">
+          <div class="dialogue-row"><span class="sp hotel">Hotel:</span><span>Good morning, The Grand Hotel, how may I help you?</span></div>
+          <div class="dialogue-row"><span class="sp you">You:</span><span>Good morning. I'd like to reserve a single room for three nights, from the 14th to the 17th of March, please.</span></div>
+          <div class="dialogue-row"><span class="sp hotel">Hotel:</span><span>Of course. Could I take your name and company?</span></div>
+          <div class="dialogue-row"><span class="sp you">You:</span><span>It's Morgan, calling on behalf of Office Design Ltd. Would it be possible to arrange an airport transfer?</span></div>
+          <div class="dialogue-row"><span class="sp hotel">Hotel:</span><span>Certainly. Could you confirm your arrival flight?</span></div>
+          <div class="dialogue-row"><span class="sp you">You:</span><span>Flight BA 245, arriving at 4:30 pm. Could you please confirm the booking by email?</span></div>
+        </div>
+      </div>
+
+      <div class="card card-rose" style="margin-bottom:12px">
+        <h3>❌ Cancelling a booking</h3>
+        <p class="de">(Eine Buchung stornieren)</p>
+        <div class="phrase-box" style="background:#fff1f2">
+          <div class="phrase-row"><span class="phrase-en" style="color:#be123c">I'm calling to cancel my reservation.</span><span class="phrase-fn">→ stating reason</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#be123c">Will there be a cancellation fee?</span><span class="phrase-fn">→ asking about costs</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#be123c">Could I get a refund, please?</span><span class="phrase-fn">→ requesting money back</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#be123c">I'd prefer a refund to a voucher.</span><span class="phrase-fn">→ stating preference</span></div>
+        </div>
+      </div>
+
+      <div class="card card-green">
+        <h3>✉️ Email – confirming arrangements</h3>
+        <p class="de">(E-Mail: Reiseinformationen bestätigen)</p>
+        <div class="phrase-box" style="background:#f0fdf4">
+          <div class="phrase-row"><span class="phrase-en" style="color:#16a34a">I am writing to confirm…</span><span class="phrase-fn">→ opening</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#16a34a">I have booked a room at…</span><span class="phrase-fn">→ arrangements</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#16a34a">An airport transfer has been arranged.</span><span class="phrase-fn">→ extra services</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#16a34a">Could you please confirm…?</span><span class="phrase-fn">→ request</span></div>
+          <div class="phrase-row"><span class="phrase-en" style="color:#16a34a">Please do not hesitate to contact me if…</span><span class="phrase-fn">→ closing</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOCAB TAB -->
+    <div class="tab-pane" id="pane-vocab">
+      <div class="vocab-grid" id="vocab-grid"></div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="goTo(2)">Time to check your knowledge →</button>
+</div>
+
+<!-- ══════════════════ PHASE 2: CHECK ══════════════════ -->
+<div class="phase" id="phase-2">
+
+  <div class="phase-label green-label">
+    <div class="phase-label-icon">✅</div>
+    <div class="phase-label-text">Check</div>
+  </div>
+
+  <div class="card card-green" style="margin-bottom:14px">
+    <p><strong>AFB I – Identify &amp; match.</strong> Answer all questions below.</p>
+    <p class="de">(Beantworte alle Fragen, um dein Verständnis zu überprüfen.)</p>
+  </div>
+
+  <!-- Q1: MC -->
+  <div class="card" id="q1">
+    <p class="label-sm">Q1 · Multiple choice</p>
+    <h3>You call a hotel to book a room. Which phrase is best?</h3>
+    <p class="de">(Du rufst ein Hotel an. Welche Formulierung passt am besten?)</p>
+    <div class="mt12">
+      <button class="mc-btn" onclick="checkMC(this,'q1',false,'Too informal – not appropriate for a business booking.')">A) "Hey, I want a room."</button>
+      <button class="mc-btn" onclick="checkMC(this,'q1',true,'✓ Correct! Formal, polite and clear.')">B) "Good morning, I'd like to reserve a single room for three nights, please."</button>
+      <button class="mc-btn" onclick="checkMC(this,'q1',false,'"I want" is too direct for a professional context. Use "I\'d like to" instead.')">C) "I want to make a booking for a room."</button>
+    </div>
+    <div class="feedback hidden" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2: MC (was gap-fill) -->
+  <div class="card" id="q2">
+    <p class="label-sm">Q2 · Multiple choice</p>
+    <h3>You need to cancel your hotel booking. Which sentence is correct?</h3>
+    <p class="de">(Du musst deine Buchung stornieren. Welcher Satz ist richtig?)</p>
+    <div class="mt12">
+      <button class="mc-btn" onclick="checkMC(this,'q2',false,'"I want to cancel" is too direct and informal for a business call.')">A) "I want to cancel my room."</button>
+      <button class="mc-btn" onclick="checkMC(this,'q2',true,'✓ Correct! Polite, clear and professional.')">B) "I'm calling to cancel my reservation. Will there be a cancellation fee?"</button>
+      <button class="mc-btn" onclick="checkMC(this,'q2',false,'This mixes up the phrases. State the reason first, then ask about fees.')">C) "I have a cancellation. Can I get a reservation fee?"</button>
+    </div>
+    <div class="feedback hidden" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3: True / False -->
+  <div class="card" id="q3-card">
+    <p class="label-sm">Q3 · True or False?</p>
+    <h3>Decide if each statement is True or False.</h3>
+    <p class="de">(Entscheide, ob jede Aussage richtig oder falsch ist.)</p>
+
+    <div class="card" style="background:#f8fafc;margin-top:12px" id="tf1">
+      <p>"Could you arrange an airport transfer?" is a polite way to make a request.</p>
+      <div class="tf-row">
+        <button class="tf-btn" onclick="checkTF(this,'tf1',true,'✓ Correct! "Could you…" is a polite modal structure for requests.')">True</button>
+        <button class="tf-btn" onclick="checkTF(this,'tf1',false,'Not quite. "Could you…" is indeed a polite, formal request.')">False</button>
+      </div>
+      <div class="feedback hidden" id="tf1-fb"></div>
+    </div>
+
+    <div class="card" style="background:#f8fafc;margin-top:8px" id="tf2">
+      <p>When you cancel a booking, it is always too late to get a refund.</p>
+      <div class="tf-row">
+        <button class="tf-btn" onclick="checkTF(this,'tf2',false,'Correct! A fee only applies for late cancellations. Early cancellations are usually free.')">True</button>
+        <button class="tf-btn" onclick="checkTF(this,'tf2',true,'✓ Correct! A fee only applies for late cancellations. Early cancellations are usually free.')">False</button>
+      </div>
+      <div class="feedback hidden" id="tf2-fb"></div>
+    </div>
+
+    <div class="card" style="background:#f8fafc;margin-top:8px" id="tf3">
+      <p>The subject line of a business email should clearly show the content of the email.</p>
+      <div class="tf-row">
+        <button class="tf-btn" onclick="checkTF(this,'tf3',true,'✓ Correct! A clear subject line helps the reader immediately.')">True</button>
+        <button class="tf-btn" onclick="checkTF(this,'tf3',false,'Not quite. A clear subject line is essential in business emails.')">False</button>
+      </div>
+      <div class="feedback hidden" id="tf3-fb"></div>
+    </div>
+  </div>
+
+  <!-- Q4: Matching -->
+  <div class="card" id="q4-card">
+    <p class="label-sm">Q4 · Matching</p>
+    <h3>Match each phrase (1–4) to its function (A–D).</h3>
+    <p class="de">(Ordne jede Phrase ihrer Funktion zu. Wähle aus dem Dropdown.)</p>
+
+    <div class="card card-blue mt12" style="margin-bottom:8px">
+      <p class="label-sm">Phrases</p>
+      <p style="font-size:13px;margin-top:4px">A. Asking for clarification &nbsp;|&nbsp; B. Making a reservation &nbsp;|&nbsp; C. Referring to an attachment &nbsp;|&nbsp; D. Asking about costs</p>
+    </div>
+
+    <div class="match-row"><span class="match-num">1.</span><span style="flex:1;font-size:13px;color:#475569">"I'd like to reserve a room…"</span><select id="m1"><option value="">–</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+    <div class="match-row"><span class="match-num">2.</span><span style="flex:1;font-size:13px;color:#475569">"Will there be a cancellation fee?"</span><select id="m2"><option value="">–</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+    <div class="match-row"><span class="match-num">3.</span><span style="flex:1;font-size:13px;color:#475569">"Please find the confirmation attached."</span><select id="m3"><option value="">–</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+    <div class="match-row"><span class="match-num">4.</span><span style="flex:1;font-size:13px;color:#475569">"Could you repeat that, please?"</span><select id="m4"><option value="">–</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+
+    <button class="btn-check" onclick="checkMatching()">Check matching ✓</button>
+    <div class="feedback hidden" id="match-fb"></div>
+  </div>
+
+  <button class="btn-primary" onclick="goTo(3)">Now apply what you've learned →</button>
+</div>
+
+<!-- ══════════════════ PHASE 3: TRANSFER ══════════════════ -->
+<div class="phase" id="phase-3">
+
+  <div class="phase-label violet-label phase-label">
+    <div class="phase-label-icon">⭐</div>
+    <div class="phase-label-text">Apply · AFB II</div>
+  </div>
+
+  <div class="card card-violet">
+    <p class="label-sm">🏢 Office Design Ltd. – Your Task</p>
+    <p class="mt8">Complete the email to Sarah Keane. Choose the correct option from each dropdown.</p>
+    <p class="de">(Vervollständige die E-Mail. Wähle jeweils die richtige Option aus dem Dropdown-Menü.)</p>
+  </div>
+
+  <div class="card">
+    <div class="email-meta">
+      <div><span>To:</span> s.keane [at] officedesign.co.uk</div>
+      <div><span>From:</span> j.morgan [at] officedesign.de</div>
+      <div style="margin-top:4px"><span>Subject:</span>
+        <select id="eg-subject" style="margin-left:4px;display:inline-block;width:auto;min-width:180px">
+          <option value="">– select –</option>
+          <option value="w">RE: Monday Meeting</option>
+          <option value="c">Travel Arrangements – London Visit, 14–17 March</option>
+          <option value="w2">Hotel London</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="email-body">
+      <p>Dear Ms Keane,</p>
+      <select id="eg-opening" style="margin:8px 0">
+        <option value="">– select opening sentence –</option>
+        <option value="w">I am emailing because of your trip.</option>
+        <option value="c">I am writing to confirm the travel arrangements for your upcoming visit to our London head office.</option>
+        <option value="w2">Here is some information about London.</option>
+      </select>
+      <select id="eg-booking" style="margin:4px 0">
+        <option value="">– select booking details –</option>
+        <option value="w">There is a hotel called The Strand Hotel in London.</option>
+        <option value="w2">I booked you a room. It costs money and has a bed.</option>
+        <option value="c">I have booked a single room at The Strand Hotel, London, for three nights (14–17 March), including breakfast. The rate is £120 per night. An airport transfer has also been arranged.</option>
+      </select>
+      <select id="eg-request" style="margin:4px 0">
+        <option value="">– select request –</option>
+        <option value="c">Could you please confirm your flight details so that the hotel can arrange the transfer?</option>
+        <option value="w">Tell me your flight number when you know it.</option>
+        <option value="w2">The hotel needs your name and passport number.</option>
+      </select>
+      <select id="eg-closing" style="margin:4px 0">
+        <option value="">– select closing –</option>
+        <option value="w">See you soon, bye!</option>
+        <option value="w2">I hope this is okay for you.</option>
+        <option value="c">Please do not hesitate to contact me if you have any questions.</option>
+      </select>
+      <p style="margin-top:8px;color:#64748b">Best regards,<br>James Morgan</p>
+    </div>
+
+    <button class="btn-check" style="width:100%;margin-top:16px" onclick="checkEmail()">Check my email ✓</button>
+    <div class="feedback hidden" id="email-fb"></div>
+  </div>
+
+  <!-- Self-check -->
+  <div class="card">
+    <h3>💭 Reflect:</h3>
+    <p class="de">(Was hast du heute gelernt?)</p>
+    <div class="mt12">
+      <div class="check-item"><input type="checkbox"> <span>I can book a hotel room in English.<br><span class="de" style="margin:0">(Ich kann auf Englisch ein Hotelzimmer buchen.)</span></span></div>
+      <div class="check-item"><input type="checkbox"> <span>I know how to cancel a booking politely.<br><span class="de" style="margin:0">(Ich weiß, wie man höflich storniert.)</span></span></div>
+      <div class="check-item"><input type="checkbox"> <span>I understand the structure of a business email.<br><span class="de" style="margin:0">(Ich verstehe den Aufbau einer Geschäfts-E-Mail.)</span></span></div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="finish()">🎉 Complete Module</button>
+</div>
+
+<!-- ══════════════════ COMPLETE ══════════════════ -->
+<div class="phase" id="phase-complete">
+  <div class="complete-card">
+    <div class="complete-emoji">🎉</div>
+    <div class="complete-title">Well done!</div>
+    <div class="complete-sub">You've completed the <em>Travelling for Work</em> module.</div>
+    <div class="score-badge" id="final-score"></div>
+    <p class="complete-sub">Next: check your email answers with your teacher and practise the key phrases with a partner.</p>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+var score = 0;
+var answered = { q1: false, q2: false, tf1: false, tf2: false, tf3: false, matching: false, email: false };
+
+// ── VOCAB DATA ──
+var vocab = [
+  { word: "to reserve / to book", def: "to arrange something in advance (room, ticket, seat)", ex: "I'd like to reserve a single room." },
+  { word: "reservation / booking", def: "an arrangement made in advance", ex: "Can you confirm my booking?" },
+  { word: "single / double room", def: "a room for one person / two people", ex: "I need a single room with a desk." },
+  { word: "check-in / check-out", def: "arrival / departure at a hotel", ex: "Check-in is at 3 pm; check-out is at 11 am." },
+  { word: "early check-in", def: "arriving before the standard check-in time", ex: "Would it be possible to have an early check-in?" },
+  { word: "airport transfer", def: "transport organised between the airport and the hotel", ex: "Could you arrange an airport transfer?" },
+  { word: "cancellation fee", def: "a charge you pay for cancelling a booking", ex: "Will there be a cancellation fee?" },
+  { word: "refund", def: "money paid back after a cancellation", ex: "I'd prefer a refund to a voucher." },
+  { word: "itinerary", def: "a detailed plan of a trip with dates and places", ex: "I'll send you the full itinerary by email." },
+  { word: "confirmation", def: "written proof that a booking has been accepted", ex: "Please send a written confirmation." },
+];
+
+(function buildVocab() {
+  var grid = document.getElementById('vocab-grid');
+  var html = '';
+  for (var i = 0; i < vocab.length; i++) {
+    var v = vocab[i];
+    html += '<div class="vocab-item"><div class="vocab-word">' + v.word + '</div><div class="vocab-def">' + v.def + '</div><div class="vocab-ex">"' + v.ex + '"</div></div>';
+  }
+  grid.innerHTML = html;
+})();
+
+// ── NAVIGATION ──
+var PHASES = ['phase-0','phase-1','phase-2','phase-3','phase-complete'];
+
+function goTo(index) {
+  for (var i = 0; i < PHASES.length; i++) {
+    document.getElementById(PHASES[i]).classList.remove('active');
+  }
+  document.getElementById(PHASES[index]).classList.add('active');
+
+  for (var d = 0; d < 4; d++) {
+    var dot = document.getElementById('dot-' + d);
+    var lbl = document.getElementById('lbl-' + d);
+    if (d <= index) {
+      dot.classList.add('active');
+      lbl.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+      lbl.classList.remove('active');
+    }
+  }
+
+  var pct = Math.min(((index + 1) / 4) * 100, 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  if (index >= 2) document.getElementById('score-badge').style.display = 'inline-block';
+
+  window.scrollTo(0, 0);
+}
+
+// ── POLL ──
+function selectPoll(btn) {
+  var btns = document.querySelectorAll('#poll-btns .poll-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
+  btn.classList.add('selected');
+}
+
+// ── TABS ──
+function switchTab(name) {
+  var panes = ['phrases','vocab'];
+  for (var i = 0; i < panes.length; i++) {
+    document.getElementById('pane-' + panes[i]).classList.remove('active');
+    document.getElementById('tab-' + panes[i]).classList.remove('active');
+  }
+  document.getElementById('pane-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ── UPDATE SCORE DISPLAY ──
+function updateScore() {
+  document.getElementById('score-badge').textContent = 'Score: ' + score;
+}
+
+// ── MC ──
+function checkMC(btn, qid, correct, msg) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  var btns = btn.parentNode.querySelectorAll('.mc-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+  if (correct) {
+    btn.classList.add('correct');
+    score++;
+    updateScore();
+  } else {
+    btn.classList.add('wrong');
+  }
+  var fb = document.getElementById(qid + '-fb');
+  fb.textContent = msg;
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+}
+
+// ── TF ──
+function checkTF(btn, qid, correct, msg) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  var btns = btn.parentNode.querySelectorAll('.tf-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (correct) { score++; updateScore(); }
+  var fb = document.getElementById(qid + '-fb');
+  fb.textContent = msg;
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+}
+
+// ── MATCHING ──
+function checkMatching() {
+  if (answered['matching']) return;
+  answered['matching'] = true;
+  var correct = { m1: 'B', m2: 'D', m3: 'C', m4: 'A' };
+  var got = 0;
+  var lines = [];
+  for (var id in correct) {
+    var sel = document.getElementById(id);
+    sel.disabled = true;
+    var ok = sel.value === correct[id];
+    if (ok) { got++; sel.classList.add('correct'); }
+    else sel.classList.add('wrong');
+    lines.push((ok ? '✓' : '✗') + ' Phrase ' + id.slice(1) + ' → ' + correct[id] + (ok ? '' : ' (you chose: ' + (sel.value || '–') + ')'));
+  }
+  score += got;
+  updateScore();
+  var fb = document.getElementById('match-fb');
+  fb.textContent = lines.join(' | ');
+  fb.className = 'feedback ' + (got === 4 ? 'correct' : 'wrong');
+}
+
+// ── EMAIL GAPS ──
+function checkEmail() {
+  if (answered['email']) return;
+  answered['email'] = true;
+  var fields = [
+    { id: 'eg-subject',  label: 'Subject' },
+    { id: 'eg-opening',  label: 'Opening' },
+    { id: 'eg-booking',  label: 'Booking details' },
+    { id: 'eg-request',  label: 'Request' },
+    { id: 'eg-closing',  label: 'Closing' },
+  ];
+  var got = 0;
+  var lines = [];
+  for (var i = 0; i < fields.length; i++) {
+    var sel = document.getElementById(fields[i].id);
+    sel.disabled = true;
+    var ok = sel.value === 'c';
+    if (ok) { got++; sel.classList.add('correct'); }
+    else sel.classList.add('wrong');
+    lines.push((ok ? '✓' : '✗') + ' ' + fields[i].label);
+  }
+  score += got;
+  updateScore();
+  var fb = document.getElementById('email-fb');
+  fb.textContent = lines.join('  |  ') + '  –  ' + got + '/5 correct';
+  fb.className = 'feedback ' + (got === 5 ? 'correct' : 'wrong');
+}
+
+// ── FINISH ──
+function finish() {
+  document.getElementById('final-score').textContent = 'Your score: ' + score + ' points';
+  goTo(4);
+}
+</script>
+</body>
+</html>
