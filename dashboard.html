@@ -292,6 +292,7 @@ tbody tr:hover { background: #FAFAFE; }
 .ring-low  { background: #FEF2F2; color: #7F1D1D; }
 .ring-grey { background: #F3F4F6; color: #9CA3AF; }
 </style>
+<script src="nav.js" defer></script>
 </head>
 <body>
 
@@ -368,6 +369,25 @@ tbody tr:hover { background: #FAFAFE; }
       <button class="btn btn-ghost btn-sm" style="flex:1" onclick="closeCleanModal()">Schließen</button>
     </div>
     <div id="clean-status" style="font-size:0.78rem;text-align:center;margin-top:0.75rem;min-height:1rem;color:var(--text-muted)"></div>
+  </div>
+</div>
+
+<!-- ── Notenskala-Modal ── -->
+<div class="modal-backdrop" id="grade-scale-modal">
+  <div class="modal" style="max-width:360px">
+    <h3>Notenskala konfigurieren</h3>
+    <p>Mindest-Score (%) für jede Note. Note 6 = unter Note-5-Schwelle.</p>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:0.6rem 1rem;align-items:center;margin:1rem 0">
+      <label style="font-weight:600">Note 1 ab</label><input type="number" id="gs-1" min="0" max="100" style="padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem">
+      <label style="font-weight:600">Note 2 ab</label><input type="number" id="gs-2" min="0" max="100" style="padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem">
+      <label style="font-weight:600">Note 3 ab</label><input type="number" id="gs-3" min="0" max="100" style="padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem">
+      <label style="font-weight:600">Note 4 ab</label><input type="number" id="gs-4" min="0" max="100" style="padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem">
+      <label style="font-weight:600">Note 5 ab</label><input type="number" id="gs-5" min="0" max="100" style="padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.88rem">
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeGradeModal()">Abbrechen</button>
+      <button class="btn" onclick="saveGradeScale()">Speichern</button>
+    </div>
   </div>
 </div>
 
@@ -497,6 +517,8 @@ tbody tr:hover { background: #FAFAFE; }
       <div class="filter-group" id="exam-class-filters">
         <button class="filter-btn active" data-class="all" onclick="setExamClassFilter('all', this)">Alle Klassen</button>
       </div>
+      <button class="toggle-chip" onclick="openGradeModal()" style="background:none;border:1px solid var(--border);cursor:pointer">⚙ Notenskala</button>
+      <button class="toggle-chip" onclick="exportCSV()" style="background:none;border:1px solid var(--border);cursor:pointer">⬇ CSV</button>
       <a href="pruefungs-dashboard.html" class="toggle-chip" style="text-decoration:none">
         Live-Ansicht →
       </a>
@@ -509,6 +531,7 @@ tbody tr:hover { background: #FAFAFE; }
             <th>Code</th>
             <th>Prüfung</th>
             <th>Score</th>
+            <th>Note</th>
             <th>Status</th>
             <th>Gestartet</th>
             <th>Abgegeben</th>
@@ -707,7 +730,7 @@ function renderExamTable() {
 
   const tbody = document.getElementById('exam-body');
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Keine Prüfungsdaten</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Keine Prüfungsdaten</div></div></td></tr>`;
     return;
   }
 
@@ -729,10 +752,13 @@ function renderExamTable() {
       ? `<span style="font-weight:600">${esc(displayName)}</span> <span class="code-chip" style="font-size:0.68rem">${esc(r.code)}</span>`
       : `<span class="code-chip">${esc(r.code)}</span>`;
 
+    const note = scoreToNote(score);
+    const noteColor = note === '1' || note === '2' ? '#10B981' : note === '3' || note === '4' ? '#F59E0B' : note === '—' ? 'var(--text-muted)' : '#EF4444';
     return `<tr>
       <td>${nameHtml}</td>
       <td><span class="material-name" style="font-size:0.78rem">${esc(examLabel)}</span></td>
       <td>${scoreBar}</td>
+      <td><span style="font-weight:700;color:${noteColor}">${note}</span></td>
       <td>${pill}</td>
       <td><span class="time-text">${tStart}</span></td>
       <td><span class="time-text">${tDone}</span></td>
@@ -919,6 +945,51 @@ document.getElementById('cs-dupes').onclick = async function () {
 function setCleanStatus(msg) {
   document.getElementById('clean-status').textContent = msg;
 }
+
+/* ── Notenberechnung ── */
+const DEFAULT_SCALE = { 1: 92, 2: 81, 3: 67, 4: 50, 5: 30 };
+let gradeScale = JSON.parse(localStorage.getItem('gradeScale') || 'null') || DEFAULT_SCALE;
+function scoreToNote(score) {
+  if (score === null) return '—';
+  for (const n of [1,2,3,4,5]) { if (score >= gradeScale[n]) return String(n); }
+  return '6';
+}
+window.openGradeModal = function () {
+  [1,2,3,4,5].forEach(n => { document.getElementById('gs-' + n).value = gradeScale[n]; });
+  document.getElementById('grade-scale-modal').classList.add('open');
+};
+window.closeGradeModal = function () { document.getElementById('grade-scale-modal').classList.remove('open'); };
+window.saveGradeScale = function () {
+  [1,2,3,4,5].forEach(n => { gradeScale[n] = parseInt(document.getElementById('gs-' + n).value) || DEFAULT_SCALE[n]; });
+  localStorage.setItem('gradeScale', JSON.stringify(gradeScale));
+  closeGradeModal();
+  renderExamTable();
+};
+document.getElementById('grade-scale-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGradeModal(); });
+
+/* ── CSV-Export ── */
+window.exportCSV = function () {
+  let rows = examData;
+  if (activeExamFilter !== 'all') rows = rows.filter(r => r.exam_id === activeExamFilter);
+  if (activeExamClassFilter !== 'all') rows = rows.filter(r => r.code.startsWith(activeExamClassFilter));
+  const lines = ['"Code","Name","Prüfung","Score%","Note","Status","Gestartet","Abgegeben"'];
+  rows.forEach(r => {
+    const name  = resolveName(r.code);
+    const exam  = EXAM_NAMES[r.exam_id] || r.exam_id;
+    const score = r.score !== null ? r.score : '';
+    const note  = scoreToNote(r.score);
+    const status = r.submitted_at ? 'Abgegeben' : 'Läuft';
+    const tStart = r.started_at   ? new Date(r.started_at).toLocaleString('de-DE') : '';
+    const tDone  = r.submitted_at ? new Date(r.submitted_at).toLocaleString('de-DE') : '';
+    lines.push([r.code, name, exam, score, note, status, tStart, tDone].map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
+  });
+  const csv   = '\uFEFF' + lines.join('\r\n');
+  const blob  = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a     = document.createElement('a');
+  a.href      = URL.createObjectURL(blob);
+  a.download  = 'pruefungen_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+};
 
 /* ── Helpers ── */
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }

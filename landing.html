@@ -182,6 +182,29 @@ h1 {
 
 .section-label:first-of-type { margin-top: 0; }
 
+/* ─── TEACHER SECTION ─── */
+.teacher-section {
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: -4px;
+}
+
+.lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6D28D9;
+  background: #EDE9FE;
+  border: 1px solid #C4B5FD;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
 /* ─── FOOTER ─── */
 footer {
   padding: 24px 40px;
@@ -243,50 +266,52 @@ footer {
   </div>
 
   <div class="section-label">Lehrkräfte</div>
-  <div class="grid">
-    <a href="dashboard.html" class="card">
-      <div class="card-header">
-        <div class="card-icon icon-purple">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+  <div class="teacher-section">
+    <div class="grid">
+      <a href="login.html" class="card">
+        <div class="card-header">
+          <div class="card-icon icon-purple">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <span class="lock-badge">🔒 Login erforderlich</span>
         </div>
-        <span class="card-badge">Tracking</span>
-      </div>
-      <h2>Lernfortschritt</h2>
-      <p>Welche Schülerinnen haben welche Materialien geöffnet und abgeschlossen?</p>
-    </a>
+        <h2>Lernfortschritt</h2>
+        <p>Welche Schülerinnen haben welche Materialien geöffnet und abgeschlossen?</p>
+      </a>
 
-    <a href="pruefung-erstellen.html" class="card">
-      <div class="card-header">
-        <div class="card-icon icon-amber">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <a href="login.html" class="card">
+        <div class="card-header">
+          <div class="card-icon icon-amber">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <span class="lock-badge">🔒 Login erforderlich</span>
         </div>
-        <span class="card-badge">Admin</span>
-      </div>
-      <h2>Prüfung erstellen</h2>
-      <p>Fragen-Editor, JSON-Import via Claude AI, Aktivierung mit einem Klick.</p>
-    </a>
+        <h2>Prüfung erstellen</h2>
+        <p>Fragen-Editor, JSON-Import via Claude AI, Aktivierung mit einem Klick.</p>
+      </a>
 
-    <a href="pruefungs-dashboard.html" class="card">
-      <div class="card-header">
-        <div class="card-icon icon-green">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <a href="login.html" class="card">
+        <div class="card-header">
+          <div class="card-icon icon-green">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <span class="lock-badge">🔒 Login erforderlich</span>
         </div>
-        <span class="card-badge">Live</span>
-      </div>
-      <h2>Live-Monitoring</h2>
-      <p>Echtzeit-Übersicht während einer laufenden Prüfung — Abgaben und Scores.</p>
-    </a>
+        <h2>Live-Monitoring</h2>
+        <p>Echtzeit-Übersicht während einer laufenden Prüfung — Abgaben und Scores.</p>
+      </a>
 
-    <a href="codegenerator.html" class="card">
-      <div class="card-header">
-        <div class="card-icon icon-slate">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <a href="login.html" class="card">
+        <div class="card-header">
+          <div class="card-icon icon-slate">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </div>
+          <span class="lock-badge">🔒 Login erforderlich</span>
         </div>
-        <span class="card-badge">Einmalig</span>
-      </div>
-      <h2>Code-Generator</h2>
-      <p>Schüler-Codes generieren und drucken (z.B. BK24a-01 bis BK24a-30).</p>
-    </a>
+        <h2>Code-Generator</h2>
+        <p>Schüler-Codes generieren und drucken (z.B. BK24a-01 bis BK24a-30).</p>
+      </a>
+    </div>
   </div>
 </main>
 
