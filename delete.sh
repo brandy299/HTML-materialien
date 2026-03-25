@@ -3,6 +3,8 @@
 # Nutzung: ./delete.sh "materialien/GPU/LF5/datei.html"
 
 set -e
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 PFAD="$1"

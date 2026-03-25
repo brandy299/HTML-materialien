@@ -110,10 +110,37 @@ def get_file_date(fpath: str) -> str:
     except Exception:
         return datetime.now().strftime("%d.%m.%Y")
 
+def fix_encoding(text: str) -> str:
+    """Repariert double-encoded UTF-8 Sequenzen (z.B. Ã¼ → ü, â → →).
+    Wird nach jedem Lesen aufgerufen, damit Encoding-Fehler sich nicht akkumulieren."""
+    result = []
+    i = 0
+    while i < len(text):
+        c = text[i]
+        code = ord(c)
+        if 0x00C0 <= code <= 0x00FF:
+            j = i + 1
+            while j < len(text) and 0x0080 <= ord(text[j]) <= 0x00BF:
+                j += 1
+            if j > i + 1:
+                try:
+                    bs = bytes(ord(ch) for ch in text[i:j])
+                    result.append(bs.decode('utf-8'))
+                    i = j
+                    continue
+                except (UnicodeDecodeError, ValueError):
+                    pass
+        result.append(c)
+        i += 1
+    return ''.join(result)
+
+
 def update_index_html(index_path: str, entries: list) -> None:
     """Ersetzt das materialien-Array in index.html (UTF-8, kein Encoding-Problem)."""
     with open(index_path, encoding="utf-8") as fh:
         content = fh.read()
+
+    content = fix_encoding(content)
 
     new_json = json.dumps(entries, ensure_ascii=False, indent=2)
 
