@@ -1257,7 +1257,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 </div><!-- /.app-layout -->
 
-<!-- ââââââ MODALS ââââââ -->
+<!-- ══════ MODALS ══════ -->
 
 <!-- UPLOAD -->
 <div class="modal-backdrop" id="modalUpload">
@@ -1295,7 +1295,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
       Persönliches GitHub Access Token (klassisch) mit <strong>repo</strong>-Scope für Schreibzugriff auf das Repository.
     </p>
     <label>Token</label>
-    <input type="password" id="inputToken" placeholder="ghp_â¦">
+    <input type="password" id="inputToken" placeholder="ghp_…">
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalToken')">Abbrechen</button>
       <button class="btn-primary" onclick="saveToken()">Speichern</button>
@@ -1336,17 +1336,17 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 <div id="toast"></div>
 
 <script>
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    CONSTANTS
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 const OWNER   = 'brandy299';
 const REPO    = 'HTML-materialien';
 const API     = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    DATA
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 const materialien = [
   {
     "name": "hs2d_ls5_travelling_7",
@@ -1413,9 +1413,9 @@ const materialien = [
   }
 ];
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    STATE
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 let editMode      = false;
 let renameTarget  = null;
 let deleteTarget  = null;
@@ -1426,9 +1426,9 @@ let selectedFach    = null;
 let selectedThema   = null;
 let previewMaterial = null;
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    FACH COLOR MAP
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 const _fachColorMap = {};
 
 function getFachClass(fach) {
@@ -1459,9 +1459,9 @@ const COLOR_VALUES = {
 
 function cv(cls) { return COLOR_VALUES[cls] || COLOR_VALUES['fc-0']; }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    UTILITIES
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function esc(s) {
   return String(s)
     .replace(/&/g, '&amp;')
@@ -1471,9 +1471,9 @@ function esc(s) {
     .replace(/'/g, '&#39;');
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    SIDEBAR
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function buildSidebar() {
   const tree = document.getElementById('sidebar-tree');
   document.getElementById('sidebarAllCount').textContent = materialien.length;
@@ -1481,7 +1481,7 @@ function buildSidebar() {
   const allEl = document.getElementById('sidebarAll');
   allEl.classList.toggle('active', selectedFach === null && selectedThema === null);
 
-  // Build fach â thema â count map
+  // Build fach → thema → count map
   const fachMap = {};
   materialien.forEach(m => {
     if (!fachMap[m.fach]) fachMap[m.fach] = {};
@@ -1575,10 +1575,10 @@ function updateBreadcrumb() {
   const bcD = document.getElementById('breadcrumb-desktop');
   let html = '<span class="bc-item" onclick="selectFolder(null,null)">Alle</span>';
   if (selectedFach) {
-    html += '<span class="bc-sep">âº</span>';
+    html += '<span class="bc-sep">›</span>';
     if (selectedThema) {
       html += '<span class="bc-item" onclick="selectFolder(\'' + esc(selectedFach) + '\',null)">' + esc(selectedFach) + '</span>';
-      html += '<span class="bc-sep">âº</span>';
+      html += '<span class="bc-sep">›</span>';
       html += '<span class="bc-cur">' + esc(selectedThema) + '</span>';
     } else {
       html += '<span class="bc-cur">' + esc(selectedFach) + '</span>';
@@ -1588,9 +1588,9 @@ function updateBreadcrumb() {
   if (bcD) bcD.innerHTML = html;
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    PREVIEW PANEL
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function showPreview(m) {
   previewMaterial = m;
   const cls = getFachClass(m.fach);
@@ -1641,9 +1641,9 @@ function previewDelete() {
   if (previewMaterial) showDelete(previewMaterial);
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    RENDER
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function syncSearch(val) {
   const mobile = document.getElementById('search');
   const desktop = document.getElementById('search-desktop');
@@ -1690,7 +1690,7 @@ function render(query) {
     return;
   }
 
-  // "Zuletzt hinzugefügt" â only when viewing all without search
+  // "Zuletzt hinzugefügt" — only when viewing all without search
   if (!selectedFach && !selectedThema && !q) {
     const recent = materialien.slice(-3).reverse();
     const recSec = document.createElement('div');
@@ -1829,9 +1829,9 @@ function copyLink(e, pfad) {
     .then(function () { showToast('Link kopiert!'); });
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    MOBILE SIDEBAR
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebar-overlay').classList.toggle('open');
@@ -1842,9 +1842,9 @@ function closeSidebar() {
   document.getElementById('sidebar-overlay').classList.remove('open');
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    EDIT MODE
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function toggleEdit() {
   editMode = !editMode;
   document.body.classList.toggle('edit-mode', editMode);
@@ -1856,9 +1856,9 @@ function toggleEdit() {
   showToast(editMode ? 'Bearbeitungsmodus aktiv' : 'Bearbeitungsmodus beendet');
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    TOAST
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 let _toastTimer;
 function showToast(msg) {
   const el = document.getElementById('toast');
@@ -1868,9 +1868,9 @@ function showToast(msg) {
   _toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    MODALS
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function openModal(id) {
   document.getElementById(id).classList.add('open');
 }
@@ -1884,9 +1884,9 @@ document.querySelectorAll('.modal-backdrop').forEach(function (bd) {
   });
 });
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    TOKEN
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function showToken() {
   document.getElementById('inputToken').value = getToken();
   openModal('modalToken');
@@ -1898,9 +1898,9 @@ function saveToken() {
 }
 function getToken() { return localStorage.getItem('gh_token') || ''; }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    GITHUB API
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 async function ghGet(path) {
   const r = await fetch(API + '/contents/' + path, {
     headers: {
@@ -1956,9 +1956,9 @@ async function updateIndex(newData) {
   });
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    UPLOAD
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function showUpload() {
   uploadFile = null;
   document.getElementById('uploadTitel').value = '';
@@ -1976,7 +1976,7 @@ function fileChosen(e) {
   const f = e.target.files[0];
   if (!f) return;
   uploadFile = f;
-  document.getElementById('dzText').textContent = 'â ' + f.name;
+  document.getElementById('dzText').textContent = '✓ ' + f.name;
   if (!document.getElementById('uploadTitel').value)
     document.getElementById('uploadTitel').value = f.name.replace(/\.html?$/i, '');
 }
@@ -1994,7 +1994,7 @@ function dzDrop(e) {
   const f = e.dataTransfer.files[0];
   if (f && f.name.toLowerCase().endsWith('.html')) {
     uploadFile = f;
-    document.getElementById('dzText').textContent = 'â ' + f.name;
+    document.getElementById('dzText').textContent = '✓ ' + f.name;
     if (!document.getElementById('uploadTitel').value)
       document.getElementById('uploadTitel').value = f.name.replace(/\.html?$/i, '');
   } else if (f) {
@@ -2008,11 +2008,11 @@ async function doUpload() {
   const fach  = document.getElementById('uploadFach').value.trim();
   const thema = document.getElementById('uploadThema').value.trim();
   if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (âï¸)');
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnUpload');
   btn.disabled = true;
-  btn.textContent = 'Hochladenâ¦';
+  btn.textContent = 'Hochladen…';
 
   const pfad = 'materialien/' + fach + '/' + thema + '/' + uploadFile.name;
   const pw = document.getElementById('progressWrap');
@@ -2056,9 +2056,9 @@ async function doUpload() {
   }
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    RENAME
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function showRename(m) {
   if (!m) return;
   renameTarget = m;
@@ -2074,11 +2074,11 @@ async function doRename() {
   const fach  = document.getElementById('inputFach').value.trim();
   const thema = document.getElementById('inputThema').value.trim();
   if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (âï¸)');
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnSaveRename');
   btn.disabled = true;
-  btn.textContent = 'Speichernâ¦';
+  btn.textContent = 'Speichern…';
 
   const idx = materialien.indexOf(renameTarget);
   if (idx < 0) { btn.disabled = false; btn.textContent = 'Speichern'; return; }
@@ -2091,7 +2091,7 @@ async function doRename() {
     if (newPfad !== oldPfad) {
       const old = await ghGet(oldPfad);
       await ghPut(newPfad, {
-        message: 'Move: ' + renameTarget.name + ' â ' + titel,
+        message: 'Move: ' + renameTarget.name + ' → ' + titel,
         content: old.content.replace(/\n/g, '')
       });
       await ghDelete(oldPfad, old.sha, 'Remove old: ' + oldPfad);
@@ -2115,9 +2115,9 @@ async function doRename() {
   }
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    DELETE
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 function showDelete(m) {
   if (!m) return;
   deleteTarget = m;
@@ -2128,11 +2128,11 @@ function showDelete(m) {
 
 async function doDelete() {
   if (!deleteTarget) return;
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (âï¸)');
+  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnConfirmDelete');
   btn.disabled    = true;
-  btn.textContent = 'Löschenâ¦';
+  btn.textContent = 'Löschen…';
 
   try {
     const fileInfo = await ghGet(deleteTarget.pfad);
@@ -2157,9 +2157,9 @@ async function doDelete() {
   }
 }
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    GLOBAL DRAG & DROP
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 let _dragCounter = 0;
 
 document.addEventListener('dragenter', function (e) {
@@ -2185,16 +2185,16 @@ document.addEventListener('drop', function (e) {
     uploadFile = f;
     showUpload();
     // Re-apply file info after modal opens
-    document.getElementById('dzText').textContent = 'â ' + f.name;
+    document.getElementById('dzText').textContent = '✓ ' + f.name;
     document.getElementById('uploadTitel').value  = f.name.replace(/\.html?$/i, '');
   } else if (f) {
     showToast('Nur HTML-Dateien erlaubt');
   }
 });
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    KEYBOARD
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-backdrop.open').forEach(function (m) {
@@ -2209,9 +2209,9 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-/* âââââââââââââââââââââââââââââââââââââââââââ
+/* ═══════════════════════════════════════════
    INIT
-âââââââââââââââââââââââââââââââââââââââââââ */
+═══════════════════════════════════════════ */
 buildSidebar();
 render('');
 updateBreadcrumb();

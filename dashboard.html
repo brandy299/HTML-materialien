@@ -545,8 +545,10 @@ let activeExamClassFilter = 'all';
 let showOnlyCompleted = false;
 let refreshTimer = null;
 
-/* ── Auth (temporarily disabled) ── */
-document.getElementById('dashboard')?.remove();
+/* ── Auth guard ── */
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) { window.location.href = 'login.html'; }
+
 document.getElementById('btn-logout').onclick = async () => {
   clearInterval(refreshTimer);
   await supabase.auth.signOut();

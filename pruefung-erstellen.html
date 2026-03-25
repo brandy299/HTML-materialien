@@ -395,6 +395,7 @@ header {
     <button class="btn btn-ghost" onclick="openImport()">⬆ JSON importieren</button>
     <button class="btn" onclick="newExam()">+ Neue Prüfung</button>
     <a href="dashboard.html" class="btn btn-ghost" style="text-decoration:none">← Dashboard</a>
+    <button class="btn btn-ghost" id="btn-logout">Abmelden</button>
   </div>
 </header>
 
@@ -497,6 +498,10 @@ const sb = createClient(
   'https://yodanvzkkhlqemlvtvey.supabase.co',
   'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
 );
+
+/* ── Auth guard ── */
+const { data: { session } } = await sb.auth.getSession();
+if (!session) { window.location.href = 'login.html'; }
 
 const BASE_URL = location.origin + location.pathname.replace('pruefung-erstellen.html', 'pruefung.html');
 
@@ -863,6 +868,11 @@ window.exportJSON = function () {
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 /* ═══════════ INIT ═══════════ */
+document.getElementById('btn-logout').onclick = async () => {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
+};
+
 loadList();
 </script>
 </body>

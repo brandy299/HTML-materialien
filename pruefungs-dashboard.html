@@ -415,6 +415,7 @@ tbody tr:hover { background: #FAFAFE; }
     <span id="last-refresh">—</span>
     <button class="btn-sm" id="btn-refresh" onclick="loadData()">Aktualisieren</button>
     <a href="dashboard.html" class="btn-sm" style="text-decoration:none">← Haupt-Dashboard</a>
+    <button class="btn-sm" id="btn-logout" style="opacity:0.7">Abmelden</button>
   </div>
 </header>
 
@@ -557,6 +558,10 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const SUPABASE_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── Auth guard ── */
+const { data: { session } } = await sb.auth.getSession();
+if (!session) { window.location.href = 'login.html'; }
 
 /* Exam display names */
 const EXAM_NAMES = {
@@ -814,6 +819,11 @@ window.setAutoRefresh = function(secs) {
       loadData();
     }
   }, 1000);
+};
+
+document.getElementById('btn-logout').onclick = async () => {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
 };
 
 /* ─── Init ─── */
