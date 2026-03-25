@@ -67,18 +67,6 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-#hamburger {
-  background: none;
-  border: none;
-  color: #D1D5DB;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
 .logo {
   display: flex;
   align-items: center;
@@ -159,16 +147,6 @@ body {
 .hbtn.primary:hover { background: var(--primary-hover); }
 .hbtn.active { color: #F9FAFB; background: rgba(255,255,255,0.1); }
 
-/* ---- SIDEBAR OVERLAY ---- */
-#sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 39;
-}
-#sidebar-overlay.open { display: block; }
-
 /* ---- DRAG OVERLAY ---- */
 #dragOverlay {
   display: none;
@@ -193,183 +171,123 @@ body {
   min-height: calc(100vh - 0px);
 }
 
-/* ---- SIDEBAR ---- */
-#sidebar {
-  width: var(--sidebar-w);
-  flex-shrink: 0;
-  background: var(--sidebar-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 40;
-  overflow-y: auto;
-  transition: transform 300ms ease;
-}
-
-#sidebar-inner {
-  padding: 16px 0 24px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-/* Logo in sidebar */
-#sidebar-inner::before {
-  content: '';
-}
-
-.sidebar-logo-area {
-  padding: 4px 12px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: 8px;
-}
-
-.sidebar-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: #4B5563;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0 12px;
-  margin-bottom: 4px;
-}
-
-.sidebar-all {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
-  border-radius: 0;
-  cursor: pointer;
-  color: #9CA3AF;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 150ms;
-}
-.sidebar-all:hover { background: rgba(255,255,255,0.05); color: #F9FAFB; }
-.sidebar-all.active { background: rgba(79,70,229,0.15); color: #A5B4FC; }
-
-.all-icon { display: flex; align-items: center; }
-
-.sb-divider {
-  height: 1px;
-  background: rgba(255,255,255,0.06);
-  margin: 8px 0;
-}
-
-.sb-count, .ti-count {
-  margin-left: auto;
-  font-size: 10px;
-  font-weight: 600;
-  color: #4B5563;
-  background: rgba(255,255,255,0.06);
-  padding: 1px 5px;
-  border-radius: 100px;
-}
-.sidebar-all.active .sb-count { color: #6366F1; }
-
-/* Fach groups */
-.fach-group { margin-bottom: 2px; }
-
-.fach-header {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  cursor: pointer;
-  color: #9CA3AF;
-  font-size: 12px;
-  font-weight: 600;
-  transition: all 150ms;
-  user-select: none;
-}
-.fach-header:hover { background: rgba(255,255,255,0.05); color: #D1D5DB; }
-.fach-header.active { color: #F9FAFB; }
-
-.fach-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.fach-name { flex: 1; font-size: 12px; }
-
-.fach-chevron {
-  transition: transform 200ms;
-  color: #4B5563;
-}
-.fach-chevron.open { transform: rotate(90deg); }
-
-/* Per-fach dot colors */
-.fach-group.fc-0 .fach-dot { background: #6366F1; }
-.fach-group.fc-1 .fach-dot { background: #0891B2; }
-.fach-group.fc-2 .fach-dot { background: #EA580C; }
-.fach-group.fc-3 .fach-dot { background: #9333EA; }
-.fach-group.fc-4 .fach-dot { background: #1D4ED8; }
-.fach-group.fc-5 .fach-dot { background: #DB2777; }
-.fach-group.fc-6 .fach-dot { background: #16A34A; }
-.fach-group.fc-7 .fach-dot { background: #D97706; }
-
-.thema-list {
-  display: none;
-  padding-left: 0;
-}
-.thema-list.open { display: block; }
-
-.thema-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 12px 5px 26px;
-  cursor: pointer;
-  color: #6B7280;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 150ms;
-}
-.thema-item:hover { background: rgba(255,255,255,0.04); color: #D1D5DB; }
-.thema-item.active { background: rgba(79,70,229,0.1); color: #A5B4FC; }
-
-.thema-item-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-  opacity: 0.5;
-}
-
-.thema-item-label { flex: 1; }
-
-/* Admin links at bottom */
-.sidebar-admin {
-  margin-top: auto;
-  padding: 12px 0 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-
-.admin-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  color: #4B5563;
-  font-size: 11px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 150ms;
-  cursor: pointer;
-}
-.admin-link:hover { color: #9CA3AF; }
-
 /* ---- MAIN AREA ---- */
 #mainArea {
   flex: 1;
-  margin-left: var(--sidebar-w);
+  margin-left: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* ---- FACH-KACHELN (Default-Ansicht) ---- */
+.fach-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.fach-tile {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px 18px;
+  cursor: pointer;
+  transition: border-color 150ms, box-shadow 150ms, transform 100ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.fach-tile:hover {
+  border-color: var(--tile-color, var(--primary));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+
+.fach-tile-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--tile-light, #EEF2FF);
+  color: var(--tile-color, #4F46E5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.fach-tile-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.fach-tile-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.fach-tile-themen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fach-tile-tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: var(--tile-light, #EEF2FF);
+  color: var(--tile-color, #4F46E5);
+}
+
+.fach-tile-arrow {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-size: 16px;
+  color: var(--border-strong);
+  transition: color 150ms, transform 150ms;
+}
+
+.fach-tile:hover .fach-tile-arrow {
+  color: var(--tile-color, var(--primary));
+  transform: translateX(3px);
+}
+
+/* ---- THEMA-CHIPS ---- */
+.thema-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 0 14px;
+}
+
+.thema-chip {
+  padding: 5px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.thema-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.thema-chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
 }
 
 .main-inner {
@@ -935,21 +853,12 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 @media (max-width: 768px) {
   #app-header { display: flex; }
-
-  #sidebar {
-    transform: translateX(-100%);
-  }
-  #sidebar.open {
-    transform: translateX(0);
-  }
-
   #mainArea { margin-left: 0; }
-
   .main-inner { padding: 16px 14px 40px; }
-
   .file-grid { grid-template-columns: 1fr; }
-
   #statsRow { display: none; }
+  .fach-tile-grid { grid-template-columns: 1fr; }
+  .thema-chips { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 10px; }
 }
 
 /* ---- DESKTOP TOPBAR ---- */
@@ -1048,14 +957,6 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 <!-- HEADER -->
 <header id="app-header">
-  <button id="hamburger" onclick="toggleSidebar()" aria-label="Menü öffnen">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <line x1="3" y1="12" x2="21" y2="12"/>
-      <line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
-  </button>
-
   <div class="logo">
     <span class="logo-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -1098,9 +999,6 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
   </button>
 </header>
 
-<!-- Mobile sidebar backdrop -->
-<div id="sidebar-overlay" onclick="closeSidebar()"></div>
-
 <!-- Drag overlay -->
 <div id="dragOverlay">
   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1113,64 +1011,6 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 <!-- APP LAYOUT -->
 <div class="app-layout">
-
-  <!-- SIDEBAR -->
-  <aside id="sidebar">
-    <div id="sidebar-inner">
-      <div class="sidebar-logo-area">
-        <a href="landing.html" style="display:flex;align-items:center;gap:9px;text-decoration:none">
-          <div style="width:30px;height:30px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,0.35)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          </div>
-          <div>
-            <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#F1F5F9;line-height:1.2;letter-spacing:-0.02em">Unterricht<span style="color:var(--primary)">.</span>Digital</div>
-            <div style="font-size:10px;color:#475569;margin-top:1px">Materialien</div>
-          </div>
-        </a>
-      </div>
-      <div class="sidebar-label" style="margin-top:12px">Ordner</div>
-
-      <div class="sidebar-all active" id="sidebarAll" onclick="selectFolder(null, null)">
-        <span class="all-icon">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        </span>
-        Alle Materialien
-        <span class="sb-count" id="sidebarAllCount">0</span>
-      </div>
-
-      <div class="sb-divider"></div>
-
-      <div id="sidebar-tree"></div>
-      <div class="sidebar-admin">
-        <a href="dashboard.html" class="admin-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Dashboard
-        </a>
-        <a href="codegenerator.html" class="admin-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Code-Generator
-        </a>
-        <a href="login.html" class="admin-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Admin-Login
-        </a>
-      <div class="sb-divider" style="margin-top:8px"></div>
-      <div class="sidebar-label" style="margin-top:10px">Prüfungssystem</div>
-      <a href="pruefung-erstellen.html" class="admin-link" style="display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:5px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,0.06)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-        Prüfung erstellen
-      </a>
-      <a href="pruefungs-dashboard.html" class="admin-link" style="display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:5px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,0.06)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Live-Monitoring
-      </a>
-      <a href="pruefung-test.html" class="admin-link" style="display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:5px;color:#9CA3AF;text-decoration:none;font-size:12px;font-weight:500;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,0.06)';this.style.color='#F9FAFB'" onmouseout="this.style.background='';this.style.color='#9CA3AF'">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Probelauf
-      </a>
-      </div>
-    </div>
-  </aside>
 
   <!-- MAIN AREA -->
   <main id="mainArea">
@@ -1479,109 +1319,42 @@ function esc(s) {
 }
 
 /* ═══════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR (no-op — sidebar removed)
 ═══════════════════════════════════════════ */
 function buildSidebar() {
-  const tree = document.getElementById('sidebar-tree');
-  document.getElementById('sidebarAllCount').textContent = materialien.length;
-
-  const allEl = document.getElementById('sidebarAll');
-  allEl.classList.toggle('active', selectedFach === null && selectedThema === null);
-
-  // Build fach → thema → count map
-  const fachMap = {};
-  materialien.forEach(m => {
-    if (!fachMap[m.fach]) fachMap[m.fach] = {};
-    fachMap[m.fach][m.thema] = (fachMap[m.fach][m.thema] || 0) + 1;
-  });
-
-  tree.innerHTML = '';
-
-  Object.entries(fachMap).forEach(([fach, themen]) => {
-    const cls = getFachClass(fach);
-    const fachTotal = Object.values(themen).reduce((a, b) => a + b, 0);
-    const isFachActive = selectedFach === fach && !selectedThema;
-    const isExpanded = selectedFach === fach;
-
-    const group = document.createElement('div');
-    group.className = 'fach-group ' + cls;
-
-    const header = document.createElement('div');
-    header.className = 'fach-header' + (isFachActive ? ' active' : '');
-    header.innerHTML =
-      '<span class="fach-dot"></span>' +
-      '<span class="fach-name">' + esc(fach) + '</span>' +
-      '<span class="sb-count">' + fachTotal + '</span>' +
-      '<svg class="fach-chevron' + (isExpanded ? ' open' : '') + '" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
-
-    header.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const list = group.querySelector('.thema-list');
-      const chevron = header.querySelector('.fach-chevron');
-      const opening = !list.classList.contains('open');
-      list.classList.toggle('open', opening);
-      chevron.classList.toggle('open', opening);
-      selectFolder(opening ? fach : null, null);
-    });
-
-    const themaListEl = document.createElement('div');
-    themaListEl.className = 'thema-list' + (isExpanded ? ' open' : '');
-
-    Object.entries(themen).forEach(([thema, count]) => {
-      const isThemaActive = selectedFach === fach && selectedThema === thema;
-      const item = document.createElement('div');
-      item.className = 'thema-item' + (isThemaActive ? ' active' : '');
-      item.innerHTML =
-        '<span class="thema-item-dot"></span>' +
-        '<span class="thema-item-label">' + esc(thema) + '</span>' +
-        '<span class="ti-count">' + count + '</span>';
-      item.addEventListener('click', function (e) {
-        e.stopPropagation();
-        selectFolder(fach, thema);
-      });
-      themaListEl.appendChild(item);
-    });
-
-    group.appendChild(header);
-    group.appendChild(themaListEl);
-    tree.appendChild(group);
-  });
-
-  // Populate datalists
+  // Sidebar entfernt — Fach-Kacheln übernehmen die Navigation
+  // Datalists für Upload-Modal befüllen
   const fachDL = document.getElementById('fachList');
-  fachDL.innerHTML = '';
-  Object.keys(fachMap).forEach(f => {
-    const o = document.createElement('option');
-    o.value = f;
-    fachDL.appendChild(o);
-  });
-
   const themaDL = document.getElementById('themaList');
-  themaDL.innerHTML = '';
-  const allThemen = [...new Set(materialien.map(m => m.thema))];
-  allThemen.forEach(t => {
-    const o = document.createElement('option');
-    o.value = t;
-    themaDL.appendChild(o);
-  });
+  if (fachDL) {
+    fachDL.innerHTML = '';
+    [...new Set(materialien.map(m => m.fach))].forEach(f => {
+      const o = document.createElement('option'); o.value = f; fachDL.appendChild(o);
+    });
+  }
+  if (themaDL) {
+    themaDL.innerHTML = '';
+    [...new Set(materialien.map(m => m.thema))].forEach(t => {
+      const o = document.createElement('option'); o.value = t; themaDL.appendChild(o);
+    });
+  }
 }
 
 function selectFolder(fach, thema) {
   selectedFach = fach;
   selectedThema = thema;
-  buildSidebar();
+  buildSidebar(); // populates datalists only
   render(document.getElementById('search').value);
   updateBreadcrumb();
   closePreview();
-  // Close mobile sidebar after selection
-  if (window.innerWidth < 768) closeSidebar();
 }
 
 function updateBreadcrumb() {
-  const bc = document.getElementById('breadcrumb');
+  const bc  = document.getElementById('breadcrumb');
   const bcD = document.getElementById('breadcrumb-desktop');
-  let html = '<span class="bc-item" onclick="selectFolder(null,null)">Alle</span>';
+  let html = '';
   if (selectedFach) {
+    html = '<span class="bc-item" onclick="selectFolder(null,null)">← Alle Fächer</span>';
     html += '<span class="bc-sep">›</span>';
     if (selectedThema) {
       html += '<span class="bc-item" onclick="selectFolder(\'' + esc(selectedFach) + '\',null)">' + esc(selectedFach) + '</span>';
@@ -1663,10 +1436,52 @@ function render(query) {
   if (query === undefined) query = '';
   const q = query.toLowerCase().trim();
 
-  const list     = document.getElementById('fileList');
-  const statsRow = document.getElementById('statsRow');
+  const list      = document.getElementById('fileList');
+  const statsRow  = document.getElementById('statsRow');
+  const filterBar = document.getElementById('filterBar');
 
-  // Filter items
+  list.innerHTML = '';
+
+  /* ── DEFAULT: Fach-Kacheln ──────────────────────────────── */
+  if (!selectedFach && !selectedThema && !q) {
+    statsRow.innerHTML  = '';
+    filterBar.innerHTML = '';
+
+    const fachMap = {};
+    materialien.forEach(function (m) {
+      if (!fachMap[m.fach]) fachMap[m.fach] = { themen: [], count: 0 };
+      if (!fachMap[m.fach].themen.includes(m.thema)) fachMap[m.fach].themen.push(m.thema);
+      fachMap[m.fach].count++;
+    });
+
+    const tileGrid = document.createElement('div');
+    tileGrid.className = 'fach-tile-grid';
+
+    Object.entries(fachMap).forEach(function ([fach, data]) {
+      const cls = getFachClass(fach);
+      const c   = cv(cls);
+      const tile = document.createElement('div');
+      tile.className = 'fach-tile ' + cls;
+      tile.style.cssText = '--tile-color:' + c.color + ';--tile-light:' + c.light + ';--tile-bg:' + c.bg;
+      tile.onclick = function () { selectFolder(fach, null); };
+      tile.innerHTML =
+        '<div class="fach-tile-icon">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' +
+        '</div>' +
+        '<div class="fach-tile-name">' + esc(fach) + '</div>' +
+        '<div class="fach-tile-count">' + data.count + ' Material' + (data.count !== 1 ? 'ien' : '') + '</div>' +
+        '<div class="fach-tile-themen">' +
+        data.themen.map(function (t) { return '<span class="fach-tile-tag">' + esc(t) + '</span>'; }).join('') +
+        '</div>' +
+        '<div class="fach-tile-arrow">→</div>';
+      tileGrid.appendChild(tile);
+    });
+
+    list.appendChild(tileGrid);
+    return;
+  }
+
+  /* ── FILTER: items ─────────────────────────────────────── */
   const items = materialien.filter(function (m) {
     const matchSearch = !q ||
       m.name.toLowerCase().includes(q) ||
@@ -1677,7 +1492,7 @@ function render(query) {
     return matchSearch && matchFach && matchThema;
   });
 
-  // Stats
+  /* ── STATS ─────────────────────────────────────────────── */
   const uFaecher = [...new Set(items.map(function (m) { return m.fach; }))].length;
   const uThemen  = [...new Set(items.map(function (m) { return m.thema; }))].length;
   statsRow.innerHTML =
@@ -1685,40 +1500,45 @@ function render(query) {
     '<div class="stat-chip"><strong>' + uFaecher + '</strong>&nbsp;Fächer</div>' +
     '<div class="stat-chip"><strong>' + uThemen  + '</strong>&nbsp;Themen</div>';
 
-  list.innerHTML = '';
+  /* ── THEMA-CHIPS (wenn Fach aktiv, keine Suche) ─────────── */
+  if (selectedFach && !q) {
+    const fachThemen = [...new Set(materialien
+      .filter(function (m) { return m.fach === selectedFach; })
+      .map(function (m) { return m.thema; }))];
+    let chips = '<div class="thema-chips">';
+    chips += '<button class="thema-chip' + (!selectedThema ? ' active' : '') +
+             '" onclick="selectFolder(\'' + esc(selectedFach) + '\',null)">Alle</button>';
+    fachThemen.forEach(function (t) {
+      chips += '<button class="thema-chip' + (selectedThema === t ? ' active' : '') +
+               '" onclick="selectFolder(\'' + esc(selectedFach) + '\',\'' + esc(t) + '\')">' + esc(t) + '</button>';
+    });
+    chips += '</div>';
+    filterBar.innerHTML = chips;
+  } else {
+    filterBar.innerHTML = '';
+  }
 
+  /* ── EMPTY STATE ───────────────────────────────────────── */
   if (items.length === 0) {
     list.innerHTML =
       '<div class="empty-state">' +
       '<div class="empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>' +
       '<h3>Keine Materialien gefunden</h3>' +
-      '<p>Anderen Suchbegriff versuchen oder anderen Ordner wählen.</p>' +
+      '<p>Anderen Suchbegriff versuchen.</p>' +
       '</div>';
     return;
   }
 
-  // "Zuletzt hinzugefügt" — only when viewing all without search
-  if (!selectedFach && !selectedThema && !q) {
-    const recent = materialien.slice(-3).reverse();
-    const recSec = document.createElement('div');
-    recSec.className = 'recent-section';
-    recSec.innerHTML = '<div class="recent-header"><span class="recent-title">Zuletzt hinzugefügt</span></div>';
-    const grid = document.createElement('div');
-    grid.className = 'file-grid';
-    recent.forEach(function (m) { grid.appendChild(makeCard(m)); });
-    recSec.appendChild(grid);
-    list.appendChild(recSec);
-  }
-
-  if (selectedThema) {
-    // Flat list
+  /* ── KARTEN-ANSICHT ────────────────────────────────────── */
+  if (selectedThema || q) {
+    // Flache Liste (Thema gewählt oder Suche)
     const grid = document.createElement('div');
     grid.className = 'file-grid';
     items.forEach(function (m) { grid.appendChild(makeCard(m)); });
     list.appendChild(grid);
 
   } else if (selectedFach) {
-    // Group by thema
+    // Nach Thema gruppiert
     const themaMap = {};
     items.forEach(function (m) {
       if (!themaMap[m.thema]) themaMap[m.thema] = [];
@@ -1738,47 +1558,6 @@ function render(query) {
       ms.forEach(function (m) { grid.appendChild(makeCard(m)); });
       sec.appendChild(grid);
       list.appendChild(sec);
-    });
-
-  } else {
-    // Group by fach then thema
-    const fachMap = {};
-    items.forEach(function (m) {
-      if (!fachMap[m.fach]) fachMap[m.fach] = {};
-      if (!fachMap[m.fach][m.thema]) fachMap[m.fach][m.thema] = [];
-      fachMap[m.fach][m.thema].push(m);
-    });
-
-    Object.entries(fachMap).forEach(function ([fach, themen]) {
-      const cls   = getFachClass(fach);
-      const total = Object.values(themen).flat().length;
-
-      const fachSec  = document.createElement('div');
-      const secHead  = document.createElement('div');
-      secHead.className = 'section-header ' + cls;
-      secHead.innerHTML =
-        '<span class="section-dot"></span>' +
-        '<span class="section-title">' + esc(fach) + '</span>' +
-        '<span class="section-sub">' + total + ' Material' + (total !== 1 ? 'ien' : '') + '</span>' +
-        '<span class="section-line"></span>';
-      fachSec.appendChild(secHead);
-
-      Object.entries(themen).forEach(function ([thema, ms]) {
-        const sec = document.createElement('div');
-        sec.className = 'thema-section';
-        sec.innerHTML =
-          '<div class="thema-header ' + cls + '">' +
-          '<span class="thema-badge">' + esc(thema) + '</span>' +
-          '<span class="thema-count-badge">' + ms.length + ' Material' + (ms.length !== 1 ? 'ien' : '') + '</span>' +
-          '</div>';
-        const grid = document.createElement('div');
-        grid.className = 'file-grid';
-        ms.forEach(function (m) { grid.appendChild(makeCard(m)); });
-        sec.appendChild(grid);
-        fachSec.appendChild(sec);
-      });
-
-      list.appendChild(fachSec);
     });
   }
 }
@@ -1837,17 +1616,10 @@ function copyLink(e, pfad) {
 }
 
 /* ═══════════════════════════════════════════
-   MOBILE SIDEBAR
+   MOBILE SIDEBAR (entfernt)
 ═══════════════════════════════════════════ */
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebar-overlay').classList.toggle('open');
-}
-
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('open');
-}
+function toggleSidebar() {}
+function closeSidebar() {}
 
 /* ═══════════════════════════════════════════
    EDIT MODE
