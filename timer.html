@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unterricht — Klassentimer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #C0421A;
+      --accent-light: #F7E8E2;
+      --ink: #1a1a18;
+      --muted: #666660;
+      --faint: #999992;
+      --card: #ffffff;
+      --surface: #f5f4f0;
+      --border: rgba(0,0,0,0.1);
+      --border-med: rgba(0,0,0,0.2);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #f0efe8;
+        --muted: #999992;
+        --faint: #666660;
+        --card: #1c1c1a;
+        --surface: #252523;
+        --border: rgba(255,255,255,0.1);
+        --border-med: rgba(255,255,255,0.2);
+        --accent-light: #3a1a0e;
+      }
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--surface);
+      font-family: 'DM Mono', monospace;
+      color: var(--ink);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .app {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 2.5rem 2.5rem 2rem;
+      width: 100%;
+      max-width: 540px;
+      border: 0.5px solid var(--border);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    }
+
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .phase-row {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    .phase-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border-med);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .phase-btn:hover { background: var(--surface); color: var(--ink); }
+
+    .phase-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .clock-block {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.75rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+    }
+
+    .progress-fill-top {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 1s linear;
+    }
+
+    .time-display {
+      font-family: 'DM Serif Display', serif;
+      font-size: 80px;
+      letter-spacing: -2px;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s ease;
+    }
+
+    .time-display.urgent { color: var(--accent); }
+
+    .activity-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+      min-height: 20px;
+      font-style: italic;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-main {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 28px;
+      background: var(--ink);
+      color: var(--card);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: opacity 0.15s;
+    }
+
+    .btn-main:hover { opacity: 0.75; }
+
+    .btn-ghost {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      padding: 10px 16px;
+      background: transparent;
+      color: var(--muted);
+      border: 0.5px solid var(--border-med);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-ghost:hover { background: var(--card); color: var(--ink); }
+
+    .presets {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .preset {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 6px 10px;
+      background: var(--card);
+      border: 0.5px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--faint);
+      transition: all 0.12s;
+    }
+
+    .preset:hover { color: var(--accent); border-color: var(--accent); }
+
+    .divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .queue-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .queue-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .add-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 4px 12px;
+      background: transparent;
+      border: 0.5px solid var(--border-med);
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.12s;
+    }
+
+    .add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .queue-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.12s;
+      user-select: none;
+    }
+
+    .queue-item:hover { border-color: var(--border-med); }
+
+    .queue-item.current-item {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .item-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border-med);
+      flex-shrink: 0;
+    }
+
+    .queue-item.current-item .item-dot { background: var(--accent); }
+
+    .item-name { font-size: 13px; color: var(--ink); flex: 1; }
+
+    .item-dur {
+      font-size: 12px;
+      color: var(--faint);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .item-remove {
+      font-size: 16px;
+      color: var(--faint);
+      cursor: pointer;
+      padding: 0 4px;
+      border: none;
+      background: none;
+      line-height: 1;
+      transition: color 0.12s;
+    }
+
+    .item-remove:hover { color: var(--accent); }
+
+    .add-form {
+      display: none;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 0.5px dashed var(--border-med);
+      margin-bottom: 6px;
+    }
+
+    .add-form.open { display: flex; }
+
+    .add-form input[type="text"],
+    .add-form input[type="number"] {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      padding: 6px 10px;
+      border: 0.5px solid var(--border-med);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .add-form input[type="text"] { flex: 1; }
+    .add-form input[type="number"] { width: 65px; }
+
+    .add-form input:focus { border-color: var(--accent); }
+
+    .confirm-add {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      padding: 6px 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Alarm overlay */
+    .alarm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(192, 66, 26, 0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      z-index: 100;
+    }
+
+    .alarm-overlay.show { display: flex; }
+
+    .alarm-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: #fff;
+      text-align: center;
+      letter-spacing: -1px;
+    }
+
+    .alarm-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.08em;
+    }
+
+    .alarm-dismiss {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      padding: 12px 32px;
+      background: #fff;
+      color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+<a href="landing.html" style="position:fixed;top:12px;left:12px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:6px 13px 6px 10px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);border:1px solid rgba(0,0,0,0.12);border-radius:100px;font-family:system-ui,sans-serif;font-size:12px;font-weight:600;color:#6B7280;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.10)" onmouseover="this.style.color='#111827'" onmouseout="this.style.color='#6B7280'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Start</a>
+
+<div class="alarm-overlay" id="alarmOverlay">
+  <div class="alarm-text" id="alarmText">Zeit abgelaufen!</div>
+  <div class="alarm-sub" id="alarmSub"></div>
+  <button class="alarm-dismiss" onclick="dismissAlarm()">Weiter →</button>
+</div>
+
+<div class="app">
+  <div class="header">
+    <div class="title">Unterricht</div>
+    <div class="subtitle">Klassentimer</div>
+  </div>
+
+  <div class="phase-row" id="phaseRow">
+    <button class="phase-btn active" onclick="setPhase('Einstieg', 5)">Einstieg</button>
+    <button class="phase-btn" onclick="setPhase('Erarbeitung', 15)">Erarbeitung</button>
+    <button class="phase-btn" onclick="setPhase('Gruppenarbeit', 10)">Gruppenarbeit</button>
+    <button class="phase-btn" onclick="setPhase('Sicherung', 8)">Sicherung</button>
+    <button class="phase-btn" onclick="setPhase('Puffer', 3)">Puffer</button>
+  </div>
+
+  <div class="clock-block">
+    <div class="progress-bar-top"><div class="progress-fill-top" id="progressFill"></div></div>
+    <div class="time-display" id="timeDisplay">05:00</div>
+    <div class="activity-label" id="activityLabel">Einstieg — Stunde beginnt</div>
+    <div class="controls">
+      <button class="btn-main" id="startBtn" onclick="toggleTimer()">Start</button>
+      <button class="btn-ghost" onclick="resetTimer()">Reset</button>
+      <div class="presets">
+        <button class="preset" onclick="setMinutes(3)">3m</button>
+        <button class="preset" onclick="setMinutes(5)">5m</button>
+        <button class="preset" onclick="setMinutes(10)">10m</button>
+        <button class="preset" onclick="setMinutes(15)">15m</button>
+        <button class="preset" onclick="setMinutes(20)">20m</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="queue-header">
+    <span class="queue-label">Ablaufplan</span>
+    <button class="add-btn" onclick="toggleAddForm()">+ Schritt hinzufügen</button>
+  </div>
+
+  <div class="add-form" id="addForm">
+    <input type="text" id="newName" placeholder="Aktivität..." />
+    <input type="number" id="newMins" placeholder="min" min="1" max="60" value="5" />
+    <button class="confirm-add" onclick="addItem()">+</button>
+  </div>
+
+  <div id="queueList"></div>
+</div>
+
+<script>
+  let totalSecs = 300;
+  let remainSecs = 300;
+  let running = false;
+  let interval = null;
+  let currentPhase = 'Einstieg';
+  let currentQueueIdx = 0;
+
+  let queue = [
+    { name: 'Einstieg', mins: 5 },
+    { name: 'Erarbeitung', mins: 15 },
+    { name: 'Gruppenarbeit', mins: 10 },
+    { name: 'Sicherung', mins: 8 },
+  ];
+
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  }
+
+  function updateDisplay() {
+    const el = document.getElementById('timeDisplay');
+    el.textContent = fmt(remainSecs);
+    el.classList.toggle('urgent', remainSecs <= 60 && remainSecs > 0);
+    const pct = totalSecs > 0 ? ((totalSecs - remainSecs) / totalSecs) * 100 : 0;
+    document.getElementById('progressFill').style.width = Math.min(100, pct) + '%';
+    document.title = fmt(remainSecs) + ' — ' + currentPhase;
+  }
+
+  function updateLabel() {
+    document.getElementById('activityLabel').textContent =
+      currentPhase + ' — ' + (running ? 'Läuft...' : remainSecs === totalSecs ? 'Bereit' : 'Pausiert');
+  }
+
+  function toggleTimer() {
+    if (running) {
+      clearInterval(interval);
+      running = false;
+      document.getElementById('startBtn').textContent = 'Weiter';
+    } else {
+      if (remainSecs === 0) remainSecs = totalSecs;
+      running = true;
+      document.getElementById('startBtn').textContent = 'Pause';
+      interval = setInterval(() => {
+        if (remainSecs > 0) {
+          remainSecs--;
+          updateDisplay();
+          updateLabel();
+        } else {
+          clearInterval(interval);
+          running = false;
+          document.getElementById('startBtn').textContent = 'Start';
+          triggerAlarm();
+        }
+      }, 1000);
+    }
+    updateLabel();
+  }
+
+  function resetTimer() {
+    clearInterval(interval);
+    running = false;
+    remainSecs = totalSecs;
+    document.getElementById('startBtn').textContent = 'Start';
+    updateDisplay();
+    updateLabel();
+  }
+
+  function setMinutes(m) {
+    clearInterval(interval);
+    running = false;
+    totalSecs = m * 60;
+    remainSecs = totalSecs;
+    document.getElementById('startBtn').textContent = 'Start';
+    updateDisplay();
+    updateLabel();
+  }
+
+  function setPhase(name, mins) {
+    currentPhase = name;
+    document.querySelectorAll('.phase-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent === name);
+    });
+    setMinutes(mins);
+  }
+
+  function triggerAlarm() {
+    const overlay = document.getElementById('alarmOverlay');
+    document.getElementById('alarmText').textContent = currentPhase + ' — fertig!';
+    const nextIdx = currentQueueIdx + 1;
+    if (nextIdx < queue.length) {
+      document.getElementById('alarmSub').textContent =
+        'Nächste Phase: ' + queue[nextIdx].name + ' (' + queue[nextIdx].mins + ' min)';
+    } else {
+      document.getElementById('alarmSub').textContent = 'Alle Phasen abgeschlossen.';
+    }
+    overlay.classList.add('show');
+
+    // Browser notification if allowed
+    if (Notification.permission === 'granted') {
+      new Notification('Unterricht Timer', { body: currentPhase + ' abgelaufen!' });
+    }
+  }
+
+  function dismissAlarm() {
+    document.getElementById('alarmOverlay').classList.remove('show');
+    advanceQueue();
+  }
+
+  function advanceQueue() {
+    const nextIdx = currentQueueIdx + 1;
+    if (nextIdx < queue.length) {
+      currentQueueIdx = nextIdx;
+      renderQueue();
+      const next = queue[nextIdx];
+      setPhase(next.name, next.mins);
+    } else {
+      document.getElementById('activityLabel').textContent = 'Stunde abgeschlossen!';
+    }
+  }
+
+  function renderQueue() {
+    const list = document.getElementById('queueList');
+    list.innerHTML = '';
+    queue.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'queue-item' + (i === currentQueueIdx ? ' current-item' : '');
+      div.innerHTML = `
+        <div class="item-dot"></div>
+        <span class="item-name">${item.name}</span>
+        <span class="item-dur">${item.mins} min</span>
+        <button class="item-remove" title="Entfernen" onclick="removeItem(event,${i})">×</button>
+      `;
+      div.addEventListener('click', (e) => {
+        if (e.target.classList.contains('item-remove')) return;
+        currentQueueIdx = i;
+        setPhase(item.name, item.mins);
+        renderQueue();
+      });
+      list.appendChild(div);
+    });
+  }
+
+  function removeItem(e, i) {
+    e.stopPropagation();
+    queue.splice(i, 1);
+    if (currentQueueIdx >= queue.length) currentQueueIdx = Math.max(0, queue.length - 1);
+    renderQueue();
+  }
+
+  function toggleAddForm() {
+    const f = document.getElementById('addForm');
+    f.classList.toggle('open');
+    if (f.classList.contains('open')) document.getElementById('newName').focus();
+  }
+
+  function addItem() {
+    const name = document.getElementById('newName').value.trim();
+    const mins = parseInt(document.getElementById('newMins').value) || 5;
+    if (!name) return;
+    queue.push({ name, mins });
+    document.getElementById('newName').value = '';
+    document.getElementById('newMins').value = 5;
+    document.getElementById('addForm').classList.remove('open');
+    renderQueue();
+  }
+
+  document.getElementById('newName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+
+  // Request notification permission on load
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.code === 'Space') { e.preventDefault(); toggleTimer(); }
+    if (e.code === 'KeyR') resetTimer();
+  });
+
+  updateDisplay();
+  updateLabel();
+  renderQueue();
+</script>
+</body>
+</html>
