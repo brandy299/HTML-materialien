@@ -502,15 +502,17 @@ tbody tr:hover { background: #FAFAFE; }
 
       <div class="panel-card" style="margin-top:0.75rem">
         <div class="panel-title">Fortschritt</div>
-        <div id="progress-ring-wrap" style="text-align:center;padding:0.5rem 0">
-          <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#E5E7EB" stroke-width="10"/>
-            <circle id="ring-fill" cx="50" cy="50" r="42" fill="none" stroke="#10B981" stroke-width="10"
-              stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round"
-              style="transition: stroke-dashoffset 700ms ease"/>
-          </svg>
-          <div style="margin-top:-60px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800" id="ring-pct">0%</div>
-          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:36px" id="ring-label">Abgegeben</div>
+        <div id="progress-ring-wrap" style="display:flex;flex-direction:column;align-items:center;padding:0.5rem 0;gap:0.4rem">
+          <div style="position:relative;width:100px;height:100px">
+            <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+              <circle id="ring-fill" cx="50" cy="50" r="42" fill="none" stroke="#10B981" stroke-width="10"
+                stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round"
+                style="transition: stroke-dashoffset 700ms ease"/>
+            </svg>
+            <div id="ring-pct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800">0%</div>
+          </div>
+          <div id="ring-label" style="font-size:0.72rem;color:var(--text-muted)">0 von 0 abgegeben</div>
         </div>
       </div>
 
