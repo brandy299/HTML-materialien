@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LF 8 – Entgelt & Sozialversicherung · PBP · HS2D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg:      #0c0c0f;
+  --surface: #131318;
+  --card:    #1a1a22;
+  --border:  rgba(255,255,255,.07);
+  --txt:     #f0ece4;
+  --muted:   rgba(240,236,228,.45);
+  --dim:     rgba(240,236,228,.2);
+  --gold:    #e8a020;
+  --gold-lt: rgba(232,160,32,.12);
+  --gold-bd: rgba(232,160,32,.3);
+  --rust:    #d44a2e;
+  --rust-lt: rgba(212,74,46,.1);
+  --teal:    #2ec4b6;
+  --teal-lt: rgba(46,196,182,.1);
+  --green:   #4caf78;
+  --green-lt:rgba(76,175,120,.1);
+  --red:     #e05555;
+  --red-lt:  rgba(224,85,85,.1);
+  --blue:    #5b8dee;
+  --blue-lt: rgba(91,141,238,.1);
+  --purple:  #9b6ee4;
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Outfit',sans-serif; color:var(--txt); }
+
+/* ══════════════════════════════════════════
+   DECK
+══════════════════════════════════════════ */
+.deck { position:relative; width:100vw; height:100vh; }
+.slide { position:absolute; inset:0; opacity:0; pointer-events:none; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.slide.active { opacity:1; pointer-events:all; }
+.slide.enter  { animation: sIn  .5s cubic-bezier(.16,1,.3,1) forwards; }
+.slide.exit   { animation: sOut .32s ease-in forwards; }
+@keyframes sIn  { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+@keyframes sOut { from{opacity:1;transform:none} to{opacity:0;transform:translateY(-16px)} }
+
+.reveal { opacity:0; transform:translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+.reveal.go { opacity:1; transform:none; }
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+#bar { position:fixed; top:0; left:0; height:2px; background:var(--gold); transition:width .35s; z-index:200; }
+.nav { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); display:flex; gap:10px; align-items:center; z-index:100; }
+.nb  { border:none; cursor:pointer; border-radius:40px; padding:8px 20px; font-family:'Outfit',sans-serif; font-weight:700; font-size:13px; transition:.18s; }
+.nbp { background:rgba(255,255,255,.08); color:var(--txt); }
+.nbp:hover { background:rgba(255,255,255,.14); }
+.nbn { background:var(--gold); color:#0c0c0f; }
+.nbn:hover { transform:scale(1.04); background:#f0ae28; }
+.dots { display:flex; gap:5px; align-items:center; }
+.dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.18); cursor:pointer; transition:.2s; }
+.dot.on { background:var(--gold); width:18px; border-radius:3px; }
+
+/* ══════════════════════════════════════════
+   PHASE BADGE
+══════════════════════════════════════════ */
+.phase-badge {
+  position:fixed; top:18px; right:24px;
+  font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); z-index:150;
+  background:rgba(255,255,255,.05); border:1px solid var(--border);
+  border-radius:999px; padding:5px 14px;
+}
+
+/* ══════════════════════════════════════════
+   SHARED LAYOUT HELPERS
+══════════════════════════════════════════ */
+.inner { max-width:1060px; width:100%; padding:48px 52px; }
+.inner-sm { max-width:860px; width:100%; padding:48px 52px; }
+.eyebrow { font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.eyebrow::before { content:''; display:block; width:20px; height:2px; background:var(--gold); flex-shrink:0; }
+.stitle { font-family:'Instrument Serif',serif; font-size:clamp(1.9rem,3.8vw,2.8rem); line-height:1.1; color:var(--txt); margin-bottom:24px; }
+.stitle em { color:var(--gold); font-style:italic; }
+.ssub  { font-size:.9rem; color:var(--muted); line-height:1.7; margin-bottom:28px; }
+
+/* ══════════════════════════════════════════
+   SLIDE 1 – TITEL (Rückblick + Vorschau)
+══════════════════════════════════════════ */
+#s1 {
+  background:var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 80% 30%, rgba(232,160,32,.07),transparent 65%),
+    radial-gradient(ellipse 50% 60% at 10% 80%, rgba(46,196,182,.05),transparent 60%);
+}
+.s1-wrap { max-width:1080px; width:100%; padding:52px; display:grid; grid-template-columns:1.1fr 1fr; gap:40px; align-items:center; }
+.s1-tag { font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+.s1-h { font-family:'Instrument Serif',serif; font-size:clamp(2.4rem,5vw,3.8rem); line-height:1.05; margin-bottom:16px; }
+.s1-h em { color:var(--gold); font-style:italic; }
+.s1-p { font-size:.95rem; color:var(--muted); line-height:1.7; }
+.s1-divider { width:1px; background:var(--border); align-self:stretch; }
+.s1-phases { display:flex; flex-direction:column; gap:10px; }
+.s1-ph {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:14px 18px; display:flex; align-items:center; gap:14px;
+}
+.ph-time { font-size:11px; font-weight:800; color:var(--gold); background:var(--gold-lt); border-radius:6px; padding:3px 8px; white-space:nowrap; }
+.ph-txt { font-size:.85rem; color:var(--txt); font-weight:500; }
+.ph-new { font-size:10px; font-weight:700; background:var(--teal-lt); color:var(--teal); border-radius:4px; padding:2px 6px; margin-left:auto; }
+
+/* ══════════════════════════════════════════
+   SLIDE 2 – WIEDERHOLUNG QUIZ
+══════════════════════════════════════════ */
+#s2 { background:var(--surface); }
+.quiz-wrap { max-width:860px; width:100%; padding:48px; }
+.q-counter { font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.q-text { font-family:'Instrument Serif',serif; font-size:clamp(1.4rem,2.8vw,2rem); line-height:1.25; color:var(--txt); margin-bottom:28px; }
+.q-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.q-opt {
+  background:var(--card); border:1.5px solid var(--border); border-radius:12px;
+  padding:14px 18px; cursor:pointer; font-size:.9rem; font-weight:500; color:var(--txt);
+  transition:.18s; text-align:left;
+}
+.q-opt:hover { border-color:rgba(232,160,32,.4); background:var(--gold-lt); }
+.q-opt.correct { border-color:var(--green)!important; background:var(--green-lt)!important; color:var(--green); }
+.q-opt.wrong   { border-color:var(--red)!important; background:var(--red-lt)!important; color:var(--red); }
+.q-fb { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:.88rem; line-height:1.6; display:none; }
+.q-fb.show { display:block; }
+.q-fb.ok  { background:var(--green-lt); border:1px solid rgba(76,175,120,.3); color:#81c9a0; }
+.q-fb.nok { background:var(--red-lt); border:1px solid rgba(224,85,85,.3); color:#f09090; }
+.q-actions { margin-top:16px; display:flex; gap:10px; }
+.q-next { background:var(--card); border:1px solid var(--border); color:var(--txt); border-radius:8px; padding:9px 20px; font-family:'Outfit',sans-serif; font-weight:700; font-size:13px; cursor:pointer; transition:.18s; display:none; }
+.q-next:hover { background:rgba(255,255,255,.08); }
+.q-prog-bar { height:4px; background:rgba(255,255,255,.08); border-radius:2px; margin-bottom:28px; }
+.q-prog-fill { height:100%; background:var(--gold); border-radius:2px; transition:.4s; }
+.q-score { font-size:13px; color:var(--muted); margin-left:auto; }
+.q-result { text-align:center; padding:20px; }
+.qr-big { font-family:'Instrument Serif',serif; font-size:3.5rem; color:var(--gold); margin-bottom:8px; }
+.qr-txt { color:var(--muted); margin-bottom:20px; }
+.q-restart { background:var(--gold); color:#0c0c0f; border:none; border-radius:8px; padding:10px 24px; font-family:'Outfit',sans-serif; font-weight:700; font-size:14px; cursor:pointer; }
+
+/* ══════════════════════════════════════════
+   SLIDE 3 – ÜBERGANG / HOOK
+══════════════════════════════════════════ */
+#s3 { background:var(--bg); }
+.hook-wrap { max-width:820px; text-align:center; padding:52px; }
+.hook-em { font-size:clamp(1rem,2vw,1.3rem); color:var(--muted); font-style:italic; line-height:1.8; margin-bottom:32px; background:var(--card); border:1px solid var(--border); border-radius:18px; padding:24px 32px; }
+.hook-em strong { color:var(--txt); }
+.hook-q { font-family:'Instrument Serif',serif; font-size:clamp(1.9rem,4vw,3rem); color:var(--txt); line-height:1.2; margin-bottom:28px; }
+.hook-q em { color:var(--gold); font-style:italic; }
+.hook-chips { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.hchip { background:var(--card); border:1px solid var(--border); border-radius:999px; padding:7px 18px; font-size:.85rem; color:var(--muted); }
+
+/* ══════════════════════════════════════════
+   SLIDE 4 – SV ÜBERBLICK (5 Säulen)
+══════════════════════════════════════════ */
+#s4 { background:var(--surface); }
+.sv-inner { max-width:1080px; width:100%; padding:44px 52px; }
+.saeule-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:22px; }
+.saeule {
+  border-radius:16px; overflow:hidden; cursor:default;
+  transition:transform .2s, box-shadow .2s;
+}
+.saeule:hover { transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,.4); }
+.sa-head { padding:16px 14px; }
+.sa-ico  { font-size:28px; margin-bottom:10px; }
+.sa-name { font-weight:800; font-size:.9rem; margin-bottom:3px; }
+.sa-abk  { font-size:11px; font-weight:600; opacity:.65; text-transform:uppercase; letter-spacing:.08em; }
+.sa-body { background:rgba(0,0,0,.25); padding:14px; }
+.sa-row  { font-size:.75rem; line-height:1.5; margin-bottom:5px; display:flex; gap:6px; }
+.sa-row:last-child { margin-bottom:0; }
+.sa-lbl  { opacity:.5; flex-shrink:0; width:54px; }
+.sa-val  { font-weight:600; }
+.saeule.kv   .sa-head { background:rgba(91,141,238,.18); color:var(--blue); }
+.saeule.rv   .sa-head { background:rgba(155,110,228,.18); color:var(--purple); }
+.saeule.av   .sa-head { background:rgba(232,160,32,.18); color:var(--gold); }
+.saeule.pv   .sa-head { background:rgba(46,196,182,.18); color:var(--teal); }
+.saeule.uv   .sa-head { background:rgba(212,74,46,.18); color:var(--rust); }
+.saeule .sa-body { color:var(--txt); }
+
+.sv-memo {
+  margin-top:14px;
+  background:var(--gold-lt); border:1px solid var(--gold-bd);
+  border-radius:12px; padding:12px 18px;
+  font-size:.85rem; color:var(--txt); line-height:1.6;
+}
+
+/* ══════════════════════════════════════════
+   SLIDE 5 – BRUTTO → NETTO SCHRITT FÜR SCHRITT
+══════════════════════════════════════════ */
+#s5 { background:var(--bg); }
+.bbn-wrap { max-width:900px; width:100%; padding:44px 52px; }
+.bbn-flow { margin-top:24px; display:flex; flex-direction:column; gap:8px; }
+.bbn-row {
+  display:flex; align-items:center; gap:0;
+  opacity:.25; transform:translateX(-8px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.bbn-row.lit { opacity:1; transform:none; }
+.bbn-box {
+  flex:1; background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:14px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.bbn-box.highlight { border-color:var(--gold); background:var(--gold-lt); }
+.bbn-box.result    { border-color:var(--teal); background:var(--teal-lt); }
+.bbn-label { font-size:.88rem; font-weight:500; color:var(--txt); }
+.bbn-pct   { font-size:.78rem; color:var(--muted); margin-top:2px; }
+.bbn-amount{ font-size:1rem; font-weight:800; white-space:nowrap; }
+.bbn-amount.pos { color:var(--txt); }
+.bbn-amount.neg { color:var(--red); }
+.bbn-amount.fin { color:var(--teal); font-size:1.1rem; }
+.bbn-op { width:32px; text-align:center; font-size:1.1rem; color:var(--muted); flex-shrink:0; }
+.bbn-steps { display:flex; gap:8px; margin-top:20px; flex-wrap:wrap; }
+.bbn-btn {
+  background:var(--card); border:1px solid var(--border); color:var(--txt);
+  border-radius:8px; padding:8px 16px; font-family:'Outfit',sans-serif;
+  font-weight:600; font-size:12px; cursor:pointer; transition:.18s;
+}
+.bbn-btn:hover { background:rgba(255,255,255,.07); }
+.bbn-btn.on { background:var(--gold); color:#0c0c0f; border-color:transparent; }
+
+/* ══════════════════════════════════════════
+   SLIDE 6 – INTERAKTIVER GEHALTSRECHNER
+══════════════════════════════════════════ */
+#s6 { background:var(--surface); }
+.calc-outer { max-width:1000px; width:100%; padding:40px 52px; }
+.calc-grid  { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:22px; }
+
+.calc-inputs { display:flex; flex-direction:column; gap:14px; }
+.ci-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.ci-input {
+  width:100%; background:var(--card); border:1.5px solid var(--border);
+  border-radius:10px; padding:11px 14px; color:var(--txt);
+  font-family:'Outfit',sans-serif; font-size:15px; font-weight:600;
+  outline:none; transition:.2s;
+}
+.ci-input:focus { border-color:var(--gold); background:var(--gold-lt); }
+.ci-select {
+  width:100%; background:var(--card); border:1.5px solid var(--border);
+  border-radius:10px; padding:11px 14px; color:var(--txt);
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:500;
+  outline:none; cursor:pointer;
+}
+.ci-select option { background:var(--card); }
+
+.calc-result { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; display:flex; flex-direction:column; gap:0; }
+.cr-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:.88rem; }
+.cr-row:last-child { border-bottom:none; }
+.cr-lbl { color:var(--muted); }
+.cr-val { font-weight:700; }
+.cr-val.neg { color:var(--red); }
+.cr-val.fin { color:var(--teal); font-size:1.1rem; }
+.cr-row.brutto { background:rgba(255,255,255,.02); margin:0 -22px; padding:10px 22px; }
+.cr-row.sum    { background:var(--teal-lt); margin:0 -22px -22px; padding:14px 22px; border-radius:0 0 16px 16px; border-bottom:none; }
+.cr-row.sum .cr-lbl { color:var(--teal); font-weight:700; font-size:.95rem; }
+
+.ag-hint { margin-top:14px; background:var(--blue-lt); border:1px solid rgba(91,141,238,.25); border-radius:10px; padding:12px 16px; font-size:.82rem; color:rgba(91,141,238,.85); line-height:1.6; }
+
+/* ══════════════════════════════════════════
+   SLIDE 7 – BESCHÄFTIGUNGSARTEN
+══════════════════════════════════════════ */
+#s7 { background:var(--bg); }
+.bv-inner { max-width:1060px; width:100%; padding:44px 52px; }
+.bv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px; }
+.bv-card { border-radius:18px; overflow:hidden; transition:.2s; }
+.bv-card:hover { transform:translateY(-3px); }
+.bvc-head { padding:18px 20px; }
+.bvc-title { font-weight:800; font-size:1.05rem; margin-bottom:3px; }
+.bvc-limit { font-size:.78rem; opacity:.7; font-weight:600; }
+.bvc-body  { background:var(--card); padding:18px 20px; }
+.bvc-fact  { display:flex; justify-content:space-between; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--border); font-size:.82rem; }
+.bvc-fact:last-child { border-bottom:none; }
+.bvcf-l  { color:var(--muted); }
+.bvcf-r  { font-weight:600; text-align:right; max-width:60%; }
+
+.bv-card.mini  .bvc-head { background:rgba(232,160,32,.15); color:var(--gold); }
+.bv-card.midi  .bvc-head { background:rgba(91,141,238,.15); color:var(--blue); }
+.bv-card.voll  .bvc-head { background:rgba(76,175,120,.15); color:var(--green); }
+.bvcf-r.gut   { color:var(--green); }
+.bvcf-r.schlecht { color:var(--red); }
+
+.bv-slider-wrap { margin-top:18px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 22px; }
+.bvs-label { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; display:flex; justify-content:space-between; }
+.bvs-track { position:relative; height:28px; background:rgba(255,255,255,.05); border-radius:14px; overflow:visible; }
+.bvs-fill  { position:absolute; top:0; left:0; height:100%; border-radius:14px; background:linear-gradient(90deg,var(--gold),var(--blue),var(--green)); transition:.6s; }
+.bvs-markers { display:flex; justify-content:space-between; margin-top:6px; }
+.bvsm { font-size:10px; color:var(--muted); font-weight:600; }
+.bvs-result { margin-top:12px; text-align:center; font-weight:700; font-size:.95rem; padding:8px; border-radius:8px; transition:.3s; }
+
+/* ══════════════════════════════════════════
+   SLIDE 8 – ZAHLENSPIEL / "WIE VIEL BLEIBT"
+══════════════════════════════════════════ */
+#s8 { background:var(--surface); }
+.pie-wrap { max-width:960px; width:100%; padding:44px 52px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center; }
+.pie-left {}
+.pie-canvas-wrap { position:relative; width:280px; height:280px; margin:0 auto; }
+canvas#pieChart { width:280px!important; height:280px!important; }
+.pie-center {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  text-align:center; pointer-events:none;
+}
+.pie-center .pc-val { font-family:'Instrument Serif',serif; font-size:2.2rem; color:var(--teal); line-height:1; }
+.pie-center .pc-lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:3px; text-transform:uppercase; letter-spacing:.08em; }
+
+.pie-legend { display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+.pl-item { display:flex; align-items:center; gap:10px; font-size:.85rem; }
+.pl-dot  { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+.pl-val  { margin-left:auto; font-weight:700; }
+
+.pie-right { }
+.pie-right .stitle { margin-bottom:12px; }
+.pie-person { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 18px; margin-bottom:16px; display:flex; align-items:center; gap:14px; font-size:.88rem; }
+.pp-ico { font-size:28px; }
+.pp-name { font-weight:700; }
+.pp-info { color:var(--muted); font-size:.8rem; }
+.pie-persons { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.pp-btn { background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:10px 16px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:.18s; }
+.pp-btn:hover { border-color:var(--gold-bd); }
+.pp-btn.active { border-color:var(--gold); background:var(--gold-lt); }
+.pp-btn .ppb-name { font-weight:700; font-size:.88rem; }
+.pp-btn .ppb-info { font-size:.75rem; color:var(--muted); }
+.pp-btn .ppb-ico { font-size:22px; }
+
+/* ══════════════════════════════════════════
+   SLIDE 9 – STEUERN
+══════════════════════════════════════════ */
+#s9 { background:var(--bg); }
+.tax-inner { max-width:1000px; width:100%; padding:44px 52px; }
+.tax-grid  { display:grid; grid-template-columns:1.2fr 1fr; gap:24px; margin-top:20px; }
+.sk-list   { display:flex; flex-direction:column; gap:8px; }
+.sk-card   { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 18px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:.18s; }
+.sk-card:hover { border-color:var(--gold-bd); }
+.sk-card.active { border-color:var(--gold); background:var(--gold-lt); }
+.sk-num    { font-size:1.4rem; font-weight:800; color:var(--gold); min-width:28px; }
+.sk-name   { font-weight:700; font-size:.9rem; }
+.sk-desc   { font-size:.78rem; color:var(--muted); }
+.sk-detail { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; }
+.skd-title { font-family:'Instrument Serif',serif; font-size:1.4rem; margin-bottom:14px; color:var(--gold); }
+.skd-row   { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); font-size:.86rem; }
+.skd-row:last-child { border-bottom:none; }
+.skd-lbl   { color:var(--muted); }
+.skd-val   { font-weight:600; }
+
+/* ══════════════════════════════════════════
+   SLIDE 10 – ZUSAMMENFASSUNG
+══════════════════════════════════════════ */
+#s10 { background:var(--bg); background-image: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(232,160,32,.06),transparent 70%); }
+.sum-wrap { max-width:980px; width:100%; padding:52px; text-align:center; }
+.sum-title { font-family:'Instrument Serif',serif; font-size:clamp(2rem,4.5vw,3.2rem); margin-bottom:8px; }
+.sum-title em { color:var(--gold); font-style:italic; }
+.sum-sub { color:var(--muted); font-size:.95rem; margin-bottom:40px; }
+.sum-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; text-align:left; }
+.sum-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 18px; display:flex; align-items:flex-start; gap:12px; font-size:.87rem; line-height:1.5; }
+.sum-item::before { content:'✓'; width:22px; height:22px; border-radius:50%; background:var(--gold-lt); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+<div class="phase-badge" id="phaseBadge">Phase 1</div>
+
+<div class="deck" id="deck">
+
+  <!-- ══════ SLIDE 1 – TITEL ══════ -->
+  <div class="slide active" id="s1">
+    <div class="s1-wrap">
+      <div>
+        <div class="s1-tag reveal">PBP · LF 8 · Doppelstunde · Klasse HS2D</div>
+        <h1 class="s1-h reveal">Personal&shy;wirtschaft:<br><em>Entgelt &amp; Sozial&shy;versicherung</em></h1>
+        <p class="s1-p reveal">Wir bauen auf der letzten Stunde auf — kurze Wiederholung, dann tief in AS 8.2: Wie entsteht das Nettogehalt, und wofür zahlen wir eigentlich SV-Beiträge?</p>
+      </div>
+      <div>
+        <div class="s1-phases">
+          <div class="s1-ph reveal">
+            <span class="ph-time">15 min</span>
+            <span class="ph-txt">Wiederholung: Personalbedarfsplanung</span>
+          </div>
+          <div class="s1-ph reveal">
+            <span class="ph-time">25 min</span>
+            <span class="ph-txt">Das Sozialversicherungssystem</span>
+            <span class="ph-new">NEU</span>
+          </div>
+          <div class="s1-ph reveal">
+            <span class="ph-time">35 min</span>
+            <span class="ph-txt">Entgeltabrechnung: Brutto → Netto</span>
+            <span class="ph-new">NEU</span>
+          </div>
+          <div class="s1-ph reveal">
+            <span class="ph-time">15 min</span>
+            <span class="ph-txt">Beschäftigungsarten &amp; Zusammenfassung</span>
+            <span class="ph-new">NEU</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 2 – QUIZ WIEDERHOLUNG ══════ -->
+  <div class="slide" id="s2">
+    <div class="quiz-wrap">
+      <div class="eyebrow reveal">Phase 1 · Wiederholung</div>
+      <h2 class="stitle reveal">Schnell-Quiz: Weißt du's noch?</h2>
+      <div id="quiz-area">
+        <div class="q-prog-bar"><div class="q-prog-fill" id="qpf" style="width:20%"></div></div>
+        <div style="display:flex;align-items:center;margin-bottom:12px">
+          <div class="q-counter" id="q-ctr">Frage 1 / 5</div>
+          <div class="q-score" id="q-sc">⭐ 0 Punkte</div>
+        </div>
+        <div class="q-text" id="q-txt"></div>
+        <div class="q-opts" id="q-opts"></div>
+        <div class="q-fb" id="q-fb"></div>
+        <div class="q-actions"><button class="q-next" id="q-next" onclick="qNext()">Weiter →</button></div>
+      </div>
+      <div id="quiz-result" class="q-result" style="display:none">
+        <div class="qr-big" id="qr-big">0/5</div>
+        <div class="qr-txt" id="qr-txt"></div>
+        <button class="q-restart" onclick="qStart()">Nochmal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 3 – HOOK / ÜBERGANG ══════ -->
+  <div class="slide" id="s3">
+    <div class="hook-wrap">
+      <div class="eyebrow reveal" style="justify-content:center">Phase 2 · Einstieg</div>
+      <div class="hook-em reveal">
+        <strong>Bärbel Neu</strong> bekommt ihre Gehaltsabrechnung und sagt zu ihrer Kollegin:<br>
+        „Ich habe diesen Monat <strong>1.086 € Abzüge</strong>! Mein Bruttogehalt ist 3.008 € — aber ich kriege nur 1.921 € netto. Das ist fast ein Drittel weg!"
+      </div>
+      <h2 class="hook-q reveal">Wohin fließen die <em>Abzüge</em><br>eigentlich?</h2>
+      <div class="hook-chips reveal">
+        <span class="hchip">Lohnsteuer</span>
+        <span class="hchip">Krankenversicherung</span>
+        <span class="hchip">Rentenversicherung</span>
+        <span class="hchip">Pflegeversicherung</span>
+        <span class="hchip">Arbeitslosenversicherung</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 4 – 5 SÄULEN SV ══════ -->
+  <div class="slide" id="s4">
+    <div class="sv-inner">
+      <div class="eyebrow reveal">Phase 2 · Sozialversicherung</div>
+      <h2 class="stitle reveal">Die <em>5 Säulen</em> der Sozialversicherung</h2>
+      <div class="saeule-grid">
+        <div class="saeule kv reveal">
+          <div class="sa-head">
+            <div class="sa-ico">🏥</div>
+            <div class="sa-name">Krankenversicherung</div>
+            <div class="sa-abk">KV</div>
+          </div>
+          <div class="sa-body">
+            <div class="sa-row"><span class="sa-lbl">Träger</span><span class="sa-val">AOK, TK, Barmer …</span></div>
+            <div class="sa-row"><span class="sa-lbl">Leistung</span><span class="sa-val">Arzt, Krankenhaus, Medikamente</span></div>
+            <div class="sa-row"><span class="sa-lbl">AN-Anteil</span><span class="sa-val">7,3 % + Zusatz</span></div>
+            <div class="sa-row"><span class="sa-lbl">AG-Anteil</span><span class="sa-val">7,3 % + Zusatz</span></div>
+          </div>
+        </div>
+        <div class="saeule rv reveal">
+          <div class="sa-head">
+            <div class="sa-ico">👴</div>
+            <div class="sa-name">Rentenversicherung</div>
+            <div class="sa-abk">RV</div>
+          </div>
+          <div class="sa-body">
+            <div class="sa-row"><span class="sa-lbl">Träger</span><span class="sa-val">Deutsche Rentenvers.</span></div>
+            <div class="sa-row"><span class="sa-lbl">Leistung</span><span class="sa-val">Altersrente, Erwerbsminderung</span></div>
+            <div class="sa-row"><span class="sa-lbl">AN-Anteil</span><span class="sa-val">9,3 %</span></div>
+            <div class="sa-row"><span class="sa-lbl">AG-Anteil</span><span class="sa-val">9,3 %</span></div>
+          </div>
+        </div>
+        <div class="saeule av reveal">
+          <div class="sa-head">
+            <div class="sa-ico">💼</div>
+            <div class="sa-name">Arbeitslosenvers.</div>
+            <div class="sa-abk">AV</div>
+          </div>
+          <div class="sa-body">
+            <div class="sa-row"><span class="sa-lbl">Träger</span><span class="sa-val">Bundesagentur f. Arbeit</span></div>
+            <div class="sa-row"><span class="sa-lbl">Leistung</span><span class="sa-val">Arbeitslosengeld, Beratung</span></div>
+            <div class="sa-row"><span class="sa-lbl">AN-Anteil</span><span class="sa-val">1,3 %</span></div>
+            <div class="sa-row"><span class="sa-lbl">AG-Anteil</span><span class="sa-val">1,3 %</span></div>
+          </div>
+        </div>
+        <div class="saeule pv reveal">
+          <div class="sa-head">
+            <div class="sa-ico">🩹</div>
+            <div class="sa-name">Pflegeversicherung</div>
+            <div class="sa-abk">PV</div>
+          </div>
+          <div class="sa-body">
+            <div class="sa-row"><span class="sa-lbl">Träger</span><span class="sa-val">Pflegekassen</span></div>
+            <div class="sa-row"><span class="sa-lbl">Leistung</span><span class="sa-val">Häusliche &amp; stat. Pflege</span></div>
+            <div class="sa-row"><span class="sa-lbl">AN-Anteil</span><span class="sa-val">1,7 %</span></div>
+            <div class="sa-row"><span class="sa-lbl">AG-Anteil</span><span class="sa-val">1,7 %</span></div>
+          </div>
+        </div>
+        <div class="saeule uv reveal">
+          <div class="sa-head">
+            <div class="sa-ico">⚠️</div>
+            <div class="sa-name">Unfallversicherung</div>
+            <div class="sa-abk">UV</div>
+          </div>
+          <div class="sa-body">
+            <div class="sa-row"><span class="sa-lbl">Träger</span><span class="sa-val">Berufsgenossenschaften</span></div>
+            <div class="sa-row"><span class="sa-lbl">Leistung</span><span class="sa-val">Arbeits- &amp; Wegeunfall</span></div>
+            <div class="sa-row"><span class="sa-lbl">AN-Anteil</span><span class="sa-val">0 %</span></div>
+            <div class="sa-row"><span class="sa-lbl">AG-Anteil</span><span class="sa-val">100 % (allein)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="sv-memo reveal">
+        💡 <strong>Merksatz:</strong> Bei KV, RV, AV und PV zahlen AG und AN jeweils die Hälfte. Die Unfallversicherung zahlt <em>nur der Arbeitgeber</em>.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 5 – BRUTTO → NETTO SCHRITT FÜR SCHRITT ══════ -->
+  <div class="slide" id="s5">
+    <div class="bbn-wrap">
+      <div class="eyebrow reveal">Phase 3 · Entgeltabrechnung</div>
+      <h2 class="stitle reveal">Vom <em>Brutto</em> zum <em>Netto</em> — Schritt für Schritt</h2>
+      <div class="bbn-flow" id="bbn-flow">
+        <div class="bbn-row" id="br0">
+          <div class="bbn-box highlight" style="flex:1">
+            <div><div class="bbn-label">Bruttogehalt</div><div class="bbn-pct">vereinbartes Gehalt</div></div>
+            <div class="bbn-amount pos">3.008,00 €</div>
+          </div>
+        </div>
+        <div class="bbn-row" id="br1">
+          <div class="bbn-op">−</div>
+          <div class="bbn-box" style="flex:1">
+            <div><div class="bbn-label">Lohnsteuer</div><div class="bbn-pct">Steuerklasse III, ca. 14 %</div></div>
+            <div class="bbn-amount neg">− 421,16 €</div>
+          </div>
+        </div>
+        <div class="bbn-row" id="br2">
+          <div class="bbn-op">−</div>
+          <div class="bbn-box" style="flex:1">
+            <div><div class="bbn-label">Solidaritätszuschlag</div><div class="bbn-pct">entfällt für die meisten</div></div>
+            <div class="bbn-amount neg">− 23,16 €</div>
+          </div>
+        </div>
+        <div class="bbn-row" id="br3">
+          <div class="bbn-op">−</div>
+          <div class="bbn-box" style="flex:1">
+            <div><div class="bbn-label">Kirchensteuer (ev.)</div><div class="bbn-pct">9 % der Lohnsteuer</div></div>
+            <div class="bbn-amount neg">− 37,90 €</div>
+          </div>
+        </div>
+        <div class="bbn-row" id="br4">
+          <div class="bbn-op">−</div>
+          <div class="bbn-box" style="flex:1">
+            <div><div class="bbn-label">Sozialversicherung AN-Anteil</div><div class="bbn-pct">KV 7,75 % · RV 9,3 % · AV 1,3 % · PV 1,775 %</div></div>
+            <div class="bbn-amount neg">− 604,27 €</div>
+          </div>
+        </div>
+        <div class="bbn-row" id="br5">
+          <div class="bbn-op">=</div>
+          <div class="bbn-box result" style="flex:1">
+            <div><div class="bbn-label" style="color:var(--teal);font-weight:800">Nettogehalt (Auszahlungsbetrag)</div><div class="bbn-pct">geht auf das Konto</div></div>
+            <div class="bbn-amount fin">1.921,51 €</div>
+          </div>
+        </div>
+      </div>
+      <div class="bbn-steps" id="bbn-steps">
+        <button class="bbn-btn on" onclick="bbnStep(0)">Start</button>
+        <button class="bbn-btn" onclick="bbnStep(1)">− Lohnsteuer</button>
+        <button class="bbn-btn" onclick="bbnStep(2)">− SolZ</button>
+        <button class="bbn-btn" onclick="bbnStep(3)">− KiSt</button>
+        <button class="bbn-btn" onclick="bbnStep(4)">− SV</button>
+        <button class="bbn-btn" onclick="bbnStep(5)">= Netto ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 6 – INTERAKTIVER RECHNER ══════ -->
+  <div class="slide" id="s6">
+    <div class="calc-outer">
+      <div class="eyebrow reveal">Phase 3 · Interaktiv</div>
+      <h2 class="stitle reveal">Gehaltsrechner: Dein <em>eigenes Beispiel</em></h2>
+      <div class="calc-grid reveal">
+        <div class="calc-inputs">
+          <div>
+            <div class="ci-label">Bruttogehalt (€/Monat)</div>
+            <input class="ci-input" id="ci-brutto" type="number" value="2650" min="0" max="10000" oninput="calcGehalt()">
+          </div>
+          <div>
+            <div class="ci-label">Steuerklasse</div>
+            <select class="ci-select" id="ci-sk" onchange="calcGehalt()">
+              <option value="0.12">Klasse I – ledig</option>
+              <option value="0.06">Klasse III – verheiratet (Alleinverd.)</option>
+              <option value="0.10">Klasse IV – verheiratet</option>
+              <option value="0.20">Klasse V – Zweitverdiener</option>
+            </select>
+          </div>
+          <div>
+            <div class="ci-label">KV-Zusatzbeitrag (%)</div>
+            <input class="ci-input" id="ci-zusatz" type="number" value="1.6" min="0" max="3" step="0.1" oninput="calcGehalt()">
+          </div>
+          <div>
+            <div class="ci-label">Kirchensteuer?</div>
+            <select class="ci-select" id="ci-kist" onchange="calcGehalt()">
+              <option value="0.09">Ja (ev. / kath.) – 9 %</option>
+              <option value="0">Nein</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="calc-result" id="calc-result"></div>
+          <div class="ag-hint">
+            💡 <strong>AG-Anteil:</strong> Dein Arbeitgeber zahlt zusätzlich denselben SV-Betrag nochmals — das sind echte <strong>Lohnnebenkosten</strong>, die du nicht siehst.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 7 – BESCHÄFTIGUNGSARTEN ══════ -->
+  <div class="slide" id="s7">
+    <div class="bv-inner">
+      <div class="eyebrow reveal">Phase 4 · Beschäftigungsarten</div>
+      <h2 class="stitle reveal">Minijob, Midijob oder <em>Vollzeit</em>?</h2>
+      <div class="bv-grid">
+        <div class="bv-card mini reveal">
+          <div class="bvc-head">
+            <div class="bvc-title">Minijob</div>
+            <div class="bvc-limit">bis 556 €/Monat</div>
+          </div>
+          <div class="bvc-body">
+            <div class="bvc-fact"><span class="bvcf-l">SV-Pflicht AN</span><span class="bvcf-r schlecht">Nein — AG zahlt Pauschale (~28 %)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Lohnsteuer</span><span class="bvcf-r">Pauschal 2 % (AG)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Urlaubsanspruch</span><span class="bvcf-r gut">Ja (anteilig)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Rentenanspruch</span><span class="bvcf-r schlecht">Sehr gering</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Typisch für</span><span class="bvcf-r">Aushilfe Tim, Studentin Jana</span></div>
+          </div>
+        </div>
+        <div class="bv-card midi reveal">
+          <div class="bvc-head">
+            <div class="bvc-title">Midijob</div>
+            <div class="bvc-limit">556 € – 2.000 €/Monat</div>
+          </div>
+          <div class="bvc-body">
+            <div class="bvc-fact"><span class="bvcf-l">SV-Pflicht AN</span><span class="bvcf-r gut">Ja — aber reduziert</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Lohnsteuer</span><span class="bvcf-r">Nach Steuerklasse</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Urlaubsanspruch</span><span class="bvcf-r gut">Ja (anteilig)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Rentenanspruch</span><span class="bvcf-r gut">Ja (anteilig)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Typisch für</span><span class="bvcf-r">Frau Meier (Teilzeit)</span></div>
+          </div>
+        </div>
+        <div class="bv-card voll reveal">
+          <div class="bvc-head">
+            <div class="bvc-title">Vollzeit / regulär</div>
+            <div class="bvc-limit">über 2.000 €/Monat</div>
+          </div>
+          <div class="bvc-body">
+            <div class="bvc-fact"><span class="bvcf-l">SV-Pflicht AN</span><span class="bvcf-r gut">Ja — volle Beiträge</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Lohnsteuer</span><span class="bvcf-r">Nach Steuerklasse</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Urlaubsanspruch</span><span class="bvcf-r gut">Ja (mind. 24 Werktage)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Rentenanspruch</span><span class="bvcf-r gut">Ja (voller Anspruch)</span></div>
+            <div class="bvc-fact"><span class="bvcf-l">Typisch für</span><span class="bvcf-r">Jonas Keller, Hr. Yilmaz</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bv-slider-wrap reveal">
+        <div class="bvs-label">
+          <span>Schiebe, um die Einkommenszone zu sehen:</span>
+          <span id="bvs-val">1.200 €/Monat</span>
+        </div>
+        <input type="range" id="bvs-range" min="0" max="3000" value="1200" style="width:100%;accent-color:var(--gold)" oninput="bvsUpdate()">
+        <div class="bvs-markers">
+          <span class="bvsm">0 €</span>
+          <span class="bvsm">556 € (Minijob)</span>
+          <span class="bvsm">2.000 € (Midijob)</span>
+          <span class="bvsm">3.000 €+</span>
+        </div>
+        <div class="bvs-result" id="bvs-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 8 – TORTENDIAGRAMM INTERAKTIV ══════ -->
+  <div class="slide" id="s8">
+    <div class="pie-wrap">
+      <div class="pie-left reveal">
+        <div class="eyebrow" style="margin-bottom:14px">Phase 3 · Visualisierung</div>
+        <h2 class="stitle">Wie viel <em>bleibt wirklich?</em></h2>
+        <div class="pie-persons" id="pie-persons">
+          <div class="pp-btn active" onclick="setPerson(0,this)">
+            <span class="ppb-ico">👨‍🏭</span>
+            <div><div class="ppb-name">Jonas Keller</div><div class="ppb-info">2.650 € · SK I · ledig</div></div>
+          </div>
+          <div class="pp-btn" onclick="setPerson(1,this)">
+            <span class="ppb-ico">👩‍💼</span>
+            <div><div class="ppb-name">Frau Meier</div><div class="ppb-info">3.165 € · SK III · verheiratet</div></div>
+          </div>
+          <div class="pp-btn" onclick="setPerson(2,this)">
+            <span class="ppb-ico">👨‍🎓</span>
+            <div><div class="ppb-name">Azubi Leon</div><div class="ppb-info">620 € · SK I · Minijobgrenze</div></div>
+          </div>
+        </div>
+        <div class="pie-legend" id="pie-legend"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div class="pie-canvas-wrap reveal">
+          <canvas id="pieChart" width="280" height="280"></canvas>
+          <div class="pie-center">
+            <div class="pc-val" id="pc-netto">–</div>
+            <div class="pc-lbl">Netto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 9 – STEUERKLASSEN ══════ -->
+  <div class="slide" id="s9">
+    <div class="tax-inner">
+      <div class="eyebrow reveal">Phase 3 · Steuer</div>
+      <h2 class="stitle reveal">Steuerklassen: Wer zahlt <em>wie viel?</em></h2>
+      <div class="tax-grid reveal">
+        <div class="sk-list" id="sk-list"></div>
+        <div class="sk-detail" id="sk-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SLIDE 10 – ZUSAMMENFASSUNG ══════ -->
+  <div class="slide" id="s10">
+    <div class="sum-wrap">
+      <div class="eyebrow reveal" style="justify-content:center">Ende der Doppelstunde</div>
+      <h2 class="sum-title reveal">Das kannst du jetzt — <em>wirklich.</em></h2>
+      <p class="sum-sub reveal">AS 8.1 Wiederholung + AS 8.2 Personaleinsatz &amp; Entlohnung · LF 8 · PBP</p>
+      <div class="sum-grid">
+        <div class="sum-item reveal">Nettobedarf berechnen &amp; Bedarfsarten erkennen</div>
+        <div class="sum-item reveal">Die 5 Säulen der Sozialversicherung benennen &amp; erklären</div>
+        <div class="sum-item reveal">Die Aufgabe jedes SV-Zweiges beschreiben</div>
+        <div class="sum-item reveal">AN- und AG-Anteil an der SV unterscheiden</div>
+        <div class="sum-item reveal">Eine Entgeltabrechnung Schritt für Schritt nachvollziehen</div>
+        <div class="sum-item reveal">Brutto minus Abzüge = Netto berechnen</div>
+        <div class="sum-item reveal">Minijob, Midijob und Vollzeit unterscheiden</div>
+        <div class="sum-item reveal">Steuerklassen erklären und zuordnen</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .deck -->
+
+<nav class="nav" id="nav">
+  <button class="nb nbp" id="prev" onclick="go(cur-1)">← Zurück</button>
+  <div class="dots" id="dots"></div>
+  <button class="nb nbn" id="next" onclick="go(cur+1)">Weiter →</button>
+</nav>
+
+<script>
+// ══════════════════════════════
+// DECK ENGINE
+// ══════════════════════════════
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0;
+const phases = ['Phase 1','Phase 1','Phase 1','Phase 2','Phase 2','Phase 3','Phase 3','Phase 3','Phase 3','Phase 4'];
+
+const dotsEl = document.getElementById('dots');
+slides.forEach((_,i)=>{
+  const d = document.createElement('div');
+  d.className='dot'+(i===0?' on':'');
+  d.onclick=()=>go(i);
+  dotsEl.appendChild(d);
+});
+
+function updateUI(){
+  document.getElementById('bar').style.width=((cur+1)/N*100)+'%';
+  dotsEl.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  document.getElementById('prev').style.opacity=cur===0?'.3':'1';
+  document.getElementById('next').textContent=cur===N-1?'Fertig ✓':'Weiter →';
+  document.getElementById('phaseBadge').textContent=phases[cur];
+}
+function revealAll(s){
+  s.querySelectorAll('.reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('go'),70+i*80));
+}
+function go(n){
+  if(n<0||n>=N) return;
+  slides[cur].classList.remove('active','enter');
+  slides[cur].classList.add('exit');
+  setTimeout(()=>slides[cur].classList.remove('exit'),340);
+  cur=n;
+  slides[cur].querySelectorAll('.reveal').forEach(el=>el.classList.remove('go'));
+  slides[cur].classList.add('active','enter');
+  setTimeout(()=>{slides[cur].classList.remove('enter');revealAll(slides[cur]);},10);
+  if(cur===1) qStart();
+  if(cur===5) bbnStep(0);
+  if(cur===6) calcGehalt();
+  if(cur===7) drawPie();
+  if(cur===8) renderSK();
+  updateUI();
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ') go(cur+1);
+  if(e.key==='ArrowLeft') go(cur-1);
+});
+revealAll(slides[0]);
+updateUI();
+
+// ══════════════════════════════
+// QUIZ
+// ══════════════════════════════
+const QS=[
+  {q:'Was ist der "Nettobedarf"?',opts:['Sollbestand − Istbestand','Istbestand − Sollbestand','Ersatzbedarf + Neubedarf','Sollbestand × Istbestand'],ans:0,fb:'Richtig! Nettobedarf = Sollbestand − Istbestand. Positiv = Fehlbedarf, negativ = Überhang.'},
+  {q:'Eine Mitarbeiterin geht in Rente. Ihr Platz muss neu besetzt werden. Welche Bedarfsart liegt vor?',opts:['Ersatzbedarf','Neubedarf','Freisetzungsbedarf','Reservebedarf'],ans:0,fb:'Genau! Wenn jemand geht und die Stelle bleibt, ist das Ersatzbedarf.'},
+  {q:'Die Böckler-Office GmbH eröffnet eine zweite Filiale und braucht 3 neue Mitarbeitende. Was ist das?',opts:['Neubedarf','Ersatzbedarf','Freisetzungsbedarf','Nettobedarf'],ans:0,fb:'Korrekt! Neue Stellen durch Wachstum = Neubedarf.'},
+  {q:'Internes Beschaffungsbeispiel — welches?',opts:['Versetzung aus einer anderen Abteilung','Stellenanzeige auf Indeed','Agentur für Arbeit einschalten','Zeitungsinserat schalten'],ans:0,fb:'Richtig! Intern = aus dem eigenen Betrieb. Versetzung, Beförderung, Intranet-Ausschreibung.'},
+  {q:'Lager: Ist 8, Soll 12 — Nettobedarf?',opts:['+4 (Fehlbedarf)','−4 (Überhang)','0 (kein Bedarf)','4 (Ersatzbedarf)'],ans:0,fb:'Korrekt! 12 − 8 = +4. Positiv = Fehlbedarf → 4 Stellen müssen besetzt werden.'},
+];
+let qi=0,qs=0,qa=false;
+function qStart(){qi=0;qs=0;qa=false;document.getElementById('quiz-area').style.display='block';document.getElementById('quiz-result').style.display='none';document.getElementById('q-sc').textContent='⭐ 0 Punkte';qShow();}
+function qShow(){
+  const q=QS[qi];
+  document.getElementById('qpf').style.width=((qi+1)/QS.length*100)+'%';
+  document.getElementById('q-ctr').textContent=`Frage ${qi+1} / ${QS.length}`;
+  document.getElementById('q-txt').textContent=q.q;
+  const o=document.getElementById('q-opts');
+  o.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='q-opt';b.textContent=opt;
+    b.onclick=()=>qAnswer(i);
+    o.appendChild(b);
+  });
+  document.getElementById('q-fb').className='q-fb';
+  document.getElementById('q-fb').innerHTML='';
+  document.getElementById('q-next').style.display='none';
+  qa=false;
+}
+function qAnswer(i){
+  if(qa)return;qa=true;
+  const q=QS[qi];
+  document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.q-opt')[q.ans].classList.add('correct');
+  const fb=document.getElementById('q-fb');
+  if(i===q.ans){qs++;document.getElementById('q-sc').textContent=`⭐ ${qs} Punkte`;fb.className='q-fb ok show';fb.innerHTML='✅ '+q.fb;}
+  else{document.querySelectorAll('.q-opt')[i].classList.add('wrong');fb.className='q-fb nok show';fb.innerHTML='❌ '+q.fb;}
+  document.getElementById('q-next').style.display='inline-block';
+  document.getElementById('q-next').textContent=qi<QS.length-1?'Nächste Frage →':'Auswertung 🏆';
+}
+function qNext(){
+  qi++;
+  if(qi>=QS.length){
+    document.getElementById('quiz-area').style.display='none';
+    document.getElementById('quiz-result').style.display='block';
+    document.getElementById('qr-big').textContent=`${qs}/${QS.length}`;
+    const pct=qs/QS.length;
+    document.getElementById('qr-txt').textContent=pct>=0.8?'🌟 Super! Wiederholung erfolgreich!':pct>=0.6?'👍 Gut! Kleinen Blick ins Heft lohnt sich.':'📚 Nochmal kurz wiederholen — dann geht es weiter!';
+  }else qShow();
+}
+
+// ══════════════════════════════
+// BRUTTO → NETTO STEPS
+// ══════════════════════════════
+function bbnStep(n){
+  for(let i=0;i<=5;i++) document.getElementById('br'+i).classList.toggle('lit',i<=n);
+  document.querySelectorAll('.bbn-btn').forEach((b,i)=>b.classList.toggle('on',i===n));
+}
+
+// ══════════════════════════════
+// GEHALTSRECHNER
+// ══════════════════════════════
+function calcGehalt(){
+  const b  = parseFloat(document.getElementById('ci-brutto').value)||0;
+  const lr = parseFloat(document.getElementById('ci-sk').value)||0.12;
+  const zs = parseFloat(document.getElementById('ci-zusatz').value)||1.6;
+  const ki = parseFloat(document.getElementById('ci-kist').value)||0;
+  const lst= +(b*lr).toFixed(2);
+  const kst= +(lst*ki).toFixed(2);
+  const kv = +(b*(7.3+zs/2)/100).toFixed(2);
+  const rv = +(b*9.3/100).toFixed(2);
+  const pv = +(b*1.7/100).toFixed(2);
+  const av = +(b*1.3/100).toFixed(2);
+  const sv = +(kv+rv+pv+av).toFixed(2);
+  const net= +(b-lst-kst-sv).toFixed(2);
+  const fmt= n=>n.toFixed(2).replace('.',',')+' €';
+  document.getElementById('calc-result').innerHTML=`
+    <div class="cr-row brutto"><span class="cr-lbl">Bruttogehalt</span><span class="cr-val">${fmt(b)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− Lohnsteuer</span><span class="cr-val neg">− ${fmt(lst)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− Kirchensteuer</span><span class="cr-val neg">− ${fmt(kst)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− KV (${(7.3+zs/2).toFixed(2)} %)</span><span class="cr-val neg">− ${fmt(kv)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− RV (9,3 %)</span><span class="cr-val neg">− ${fmt(rv)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− PV (1,7 %)</span><span class="cr-val neg">− ${fmt(pv)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">− AV (1,3 %)</span><span class="cr-val neg">− ${fmt(av)}</span></div>
+    <div class="cr-row sum"><span class="cr-lbl">= Nettogehalt</span><span class="cr-val fin">${fmt(net)}</span></div>`;
+}
+
+// ══════════════════════════════
+// BV SLIDER
+// ══════════════════════════════
+function bvsUpdate(){
+  const v=parseInt(document.getElementById('bvs-range').value);
+  document.getElementById('bvs-val').textContent=v.toLocaleString('de-DE')+' €/Monat';
+  const r=document.getElementById('bvs-result');
+  if(v<=556){r.style.background='rgba(232,160,32,.1)';r.style.color='var(--gold)';r.textContent='→ Minijob: Kein SV-Beitrag für AN, AG zahlt Pauschale (~28 %)';}
+  else if(v<=2000){r.style.background='rgba(91,141,238,.1)';r.style.color='var(--blue)';r.textContent='→ Midijob (Übergangsbereich): Reduzierte SV-Beiträge für AN';}
+  else{r.style.background='rgba(76,175,120,.1)';r.style.color='var(--green)';r.textContent='→ Regulär/Vollzeit: Volle SV-Beiträge, voller Schutz';}
+}
+bvsUpdate();
+
+// ══════════════════════════════
+// TORTENDIAGRAMM
+// ══════════════════════════════
+const persons=[
+  {name:'Jonas Keller',brutto:2650,lst:0.12,zusatz:1.6,ki:0},
+  {name:'Frau Meier',  brutto:3165,lst:0.06,zusatz:1.6,ki:0.09},
+  {name:'Azubi Leon',  brutto:620, lst:0.0, zusatz:1.6,ki:0},
+];
+let curPerson=0;
+function setPerson(i,el){
+  curPerson=i;
+  document.querySelectorAll('.pp-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  drawPie();
+}
+function drawPie(){
+  const p=persons[curPerson];
+  const b=p.brutto;
+  const lst=+(b*p.lst).toFixed(2);
+  const kst=+(lst*p.ki).toFixed(2);
+  const kv=+(b*(7.3+p.zusatz/2)/100).toFixed(2);
+  const rv=+(b*9.3/100).toFixed(2);
+  const pv=+(b*1.7/100).toFixed(2);
+  const av=+(b*1.3/100).toFixed(2);
+  const sv=+(kv+rv+pv+av).toFixed(2);
+  const net=+(b-lst-kst-sv).toFixed(2);
+  const fmt=n=>n.toFixed(2).replace('.',',')+' €';
+  document.getElementById('pc-netto').textContent=fmt(net);
+
+  const slices=[
+    {label:'Netto',val:net,color:'#2ec4b6'},
+    {label:'Lohnsteuer',val:lst,color:'#e05555'},
+    {label:'Kirchensteuer',val:kst,color:'#d44a2e'},
+    {label:'Sozialvers. (AN)',val:sv,color:'#5b8dee'},
+  ].filter(s=>s.val>0);
+
+  const canvas=document.getElementById('pieChart');
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,280,280);
+  let start=-Math.PI/2;
+  slices.forEach(s=>{
+    const angle=(s.val/b)*2*Math.PI;
+    ctx.beginPath();ctx.moveTo(140,140);
+    ctx.arc(140,140,120,start,start+angle);
+    ctx.closePath();ctx.fillStyle=s.color;ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=2;ctx.stroke();
+    start+=angle;
+  });
+  // donut hole
+  ctx.beginPath();ctx.arc(140,140,72,0,2*Math.PI);
+  ctx.fillStyle='#131318';ctx.fill();
+
+  const leg=document.getElementById('pie-legend');
+  leg.innerHTML=slices.map(s=>`
+    <div class="pl-item">
+      <div class="pl-dot" style="background:${s.color}"></div>
+      <span>${s.label}</span>
+      <span class="pl-val">${fmt(s.val)}</span>
+    </div>`).join('');
+}
+
+// ══════════════════════════════
+// STEUERKLASSEN
+// ══════════════════════════════
+const SKS=[
+  {num:'I',name:'Ledig, getrennt lebend',lohnsteuer:'Normal (Grundfreibetrag)',besonderheit:'Standardklasse für Singles',beispiel:'Azubi Leon, Jonas Keller'},
+  {num:'II',name:'Alleinerziehend',lohnsteuer:'Geringer (Entlastungsbetrag)',besonderheit:'Entlastungsbetrag für Alleinerziehende',beispiel:'Mutter/Vater mit Kind, alleinstehend'},
+  {num:'III',name:'Verheiratet, besser Verdienender',lohnsteuer:'Sehr gering',besonderheit:'Vorteilig bei großem Gehaltsunterschied',beispiel:'Frau Meier (höheres Gehalt)'},
+  {num:'IV',name:'Verheiratet, ähnliche Gehälter',lohnsteuer:'Normal (wie SK I)',besonderheit:'Beide Partner zahlen gleich viel',beispiel:'Paare mit ähnlichem Einkommen'},
+  {num:'V',name:'Verheiratet, Zweitverdiener',lohnsteuer:'Sehr hoch',besonderheit:'Ergänzt SK III beim Partner',beispiel:'Teilzeitkraft mit SK-III-Partner'},
+  {num:'VI',name:'Zweiter Arbeitgeber',lohnsteuer:'Maximal (kein Freibetrag)',besonderheit:'Jeder weitere Job wird so besteuert',beispiel:'Nebenjob zusätzlich zu Vollzeit'},
+];
+let curSK=0;
+function renderSK(){
+  const list=document.getElementById('sk-list');
+  const detail=document.getElementById('sk-detail');
+  list.innerHTML=SKS.map((s,i)=>`
+    <div class="sk-card${i===curSK?' active':''}" onclick="selSK(${i})">
+      <div class="sk-num">${s.num}</div>
+      <div><div class="sk-name">Klasse ${s.num}</div><div class="sk-desc">${s.name}</div></div>
+    </div>`).join('');
+  const s=SKS[curSK];
+  detail.innerHTML=`
+    <div class="skd-title">Steuerklasse ${s.num}</div>
+    <div class="skd-row"><span class="skd-lbl">Wer?</span><span class="skd-val">${s.name}</span></div>
+    <div class="skd-row"><span class="skd-lbl">Lohnsteuer</span><span class="skd-val">${s.lohnsteuer}</span></div>
+    <div class="skd-row"><span class="skd-lbl">Besonderheit</span><span class="skd-val">${s.besonderheit}</span></div>
+    <div class="skd-row"><span class="skd-lbl">Beispiel</span><span class="skd-val">${s.beispiel}</span></div>`;
+}
+function selSK(i){curSK=i;renderSK();}
+</script>
+</body>
+</html>
