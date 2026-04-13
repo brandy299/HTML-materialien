@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personalbedarfsplanung · LF 8 · PBP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --ink:     #0e0e0e;
+  --paper:   #f5f1ea;
+  --bone:    #ede8df;
+  --ash:     #b8b0a4;
+  --warm:    #7a6f63;
+  --accent:  #c8392b;
+  --accent2: #e8a020;
+  --good:    #2e7d32;
+  --neg:     #c62828;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--ink);
+  font-family: 'Syne', sans-serif;
+  color: var(--ink);
+  cursor: default;
+}
+
+/* ═══════════════════════════════════════════
+   DECK ENGINE
+═══════════════════════════════════════════ */
+.deck { position: relative; width: 100vw; height: 100vh; }
+
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+}
+.slide.active  { opacity: 1; pointer-events: all; }
+.slide.enter   { animation: sIn  .55s cubic-bezier(.16,1,.3,1) forwards; }
+.slide.exit    { animation: sOut .35s ease-in forwards; }
+
+@keyframes sIn  { from { opacity:0; transform:translateY(28px) } to { opacity:1; transform:none } }
+@keyframes sOut { from { opacity:1; transform:none } to { opacity:0; transform:translateY(-20px) } }
+
+/* stagger helper */
+.reveal { opacity:0; transform:translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.go { opacity:1; transform:none; }
+
+/* ═══════════════════════════════════════════
+   PROGRESS + NAV
+═══════════════════════════════════════════ */
+#progress {
+  position: fixed; top:0; left:0; height:3px;
+  background: var(--accent); transition: width .4s ease; z-index:200;
+}
+
+.nav {
+  position: fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; gap:12px; align-items:center; z-index:100;
+}
+.nbtn {
+  border:none; cursor:pointer; border-radius:40px;
+  padding:9px 22px; font-family:'Syne',sans-serif; font-weight:700; font-size:13px;
+  transition: all .18s;
+}
+.nprev { background:rgba(255,255,255,.1); color:#fff; }
+.nprev:hover { background:rgba(255,255,255,.2); }
+.nnext { background:var(--paper); color:var(--ink); }
+.nnext:hover { transform:scale(1.04); background:#fff; }
+
+.dots { display:flex; gap:6px; align-items:center; }
+.dot {
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,.25); cursor:pointer; transition:.2s;
+}
+.dot.on { background:var(--paper); width:20px; border-radius:4px; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 1 – TITELFOLIE
+═══════════════════════════════════════════ */
+#s1 {
+  background: var(--ink);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(200,57,43,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 20% 70%, rgba(232,160,32,.05) 0%, transparent 60%);
+}
+
+.s1-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  align-items: center;
+  padding: 60px;
+}
+
+.s1-left { padding-right: 60px; border-right: 1px solid rgba(255,255,255,.08); }
+
+.s1-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ash);
+  margin-bottom: 20px;
+  display: flex; align-items:center; gap:10px;
+}
+.s1-eyebrow::before {
+  content:''; display:block; width:30px; height:1px; background:var(--accent);
+}
+
+.s1-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1.07;
+  color: #fff;
+  margin-bottom: 24px;
+}
+.s1-title em { color: var(--accent2); font-style: normal; }
+
+.s1-sub {
+  font-size: .95rem; color: rgba(255,255,255,.45);
+  line-height: 1.7; font-weight: 400;
+}
+
+.s1-right { padding-left: 60px; }
+
+.s1-cards { display:flex; flex-direction:column; gap:12px; }
+.s1-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex; align-items:center; gap:16px;
+  transition: .2s;
+}
+.s1-card:hover { background:rgba(255,255,255,.07); }
+.s1-num {
+  width:34px; height:34px; border-radius:50%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:var(--ash); flex-shrink:0;
+}
+.s1-card-text { font-size:.88rem; color:rgba(255,255,255,.65); line-height:1.4; }
+.s1-card-text strong { color:#fff; display:block; font-size:.93rem; margin-bottom:2px; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 2 – SZENARIO
+═══════════════════════════════════════════ */
+#s2 { background: var(--paper); }
+
+.s2-inner {
+  max-width: 1000px; width:100%; padding: 60px 48px;
+}
+
+.eyebrow {
+  font-size:11px; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--warm);
+  margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--accent); }
+
+.slide-title {
+  font-family:'DM Serif Display',serif;
+  font-size: clamp(2rem,4vw,2.8rem);
+  line-height:1.1; color:var(--ink);
+  margin-bottom:28px;
+}
+
+.scenario-box {
+  background:#fff;
+  border-radius:18px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 24px rgba(0,0,0,.07);
+  border-left: 4px solid var(--accent);
+  margin-bottom:28px;
+  font-size:1rem; line-height:1.8; color:#333;
+}
+.scenario-box strong { color:var(--ink); }
+
+.fact-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.fact {
+  background:#fff; border-radius:14px; padding:18px;
+  box-shadow:0 1px 8px rgba(0,0,0,.06);
+  text-align:center;
+  border-top:3px solid var(--ink);
+}
+.fact .f-num {
+  font-family:'DM Serif Display',serif;
+  font-size:2.2rem; color:var(--ink); margin-bottom:4px;
+}
+.fact .f-lbl { font-size:.75rem; color:var(--warm); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 3 – BEGRIFFE (Karten-Flip)
+═══════════════════════════════════════════ */
+#s3 { background: var(--bone); }
+
+.s3-inner { max-width:1100px; width:100%; padding:50px 48px; }
+
+.begriff-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:24px;
+}
+
+.bcard {
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 1px 10px rgba(0,0,0,.06);
+  border-top:3px solid var(--ink);
+  cursor:default;
+  transition: transform .2s, box-shadow .2s;
+}
+.bcard:hover { transform:translateY(-3px); box-shadow:0 6px 24px rgba(0,0,0,.1); }
+.bcard .bc-term {
+  font-weight:800; font-size:.95rem; color:var(--ink); margin-bottom:6px;
+}
+.bcard .bc-def {
+  font-size:.82rem; color:var(--warm); line-height:1.55;
+}
+.bcard .bc-formula {
+  margin-top:10px;
+  background:var(--bone);
+  border-radius:8px;
+  padding:7px 10px;
+  font-size:.8rem; font-weight:700; color:var(--ink);
+  font-family:monospace;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE 4 – FORMEL ANIMIERT
+═══════════════════════════════════════════ */
+#s4 { background: var(--ink); }
+
+.formula-stage {
+  display:flex; flex-direction:column;
+  align-items:center; text-align:center;
+  padding:40px;
+  max-width:900px; width:100%;
+}
+
+.formula-eyebrow {
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(255,255,255,.35); margin-bottom:20px; font-weight:700;
+}
+
+.formula-title {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.8rem,3.5vw,2.6rem);
+  color:#fff; margin-bottom:48px; line-height:1.2;
+}
+.formula-title em { color:var(--accent2); font-style:normal; }
+
+.formula-display {
+  display:flex; align-items:center; gap:0;
+  margin-bottom:44px;
+}
+
+.f-box {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px; padding:20px 28px;
+  text-align:center; min-width:170px;
+  transition: all .4s cubic-bezier(.34,1.56,.64,1);
+}
+.f-box.lit {
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.3);
+  transform:scale(1.06);
+}
+.f-box .fb-val {
+  font-family:'DM Serif Display',serif;
+  font-size:2.4rem; color:#fff; line-height:1;
+}
+.f-box.result .fb-val { color:var(--accent2); font-size:2.8rem; }
+.f-box .fb-lbl { font-size:11px; color:rgba(255,255,255,.4); margin-top:6px;
+  font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+
+.f-op {
+  font-size:2rem; color:rgba(255,255,255,.25); padding:0 16px; font-weight:300;
+  transition:.4s;
+}
+.f-op.lit { color:rgba(255,255,255,.6); }
+
+.formula-verdict {
+  padding:14px 28px;
+  border-radius:40px;
+  font-weight:700; font-size:1rem;
+  opacity:0; transform:translateY(10px);
+  transition: all .4s ease .2s;
+}
+.formula-verdict.show { opacity:1; transform:none; }
+.verdict-pos { background:rgba(46,125,50,.15); border:1px solid rgba(46,125,50,.4); color:#81c784; }
+.verdict-neg { background:rgba(198,40,40,.15); border:1px solid rgba(198,40,40,.4); color:#ef9a9a; }
+.verdict-zero{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.6); }
+
+.formula-cases {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+  max-width:700px; width:100%;
+}
+.f-case {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:14px 16px; text-align:center;
+  cursor:pointer; transition:.2s;
+}
+.f-case:hover { background:rgba(255,255,255,.09); }
+.f-case .fc-label { font-size:12px; color:rgba(255,255,255,.4); margin-bottom:4px; font-weight:600; }
+.f-case .fc-nums { font-size:.95rem; color:rgba(255,255,255,.75); }
+.f-case.pos { border-color:rgba(46,125,50,.4); }
+.f-case.neg { border-color:rgba(198,40,40,.4); }
+
+/* ═══════════════════════════════════════════
+   SLIDE 5 – BEDARFSARTEN
+═══════════════════════════════════════════ */
+#s5 { background: var(--paper); }
+
+.s5-inner { max-width:1060px; width:100%; padding:50px 48px; }
+
+.art-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+  margin-top:24px;
+}
+.art-card {
+  border-radius:18px; overflow:hidden;
+  box-shadow:0 2px 14px rgba(0,0,0,.07);
+}
+.art-card .ac-head {
+  padding:18px 20px;
+  font-weight:800; font-size:1rem; color:#fff;
+  display:flex; align-items:center; gap:12px;
+}
+.art-card.ersatz .ac-head { background:#1a1a1a; }
+.art-card.neu    .ac-head { background:#2e2e2e; }
+.art-card.frei   .ac-head { background:#424242; }
+.art-card .ac-icon { font-size:22px; }
+.art-card .ac-body {
+  background:#fff; padding:16px 20px;
+}
+.art-card .ac-body p { font-size:.83rem; color:#444; line-height:1.6; margin-bottom:10px; }
+.art-card .ac-body p:last-child { margin-bottom:0; }
+.ac-tag {
+  display:inline-block; border-radius:6px; padding:3px 9px;
+  font-size:11px; font-weight:700; background:var(--bone); color:var(--warm);
+  margin-right:4px; margin-bottom:4px;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE 6 – INTERN vs EXTERN
+═══════════════════════════════════════════ */
+#s6 { background: var(--bone); }
+
+.s6-inner { max-width:1060px; width:100%; padding:50px 48px; }
+
+.versus-grid {
+  display:grid; grid-template-columns:1fr 56px 1fr; gap:0;
+  margin-top:24px; align-items:start;
+}
+.vs-col {
+  background:#fff; border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 2px 14px rgba(0,0,0,.07);
+}
+.vs-head {
+  padding:18px 22px; font-weight:800; font-size:1rem; color:#fff;
+}
+.vs-col.intern .vs-head { background:#1a1a1a; }
+.vs-col.extern .vs-head { background:#3a3a3a; }
+.vs-body { padding:20px 22px; }
+.vs-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:9px 0; border-bottom:1px solid var(--bone); font-size:.85rem;
+}
+.vs-item:last-child { border-bottom:none; }
+.vs-dot { width:6px; height:6px; border-radius:50%; background:var(--ink); flex-shrink:0; margin-top:6px; }
+.vs-vs {
+  display:flex; align-items:center; justify-content:center;
+  font-family:'DM Serif Display',serif; font-size:1.8rem; color:var(--ash);
+  padding-top:80px;
+}
+
+.vs-pros-cons {
+  margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.pc-block { background:var(--bone); border-radius:12px; padding:14px; }
+.pc-block .pc-head { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+.pc-block.gut .pc-head { color:var(--good); }
+.pc-block.slecht .pc-head { color:var(--neg); }
+.pc-block p { font-size:.78rem; color:var(--warm); line-height:1.55; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 7 – RECHENBEISPIEL INTERAKTIV
+═══════════════════════════════════════════ */
+#s7 { background: var(--ink); }
+
+.s7-inner {
+  max-width:960px; width:100%; padding:50px 48px;
+  display:flex; flex-direction:column; align-items:center;
+}
+
+.s7-title {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.8rem,3.5vw,2.5rem);
+  color:#fff; margin-bottom:8px; text-align:center;
+}
+.s7-sub { color:rgba(255,255,255,.4); font-size:.9rem; margin-bottom:36px; text-align:center; }
+
+.calc-table {
+  width:100%; border-collapse:collapse;
+  background:rgba(255,255,255,.04);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px;
+}
+.calc-table th {
+  background:rgba(255,255,255,.08); color:rgba(255,255,255,.6);
+  padding:12px 18px; text-align:left; font-size:11px;
+  font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+}
+.calc-table td {
+  padding:13px 18px; font-size:.9rem; color:rgba(255,255,255,.75);
+  border-top:1px solid rgba(255,255,255,.05);
+  transition: background .3s;
+}
+.calc-table tr.highlight td { background:rgba(255,255,255,.06); color:#fff; }
+.calc-table td.dept { font-weight:600; color:#fff; }
+.calc-table td.netto-pos { color:#81c784; font-weight:700; }
+.calc-table td.netto-neg { color:#ef9a9a; font-weight:700; }
+.calc-table td.netto-zero{ color:var(--ash); font-weight:600; }
+.calc-table tr.sum-row td { background:rgba(255,255,255,.08); color:#fff; font-weight:700; border-top:2px solid rgba(255,255,255,.15); }
+.calc-table td.sum-pos { color:var(--accent2); font-size:1.05rem; }
+
+.step-btns { display:flex; gap:10px; }
+.step-btn {
+  border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.06);
+  color:#fff; border-radius:40px; padding:9px 22px;
+  font-family:'Syne',sans-serif; font-weight:600; font-size:13px;
+  cursor:pointer; transition:.2s;
+}
+.step-btn:hover { background:rgba(255,255,255,.12); }
+.step-btn.active { background:var(--paper); color:var(--ink); border-color:transparent; }
+
+/* ═══════════════════════════════════════════
+   SLIDE 8 – MERKSATZ
+═══════════════════════════════════════════ */
+#s8 { background: var(--paper); }
+
+.s8-inner {
+  max-width:900px; width:100%; padding:60px 48px;
+  text-align:center;
+}
+
+.s8-kicker {
+  font-size:11px; font-weight:700; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--warm); margin-bottom:24px;
+}
+
+.s8-main {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(2rem,4vw,3rem);
+  color:var(--ink); line-height:1.2;
+  margin-bottom:40px;
+}
+.s8-main em { color:var(--accent); font-style:italic; }
+
+.memo-cards {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  text-align:left; margin-bottom:36px;
+}
+.memo-card {
+  background:#fff; border-radius:14px; padding:20px;
+  box-shadow:0 1px 10px rgba(0,0,0,.06);
+}
+.mc-sign {
+  font-family:'DM Serif Display',serif;
+  font-size:2rem; line-height:1; margin-bottom:8px;
+}
+.mc-sign.pos { color:var(--good); }
+.mc-sign.neg { color:var(--neg); }
+.mc-sign.zero{ color:var(--warm); }
+.mc-title { font-weight:800; font-size:.9rem; margin-bottom:4px; }
+.mc-text { font-size:.8rem; color:var(--warm); line-height:1.55; }
+
+.s8-formula {
+  background:var(--ink); color:#fff;
+  border-radius:14px; padding:18px 32px;
+  display:inline-block;
+  font-size:1.1rem; font-weight:700;
+  letter-spacing:.03em;
+}
+.s8-formula span { color:var(--accent2); }
+
+/* ═══════════════════════════════════════════
+   SLIDE 9 – ABSCHLUSS / ZUSAMMENFASSUNG
+═══════════════════════════════════════════ */
+#s9 { background: var(--ink); }
+
+.s9-inner {
+  max-width:1000px; width:100%; padding:60px 48px;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+
+.s9-tag {
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(255,255,255,.3); margin-bottom:22px; font-weight:700;
+}
+
+.s9-title {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(2.2rem,4.5vw,3.4rem);
+  color:#fff; line-height:1.1; margin-bottom:12px;
+}
+.s9-title em { color:var(--accent2); font-style:italic; }
+
+.s9-sub { color:rgba(255,255,255,.4); font-size:.95rem; margin-bottom:44px; }
+
+.checklist {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
+  text-align:left; width:100%; max-width:720px;
+}
+.check-item {
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:14px 18px;
+  display:flex; align-items:center; gap:12px;
+  font-size:.88rem; color:rgba(255,255,255,.75);
+}
+.check-item::before {
+  content:'✓'; width:24px; height:24px; border-radius:50%;
+  background:rgba(255,255,255,.08); color:var(--accent2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800; flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 780px) {
+  .s1-grid { grid-template-columns:1fr; padding:32px; }
+  .s1-left { border-right:none; border-bottom:1px solid rgba(255,255,255,.08); padding-right:0; padding-bottom:24px; margin-bottom:24px; }
+  .s1-right { padding-left:0; }
+  .s1-cards { flex-direction:row; flex-wrap:wrap; }
+  .s1-card { flex:1; min-width:140px; }
+  .begriffe-grid, .art-grid, .formula-cases, .memo-cards, .checklist { grid-template-columns:1fr; }
+  .versus-grid { grid-template-columns:1fr; }
+  .vs-vs { display:none; }
+  .calc-table { font-size:.78rem; }
+  .fact-row { grid-template-columns:1fr; }
+  .s8-main { font-size:1.6rem; }
+  .slide-title { font-size:1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 – TITEL
+  ══════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="s1-grid">
+      <div class="s1-left">
+        <div class="s1-eyebrow reveal">PBP · Lernfeld 8 · Klasse HS2D</div>
+        <h1 class="s1-title reveal">Personal&shy;<em>bedarfs&shy;</em>planung</h1>
+        <p class="s1-sub reveal">Wie viele Mitarbeitende braucht ein Unternehmen — und warum? Wir lernen heute das systematische Vorgehen der Personalplanung kennen.</p>
+      </div>
+      <div class="s1-right">
+        <div class="s1-cards">
+          <div class="s1-card reveal">
+            <div class="s1-num">1</div>
+            <div class="s1-card-text"><strong>Die wichtigsten Begriffe</strong>Istbestand, Sollbestand, Nettobedarf & Co.</div>
+          </div>
+          <div class="s1-card reveal">
+            <div class="s1-num">2</div>
+            <div class="s1-card-text"><strong>Die Formel</strong>Nettobedarf = Sollbestand − Istbestand</div>
+          </div>
+          <div class="s1-card reveal">
+            <div class="s1-num">3</div>
+            <div class="s1-card-text"><strong>Bedarfsarten</strong>Ersatz-, Neu- und Freisetzungsbedarf erkennen</div>
+          </div>
+          <div class="s1-card reveal">
+            <div class="s1-num">4</div>
+            <div class="s1-card-text"><strong>Beschaffung</strong>Intern oder extern neue Stellen besetzen?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 – SZENARIO
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="s2-inner">
+      <div class="eyebrow reveal">Ausgangssituation</div>
+      <h2 class="slide-title reveal">Unser Modellunternehmen</h2>
+      <div class="scenario-box reveal">
+        <p>Die <strong>Böckler-Office GmbH</strong> in Oberhausen handelt mit Bürobedarf und IT-Zubehör. Filialleiter <strong>Herr Dönmez</strong> plant eine Expansion in eine zweite Filiale. Er stellt fest: Im Lager fehlen Mitarbeitende, im Vertrieb gibt es zu viele — und die Buchhaltung ist genau richtig besetzt. Herr Dönmez muss den <strong>Personalbedarf systematisch planen</strong>, bevor er handelt.</p>
+      </div>
+      <div class="fact-row reveal">
+        <div class="fact">
+          <div class="f-num">38</div>
+          <div class="f-lbl">Beschäftigte gesamt</div>
+        </div>
+        <div class="fact">
+          <div class="f-num">3</div>
+          <div class="f-lbl">Abteilungen betroffen</div>
+        </div>
+        <div class="fact">
+          <div class="f-num">+3</div>
+          <div class="f-lbl">Stellen im Fehlbedarf</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 – BEGRIFFE
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="s3-inner">
+      <div class="eyebrow reveal">Grundbegriffe</div>
+      <h2 class="slide-title reveal">Das musst du kennen</h2>
+      <div class="begriff-grid">
+        <div class="bcard reveal">
+          <div class="bc-term">Istbestand</div>
+          <div class="bc-def">Wie viele Mitarbeitende arbeiten <em>gerade jetzt</em> im Betrieb?</div>
+          <div class="bc-formula">→ Ausgangswert</div>
+        </div>
+        <div class="bcard reveal">
+          <div class="bc-term">Sollbestand</div>
+          <div class="bc-def">Wie viele Mitarbeitende werden <em>benötigt</em>?</div>
+          <div class="bc-formula">→ Zielwert</div>
+        </div>
+        <div class="bcard reveal">
+          <div class="bc-term">Nettobedarf</div>
+          <div class="bc-def">Die <em>Differenz</em> zwischen Soll und Ist — zeigt, ob Stellen fehlen oder zu viele vorhanden sind.</div>
+          <div class="bc-formula">Sollbestand − Istbestand</div>
+        </div>
+        <div class="bcard reveal">
+          <div class="bc-term">Ersatzbedarf</div>
+          <div class="bc-def">Stellen, die durch <em>Abgänge</em> neu besetzt werden müssen.</div>
+          <div class="bc-formula">Kündigung, Rente, Elternzeit</div>
+        </div>
+        <div class="bcard reveal">
+          <div class="bc-term">Neubedarf</div>
+          <div class="bc-def">Völlig neue Stellen, die durch <em>Wachstum</em> entstehen.</div>
+          <div class="bc-formula">Expansion, neue Produkte</div>
+        </div>
+        <div class="bcard reveal">
+          <div class="bc-term">Freisetzungsbedarf</div>
+          <div class="bc-def">Stellen, die durch <em>Rationalisierung</em> oder Rückgang wegfallen.</div>
+          <div class="bc-formula">Automatisierung, Auftragsrückgang</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 – FORMEL INTERAKTIV
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="formula-stage">
+      <div class="formula-eyebrow reveal">Die Kernformel</div>
+      <h2 class="formula-title reveal">Nettobedarf = Sollbestand <em>−</em> Istbestand</h2>
+
+      <div class="formula-display reveal" id="formula-display">
+        <div class="f-box" id="fb-soll">
+          <div class="fb-val" id="fv-soll">9</div>
+          <div class="fb-lbl">Sollbestand</div>
+        </div>
+        <div class="f-op" id="fo1">−</div>
+        <div class="f-box" id="fb-ist">
+          <div class="fb-val" id="fv-ist">6</div>
+          <div class="fb-lbl">Istbestand</div>
+        </div>
+        <div class="f-op" id="fo2">=</div>
+        <div class="f-box result" id="fb-net">
+          <div class="fb-val" id="fv-net">?</div>
+          <div class="fb-lbl">Nettobedarf</div>
+        </div>
+      </div>
+
+      <div class="formula-verdict" id="formula-verdict"></div>
+
+      <div class="formula-cases reveal">
+        <div class="f-case pos" onclick="setCase(9,6)">
+          <div class="fc-label">Beispiel 1 · Lager</div>
+          <div class="fc-nums">Soll 9 − Ist 6</div>
+        </div>
+        <div class="f-case neg" onclick="setCase(10,12)">
+          <div class="fc-label">Beispiel 2 · Vertrieb</div>
+          <div class="fc-nums">Soll 10 − Ist 12</div>
+        </div>
+        <div class="f-case" onclick="setCase(3,3)">
+          <div class="fc-label">Beispiel 3 · Buchh.</div>
+          <div class="fc-nums">Soll 3 − Ist 3</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 – BEDARFSARTEN
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="s5-inner">
+      <div class="eyebrow reveal">Bedarfsarten</div>
+      <h2 class="slide-title reveal">Warum entsteht Personalbedarf?</h2>
+      <div class="art-grid">
+        <div class="art-card ersatz reveal">
+          <div class="ac-head">
+            <span class="ac-icon">🔄</span>
+            Ersatzbedarf
+          </div>
+          <div class="ac-body">
+            <p>Eine <strong>bestehende Stelle</strong> muss neu besetzt werden, weil jemand den Betrieb verlässt.</p>
+            <p>Erkennungssatz: <em>„… muss ersetzt werden."</em></p>
+            <div>
+              <span class="ac-tag">Kündigung</span>
+              <span class="ac-tag">Rente</span>
+              <span class="ac-tag">Elternzeit</span>
+              <span class="ac-tag">Krankheit</span>
+            </div>
+          </div>
+        </div>
+        <div class="art-card neu reveal">
+          <div class="ac-head">
+            <span class="ac-icon">✨</span>
+            Neubedarf
+          </div>
+          <div class="ac-body">
+            <p>Es entstehen <strong>völlig neue Stellen</strong>, weil das Unternehmen wächst.</p>
+            <p>Erkennungssatz: <em>„… neue Stelle wird gebraucht."</em></p>
+            <div>
+              <span class="ac-tag">Neue Filiale</span>
+              <span class="ac-tag">Neue Produkte</span>
+              <span class="ac-tag">Expansion</span>
+            </div>
+          </div>
+        </div>
+        <div class="art-card frei reveal">
+          <div class="ac-head">
+            <span class="ac-icon">↘</span>
+            Freisetzungsbedarf
+          </div>
+          <div class="ac-body">
+            <p>Stellen fallen <strong>komplett weg</strong>, weil weniger Personal gebraucht wird.</p>
+            <p>Erkennungssatz: <em>„… Stelle fällt weg."</em></p>
+            <div>
+              <span class="ac-tag">Automatisierung</span>
+              <span class="ac-tag">Auftragsrückgang</span>
+              <span class="ac-tag">Rationalisierung</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 – INTERN vs. EXTERN
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="s6-inner">
+      <div class="eyebrow reveal">Personalbeschaffung</div>
+      <h2 class="slide-title reveal">Intern oder extern besetzen?</h2>
+      <div class="versus-grid reveal">
+        <div class="vs-col intern">
+          <div class="vs-head">🏢 Interne Beschaffung</div>
+          <div class="vs-body">
+            <div class="vs-item"><span class="vs-dot"></span><span>Stelle aus dem <strong>eigenen Betrieb</strong> besetzen</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Versetzung aus einer anderen Abteilung</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Beförderung einer vorhandenen Kraft</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Stellenausschreibung im <strong>Intranet</strong></span></div>
+            <div class="vs-pros-cons">
+              <div class="pc-block gut">
+                <div class="pc-head">+ Vorteile</div>
+                <p>Schnell, günstig, MA kennt den Betrieb bereits</p>
+              </div>
+              <div class="pc-block slecht">
+                <div class="pc-head">− Nachteile</div>
+                <p>Kleine Auswahl, hinterlässt Lücke anderswo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vs-vs">vs</div>
+        <div class="vs-col extern">
+          <div class="vs-head">🌐 Externe Beschaffung</div>
+          <div class="vs-body">
+            <div class="vs-item"><span class="vs-dot"></span><span>Stelle von <strong>außerhalb</strong> besetzen</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Jobportal (Indeed, StepStone …)</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Agentur für Arbeit</span></div>
+            <div class="vs-item"><span class="vs-dot"></span><span>Zeitungsanzeige / Personalvermittler</span></div>
+            <div class="vs-pros-cons">
+              <div class="pc-block gut">
+                <div class="pc-head">+ Vorteile</div>
+                <p>Mehr Auswahl, frisches Know-how von außen</p>
+              </div>
+              <div class="pc-block slecht">
+                <div class="pc-head">− Nachteile</div>
+                <p>Teuer, dauert länger, Einarbeitung nötig</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 7 – RECHENBEISPIEL
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s7">
+    <div class="s7-inner">
+      <h2 class="s7-title reveal">Rechenbeispiel: Böckler-Office GmbH</h2>
+      <p class="s7-sub reveal">Klicke auf die Schaltflächen, um die Abteilungen schrittweise einzublenden</p>
+
+      <table class="calc-table reveal" id="calc-table">
+        <thead>
+          <tr>
+            <th>Abteilung</th>
+            <th>Istbestand</th>
+            <th>Sollbestand</th>
+            <th>Nettobedarf</th>
+            <th>Ergebnis</th>
+          </tr>
+        </thead>
+        <tbody id="calc-body">
+          <tr id="cr0"><td class="dept">Lager</td><td>6</td><td>9</td><td class="netto-pos" id="cn0">?</td><td id="ce0">—</td></tr>
+          <tr id="cr1"><td class="dept">Vertrieb</td><td>12</td><td>10</td><td class="netto-neg" id="cn1">?</td><td id="ce1">—</td></tr>
+          <tr id="cr2"><td class="dept">IT-Service</td><td>3</td><td>3</td><td class="netto-zero" id="cn2">?</td><td id="ce2">—</td></tr>
+          <tr id="cr3"><td class="dept">Buchhaltung</td><td>2</td><td>4</td><td class="netto-pos" id="cn3">?</td><td id="ce3">—</td></tr>
+          <tr class="sum-row" id="cr4"><td>Gesamt</td><td>23</td><td>26</td><td class="sum-pos" id="cn4">?</td><td id="ce4">—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="step-btns reveal" id="step-btns">
+        <button class="step-btn active" onclick="showStep(0)">Start</button>
+        <button class="step-btn" onclick="showStep(1)">Lager</button>
+        <button class="step-btn" onclick="showStep(2)">+ Vertrieb</button>
+        <button class="step-btn" onclick="showStep(3)">+ IT</button>
+        <button class="step-btn" onclick="showStep(4)">+ Buchh.</button>
+        <button class="step-btn" onclick="showStep(5)">Gesamt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 8 – MERKSATZ
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s8">
+    <div class="s8-inner">
+      <div class="s8-kicker reveal">Für die Klausur</div>
+      <h2 class="s8-main reveal">So erkennst du die <em>Bedarfsart</em> sofort.</h2>
+      <div class="memo-cards">
+        <div class="memo-card reveal">
+          <div class="mc-sign pos">+</div>
+          <div class="mc-title">Ersatzbedarf</div>
+          <div class="mc-text">Jemand <strong>geht</strong> und die Stelle bleibt.<br>Stichworte: kündigt, geht in Rente, Elternzeit, Krankheit.</div>
+        </div>
+        <div class="memo-card reveal">
+          <div class="mc-sign pos">✦</div>
+          <div class="mc-title">Neubedarf</div>
+          <div class="mc-text">Eine völlig <strong>neue Stelle</strong> entsteht.<br>Stichworte: neue Filiale, neues Produkt, Expansion, Wachstum.</div>
+        </div>
+        <div class="memo-card reveal">
+          <div class="mc-sign neg">−</div>
+          <div class="mc-title">Freisetzungsbedarf</div>
+          <div class="mc-text">Eine Stelle <strong>fällt weg</strong>.<br>Stichworte: Maschine ersetzt, Aufträge sinken, Rationalisierung.</div>
+        </div>
+      </div>
+      <div class="s8-formula reveal">
+        Nettobedarf = <span>Sollbestand</span> − <span>Istbestand</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 9 – ABSCHLUSS
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s9">
+    <div class="s9-inner">
+      <div class="s9-tag reveal">Zusammenfassung · LF 8 · PBP</div>
+      <h2 class="s9-title reveal">Das <em>kannst</em> du<br>jetzt.</h2>
+      <p class="s9-sub reveal">Personalbedarfsplanung bei der Böckler-Office GmbH</p>
+      <div class="checklist">
+        <div class="check-item reveal">Istbestand und Sollbestand erklären</div>
+        <div class="check-item reveal">Nettobedarf berechnen (Soll − Ist)</div>
+        <div class="check-item reveal">Ersatzbedarf erkennen und benennen</div>
+        <div class="check-item reveal">Neubedarf erkennen und benennen</div>
+        <div class="check-item reveal">Freisetzungsbedarf erkennen und benennen</div>
+        <div class="check-item reveal">Interne und externe Beschaffung unterscheiden</div>
+        <div class="check-item reveal">Fehlbedarf (+) und Überhang (−) deuten</div>
+        <div class="check-item reveal">Beispiele aus der Böckler-Office GmbH anwenden</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .deck -->
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <button class="nbtn nprev" id="prev" onclick="go(cur-1)">← Zurück</button>
+  <div class="dots" id="dots"></div>
+  <button class="nbtn nnext" id="next" onclick="go(cur+1)">Weiter →</button>
+</nav>
+
+<script>
+// ══════════════════════════════
+// DECK ENGINE
+// ══════════════════════════════
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0;
+
+// Dots
+const dotsEl = document.getElementById('dots');
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' on':'');
+  d.onclick = () => go(i);
+  dotsEl.appendChild(d);
+});
+
+function updateUI() {
+  document.getElementById('progress').style.width = ((cur+1)/N*100) + '%';
+  dotsEl.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
+  document.getElementById('prev').style.opacity = cur===0 ? '.3':'1';
+  document.getElementById('next').textContent = cur===N-1 ? 'Fertig ✓' : 'Weiter →';
+}
+
+function revealAll(slide) {
+  const items = slide.querySelectorAll('.reveal');
+  items.forEach((el,i) => setTimeout(() => el.classList.add('go'), 80 + i*90));
+}
+
+function go(n) {
+  if (n < 0 || n >= N) return;
+  const old = slides[cur];
+  old.classList.remove('active','enter');
+  old.classList.add('exit');
+  setTimeout(() => old.classList.remove('exit'), 380);
+
+  cur = n;
+  const neo = slides[cur];
+  neo.querySelectorAll('.reveal').forEach(el => el.classList.remove('go'));
+  neo.classList.add('active','enter');
+  setTimeout(() => { neo.classList.remove('enter'); revealAll(neo); }, 10);
+
+  // slide-specific resets
+  if (cur === 3) resetFormula();
+  if (cur === 6) showStep(0);
+
+  updateUI();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') go(cur+1);
+  if (e.key === 'ArrowLeft') go(cur-1);
+});
+
+revealAll(slides[0]);
+updateUI();
+
+// ══════════════════════════════
+// SLIDE 4 – FORMEL INTERAKTIV
+// ══════════════════════════════
+function resetFormula() {
+  document.getElementById('fv-soll').textContent = '9';
+  document.getElementById('fv-ist').textContent  = '6';
+  document.getElementById('fv-net').textContent  = '?';
+  ['fb-soll','fb-ist','fb-net','fo1','fo2'].forEach(id => {
+    document.getElementById(id).classList.remove('lit');
+  });
+  const v = document.getElementById('formula-verdict');
+  v.className = 'formula-verdict';
+  v.textContent = '';
+}
+
+let formulaAnimating = false;
+function setCase(soll, ist) {
+  if (formulaAnimating) return;
+  formulaAnimating = true;
+
+  const net = soll - ist;
+  document.getElementById('fv-soll').textContent = soll;
+  document.getElementById('fv-ist').textContent  = ist;
+  document.getElementById('fv-net').textContent  = '?';
+
+  const v = document.getElementById('formula-verdict');
+  v.className = 'formula-verdict';
+  v.textContent = '';
+
+  ['fo1','fo2'].forEach(id => document.getElementById(id).classList.remove('lit'));
+
+  // animate: highlight soll
+  setTimeout(() => {
+    document.getElementById('fb-soll').classList.add('lit');
+    document.getElementById('fo1').classList.add('lit');
+  }, 200);
+
+  // highlight ist
+  setTimeout(() => {
+    document.getElementById('fb-ist').classList.add('lit');
+    document.getElementById('fo2').classList.add('lit');
+  }, 600);
+
+  // show result
+  setTimeout(() => {
+    document.getElementById('fv-net').textContent = net > 0 ? '+'+net : net;
+    document.getElementById('fb-net').classList.add('lit');
+
+    if (net > 0) {
+      v.className = 'formula-verdict verdict-pos show';
+      v.textContent = '+' + net + ' Fehlbedarf → ' + net + ' Stelle(n) neu besetzen';
+    } else if (net < 0) {
+      v.className = 'formula-verdict verdict-neg show';
+      v.textContent = net + ' Personalüberhang → ' + Math.abs(net) + ' Stelle(n) zu viel';
+    } else {
+      v.className = 'formula-verdict verdict-zero show';
+      v.textContent = '0 → Kein Handlungsbedarf';
+    }
+    setTimeout(() => {
+      ['fb-soll','fb-ist','fb-net','fo1','fo2'].forEach(id =>
+        document.getElementById(id).classList.remove('lit'));
+      formulaAnimating = false;
+    }, 1800);
+  }, 1000);
+}
+
+// ══════════════════════════════
+// SLIDE 7 – STEP RECHNER
+// ══════════════════════════════
+const steps = [
+  { soll:  9, ist: 6,  net: '+3', ergebnis: 'Fehlbedarf: 3 Stellen fehlen' },
+  { soll: 10, ist: 12, net: '−2', ergebnis: 'Überhang: 2 Stellen zu viel' },
+  { soll:  3, ist: 3,  net:  '0', ergebnis: 'Kein Handlungsbedarf' },
+  { soll:  4, ist: 2,  net: '+2', ergebnis: 'Fehlbedarf: 2 Stellen fehlen' },
+];
+
+function showStep(n) {
+  // reset
+  for (let i=0;i<4;i++) {
+    document.getElementById('cn'+i).textContent = '?';
+    document.getElementById('ce'+i).textContent = '—';
+    document.getElementById('cr'+i).classList.remove('highlight');
+  }
+  document.getElementById('cn4').textContent = '?';
+  document.getElementById('ce4').textContent = '—';
+
+  document.querySelectorAll('.step-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+
+  let totalNet = 0;
+  for (let i=0;i<n && i<4;i++) {
+    const s = steps[i];
+    document.getElementById('cn'+i).textContent = s.net;
+    document.getElementById('ce'+i).textContent = s.ergebnis;
+    document.getElementById('cr'+i).classList.add('highlight');
+    totalNet += parseInt(s.net);
+  }
+
+  if (n === 5) {
+    document.getElementById('cn4').textContent = '+3';
+    document.getElementById('ce4').textContent = 'Fehlbedarf: 3 Stellen insgesamt';
+  }
+}
+</script>
+</body>
+</html>
