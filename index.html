@@ -1751,7 +1751,7 @@ async function ghDelete(path, sha, message) {
 
 async function updateIndex(newData) {
   const fileInfo    = await ghGet('index.html');
-  const rawContent  = atob(fileInfo.content.replace(/\n/g, ''));
+  const rawContent  = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
   const updated     = rawContent.replace(
     /const materialien\s*=\s*\[[\s\S]*?\];/,
     'const materialien = ' + JSON.stringify(newData, null, 2) + ';'
