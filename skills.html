@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Skills – Unterricht.Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #0F172A;
+  --muted:  #64748B;
+  --border: #E2E8F0;
+  --bg:     #F8FAFC;
+  --white:  #FFFFFF;
+  --blue:   #1D4ED8;
+  --indigo: #4F46E5;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+/* HOW TO banner */
+.how-to {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 36px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.how-to-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: #1D4ED8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.how-to-text h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.how-to-text p {
+  font-size: 13px;
+  color: #1E40AF;
+  line-height: 1.6;
+}
+
+.how-to-text ol {
+  font-size: 13px;
+  color: #1E40AF;
+  margin-top: 6px;
+  padding-left: 18px;
+  line-height: 1.8;
+}
+
+/* Section */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 32px 0 14px;
+}
+
+/* Skill cards */
+.skill-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+
+.skill-card:hover { box-shadow: 0 4px 20px rgba(15,23,42,0.07); }
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.skill-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.skill-meta { flex: 1; }
+
+.skill-meta h2 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.skill-meta p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.skill-tags {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.03em;
+}
+
+.tag-blue   { background: #EFF6FF; color: #1D4ED8; }
+.tag-indigo { background: #EEF2FF; color: #4F46E5; }
+.tag-green  { background: #ECFDF5; color: #059669; }
+.tag-amber  { background: #FFFBEB; color: #D97706; }
+.tag-purple { background: #F5F3FF; color: #7C3AED; }
+
+.skill-toggle {
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.skill-card.open .skill-toggle { transform: rotate(180deg); }
+
+.skill-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  margin-top: 0;
+}
+
+.skill-card.open .skill-body { display: block; }
+
+.prompt-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 16px 0 8px;
+}
+
+.prompt-box {
+  background: #0F172A;
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+}
+
+.prompt-box pre {
+  font-family: 'DM Mono', monospace;
+  font-size: 11.5px;
+  color: #CBD5E1;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #94A3B8;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.copy-btn:hover { background: rgba(255,255,255,0.18); color: #F1F5F9; }
+.copy-btn.copied { background: #059669; border-color: #059669; color: white; }
+
+.skill-tip {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+  line-height: 1.6;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border-left: 3px solid #E2E8F0;
+}
+
+.icon-blue   { background: #EFF6FF; color: #1D4ED8; }
+.icon-indigo { background: #EEF2FF; color: #4F46E5; }
+.icon-green  { background: #ECFDF5; color: #059669; }
+.icon-amber  { background: #FFFBEB; color: #D97706; }
+.icon-purple { background: #F5F3FF; color: #7C3AED; }
+.icon-orange { background: #FFF7ED; color: #C0421A; }
+</style>
+</head>
+<body>
+<script src="nav.js" defer></script>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <h1>Claude Skills für Lehrkräfte</h1>
+    <p>Fertige Prompts zum Einrichten in Claude.ai — einmal als Projektanweisung gespeichert, immer verfügbar.</p>
+  </div>
+
+  <div class="how-to">
+    <div class="how-to-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div class="how-to-text">
+      <h3>So verwendest du einen Skill</h3>
+      <ol>
+        <li>Auf <strong>claude.ai</strong> ein neues Projekt anlegen (z.B. „HTML-Materialien")</li>
+        <li>Unter <strong>Projektanweisungen</strong> den kopierten Prompt einfügen</li>
+        <li>Ab sofort kennt Claude in diesem Projekt das gewünschte Format automatisch</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section-label">Unterrichtsmaterialien</div>
+
+  <!-- SKILL 1: HTML-Lernpfad -->
+  <div class="skill-card" id="card-1">
+    <div class="skill-header" onclick="toggle('card-1')">
+      <div class="skill-icon icon-blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>Interaktive HTML-Lernpfade</h2>
+        <p>Erstellt vollständige, interaktive HTML-Lektionen mit Quiz, Fortschrittsbalken und Tracking.</p>
+        <div class="skill-tags">
+          <span class="tag tag-blue">HTML</span>
+          <span class="tag tag-indigo">Interaktiv</span>
+          <span class="tag tag-green">Quiz</span>
+          <span class="tag tag-amber">Tracking</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst interaktive HTML-Lernpfade für den kaufmännischen Berufskolleg-Unterricht (NRW).
+
+TECHNISCHER STACK:
+- Reines HTML/CSS/JS — keine externen Bibliotheken außer Tailwind CDN (optional)
+- Inline alles in einer einzigen .html-Datei
+- Font: DM Serif Display (Überschriften) + DM Sans (Text) via Google Fonts
+- Farbpalette: Weiß/Grau-Hintergrund, Akzentfarbe nach Fach wählbar
+- Mobile-first, responsive
+
+PFLICHT-ELEMENTE:
+1. Fortschrittsbalken oben (zeigt % der absolvierten Schritte)
+2. Mindestens 3 Phasen: Einstieg → Erarbeitung → Sicherung
+3. Pro Phase: Lerninhalt + mind. 1 Aufgabe/Quiz
+4. Multiple Choice mit sofortigem Feedback (grün/rot)
+5. Abschluss-Screen mit Score und „Weiter"-Button
+6. Tracking-Integration am Ende: trackComplete(score) aufrufen
+
+TRACKING (PFLICHT am Ende einfügen):
+&lt;script src="https://brandy299.github.io/HTML-materialien/tracking.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // Am Ende des Quiz aufrufen:
+  trackComplete(finalScore); // Score 0-100
+&lt;/script&gt;
+
+DESIGN-PRINZIPIEN:
+- Klare Typografie, viel Weißraum
+- Lerninhalt vor Aufgaben — nie direkt mit Fragen beginnen
+- Feedback immer sofort (kein Submit ohne Antwort)
+- Erklärungen bei falschen Antworten
+
+AUSGABE: Immer die komplette HTML-Datei, bereit zum direkten Upload.</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: Im Chat dann einfach schreiben: „Erstelle eine Lektion über Business Letters für B2-Niveau, 20 Minuten."</p>
+    </div>
+  </div>
+
+  <!-- SKILL 2: Prüfungs-JSON -->
+  <div class="skill-card" id="card-2">
+    <div class="skill-header" onclick="toggle('card-2')">
+      <div class="skill-icon icon-amber">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>Prüfungs-JSON für die Plattform</h2>
+        <p>Erstellt das exakte JSON-Format für den Import in den Prüfungs-Editor.</p>
+        <div class="skill-tags">
+          <span class="tag tag-amber">Prüfung</span>
+          <span class="tag tag-indigo">JSON</span>
+          <span class="tag tag-blue">Import</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst Prüfungs-JSONs für die Unterricht.Digital-Plattform am Berufskolleg NRW.
+
+AUSGABEFORMAT (immer exakt dieses Schema):
+{
+  "title": "Prüfungstitel",
+  "questions": [
+    {
+      "id": 1,
+      "type": "mc",
+      "text": "Fragetext",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correct": 0,
+      "explanation": "Kurze Erklärung warum diese Antwort richtig ist"
+    },
+    {
+      "id": 2,
+      "type": "tf",
+      "text": "Aussage die bewertet werden soll",
+      "correct": true,
+      "explanation": "Erklärung"
+    }
+  ]
+}
+
+TYPEN:
+- "mc" = Multiple Choice (4 Optionen, correct = Index 0-3)
+- "tf" = True/False (correct = true/false)
+
+REGELN:
+- Nur eindeutig richtige Antworten
+- Distraktoren (falsche Antworten) realistisch und plausibel — kein offensichtlicher Unsinn
+- Erklärungen immer auf Deutsch, 1-2 Sätze
+- Niveau und Fachsprache an Berufskolleg B2 anpassen
+- Standardmäßig 10 Fragen, außer anders gewünscht
+
+AUSGABE: Nur das JSON, kein Kommentar davor/danach — direkt kopierbar für den Import.</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: „Erstelle eine Prüfung mit 12 Fragen zu Business Emails, Niveau B2, Schwerpunkt Beschwerdebriefe."</p>
+    </div>
+  </div>
+
+  <!-- SKILL 3: Präsentation -->
+  <div class="skill-card" id="card-3">
+    <div class="skill-header" onclick="toggle('card-3')">
+      <div class="skill-icon icon-indigo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>HTML-Präsentationen / Folien</h2>
+        <p>Erstellt bildschirmfüllende HTML-Präsentationen für den Unterrichtseinstieg.</p>
+        <div class="skill-tags">
+          <span class="tag tag-indigo">Präsentation</span>
+          <span class="tag tag-blue">HTML</span>
+          <span class="tag tag-purple">Einstieg</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst HTML-Präsentationen für den Unterricht am kaufmännischen Berufskolleg NRW.
+
+FORMAT: Eine einzige .html-Datei, fullscreen, per Pfeiltasten/Klick navigierbar.
+
+TECHNISCH:
+- Kein Framework — reines HTML/CSS/JS
+- Folienwechsel per Tastatur (ArrowRight/ArrowLeft) und Klick
+- Fortschrittsanzeige (Folie X von Y)
+- Drucken via Ctrl+P / window.print() mit @media print (eine Folie pro Seite)
+
+DESIGN:
+- Dunkles Thema: Hintergrund #0F172A, Text weiß/hellgrau
+- Akzentfarbe frei wählbar (Standard: #4F46E5 Indigo)
+- Font: Inter / System-UI
+- Großzügige Schriftgrößen (Titel min. 2.5rem, Body min. 1.2rem)
+- Maximal 5-7 Bullet-Points pro Folie — lieber mehr Folien
+
+FOLIEN-TYPEN (nach Bedarf):
+- Titelfolie (Großer Titel + Untertitel)
+- Inhaltsfolie (Titel + Bullets oder Text)
+- Bild + Text (grid 50/50)
+- Aufgabenfolie (abgesetzt, anderer Hintergrund)
+- Zusammenfassung / Merksatz (zentriert, hervorgehoben)
+
+AUSGABE: Komplette HTML-Datei, direkt uploadbar.</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: „Erstelle eine Einstiegspräsentation zu Telephoning, 8 Folien, für einen 10-Minuten-Impuls."</p>
+    </div>
+  </div>
+
+  <div class="section-label">Unterrichtsplanung</div>
+
+  <!-- SKILL 4: Lernsituation -->
+  <div class="skill-card" id="card-4">
+    <div class="skill-header" onclick="toggle('card-4')">
+      <div class="skill-icon icon-green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>Lernsituation (Lernsequenz)</h2>
+        <p>Erstellt vollständige handlungsorientierte Lernsituationen nach NRW-Lehrplan.</p>
+        <div class="skill-tags">
+          <span class="tag tag-green">Lehrplan</span>
+          <span class="tag tag-blue">NRW</span>
+          <span class="tag tag-amber">BK</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst Lernsituationen für den handlungsorientierten Unterricht am kaufmännischen Berufskolleg NRW (KBK).
+
+STRUKTUR jeder Lernsituation:
+1. KOPFDATEN: Lernfeld, Zeitumfang (UStd.), Klasse/Jahrgang, Fach
+2. SITUATIONSBESCHREIBUNG: Realitätsnahe Geschäftssituation als Ausgangspunkt (1 Paragraph)
+3. KOMPETENZEN: Fach-, Methoden-, Sozial-, Selbstkompetenz (je 2-3 Punkte)
+4. HANDLUNGSPRODUKT: Was erstellen/erarbeiten die SuS am Ende konkret?
+5. VERLAUFSPLANUNG:
+   - Tabellarisch: Phase | Inhalt | Methode | Medien | Zeit
+   - Phasen: Einstieg → Erarbeitung → Ergebnissicherung → Transfer
+6. AUFGABENSTELLUNGEN: 3-5 konkrete Aufgaben mit Operator (analysieren, erstellen, beurteilen...)
+7. DIFFERENZIERUNG: Je 1 Hinweis für Förderung und Forderung
+8. MATERIALHINWEISE: Benötigte Materialien/Quellen
+
+RAHMENBEDINGUNGEN:
+- Schüler: Kaufleute für Büromanagement oder vergleichbar, BK NRW
+- Sprache: Klar, präzise, Lehrersprache
+- Business English: Aufgaben können zweisprachig sein (DE/EN)
+- Lehrplankonformität: KLP NRW Berufliches Gymnasium / BK
+
+FORMAT: Fließtext + Tabellen, als strukturiertes Markdown oder HTML.</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: „Erstelle eine Lernsituation für LF5, Thema Preiskalkulation, 6 Unterrichtsstunden, Klasse 11."</p>
+    </div>
+  </div>
+
+  <!-- SKILL 5: Klausur -->
+  <div class="skill-card" id="card-5">
+    <div class="skill-header" onclick="toggle('card-5')">
+      <div class="skill-icon icon-orange">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>Klausur mit Erwartungshorizont</h2>
+        <p>Erstellt vollständige Klausuren mit EHZ und Bewertungsraster für Business English.</p>
+        <div class="skill-tags">
+          <span class="tag tag-orange">Klausur</span>
+          <span class="tag tag-green">EHZ</span>
+          <span class="tag tag-blue">Business English</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst vollständige Klausuren mit Erwartungshorizont für Business English am kaufmännischen Berufskolleg NRW.
+
+KLAUSUR-STRUKTUR:
+1. DECKBLATT: Schule, Fach, Klasse, Datum, Zeit (60/90/120 min), Name/Vorname-Feld
+2. TEIL 1 – Reading Comprehension (ca. 30% der Punkte)
+   - Authentischer oder authentisch wirkender Geschäftstext (Email, Report, Brief)
+   - 4-6 Aufgaben: True/False/Not given, Short answers, Vocabulary in context
+3. TEIL 2 – Language Use (ca. 25% der Punkte)
+   - Grammar im Kontext (z.B. Tenses, Modal verbs, Conditionals)
+   - Vocabulary (z.B. Word formation, Gap fill)
+4. TEIL 3 – Writing (ca. 45% der Punkte)
+   - Business-Schreibaufgabe: Email, Letter, Report oder Memo
+   - Klare Aufgabenstellung mit Bullet-Points was enthalten sein muss
+   - Wortanzahl: 150-200 Wörter
+
+ERWARTUNGSHORIZONT (EHZ):
+- Für jede Aufgabe: Musterlösung + Punkteverteilung
+- Writing: Bewertungsraster (Inhalt / Sprache / Format je %)
+- Notenschlüssel: 1=92%+, 2=81%+, 3=67%+, 4=50%+, 5=30%+, 6=&lt;30%
+
+NIVEAU: B1+ bis B2 (je nach Klasse angeben)
+SPRACHE: Aufgabenstellungen auf Deutsch, Texte und Antworten auf Englisch
+
+FORMAT: Sauber formatiertes Markdown, druckfertig.</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: „Erstelle eine 90-Minuten-Klausur für Klasse 12, Thema Business Correspondence, Niveau B2."</p>
+    </div>
+  </div>
+
+  <div class="section-label">Extras</div>
+
+  <!-- SKILL 6: SOL -->
+  <div class="skill-card" id="card-6">
+    <div class="skill-header" onclick="toggle('card-6')">
+      <div class="skill-icon icon-purple">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="skill-meta">
+        <h2>Selbstorganisiertes Lernen (SOL)</h2>
+        <p>Erstellt SOL-konforme Lernaufgaben, Lernpläne und Reflexionsbögen.</p>
+        <div class="skill-tags">
+          <span class="tag tag-purple">SOL</span>
+          <span class="tag tag-green">Methodik</span>
+          <span class="tag tag-blue">NRW</span>
+        </div>
+      </div>
+      <svg class="skill-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="skill-body">
+      <div class="prompt-label">Projektanweisung</div>
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">Kopieren</button>
+        <pre>Du erstellst Materialien nach den Prinzipien des Selbstorganisierten Lernens (SOL) für das Berufskolleg NRW.
+
+SOL-GRUNDPRINZIPIEN die du immer beachtest:
+- Schüler planen, steuern und reflektieren ihren eigenen Lernprozess
+- Materialien enthalten immer: Lernziel, Lernauftrag, Reflexion
+- Kooperatives Lernen (Partner-/Gruppenarbeit) wird bevorzugt
+- Lehrkraft = Lernbegleiter, nicht Wissensvermittler
+
+MATERIALTYPEN die du erstellen kannst:
+1. LERNPLAN: Wochentabelle mit Zielen, Aufgaben, Selbsteinschätzung
+2. LERNAUFTRAG: Offene Aufgabe mit Kompetenzorientierung, ohne Einheitsweg
+3. REFLEXIONSBOGEN: Skalen + offene Fragen (Was habe ich gelernt? / Was war schwierig?)
+4. EXPERTENGRUPPEN-MATERIAL: Für Jigsaw-Methode aufgeteilte Themenblätter
+5. PORTFOLIO-AUFGABE: Sammlung von Lernprodukten mit Kriterienraster
+
+FORMAT: Markdown mit klaren Abschnitten, druckfertig als A4.
+SPRACHE: Schülerangepasst (klar, direkt, Du-Form).</pre>
+      </div>
+      <p class="skill-tip">💡 Tipp: „Erstelle einen Lernplan für eine SOL-Phase zu Business Emails, 3 Wochen, Klasse 11."</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggle(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+function copyPrompt(btn) {
+  const pre = btn.closest('.prompt-box').querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Kopiert ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Kopieren';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
