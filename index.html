@@ -1126,6 +1126,8 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
     <label>Thema</label>
     <input type="text" id="uploadThema" list="themaList" placeholder="z.B. LF5">
     <datalist id="themaList"></datalist>
+    <label>Kürzel</label>
+    <input type="text" id="uploadAutor" placeholder="z.B. YB" maxlength="4" style="text-transform:uppercase;width:80px">
     <div id="progressWrap"><div id="progressBar"></div></div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalUpload')">Abbrechen</button>
@@ -1181,6 +1183,32 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 
 <!-- TOAST -->
 <div id="toast"></div>
+
+<!-- Auth guard (separate module so onclick-handlers in main script stay global) -->
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient(
+  'https://yodanvzkkhlqemlvtvey.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvZGFudnpra2hscWVtbHZ0dmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MTgzMzcsImV4cCI6MjA1ODM5NDMzN30.jLKST1bpRtPFVZNOdwQOWJhbJJEiVFNMjh4b71_tN2Y'
+);
+const { data: { session } } = await sb.auth.getSession();
+if (session) {
+  const kuerzel = (session.user.email || '').split('@')[0].slice(0, 3).toUpperCase();
+  window.__kuerzel = kuerzel;
+  const el = document.getElementById('uploadAutor');
+  if (el) el.value = kuerzel;
+} else {
+  window.__kuerzel = '';
+  // Hide teacher-only buttons
+  ['tokenBtn','tokenBtn2','editToggle','editToggle2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.querySelectorAll('.hbtn.primary, .hbtn-desktop.primary-desktop').forEach(el => {
+    el.style.display = 'none';
+  });
+}
+</script>
 
 <script>
 /* ═══════════════════════════════════════════
@@ -1602,7 +1630,9 @@ function makeCard(m) {
     '<div class="file-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>' +
     '<div class="file-info">' +
     '  <div class="file-title">' + esc(m.name) + '</div>' +
-    '  <div class="file-meta">' + esc(m.fach) + ' · ' + esc(m.thema) + ' · ' + esc(m.datum) + '</div>' +
+    '  <div class="file-meta">' + esc(m.fach) + ' · ' + esc(m.thema) + ' · ' + esc(m.datum) +
+       (m.autor ? ' · <span style="display:inline-block;padding:1px 6px;border-radius:4px;background:#EEF2FF;color:#4F46E5;font-size:10px;font-weight:700;letter-spacing:0.05em">' + esc(m.autor) + '</span>' : '') +
+    '</div>' +
     '</div>' +
     '<button class="card-copy-btn" title="Link kopieren" onclick="copyLink(event,\'' + esc(m.pfad) + '\')">' +
     '  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
@@ -1771,6 +1801,7 @@ function showUpload() {
   document.getElementById('uploadTitel').value = '';
   document.getElementById('uploadFach').value  = '';
   document.getElementById('uploadThema').value = '';
+  document.getElementById('uploadAutor').value = (window.__kuerzel || '');
   document.getElementById('dzText').textContent = 'HTML-Datei hierher ziehen oder klicken';
   document.getElementById('progressWrap').style.display = 'none';
   document.getElementById('progressBar').style.width    = '0%';
@@ -1821,6 +1852,7 @@ async function doUpload() {
   btn.disabled = true;
   btn.textContent = 'Hochladen…';
 
+  const autor = (document.getElementById('uploadAutor').value.trim() || window.__kuerzel || '').toUpperCase().slice(0,4);
   const pfad = 'materialien/' + fach + '/' + thema + '/' + uploadFile.name;
   const pw = document.getElementById('progressWrap');
   const pb = document.getElementById('progressBar');
@@ -1841,7 +1873,7 @@ async function doUpload() {
 
     const today = new Date();
     const datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
-    materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum });
+    materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor });
     await updateIndex(materialien);
     pb.style.width = '100%';
 
