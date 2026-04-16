@@ -782,7 +782,15 @@ document.getElementById('btn-start').onclick = async () => {
   }
 
   if (data && !data.submitted_at) {
-    // Started but not yet submitted – resume with remaining time
+    // Started but not yet submitted – check if time has already run out
+    const elapsed = Math.floor((Date.now() - new Date(data.started_at).getTime()) / 1000);
+    if (elapsed >= EXAM.timeLimit) {
+      document.getElementById('blocked-msg').textContent =
+        'Die Zeit für diese Prüfung ist abgelaufen. Bitte wende dich an deine Lehrkraft.';
+      show('scr-blocked');
+      return;
+    }
+    // Resume with remaining time
     examStartedAt = data.started_at;
     answers = new Array(EXAM.questions.length).fill(null);
     startQuiz();
