@@ -35,8 +35,8 @@ body {
 }
 
 /* ─── SCREENS ─── */
-.screen { display: none; }
-.screen.active { display: flex; }
+.screen { display: none !important; }
+.screen.active { display: flex !important; }
 
 /* ─── WRAPPER ─── */
 .wrap {
@@ -345,13 +345,46 @@ input.code-input.error { border-color: var(--error); }
 
 .opt:disabled { cursor: default; }
 
+/* ─── QUESTION DOTS ─── */
+.q-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 1.25rem;
+  justify-content: center;
+}
+.q-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--white);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms, border-color 150ms, color 150ms;
+}
+.q-dot:hover { border-color: var(--primary); color: var(--primary); }
+.q-dot.answered { background: #EEF2FF; border-color: var(--primary); color: var(--primary); }
+.q-dot.current { background: var(--primary); border-color: var(--primary); color: white; }
+
 .q-nav {
   display: flex;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .q-nav .btn { flex: 1; }
+.btn-submit-early {
+  background: var(--success) !important;
+  border-color: var(--success) !important;
+  color: white !important;
+  flex: 1.2 !important;
+}
 
 /* ─── WARN BANNER (tab switch) ─── */
 #warn-banner {
@@ -522,9 +555,11 @@ input.code-input.error { border-color: var(--error); }
       <div class="q-number" id="q-number">Frage 1</div>
       <div class="q-text" id="q-text"></div>
       <div class="options" id="q-options"></div>
+      <div class="q-dots" id="q-dots"></div>
       <div class="q-nav">
-        <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()" style="display:none">Zurück</button>
-        <button class="btn" id="btn-next" onclick="nextQ()">Weiter</button>
+        <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()">← Zurück</button>
+        <button class="btn btn-submit-early" id="btn-submit-early" onclick="submitEarly()">Abgeben</button>
+        <button class="btn" id="btn-next" onclick="nextQ()">Weiter →</button>
       </div>
     </div>
   </div>
@@ -832,7 +867,7 @@ function renderQuestion() {
   document.getElementById('q-number').textContent = `Frage ${currentQ + 1}`;
   document.getElementById('q-counter').textContent = `Frage ${currentQ + 1} / ${total}`;
   document.getElementById('q-text').textContent = q.text;
-  document.getElementById('progress-fill').style.width = ((currentQ / total) * 100) + '%';
+  document.getElementById('progress-fill').style.width = (((currentQ + 1) / total) * 100) + '%';
 
   // Options
   const container = document.getElementById('q-options');
@@ -845,11 +880,26 @@ function renderQuestion() {
     container.appendChild(btn);
   });
 
+  // Question dots
+  const dotsEl = document.getElementById('q-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'q-dot' +
+      (i === currentQ ? ' current' : answers[i] !== null ? ' answered' : '');
+    dot.textContent = i + 1;
+    dot.title = `Frage ${i + 1}`;
+    dot.onclick = () => { currentQ = i; renderQuestion(); };
+    dotsEl.appendChild(dot);
+  }
+
   // Nav buttons
-  document.getElementById('btn-prev').style.display = currentQ > 0 ? 'block' : 'none';
+  document.getElementById('btn-prev').style.visibility = currentQ > 0 ? 'visible' : 'hidden';
   const nextBtn = document.getElementById('btn-next');
-  nextBtn.textContent = currentQ === total - 1 ? 'Abgeben' : 'Weiter';
-  nextBtn.style.background = currentQ === total - 1 ? '#10B981' : '';
+  nextBtn.textContent = currentQ === total - 1 ? 'Fertig →' : 'Weiter →';
+  nextBtn.style.display = currentQ === total - 1 ? 'none' : '';
+  document.getElementById('btn-submit-early').textContent =
+    answers.filter(a => a !== null).length === total ? '✓ Abgeben' : `Abgeben (${answers.filter(a => a !== null).length}/${total})`;
 }
 
 function selectAnswer(idx) {
@@ -857,20 +907,13 @@ function selectAnswer(idx) {
   document.querySelectorAll('.opt').forEach((b, i) => {
     b.classList.toggle('selected', i === idx);
   });
+  renderQuestion();
 }
 
 window.nextQ = function () {
-  if (answers[currentQ] === null) {
-    // Flash options to hint at needing selection
-    document.getElementById('q-options').style.outline = '2px solid var(--error)';
-    setTimeout(() => document.getElementById('q-options').style.outline = '', 800);
-    return;
-  }
   if (currentQ < EXAM.questions.length - 1) {
     currentQ++;
     renderQuestion();
-  } else {
-    submitExam('manual');
   }
 };
 
@@ -879,6 +922,16 @@ window.prevQ = function () {
     currentQ--;
     renderQuestion();
   }
+};
+
+window.submitEarly = function () {
+  const answered = answers.filter(a => a !== null).length;
+  const total = EXAM.questions.length;
+  if (answered < total) {
+    const unanswered = total - answered;
+    if (!confirm(`Du hast noch ${unanswered} Frage${unanswered > 1 ? 'n' : ''} nicht beantwortet. Trotzdem abgeben?`)) return;
+  }
+  submitExam('manual');
 };
 
 /* ── Timer ── */
