@@ -666,13 +666,14 @@ const SUPABASE_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ── State ── */
-let EXAM        = null;
-let studentCode = '';
-let currentQ    = 0;
-let answers     = [];
-let timerSecs   = 0;
+let EXAM          = null;
+let studentCode   = '';
+let currentQ      = 0;
+let answers       = [];
+let timerSecs     = 0;
 let timerInterval = null;
 let tabWarnCount  = 0;
+let examStartedAt = null;
 
 /* ── Load exam (from URL param or fallback) ── */
 async function loadExam() {
