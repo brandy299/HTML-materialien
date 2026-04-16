@@ -758,10 +758,10 @@ document.getElementById('btn-start').onclick = async () => {
   show('scr-loading');
   document.getElementById('loading-msg').textContent = 'Code wird geprüft…';
 
-  // Check if already submitted
+  // Check if already started or submitted
   const { data, error } = await sb
     .from('exam_results')
-    .select('id, submitted_at')
+    .select('id, submitted_at, started_at')
     .eq('code', studentCode)
     .eq('exam_id', EXAM.id)
     .maybeSingle();
@@ -771,18 +771,24 @@ document.getElementById('btn-start').onclick = async () => {
     return;
   }
 
-  if (data) {
-    // Already submitted
-    const when = data.submitted_at
-      ? new Date(data.submitted_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' })
-      : '—';
+  if (data && data.submitted_at) {
+    // Already submitted – block
+    const when = new Date(data.submitted_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
     document.getElementById('blocked-msg').textContent =
       `Du hast diese Prüfung bereits am ${when} abgegeben. Eine erneute Teilnahme ist nicht möglich.\n\nWende dich bei Fragen an deine Lehrkraft.`;
     show('scr-blocked');
     return;
   }
 
-  // Register start in DB (insert with submitted_at = null)
+  if (data && !data.submitted_at) {
+    // Started but not yet submitted – resume with remaining time
+    examStartedAt = data.started_at;
+    answers = new Array(EXAM.questions.length).fill(null);
+    startQuiz();
+    return;
+  }
+
+  // No existing row – register start in DB
   const { error: insertErr } = await sb.from('exam_results').insert({
     code:       studentCode,
     exam_id:    EXAM.id,
@@ -791,13 +797,7 @@ document.getElementById('btn-start').onclick = async () => {
   });
 
   if (insertErr && insertErr.code !== '23505') {
-    // 23505 = unique_violation → already started (race condition), redirect to blocked
     document.getElementById('loading-msg').textContent = 'Fehler beim Starten. Bitte Seite neu laden.';
-    return;
-  }
-
-  if (insertErr?.code === '23505') {
-    show('scr-blocked');
     return;
   }
 
@@ -874,7 +874,10 @@ window.prevQ = function () {
 
 /* ── Timer ── */
 function startTimer() {
-  timerSecs = EXAM.timeLimit;
+  const elapsed = examStartedAt
+    ? Math.floor((Date.now() - new Date(examStartedAt).getTime()) / 1000)
+    : 0;
+  timerSecs = Math.max(1, EXAM.timeLimit - elapsed);
   updateTimerDisplay();
   timerInterval = setInterval(() => {
     timerSecs--;
