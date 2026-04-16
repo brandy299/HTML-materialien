@@ -1083,6 +1083,15 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
         </svg>
         Link kopieren
       </button>
+      <button class="pv-btn" onclick="previewShowQR()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/>
+          <rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="2" height="2"/>
+          <rect x="18" y="19" width="3" height="2"/><rect x="19" y="17" width="2" height="2"/>
+        </svg>
+        QR-Code
+      </button>
       <button class="pv-btn" id="previewEditBtn" onclick="previewEdit()">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -1177,6 +1186,22 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalDelete')">Abbrechen</button>
       <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
+    </div>
+  </div>
+</div>
+
+<!-- QR CODE MODAL -->
+<div class="modal-backdrop" id="modalQR">
+  <div class="modal" style="max-width:320px;text-align:center">
+    <h2 style="margin-bottom:4px">QR-Code</h2>
+    <p id="qrModalTitle" style="font-size:12px;color:#64748B;margin-bottom:16px;word-break:break-all"></p>
+    <div id="qrModalContainer" style="display:flex;justify-content:center;margin-bottom:16px"></div>
+    <div class="modal-footer" style="justify-content:center;gap:8px">
+      <button class="btn-secondary" onclick="closeModal('modalQR')">Schließen</button>
+      <button class="btn-primary" onclick="printMaterialQR()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Drucken
+      </button>
     </div>
   </div>
 </div>
@@ -1475,6 +1500,44 @@ function previewCopyLink() {
   if (!previewMaterial) return;
   navigator.clipboard.writeText(BASE_URL + previewMaterial.pfad)
     .then(function () { showToast('Link kopiert!'); });
+}
+
+function previewShowQR() {
+  if (!previewMaterial) return;
+  var url = BASE_URL + previewMaterial.pfad;
+  document.getElementById('qrModalTitle').textContent = previewMaterial.name + ' — ' + url;
+  var container = document.getElementById('qrModalContainer');
+  container.innerHTML = '';
+  new QRCode(container, {
+    text: url,
+    width: 200,
+    height: 200,
+    colorDark: '#111827',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+  openModal('modalQR');
+}
+
+function printMaterialQR() {
+  var canvas = document.querySelector('#qrModalContainer canvas');
+  var title = previewMaterial ? previewMaterial.name : '';
+  var url = previewMaterial ? BASE_URL + previewMaterial.pfad : '';
+  if (!canvas) return;
+  var win = window.open('', '_blank');
+  win.document.write(
+    '<html><head><title>QR – ' + title + '</title>' +
+    '<style>body{font-family:system-ui,sans-serif;text-align:center;padding:40px}' +
+    'img{display:block;margin:0 auto 16px}' +
+    'p{font-size:12px;color:#555;word-break:break-all;max-width:240px;margin:0 auto}' +
+    'h2{font-size:16px;margin-bottom:8px}</style></head>' +
+    '<body><h2>' + title + '</h2>' +
+    '<img src="' + canvas.toDataURL() + '" width="200" height="200">' +
+    '<p>' + url + '</p>' +
+    '<script>window.onload=function(){window.print();}<\/script>' +
+    '</body></html>'
+  );
+  win.document.close();
 }
 
 function previewEdit() {
@@ -2063,5 +2126,6 @@ buildSidebar();
 render('');
 updateBreadcrumb();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </body>
 </html>
