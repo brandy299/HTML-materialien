@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Letters – Interactive Learning Path | B2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo-50: #eef2ff;
+    --indigo-100: #e0e7ff;
+    --indigo-500: #6366f1;
+    --indigo-600: #4f46e5;
+    --slate-900: #0f172a;
+    --slate-600: #475569;
+    --slate-400: #94a3b8;
+    --emerald-50: #ecfdf5;
+    --emerald-500: #10b981;
+    --amber-50: #fffbeb;
+    --amber-400: #fbbf24;
+    --rose-50: #fff1f2;
+    --rose-500: #f43f5e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f8f7ff;
+    color: var(--slate-900);
+    min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+
+  /* Progress bar */
+  #progress-bar { transition: width 0.5s ease; }
+
+  /* Phase cards */
+  .phase-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  /* Animated sections */
+  .section { display: none; animation: fadeSlideIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Letter layout visual */
+  .letter-box {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 20px rgba(79,70,229,0.08);
+    padding: 1.5rem;
+    border: 1.5px solid #e0e7ff;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .letter-part {
+    border-left: 3px solid transparent;
+    padding-left: 0.75rem;
+    margin-bottom: 0.4rem;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .letter-part:hover { background: #f1f5f9; }
+  .letter-part.highlighted { border-left-color: var(--indigo-500); background: var(--indigo-50); }
+
+  /* Quiz option buttons */
+  .quiz-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--slate-900);
+  }
+  .quiz-btn:hover:not(:disabled) { border-color: var(--indigo-500); background: var(--indigo-50); }
+  .quiz-btn.correct { background: var(--emerald-50); border-color: var(--emerald-500); color: #065f46; }
+  .quiz-btn.wrong   { background: var(--rose-50);    border-color: var(--rose-500);    color: #9f1239; }
+  .quiz-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+  /* Drag & Drop */
+  .drag-item {
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.625rem;
+    padding: 0.5rem 0.875rem;
+    margin-bottom: 0.4rem;
+    cursor: grab;
+    user-select: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    font-size: 0.85rem;
+  }
+  .drag-item:active { cursor: grabbing; box-shadow: 0 4px 16px rgba(79,70,229,0.18); border-color: var(--indigo-500); }
+  .drag-item.dragging { opacity: 0.4; }
+  .drop-zone {
+    min-height: 2.8rem;
+    background: #f1f5f9;
+    border: 2px dashed #cbd5e1;
+    border-radius: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .drop-zone.drag-over { background: var(--indigo-50); border-color: var(--indigo-500); }
+  .drop-zone.correct-zone { background: var(--emerald-50); border-color: var(--emerald-500); }
+  .drop-zone.wrong-zone   { background: var(--rose-50);    border-color: var(--rose-500); }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall 1.5s ease-in forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Tooltip modal */
+  #tooltip-modal { display: none; }
+  #tooltip-modal.visible { display: flex; }
+
+  /* Score stars */
+  .star { font-size: 1.6rem; }
+
+  /* Phrase pill */
+  .phrase-pill {
+    display: inline-block;
+    background: var(--indigo-50);
+    color: var(--indigo-600);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin: 3px;
+    border: 1px solid var(--indigo-100);
+  }
+
+  /* Nav dots */
+  .nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-dot.active { background: var(--indigo-500); transform: scale(1.3); }
+  .nav-dot.done   { background: var(--emerald-500); }
+
+  /* Mobile-friendly tap targets */
+  button { min-height: 44px; }
+  
+  /* Fill-in blank */
+  .blank-input {
+    border: none;
+    border-bottom: 2px solid var(--indigo-500);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    outline: none;
+    width: 140px;
+    color: var(--slate-900);
+  }
+  .blank-input.correct-input { border-bottom-color: var(--emerald-500); color: #065f46; }
+  .blank-input.wrong-input   { border-bottom-color: var(--rose-500);    color: #9f1239; }
+
+  /* Tab navigation */
+  .tab-btn {
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    color: var(--slate-600);
+  }
+  .tab-btn.active-tab { background: white; color: var(--indigo-600); box-shadow: 0 1px 6px rgba(99,102,241,0.15); }
+
+  /* Scenario builder */
+  .scenario-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    border: 1.5px solid #e2e8f0;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .scenario-card.selected { border-color: var(--indigo-500); background: var(--indigo-50); }
+
+  /* Responsive letter preview */
+  @media (max-width: 640px) {
+    .letter-box { font-size: 0.78rem; padding: 1rem; }
+    h1.title-main { font-size: 1.8rem !important; }
+  }
+</style>
+</head>
+<body>
+<a href="../../../index.html" style="position:fixed;top:12px;left:12px;z-index:9999;display:inline-flex;align-items:center;gap:6px;padding:6px 13px 6px 10px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);border:1px solid rgba(0,0,0,0.12);border-radius:100px;font-family:system-ui,sans-serif;font-size:12px;font-weight:600;color:#1D4ED8;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.10);transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 4px 14px rgba(0,0,0,0.16)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.10)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Materialien</a>
+
+<!-- Tooltip Modal -->
+<div id="tooltip-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/40 p-4" onclick="closeTooltip(event)">
+  <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6" onclick="event.stopPropagation()">
+    <div class="flex items-start justify-between mb-3">
+      <h3 class="text-lg font-semibold" id="tooltip-title" style="font-family:'DM Serif Display',serif"></h3>
+      <button onclick="closeTooltipBtn()" class="text-slate-400 hover:text-slate-600 ml-3 text-xl leading-none">×</button>
+    </div>
+    <p class="text-slate-600 text-sm leading-relaxed" id="tooltip-body"></p>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="bg-white border-b border-slate-100 sticky top-0 z-30 shadow-sm">
+  <div class="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white text-lg flex-shrink-0" style="background: linear-gradient(135deg,#6366f1,#818cf8);">✉️</div>
+    <div class="flex-1 min-w-0">
+      <p class="text-xs text-slate-400 font-medium uppercase tracking-widest leading-none mb-0.5">Office Design Ltd. · B2</p>
+      <h1 class="text-base font-semibold text-slate-800 truncate" style="font-family:'DM Serif Display',serif;">Business Letters</h1>
+    </div>
+    <div class="flex flex-col items-end gap-1 flex-shrink-0">
+      <span class="text-xs text-slate-400" id="progress-label">0 / 5</span>
+      <div class="w-28 h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-2 rounded-full" style="background:linear-gradient(90deg,#6366f1,#a5b4fc);width:0%"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Nav dots -->
+  <div class="max-w-2xl mx-auto px-4 pb-2 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+    <div class="nav-dot active" id="dot-0" onclick="goToSection(0)" title="Hook"></div>
+    <div class="nav-dot" id="dot-1" onclick="goToSection(1)" title="Structure"></div>
+    <div class="nav-dot" id="dot-2" onclick="goToSection(2)" title="Language"></div>
+    <div class="nav-dot" id="dot-3" onclick="goToSection(3)" title="Check"></div>
+    <div class="nav-dot" id="dot-4" onclick="goToSection(4)" title="Transfer"></div>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-6 pb-20">
+
+<!-- ════════════════════════════════════
+     SECTION 0 – HOOK
+════════════════════════════════════ -->
+<div class="section active" id="section-0">
+  <div class="inline-flex items-center gap-2 mb-4">
+    <span class="phase-badge text-white" style="background:linear-gradient(135deg,#f97316,#fb923c);">🎯 Hook</span>
+  </div>
+
+  <h2 class="text-2xl md:text-3xl mb-2" style="font-family:'DM Serif Display',serif;">One wrong word can cost you the deal.</h2>
+  <p class="text-slate-600 mb-5 text-sm leading-relaxed">A senior buyer at <strong>Office Design Ltd.</strong> once received a business letter that started with <em>"Dear Sir or Madam, we want to sell you stuff."</em> – They never replied. In international business, your letter <em>is</em> your first impression.</p>
+
+  <!-- Story scenario -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-5">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-2">📋 Your Situation</p>
+    <p class="text-sm text-slate-700 leading-relaxed">You are a trainee in the <strong>Export Department</strong> at <strong>Office Design Ltd.</strong>, an international office furniture company based in Dortmund. Your manager, Ms Petra Kahl, has asked you to write a formal business letter to a new UK supplier, <strong>Greenfield Supplies Ltd.</strong> in Edinburgh.</p>
+    <p class="text-sm text-slate-700 mt-2 leading-relaxed">By the end of this module, you will be able to write this letter independently – and correctly.</p>
+  </div>
+
+  <!-- What you'll learn -->
+  <div class="rounded-2xl p-4 mb-6" style="background:var(--indigo-50);border:1.5px solid var(--indigo-100);">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">💡 Learning Objectives</p>
+    <div class="space-y-2">
+      <div class="flex items-start gap-2 text-sm text-slate-700"><span class="text-indigo-400 mt-0.5">▸</span><span>Identify and label all 12 parts of a formal business letter</span></div>
+      <div class="flex items-start gap-2 text-sm text-slate-700"><span class="text-indigo-400 mt-0.5">▸</span><span>Choose the correct salutation and complimentary close</span></div>
+      <div class="flex items-start gap-2 text-sm text-slate-700"><span class="text-indigo-400 mt-0.5">▸</span><span>Use formal language and standard business phrases</span></div>
+      <div class="flex items-start gap-2 text-sm text-slate-700"><span class="text-indigo-400 mt-0.5">▸</span><span>Identify and correct common mistakes in letters</span></div>
+      <div class="flex items-start gap-2 text-sm text-slate-700"><span class="text-indigo-400 mt-0.5">▸</span><span>Write a complete business letter in a real-life scenario</span></div>
+    </div>
+  </div>
+
+  <!-- Quick poll -->
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
+    <p class="text-sm font-semibold text-slate-700 mb-3">🤔 Quick Check-In: How confident do you feel about writing a formal business letter?</p>
+    <div id="poll-area">
+      <button class="quiz-btn text-sm" onclick="selectPoll(this,'😅 Not at all – I need help!')">😅 Not at all – I need help!</button>
+      <button class="quiz-btn text-sm" onclick="selectPoll(this,'🙂 A little – I know the basics')">🙂 A little – I know the basics</button>
+      <button class="quiz-btn text-sm" onclick="selectPoll(this,'😎 Pretty confident – let\'s refine!')">😎 Pretty confident – let's refine!</button>
+    </div>
+  </div>
+
+  <button onclick="goToSection(1)" class="w-full text-white font-semibold py-3.5 rounded-2xl shadow-md transition-all hover:scale-[1.01] active:scale-[0.99]" style="background:linear-gradient(135deg,#6366f1,#818cf8);">
+    Start the Learning Path →
+  </button>
+</div>
+
+<!-- ════════════════════════════════════
+     SECTION 1 – INPUT: STRUCTURE
+════════════════════════════════════ -->
+<div class="section" id="section-1">
+  <div class="inline-flex items-center gap-2 mb-4">
+    <span class="phase-badge text-white" style="background:linear-gradient(135deg,#6366f1,#818cf8);">📚 Input – Part 1</span>
+  </div>
+  <h2 class="text-2xl mb-1" style="font-family:'DM Serif Display',serif;">The Anatomy of a Business Letter</h2>
+  <p class="text-slate-500 text-sm mb-5">Tap on any highlighted part to learn what it does.</p>
+
+  <!-- Annotated letter -->
+  <div class="letter-box mb-4">
+    <div class="letter-part highlighted" onclick="showTooltip('1. Letterhead','The sender\'s full name, address, telephone, email, and website. Usually printed at the top. It often includes the company logo. Office Design Ltd. would have theirs pre-printed.')">
+      <strong>Office Design Ltd.</strong><br>
+      Bayrische Str. 400 · 44339 Dortmund · Germany<br>
+      Tel: +49 231 809871 · info@officedesign.ger
+    </div>
+    <div class="letter-part" onclick="showTooltip('2. Reference','Shows who wrote (initials of signatory) and who typed the letter, e.g. PK/TM = Petra Kahl wrote it, Thomas Müller typed it. Some companies use a reference number instead.')">
+      <span class="text-slate-400 text-xs">Ref: PK/TM</span>
+    </div>
+    <div class="letter-part highlighted" onclick="showTooltip('3. Date','Always write the date in full: day (figures) – month (word) – year (figures). Example: 17 March 2026. Avoid all-figure dates like 17/03/26 as they can be misunderstood internationally.')">
+      <span class="text-slate-400 text-xs">17 March 2026</span>
+    </div>
+    <div class="letter-part" onclick="showTooltip('4. Special Marking (optional)','Words like CONFIDENTIAL, URGENT, or REGISTERED. Written in capitals, above the inside address, so it is visible through a window envelope.')">
+      <span class="text-slate-400 text-xs font-semibold tracking-wide">CONFIDENTIAL</span>
+    </div>
+    <div class="letter-part highlighted" onclick="showTooltip('5. Inside Address','The recipient\'s full postal address. Always include the country if sending abroad. Write the town in CAPITALS for UK addresses. The postcode goes on a separate line.')">
+      Greenfield Supplies Ltd<br>
+      12 Rosebery Avenue<br>
+      EDINBURGH<br>
+      EH3 6AT<br>
+      VEREINIGTES KÖNIGREICH
+    </div>
+    <div class="letter-part" onclick="showTooltip('6. Attention Line (Attn.)','Optional. Placed below the inside address. Directs the letter to a specific person even if the letter is opened by the post department. Example: Attn. Ms J. Green, Purchasing Department')">
+      <span class="text-slate-400 text-xs">Attn. Ms J. Green, Purchasing Department</span>
+    </div>
+    <div class="letter-part highlighted" onclick="showTooltip('7. Salutation','The greeting. Use \'Dear Mr/Ms + surname\' when you know the name → close with \'Yours sincerely\'. Use \'Dear Sir or Madam\' when the name is unknown → close with \'Yours faithfully\'. Never write \'Dear Mister\'!')">
+      Dear Ms Green
+    </div>
+    <div class="letter-part highlighted" onclick="showTooltip('8. Subject Line','A short, bold or underlined title that summarises what the letter is about. Starts with a capital letter. Example: Order for 50 ergonomic office chairs')">
+      <u><strong>Order no. 2901-D for ergonomic office chairs</strong></u>
+    </div>
+    <div class="letter-part" onclick="showTooltip('9. Body of the Letter','The main text. Always begins with a capital letter. Paragraphs are separated by a blank line (no indentation). Keep it formal, concise and polite. Typically: Introduction → Details → Closing remark.')">
+      <span class="text-slate-400 text-xs">[Body: Introduction → Details → Closing]</span><br>
+      Thank you for your enquiry of 10 March 2026 regarding our range of ergonomic chairs. We are pleased to confirm that all items are available and enclose our current catalogue for your information…
+    </div>
+    <div class="letter-part highlighted" onclick="showTooltip('10. Complimentary Close','The sign-off. It is ALWAYS linked to the salutation:\n• Dear Sir or Madam → Yours faithfully\n• Dear Ms Green → Yours sincerely\n• Dear Judy (first name) → Best wishes / Kind regards\nDon\'t forget the \'s\' in Yours!')">
+      Yours sincerely
+    </div>
+    <div class="letter-part" onclick="showTooltip('11. Signature Block','The handwritten signature goes here, followed by the full typed name and job title. Women may add their preferred title in brackets, e.g. Petra Kahl (Ms). The company name appears below.')">
+      <em>[Signature]</em><br>
+      Petra Kahl (Ms)<br>
+      Export Manager<br>
+      Office Design Ltd.
+    </div>
+    <div class="letter-part" onclick="showTooltip('12. Enclosure(s)','Written as \'Enc\' (one item) or \'Encs\' (multiple). You can list them: Enc: Catalogue, Price List. This tells the reader to look for additional documents.')">
+      <span class="text-slate-400 text-xs">Encs: Catalogue, Price List</span>
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-400 mb-5 text-center">💡 Tap any section of the letter for an explanation</p>
+
+  <!-- Salutation / Close Table -->
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-6">
+    <div class="px-4 pt-4 pb-2">
+      <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">📌 The Golden Rule: Salutation ↔ Close</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-indigo-50">
+          <tr>
+            <th class="text-left px-4 py-2 text-slate-600 font-semibold text-xs">Salutation</th>
+            <th class="text-left px-4 py-2 text-slate-600 font-semibold text-xs">Close</th>
+            <th class="text-left px-4 py-2 text-slate-600 font-semibold text-xs">Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100"><td class="px-4 py-2 text-slate-700">Dear Sir or Madam</td><td class="px-4 py-2 font-medium text-indigo-600">Yours faithfully</td><td class="px-4 py-2 text-slate-500">Formal (unknown)</td></tr>
+          <tr class="border-t border-slate-100 bg-slate-50"><td class="px-4 py-2 text-slate-700">Dear Ms Green</td><td class="px-4 py-2 font-medium text-indigo-600">Yours sincerely</td><td class="px-4 py-2 text-slate-500">Formal (named)</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-4 py-2 text-slate-700">Dear Judy</td><td class="px-4 py-2 font-medium text-indigo-600">Best wishes / Kind regards</td><td class="px-4 py-2 text-slate-500">Semi-formal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <button onclick="goToSection(0)" class="flex-1 bg-white border border-slate-200 text-slate-600 font-medium py-3 rounded-2xl text-sm">← Back</button>
+    <button onclick="goToSection(2)" class="flex-1 text-white font-semibold py-3 rounded-2xl" style="background:linear-gradient(135deg,#6366f1,#818cf8);">Language & Phrases →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SECTION 2 – INPUT: LANGUAGE
+════════════════════════════════════ -->
+<div class="section" id="section-2">
+  <div class="inline-flex items-center gap-2 mb-4">
+    <span class="phase-badge text-white" style="background:linear-gradient(135deg,#6366f1,#818cf8);">📚 Input – Part 2</span>
+  </div>
+  <h2 class="text-2xl mb-1" style="font-family:'DM Serif Display',serif;">The Language of Business Letters</h2>
+  <p class="text-slate-500 text-sm mb-5">Standard phrases make your letters sound professional. Study the tabs below.</p>
+
+  <!-- Tab navigation -->
+  <div class="bg-slate-100 rounded-xl p-1 flex gap-1 mb-5 overflow-x-auto">
+    <button class="tab-btn active-tab flex-shrink-0" onclick="switchTab(0)" id="tab-0">Opening</button>
+    <button class="tab-btn flex-shrink-0" onclick="switchTab(1)" id="tab-1">Reference</button>
+    <button class="tab-btn flex-shrink-0" onclick="switchTab(2)" id="tab-2">Requests</button>
+    <button class="tab-btn flex-shrink-0" onclick="switchTab(3)" id="tab-3">Closing</button>
+    <button class="tab-btn flex-shrink-0" onclick="switchTab(4)" id="tab-4">Caution ⚠️</button>
+  </div>
+
+  <div id="tab-content-0" class="tab-content bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-5">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Opening Lines</p>
+    <div class="space-y-2">
+      <div class="flex flex-col gap-1">
+        <span class="phrase-pill">We are writing to enquire about …</span>
+        <span class="text-xs text-slate-400 pl-2">→ Standard opening for an enquiry</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="phrase-pill">With reference to your letter of 10 March …</span>
+        <span class="text-xs text-slate-400 pl-2">→ Referring to previous correspondence</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="phrase-pill">Thank you for your enquiry of 12 March regarding …</span>
+        <span class="text-xs text-slate-400 pl-2">→ Acknowledging a received letter</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="phrase-pill">Further to our telephone conversation today, …</span>
+        <span class="text-xs text-slate-400 pl-2">→ Following up on a phone call</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-content-1" class="tab-content bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-5 hidden">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Referring to Attachments & Orders</p>
+    <div class="space-y-2">
+      <div class="flex flex-col gap-1"><span class="phrase-pill">Please find enclosed our current catalogue …</span><span class="text-xs text-slate-400 pl-2">→ Mentioning an enclosure</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">As requested, we enclose …</span><span class="text-xs text-slate-400 pl-2">→ Responding to a request for documents</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We are pleased to confirm your order no. 2901-D for …</span><span class="text-xs text-slate-400 pl-2">→ Order confirmation</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">With regard to order no. … dated …, we wish to inform you that …</span><span class="text-xs text-slate-400 pl-2">→ Referring to a specific order</span></div>
+    </div>
+  </div>
+
+  <div id="tab-content-2" class="tab-content bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-5 hidden">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Making Polite Requests</p>
+    <div class="space-y-2">
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We would be grateful if you could …</span><span class="text-xs text-slate-400 pl-2">→ Polite request (preferred at B2)</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">Could you please send us your current price list?</span><span class="text-xs text-slate-400 pl-2">→ Direct but polite request</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">Please do not hesitate to contact us should you have any queries.</span><span class="text-xs text-slate-400 pl-2">→ Standard offer of further help</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We would appreciate it if you could reply by 30 March.</span><span class="text-xs text-slate-400 pl-2">→ Requesting a deadline</span></div>
+    </div>
+  </div>
+
+  <div id="tab-content-3" class="tab-content bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-5 hidden">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Closing Sentences</p>
+    <div class="space-y-2">
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We look forward to hearing from you.</span><span class="text-xs text-slate-400 pl-2">→ Most common closing sentence</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We look forward to receiving your order.</span><span class="text-xs text-slate-400 pl-2">→ For offers / catalogues</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">We trust that this information is of use to you.</span><span class="text-xs text-slate-400 pl-2">→ Formal, slightly old-fashioned but correct</span></div>
+      <div class="flex flex-col gap-1"><span class="phrase-pill">Should you require any further information, please feel free to contact us.</span><span class="text-xs text-slate-400 pl-2">→ Offering further assistance</span></div>
+    </div>
+  </div>
+
+  <div id="tab-content-4" class="tab-content bg-white rounded-2xl border border-rose-100 shadow-sm p-5 mb-5 hidden" style="border-color:#fecdd3;">
+    <p class="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-3">⚠️ Common Mistakes to Avoid</p>
+    <div class="space-y-3">
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">Dear Sir, dear Madam</span> → <span class="text-emerald-600 font-medium">Dear Sir or Madam</span></div>
+      </div>
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">Dear Mister Jones</span> → <span class="text-emerald-600 font-medium">Dear Mr Jones</span></div>
+      </div>
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">Yours sincerely (after Dear Sir or Madam)</span> → <span class="text-emerald-600 font-medium">Yours faithfully</span></div>
+      </div>
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">we received your letter</span> → <span class="text-emerald-600 font-medium">Thank you for your letter of …</span> (always start with capital)</div>
+      </div>
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">Please notice that …</span> → <span class="text-emerald-600 font-medium">Please note that …</span></div>
+      </div>
+      <div class="flex gap-3 items-start text-sm">
+        <span class="text-rose-400 font-bold flex-shrink-0">✗</span>
+        <div><span class="line-through text-rose-400">I look forward to hear from you</span> → <span class="text-emerald-600 font-medium">I look forward to hearing from you</span> (gerund!)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <button onclick="goToSection(1)" class="flex-1 bg-white border border-slate-200 text-slate-600 font-medium py-3 rounded-2xl text-sm">← Back</button>
+    <button onclick="goToSection(3)" class="flex-1 text-white font-semibold py-3 rounded-2xl" style="background:linear-gradient(135deg,#6366f1,#818cf8);">Check Your Knowledge →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SECTION 3 – CHECK
+════════════════════════════════════ -->
+<div class="section" id="section-3">
+  <div class="inline-flex items-center gap-2 mb-4">
+    <span class="phase-badge text-white" style="background:linear-gradient(135deg,#10b981,#34d399);">✅ Check</span>
+  </div>
+  <h2 class="text-2xl mb-1" style="font-family:'DM Serif Display',serif;">Knowledge Check</h2>
+  <p class="text-slate-500 text-sm mb-2">Three activities – complete them all to unlock the Transfer task.</p>
+  <p class="text-xs text-slate-400 mb-5" id="check-score-label">Score: 0 / 10</p>
+
+  <!-- Sub-tabs -->
+  <div class="bg-slate-100 rounded-xl p-1 flex gap-1 mb-5">
+    <button class="tab-btn active-tab flex-1 text-xs" onclick="switchCheckTab(0)" id="ctab-0">A · Quiz</button>
+    <button class="tab-btn flex-1 text-xs" onclick="switchCheckTab(1)" id="ctab-1">B · Fill-in</button>
+    <button class="tab-btn flex-1 text-xs" onclick="switchCheckTab(2)" id="ctab-2">C · Drag & Drop</button>
+  </div>
+
+  <!-- CHECK TAB A: Multiple Choice Quiz -->
+  <div id="check-tab-0" class="check-tab-content">
+    <div class="space-y-5" id="quiz-container">
+
+      <!-- Q1 -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5" data-question="q1">
+        <p class="text-sm font-semibold text-slate-700 mb-3">1. You are writing to Ms Carter at Greenfield Supplies Ltd. You don't know her first name. Which salutation is correct?</p>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q1',false)">Dear Ms Carter, Madam</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q1',true)">Dear Ms Carter</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q1',false)">Dear Madam Carter</button>
+        <div id="feedback-q1" class="hidden text-xs mt-2 p-3 rounded-xl"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5" data-question="q2">
+        <p class="text-sm font-semibold text-slate-700 mb-3">2. You opened your letter with "Dear Sir or Madam". Which complimentary close must you use?</p>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q2',false)">Yours sincerely</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q2',true)">Yours faithfully</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q2',false)">Best wishes</button>
+        <div id="feedback-q2" class="hidden text-xs mt-2 p-3 rounded-xl"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5" data-question="q3">
+        <p class="text-sm font-semibold text-slate-700 mb-3">3. Which date format is safest for international business letters?</p>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q3',false)">17/03/26</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q3',false)">03-17-2026</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q3',true)">17 March 2026</button>
+        <div id="feedback-q3" class="hidden text-xs mt-2 p-3 rounded-xl"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5" data-question="q4">
+        <p class="text-sm font-semibold text-slate-700 mb-3">4. Which phrase correctly introduces an attachment?</p>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q4',false)">I am attaching our catalogue herewith for your reference needs.</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q4',true)">Please find enclosed our current catalogue for your information.</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q4',false)">We send you our catalogue. It is attached.</button>
+        <div id="feedback-q4" class="hidden text-xs mt-2 p-3 rounded-xl"></div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5" data-question="q5">
+        <p class="text-sm font-semibold text-slate-700 mb-3">5. "Enc: Catalogue, Price List" appears at the bottom of a letter. What does this indicate?</p>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q5',false)">The letter has a special marking.</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q5',true)">Two additional documents are included with the letter.</button>
+        <button class="quiz-btn" onclick="checkQuiz(this,'q5',false)">The reference initials of the sender and typist.</button>
+        <div id="feedback-q5" class="hidden text-xs mt-2 p-3 rounded-xl"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECK TAB B: Fill in the blanks -->
+  <div id="check-tab-1" class="check-tab-content hidden">
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-4">
+      <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Complete the letter extract with the correct words.</p>
+      <p class="text-xs text-slate-400 mb-4">Word bank: <span class="font-medium text-slate-600">faithfully · sincerely · regarding · enclosed · hesitate · enquiry · note · forward</span></p>
+      <div class="text-sm leading-loose text-slate-700" id="fill-in-area">
+        <p>Dear Sir or Madam,</p>
+        <p class="mt-2">Thank you for your <input class="blank-input" id="b1" placeholder="________"> of 14 March 2026 
+        <input class="blank-input" id="b2" placeholder="________"> our office furniture range.</p>
+        <p class="mt-2">Please <input class="blank-input" id="b3" placeholder="________"> that the items you requested are currently in stock. As requested, our latest catalogue and price list are <input class="blank-input" id="b4" placeholder="________">.</p>
+        <p class="mt-2">Please do not <input class="blank-input" id="b5" placeholder="________"> to contact us should you have any further questions. We look <input class="blank-input" id="b6" placeholder="________"> to hearing from you.</p>
+        <p class="mt-2">Yours <input class="blank-input" id="b7" placeholder="________">,</p>
+        <p>Petra Kahl</p>
+      </div>
+      <div class="flex gap-3 mt-5">
+        <button onclick="checkFillIn()" class="flex-1 text-white text-sm font-semibold py-3 rounded-xl" style="background:linear-gradient(135deg,#6366f1,#818cf8);">Check Answers</button>
+        <button onclick="resetFillIn()" class="px-4 bg-slate-100 text-slate-600 text-sm font-medium py-3 rounded-xl">Reset</button>
+      </div>
+      <div id="fillin-feedback" class="hidden mt-3 text-sm p-3 rounded-xl"></div>
+    </div>
+  </div>
+
+  <!-- CHECK TAB C: Drag & Drop -->
+  <div id="check-tab-2" class="check-tab-content hidden">
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-4">
+      <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">Drag each letter part into the correct position</p>
+      <p class="text-xs text-slate-400 mb-4">Arrange the following elements in the correct order for a business letter (top → bottom).</p>
+
+      <!-- Items to drag -->
+      <div id="drag-bank" class="flex flex-wrap gap-2 min-h-12 mb-4 p-3 rounded-xl bg-slate-50 border border-dashed border-slate-200">
+        <div class="drag-item" draggable="true" data-id="d1" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Complimentary close</div>
+        <div class="drag-item" draggable="true" data-id="d2" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Inside address</div>
+        <div class="drag-item" draggable="true" data-id="d3" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Subject line</div>
+        <div class="drag-item" draggable="true" data-id="d4" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Letterhead</div>
+        <div class="drag-item" draggable="true" data-id="d5" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Salutation</div>
+        <div class="drag-item" draggable="true" data-id="d6" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Body of the letter</div>
+        <div class="drag-item" draggable="true" data-id="d7" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Signature block</div>
+        <div class="drag-item" draggable="true" data-id="d8" ondragstart="dragStart(event)" ontouchstart="touchStart(event)">Date</div>
+      </div>
+
+      <!-- Drop zones -->
+      <div class="space-y-2 mb-4" id="drop-zones">
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">1</span><div class="drop-zone flex-1" id="dz-1" data-correct="d4" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">2</span><div class="drop-zone flex-1" id="dz-2" data-correct="d8" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">3</span><div class="drop-zone flex-1" id="dz-3" data-correct="d2" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">4</span><div class="drop-zone flex-1" id="dz-4" data-correct="d5" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">5</span><div class="drop-zone flex-1" id="dz-5" data-correct="d3" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">6</span><div class="drop-zone flex-1" id="dz-6" data-correct="d6" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">7</span><div class="drop-zone flex-1" id="dz-7" data-correct="d1" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+        <div class="flex items-center gap-2"><span class="text-slate-400 text-xs font-bold w-4">8</span><div class="drop-zone flex-1" id="dz-8" data-correct="d7" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event)"><span class="text-slate-300 text-xs">Drop here</span></div></div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="checkDragDrop()" class="flex-1 text-white text-sm font-semibold py-3 rounded-xl" style="background:linear-gradient(135deg,#6366f1,#818cf8);">Check Order</button>
+        <button onclick="resetDragDrop()" class="px-4 bg-slate-100 text-slate-600 text-sm font-medium py-3 rounded-xl">Reset</button>
+      </div>
+      <div id="dragdrop-feedback" class="hidden mt-3 text-sm p-3 rounded-xl"></div>
+    </div>
+  </div>
+
+  <div class="flex gap-3 mt-5">
+    <button onclick="goToSection(2)" class="flex-1 bg-white border border-slate-200 text-slate-600 font-medium py-3 rounded-2xl text-sm">← Back</button>
+    <button onclick="goToSection(4)" id="transfer-btn" class="flex-1 text-white font-semibold py-3 rounded-2xl" style="background:linear-gradient(135deg,#6366f1,#818cf8);">Transfer Task →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SECTION 4 – TRANSFER
+════════════════════════════════════ -->
+<div class="section" id="section-4">
+  <div class="inline-flex items-center gap-2 mb-4">
+    <span class="phase-badge text-white" style="background:linear-gradient(135deg,#f97316,#fb923c);">🚀 Transfer</span>
+  </div>
+  <h2 class="text-2xl mb-1" style="font-family:'DM Serif Display',serif;">Write Your Letter</h2>
+  <p class="text-slate-500 text-sm mb-5">Apply everything you've learned. Complete the business letter step by step.</p>
+
+  <!-- Scenario -->
+  <div class="rounded-2xl p-5 mb-5 border" style="background:#fffbf5;border-color:#fed7aa;">
+    <p class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:#ea580c;">📋 Task (AFB II/III)</p>
+    <p class="text-sm leading-relaxed text-slate-700 mb-3">You work in the Export Department at <strong>Office Design Ltd.</strong>, Bayrische Str. 400, 44339 Dortmund, Germany (email: export@officedesign.ger). Your manager is <strong>Ms Petra Kahl</strong>.</p>
+    <p class="text-sm leading-relaxed text-slate-700 mb-3">On 10 March 2026, you received an enquiry from <strong>Mr David Clarke</strong>, Purchasing Manager at <strong>Greenfield Supplies Ltd.</strong>, 12 Rosebery Avenue, Edinburgh, EH3 6AT, United Kingdom. He is interested in your ergonomic chair collection (catalogue no. EF-200).</p>
+    <p class="text-sm leading-relaxed text-slate-700"><strong>Write a formal reply (today's date)</strong> in which you: (1) thank Mr Clarke for his enquiry, (2) confirm the items are available, (3) enclose your current catalogue and price list, (4) state your standard payment terms are 30 days net, (5) offer further assistance and close politely.</p>
+  </div>
+
+  <!-- Letter builder -->
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-5">
+    <div class="bg-indigo-50 px-4 py-3 border-b border-indigo-100">
+      <p class="text-xs font-semibold text-indigo-600 uppercase tracking-widest">📝 Letter Builder</p>
+    </div>
+    <div class="p-4 space-y-3">
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Letterhead (pre-printed – given)</label>
+        <div class="bg-slate-50 rounded-xl p-3 text-xs text-slate-500 border border-slate-100">Office Design Ltd. · Bayrische Str. 400 · 44339 Dortmund · Germany · +49 231 809871 · export@officedesign.ger</div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Date *</label>
+        <input type="text" placeholder="e.g. 17 March 2026" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50" id="tf-date">
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Inside Address *</label>
+        <textarea rows="4" placeholder="Recipient's full name, company, address, country…" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 resize-none" id="tf-address"></textarea>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Salutation *</label>
+        <input type="text" placeholder="Dear …" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50" id="tf-salutation">
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Subject Line *</label>
+        <input type="text" placeholder="Re: Your enquiry of …" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50" id="tf-subject">
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Body *</label>
+        <textarea rows="8" placeholder="Write your letter body here. Remember: 3 paragraphs – Opening / Details / Closing remark." class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 resize-none" id="tf-body"></textarea>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Complimentary Close *</label>
+        <input type="text" placeholder="Yours …" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50" id="tf-close">
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1">Enclosures</label>
+        <input type="text" placeholder="Encs: …" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50" id="tf-enc">
+      </div>
+    </div>
+  </div>
+
+  <!-- Self-check -->
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-5">
+    <p class="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">🔍 Self-Check Checklist</p>
+    <div class="space-y-2" id="checklist">
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>I used the correct date format (day Month year)</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>I included the recipient's full address including the country</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>My salutation and complimentary close match correctly</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>I thanked the customer for their enquiry</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>I mentioned the enclosures in both the body and at the bottom</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>I stated the payment terms (30 days net)</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>My closing sentence is "We look forward to …" (gerund!)</span></label>
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-slate-700"><input type="checkbox" class="mt-0.5 accent-indigo-500 w-4 h-4"><span>The first word of my letter body starts with a capital letter</span></label>
+    </div>
+    <button onclick="checkTransfer()" class="mt-4 w-full text-white font-semibold py-3 rounded-xl text-sm" style="background:linear-gradient(135deg,#10b981,#34d399);">✅ Submit &amp; See Model Answer</button>
+  </div>
+
+  <!-- Model answer (hidden until submit) -->
+  <div id="model-answer" class="hidden bg-white rounded-2xl border border-emerald-200 shadow-sm p-5 mb-5" style="background:#f0fdf4;">
+    <p class="text-xs font-semibold text-emerald-600 uppercase tracking-widest mb-4">📄 Model Answer</p>
+    <div class="letter-box text-xs leading-loose" style="font-size:0.8rem;">
+      <p><strong>Office Design Ltd.</strong><br>Bayrische Str. 400 · 44339 Dortmund · Germany<br>Tel: +49 231 809871 · export@officedesign.ger</p>
+      <p class="mt-2 text-slate-400">Ref: PK/TM</p>
+      <p class="mt-1">17 March 2026</p>
+      <p class="mt-3">Mr David Clarke<br>Purchasing Manager<br>Greenfield Supplies Ltd.<br>12 Rosebery Avenue<br>EDINBURGH<br>EH3 6AT<br>VEREINIGTES KÖNIGREICH</p>
+      <p class="mt-3"><u><strong>Re: Your enquiry of 10 March 2026 regarding ergonomic chairs (cat. no. EF-200)</strong></u></p>
+      <p class="mt-3">Dear Mr Clarke,</p>
+      <p class="mt-2">Thank you for your enquiry of 10 March 2026 regarding our ergonomic chair collection (catalogue no. EF-200). We are pleased to confirm that all items are currently in stock and available for immediate delivery.</p>
+      <p class="mt-2">As requested, we enclose our current catalogue and price list for your information. Our standard payment terms are 30 days net from the date of invoice.</p>
+      <p class="mt-2">Please do not hesitate to contact us should you require any further information. We look forward to receiving your order.</p>
+      <p class="mt-3">Yours sincerely,</p>
+      <p class="mt-4"><em>[Signature]</em><br>Petra Kahl (Ms)<br>Export Manager<br>Office Design Ltd.</p>
+      <p class="mt-3 text-slate-400">Encs: Catalogue (EF-200), Price List</p>
+    </div>
+  </div>
+
+  <!-- Final score -->
+  <div id="final-score" class="hidden rounded-2xl p-5 mb-5 text-center" style="background:linear-gradient(135deg,#6366f1,#818cf8);">
+    <p class="text-white/80 text-xs uppercase tracking-widest mb-1">Learning Path Complete!</p>
+    <h3 class="text-white text-2xl mb-2" style="font-family:'DM Serif Display',serif;">🎉 Well done!</h3>
+    <p class="text-white/90 text-sm">You have completed the Business Letters learning path at B2 level. You can now write a professional formal business letter in English – a key skill for your career in international business!</p>
+    <div class="flex justify-center gap-2 mt-3" id="final-stars"></div>
+  </div>
+
+  <button onclick="goToSection(3)" class="w-full bg-white border border-slate-200 text-slate-600 font-medium py-3 rounded-2xl text-sm mb-2">← Back to Check</button>
+</div>
+
+</main>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let currentSection = 0;
+const totalSections = 5;
+let quizScore = 0;
+let fillInScore = 0;
+let dragScore = 0;
+let totalCheckScore = 0;
+const quizAnswered = {};
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+function goToSection(n) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + n).classList.add('active');
+  for (let i = 0; i < totalSections; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active','done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  }
+  currentSection = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateProgress(n) {
+  const pct = Math.round((n / (totalSections - 1)) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = n + ' / ' + (totalSections - 1);
+}
+
+// ─── Tooltip Modal ────────────────────────────────────────────────────────────
+const glossary = {};
+function showTooltip(title, body) {
+  document.getElementById('tooltip-title').textContent = title;
+  document.getElementById('tooltip-body').textContent = body;
+  document.getElementById('tooltip-modal').classList.add('visible');
+  document.querySelectorAll('.letter-part').forEach(p => p.classList.remove('highlighted'));
+  event.currentTarget.classList.add('highlighted');
+}
+function closeTooltip(e) {
+  document.getElementById('tooltip-modal').classList.remove('visible');
+}
+function closeTooltipBtn() {
+  document.getElementById('tooltip-modal').classList.remove('visible');
+}
+
+// ─── Poll ─────────────────────────────────────────────────────────────────────
+function selectPoll(btn, answer) {
+  document.querySelectorAll('#poll-area .quiz-btn').forEach(b => {
+    b.disabled = true;
+    b.classList.remove('correct');
+  });
+  btn.classList.add('correct');
+}
+
+// ─── Tab switching (phrases) ──────────────────────────────────────────────────
+function switchTab(n) {
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('tab-content-' + i);
+    const btn = document.getElementById('tab-' + i);
+    if (el) el.classList.toggle('hidden', i !== n);
+    if (btn) btn.classList.toggle('active-tab', i === n);
+  }
+}
+
+// ─── Check sub-tabs ───────────────────────────────────────────────────────────
+function switchCheckTab(n) {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('check-tab-' + i).classList.toggle('hidden', i !== n);
+    document.getElementById('ctab-' + i).classList.toggle('active-tab', i === n);
+  }
+}
+
+// ─── Quiz ─────────────────────────────────────────────────────────────────────
+function checkQuiz(btn, qId, correct) {
+  if (quizAnswered[qId]) return;
+  quizAnswered[qId] = true;
+  const card = btn.closest('[data-question]');
+  card.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+  const feedback = document.getElementById('feedback-' + qId);
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'text-xs mt-2 p-3 rounded-xl bg-emerald-50 text-emerald-700';
+    feedback.textContent = '✓ Correct! ' + getQuizFeedback(qId, true);
+    feedback.classList.remove('hidden');
+    quizScore++;
+    updateCheckScore();
+    spawnConfetti(btn);
+  } else {
+    btn.classList.add('wrong');
+    feedback.className = 'text-xs mt-2 p-3 rounded-xl bg-rose-50 text-rose-700';
+    feedback.textContent = '✗ Not quite. ' + getQuizFeedback(qId, false);
+    feedback.classList.remove('hidden');
+    // show correct answer
+    const allBtns = card.querySelectorAll('.quiz-btn');
+    allBtns.forEach(b => { if (b.onclick.toString().includes(',true)')) b.classList.add('correct'); });
+  }
+}
+
+function getQuizFeedback(qId, correct) {
+  const feedback = {
+    q1: { t: 'When you know the name, use "Dear + title + surname" only. No "Madam" added!', f: 'Remember: if you know the name → Dear Ms/Mr + surname. Simple and professional.' },
+    q2: { t: '"Dear Sir or Madam" (unknown) → always "Yours faithfully". This is a fixed rule!', f: '"Yours sincerely" is only used after "Dear + name". Never mix them up!' },
+    q3: { t: 'Writing out the month as a word avoids confusion between British and American date formats.', f: 'All-figure dates like 17/03/26 can be misread internationally. Always write the month as a word.' },
+    q4: { t: '"Please find enclosed" is the standard formal phrase for introducing an attachment in a letter.', f: '"Please find enclosed" is the professional standard. The other options are too informal or clunky.' },
+    q5: { t: '"Encs" = Enclosures. It indicates documents sent together with the letter.', f: '"Enc" or "Encs" at the bottom of a letter always refers to attached/enclosed documents.' }
+  };
+  return correct ? feedback[qId].t : feedback[qId].f;
+}
+
+// ─── Fill-in-the-blank ────────────────────────────────────────────────────────
+const fillAnswers = { b1:'enquiry', b2:'regarding', b3:'note', b4:'enclosed', b5:'hesitate', b6:'forward', b7:'faithfully' };
+
+function checkFillIn() {
+  let correct = 0;
+  Object.entries(fillAnswers).forEach(([id, ans]) => {
+    const inp = document.getElementById(id);
+    const val = inp.value.trim().toLowerCase();
+    inp.classList.remove('correct-input','wrong-input');
+    if (val === ans) { inp.classList.add('correct-input'); correct++; }
+    else { inp.classList.add('wrong-input'); inp.value = '✗ → ' + ans; setTimeout(()=>{ inp.value = ''; inp.classList.remove('wrong-input'); },1500); }
+  });
+  fillInScore = correct;
+  updateCheckScore();
+  const fb = document.getElementById('fillin-feedback');
+  fb.classList.remove('hidden');
+  if (correct === 7) {
+    fb.className = 'mt-3 text-sm p-3 rounded-xl bg-emerald-50 text-emerald-700';
+    fb.textContent = '🎉 Perfect! All 7 blanks correct. Excellent command of business letter phrases!';
+    spawnConfettiGlobal();
+  } else {
+    fb.className = 'mt-3 text-sm p-3 rounded-xl bg-amber-50 text-amber-700';
+    fb.textContent = `${correct}/7 correct. Check the highlighted fields and try again.`;
+  }
+}
+
+function resetFillIn() {
+  Object.keys(fillAnswers).forEach(id => {
+    const inp = document.getElementById(id);
+    inp.value = '';
+    inp.classList.remove('correct-input','wrong-input');
+  });
+  document.getElementById('fillin-feedback').classList.add('hidden');
+}
+
+// ─── Drag & Drop ──────────────────────────────────────────────────────────────
+let draggedEl = null;
+
+function dragStart(e) {
+  draggedEl = e.target;
+  e.dataTransfer.setData('text/plain', e.target.dataset.id);
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function dragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function dropItem(e) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.classList.remove('drag-over');
+  if (zone.querySelector('.drag-item')) return; // already filled
+  const id = e.dataTransfer.getData('text/plain');
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) {
+    el.classList.remove('dragging');
+    zone.innerHTML = '';
+    zone.appendChild(el);
+  }
+}
+
+// Touch support for drag & drop
+let touchItem = null;
+let touchClone = null;
+function touchStart(e) {
+  touchItem = e.currentTarget;
+  const touch = e.touches[0];
+  touchClone = touchItem.cloneNode(true);
+  touchClone.style.cssText = `position:fixed;top:${touch.clientY - 20}px;left:${touch.clientX - 60}px;opacity:0.8;z-index:1000;pointer-events:none;`;
+  document.body.appendChild(touchClone);
+  document.addEventListener('touchmove', touchMove, { passive: false });
+  document.addEventListener('touchend', touchEnd);
+}
+function touchMove(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  if (touchClone) {
+    touchClone.style.top = (touch.clientY - 20) + 'px';
+    touchClone.style.left = (touch.clientX - 60) + 'px';
+  }
+}
+function touchEnd(e) {
+  document.removeEventListener('touchmove', touchMove);
+  document.removeEventListener('touchend', touchEnd);
+  if (touchClone) { document.body.removeChild(touchClone); touchClone = null; }
+  const touch = e.changedTouches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const zone = el ? el.closest('.drop-zone') : null;
+  if (zone && touchItem && !zone.querySelector('.drag-item')) {
+    zone.innerHTML = '';
+    zone.appendChild(touchItem);
+  }
+  touchItem = null;
+}
+
+function checkDragDrop() {
+  let correct = 0;
+  const zones = document.querySelectorAll('.drop-zone');
+  zones.forEach(zone => {
+    zone.classList.remove('correct-zone','wrong-zone');
+    const item = zone.querySelector('.drag-item');
+    if (item) {
+      if (item.dataset.id === zone.dataset.correct) {
+        zone.classList.add('correct-zone');
+        correct++;
+      } else {
+        zone.classList.add('wrong-zone');
+      }
+    }
+  });
+  dragScore = correct;
+  updateCheckScore();
+  const fb = document.getElementById('dragdrop-feedback');
+  fb.classList.remove('hidden');
+  if (correct === 8) {
+    fb.className = 'mt-3 text-sm p-3 rounded-xl bg-emerald-50 text-emerald-700';
+    fb.textContent = '🎉 Perfect order! You know the exact structure of a business letter.';
+    spawnConfettiGlobal();
+  } else {
+    const correctOrder = ['d4','d8','d2','d5','d3','d6','d1','d7'];
+    const names = {d4:'Letterhead',d8:'Date',d2:'Inside address',d5:'Salutation',d3:'Subject line',d6:'Body',d1:'Complimentary close',d7:'Signature block'};
+    fb.className = 'mt-3 text-sm p-3 rounded-xl bg-amber-50 text-amber-700';
+    fb.textContent = `${correct}/8 correct. Correct order: ${correctOrder.map(id=>names[id]).join(' → ')}`;
+  }
+}
+
+function resetDragDrop() {
+  const bank = document.getElementById('drag-bank');
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const item = zone.querySelector('.drag-item');
+    if (item) { bank.appendChild(item); }
+    zone.classList.remove('correct-zone','wrong-zone');
+    zone.innerHTML = '<span class="text-slate-300 text-xs">Drop here</span>';
+  });
+  document.getElementById('dragdrop-feedback').classList.add('hidden');
+}
+
+// ─── Score tracking ───────────────────────────────────────────────────────────
+function updateCheckScore() {
+  totalCheckScore = quizScore + fillInScore + dragScore;
+  document.getElementById('check-score-label').textContent = `Score: ${totalCheckScore} / 20`;
+}
+
+// ─── Transfer ─────────────────────────────────────────────────────────────────
+function checkTransfer() {
+  const checked = document.querySelectorAll('#checklist input:checked').length;
+  document.getElementById('model-answer').classList.remove('hidden');
+  document.getElementById('final-score').classList.remove('hidden');
+  const stars = document.getElementById('final-stars');
+  stars.innerHTML = '';
+  const starCount = checked >= 7 ? 3 : checked >= 5 ? 2 : 1;
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = i < starCount ? '⭐' : '☆';
+    stars.appendChild(s);
+  }
+  if (starCount === 3) spawnConfettiGlobal();
+  window.scrollTo({top: document.getElementById('model-answer').offsetTop - 80, behavior:'smooth'});
+}
+
+// ─── Confetti ─────────────────────────────────────────────────────────────────
+function spawnConfetti(target) {
+  const rect = target.getBoundingClientRect();
+  for (let i = 0; i < 12; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const colors = ['#6366f1','#10b981','#f59e0b','#f43f5e','#a5b4fc'];
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = (rect.left + Math.random() * rect.width) + 'px';
+    c.style.top = rect.top + 'px';
+    c.style.animationDelay = (Math.random() * 0.4) + 's';
+    c.style.width = (6 + Math.random()*8) + 'px';
+    c.style.height = (6 + Math.random()*8) + 'px';
+    document.body.appendChild(c);
+    c.addEventListener('animationend', () => c.remove());
+  }
+}
+function spawnConfettiGlobal() {
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const colors = ['#6366f1','#10b981','#f59e0b','#f43f5e','#a5b4fc','#34d399'];
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = (Math.random() * window.innerWidth) + 'px';
+    c.style.top = '0px';
+    c.style.animationDelay = (Math.random() * 1) + 's';
+    c.style.width = (6 + Math.random()*10) + 'px';
+    c.style.height = (6 + Math.random()*10) + 'px';
+    document.body.appendChild(c);
+    c.addEventListener('animationend', () => c.remove());
+  }
+}
+</script>
+<script src="https://brandy299.github.io/HTML-materialien/tracking.js"></script>
+</body>
+</html>
