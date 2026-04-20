@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Write a Business Letter – Office Design Ltd.</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+
+  /* ── SLIDE ANIMATIONS ─────────────────────────── */
+  .slide { display: none; animation: fadeSlide 0.45s ease both; }
+  .slide.active { display: flex; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LETTER PART HIGHLIGHT ─────────────────────── */
+  .letter-part {
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .letter-part:hover, .letter-part.highlighted {
+    background: #eef2ff;
+    border-left-color: #6366f1;
+    border-radius: 0 6px 6px 0;
+  }
+  .letter-part.highlighted { background: #e0e7ff; }
+
+  /* ── QUIZ FEEDBACK ─────────────────────────────── */
+  .quiz-option {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .quiz-option:hover { transform: translateX(4px); }
+  .quiz-option.correct { background: #dcfce7 !important; border-color: #16a34a !important; color: #15803d; }
+  .quiz-option.wrong   { background: #fee2e2 !important; border-color: #dc2626 !important; color: #b91c1c;
+    animation: shake 0.4s ease; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  /* ── GAP FILL ──────────────────────────────────── */
+  .gap-input {
+    border-bottom: 2px solid #6366f1;
+    background: transparent;
+    outline: none;
+    min-width: 120px;
+    text-align: center;
+    font-weight: 600;
+    color: #3730a3;
+    transition: border-color 0.2s;
+  }
+  .gap-input:focus { border-color: #4338ca; }
+  .gap-input.correct-gap { border-color: #16a34a; color: #15803d; }
+  .gap-input.wrong-gap   { border-color: #dc2626; color: #b91c1c; animation: shake 0.4s ease; }
+
+  /* ── PROGRESS BAR ──────────────────────────────── */
+  #progress-fill { transition: width 0.5s ease; }
+
+  /* ── CHECKLIST ─────────────────────────────────── */
+  .check-item input:checked + span { text-decoration: line-through; color: #9ca3af; }
+
+  /* ── SCROLL ────────────────────────────────────── */
+  .overflow-y-auto::-webkit-scrollbar { width: 4px; }
+  .overflow-y-auto::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 4px; }
+
+  /* ── LETTER PREVIEW CARD ───────────────────────── */
+  .letter-preview {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+  }
+
+  /* ── TOOLTIP ────────────────────────────────────── */
+  .tooltip { position: relative; }
+  .tooltip .tip {
+    visibility: hidden; opacity: 0;
+    background: #312e81; color: #fff;
+    font-size: 0.72rem; padding: 6px 10px;
+    border-radius: 8px; position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: calc(100% + 8px); white-space: nowrap; z-index: 50;
+    transition: opacity 0.2s;
+  }
+  .tooltip:hover .tip { visibility: visible; opacity: 1; }
+
+  /* ── BADGE ───────────────────────────────────────── */
+  .afb-badge {
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 2px 7px; border-radius: 999px; display: inline-block;
+  }
+  .afb1 { background: #dbeafe; color: #1d4ed8; }
+  .afb2 { background: #fef9c3; color: #854d0e; }
+  .afb3 { background: #fce7f3; color: #9d174d; }
+
+  /* ── PHASE PILL ──────────────────────────────────── */
+  .phase-pill {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+    padding: 3px 10px; border-radius: 999px; text-transform: uppercase;
+  }
+
+  /* ── SALUTATION TABLE ──────────────────────────── */
+  .sal-table tr:nth-child(even) { background: #f8faff; }
+  .sal-table tr:hover { background: #eef2ff; }
+</style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-start p-4">
+
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<header class="w-full max-w-4xl mb-4">
+  <div class="bg-white rounded-2xl shadow-sm px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+        <i data-lucide="mail" class="w-4 h-4 text-white"></i>
+      </div>
+      <div>
+        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Business English · B1/B2</p>
+        <p class="text-sm font-700 text-slate-800 font-semibold">How to Write a Business Letter</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-slate-500">Progress</span>
+      <div class="w-28 h-2 bg-slate-200 rounded-full overflow-hidden">
+        <div id="progress-fill" class="h-2 bg-indigo-500 rounded-full" style="width:0%"></div>
+      </div>
+      <span id="slide-counter" class="text-xs font-semibold text-indigo-600">1/9</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     SLIDES CONTAINER
+══════════════════════════════════════ -->
+<main class="w-full max-w-4xl flex-1">
+
+<!-- ─────────────────────────────────────
+  SLIDE 1 · HOOK
+───────────────────────────────────── -->
+<div class="slide active flex-col gap-4" id="slide-1">
+  <div class="bg-amber-50 border-l-4 border-amber-400 rounded-2xl p-5 shadow-sm">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="phase-pill bg-amber-100 text-amber-700">🪝 Hook</span>
+    </div>
+    <h1 class="text-2xl font-extrabold text-slate-800 mt-2 leading-tight">
+      Would you sign this letter?
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">Spot the problems before you learn the rules.</p>
+  </div>
+
+  <!-- BAD LETTER EXAMPLE -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-red-200">
+    <div class="flex items-center gap-2 mb-4">
+      <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i>
+      <span class="text-sm font-semibold text-red-600">A trainee at Office Design Ltd. wrote this letter. Something's wrong...</span>
+    </div>
+    <div class="letter-preview bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-2 text-slate-700">
+      <p class="text-red-500"><!-- No letterhead at all --></p>
+      <p>14.08.2025</p>
+      <p>Green Furniture Solutions<br>47 Bridge Street<br>manchester<br>m2 3ab</p>
+      <div class="mt-2">
+        <p class="text-red-400 italic">dear madams and sirs:</p>
+        <p class="mt-1"><span class="bg-yellow-100 px-1 rounded">translation into english of contract no. 489</span></p>
+        <p class="mt-1">many thanks for your phone call. as requested, a translation of the contract are enclosed for your information.</p>
+        <p class="mt-1">Please contact us if you have any queries.</p>
+        <p class="mt-2 text-red-400 italic">Yours faithfully<br><br>Sophie Müller<br>Sales</p>
+      </div>
+    </div>
+    <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2" id="mistake-list">
+      <!-- filled dynamically -->
+    </div>
+    <button onclick="revealMistakes()" class="mt-4 bg-red-50 hover:bg-red-100 text-red-700 text-sm font-semibold px-4 py-2 rounded-xl transition border border-red-200">
+      👁 Reveal mistakes
+    </button>
+  </div>
+
+  <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-slate-700">
+    <strong>📌 Source:</strong> Cornelsen – <em>Focus on Business</em>, Commercial Correspondence unit (p. 89–92) · This letter contains <strong>12 classic mistakes</strong> from the Cornelsen exercise.
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 2 · INPUT — OVERVIEW
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-2">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-blue-100 text-blue-700">📥 Input · Overview</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">The 12 Parts of a Business Letter</h2>
+    <p class="text-sm text-slate-500 mt-1">Based on <em>Focus on Business</em> (Cornelsen), p. 90 — "Business Letter Layout"</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm p-5 grid md:grid-cols-2 gap-4">
+    <div>
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Click a part to highlight it →</p>
+      <div class="space-y-1" id="parts-nav">
+        <!-- injected by JS -->
+      </div>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-4 letter-preview border border-slate-200" id="letter-preview-left">
+      <!-- Letter preview injected by JS -->
+    </div>
+  </div>
+
+  <!-- Explanation panel -->
+  <div id="part-explanation" class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-slate-700 hidden">
+    <strong id="part-title" class="text-indigo-700"></strong>
+    <p id="part-desc" class="mt-1"></p>
+    <p id="part-example" class="mt-2 font-mono text-xs bg-white rounded p-2 border border-indigo-100 text-slate-600 hidden"></p>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 3 · LETTERHEAD & REFERENCE
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-3">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-blue-100 text-blue-700">📥 Input · Parts 1–3</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Letterhead, Reference &amp; Date</h2>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    <!-- Card 1 -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 border-t-4 border-indigo-400">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-700 font-bold text-sm">1</div>
+        <span class="font-bold text-slate-800">Letterhead</span>
+      </div>
+      <ul class="space-y-2 text-sm text-slate-600">
+        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>Company name &amp; logo</li>
+        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>Full postal address (incl. country)</li>
+        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>Tel / Fax / Email / Website</li>
+        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5"></i>Often printed / pre-designed</li>
+      </ul>
+      <div class="mt-3 bg-slate-50 rounded-lg p-3 font-mono text-xs text-slate-500 border border-slate-100">
+        Office Design Ltd.<br>15 Harbour Walk, LONDON<br>EC3R 7AB · UNITED KINGDOM<br>info@officedesign.co.uk
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 border-t-4 border-violet-400">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-7 h-7 bg-violet-100 rounded-lg flex items-center justify-center text-violet-700 font-bold text-sm">2</div>
+        <span class="font-bold text-slate-800">Reference (Ref.)</span>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">Shows <strong>who wrote</strong> and <strong>who typed</strong> the letter (initials). Used when replying.</p>
+      <div class="bg-violet-50 rounded-lg p-3 font-mono text-xs text-violet-700 border border-violet-100">
+        Our ref: SM/TL<br>Your ref: GF/KP
+      </div>
+      <p class="text-xs text-slate-400 mt-2">SM = Sarah Mitchell (author) · TL = Tina Lorenz (typist)</p>
+      <div class="mt-3 bg-amber-50 rounded-lg p-2 text-xs text-amber-700 border border-amber-200">
+        <strong>⚠ Cornelsen note:</strong> "TL signed the letter and BK typed it." (p. 90)
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 border-t-4 border-emerald-400">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm">3</div>
+        <span class="font-bold text-slate-800">Date</span>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">Always write the <strong>month as a word</strong> to avoid confusion between British and American English.</p>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <span class="text-red-500 font-mono text-xs bg-red-50 px-2 py-1 rounded border border-red-200 line-through">08/09/25</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+          <span class="text-green-700 font-mono text-xs bg-green-50 px-2 py-1 rounded border border-green-200">8 September 2025</span>
+        </div>
+        <p class="text-xs text-slate-400">08/09 = September 8 (US) vs. 8 October (UK) — ambiguous!</p>
+      </div>
+      <div class="mt-3 bg-emerald-50 rounded-lg p-2 text-xs text-emerald-700 border border-emerald-200">
+        <strong>Rule:</strong> day (figures) – month (word) – year (four figures)
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-slate-700">
+    <i data-lucide="book-open" class="w-4 h-4 inline text-blue-500 mr-1"></i>
+    <strong>Cornelsen – Focus on Business</strong> (p. 90–91): "An all-figure date can be misunderstood. The month should always be written out and the year should be a four-figure number."
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 4 · ADDRESS & ATTENTION
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-4">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-blue-100 text-blue-700">📥 Input · Parts 4–6</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Special Marking, Inside Address &amp; Attention Line</h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-2xl shadow-sm p-5 space-y-4">
+      <!-- Special marking -->
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-rose-100 rounded text-rose-700 font-bold text-xs flex items-center justify-center">4</div>
+          <span class="font-bold text-slate-800">Special Marking</span>
+          <span class="afb-badge afb1">AFB I</span>
+        </div>
+        <p class="text-sm text-slate-600 mb-2">Placed <em>above</em> the inside address. Visible in a window envelope.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-red-50 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">URGENT</span>
+          <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">CONFIDENTIAL</span>
+          <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">PRIVATE AND CONFIDENTIAL</span>
+          <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">AIR MAIL</span>
+          <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">RECORDED DELIVERY</span>
+        </div>
+      </div>
+      <hr class="border-slate-100">
+      <!-- Inside address -->
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-blue-100 rounded text-blue-700 font-bold text-xs flex items-center justify-center">5</div>
+          <span class="font-bold text-slate-800">Inside Address</span>
+        </div>
+        <p class="text-sm text-slate-600 mb-2">The recipient's full address. Always include the country when writing abroad.</p>
+        <div class="font-mono text-xs bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-600">
+          Green Furniture Solutions<br>
+          47 Bridge Street<br>
+          MANCHESTER<br>
+          M2 3AB<br>
+          <span class="text-indigo-500">UNITED KINGDOM</span>
+        </div>
+        <p class="text-xs text-amber-600 mt-2 bg-amber-50 rounded px-2 py-1 border border-amber-100">
+          ⚠ UK addresses: town/city in CAPITALS, postcode on its own line. House number before street name.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm p-5 space-y-4">
+      <!-- Attention line -->
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-indigo-100 rounded text-indigo-700 font-bold text-xs flex items-center justify-center">6</div>
+          <span class="font-bold text-slate-800">Attention Line (Attn.)</span>
+        </div>
+        <p class="text-sm text-slate-600 mb-3">Placed <em>below</em> the inside address. Directs the letter to a specific person within the company.</p>
+        <div class="font-mono text-xs bg-indigo-50 p-3 rounded-lg border border-indigo-100 text-slate-600">
+          Attn. Ms McDermott, Marketing Department
+        </div>
+        <div class="mt-3 bg-slate-50 rounded-lg p-3 text-xs text-slate-600 border border-slate-100">
+          <strong>If Attn. is used:</strong> the letter may be opened by the post department and forwarded.<br>
+          <strong>If the name is in the address:</strong> only that person (or their secretary) may open it.
+        </div>
+      </div>
+      <hr class="border-slate-100">
+      <!-- Window envelope diagram -->
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Window Envelope Logic</p>
+        <div class="bg-slate-100 rounded-xl p-3 relative border border-slate-300">
+          <div class="absolute top-3 left-3 w-20 h-10 border-2 border-dashed border-slate-400 rounded bg-white flex items-center justify-center">
+            <span class="text-slate-400 text-xs">window</span>
+          </div>
+          <div class="ml-28 font-mono text-xs text-slate-600 leading-relaxed">
+            <span class="text-red-500">CONFIDENTIAL</span><br>
+            Green Furniture Solutions<br>
+            47 Bridge Street · M2 3AB<br>
+            <span class="text-indigo-500">Attn. Ms McDermott</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 5 · SALUTATION & CLOSE
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-5">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-blue-100 text-blue-700">📥 Input · Parts 7 &amp; 10</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Salutation &amp; Complimentary Close</h2>
+    <p class="text-sm text-slate-500 mt-1">"The salutation and complimentary close are <strong>linked</strong>." — Cornelsen, p. 92</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <table class="w-full text-sm sal-table">
+      <thead class="bg-indigo-600 text-white">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Salutation</th>
+          <th class="px-4 py-3 text-left font-semibold">Complimentary Close</th>
+          <th class="px-4 py-3 text-left font-semibold">Register</th>
+          <th class="px-4 py-3 text-left font-semibold hidden md:table-cell">When to use</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <tr>
+          <td class="px-4 py-3 font-mono font-semibold text-slate-800">Dear Sir or Madam</td>
+          <td class="px-4 py-3 font-mono text-slate-700">Yours faithfully</td>
+          <td class="px-4 py-3"><span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded">Formal</span></td>
+          <td class="px-4 py-3 text-slate-500 text-xs hidden md:table-cell">Name of person is unknown</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-mono font-semibold text-slate-800">Dear Mr / Ms Green</td>
+          <td class="px-4 py-3 font-mono text-slate-700">Yours sincerely</td>
+          <td class="px-4 py-3"><span class="bg-orange-100 text-orange-700 text-xs font-bold px-2 py-0.5 rounded">Formal</span></td>
+          <td class="px-4 py-3 text-slate-500 text-xs hidden md:table-cell">Most common form in business</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-mono font-semibold text-slate-800">Dear Mr / Ms Green</td>
+          <td class="px-4 py-3 font-mono text-slate-700">Best wishes</td>
+          <td class="px-4 py-3"><span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-0.5 rounded">Semi-formal</span></td>
+          <td class="px-4 py-3 text-slate-500 text-xs hidden md:table-cell">Know the person well</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-mono font-semibold text-slate-800">Dear Bill / Dear Sarah</td>
+          <td class="px-4 py-3 font-mono text-slate-700">Best regards / Regards</td>
+          <td class="px-4 py-3"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded">Informal</span></td>
+          <td class="px-4 py-3 text-slate-500 text-xs hidden md:table-cell">Close business friends</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Title guide -->
+  <div class="bg-white rounded-2xl shadow-sm p-5">
+    <p class="text-sm font-bold text-slate-700 mb-3">Choosing the Right Title (Ms / Mrs / Miss / Mr)</p>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-violet-50 rounded-xl p-3 border border-violet-100">
+        <p class="text-xs font-bold text-violet-700 mb-1">Ms (preferred in business)</p>
+        <p class="text-xs text-slate-600">Marital status unknown · Always appropriate · Cornelsen: "preferred form of address in business correspondence"</p>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+        <p class="text-xs font-bold text-slate-600 mb-1">Mrs / Miss</p>
+        <p class="text-xs text-slate-600">Only if the woman herself uses that title. Mrs = married · Miss = unmarried</p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+        <p class="text-xs font-bold text-blue-700 mb-1">Mr</p>
+        <p class="text-xs text-slate-600">For men regardless of marital status.</p>
+      </div>
+      <div class="bg-amber-50 rounded-xl p-3 border border-amber-100">
+        <p class="text-xs font-bold text-amber-700 mb-1">⚠ No punctuation</p>
+        <p class="text-xs text-slate-600">"In most cases the salutation and complimentary close can be written <strong>without punctuation</strong>." (Cornelsen, p. 92)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 6 · SUBJECT LINE, BODY, SIGNATURE
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-6">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-blue-100 text-blue-700">📥 Input · Parts 8–12</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Subject Line, Body, Signature &amp; Enclosures</h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="space-y-3">
+      <!-- Subject line -->
+      <div class="bg-white rounded-2xl shadow-sm p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-amber-100 rounded text-amber-700 font-bold text-xs flex items-center justify-center">8</div>
+          <span class="font-bold text-slate-800">Subject Line</span>
+        </div>
+        <ul class="text-sm text-slate-600 space-y-1">
+          <li>• Written in <strong>bold</strong> or underlined</li>
+          <li>• Starts with a capital letter</li>
+          <li>• Rest in lower case (except proper nouns)</li>
+          <li>• After the salutation, before the body</li>
+        </ul>
+        <div class="mt-2 font-mono text-xs bg-amber-50 p-2 rounded border border-amber-100 text-amber-800">
+          <strong>Purchase order no. 1249</strong><br>
+          <strong>Confirmation of your enquiry of 12 May 2025</strong>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="bg-white rounded-2xl shadow-sm p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-green-100 rounded text-green-700 font-bold text-xs flex items-center justify-center">9</div>
+          <span class="font-bold text-slate-800">Body of the Letter</span>
+        </div>
+        <ul class="text-sm text-slate-600 space-y-1">
+          <li>• First word always starts with a <strong>capital letter</strong></li>
+          <li>• Paragraphs separated by a <strong>blank line</strong></li>
+          <li>• Typically 2–4 paragraphs (opening – main – closing)</li>
+          <li>• All lines start at the left margin (block style)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="space-y-3">
+      <!-- Signature -->
+      <div class="bg-white rounded-2xl shadow-sm p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-indigo-100 rounded text-indigo-700 font-bold text-xs flex items-center justify-center">11</div>
+          <span class="font-bold text-slate-800">Signature</span>
+        </div>
+        <p class="text-sm text-slate-600 mb-2">"Signatures are often hard to read, so write the signatory's name and position under the signature." — Cornelsen</p>
+        <div class="font-mono text-xs bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-600">
+          Yours sincerely<br>
+          Office Design Ltd.<br>
+          <br>
+          <em class="font-sans text-lg text-slate-400">Sarah Mitchell</em><br>
+          <br>
+          Sarah Mitchell (Ms)<br>
+          Sales Department
+        </div>
+        <p class="text-xs text-slate-400 mt-2">Women may add preferred title in brackets after name.</p>
+      </div>
+      <!-- Enclosures -->
+      <div class="bg-white rounded-2xl shadow-sm p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 bg-rose-100 rounded text-rose-700 font-bold text-xs flex items-center justify-center">12</div>
+          <span class="font-bold text-slate-800">Enclosure(s)</span>
+        </div>
+        <p class="text-sm text-slate-600 mb-2">Documents sent with the letter.</p>
+        <div class="font-mono text-xs bg-rose-50 p-2 rounded border border-rose-100 text-rose-700 space-y-1">
+          <p>Enc</p>
+          <p>Encs</p>
+          <p>Enc: Price list</p>
+          <p>Encs: Catalogue; Terms &amp; Conditions</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 7 · CHECK
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-7">
+  <div class="bg-emerald-50 border-l-4 border-emerald-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-emerald-100 text-emerald-700">✅ Check · Knowledge Test</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Test Your Knowledge</h2>
+    <p class="text-sm text-slate-500 mt-1">Answer all questions — instant feedback! <span class="afb-badge afb1">AFB I</span></p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm p-6 space-y-6" id="quiz-container">
+    <!-- Q1 -->
+    <div class="quiz-question" id="q1">
+      <p class="font-semibold text-slate-800 mb-3">1. You don't know the name of the recipient. Which salutation is correct?</p>
+      <div class="space-y-2">
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q1', false)">Dear Madam or Sirs:</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q1', true)">Dear Sir or Madam</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q1', false)">To Whom It May Concern,</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q1', false)">Dear madams and sirs:</div>
+      </div>
+      <div id="q1-feedback" class="hidden mt-2 text-xs rounded-lg p-3"></div>
+    </div>
+    <hr class="border-slate-100">
+    <!-- Q2 -->
+    <div class="quiz-question" id="q2">
+      <p class="font-semibold text-slate-800 mb-3">2. You begin with "Dear Ms Carter". Which complimentary close do you use?</p>
+      <div class="space-y-2">
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q2', false)">Yours faithfully</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q2', true)">Yours sincerely</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q2', false)">Yours truly</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm" onclick="checkAnswer(this, 'q2', false)">Kind greetings</div>
+      </div>
+      <div id="q2-feedback" class="hidden mt-2 text-xs rounded-lg p-3"></div>
+    </div>
+    <hr class="border-slate-100">
+    <!-- Q3 -->
+    <div class="quiz-question" id="q3">
+      <p class="font-semibold text-slate-800 mb-3">3. Which date format is correct in a British business letter?</p>
+      <div class="space-y-2">
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-mono" onclick="checkAnswer(this, 'q3', false)">09/08/2025</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-mono" onclick="checkAnswer(this, 'q3', false)">August 9, 2025</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-mono" onclick="checkAnswer(this, 'q3', true)">9 August 2025</div>
+        <div class="quiz-option border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-mono" onclick="checkAnswer(this, 'q3', false)">09-Aug-25</div>
+      </div>
+      <div id="q3-feedback" class="hidden mt-2 text-xs rounded-lg p-3"></div>
+    </div>
+    <hr class="border-slate-100">
+    <!-- Q4 GAP FILL -->
+    <div class="quiz-question">
+      <p class="font-semibold text-slate-800 mb-3">4. Complete the sentence. <span class="afb-badge afb2">AFB II</span></p>
+      <p class="text-sm text-slate-600 bg-slate-50 rounded-xl p-4 border border-slate-200 leading-relaxed">
+        When attaching documents to a letter, you write
+        <input class="gap-input px-2 py-0.5 mx-1 w-16" id="gap1" placeholder="..."> or
+        <input class="gap-input px-2 py-0.5 mx-1 w-16" id="gap2" placeholder="...">
+        at the bottom of the letter. The subject line is written in
+        <input class="gap-input px-2 py-0.5 mx-1 w-20" id="gap3" placeholder="..."> or underlined.
+      </p>
+      <button onclick="checkGaps()" class="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">
+        Check answers
+      </button>
+      <div id="gap-feedback" class="hidden mt-2 text-xs rounded-lg p-3"></div>
+    </div>
+  </div>
+
+  <div id="quiz-score" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
+    <p class="text-lg font-extrabold text-emerald-700" id="score-text"></p>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 8 · ANNOTATED LETTER
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-8">
+  <div class="bg-violet-50 border-l-4 border-violet-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-violet-100 text-violet-700">🚀 Transfer · Model Letter</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Annotated Model Letter — Office Design Ltd.</h2>
+    <p class="text-sm text-slate-500 mt-1">Hover over each numbered part to see the label.</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm p-6">
+    <div class="letter-preview space-y-1 text-slate-700 leading-relaxed">
+
+      <!-- Part 1: Letterhead -->
+      <div class="tooltip">
+        <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-3 mb-2">
+          <p class="font-bold text-slate-800 not-italic text-base">OFFICE DESIGN LTD.</p>
+          <p>15 Harbour Walk · LONDON · EC3R 7AB · UNITED KINGDOM</p>
+          <p>Tel: +44 20 7946 0800 · info@officedesign.co.uk · www.officedesign.co.uk</p>
+        </div>
+        <span class="tip">① Letterhead</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <!-- Part 2 -->
+        <div class="tooltip">
+          <p class="bg-violet-50 border border-violet-100 rounded p-1 px-2">Our ref: SM/TL</p>
+          <span class="tip">② Reference</span>
+        </div>
+        <!-- Part 3 -->
+        <div class="tooltip">
+          <p class="bg-emerald-50 border border-emerald-100 rounded p-1 px-2">12 May 2025</p>
+          <span class="tip">③ Date (day – month as word – year)</span>
+        </div>
+      </div>
+
+      <!-- Part 5 -->
+      <div class="tooltip mt-2">
+        <div class="bg-blue-50 border border-blue-100 rounded p-2 px-3">
+          <p>Green Furniture Solutions</p>
+          <p>47 Bridge Street</p>
+          <p>MANCHESTER</p>
+          <p>M2 3AB</p>
+          <p>UNITED KINGDOM</p>
+        </div>
+        <span class="tip">⑤ Inside address</span>
+      </div>
+
+      <!-- Part 6 -->
+      <div class="tooltip mt-1">
+        <p class="bg-cyan-50 border border-cyan-100 rounded p-1 px-2">Attn. Ms J. Hargreaves, Purchasing Department</p>
+        <span class="tip">⑥ Attention line</span>
+      </div>
+
+      <!-- Part 7 -->
+      <div class="tooltip mt-2">
+        <p class="bg-amber-50 border border-amber-100 rounded p-1 px-2">Dear Ms Hargreaves</p>
+        <span class="tip">⑦ Salutation → leads to "Yours sincerely"</span>
+      </div>
+
+      <!-- Part 8 -->
+      <div class="tooltip mt-1">
+        <p class="bg-orange-50 border border-orange-100 rounded p-1 px-2 font-bold not-italic">Enquiry regarding office chairs – your letter of 5 May 2025</p>
+        <span class="tip">⑧ Subject line (bold, capital first letter)</span>
+      </div>
+
+      <!-- Part 9 -->
+      <div class="tooltip mt-2">
+        <div class="bg-slate-50 border border-slate-200 rounded p-3 space-y-2">
+          <p>Thank you for your letter of 5 May 2025. We are pleased to be able to meet your requirements for ergonomic office seating.</p>
+          <p>Please find enclosed our latest catalogue and current price list for your information. We would be happy to arrange a product demonstration at your convenience.</p>
+          <p>We look forward to hearing from you.</p>
+        </div>
+        <span class="tip">⑨ Body of the letter</span>
+      </div>
+
+      <!-- Part 10 -->
+      <div class="tooltip mt-2">
+        <p class="bg-rose-50 border border-rose-100 rounded p-1 px-2">Yours sincerely</p>
+        <span class="tip">⑩ Complimentary close (linked to salutation)</span>
+      </div>
+
+      <!-- Company name under close -->
+      <p class="px-2">Office Design Ltd.</p>
+
+      <!-- Part 11 -->
+      <div class="tooltip">
+        <div class="bg-fuchsia-50 border border-fuchsia-100 rounded p-2 px-3">
+          <p class="italic font-sans text-xl text-slate-400">Sarah Mitchell</p>
+          <p>Sarah Mitchell (Ms)</p>
+          <p>Sales Department</p>
+        </div>
+        <span class="tip">⑪ Signature + printed name + position</span>
+      </div>
+
+      <!-- Part 12 -->
+      <div class="tooltip mt-1">
+        <p class="bg-red-50 border border-red-100 rounded p-1 px-2">Encs: Catalogue; Price list 2025</p>
+        <span class="tip">⑫ Enclosures</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+  SLIDE 9 · TRANSFER TASK
+───────────────────────────────────── -->
+<div class="slide flex-col gap-4" id="slide-9">
+  <div class="bg-violet-50 border-l-4 border-violet-400 rounded-2xl p-5 shadow-sm">
+    <span class="phase-pill bg-violet-100 text-violet-700">🚀 Transfer · Writing Task</span>
+    <h2 class="text-xl font-extrabold text-slate-800 mt-2">Now It's Your Turn!</h2>
+    <p class="text-sm text-slate-500 mt-1">Write your own business letter using the layout. <span class="afb-badge afb3">AFB III</span></p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm p-5">
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+      <p class="font-semibold text-slate-800 mb-2 text-sm">📋 Scenario</p>
+      <p class="text-sm text-slate-700">You work in the Sales Department at <strong>Office Design Ltd.</strong> in London. A new potential customer, <strong>Mr Thomas Klein</strong>, Managing Director of <strong>Büro &amp; Mehr GmbH</strong> (Königsallee 45, 40212 DÜSSELDORF, GERMANY), contacted you at a trade fair and asked for your catalogue and price list. Write a formal business letter including all 12 parts. Attach both documents.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Useful Phrases</p>
+        <div class="space-y-1 text-xs font-mono text-slate-600 bg-slate-50 rounded-xl p-3 border border-slate-100">
+          <p>Thank you for your interest in our products.</p>
+          <p>We were delighted to meet you at [trade fair].</p>
+          <p>Please find enclosed our latest catalogue ...</p>
+          <p>We look forward to hearing from you.</p>
+          <p>Should you have any queries, please do not hesitate to contact us.</p>
+          <p>We hope to develop a successful business relationship ...</p>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Self-Assessment Checklist</p>
+        <div class="space-y-2" id="checklist">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <textarea id="student-letter" class="w-full h-52 border-2 border-slate-200 focus:border-indigo-400 rounded-xl p-4 text-xs font-mono text-slate-700 outline-none transition resize-none" placeholder="Start writing your business letter here..."></textarea>
+    <div class="flex items-center justify-between mt-2">
+      <span class="text-xs text-slate-400" id="word-counter">0 words</span>
+      <button onclick="launchConfetti()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2 rounded-xl transition flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        Mark as complete 🎉
+      </button>
+    </div>
+  </div>
+
+  <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-xs text-slate-600">
+    <strong>📚 Source:</strong> All rules and examples adapted from <em>Cornelsen – Focus on Business</em>, "Commercial Correspondence / Business Letter Layout" (pp. 89–92) and <em>Klett – Kick Off! Upgrade</em>, "Gestaltung eines Geschäftsbriefs" (pp. 112–113).
+  </div>
+</div>
+
+</main>
+
+<!-- ══════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════ -->
+<footer class="w-full max-w-4xl mt-4 mb-8">
+  <div class="bg-white rounded-2xl shadow-sm px-6 py-3 flex items-center justify-between">
+    <button onclick="prevSlide()" id="btn-prev" class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition disabled:opacity-30" disabled>
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
+    </button>
+
+    <!-- Slide dots -->
+    <div class="flex gap-2" id="dots-container"></div>
+
+    <button onclick="nextSlide()" id="btn-next" class="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition">
+      Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+/* ── STATE ─────────────────────────── */
+const TOTAL = 9;
+let current = 1;
+const quizAnswered = { q1: false, q2: false, q3: false };
+let quizScore = 0;
+const MAX_QUIZ = 3;
+
+/* ── LETTER PARTS DATA ─────────────── */
+const parts = [
+  { num: 1,  label: "Letterhead",         color: "indigo",  desc: "The sender's name, postal address, telephone, fax, email and website. Often has the company logo.", example: "Office Design Ltd. · 15 Harbour Walk · LONDON · EC3R 7AB" },
+  { num: 2,  label: "Reference (Ref.)",   color: "violet",  desc: "Shows who wrote and who typed the letter (initials). Used in replies as 'Your ref.' / 'Our ref.'.", example: "Our ref: SM/TL" },
+  { num: 3,  label: "Date",               color: "emerald", desc: "Always write the month as a word to avoid misunderstandings between British and American English.", example: "9 August 2025" },
+  { num: 4,  label: "Special Marking",    color: "rose",    desc: "E.g. URGENT, CONFIDENTIAL, PERSONAL, AIR MAIL. Placed above the inside address; visible in a window envelope.", example: "CONFIDENTIAL" },
+  { num: 5,  label: "Inside Address",     color: "blue",    desc: "The full recipient address. Always include the country when writing abroad. UK: town/city in CAPITALS, postcode on its own line.", example: "Green Furniture Solutions\n47 Bridge Street\nMANCHESTER\nM2 3AB\nUNITED KINGDOM" },
+  { num: 6,  label: "Attention Line",     color: "cyan",    desc: "Placed below the inside address. Directs the letter to a specific person within the company.", example: "Attn. Ms McDermott, Marketing Department" },
+  { num: 7,  label: "Salutation",         color: "amber",   desc: "Linked to the complimentary close. Use 'Dear Sir or Madam' (name unknown) or 'Dear Mr/Ms [name]' (name known). No punctuation in most cases.", example: "Dear Ms Hargreaves" },
+  { num: 8,  label: "Subject Line",       color: "orange",  desc: "Written in bold or underlined. Starts with a capital letter, rest in lower case (except proper nouns).", example: "Enquiry regarding office chairs" },
+  { num: 9,  label: "Body of the Letter", color: "slate",   desc: "First word always capitalised. Paragraphs separated by a blank line. Block style: all lines start at the left margin.", example: "Thank you for your letter of 5 May 2025..." },
+  { num: 10, label: "Complimentary Close",color: "rose",    desc: "Linked to salutation. 'Yours faithfully' (unknown name) · 'Yours sincerely' (named person) · Don't forget the 's' in Yours!", example: "Yours sincerely" },
+  { num: 11, label: "Signature",          color: "fuchsia", desc: "Handwritten signature followed by printed name and position/department. Women may add preferred title in brackets.", example: "Sarah Mitchell (Ms)\nSales Department" },
+  { num: 12, label: "Enclosure(s)",       color: "red",     desc: "Documents sent with the letter. 'Enc' (one) or 'Encs' (several). Can list items: 'Encs: Catalogue; Price list'.", example: "Encs: Catalogue; Price list 2025" },
+];
+
+/* ── SLIDE NAVIGATION ──────────────── */
+function goTo(n) {
+  document.getElementById(`slide-${current}`).classList.remove('active');
+  current = n;
+  document.getElementById(`slide-${current}`).classList.add('active');
+  document.getElementById('btn-prev').disabled = current === 1;
+  document.getElementById('btn-next').style.display = current === TOTAL ? 'none' : '';
+  document.getElementById('slide-counter').textContent = `${current}/${TOTAL}`;
+  document.getElementById('progress-fill').style.width = `${Math.round((current/TOTAL)*100)}%`;
+  updateDots();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function nextSlide() { if (current < TOTAL) goTo(current + 1); }
+function prevSlide() { if (current > 1) goTo(current - 1); }
+
+/* ── DOTS ──────────────────────────── */
+function buildDots() {
+  const c = document.getElementById('dots-container');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'w-2 h-2 rounded-full transition-all duration-200';
+    d.onclick = () => goTo(i);
+    d.id = `dot-${i}`;
+    c.appendChild(d);
+  }
+  updateDots();
+}
+function updateDots() {
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = `w-2 h-2 rounded-full transition-all duration-200 ${i === current ? 'bg-indigo-600 w-4' : 'bg-slate-300 hover:bg-slate-400'}`;
+  }
+}
+
+/* ── SLIDE 1: MISTAKES ─────────────── */
+const mistakes = [
+  { text: "No letterhead", color: "red" },
+  { text: "Date: all-figures (ambiguous)", color: "orange" },
+  { text: "City not in CAPITALS", color: "orange" },
+  { text: "Postcode not on own line", color: "orange" },
+  { text: '"dear madams and sirs:" — wrong salutation + colon', color: "red" },
+  { text: "Subject line not capitalised/bold", color: "yellow" },
+  { text: '"many thanks" — no capital letter', color: "yellow" },
+  { text: '"a translation ... are enclosed" — grammar error', color: "orange" },
+  { text: "Closing should match salutation: Yours faithfully is wrong here (name known)", color: "red" },
+  { text: "No company name under Yours faithfully", color: "orange" },
+  { text: "No signature/position block", color: "red" },
+  { text: "No reference", color: "yellow" },
+];
+
+function revealMistakes() {
+  const c = document.getElementById('mistake-list');
+  c.innerHTML = '';
+  mistakes.forEach((m, i) => {
+    const colors = { red: 'bg-red-50 text-red-700 border-red-200', orange: 'bg-orange-50 text-orange-700 border-orange-200', yellow: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
+    const div = document.createElement('div');
+    div.className = `${colors[m.color]} text-xs border rounded-lg p-2 flex gap-1 items-start`;
+    div.innerHTML = `<span class="font-bold">${i+1}.</span><span>${m.text}</span>`;
+    div.style.opacity = '0';
+    div.style.transform = 'translateY(8px)';
+    div.style.transition = `all 0.3s ease ${i * 0.06}s`;
+    c.appendChild(div);
+    requestAnimationFrame(() => { div.style.opacity='1'; div.style.transform='translateY(0)'; });
+  });
+}
+
+/* ── SLIDE 2: PARTS NAV ─────────────── */
+function buildPartsNav() {
+  const nav = document.getElementById('parts-nav');
+  const preview = document.getElementById('letter-preview-left');
+
+  // Build nav buttons
+  parts.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = `letter-part w-full text-left px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-r-lg`;
+    btn.innerHTML = `<span class="inline-block w-5 text-slate-400 font-bold">${p.num}.</span> ${p.label}`;
+    btn.onclick = () => showPart(p);
+    btn.id = `nav-part-${p.num}`;
+    nav.appendChild(btn);
+  });
+
+  // Build compact letter preview
+  preview.innerHTML = `
+    <div class="text-indigo-600 font-bold text-xs mb-1">OFFICE DESIGN LTD.</div>
+    <div class="text-slate-400 text-xs">15 Harbour Walk, LONDON EC3R 7AB</div>
+    <div class="mt-1 text-slate-400 text-xs">Our ref: SM/TL</div>
+    <div class="text-slate-400 text-xs">12 May 2025</div>
+    <div class="mt-1 text-slate-500 text-xs font-bold">CONFIDENTIAL</div>
+    <div class="text-slate-500 text-xs">Green Furniture Solutions<br>47 Bridge Street<br>MANCHESTER M2 3AB<br>UNITED KINGDOM</div>
+    <div class="text-slate-400 text-xs mt-1">Attn. Ms Hargreaves</div>
+    <div class="text-slate-600 text-xs mt-1">Dear Ms Hargreaves</div>
+    <div class="text-slate-700 text-xs font-bold mt-1">Enquiry regarding office chairs</div>
+    <div class="text-slate-500 text-xs mt-1">Thank you for your letter of 5 May 2025. Please find enclosed our latest catalogue...</div>
+    <div class="text-slate-500 text-xs mt-1">We look forward to hearing from you.</div>
+    <div class="text-slate-600 text-xs mt-1">Yours sincerely</div>
+    <div class="text-slate-600 text-xs">Office Design Ltd.</div>
+    <div class="text-slate-400 text-xs italic mt-0.5">Sarah Mitchell (Ms)</div>
+    <div class="text-slate-400 text-xs">Sales Department</div>
+    <div class="text-slate-400 text-xs mt-1">Encs: Catalogue; Price list</div>
+  `;
+}
+
+function showPart(p) {
+  // Clear highlight
+  parts.forEach(x => {
+    const b = document.getElementById(`nav-part-${x.num}`);
+    if (b) b.classList.remove('highlighted');
+  });
+  document.getElementById(`nav-part-${p.num}`).classList.add('highlighted');
+
+  const exp = document.getElementById('part-explanation');
+  document.getElementById('part-title').textContent = `${p.num}. ${p.label}`;
+  document.getElementById('part-desc').textContent = p.desc;
+  const ex = document.getElementById('part-example');
+  if (p.example) {
+    ex.textContent = p.example;
+    ex.classList.remove('hidden');
+  } else {
+    ex.classList.add('hidden');
+  }
+  exp.classList.remove('hidden');
+}
+
+/* ── SLIDE 7: QUIZ ─────────────────── */
+function checkAnswer(el, qId, correct) {
+  if (quizAnswered[qId]) return;
+  quizAnswered[qId] = true;
+
+  const parent = el.closest('.quiz-question');
+  parent.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+
+  const feedback = document.getElementById(`${qId}-feedback`);
+  if (correct) {
+    el.classList.add('correct');
+    quizScore++;
+    feedback.className = 'mt-2 text-xs rounded-lg p-3 bg-green-50 text-green-700 border border-green-200';
+    feedback.textContent = '✅ Correct! Well done.';
+    const msgs = {
+      q1: 'Correct! "Dear Sir or Madam" is used when the name is unknown. The complimentary close is then "Yours faithfully".',
+      q2: 'Correct! When you know the name, use "Yours sincerely". Remember: salutation and close are always linked!',
+      q3: 'Correct! Always write the month as a word (e.g. August) to avoid confusion between British and American English.'
+    };
+    feedback.textContent = '✅ ' + msgs[qId];
+  } else {
+    el.classList.add('wrong');
+    feedback.className = 'mt-2 text-xs rounded-lg p-3 bg-red-50 text-red-700 border border-red-200';
+    const wrongs = {
+      q1: '❌ Not quite. "Dear madams and sirs:" has two errors: wrong order and a colon. "To Whom It May Concern" is less preferred. The correct form is "Dear Sir or Madam" (no punctuation).',
+      q2: '❌ Not quite. "Yours faithfully" goes with "Dear Sir or Madam" (unknown name). When you write to a named person, use "Yours sincerely".',
+      q3: '❌ Not quite. All-figure dates (09/08) are ambiguous: 09/08 means August 9 in the US but 9 October in the UK. Always write the month as a word.'
+    };
+    feedback.textContent = wrongs[qId];
+  }
+  feedback.classList.remove('hidden');
+  updateQuizScore();
+}
+
+function checkGaps() {
+  const g1 = document.getElementById('gap1').value.trim().toLowerCase();
+  const g2 = document.getElementById('gap2').value.trim().toLowerCase();
+  const g3 = document.getElementById('gap3').value.trim().toLowerCase();
+  const fb = document.getElementById('gap-feedback');
+
+  const ok1 = g1 === 'enc' || g1 === 'encs' || g1 === 'encl';
+  const ok2 = g2 === 'encs' || g2 === 'enc' || g2 === 'encl';
+  const ok3 = g3 === 'bold';
+
+  const inputs = [document.getElementById('gap1'), document.getElementById('gap2'), document.getElementById('gap3')];
+  const oks    = [ok1, ok2, ok3];
+  inputs.forEach((inp, i) => {
+    inp.classList.toggle('correct-gap', oks[i]);
+    inp.classList.toggle('wrong-gap', !oks[i]);
+  });
+
+  if (ok1 && ok2 && ok3) {
+    fb.className = 'mt-2 text-xs rounded-lg p-3 bg-green-50 text-green-700 border border-green-200';
+    fb.textContent = '✅ All correct! Enc / Encs for enclosures, and the subject line is written in bold.';
+  } else {
+    fb.className = 'mt-2 text-xs rounded-lg p-3 bg-amber-50 text-amber-700 border border-amber-200';
+    fb.textContent = '⚠ Check again: 1&2 = Enc/Encs  · 3 = bold';
+  }
+  fb.classList.remove('hidden');
+}
+
+function updateQuizScore() {
+  const answered = Object.values(quizAnswered).filter(Boolean).length;
+  if (answered === MAX_QUIZ) {
+    const sc = document.getElementById('quiz-score');
+    const txt = document.getElementById('score-text');
+    sc.classList.remove('hidden');
+    txt.textContent = `You scored ${quizScore} / ${MAX_QUIZ} on the multiple-choice questions!`;
+    if (quizScore === MAX_QUIZ) {
+      txt.textContent += ' 🎉 Perfect!';
+      launchConfetti();
+    }
+  }
+}
+
+/* ── SLIDE 9: CHECKLIST ─────────────── */
+const checkItems = [
+  "I included a letterhead",
+  "The date is written correctly (day – month as word – year)",
+  "I have an inside address with country",
+  "My salutation is correct and without punctuation",
+  "The subject line is in bold / underlined",
+  "Body paragraphs are separated by blank lines",
+  "My complimentary close matches my salutation",
+  "I signed with full name and position",
+  "I noted my enclosures (Encs:)",
+];
+
+function buildChecklist() {
+  const c = document.getElementById('checklist');
+  checkItems.forEach((item, i) => {
+    const label = document.createElement('label');
+    label.className = 'check-item flex items-center gap-2 text-xs text-slate-700 cursor-pointer';
+    label.innerHTML = `<input type="checkbox" class="accent-indigo-600 w-3.5 h-3.5"><span>${item}</span>`;
+    c.appendChild(label);
+  });
+}
+
+/* ── WORD COUNTER ─────────────────── */
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'student-letter') {
+    const words = e.target.value.trim().split(/\s+/).filter(w => w).length;
+    document.getElementById('word-counter').textContent = `${words} word${words !== 1 ? 's' : ''}`;
+  }
+});
+
+/* ── CONFETTI ─────────────────────── */
+function launchConfetti() {
+  confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 }, colors: ['#6366f1','#a78bfa','#34d399','#fbbf24'] });
+}
+
+/* ── INIT ─────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  buildDots();
+  buildPartsNav();
+  buildChecklist();
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft')  prevSlide();
+  });
+});
+</script>
+</body>
+</html>
