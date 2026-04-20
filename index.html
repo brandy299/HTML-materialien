@@ -1164,13 +1164,14 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 <!-- RENAME -->
 <div class="modal-backdrop" id="modalRename">
   <div class="modal">
-    <h2>Material umbenennen</h2>
+    <h2>Material bearbeiten</h2>
     <label>Titel</label>
     <input type="text" id="inputTitel" placeholder="Titel">
     <label>Fach</label>
     <input type="text" id="inputFach" list="fachList" placeholder="Fach">
-    <label>Thema</label>
-    <input type="text" id="inputThema" list="themaList" placeholder="Thema">
+    <label>Thema <span style="font-size:0.75rem;font-weight:400;color:#9CA3AF">(bestehende auswählen oder neu eingeben)</span></label>
+    <input type="text" id="inputThema" list="inputThemaList" placeholder="Thema">
+    <datalist id="inputThemaList"></datalist>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalRename')">Abbrechen</button>
       <button class="btn-primary" id="btnSaveRename" onclick="doRename()">Speichern</button>
@@ -1983,6 +1984,14 @@ function showRename(m) {
   document.getElementById('inputTitel').value = m.name;
   document.getElementById('inputFach').value  = m.fach;
   document.getElementById('inputThema').value = m.thema;
+  // Datalist mit allen vorhandenen Themen (für das gewählte Fach zuerst)
+  const dl = document.getElementById('inputThemaList');
+  const themen = [...new Set(
+    materialien
+      .sort((a, b) => (a.fach === m.fach ? -1 : 1))
+      .map(x => x.thema)
+  )];
+  dl.innerHTML = themen.map(t => `<option value="${t}">`).join('');
   openModal('modalRename');
 }
 
@@ -2001,31 +2010,29 @@ async function doRename() {
   const idx = materialien.indexOf(renameTarget);
   if (idx < 0) { btn.disabled = false; btn.textContent = 'Speichern'; return; }
 
-  const oldPfad = renameTarget.pfad;
-  const fileName = oldPfad.split('/').pop();
-  const newPfad  = 'materialien/' + fach + '/' + thema + '/' + fileName;
+  // Nur Metadaten im Index aktualisieren – Datei bleibt am alten Pfad.
+  // Das verhindert unnötige Datei-Verschiebungen auf GitHub und macht
+  // das Umbenennen von Fach/Thema deutlich robuster.
+  const updated = {
+    name:  titel,
+    fach:  fach,
+    thema: thema,
+    pfad:  renameTarget.pfad,   // Pfad unverändert lassen
+    datum: renameTarget.datum,
+    autor: renameTarget.autor
+  };
+  materialien[idx] = updated;
 
   try {
-    if (newPfad !== oldPfad) {
-      const old = await ghGet(oldPfad);
-      await ghPut(newPfad, {
-        message: 'Move: ' + renameTarget.name + ' → ' + titel,
-        content: old.content.replace(/\n/g, '')
-      });
-      await ghDelete(oldPfad, old.sha, 'Remove old: ' + oldPfad);
-    }
-
-    const updated = { name: titel, fach: fach, thema: thema, pfad: newPfad, datum: renameTarget.datum };
-    materialien[idx] = updated;
     await updateIndex(materialien);
-
     closeModal('modalRename');
     buildSidebar();
     render(document.getElementById('search').value);
-    if (previewMaterial && previewMaterial.pfad === oldPfad) showPreview(updated);
+    if (previewMaterial && previewMaterial.pfad === renameTarget.pfad) showPreview(updated);
     renameTarget = null;
-    showToast('Umbenannt zu "' + titel + '"');
+    showToast('Gespeichert ✓');
   } catch (e) {
+    materialien[idx] = renameTarget; // Rollback
     showToast('Fehler: ' + e.message);
   } finally {
     btn.disabled    = false;
