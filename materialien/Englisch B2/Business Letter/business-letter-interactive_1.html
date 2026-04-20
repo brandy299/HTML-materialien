@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Anatomy of a Business Letter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════ */
+:root {
+  --paper:      #f5f0e8;
+  --paper-dark: #ede5d5;
+  --ink:        #1a1410;
+  --ink-mid:    #3d3228;
+  --ink-light:  #7a6a5a;
+  --ink-faint:  #b8a898;
+  --accent:     #c0392b;
+  --accent-soft:#f5e6e4;
+  --gold:       #b8860b;
+  --gold-soft:  #faf3e0;
+  --teal:       #1a6b6b;
+  --teal-soft:  #e0f0f0;
+  --shadow:     rgba(26,20,16,0.12);
+  --shadow-deep:rgba(26,20,16,0.25);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #2c2416;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, #3d3020 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #1a1008 0%, transparent 50%);
+  min-height: 100vh;
+  font-family: 'Source Serif 4', Georgia, serif;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════ */
+.app-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.site-header {
+  grid-column: 1 / -1;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  padding: 18px 36px;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px var(--shadow-deep);
+}
+
+.site-header .kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  border: 1px solid var(--ink-faint);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.site-header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.site-header .sub {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  margin-left: auto;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR NAV
+═══════════════════════════════════════ */
+.sidebar {
+  background: var(--paper-dark);
+  border-right: 1px solid rgba(26,20,16,0.15);
+  padding: 28px 0;
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  padding: 0 20px 20px;
+}
+
+.sidebar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0 4px;
+  margin-bottom: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  margin-bottom: 3px;
+}
+
+.nav-item:hover {
+  background: rgba(26,20,16,0.06);
+}
+
+.nav-item.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.nav-item .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  width: 20px;
+  text-align: center;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.nav-item.active .num { opacity: 0.7; color: var(--paper); }
+
+.nav-item .label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-mid);
+}
+
+.nav-item.active .label { color: var(--paper); }
+
+.nav-item .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.nav-item.visited .dot { background: var(--teal); }
+.nav-item.active .dot  { background: var(--gold); }
+
+.progress-ring {
+  margin: 20px;
+  padding: 16px;
+  background: var(--paper);
+  border-radius: 8px;
+  border: 1px solid rgba(26,20,16,0.12);
+  text-align: center;
+}
+
+.progress-ring .pct {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.progress-bar {
+  height: 4px;
+  background: rgba(26,20,16,0.1);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ═══════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════ */
+.main-content {
+  background: #e8e0d0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  padding: 40px 48px;
+  overflow-y: auto;
+}
+
+/* ═══════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════ */
+.section {
+  display: none;
+  animation: sectionIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.section.visible { display: block; }
+
+@keyframes sectionIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Section heading ─── */
+.section-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ink-faint);
+}
+
+.section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.section-sub {
+  font-size: 1rem;
+  color: var(--ink-light);
+  font-style: italic;
+  margin-bottom: 32px;
+  max-width: 560px;
+}
+
+/* ═══════════════════════════════════════
+   LETTER ANATOMY — THE HERO COMPONENT
+═══════════════════════════════════════ */
+.anatomy-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+.letter-paper {
+  background: #fdfaf5;
+  border: 1px solid rgba(26,20,16,0.15);
+  box-shadow: 8px 8px 0 rgba(26,20,16,0.08), 16px 16px 0 rgba(26,20,16,0.04);
+  border-radius: 2px;
+  padding: 36px 40px;
+  position: relative;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: #1a1410;
+  cursor: default;
+}
+
+/* Paper fold corner */
+.letter-paper::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 28px 28px 0;
+  border-color: transparent #e8e0d0 transparent transparent;
+}
+
+/* ── Letter Parts ── */
+.lp {
+  position: relative;
+  padding: 4px 8px;
+  margin: 2px -8px;
+  border-radius: 3px;
+  border-left: 3px solid transparent;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.lp:hover, .lp.highlight {
+  background: rgba(192,57,43,0.06);
+  border-left-color: var(--accent);
+}
+
+.lp.highlight {
+  background: rgba(192,57,43,0.09);
+}
+
+.lp-number {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Playfair Display', serif;
+  font-size: 0.65rem;
+  font-style: italic;
+  color: var(--ink-faint);
+  font-weight: 700;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.lp:hover .lp-number, .lp.highlight .lp-number {
+  color: var(--accent);
+}
+
+/* Letterhead styling */
+.lp-letterhead {
+  border-top: 3px double rgba(26,20,16,0.3);
+  border-bottom: 1px solid rgba(26,20,16,0.15);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+.lh-company {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #1a1410;
+}
+.lh-address { font-size: 0.7rem; color: #5a4a3a; margin-top: 2px; }
+
+.lp-subject { font-weight: 700; text-decoration: underline; }
+
+.lp-body p + p { margin-top: 8px; }
+
+/* ── Info Panel (right) ── */
+.info-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.info-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 6px 6px 0 rgba(26,20,16,0.12);
+  min-height: 280px;
+  transition: all 0.3s ease;
+}
+
+.info-card-header {
+  background: var(--ink);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-card-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--paper);
+  line-height: 1;
+  width: 32px;
+}
+
+.info-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: -0.01em;
+}
+
+.info-card-en {
+  font-size: 0.75rem;
+  color: rgba(245,240,232,0.55);
+  font-style: italic;
+  margin-top: 1px;
+}
+
+.info-card-body {
+  padding: 20px;
+}
+
+.info-card-desc {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  margin-bottom: 14px;
+}
+
+.info-card-rule {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--ink-mid);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 12px;
+}
+
+.info-card-example {
+  background: rgba(26,20,16,0.04);
+  border: 1px solid rgba(26,20,16,0.1);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-mid);
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.info-hint {
+  background: var(--paper);
+  border: 2px dashed var(--ink-faint);
+  border-radius: 4px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ink-light);
+  font-style: italic;
+  font-size: 0.88rem;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.info-hint .arrow-icon {
+  font-size: 2rem;
+  opacity: 0.3;
+  animation: bobLeft 2s ease-in-out infinite;
+}
+
+@keyframes bobLeft {
+  0%,100% { transform: translateX(0); }
+  50%      { transform: translateX(-8px); }
+}
+
+/* ═══════════════════════════════════════
+   SALUTATION TABLE SECTION
+═══════════════════════════════════════ */
+.sal-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.sal-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 0;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid rgba(26,20,16,0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sal-row:hover {
+  box-shadow: 4px 4px 0 rgba(26,20,16,0.1);
+  transform: translateY(-1px);
+}
+
+.sal-row .sal-cell {
+  padding: 14px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--ink-mid);
+}
+
+.sal-row .sal-arrow {
+  padding: 14px 8px;
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+}
+
+.sal-row .sal-badge {
+  padding: 14px 18px;
+}
+
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.badge-formal  { background: #1a1410; color: var(--paper); }
+.badge-semi    { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+.badge-informal{ background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal); }
+
+/* ═══════════════════════════════════════
+   DATE FORMAT DEMO
+═══════════════════════════════════════ */
+.date-demo {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 4px 4px 0 rgba(26,20,16,0.08);
+}
+
+.date-wrong {
+  text-align: center;
+}
+
+.date-wrong .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  opacity: 0.7;
+}
+
+.date-right .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--teal);
+}
+
+.date-arrow {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--ink-faint);
+}
+
+.date-caption {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  font-style: italic;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════
+   QUIZ SECTION
+═══════════════════════════════════════ */
+.quiz-wrap {
+  max-width: 680px;
+}
+
+.quiz-q {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: 4px 4px 0 rgba(26,20,16,0.08);
+  transition: box-shadow 0.2s;
+}
+
+.quiz-q:hover {
+  box-shadow: 6px 6px 0 rgba(26,20,16,0.12);
+}
+
+.q-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.q-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+.q-options { display: grid; gap: 8px; }
+
+.q-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(26,20,16,0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.88rem;
+  color: var(--ink-mid);
+  background: rgba(255,255,255,0.5);
+}
+
+.q-opt:hover:not(.locked) {
+  border-color: var(--ink);
+  background: white;
+  transform: translateX(3px);
+}
+
+.q-opt .q-letter {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.q-opt.correct {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+.q-opt.correct .q-letter { color: var(--teal); }
+
+.q-opt.wrong {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  animation: shake 0.4s ease;
+}
+.q-opt.wrong .q-letter { color: var(--accent); }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  60%      { transform: translateX(6px); }
+}
+
+.q-feedback {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  display: none;
+}
+
+.q-feedback.show { display: block; animation: feedbackIn 0.3s ease both; }
+@keyframes feedbackIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+.q-feedback.ok  { background: var(--teal-soft); color: var(--teal); border: 1px solid rgba(26,107,107,0.2); }
+.q-feedback.bad { background: var(--accent-soft); color: #8B2020; border: 1px solid rgba(192,57,43,0.2); }
+
+.quiz-result {
+  background: var(--ink);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  color: var(--paper);
+  display: none;
+}
+
+.quiz-result.show { display: block; animation: sectionIn 0.5s ease both; }
+
+.result-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 12px 0;
+}
+
+/* ═══════════════════════════════════════
+   BUILD ANIMATION — LETTER BUILDER
+═══════════════════════════════════════ */
+.builder-wrap {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.builder-controls {
+  position: sticky;
+  top: 20px;
+}
+
+.build-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1.5px solid rgba(26,20,16,0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-family: 'Source Serif 4', serif;
+}
+
+.build-btn:hover {
+  border-color: var(--ink);
+  background: white;
+}
+
+.build-btn.done {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.build-btn .b-num {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-faint);
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.build-btn.done .b-num { color: var(--teal); }
+
+.build-btn .b-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-mid);
+}
+
+.build-btn.done .b-label { color: var(--teal); }
+
+.build-btn .b-check {
+  margin-left: auto;
+  color: var(--teal);
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.build-btn.done .b-check { opacity: 1; }
+
+/* Animated letter */
+.anim-letter {
+  background: #fdfaf5;
+  border: 1px solid rgba(26,20,16,0.15);
+  box-shadow: 8px 8px 0 rgba(26,20,16,0.08);
+  border-radius: 2px;
+  padding: 32px 36px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: #1a1410;
+  min-height: 400px;
+  position: relative;
+}
+
+.anim-letter::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 26px 26px 0;
+  border-color: transparent #e8e0d0 transparent transparent;
+}
+
+.letter-block {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  border-left: 3px solid transparent;
+  padding-left: 8px;
+  margin-left: -8px;
+}
+
+.letter-block.reveal {
+  opacity: 1;
+  transform: translateX(0);
+  border-left-color: var(--accent);
+}
+
+.letter-block.settled {
+  border-left-color: transparent;
+}
+
+.letter-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: var(--accent);
+  color: white;
+  border-radius: 2px;
+  margin-bottom: 3px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+.letter-block.reveal .letter-tag { opacity: 1; }
+.letter-block.settled .letter-tag { opacity: 0; }
+
+/* ═══════════════════════════════════════
+   REFERENCE SECTION
+═══════════════════════════════════════ */
+.ref-card {
+  background: var(--paper);
+  border: 1px solid rgba(26,20,16,0.12);
+  border-radius: 6px;
+  padding: 20px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 2px 2px 0 rgba(26,20,16,0.05);
+}
+
+.ref-card:hover {
+  box-shadow: 4px 4px 0 rgba(26,20,16,0.1);
+}
+
+.ref-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--ink-faint);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+.ref-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.ref-content p {
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
+
+.ref-content .tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════
+   NAV BUTTONS
+═══════════════════════════════════════ */
+.section-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(26,20,16,0.12);
+}
+
+.btn-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 2px solid var(--ink);
+}
+
+.btn-prev {
+  background: transparent;
+  color: var(--ink);
+}
+.btn-prev:hover { background: rgba(26,20,16,0.06); }
+
+.btn-next {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-next:hover { background: #2d2418; box-shadow: 3px 3px 0 rgba(26,20,16,0.2); }
+
+.btn-nav:disabled { opacity: 0.3; pointer-events: none; }
+
+/* ═══════════════════════════════════════
+   DIVIDERS
+═══════════════════════════════════════ */
+.ornament-divider {
+  text-align: center;
+  color: var(--ink-faint);
+  margin: 28px 0;
+  font-size: 1rem;
+  letter-spacing: 0.5em;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    height: auto;
+    display: flex;
+    overflow-x: auto;
+    padding: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sidebar-section { padding: 0; }
+  .sidebar-label { display: none; }
+  .nav-item { padding: 8px 12px; white-space: nowrap; }
+  .anatomy-grid, .builder-wrap { grid-template-columns: 1fr; }
+  .info-panel { position: static; }
+  .main-content { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+<!-- ════════════ HEADER ════════════ -->
+<header class="site-header">
+  <span class="kicker">Business English · B1/B2 · Commercial Correspondence</span>
+  <h1>The Anatomy of a Business Letter</h1>
+  <span class="sub">Office Design Ltd. · Interactive Learning Module</span>
+</header>
+
+<!-- ════════════ SIDEBAR ════════════ -->
+<nav class="sidebar">
+  <div style="padding:0 20px 8px;">
+    <div class="progress-ring">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:4px;">Progress</div>
+      <div class="pct" id="pct-display">0%</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Sections</div>
+    <div class="nav-item active" data-sec="0" onclick="gotoSection(0)">
+      <span class="num">I</span>
+      <span class="label">Overview</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="1" onclick="gotoSection(1)">
+      <span class="num">II</span>
+      <span class="label">Letter Anatomy</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="2" onclick="gotoSection(2)">
+      <span class="num">III</span>
+      <span class="label">Salutation &amp; Close</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="3" onclick="gotoSection(3)">
+      <span class="num">IV</span>
+      <span class="label">Date &amp; Address</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="4" onclick="gotoSection(4)">
+      <span class="num">V</span>
+      <span class="label">Build a Letter</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="5" onclick="gotoSection(5)">
+      <span class="num">VI</span>
+      <span class="label">Quick Quiz</span>
+      <span class="dot"></span>
+    </div>
+    <div class="nav-item" data-sec="6" onclick="gotoSection(6)">
+      <span class="num">VII</span>
+      <span class="label">All 12 Parts</span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════ MAIN ════════════ -->
+<main class="main-content">
+
+<!-- ─── SECTION 0: OVERVIEW ─── -->
+<section class="section visible" id="sec-0">
+  <p class="section-eyebrow">Introduction</p>
+  <h2 class="section-title">Why do letters still matter?</h2>
+  <p class="section-sub">In the age of email and instant messaging, the formal business letter remains the gold standard for official, legal and high-stakes correspondence.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:32px;">
+    <div style="background:var(--paper);border:2px solid var(--ink);border-radius:6px;padding:24px;box-shadow:4px 4px 0 rgba(26,20,16,0.08);">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--ink);line-height:1;">12</div>
+      <div style="font-size:0.85rem;color:var(--ink-light);margin-top:6px;font-style:italic;">distinct structural parts in a formal business letter</div>
+    </div>
+    <div style="background:var(--paper);border:2px solid var(--ink);border-radius:6px;padding:24px;box-shadow:4px 4px 0 rgba(26,20,16,0.08);">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--ink);line-height:1;">2</div>
+      <div style="font-size:0.85rem;color:var(--ink-light);margin-top:6px;font-style:italic;">linked pairs: salutation &amp; complimentary close</div>
+    </div>
+    <div style="background:var(--paper);border:2px solid var(--ink);border-radius:6px;padding:24px;box-shadow:4px 4px 0 rgba(26,20,16,0.08);">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--accent);line-height:1;">0</div>
+      <div style="font-size:0.85rem;color:var(--ink-light);margin-top:6px;font-style:italic;">standard layouts — but one widely-used European format</div>
+    </div>
+  </div>
+
+  <div style="background:var(--paper);border-left:5px solid var(--gold);padding:20px 24px;border-radius:0 6px 6px 0;margin-bottom:24px;box-shadow:3px 3px 0 rgba(26,20,16,0.06);">
+    <p style="font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--ink);line-height:1.5;">"About 360 million people speak English as their first language and many more use it for business, so there is no standard layout for business letters. A typical layout used in Europe and elsewhere is shown opposite."</p>
+    <p style="font-size:0.75rem;color:var(--ink-light);margin-top:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em;">— Focus on Business, Commercial Correspondence</p>
+  </div>
+
+  <div style="background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:28px;box-shadow:4px 4px 0 rgba(26,20,16,0.08);">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;margin-bottom:16px;">What you'll learn in this module:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--teal);font-size:1rem;margin-top:1px;">✦</span>
+        <span style="font-size:0.86rem;color:var(--ink-mid);">Identify and name all 12 parts of a business letter</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--teal);font-size:1rem;margin-top:1px;">✦</span>
+        <span style="font-size:0.86rem;color:var(--ink-mid);">Link salutation and complimentary close correctly</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--teal);font-size:1rem;margin-top:1px;">✦</span>
+        <span style="font-size:0.86rem;color:var(--ink-mid);">Format dates the British way — avoiding ambiguity</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--teal);font-size:1rem;margin-top:1px;">✦</span>
+        <span style="font-size:0.86sm;color:var(--ink-mid);">Build a complete letter step by step</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" disabled>← Previous</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(1)">Letter Anatomy →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 1: ANATOMY ─── -->
+<section class="section" id="sec-1">
+  <p class="section-eyebrow">Section II</p>
+  <h2 class="section-title">Letter Anatomy</h2>
+  <p class="section-sub">Click any part of the letter to learn what it is and how to write it correctly.</p>
+
+  <div class="anatomy-grid">
+    <!-- THE LETTER -->
+    <div class="letter-paper" id="anatomy-letter" style="padding-left:52px;">
+
+      <!-- Part 1: Letterhead -->
+      <div class="lp lp-letterhead" data-part="1" onclick="showPart(1)">
+        <span class="lp-number">①</span>
+        <div class="lh-company">OFFICE DESIGN LTD.</div>
+        <div class="lh-address">
+          15 Harbour Walk · LONDON · EC3R 7AB · UNITED KINGDOM<br>
+          Tel: +44 20 7946 0800 · info@officedesign.co.uk · www.officedesign.co.uk
+        </div>
+      </div>
+
+      <div style="height:12px;"></div>
+
+      <!-- Part 2: Reference -->
+      <div class="lp" data-part="2" onclick="showPart(2)">
+        <span class="lp-number">②</span>
+        Our ref: SM/TL
+      </div>
+
+      <!-- Part 3: Date -->
+      <div class="lp" data-part="3" onclick="showPart(3)">
+        <span class="lp-number">③</span>
+        12 May 2025
+      </div>
+
+      <div style="height:10px;"></div>
+
+      <!-- Part 4: Special marking -->
+      <div class="lp" data-part="4" onclick="showPart(4)" style="font-weight:700;letter-spacing:0.05em;">
+        <span class="lp-number">④</span>
+        CONFIDENTIAL
+      </div>
+
+      <!-- Part 5: Inside address -->
+      <div class="lp" data-part="5" onclick="showPart(5)">
+        <span class="lp-number">⑤</span>
+        Green Furniture Solutions<br>
+        47 Bridge Street<br>
+        MANCHESTER<br>
+        M2 3AB<br>
+        UNITED KINGDOM
+      </div>
+
+      <!-- Part 6: Attention line -->
+      <div class="lp" data-part="6" onclick="showPart(6)">
+        <span class="lp-number">⑥</span>
+        Attn. Ms J. Hargreaves, Purchasing Department
+      </div>
+
+      <div style="height:10px;"></div>
+
+      <!-- Part 7: Salutation -->
+      <div class="lp" data-part="7" onclick="showPart(7)">
+        <span class="lp-number">⑦</span>
+        Dear Ms Hargreaves
+      </div>
+
+      <!-- Part 8: Subject line -->
+      <div class="lp lp-subject" data-part="8" onclick="showPart(8)">
+        <span class="lp-number">⑧</span>
+        Enquiry regarding ergonomic office chairs – your letter of 5 May 2025
+      </div>
+
+      <div style="height:6px;"></div>
+
+      <!-- Part 9: Body -->
+      <div class="lp lp-body" data-part="9" onclick="showPart(9)">
+        <span class="lp-number">⑨</span>
+        <p>Thank you for your letter of 5 May 2025. We are pleased to be able to assist you with your requirements for ergonomic office seating.</p>
+        <p>Please find enclosed our latest catalogue and current price list for your information. All our chairs comply with current EU workplace regulations and come with a five-year warranty.</p>
+        <p>We would be happy to arrange a product demonstration at your premises at your convenience. Please do not hesitate to contact us should you require any further information.</p>
+        <p>We look forward to hearing from you.</p>
+      </div>
+
+      <div style="height:6px;"></div>
+
+      <!-- Part 10: Complimentary close -->
+      <div class="lp" data-part="10" onclick="showPart(10)">
+        <span class="lp-number">⑩</span>
+        Yours sincerely<br>
+        <span style="color:var(--ink-light);font-size:0.75em;">Office Design Ltd.</span>
+      </div>
+
+      <!-- Part 11: Signature -->
+      <div class="lp" data-part="11" onclick="showPart(11)">
+        <span class="lp-number">⑪</span>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:rgba(26,20,16,0.35);margin:6px 0 2px;">Sarah Mitchell</div>
+        Sarah Mitchell (Ms)<br>
+        Sales Department
+      </div>
+
+      <!-- Part 12: Enclosures -->
+      <div class="lp" data-part="12" onclick="showPart(12)">
+        <span class="lp-number">⑫</span>
+        Encs: Catalogue 2025; Price list 2025
+      </div>
+    </div>
+
+    <!-- INFO PANEL -->
+    <div class="info-panel">
+      <div class="info-hint" id="anatomy-hint">
+        <div class="arrow-icon">←</div>
+        <p>Click on any numbered part of the letter to see an explanation.</p>
+      </div>
+      <div class="info-card" id="anatomy-card" style="display:none;">
+        <div class="info-card-header">
+          <div class="info-card-num" id="ic-num">1</div>
+          <div>
+            <div class="info-card-title" id="ic-title">Letterhead</div>
+            <div class="info-card-en" id="ic-de">Briefkopf</div>
+          </div>
+        </div>
+        <div class="info-card-body">
+          <p class="info-card-desc" id="ic-desc"></p>
+          <div class="info-card-rule" id="ic-rule" style="display:none;"></div>
+          <div class="info-card-example" id="ic-example" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(0)">← Overview</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(2)">Salutation &amp; Close →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 2: SALUTATION ─── -->
+<section class="section" id="sec-2">
+  <p class="section-eyebrow">Section III</p>
+  <h2 class="section-title">Salutation &amp; Complimentary Close</h2>
+  <p class="section-sub">These two elements are always <em>linked</em> — choose one pair and stick to it.</p>
+
+  <div style="background:var(--paper);border-left:5px solid var(--accent);padding:16px 20px;border-radius:0 6px 6px 0;margin-bottom:28px;box-shadow:3px 3px 0 rgba(26,20,16,0.06);">
+    <strong style="font-size:0.9rem;">Key Rule:</strong>
+    <span style="font-size:0.9rem;color:var(--ink-mid);"> "In most cases the salutation and complimentary close can be written <em>without punctuation</em>. They are linked — whichever salutation you use determines which close to use."</span>
+  </div>
+
+  <div class="sal-grid">
+    <div class="sal-row" onclick="this.style.transform='scale(1.01)'">
+      <div class="sal-cell">Dear Sir or Madam</div>
+      <div class="sal-arrow">→</div>
+      <div class="sal-cell" style="font-weight:700;color:var(--ink);">Yours faithfully</div>
+      <div class="sal-badge"><span class="badge badge-formal">Formal · name unknown</span></div>
+    </div>
+    <div class="sal-row">
+      <div class="sal-cell">Dear Mr / Ms Green</div>
+      <div class="sal-arrow">→</div>
+      <div class="sal-cell" style="font-weight:700;color:var(--ink);">Yours sincerely</div>
+      <div class="sal-badge"><span class="badge badge-formal">Formal · most common</span></div>
+    </div>
+    <div class="sal-row">
+      <div class="sal-cell">Dear Ms Green</div>
+      <div class="sal-arrow">→</div>
+      <div class="sal-cell" style="font-weight:700;color:var(--gold);">Best wishes</div>
+      <div class="sal-badge"><span class="badge badge-semi">Semi-formal</span></div>
+    </div>
+    <div class="sal-row">
+      <div class="sal-cell">Dear Bill / Dear Sarah</div>
+      <div class="sal-arrow">→</div>
+      <div class="sal-cell" style="font-weight:700;color:var(--teal);">Best regards / Regards</div>
+      <div class="sal-badge"><span class="badge badge-informal">Informal</span></div>
+    </div>
+  </div>
+
+  <div class="ornament-divider">— ✦ —</div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:16px;">Choosing the right title</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+    <div style="background:var(--paper);border:1px solid rgba(26,20,16,0.12);border-radius:6px;padding:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;margin-bottom:8px;">Ms</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">Preferred in business. Marital status unknown or not relevant. Safe in all formal contexts.</p>
+    </div>
+    <div style="background:var(--paper);border:1px solid rgba(26,20,16,0.12);border-radius:6px;padding:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;margin-bottom:8px;">Mrs / Miss</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">Only use if the woman herself uses that title. Mrs = married · Miss = unmarried. Never guess.</p>
+    </div>
+    <div style="background:var(--paper);border:1px solid rgba(26,20,16,0.12);border-radius:6px;padding:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;margin-bottom:8px;">Mr</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">For men. Marital status does not affect the title in English business correspondence.</p>
+    </div>
+    <div style="background:var(--accent-soft);border:1px solid rgba(192,57,43,0.2);border-radius:6px;padding:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;margin-bottom:8px;color:var(--accent);">⚠ No punctuation</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">Write <code style="background:rgba(192,57,43,0.1);padding:1px 4px;border-radius:2px;">Dear Ms Carter</code> — not <code style="background:rgba(192,57,43,0.1);padding:1px 4px;border-radius:2px;">Dear Ms Carter,</code>. Don't forget the <em>s</em> in <em>Yours</em>.</p>
+    </div>
+  </div>
+
+  <!-- Interactive match -->
+  <div style="background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:28px;box-shadow:4px 4px 0 rgba(26,20,16,0.08);">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:6px;">Quick Check — Which close?</p>
+    <p style="font-size:0.84rem;color:var(--ink-light);margin-bottom:20px;font-style:italic;">Click the correct complimentary close for each salutation.</p>
+    <div id="match-container"></div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(1)">← Letter Anatomy</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(3)">Date &amp; Address →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 3: DATE & ADDRESS ─── -->
+<section class="section" id="sec-3">
+  <p class="section-eyebrow">Section IV</p>
+  <h2 class="section-title">Date &amp; Address Rules</h2>
+  <p class="section-sub">Two areas where many learners make systematic errors — both are easy to fix.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;">The Date</h3>
+  <p style="font-size:0.88rem;color:var(--ink-mid);margin-bottom:20px;">"An all-figure date can be misunderstood. The month should always be written out."</p>
+
+  <div class="date-demo">
+    <div class="date-wrong">
+      <div class="value">08/09/2025</div>
+      <div class="date-caption">August 9th (US English)<br>or 8th September (UK) — ambiguous!</div>
+    </div>
+    <div class="date-arrow">→</div>
+    <div class="date-right">
+      <div class="value">8 September 2025</div>
+      <div class="date-caption" style="color:var(--teal);">Day (figures) · Month (word) · Year (4 figures)<br>Unambiguous worldwide ✓</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0 32px;">
+    <div style="background:var(--accent-soft);border:1px solid rgba(192,57,43,0.2);border-radius:6px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--accent);text-decoration:line-through;margin-bottom:4px;">09/10/2025</div>
+      <div style="font-size:0.72rem;color:var(--ink-light);">Avoid — ambiguous</div>
+    </div>
+    <div style="background:var(--accent-soft);border:1px solid rgba(192,57,43,0.2);border-radius:6px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--accent);text-decoration:line-through;margin-bottom:4px;">Oct. 9, 2025</div>
+      <div style="font-size:0.72rem;color:var(--ink-light);">American style — avoid in UK</div>
+    </div>
+    <div style="background:var(--teal-soft);border:1px solid rgba(26,107,107,0.2);border-radius:6px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--teal);margin-bottom:4px;">9 October 2025</div>
+      <div style="font-size:0.72rem;color:var(--teal);">✓ Correct British form</div>
+    </div>
+  </div>
+
+  <div class="ornament-divider">— ✦ —</div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;">The Inside Address</h3>
+  <p style="font-size:0.88rem;color:var(--ink-mid);margin-bottom:20px;">Always include the country when writing abroad. UK addresses follow specific conventions.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+    <div>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">✗ Common mistakes</p>
+      <div style="background:var(--accent-soft);border:1px solid rgba(192,57,43,0.2);border-radius:6px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);line-height:1.8;">
+        Green Furniture Solutions<br>
+        47 Bridge Street<br>
+        <span style="text-decoration:underline wavy;">manchester</span>   ← not in CAPS<br>
+        <span style="text-decoration:underline wavy;">M2 3AB</span> ← not on own line<br>
+        <span style="text-decoration:underline wavy;">VEREINIGTES KÖNIGREICH</span> ← German!
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">✓ Correct version</p>
+      <div style="background:var(--teal-soft);border:1px solid rgba(26,107,107,0.2);border-radius:6px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--teal);line-height:1.8;">
+        Green Furniture Solutions<br>
+        47 Bridge Street<br>
+        MANCHESTER<br>
+        M2 3AB<br>
+        UNITED KINGDOM
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--gold-soft);border:2px solid var(--gold);border-radius:6px;padding:18px 22px;">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.95rem;color:var(--gold);margin-bottom:8px;">UK Address Rules — Remember</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="font-size:0.83rem;color:var(--ink-mid);">✦ Town/city in <strong>CAPITAL LETTERS</strong></div>
+      <div style="font-size:0.83rem;color:var(--ink-mid);">✦ Postcode on its <strong>own line</strong></div>
+      <div style="font-size:0.83rem;color:var(--ink-mid);">✦ House number <strong>before</strong> street name</div>
+      <div style="font-size:0.83rem;color:var(--ink-mid);">✦ Country in the <strong>language of the letter</strong></div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(2)">← Salutation &amp; Close</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(4)">Build a Letter →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: BUILD ─── -->
+<section class="section" id="sec-4">
+  <p class="section-eyebrow">Section V</p>
+  <h2 class="section-title">Build a Letter</h2>
+  <p class="section-sub">The parts are mixed up. Click them in the correct order to build the letter — can you remember the sequence?</p>
+
+  <div class="builder-wrap">
+    <div class="builder-controls">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px;">Click in the right order ↓</p>
+      <div id="build-controls"></div>
+      <button id="btn-reset" onclick="resetBuilder()" style="margin-top:16px;width:100%;padding:10px;background:transparent;border:1.5px solid rgba(26,20,16,0.2);border-radius:6px;cursor:pointer;font-size:0.8rem;color:var(--ink-light);font-family:'Source Serif 4',serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='rgba(26,20,16,0.2)';this.style.color='var(--ink-light)';">Reset letter</button>
+    </div>
+
+    <div class="anim-letter" id="anim-letter">
+      <p class="bh" style="font-size:0.75rem;color:var(--ink-faint);font-style:italic;text-align:center;padding-top:60px;">Click parts in the correct order to build the letter...</p>
+      <div id="letter-build-content"></div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(3)">← Date &amp; Address</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(5)">Quick Quiz →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 5: QUIZ ─── -->
+<section class="section" id="sec-5">
+  <p class="section-eyebrow">Section VI</p>
+  <h2 class="section-title">Quick Quiz</h2>
+  <p class="section-sub">Test your knowledge. Instant feedback on every question.</p>
+
+  <div class="quiz-wrap" id="quiz-container"></div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(4)">← Build a Letter</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(6)">All 12 Parts →</button>
+  </div>
+</section>
+
+<!-- ─── SECTION 6: REFERENCE ─── -->
+<section class="section" id="sec-6">
+  <p class="section-eyebrow">Section VII · Quick Reference</p>
+  <h2 class="section-title">All 12 Parts</h2>
+  <p class="section-sub">A complete reference guide to all 12 structural parts of a formal business letter.</p>
+  <div id="ref-list"></div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(5)">← Quick Quiz</button>
+    <button class="btn-nav btn-next" style="background:var(--teal);border-color:var(--teal);color:white;" onclick="window.scrollTo(0,0);gotoSection(0);">Start over ↺</button>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+/* ─── DATA ─── */
+const PARTS_DATA = [
+  { num:1,  title:"Letterhead",          de:"Briefkopf",
+    desc:"The printed header at the top of company stationery. It contains the company name, full postal address including country, telephone number, fax number, email address and website. It often also includes the company's logo.",
+    rule:"The letterhead should include the sender's name, postal address including the country, telephone and fax numbers, email address and website address.",
+    example:"OFFICE DESIGN LTD.\n15 Harbour Walk · LONDON · EC3R 7AB\nTel: +44 20 7946 0800\ninfo@officedesign.co.uk",
+    tag:"Structure", tagColor:"var(--ink)"
+  },
+  { num:2,  title:"Reference (Ref.)",    de:"Zeichen",
+    desc:"Shows who wrote the letter (first set of initials) and who typed it (second set). When replying to a letter, quote the sender's reference as 'Your ref.' and give your own as 'Our ref.'",
+    rule:"TL signed the letter and BK typed it → Ref: TL/BK. Some companies use different reference systems, e.g. Ref. 1/L 21.4000.",
+    example:"Our ref: SM/TL\nYour ref: GF/KP",
+    tag:"Administration", tagColor:"var(--teal)"
+  },
+  { num:3,  title:"Date",                de:"Datum",
+    desc:"An all-figure date can be misunderstood. In American English 08/09/25 means August 9, 2025, but in British English it means 8 September 2025. For this reason, always write the month as a word.",
+    rule:"Format: day (figures) – month (as a word) – year (four figures).\nNever use all-figure dates in formal business correspondence.",
+    example:"12 May 2025\n3 October 2025\n21 January 2026",
+    tag:"Conventions", tagColor:"var(--gold)"
+  },
+  { num:4,  title:"Special Marking",     de:"Vermerk",
+    desc:"Optional markings placed above the inside address. They are visible through a window envelope and instruct the postal service or recipient how to treat the letter.",
+    rule:"Common markings: URGENT · CONFIDENTIAL · PRIVATE AND CONFIDENTIAL · PERSONAL · AIR MAIL · RECORDED DELIVERY",
+    example:"CONFIDENTIAL\nURGENT\nPRIVATE AND CONFIDENTIAL",
+    tag:"Optional", tagColor:"var(--ink-light)"
+  },
+  { num:5,  title:"Inside Address",      de:"Innenadresse / Empfängeranschrift",
+    desc:"The recipient's full address, written inside the letter itself. Always include the country when writing abroad. For UK addresses, write the town or city in CAPITAL LETTERS and the postcode on a separate line.",
+    rule:"In British/American addresses, the house number comes BEFORE the street name (75 Banbury Road, not Banbury Road 75).",
+    example:"Green Furniture Solutions\n47 Bridge Street\nMANCHESTER\nM2 3AB\nUNITED KINGDOM",
+    tag:"Layout", tagColor:"var(--ink)"
+  },
+  { num:6,  title:"Attention Line",      de:"Zeile 'zu Händen'",
+    desc:"Written below the inside address. Directs the letter to a specific person within the company. If there is an attention line, the company's post department may open the letter and forward it to the named person.",
+    rule:"If the inside address starts with someone's name, the letter may only be opened by that person or their secretary — no Attn. line needed.",
+    example:"Attn. Ms J. Hargreaves, Purchasing Department\nAttn. Mr T. Brooks, Finance",
+    tag:"Optional", tagColor:"var(--ink-light)"
+  },
+  { num:7,  title:"Salutation",          de:"Anrede",
+    desc:"The formal greeting. Crucially, the salutation and complimentary close are always LINKED — the salutation you choose determines which close you must use. In most cases, no punctuation is used.",
+    rule:"Dear Sir or Madam → Yours faithfully\nDear Mr/Ms [name] → Yours sincerely\nDon't forget the 's' in Yours!",
+    example:"Dear Sir or Madam\nDear Ms Hargreaves\nDear Mr Klein\nDear Bill",
+    tag:"Language", tagColor:"var(--accent)"
+  },
+  { num:8,  title:"Subject Line",        de:"Betreffzeile",
+    desc:"A brief heading summarising what the letter is about. Written in bold or underlined, placed after the salutation. Helps the reader quickly understand the letter's purpose.",
+    rule:"Starts with a capital letter. The rest is in lower case — except proper nouns, place names, nationalities and languages.",
+    example:"Enquiry regarding office chairs\nPurchase order No. 1249\nConfirmation of your order of 5 May",
+    tag:"Structure", tagColor:"var(--ink)"
+  },
+  { num:9,  title:"Body",                de:"Haupttext",
+    desc:"The main content of the letter. Typically 2–4 paragraphs. The first word of the body always starts with a capital letter. Paragraphs are separated by a blank line. All lines begin at the left margin (block style).",
+    rule:"Never indent paragraphs — leave a blank line between them instead. Open with reference to previous correspondence if replying.",
+    example:"Thank you for your letter of 5 May 2025...\n\nPlease find enclosed our latest catalogue...\n\nWe look forward to hearing from you.",
+    tag:"Content", tagColor:"var(--teal)"
+  },
+  { num:10, title:"Complimentary Close", de:"Schlussformel",
+    desc:"The formal sign-off, always linked to the salutation. The company name is typically written under the complimentary close. Do not forget the 's' in 'Yours'.",
+    rule:"Dear Sir or Madam → Yours faithfully\nDear [name] → Yours sincerely\nClose friend/colleague → Best wishes / Kind regards",
+    example:"Yours faithfully\nOffice Design Ltd.\n\n– or –\n\nYours sincerely\nOffice Design Ltd.",
+    tag:"Language", tagColor:"var(--accent)"
+  },
+  { num:11, title:"Signature",           de:"Unterschrift",
+    desc:"Signatures are often hard to read, so always print the name below the handwritten signature. Add the job title or department below the name. Women may add their preferred title in brackets.",
+    rule:"No direct English equivalent to 'Sachbearbeiter/in' — use the department name instead (e.g. Sales Department).",
+    example:"Sarah Mitchell (Ms)\nSales Department\n\n– or –\n\nThomas Klein\nPurchasing Manager",
+    tag:"Structure", tagColor:"var(--ink)"
+  },
+  { num:12, title:"Enclosure(s)",        de:"Anlage(n)",
+    desc:"Documents or items sent with the letter. Write 'Enc' for one item or 'Encs' for several. If the recipient needs to know what is enclosed, list the items after a colon.",
+    rule:"Often enough just to write Enc or Encs — but listing items is clearer: 'Encs: Catalogue; Price list 2025'",
+    example:"Enc\nEncs\nEnc: Purchase order No. 1249\nEncs: Catalogue; Terms & Conditions",
+    tag:"Administration", tagColor:"var(--teal)"
+  }
+];
+
+/* ─── NAVIGATION ─── */
+let current = 0;
+const TOTAL = 7;
+const visited = new Set([0]);
+
+function gotoSection(n) {
+  document.getElementById(`sec-${current}`).classList.remove('visible');
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.sec) === n);
+  });
+  current = n;
+  visited.add(n);
+  document.getElementById(`sec-${n}`).classList.add('visible');
+
+  // Update nav dots
+  document.querySelectorAll('.nav-item').forEach(el => {
+    const s = parseInt(el.dataset.sec);
+    el.classList.toggle('visited', visited.has(s) && s !== n);
+  });
+
+  // Progress
+  const pct = Math.round((visited.size / TOTAL) * 100);
+  document.getElementById('pct-display').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Init section
+  if (n === 4) initBuilder();
+  if (n === 5 && !quizBuilt) buildQuiz();
+  if (n === 6 && !refBuilt) buildRef();
+  if (n === 2 && !matchBuilt) buildMatch();
+}
+
+/* ─── ANATOMY ─── */
+function showPart(num) {
+  const p = PARTS_DATA[num - 1];
+  document.querySelectorAll('.lp').forEach(el => el.classList.remove('highlight'));
+  document.querySelector(`.lp[data-part="${num}"]`).classList.add('highlight');
+
+  document.getElementById('anatomy-hint').style.display = 'none';
+  const card = document.getElementById('anatomy-card');
+  card.style.display = 'block';
+  card.style.animation = 'none';
+  card.offsetHeight; // reflow
+  card.style.animation = 'sectionIn 0.35s ease both';
+
+  document.getElementById('ic-num').textContent = num;
+  document.getElementById('ic-title').textContent = p.title;
+  document.getElementById('ic-de').textContent = p.de;
+  document.getElementById('ic-desc').textContent = p.desc;
+
+  const ruleEl = document.getElementById('ic-rule');
+  if (p.rule) { ruleEl.textContent = p.rule; ruleEl.style.display = ''; }
+  else ruleEl.style.display = 'none';
+
+  const exEl = document.getElementById('ic-example');
+  if (p.example) { exEl.textContent = p.example; exEl.style.display = ''; }
+  else exEl.style.display = 'none';
+}
+
+/* ─── SALUTATION MATCH ─── */
+let matchBuilt = false;
+const matchData = [
+  { sal: "Dear Sir or Madam", correct: "Yours faithfully", opts: ["Yours faithfully", "Yours sincerely", "Best wishes"] },
+  { sal: "Dear Ms Carter",    correct: "Yours sincerely",  opts: ["Yours faithfully", "Yours sincerely", "Best regards"] },
+  { sal: "Dear Tom",          correct: "Best regards",     opts: ["Yours faithfully", "Yours sincerely", "Best regards"] },
+];
+
+function buildMatch() {
+  matchBuilt = true;
+  const c = document.getElementById('match-container');
+  matchData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-bottom:20px;';
+    div.innerHTML = `
+      <p style="font-size:0.88rem;font-weight:600;color:var(--ink);margin-bottom:10px;">
+        Salutation: <span style="font-family:'JetBrains Mono',monospace;background:rgba(26,20,16,0.06);padding:2px 8px;border-radius:3px;">${q.sal}</span>
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="mq-${qi}">
+        ${q.opts.map(o => `
+          <button onclick="checkMatch(this,'${o}','${q.correct}','mq-${qi}')"
+            style="padding:9px 16px;background:var(--paper);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;cursor:pointer;font-size:0.83rem;font-family:'JetBrains Mono',monospace;transition:all 0.2s;"
+            onmouseover="this.style.borderColor='var(--ink)'"
+            onmouseout="if(!this.classList.contains('chosen'))this.style.borderColor='rgba(26,20,16,0.15)'">${o}</button>
+        `).join('')}
+      </div>
+      <div id="mf-${qi}" style="display:none;margin-top:8px;font-size:0.8rem;padding:8px 14px;border-radius:4px;"></div>`;
+    c.appendChild(div);
+  });
+}
+
+function checkMatch(btn, chosen, correct, containerId) {
+  const btns = document.querySelectorAll(`#${containerId} button`);
+  btns.forEach(b => { b.style.pointerEvents = 'none'; b.classList.add('chosen'); });
+  const qi = containerId.split('-')[1];
+  const fb = document.getElementById(`mf-${qi}`);
+  if (chosen === correct) {
+    btn.style.background = 'var(--teal-soft)';
+    btn.style.borderColor = 'var(--teal)';
+    btn.style.color = 'var(--teal)';
+    fb.textContent = '✓ Correct!';
+    fb.style.cssText = 'display:block;font-size:0.8rem;padding:8px 14px;border-radius:4px;background:var(--teal-soft);color:var(--teal);border:1px solid rgba(26,107,107,0.2);margin-top:8px;';
+  } else {
+    btn.style.background = 'var(--accent-soft)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    fb.textContent = `✗ Not quite — the correct answer is "${correct}"`;
+    fb.style.cssText = 'display:block;font-size:0.8rem;padding:8px 14px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid rgba(192,57,43,0.2);margin-top:8px;';
+    // highlight correct
+    btns.forEach(b => { if (b.textContent.trim() === correct) { b.style.background='var(--teal-soft)'; b.style.borderColor='var(--teal)'; b.style.color='var(--teal)'; } });
+  }
+}
+
+/* ─── BUILDER ─── */
+const buildParts = [
+  { label:"Letterhead",          html:`<div style="border-top:3px double rgba(26,20,16,0.3);border-bottom:1px solid rgba(26,20,16,0.15);padding:8px 0 10px;margin-bottom:10px;"><div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;letter-spacing:0.05em;">OFFICE DESIGN LTD.</div><div style="font-size:0.68rem;color:#5a4a3a;margin-top:2px;">15 Harbour Walk · LONDON · EC3R 7AB · info@officedesign.co.uk</div></div>` },
+  { label:"Reference & Date",    html:`<div style="margin-bottom:10px;"><div>Our ref: SM/TL</div><div>12 May 2025</div></div>` },
+  { label:"Inside Address",      html:`<div style="margin-bottom:10px;">Green Furniture Solutions<br>47 Bridge Street<br>MANCHESTER<br>M2 3AB<br>UNITED KINGDOM</div>` },
+  { label:"Attn. & Salutation",  html:`<div style="margin-bottom:8px;">Attn. Ms J. Hargreaves, Purchasing Department</div><div style="margin-bottom:4px;">Dear Ms Hargreaves</div>` },
+  { label:"Subject Line",        html:`<div style="font-weight:700;text-decoration:underline;margin-bottom:10px;">Enquiry regarding office chairs – your letter of 5 May 2025</div>` },
+  { label:"Body",                html:`<div style="margin-bottom:10px;"><p>Thank you for your letter of 5 May 2025. We are pleased to be able to assist you with your requirements for ergonomic office seating.</p><br><p>Please find enclosed our latest catalogue and current price list. We look forward to hearing from you.</p></div>` },
+  { label:"Close & Signature",   html:`<div style="margin-top:6px;">Yours sincerely<br><span style="color:rgba(26,20,16,0.5);font-size:0.75em;">Office Design Ltd.</span><br><br><span style="font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;color:rgba(26,20,16,0.3);">Sarah Mitchell</span><br>Sarah Mitchell (Ms)<br>Sales Department</div>` },
+  { label:"Enclosures",          html:`<div style="margin-top:8px;">Encs: Catalogue 2025; Price list 2025</div>` },
+];
+
+let builderState = [];
+let builderInited = false;
+
+function initBuilder() {
+  if (builderInited) return;
+  builderInited = true;
+  const ctrl = document.getElementById('build-controls');
+
+  // Shuffle display order
+  const shuffledIdx = [...buildParts.map((_,i)=>i)];
+  for (let i = shuffledIdx.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledIdx[i], shuffledIdx[j]] = [shuffledIdx[j], shuffledIdx[i]];
+  }
+
+  shuffledIdx.forEach(i => {
+    const btn = document.createElement('button');
+    btn.className = 'build-btn';
+    btn.id = `bb-${i}`;
+    btn.onclick = () => addBlock(i);
+    btn.innerHTML = `<span class="b-num">?</span><span class="b-label">${buildParts[i].label}</span><span class="b-check">✓</span>`;
+    ctrl.appendChild(btn);
+  });
+}
+
+function addBlock(i) {
+  if (builderState.includes(i)) return;
+
+  // Enforce correct order
+  const nextCorrect = builderState.length;
+  if (i !== nextCorrect) {
+    const btn = document.getElementById(`bb-${i}`);
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.background = 'var(--accent-soft)';
+    btn.style.animation = 'none';
+    btn.offsetHeight;
+    btn.style.animation = 'shake 0.4s ease';
+    setTimeout(() => { btn.style.borderColor = ''; btn.style.background = ''; }, 900);
+    showBuilderHint(`Not yet — "${buildParts[i].label}" isn't the next part. What comes before it?`);
+    return;
+  }
+
+  builderState.push(i);
+  hideBuilderHint();
+
+  const letter = document.getElementById('anim-letter');
+  const content = document.getElementById('letter-build-content');
+  const hintP = letter.querySelector('p.bh');
+  if (hintP) hintP.remove();
+
+  const block = document.createElement('div');
+  block.className = 'letter-block';
+  block.id = `lb-${i}`;
+  block.innerHTML = `<div class="letter-tag">${buildParts[i].label}</div>${buildParts[i].html}`;
+  content.appendChild(block);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      block.classList.add('reveal');
+      setTimeout(() => block.classList.add('settled'), 1500);
+    });
+  });
+
+  const btn = document.getElementById(`bb-${i}`);
+  btn.classList.add('done');
+  btn.querySelector('.b-num').textContent = builderState.length;
+
+  if (builderState.length === buildParts.length) {
+    setTimeout(() => {
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#1a1410','#b8860b','#1a6b6b','#c0392b','#f5f0e8'] });
+    }, 600);
+  }
+}
+
+function showBuilderHint(msg) {
+  let hint = document.getElementById('builder-order-hint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'builder-order-hint';
+    hint.style.cssText = 'margin-top:12px;padding:10px 14px;background:var(--accent-soft);border:1px solid rgba(192,57,43,0.25);border-radius:6px;font-size:0.78rem;color:var(--accent);line-height:1.5;';
+    document.getElementById('build-controls').after(hint);
+  }
+  hint.textContent = '⚠ ' + msg;
+  hint.style.display = 'block';
+}
+
+function hideBuilderHint() {
+  const h = document.getElementById('builder-order-hint');
+  if (h) h.style.display = 'none';
+}
+
+function resetBuilder() {
+  builderState = [];
+  hideBuilderHint();
+  document.getElementById('letter-build-content').innerHTML = '';
+  const letter = document.getElementById('anim-letter');
+  if (!letter.querySelector('p.bh')) {
+    const hint = document.createElement('p');
+    hint.className = 'bh';
+    hint.style.cssText = 'font-size:0.75rem;color:var(--ink-faint);font-style:italic;text-align:center;padding-top:60px;';
+    hint.textContent = 'Click parts in the correct order to build the letter...';
+    letter.insertBefore(hint, document.getElementById('letter-build-content'));
+  }
+  buildParts.forEach((_, i) => {
+    const btn = document.getElementById(`bb-${i}`);
+    if (btn) { btn.classList.remove('done'); btn.querySelector('.b-num').textContent = '?'; }
+  });
+}
+
+/* ─── QUIZ ─── */
+let quizBuilt = false;
+const quizData = [
+  {
+    q: "You don't know the name of the recipient. Which salutation is correct?",
+    opts: ["Dear Madam or Sirs:", "Dear Sir or Madam", "To Whom It May Concern,", "Dear madams and sirs:"],
+    correct: 1,
+    feedback: { ok: "Correct! 'Dear Sir or Madam' (no punctuation) is used when the name is unknown. The matching close is 'Yours faithfully'.", bad: "Not quite. 'Dear madams and sirs' has wrong word order; 'To Whom It May Concern' is rarely used in British practice; and colons are not standard. The correct form is 'Dear Sir or Madam'." }
+  },
+  {
+    q: "Which date format is unambiguous and correct in a British business letter?",
+    opts: ["08/09/2025", "September 8, 2025", "8 September 2025", "08-Sep-25"],
+    correct: 2,
+    feedback: { ok: "Correct! Day (figures) – month (as a word) – year (four figures). This format is clear in all English-speaking countries.", bad: "Not quite. All-figure dates like 08/09 are ambiguous (US vs UK). The month must always be written as a word." }
+  },
+  {
+    q: "What does 'Attn. Ms Hargreaves, Purchasing Dept' mean?",
+    opts: ["Attachment: the letter has a file enclosed", "The letter is addressed to the attention of Ms Hargreaves", "Authorisation confirmed by Ms Hargreaves", "Alternative recipient if Ms Hargreaves is absent"],
+    correct: 1,
+    feedback: { ok: "Correct! 'Attn.' stands for 'Attention' and directs the letter to a specific person within the organisation.", bad: "'Attn.' stands for 'Attention' — it is the attention line that directs the letter to a named person, not a reference to attachments." }
+  },
+  {
+    q: "A letter starts with 'Dear Ms Carter'. Which complimentary close must you use?",
+    opts: ["Yours faithfully", "Yours sincerely", "Best regards", "Kind greetings"],
+    correct: 1,
+    feedback: { ok: "Correct! When you know the name, use 'Yours sincerely'. 'Yours faithfully' is only for 'Dear Sir or Madam'. Remember: they are a linked pair.", bad: "'Yours faithfully' goes with 'Dear Sir or Madam' (unknown name). Because you know the name (Ms Carter), the correct close is 'Yours sincerely'." }
+  },
+  {
+    q: "Which title is preferred for a woman when her marital status is unknown?",
+    opts: ["Miss", "Mrs", "Ms", "Madam"],
+    correct: 2,
+    feedback: { ok: "Correct! 'Ms' is the standard preferred title in business when the woman's marital status is unknown or not relevant.", bad: "'Mrs' indicates a married woman and 'Miss' an unmarried one — only use these if the woman herself uses them. 'Ms' is always safe." }
+  },
+];
+
+let quizScore = 0;
+let quizAnswered = 0;
+
+function buildQuiz() {
+  quizBuilt = true;
+  const c = document.getElementById('quiz-container');
+  const letters = ['A','B','C','D'];
+
+  quizData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `
+      <div class="q-num">Question ${qi+1} of ${quizData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o, oi) => `
+          <div class="q-opt" onclick="answerQ(this, ${qi}, ${oi}, ${q.correct})" id="qo-${qi}-${oi}">
+            <span class="q-letter">${letters[oi]}</span>${o}
+          </div>`).join('')}
+      </div>
+      <div class="q-feedback" id="qf-${qi}"></div>`;
+    c.appendChild(div);
+  });
+
+  const res = document.createElement('div');
+  res.className = 'quiz-result';
+  res.id = 'quiz-result';
+  res.innerHTML = `
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Your result</div>
+    <div class="result-score" id="result-score">0/5</div>
+    <div style="font-size:0.9rem;opacity:0.8;margin-top:8px;" id="result-msg"></div>`;
+  c.appendChild(res);
+}
+
+function answerQ(el, qi, oi, correct) {
+  const opts = document.querySelectorAll(`[id^="qo-${qi}-"]`);
+  opts.forEach(o => { o.classList.add('locked'); o.style.pointerEvents = 'none'; });
+
+  const fb = document.getElementById(`qf-${qi}`);
+  if (oi === correct) {
+    el.classList.add('correct');
+    quizScore++;
+    fb.textContent = '✓ ' + quizData[qi].feedback.ok;
+    fb.className = 'q-feedback show ok';
+  } else {
+    el.classList.add('wrong');
+    document.getElementById(`qo-${qi}-${correct}`).classList.add('correct');
+    fb.textContent = '✗ ' + quizData[qi].feedback.bad;
+    fb.className = 'q-feedback show bad';
+  }
+
+  quizAnswered++;
+  if (quizAnswered === quizData.length) {
+    setTimeout(showResult, 600);
+  }
+}
+
+function showResult() {
+  const res = document.getElementById('quiz-result');
+  document.getElementById('result-score').textContent = `${quizScore}/${quizData.length}`;
+  const msgs = ['Keep practising — review the letter anatomy sections.', 'Good start! Review the rules you missed.', 'Solid effort! Check the sections you found tricky.', 'Great work! Nearly there.', 'Excellent! You know your business letter layout.'];
+  document.getElementById('result-msg').textContent = msgs[quizScore] || msgs[4];
+  res.classList.add('show');
+  if (quizScore === quizData.length) {
+    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#1a1410','#b8860b','#1a6b6b','#c0392b','#f5f0e8'] });
+  }
+}
+
+/* ─── REFERENCE LIST ─── */
+let refBuilt = false;
+
+function buildRef() {
+  refBuilt = true;
+  const c = document.getElementById('ref-list');
+  PARTS_DATA.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'ref-card';
+    div.innerHTML = `
+      <div class="ref-num">${p.num}</div>
+      <div class="ref-content">
+        <h3>${p.title} <span style="font-family:'Source Serif 4',serif;font-size:0.8rem;font-weight:400;color:var(--ink-light);font-style:italic;">(${p.de})</span></h3>
+        <p>${p.desc}</p>
+        ${p.rule ? `<div style="margin-top:10px;background:rgba(26,20,16,0.04);border-left:3px solid var(--ink-faint);padding:8px 12px;font-size:0.78rem;color:var(--ink-mid);white-space:pre-line;">${p.rule}</div>` : ''}
+        <span class="tag" style="background:rgba(26,20,16,0.06);color:var(--ink-mid);">${p.tag}</span>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+/* ─── KEYBOARD NAV ─── */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight' && current < TOTAL-1) gotoSection(current+1);
+  if (e.key === 'ArrowLeft'  && current > 0)       gotoSection(current-1);
+});
+</script>
+</body>
+</html>
