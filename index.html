@@ -1507,13 +1507,13 @@ function previewOpenNew() {
 
 function previewCopyLink() {
   if (!previewMaterial) return;
-  navigator.clipboard.writeText(BASE_URL + previewMaterial.pfad)
+  navigator.clipboard.writeText(encodeURI(BASE_URL + previewMaterial.pfad))
     .then(function () { showToast('Link kopiert!'); });
 }
 
 function previewShowQR() {
   if (!previewMaterial) return;
-  var url = BASE_URL + previewMaterial.pfad;
+  var url = encodeURI(BASE_URL + previewMaterial.pfad);
   document.getElementById('qrModalTitle').textContent = previewMaterial.name + ' — ' + url;
   var container = document.getElementById('qrModalContainer');
   container.innerHTML = '';
@@ -1531,7 +1531,7 @@ function previewShowQR() {
 function printMaterialQR() {
   var canvas = document.querySelector('#qrModalContainer canvas');
   var title = previewMaterial ? previewMaterial.name : '';
-  var url = previewMaterial ? BASE_URL + previewMaterial.pfad : '';
+  var url = previewMaterial ? encodeURI(BASE_URL + previewMaterial.pfad) : '';
   if (!canvas) return;
   var win = window.open('', '_blank');
   win.document.write(
@@ -1749,7 +1749,7 @@ function makeCard(m) {
 function copyLink(e, pfad) {
   e.preventDefault();
   e.stopPropagation();
-  navigator.clipboard.writeText(BASE_URL + pfad)
+  navigator.clipboard.writeText(encodeURI(BASE_URL + pfad))
     .then(function () { showToast('Link kopiert!'); });
 }
 
