@@ -433,7 +433,13 @@ header {
           </div>
           <div class="field">
             <label>Zeit (Minuten)</label>
-            <input id="f-time" type="number" min="1" max="120" value="10" oninput="markDirty()">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <input id="f-time" type="number" min="1" max="180" value="10" oninput="markDirty()" style="width:90px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.83rem;font-weight:400;cursor:pointer;white-space:nowrap">
+                <input type="checkbox" id="f-no-time" onchange="toggleTimeLimit()" style="width:auto;cursor:pointer">
+                Kein Zeitlimit
+              </label>
+            </div>
           </div>
           <div class="field">
             <label>Klassen-Filter</label>
@@ -513,7 +519,7 @@ function renderList() {
         <div class="exam-item-badges">
           <span class="badge ${e.active ? 'badge-active' : 'badge-inactive'}">${e.active ? 'Aktiv' : 'Inaktiv'}</span>
           <span class="badge badge-q">${(e.questions||[]).length} Fragen</span>
-          <span class="badge badge-time">${Math.round((e.time_limit||600)/60)} Min</span>
+          <span class="badge badge-time">${e.time_limit === 0 ? '∞ Offen' : Math.round((e.time_limit||600)/60) + ' Min'}</span>
           ${e.class_filter ? `<span class="badge" style="background:#F0FDF4;color:#065F46">${esc(e.class_filter)}</span>` : ''}
         </div>
       </div>
@@ -565,7 +571,10 @@ function renderEditor() {
   document.getElementById('f-title').value    = currentExam.title || '';
   document.getElementById('f-id').value       = currentExam.exam_id || '';
   document.getElementById('f-subject').value  = currentExam.subject || '';
-  document.getElementById('f-time').value     = Math.round((currentExam.time_limit || 600) / 60);
+  const noTime = currentExam.time_limit === 0;
+  document.getElementById('f-no-time').checked = noTime;
+  document.getElementById('f-time').value      = noTime ? 10 : Math.round((currentExam.time_limit || 600) / 60);
+  document.getElementById('f-time').disabled   = noTime;
   document.getElementById('f-class').value    = currentExam.class_filter || '';
   document.getElementById('toggle-active').checked = currentExam.active !== false;
   document.getElementById('btn-link').style.display = currentExam.id ? 'inline-flex' : 'none';
@@ -673,6 +682,12 @@ window.toggleActive = function () {
   markDirty();
 };
 
+window.toggleTimeLimit = function () {
+  const noTime = document.getElementById('f-no-time').checked;
+  document.getElementById('f-time').disabled = noTime;
+  markDirty();
+};
+
 /* ═══════════ SAVE ═══════════ */
 window.saveExam = async function () {
   const title   = document.getElementById('f-title').value.trim();
@@ -699,7 +714,7 @@ window.saveExam = async function () {
     title,
     subject,
     class_filter: cfRaw || null,
-    time_limit:   timeMin * 60,
+    time_limit:   document.getElementById('f-no-time').checked ? 0 : timeMin * 60,
     questions:    currentExam.questions,
     active:       currentExam.active !== false,
     updated_at:   new Date().toISOString()
@@ -841,7 +856,7 @@ window.exportJSON = function () {
     title:        document.getElementById('f-title').value.trim(),
     subject:      document.getElementById('f-subject').value.trim(),
     class_filter: document.getElementById('f-class').value.trim() || null,
-    time_limit:   (parseInt(document.getElementById('f-time').value) || 10) * 60,
+    time_limit:   document.getElementById('f-no-time').checked ? 0 : (parseInt(document.getElementById('f-time').value) || 10) * 60,
     questions:    currentExam.questions
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });

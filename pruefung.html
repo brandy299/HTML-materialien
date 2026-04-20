@@ -508,12 +508,14 @@ input.code-input.error { border-color: var(--error); }
     <input id="code-input" class="code-input" type="text" placeholder="z.B. BK24a-07" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false">
     <div id="code-hint" class="field-hint">Format: Klasse-Nummer, z.B. BK24a-07</div>
 
-    <div class="rules">
+    <div class="rules" id="rules-box">
       <strong>⚠ Prüfungsregeln</strong>
       · Nur eine Abgabe möglich – danach gesperrt.<br>
       · Nicht auf andere Tabs wechseln.<br>
-      · Der Timer startet sofort mit dem Beginn.<br>
-      · Die Prüfung wird automatisch abgegeben, wenn die Zeit abläuft.
+      <span id="rule-timer">· Der Timer startet sofort mit dem Beginn.<br>
+      · Die Prüfung wird automatisch abgegeben, wenn die Zeit abläuft.</span>
+      <span id="rule-open" style="display:none">· Kein Zeitlimit – du kannst selbst abgeben.<br>
+      · Die Prüfung endet, wenn du auf „Abgeben" klickst.</span>
     </div>
 
     <button class="btn" id="btn-start">Prüfung starten</button>
@@ -736,7 +738,7 @@ async function loadExam() {
       title:       data.title,
       subject:     data.subject || '',
       classFilter: data.class_filter || null,
-      timeLimit:   data.time_limit || 600,
+      timeLimit:   data.time_limit ?? 600,
       questions:   data.questions || []
     };
   } else {
@@ -751,8 +753,12 @@ function fillStartScreen() {
   document.getElementById('start-title').textContent    = EXAM.title;
   document.getElementById('start-subject').textContent  = EXAM.subject;
   document.getElementById('start-qcount').textContent   = EXAM.questions.length + ' Fragen';
-  document.getElementById('start-time').textContent     = formatTime(EXAM.timeLimit);
+  document.getElementById('start-time').textContent     = EXAM.timeLimit === 0 ? '∞ Offen' : formatTime(EXAM.timeLimit);
   document.getElementById('start-class').textContent    = EXAM.classFilter ? 'Klasse: ' + EXAM.classFilter : 'Alle Klassen';
+  // Regel-Text je nach Zeitlimit
+  const noTime = EXAM.timeLimit === 0;
+  document.getElementById('rule-timer').style.display = noTime ? 'none' : '';
+  document.getElementById('rule-open').style.display  = noTime ? '' : 'none';
 }
 
 loadExam();
@@ -819,7 +825,7 @@ document.getElementById('btn-start').onclick = async () => {
   if (data && !data.submitted_at) {
     // Started but not yet submitted – check if time has already run out
     const elapsed = Math.floor((Date.now() - new Date(data.started_at).getTime()) / 1000);
-    if (elapsed >= EXAM.timeLimit) {
+    if (EXAM.timeLimit > 0 && elapsed >= EXAM.timeLimit) {
       document.getElementById('blocked-msg').textContent =
         'Die Zeit für diese Prüfung ist abgelaufen. Bitte wende dich an deine Lehrkraft.';
       show('scr-blocked');
@@ -856,7 +862,13 @@ function startQuiz() {
   document.getElementById('quiz-title-bar').textContent = EXAM.title;
   show('scr-quiz');
   renderQuestion();
-  startTimer();
+  if (EXAM.timeLimit === 0) {
+    // Kein Zeitlimit – Timer-Box ausblenden
+    document.getElementById('timer-box').style.display = 'none';
+  } else {
+    document.getElementById('timer-box').style.display = '';
+    startTimer();
+  }
   watchTabSwitch();
 }
 
