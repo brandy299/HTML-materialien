@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kundenauftragsabwicklung – AS 7.1 | Böckler-Office GmbH</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --bg:       #0d1f2d;
+    --surf:     #162535;
+    --card:     #1c2f42;
+    --a1:       #38bdf8;   /* sky blue  */
+    --a2:       #f59e0b;   /* amber     */
+    --a3:       #34d399;   /* emerald   */
+    --a4:       #f87171;   /* red       */
+    --text:     #e2eaf2;
+    --muted:    #6b8fa8;
+    --border:   rgba(255,255,255,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 50px;
+    background: rgba(13,31,45,.95); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200; font-size: 12px; color: var(--muted);
+  }
+  .topbar .brand { font-weight: 700; color: var(--a1); letter-spacing: .03em; font-size: 13px; }
+  .tag {
+    background: rgba(56,189,248,.12); border: 1px solid rgba(56,189,248,.25);
+    color: var(--a1); padding: 2px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+  .prev-tag {
+    background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25);
+    color: var(--a3); padding: 2px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+
+  /* ── SLIDES ── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 56px 48px;
+    opacity: 0; pointer-events: none;
+    transform: translateX(40px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .slide.active  { opacity: 1; pointer-events: all; transform: translateX(0); }
+  .slide.out     { opacity: 0; transform: translateX(-40px); }
+
+  .slide-inner { max-width: 1060px; width: 100%; }
+
+  /* ── TYPO ── */
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--a1); margin-bottom: 10px;
+  }
+  .display {
+    font-family: 'Lora', serif; font-size: clamp(1.9rem,4vw,3.2rem);
+    line-height: 1.18; margin-bottom: 18px;
+  }
+  .display em { color: var(--a2); font-style: italic; }
+  .subtitle { font-size: .98rem; color: var(--muted); line-height: 1.75; max-width: 660px; }
+  h2 { font-family: 'Lora', serif; font-size: clamp(1.4rem,2.8vw,2rem); margin-bottom: 6px; }
+  .divider { width: 40px; height: 3px; background: var(--a1); border-radius: 2px; margin: 14px 0 22px; }
+
+  /* ── RECAP BANNER ── */
+  .recap {
+    background: linear-gradient(135deg, rgba(52,211,153,.1), rgba(52,211,153,.04));
+    border: 1px solid rgba(52,211,153,.25);
+    border-radius: 14px; padding: 18px 22px; margin-bottom: 24px;
+  }
+  .recap .rlabel { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--a3); margin-bottom: 6px; }
+  .recap p { font-size: .88rem; color: var(--text); line-height: 1.65; }
+
+  /* ── CARDS ── */
+  .grid { display: grid; gap: 14px; }
+  .g3 { grid-template-columns: repeat(3,1fr); }
+  .g2 { grid-template-columns: repeat(2,1fr); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 13px; padding: 20px 22px; position: relative; overflow: hidden;
+  }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .card.sky::before    { background: var(--a1); }
+  .card.amber::before  { background: var(--a2); }
+  .card.emerald::before{ background: var(--a3); }
+  .card.red::before    { background: var(--a4); }
+  .card .icon { font-size: 26px; margin-bottom: 10px; }
+  .card h3 { font-size: .85rem; font-weight: 700; color: var(--a2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em; }
+  .card p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+  .card strong { color: var(--text); }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step  { display: flex; gap: 14px; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 11px; padding: 14px 18px; }
+  .snum  { min-width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; flex-shrink: 0; }
+  .snum.sky    { background: rgba(56,189,248,.18); color: var(--a1); }
+  .snum.amber  { background: rgba(245,158,11,.18); color: var(--a2); }
+  .snum.emerald{ background: rgba(52,211,153,.18); color: var(--a3); }
+  .snum.red    { background: rgba(248,113,113,.18); color: var(--a4); }
+  .stitle { font-weight: 600; font-size: .93rem; margin-bottom: 3px; }
+  .sdesc  { font-size: .82rem; color: var(--muted); }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: .85rem; margin-top: 12px; }
+  .tbl th { background: rgba(56,189,248,.12); color: var(--a1); font-weight: 700; font-size: .77rem; letter-spacing: .05em; text-transform: uppercase; padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--border); }
+  .tbl td { padding: 9px 13px; border-bottom: 1px solid var(--border); color: var(--muted); }
+  .tbl td strong { color: var(--text); }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: rgba(255,255,255,.025); }
+
+  /* ── INFO / WARN ── */
+  .info { background: rgba(56,189,248,.08); border-left: 4px solid var(--a1); border-radius: 0 10px 10px 0; padding: 13px 18px; font-size: .9rem; margin-top: 14px; }
+  .info strong { color: var(--a1); }
+  .warn { background: rgba(248,113,113,.08); border-left: 4px solid var(--a4); border-radius: 0 10px 10px 0; padding: 13px 18px; font-size: .9rem; margin-top: 12px; }
+  .warn strong { color: var(--a4); }
+  .good { background: rgba(52,211,153,.08); border-left: 4px solid var(--a3); border-radius: 0 10px 10px 0; padding: 13px 18px; font-size: .9rem; margin-top: 12px; }
+  .good strong { color: var(--a3); }
+
+  /* ── SCENARIO ── */
+  .scenario {
+    background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.03));
+    border: 1px solid rgba(245,158,11,.28); border-radius: 15px;
+    padding: 24px 28px; margin-bottom: 24px; position: relative;
+  }
+  .scenario::before { content:'📋'; font-size:22px; position:absolute; top:20px; right:24px; }
+  .scenario .slabel { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--a2); margin-bottom:6px; }
+  .scenario p { font-size: .95rem; line-height: 1.75; }
+
+  /* ── FLOW CHAIN ── */
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin-top: 14px; }
+  .fstep { background: var(--card); border: 1px solid var(--border); border-radius: 9px; padding: 10px 16px; font-size: .82rem; text-align: center; white-space: nowrap; }
+  .fstep strong { display:block; font-size:.72rem; color:var(--a1); margin-bottom:3px; text-transform:uppercase; letter-spacing:.04em; }
+  .farrow { color: var(--muted); font-size: 1.1rem; padding: 0 6px; flex-shrink:0; }
+
+  /* ── TWO-COL ── */
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+  /* ── TITLE BG ── */
+  .tbg { position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse 55% 50% at 85% 50%, rgba(56,189,248,.1) 0%, transparent 65%),
+                radial-gradient(ellipse 35% 55% at 8% 75%,  rgba(245,158,11,.07) 0%, transparent 60%); }
+  .tdeco { position:absolute; right:60px; top:50%; transform:translateY(-50%); font-size:160px; opacity:.03; font-family:'Lora',serif; pointer-events:none; user-select:none; }
+
+  /* ── BADGE ── */
+  .badge { display:inline-flex; align-items:center; gap:5px; background:rgba(56,189,248,.12); border:1px solid rgba(56,189,248,.25); color:var(--a1); padding:4px 12px; border-radius:20px; font-size:.76rem; font-weight:700; letter-spacing:.04em; margin-bottom:18px; }
+
+  /* ── NAV ── */
+  .nav { position:fixed; bottom:22px; right:28px; display:flex; gap:9px; z-index:200; }
+  .nbtn { width:40px; height:40px; border-radius:50%; border:1px solid var(--border); background:var(--surf); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:17px; transition:all .2s; }
+  .nbtn:hover { background:var(--card); border-color:var(--a1); color:var(--a1); }
+  .nbtn:disabled { opacity:.28; cursor:default; }
+
+  .counter { position:fixed; bottom:28px; left:28px; font-size:12px; color:var(--muted); z-index:200; }
+  .counter span { color:var(--text); font-weight:700; }
+
+  .prog { position:fixed; bottom:0; left:0; right:0; height:3px; background:rgba(255,255,255,.06); z-index:200; }
+  .progf { height:100%; background: linear-gradient(90deg, var(--a1), var(--a2)); transition:width .4s ease; }
+
+  @media(max-width:740px){
+    .g3,.g2,.twocol { grid-template-columns:1fr; }
+    .slide { padding:58px 18px 50px; }
+    .tdeco,.tbg { display:none; }
+    .flow { gap:6px; }
+    .farrow { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">Böckler-Office GmbH</span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="prev-tag">↑ AS 5.1 abgeschlossen</span>
+    <span class="tag">LF 7 · AS 7.1 · GPU · HS2</span>
+  </div>
+  <span style="font-size:12px">Kundenauftragsabwicklung</span>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- S1: TITEL -->
+  <div class="slide active">
+    <div class="tbg"></div>
+    <div class="tdeco">K</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Lernfeld 7 · AS 7.1 · Aufbau auf AS 5.1</div>
+      <h1 class="display">Kundenauftrags&shy;<br><em>abwicklung</em></h1>
+      <div class="divider"></div>
+      <p class="subtitle">
+        Die Ware ist eingelagert — jetzt geht es andersherum:<br>
+        Ein Kunde bestellt. Was passiert vom Auftrag bis zur Zahlung?
+      </p>
+      <div style="margin-top:24px">
+        <span class="badge">📦 Böckler-Office GmbH · Oberhausen</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: BRÜCKE zur letzten Stunde -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Rückblick &amp; Brücke</div>
+      <h2>Das haben wir letzte Stunde gelernt</h2>
+      <div class="divider"></div>
+      <div class="recap">
+        <div class="rlabel">✅ AS 5.1 – Wareneingang &amp; Lagerlogistik</div>
+        <p>Wir haben gesehen, wie Ware bei Böckler-Office <strong>ankommt</strong>: Wareneingangs­prüfung, Belegwesen, sachgerechte Lagerung und Lagerkennziffern. Jetzt drehen wir den Prozess um.</p>
+      </div>
+      <div class="flow">
+        <div class="fstep"><strong>Heute gelernt</strong>Lieferant → Lager</div>
+        <div class="farrow">→</div>
+        <div class="fstep" style="border-color:rgba(56,189,248,.35);"><strong>Heute neu</strong>Lager → Kunde</div>
+      </div>
+      <div class="grid g3" style="margin-top:18px">
+        <div class="card emerald">
+          <div class="icon">✅</div>
+          <h3>Können wir bereits</h3>
+          <p>Wareneingang prüfen, Belege zuordnen, Lagerkennziffern berechnen</p>
+        </div>
+        <div class="card sky">
+          <div class="icon">🆕</div>
+          <h3>Kommt heute dazu</h3>
+          <p>Auftrag annehmen, kommissionieren, versenden, Ausgangsrechnung, Zahlungskontrolle</p>
+        </div>
+        <div class="card amber">
+          <div class="icon">🔗</div>
+          <h3>Verbindung</h3>
+          <p>Warenbewegungen laufen in <strong>beide Richtungen</strong> — Eingang und Ausgang bilden den Logistikkreislauf</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: EINSTIEG Szenario -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Die neue Situation</div>
+      <h2>Ein Großauftrag bei Böckler-Office</h2>
+      <div class="divider"></div>
+      <div class="scenario">
+        <div class="slabel">Ausgangssituation</div>
+        <p>
+          Mittwochmorgen, 8:15 Uhr. Im Büro von Filialleiter <strong>Herrn Dönmez</strong> klingelt das Telefon.
+          Die <strong>Architekturbüro Wessel GmbH</strong> aus Oberhausen bestellt für ihre neue Niederlassung:
+          <strong>25 Schreibtische „DeskLine 180"</strong> und <strong>30 Bürostühle „ErgoFlex Pro"</strong> —
+          Lieferung gewünscht in <strong>10 Werktagen</strong>, Zahlung per Überweisung mit <strong>14 Tagen Zahlungsziel</strong>.
+        </p>
+      </div>
+      <div class="grid g3">
+        <div class="card sky">
+          <div class="icon">📋</div>
+          <h3>Frage 1</h3>
+          <p>Was muss Herr Dönmez <strong>zuerst prüfen</strong>, bevor er den Auftrag annimmt?</p>
+        </div>
+        <div class="card amber">
+          <div class="icon">🚚</div>
+          <h3>Frage 2</h3>
+          <p>Wie kommt die Ware vom <strong>Lager zum Kunden</strong>?</p>
+        </div>
+        <div class="card emerald">
+          <div class="icon">💶</div>
+          <h3>Frage 3</h3>
+          <p>Wie stellt Böckler-Office sicher, dass <strong>die Zahlung eingeht</strong>?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: LERNZIELE -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Lernziele heute</div>
+      <h2>Was wir heute erarbeiten</h2>
+      <div class="divider"></div>
+      <div class="steps">
+        <div class="step">
+          <div class="snum sky">Z3</div>
+          <div>
+            <div class="stitle">Auftrag annehmen &amp; Kaufvertrag abschließen</div>
+            <div class="sdesc">Rechtliche Bedingungen, Liefer- und Zahlungskonditionen, Auftragsbestätigung</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum amber">Z4</div>
+          <div>
+            <div class="stitle">Auftrag logistisch abwickeln</div>
+            <div class="sdesc">Kommissionierung, Verpackung, Versandarten (Eigen- vs. Fremdlieferung)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum emerald">Z5</div>
+          <div>
+            <div class="stitle">Auftragsabwicklung dokumentieren &amp; überwachen</div>
+            <div class="sdesc">Ausgangsrechnung, Warenbegleitpapiere, Lagerbestandsführung, Zahlungseingang</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum red">Z6</div>
+          <div>
+            <div class="stitle">Zahlungsrückstände behandeln</div>
+            <div class="sdesc">Nicht-rechtzeitig-Zahlung erkennen, Mahnwesen einleiten, rechtliche Spielräume kennen</div>
+          </div>
+        </div>
+      </div>
+      <div class="info" style="margin-top:14px">
+        <strong>Bildungsplan NRW 2023</strong> · LF 7 · AS 7.1 Kundenauftragsabwicklung und Logistik
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: PROZESS ÜBERBLICK -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Der Gesamtprozess</div>
+      <h2>Von der Bestellung bis zur Zahlung</h2>
+      <div class="divider"></div>
+      <div class="steps">
+        <div class="step">
+          <div class="snum sky">1</div>
+          <div>
+            <div class="stitle">Auftragseingang &amp; -prüfung</div>
+            <div class="sdesc">Lagerbestand prüfen · Kreditwürdigkeit des Kunden · Konditionen festlegen</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum amber">2</div>
+          <div>
+            <div class="stitle">Auftragsbestätigung versenden</div>
+            <div class="sdesc">Schriftliche Bestätigung an Kunden · Liefertermin, Menge, Preis, Zahlungsziel fixieren</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum emerald">3</div>
+          <div>
+            <div class="stitle">Kommissionierung</div>
+            <div class="sdesc">Ware anhand Kommissionierschein aus dem Lager zusammenstellen · Lagerbestand korrigieren</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum sky">4</div>
+          <div>
+            <div class="stitle">Verpackung &amp; Versand</div>
+            <div class="sdesc">Kartons / Paletten · Lieferschein erstellen · Versandart wählen (Werkverkehr oder Spediteur)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum amber">5</div>
+          <div>
+            <div class="stitle">Ausgangsrechnung &amp; Warenausgang buchen</div>
+            <div class="sdesc">Rechnung erstellen · Lagerbestand im System aktualisieren · Debitorenbuchhaltung informieren</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum red">6</div>
+          <div>
+            <div class="stitle">Zahlungseingang überwachen</div>
+            <div class="sdesc">Offene-Posten-Datei kontrollieren · bei Verzug: Mahnwesen einleiten</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: BELEGE -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Belegkette · Warenausgang</div>
+      <h2>Welche Dokumente entstehen?</h2>
+      <div class="divider"></div>
+      <table class="tbl">
+        <thead>
+          <tr><th>Beleg</th><th>Erstellt von</th><th>Funktion im Prozess</th><th>Neu gegenüber AS 5.1</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Auftragsbestätigung</strong></td><td>Böckler-Office GmbH</td><td>Bestätigt Auftrag, fixiert Konditionen</td><td style="color:var(--a3)">✅ Jetzt ausgehend</td></tr>
+          <tr><td><strong>Kommissionierschein</strong></td><td>Böckler-Office GmbH</td><td>Anweisung ans Lager: welche Ware entnehmen</td><td style="color:var(--a1)">🆕 Neu heute</td></tr>
+          <tr><td><strong>Lieferschein</strong></td><td>Böckler-Office GmbH</td><td>Begleitet die Ware zum Kunden, Empfang bestätigen lassen</td><td style="color:var(--a1)">🆕 Jetzt ausgehend</td></tr>
+          <tr><td><strong>Frachtbrief</strong></td><td>Spediteur / Böckler-Office</td><td>Transportvertrag bei Fremdlieferung</td><td style="color:var(--a3)">✅ Bekannt</td></tr>
+          <tr><td><strong>Ausgangsrechnung</strong></td><td>Böckler-Office GmbH</td><td>Zahlungsaufforderung an den Kunden</td><td style="color:var(--a1)">🆕 Neu heute</td></tr>
+          <tr><td><strong>Mahnung</strong></td><td>Böckler-Office GmbH</td><td>Bei Nicht-rechtzeitig-Zahlung</td><td style="color:var(--a1)">🆕 Neu heute</td></tr>
+        </tbody>
+      </table>
+      <div class="good">
+        <strong>Merksatz:</strong> Der Wareneingang endet mit dem Wareneingangsprotokoll — der Warenausgang endet erst, wenn die Zahlung auf dem Konto ist.
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: VERSANDARTEN -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Logistikentscheidung</div>
+      <h2>Eigen- oder Fremdlieferung?</h2>
+      <div class="divider"></div>
+      <div class="grid g2">
+        <div class="card sky">
+          <div class="icon">🚐</div>
+          <h3>Werkverkehr (Eigenlieferung)</h3>
+          <p>
+            Böckler-Office liefert mit <strong>eigenem Fahrzeug und eigenem Fahrer</strong>.<br><br>
+            ✅ Flexibler Liefertermin<br>
+            ✅ Direkter Kundenkontakt<br>
+            ❌ Hohe Fixkosten (Fahrzeug, Versicherung, Fahrer)<br>
+            ❌ Nur wirtschaftlich bei <strong>regelmäßigen Touren</strong> in der Region
+          </p>
+        </div>
+        <div class="card amber">
+          <div class="icon">🚚</div>
+          <h3>Fremdlieferung (Spediteur / Paketdienst)</h3>
+          <p>
+            Böckler-Office beauftragt einen <strong>externen Logistikdienstleister</strong>.<br><br>
+            ✅ Keine eigenen Fahrzeugkosten<br>
+            ✅ Auch für Einzellieferungen wirtschaftlich<br>
+            ❌ Weniger Kontrolle über Liefertermin<br>
+            ❌ Transportkosten erhöhen den Verkaufspreis
+          </p>
+        </div>
+      </div>
+      <div class="info">
+        <strong>Praxisfall:</strong> Die Wessel GmbH liegt 8 km entfernt in Oberhausen-Mitte.
+        Böckler-Office hat einen eigenen Transporter. Welche Versandart wählt Herr Dönmez?
+      </div>
+    </div>
+  </div>
+
+  <!-- S8: MAHNWESEN -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Störung · Nicht-rechtzeitig-Zahlung</div>
+      <h2>Was tun, wenn der Kunde nicht zahlt?</h2>
+      <div class="divider"></div>
+      <div class="steps">
+        <div class="step">
+          <div class="snum amber">1</div>
+          <div>
+            <div class="stitle">Zahlungsziel prüfen</div>
+            <div class="sdesc">Rechnung mit Zahlungsziel (z. B. 14 Tage) erstellt → Fälligkeitsdatum im Kalender / System vermerken</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum amber">2</div>
+          <div>
+            <div class="stitle">Zahlungsverzug feststellen</div>
+            <div class="sdesc">Zahlung nach Fälligkeit nicht eingegangen → Offene-Posten-Datei zeigt den Rückstand</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum amber">3</div>
+          <div>
+            <div class="stitle">1. Mahnung (freundliche Erinnerung)</div>
+            <div class="sdesc">Sachlich, höflich, neue Zahlungsfrist setzen — keine Mahngebühren in der 1. Mahnung</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum red">4</div>
+          <div>
+            <div class="stitle">2. Mahnung (mit Mahngebühren)</div>
+            <div class="sdesc">Deutlichere Formulierung, Mahngebühren und Verzugszinsen geltend machen</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="snum red">5</div>
+          <div>
+            <div class="stitle">3. Mahnung / Rechtsschritte androhen</div>
+            <div class="sdesc">Letzte Frist setzen, Übergabe an Rechtsabteilung oder Inkasso ankündigen</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn" style="margin-top:12px">
+        <strong>Achtung:</strong> Bei Geschäftskunden (B2B) tritt Verzug automatisch nach Fälligkeit ein — eine Mahnung ist rechtlich nicht zwingend nötig, aber kaufmännisch sinnvoll!
+      </div>
+    </div>
+  </div>
+
+  <!-- S9: ZUSAMMENFASSUNG -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Sicherung &amp; Übergang</div>
+      <h2>Was haben wir gelernt?</h2>
+      <div class="divider"></div>
+      <div class="twocol">
+        <div class="steps">
+          <div class="step"><div class="snum emerald">✓</div><div><div class="stitle">Auftrag prüfen &amp; bestätigen</div><div class="sdesc">Lagerbestand, Kreditwürdigkeit, Konditionen, Auftragsbestätigung</div></div></div>
+          <div class="step"><div class="snum sky">✓</div><div><div class="stitle">Logistisch abwickeln</div><div class="sdesc">Kommissionierung → Verpackung → Versandart wählen → Lieferschein</div></div></div>
+          <div class="step"><div class="snum amber">✓</div><div><div class="stitle">Dokumentieren &amp; buchen</div><div class="sdesc">Ausgangsrechnung, Warenausgang, Lagerbestand aktualisieren</div></div></div>
+          <div class="step"><div class="snum red">✓</div><div><div class="stitle">Zahlungseingang überwachen</div><div class="sdesc">Offene-Posten-Datei, dreistufiges Mahnwesen</div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card sky" style="flex:1">
+            <div class="icon">🎯</div>
+            <h3>Jetzt seid ihr dran!</h3>
+            <p>Bearbeitet das SOL-Arbeitsblatt zur Auftragsabwicklung bei der Böckler-Office GmbH.<br><br>Startet mit der Kann-Liste — was könnt ihr schon?</p>
+          </div>
+          <div class="info">
+            <strong>Tipp:</strong> Vergleicht den Wareneingangs­prozess (letzte Stunde) mit dem Warenausgangsprozess. Wo sind die Parallelen?
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<div class="prog"><div class="progf" id="pf"></div></div>
+<div class="counter">Folie <span id="cs">1</span> / <span id="ts">9</span></div>
+<div class="nav">
+  <button class="nbtn" id="pb" onclick="go(-1)" disabled>&#8592;</button>
+  <button class="nbtn" id="nb" onclick="go(1)">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const n = slides.length;
+  let c = 0;
+
+  function go(d) {
+    slides[c].classList.remove('active');
+    slides[c].classList.add('out');
+    const prev = c;
+    c = Math.max(0, Math.min(n-1, c+d));
+    setTimeout(() => { slides[prev].classList.remove('out'); slides[c].classList.add('active'); upd(); }, 45);
+  }
+
+  function upd() {
+    document.getElementById('cs').textContent = c+1;
+    document.getElementById('ts').textContent = n;
+    document.getElementById('pf').style.width = ((c+1)/n*100)+'%';
+    document.getElementById('pb').disabled = c===0;
+    document.getElementById('nb').disabled = c===n-1;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') go(1);
+    if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   go(-1);
+  });
+  let tx=0;
+  document.addEventListener('touchstart', e => tx=e.touches[0].clientX);
+  document.addEventListener('touchend',   e => { const d=tx-e.changedTouches[0].clientX; if(Math.abs(d)>50) go(d>0?1:-1); });
+  upd();
+</script>
+</body>
+</html>
