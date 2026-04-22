@@ -1257,6 +1257,7 @@ const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
 /* ═══════════════════════════════════════════
    DATA
 ═══════════════════════════════════════════ */
+/*__MATERIALIEN_START__*/
 const materialien = [
   {
     "name": "hs2d_ls5_travelling_7",
@@ -1382,6 +1383,7 @@ const materialien = [
     "autor": "BRA"
   }
 ];
+/*__MATERIALIEN_END__*/
 
 /* ═══════════════════════════════════════════
    STATE
@@ -1886,15 +1888,29 @@ async function ghDelete(path, sha, message) {
 }
 
 async function updateIndex(newData) {
-  const fileInfo    = await ghGet('index.html');
-  const rawContent  = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
-  const updated     = rawContent.replace(
-    /const materialien\s*=\s*\[[\s\S]*?\];/,
-    'const materialien = ' + JSON.stringify(newData, null, 2) + ';'
-  );
+  const fileInfo   = await ghGet('index.html');
+  const rawContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
+
+  // Marker-basierter Regex — eindeutig, kann nicht mit Material-Inhalten kollidieren
+  const marker = /\/\*__MATERIALIEN_START__\*\/[\s\S]*?\/\*__MATERIALIEN_END__\*\//;
+  if (!marker.test(rawContent)) {
+    throw new Error('Index-Marker nicht gefunden – bitte Seite neu laden und erneut versuchen');
+  }
+  const replacement =
+    '/*__MATERIALIEN_START__*/\n' +
+    'const materialien = ' + JSON.stringify(newData, null, 2) + ';\n' +
+    '/*__MATERIALIEN_END__*/';
+  const updated = rawContent.replace(marker, replacement);
+
+  // Robuste base64-Kodierung via TextEncoder (funktioniert in Chrome + Firefox gleich)
+  const bytes   = new TextEncoder().encode(updated);
+  let binary    = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  const content = btoa(binary);
+
   await ghPut('index.html', {
     message: 'Update materialien index',
-    content: btoa(unescape(encodeURIComponent(updated))),
+    content: content,
     sha: fileInfo.sha
   });
 }
@@ -1968,9 +1984,16 @@ async function doUpload() {
   try {
     const content = await new Promise(function (res, rej) {
       const reader = new FileReader();
-      reader.onload = function (e) { res(btoa(unescape(encodeURIComponent(e.target.result)))); };
+      reader.onload = function (e) {
+        try {
+          const bytes = new TextEncoder().encode(e.target.result);
+          let binary = '';
+          for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+          res(btoa(binary));
+        } catch(err) { rej(err); }
+      };
       reader.onerror = rej;
-      reader.readAsText(uploadFile);
+      reader.readAsText(uploadFile, 'UTF-8');
     });
     pb.style.width = '55%';
 
