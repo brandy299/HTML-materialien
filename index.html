@@ -1883,14 +1883,20 @@ function ghError(status, message) {
   return new Error(message || 'GitHub Fehler ' + status);
 }
 
+// Encode each path segment individually (spaces → %20, umlauts → %C3%xx etc.)
+// Required because fetch() does not auto-encode non-ASCII characters in URLs.
+function ghPath(p) {
+  return p.split('/').map(encodeURIComponent).join('/');
+}
+
 async function ghGet(path) {
-  const r = await fetch(API + '/contents/' + path, { headers: ghHeaders() });
+  const r = await fetch(API + '/contents/' + ghPath(path), { headers: ghHeaders() });
   if (!r.ok) throw ghError(r.status, 'GET ' + path + ': ' + r.status);
   return r.json();
 }
 
 async function ghPut(path, body) {
-  const r = await fetch(API + '/contents/' + path, {
+  const r = await fetch(API + '/contents/' + ghPath(path), {
     method: 'PUT',
     headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -1903,7 +1909,7 @@ async function ghPut(path, body) {
 }
 
 async function ghDelete(path, sha, message) {
-  const r = await fetch(API + '/contents/' + path, {
+  const r = await fetch(API + '/contents/' + ghPath(path), {
     method: 'DELETE',
     headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: message, sha: sha })
@@ -2132,20 +2138,32 @@ async function doDelete() {
   btn.disabled    = true;
   btn.textContent = 'Löschen…';
 
+  const target = deleteTarget; // capture before any async gap
   try {
-    const fileInfo = await ghGet(deleteTarget.pfad);
-    await ghDelete(deleteTarget.pfad, fileInfo.sha, 'Delete: ' + deleteTarget.name);
+    // Step 1: get SHA (needed for file deletion later)
+    const fileInfo = await ghGet(target.pfad);
 
-    const idx = materialien.indexOf(deleteTarget);
+    // Step 2: remove from local array and update index.html FIRST
+    // → if index update fails the file still exists and state stays consistent
+    const idx = materialien.indexOf(target);
     if (idx >= 0) materialien.splice(idx, 1);
-    await updateIndex(materialien);
+    try {
+      await updateIndex(materialien);
+    } catch (e) {
+      // Roll back the local array so the UI stays in sync
+      if (idx >= 0) materialien.splice(idx, 0, target);
+      throw e;
+    }
 
-    if (previewMaterial && previewMaterial.pfad === deleteTarget.pfad) closePreview();
+    // Step 3: delete the actual file (index already updated)
+    await ghDelete(target.pfad, fileInfo.sha, 'Delete: ' + target.name);
+
+    if (previewMaterial && previewMaterial.pfad === target.pfad) closePreview();
 
     closeModal('modalDelete');
     buildSidebar();
     render(document.getElementById('search').value);
-    showToast('"' + deleteTarget.name + '" gelöscht');
+    showToast('"' + target.name + '" gelöscht');
     deleteTarget = null;
   } catch (e) {
     showToast('Fehler: ' + e.message);
