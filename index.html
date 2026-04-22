@@ -1213,19 +1213,9 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 <!-- Auth guard (separate module so onclick-handlers in main script stay global) -->
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-const sb = createClient(
-  'https://yodanvzkkhlqemlvtvey.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvZGFudnpra2hscWVtbHZ0dmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MTgzMzcsImV4cCI6MjA1ODM5NDMzN30.jLKST1bpRtPFVZNOdwQOWJhbJJEiVFNMjh4b71_tN2Y'
-);
-const { data: { session } } = await sb.auth.getSession();
-if (session) {
-  const kuerzel = (session.user.email || '').split('@')[0].slice(0, 3).toUpperCase();
-  window.__kuerzel = kuerzel;
-  const el = document.getElementById('uploadAutor');
-  if (el) el.value = kuerzel;
-} else {
+
+function hideTeacherButtons() {
   window.__kuerzel = '';
-  // Hide teacher-only buttons
   ['tokenBtn','tokenBtn2','editToggle','editToggle2'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -1233,6 +1223,25 @@ if (session) {
   document.querySelectorAll('.hbtn.primary, .hbtn-desktop.primary-desktop').forEach(el => {
     el.style.display = 'none';
   });
+}
+
+try {
+  const sb = createClient(
+    'https://yodanvzkkhlqemlvtvey.supabase.co',
+    'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
+  );
+  const { data: { session }, error } = await sb.auth.getSession();
+  if (error || !session) {
+    hideTeacherButtons();
+  } else {
+    const kuerzel = (session.user.email || '').split('@')[0].slice(0, 3).toUpperCase();
+    window.__kuerzel = kuerzel;
+    const el = document.getElementById('uploadAutor');
+    if (el) el.value = kuerzel;
+  }
+} catch (e) {
+  // Supabase nicht erreichbar oder Key-Fehler → Buttons sicherheitshalber verstecken
+  hideTeacherButtons();
 }
 </script>
 
