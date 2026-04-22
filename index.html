@@ -1138,6 +1138,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
     <label>Kürzel</label>
     <input type="text" id="uploadAutor" placeholder="z.B. YB" maxlength="4" style="text-transform:uppercase;width:80px">
     <div id="progressWrap"><div id="progressBar"></div></div>
+    <div id="uploadErrorBox" style="display:none;color:var(--error);font-size:13px;padding:8px 10px;background:#FEF2F2;border-radius:var(--radius);margin-top:8px;line-height:1.5;"></div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalUpload')">Abbrechen</button>
       <button class="btn-primary" id="btnUpload" onclick="doUpload()">Hochladen</button>
@@ -1949,6 +1950,8 @@ function showUpload() {
   document.getElementById('dzText').textContent = 'HTML-Datei hierher ziehen oder klicken';
   document.getElementById('progressWrap').style.display = 'none';
   document.getElementById('progressBar').style.width    = '0%';
+  document.getElementById('uploadErrorBox').style.display = 'none';
+  document.getElementById('uploadErrorBox').textContent   = '';
   document.getElementById('btnUpload').disabled         = false;
   document.getElementById('btnUpload').textContent      = 'Hochladen';
   openModal('modalUpload');
@@ -2003,6 +2006,10 @@ async function doUpload() {
   pw.style.display = 'block';
   pb.style.width = '25%';
 
+  const errBox = document.getElementById('uploadErrorBox');
+  errBox.style.display = 'none';
+  errBox.textContent   = '';
+
   try {
     const content = await new Promise(function (res, rej) {
       const reader = new FileReader();
@@ -2019,12 +2026,29 @@ async function doUpload() {
     });
     pb.style.width = '55%';
 
-    await ghPut(pfad, { message: 'Upload: ' + titel, content: content });
+    // Try upload; if 422 (file exists) fetch existing SHA and overwrite
+    try {
+      await ghPut(pfad, { message: 'Upload: ' + titel, content: content });
+    } catch (putErr) {
+      if (putErr.message && putErr.message.includes('422')) {
+        // File already exists — fetch its SHA and update
+        const existing = await ghGet(pfad);
+        await ghPut(pfad, { message: 'Update: ' + titel, content: content, sha: existing.sha });
+      } else {
+        throw putErr;
+      }
+    }
     pb.style.width = '75%';
 
     const today = new Date();
     const datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
-    materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor });
+    // Update existing entry or push new one
+    const existingIdx = materialien.findIndex(function (m) { return m.pfad === pfad; });
+    if (existingIdx >= 0) {
+      materialien[existingIdx] = { name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor };
+    } else {
+      materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor });
+    }
     await updateIndex(materialien);
     pb.style.width = '100%';
 
@@ -2039,7 +2063,11 @@ async function doUpload() {
       pb.style.width   = '0%';
     }, 400);
   } catch (e) {
-    showToast('Fehler: ' + e.message);
+    console.error('[Upload Fehler]', e);
+    const msg = e.message || 'Unbekannter Fehler';
+    errBox.textContent   = '⚠ ' + msg;
+    errBox.style.display = 'block';
+    showToast('Fehler: ' + msg);
     btn.disabled    = false;
     btn.textContent = 'Hochladen';
     pb.style.width  = '0%';
