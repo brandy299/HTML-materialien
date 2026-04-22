@@ -992,6 +992,8 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
     Bearbeiten
   </button>
 
+  <button class="hbtn" id="mineToggle" onclick="toggleMineFilter()" style="display:none" title="Nur meine Materialien">Meine</button>
+
   <button class="hbtn primary" onclick="showUpload()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -1038,6 +1040,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Bearbeiten
         </button>
+        <button class="hbtn-desktop" id="mineToggle2" onclick="toggleMineFilter()" style="display:none" title="Nur meine Materialien anzeigen">Meine</button>
         <button class="hbtn-desktop primary-desktop" onclick="showUpload()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Hochladen
@@ -1216,11 +1219,16 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
+const _SB_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co';
+const _SB_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
+
+window.__sb = createClient(_SB_URL, _SB_KEY);
+
 function hideTeacherButtons() {
-  window.__kuerzel = '';
-  ['tokenBtn','tokenBtn2','editToggle','editToggle2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+  window.__kuerzel  = '';
+  window.__session  = null;
+  ['tokenBtn','tokenBtn2','editToggle','editToggle2','mineToggle','mineToggle2'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.querySelectorAll('.hbtn.primary, .hbtn-desktop.primary-desktop').forEach(el => {
     el.style.display = 'none';
@@ -1228,23 +1236,22 @@ function hideTeacherButtons() {
 }
 
 try {
-  const sb = createClient(
-    'https://yodanvzkkhlqemlvtvey.supabase.co',
-    'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R'
-  );
-  const { data: { session }, error } = await sb.auth.getSession();
+  const { data: { session }, error } = await window.__sb.auth.getSession();
   if (error || !session) {
     hideTeacherButtons();
   } else {
+    window.__session = session;
     const kuerzel = (session.user.email || '').split('@')[0].slice(0, 3).toUpperCase();
     window.__kuerzel = kuerzel;
-    const el = document.getElementById('uploadAutor');
-    if (el) el.value = kuerzel;
+    const el = document.getElementById('uploadAutor'); if (el) el.value = kuerzel;
+    ['mineToggle','mineToggle2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
   }
 } catch (e) {
-  // Supabase nicht erreichbar oder Key-Fehler → Buttons sicherheitshalber verstecken
   hideTeacherButtons();
 }
+
+// Materialien aus Supabase laden (refresht über hardcodiertem Cache)
+if (typeof loadMaterialienFromDB === 'function') loadMaterialienFromDB();
 </script>
 
 <script>
@@ -1423,6 +1430,7 @@ let activeFilter  = null;
 let selectedFach    = null;
 let selectedThema   = null;
 let previewMaterial = null;
+let mineFilterActive = false;
 
 /* ═══════════════════════════════════════════
    FACH COLOR MAP
@@ -1467,6 +1475,46 @@ function esc(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/* ═══════════════════════════════════════════
+   SUPABASE – MATERIALIEN LADEN
+═══════════════════════════════════════════ */
+async function loadMaterialienFromDB() {
+  if (!window.__sb) return;
+  try {
+    const { data, error } = await window.__sb
+      .from('materialien')
+      .select('id, name, fach, thema, pfad, datum, autor, created_by')
+      .eq('is_public', true)
+      .order('fach').order('thema').order('name');
+    if (error) throw error;
+    materialien.length = 0;
+    data.forEach(function (m) {
+      materialien.push({ id: m.id, name: m.name, fach: m.fach, thema: m.thema,
+        pfad: m.pfad, datum: m.datum || '', autor: m.autor || '', created_by: m.created_by });
+    });
+    buildSidebar();
+    render(document.getElementById('search') ? document.getElementById('search').value : '');
+    updateBreadcrumb();
+  } catch (e) {
+    console.warn('[Materialien] Supabase-Fehler, nutze lokalen Cache:', e.message);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   MINE FILTER
+═══════════════════════════════════════════ */
+function toggleMineFilter() {
+  mineFilterActive = !mineFilterActive;
+  ['mineToggle','mineToggle2'].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.color       = mineFilterActive ? '#4F46E5' : '';
+    el.style.borderColor = mineFilterActive ? '#4F46E5' : '';
+    el.textContent       = mineFilterActive ? '✓ Meine' : 'Meine';
+  });
+  render(document.getElementById('search').value);
 }
 
 /* ═══════════════════════════════════════════
@@ -1671,7 +1719,7 @@ function render(query) {
   }
 
   /* ── FILTER: items ─────────────────────────────────────── */
-  const items = materialien.filter(function (m) {
+  let items = materialien.filter(function (m) {
     const matchSearch = !q ||
       m.name.toLowerCase().includes(q) ||
       m.fach.toLowerCase().includes(q) ||
@@ -1680,6 +1728,10 @@ function render(query) {
     const matchThema = !selectedThema || m.thema === selectedThema;
     return matchSearch && matchFach && matchThema;
   });
+
+  if (mineFilterActive && window.__kuerzel) {
+    items = items.filter(function (m) { return m.autor === window.__kuerzel; });
+  }
 
   /* ── STATS ─────────────────────────────────────────────── */
   const uFaecher = [...new Set(items.map(function (m) { return m.fach; }))].length;
@@ -1919,34 +1971,6 @@ async function ghDelete(path, sha, message) {
   if (!r.ok) throw ghError(r.status, 'DELETE ' + path + ': ' + r.status);
 }
 
-async function updateIndex(newData) {
-  const fileInfo   = await ghGet('index.html');
-  const rawContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
-
-  // Marker-basierter Regex — eindeutig, kann nicht mit Material-Inhalten kollidieren
-  const marker = /\/\*__MATERIALIEN_START__\*\/[\s\S]*?\/\*__MATERIALIEN_END__\*\//;
-  if (!marker.test(rawContent)) {
-    throw new Error('Index-Marker nicht gefunden – bitte Seite neu laden und erneut versuchen');
-  }
-  const replacement =
-    '/*__MATERIALIEN_START__*/\n' +
-    'const materialien = ' + JSON.stringify(newData, null, 2) + ';\n' +
-    '/*__MATERIALIEN_END__*/';
-  const updated = rawContent.replace(marker, replacement);
-
-  // Robuste base64-Kodierung via TextEncoder (funktioniert in Chrome + Firefox gleich)
-  const bytes   = new TextEncoder().encode(updated);
-  let binary    = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  const content = btoa(binary);
-
-  await ghPut('index.html', {
-    message: 'Update materialien index',
-    content: content,
-    sha: fileInfo.sha
-  });
-}
-
 /* ═══════════════════════════════════════════
    UPLOAD
 ═══════════════════════════════════════════ */
@@ -2058,7 +2082,14 @@ async function doUpload() {
     } else {
       materialien.push({ name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor });
     }
-    await updateIndex(materialien);
+    // Supabase UPSERT – bei erneutem Upload (gleicher Pfad) wird der Eintrag aktualisiert.
+    // created_by wird beim ersten INSERT per Trigger gesetzt und bei Updates nicht überschrieben.
+    if (!window.__sb || !window.__session) throw new Error('Nicht eingeloggt – bitte Seite neu laden');
+    const { error: sbErr } = await window.__sb.from('materialien').upsert(
+      { name: titel, fach: fach, thema: thema, pfad: pfad, datum: datum, autor: autor },
+      { onConflict: 'pfad' }
+    );
+    if (sbErr) throw new Error('Supabase: ' + sbErr.message);
     pb.style.width = '100%';
 
     setTimeout(function () {
@@ -2109,7 +2140,6 @@ async function doRename() {
   const fach  = document.getElementById('inputFach').value.trim();
   const thema = document.getElementById('inputThema').value.trim();
   if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnSaveRename');
   btn.disabled = true;
@@ -2132,7 +2162,12 @@ async function doRename() {
   materialien[idx] = updated;
 
   try {
-    await updateIndex(materialien);
+    // Supabase UPDATE – kein GitHub-Token nötig, wir ändern nur Metadaten
+    if (!window.__sb || !window.__session) throw new Error('Nicht eingeloggt');
+    const { error: sbErr } = await window.__sb.from('materialien')
+      .update({ name: titel, fach: fach, thema: thema })
+      .eq('pfad', renameTarget.pfad);
+    if (sbErr) throw new Error('Supabase: ' + sbErr.message);
     closeModal('modalRename');
     buildSidebar();
     render(document.getElementById('search').value);
@@ -2194,7 +2229,9 @@ async function doDelete() {
         if (removeOnly) {
           const idx = materialien.indexOf(target);
           if (idx >= 0) materialien.splice(idx, 1);
-          await updateIndex(materialien);
+          if (!window.__sb || !window.__session) throw new Error('Nicht eingeloggt');
+          const { error: sbErr } = await window.__sb.from('materialien').delete().eq('pfad', target.pfad);
+          if (sbErr) throw new Error('Supabase: ' + sbErr.message);
           if (previewMaterial && previewMaterial.pfad === target.pfad) closePreview();
           closeModal('modalDelete');
           buildSidebar();
@@ -2207,12 +2244,14 @@ async function doDelete() {
       throw e;
     }
 
-    // Step 2: remove from local array and update index.html FIRST
-    // → if index update fails the file still exists and state stays consistent
+    // Step 2: remove from local array and update Supabase FIRST
+    // → if Supabase update fails the file still exists and state stays consistent
     const idx = materialien.indexOf(target);
     if (idx >= 0) materialien.splice(idx, 1);
     try {
-      await updateIndex(materialien);
+      if (!window.__sb || !window.__session) throw new Error('Nicht eingeloggt');
+      const { error: sbErr } = await window.__sb.from('materialien').delete().eq('pfad', target.pfad);
+      if (sbErr) { if (idx >= 0) materialien.splice(idx, 0, target); throw new Error('Supabase: ' + sbErr.message); }
     } catch (e) {
       // Roll back the local array so the UI stays in sync
       if (idx >= 0) materialien.splice(idx, 0, target);
