@@ -1185,6 +1185,7 @@ body.edit-mode #editToggle { background: rgba(79,70,229,0.15); color: #A5B4FC; b
   <div class="modal">
     <h2>Material löschen</h2>
     <p id="deleteDesc" style="font-size:0.84rem;color:#555;line-height:1.55;"></p>
+    <div id="deleteErrorBox" style="display:none;color:var(--error);font-size:13px;padding:8px 10px;background:#FEF2F2;border-radius:var(--radius);margin-top:8px;line-height:1.5;"></div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('modalDelete')">Abbrechen</button>
       <button class="btn-danger" id="btnConfirmDelete" onclick="doDelete()">Löschen</button>
@@ -1829,12 +1830,12 @@ function toggleEdit() {
    TOAST
 ═══════════════════════════════════════════ */
 let _toastTimer;
-function showToast(msg) {
+function showToast(msg, duration) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  _toastTimer = setTimeout(function () { el.classList.remove('show'); }, duration || 2600);
 }
 
 /* ═══════════════════════════════════════════
@@ -2075,7 +2076,7 @@ async function doUpload() {
     const msg = e.message || 'Unbekannter Fehler';
     errBox.textContent   = '⚠ ' + msg;
     errBox.style.display = 'block';
-    showToast('Fehler: ' + msg);
+    showToast('Fehler: ' + msg, 5000);
     btn.disabled    = false;
     btn.textContent = 'Hochladen';
     pb.style.width  = '0%';
@@ -2155,7 +2156,17 @@ function showDelete(m) {
   deleteTarget = m;
   document.getElementById('deleteDesc').textContent =
     'Möchtest du "' + m.name + '" (' + m.fach + ' / ' + m.thema + ') wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
+  document.getElementById('deleteErrorBox').style.display = 'none';
+  document.getElementById('deleteErrorBox').textContent   = '';
   openModal('modalDelete');
+}
+
+function _showDeleteError(msg) {
+  console.error('[Delete Fehler]', msg);
+  const box = document.getElementById('deleteErrorBox');
+  box.textContent   = '⚠ ' + msg;
+  box.style.display = 'block';
+  showToast('Fehler: ' + msg, 5000);
 }
 
 async function doDelete() {
@@ -2165,11 +2176,36 @@ async function doDelete() {
   const btn = document.getElementById('btnConfirmDelete');
   btn.disabled    = true;
   btn.textContent = 'Löschen…';
+  document.getElementById('deleteErrorBox').style.display = 'none';
 
   const target = deleteTarget; // capture before any async gap
   try {
     // Step 1: get SHA (needed for file deletion later)
-    const fileInfo = await ghGet(target.pfad);
+    let fileInfo;
+    try {
+      fileInfo = await ghGet(target.pfad);
+    } catch (e) {
+      // File not found on GitHub – offer to clean up the index entry only
+      if (e.message && e.message.includes('404')) {
+        const removeOnly = confirm(
+          '"' + target.name + '" wurde auf GitHub nicht gefunden (möglicherweise bereits gelöscht).\n\n' +
+          'Soll der Eintrag trotzdem aus der Liste entfernt werden?'
+        );
+        if (removeOnly) {
+          const idx = materialien.indexOf(target);
+          if (idx >= 0) materialien.splice(idx, 1);
+          await updateIndex(materialien);
+          if (previewMaterial && previewMaterial.pfad === target.pfad) closePreview();
+          closeModal('modalDelete');
+          buildSidebar();
+          render(document.getElementById('search').value);
+          showToast('"' + target.name + '" aus Liste entfernt');
+          deleteTarget = null;
+        }
+        return;
+      }
+      throw e;
+    }
 
     // Step 2: remove from local array and update index.html FIRST
     // → if index update fails the file still exists and state stays consistent
@@ -2194,7 +2230,7 @@ async function doDelete() {
     showToast('"' + target.name + '" gelöscht');
     deleteTarget = null;
   } catch (e) {
-    showToast('Fehler: ' + e.message);
+    _showDeleteError(e.message || 'Unbekannter Fehler');
   } finally {
     btn.disabled    = false;
     btn.textContent = 'Löschen';
