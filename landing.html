@@ -193,18 +193,7 @@ main {
   letter-spacing: var(--tracking-wide);
 }
 
-/* Dark mode overrides for teacher section */
-@media (prefers-color-scheme: dark) {
-  .teacher-section {
-    background: var(--bg-inset);
-    border-color: var(--border-subtle);
-  }
-}
-
-[data-theme="dark"] .teacher-section {
-  background: var(--bg-inset);
-  border-color: var(--border-subtle);
-}
+/* Note: Dark mode removed */
 
 /* ── Footer ── */
 .site-footer {
@@ -213,31 +202,6 @@ main {
   font-size: var(--text-sm);
   color: var(--text-muted);
   text-align: center;
-}
-
-/* ── Theme Toggle ── */
-.theme-toggle {
-  position: fixed;
-  bottom: var(--space-4);
-  right: var(--space-4);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  transition: all 150ms ease;
-  z-index: var(--z-dropdown);
-}
-
-.theme-toggle:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 /* ── Responsive ── */
@@ -378,47 +342,7 @@ main {
 
 </div>
 
-<!-- Theme Toggle -->
-<button class="theme-toggle" id="themeToggle" title="Light / Dark Mode">
-  <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-</button>
-
-<script>
-/* Theme Toggle Logic */
-(function() {
-  const toggle = document.getElementById('themeToggle');
-  const iconSun = document.getElementById('iconSun');
-  const iconMoon = document.getElementById('iconMoon');
-  const html = document.documentElement;
-  
-  // Check saved preference or system preference
-  const saved = localStorage.getItem('theme');
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = saved === 'dark' || (!saved && systemDark);
-  
-  if (isDark) {
-    html.setAttribute('data-theme', 'dark');
-    iconSun.style.display = 'none';
-    iconMoon.style.display = 'block';
-  }
-  
-  toggle.addEventListener('click', () => {
-    const current = html.getAttribute('data-theme');
-    if (current === 'dark') {
-      html.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-      iconSun.style.display = 'block';
-      iconMoon.style.display = 'none';
-    } else {
-      html.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-      iconSun.style.display = 'none';
-      iconMoon.style.display = 'block';
-    }
-  });
-})();
-</script>
+<!-- Note: Dark mode toggle removed for better readability -->
 
 </body>
 </html>
