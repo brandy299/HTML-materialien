@@ -168,8 +168,8 @@ main {
 
 /* ── Teacher Section ── */
 .teacher-section {
-  background: oklch(96% 0.01 265);
-  border: 1px solid oklch(90% 0.02 265);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
   margin-top: calc(-1 * var(--space-2));
@@ -196,24 +196,14 @@ main {
 /* Dark mode overrides for teacher section */
 @media (prefers-color-scheme: dark) {
   .teacher-section {
-    background: oklch(24% 0.03 265);
-    border-color: oklch(30% 0.04 265);
-  }
-  .lock-badge {
-    background: oklch(30% 0.05 265);
-    border-color: oklch(40% 0.06 265);
-    color: oklch(75% 0.08 265);
+    background: var(--bg-inset);
+    border-color: var(--border-subtle);
   }
 }
 
 [data-theme="dark"] .teacher-section {
-  background: oklch(24% 0.03 265);
-  border-color: oklch(30% 0.04 265);
-}
-[data-theme="dark"] .lock-badge {
-  background: oklch(30% 0.05 265);
-  border-color: oklch(40% 0.06 265);
-  color: oklch(75% 0.08 265);
+  background: var(--bg-inset);
+  border-color: var(--border-subtle);
 }
 
 /* ── Footer ── */
@@ -377,17 +367,6 @@ main {
         </div>
         <h2>Klassentimer</h2>
         <p>Unterrichtsphasen zeitlich steuern — Ablaufplan, Countdown, Alarm.</p>
-      </a>
-
-      <a href="skills.html" class="card-link">
-        <div class="card-header">
-          <div class="card-icon icon-blue">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          </div>
-          <span class="card-badge">Claude AI</span>
-        </div>
-        <h2>Claude Skills</h2>
-        <p>Fertige Prompts für Lernpfade, Klausuren, Prüfungs-JSONs und Lernsituationen.</p>
       </a>
     </div>
   </div>
