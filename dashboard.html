@@ -320,7 +320,7 @@ tbody tr:hover { background: #FAFAFE; }
     <!-- Codes löschen -->
     <div class="clean-section" id="cs-codes" onclick="toggleCleanStep('codes')">
       <h4>Codes löschen</h4>
-      <p>Lösche alle Einträge für ausgewählte Codes (z.B. deine eigenen Test-Codes).</p>
+      <p>Lösche alle Einträge für ausgewählte Codes aus Lernmaterialien UND Prüfungen (z.B. deine eigenen Test-Codes).</p>
       <div class="code-check-list" id="code-check-list" style="display:none" onclick="event.stopPropagation()"></div>
       <div id="cs-codes-btn" style="display:none;margin-top:0.75rem">
         <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteByCodes()">Ausgewählte Codes löschen</button>
@@ -841,15 +841,28 @@ function refreshCleanCounts() {
   }
   document.getElementById('cnt-dupes').textContent = dupeCount + ' Duplikate';
 
-  // Code checklist
-  const codes = [...new Set(allData.map(r => r.code))].sort();
+  // Code checklist - collect from BOTH progress and exam_results
+  const progressCodes = [...new Set(allData.map(r => r.code))];
+  const examCodes = [...new Set(examData.map(r => r.code))];
+  const allCodes = [...new Set([...progressCodes, ...examCodes])].sort();
+  
   const list  = document.getElementById('code-check-list');
-  list.innerHTML = codes.map(c => {
-    const cnt = allData.filter(r => r.code === c).length;
+  if (!allCodes.length) {
+    list.innerHTML = '<div class="code-check-item" style="color:var(--text-muted)">Keine Codes vorhanden</div>';
+    return;
+  }
+  
+  list.innerHTML = allCodes.map(c => {
+    const progressCnt = allData.filter(r => r.code === c).length;
+    const examCnt = examData.filter(r => r.code === c).length;
+    const totalCnt = progressCnt + examCnt;
+    const badges = [];
+    if (progressCnt) badges.push(`Lernen: ${progressCnt}`);
+    if (examCnt) badges.push(`Prüfung: ${examCnt}`);
     return `<label class="code-check-item">
       <input type="checkbox" class="code-check" value="${esc(c)}">
       <span class="code-chip" style="font-size:0.75rem">${esc(c)}</span>
-      <span class="code-check-count">${cnt} Einträge</span>
+      <span class="code-check-count">${badges.join(' · ')}</span>
     </label>`;
   }).join('');
 }
@@ -876,12 +889,15 @@ window.toggleCleanStep = function (step) {
 window.deleteByCodes = async function () {
   const checked = [...document.querySelectorAll('.code-check:checked')].map(c => c.value);
   if (!checked.length) { setCleanStatus('Keine Codes ausgewählt.'); return; }
-  if (!confirm(`Alle Einträge für ${checked.length} Code(s) löschen?\n\n${checked.join(', ')}`)) return;
+  if (!confirm(`Alle Einträge für ${checked.length} Code(s) löschen?\nDies betrifft sowohl Lernmaterialien als auch Prüfungen.\n\n${checked.join(', ')}`)) return;
   setCleanStatus('Lösche…');
+  let deletedTotal = 0;
   for (const code of checked) {
-    await supabase.from('progress').delete().eq('code', code);
+    const { data: progData } = await supabase.from('progress').delete().eq('code', code).select();
+    const { data: examData } = await supabase.from('exam_results').delete().eq('code', code).select();
+    deletedTotal += (progData?.length || 0) + (examData?.length || 0);
   }
-  setCleanStatus('✓ ' + checked.length + ' Code(s) gelöscht.');
+  setCleanStatus('✓ ' + checked.length + ' Code(s) gelöscht (' + deletedTotal + ' Einträge insgesamt).');
   await loadData();
 };
 
