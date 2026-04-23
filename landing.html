@@ -3,378 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unterricht.Digital — Digitale Materialien für das Berufskolleg</title>
+<title>Unterricht.Digital</title>
 <link rel="stylesheet" href="styles/design-system.css">
 <style>
-/* ============================================================
-   LANDING PAGE v3.0 — Editorial, asymmetrisch, datengetrieben
-   ============================================================ */
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: scale(0.8); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-/* ── Page ── */
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  background: var(--bg-page);
 }
 
-/* ── Header ── */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: var(--space-4) var(--space-8);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
+main {
+  flex: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-16);
+  width: 100%;
 }
 
-.header-left {
+.brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  margin-bottom: var(--space-10);
 }
 
-.logo-mark {
-  width: 36px;
-  height: 36px;
+.brand-mark {
+  width: 32px;
+  height: 32px;
   background: var(--primary-500);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.logo-text {
+.brand-name {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--text-xl);
-  color: var(--text-primary);
-  letter-spacing: -0.03em;
-}
-
-.logo-text span {
-  color: var(--primary-500);
-}
-
-.header-nav {
-  display: flex;
-  gap: var(--space-1);
-}
-
-.nav-link {
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all 150ms ease;
-}
-.nav-link:hover {
-  color: var(--text-primary);
-  background: var(--bg-hover);
-}
-
-/* ── Hero ── */
-.hero {
-  padding: var(--space-16) var(--space-8) var(--space-12);
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  position: relative;
-}
-
-.hero-visual {
-  position: absolute;
-  top: var(--space-6);
-  right: var(--space-8);
-  width: 320px;
-  height: 320px;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.hero-visual svg {
-  width: 100%;
-  height: 100%;
-  animation: float 6s ease-in-out infinite;
-}
-
-.hero-eyebrow {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--primary-500);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  margin-bottom: var(--space-4);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  animation: fadeUp 0.6s ease forwards;
-  animation-delay: 0.1s;
-  opacity: 0;
-}
-
-.hero-eyebrow .live-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--color-success);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-primary);
-  max-width: 16ch;
-  margin-bottom: var(--space-5);
-  animation: fadeUp 0.7s ease forwards;
-  animation-delay: 0.2s;
-  opacity: 0;
-}
-
-.hero h1 em {
-  color: var(--primary-500);
-  font-style: normal;
-}
-
-.hero-subtitle {
+  font-weight: 700;
   font-size: var(--text-lg);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.brand-name span { color: var(--primary-500); }
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--tracking-tight);
+}
+
+.lead {
+  font-size: var(--text-base);
   color: var(--text-secondary);
   line-height: var(--leading-normal);
-  max-width: 52ch;
-  margin-bottom: var(--space-8);
-  animation: fadeUp 0.7s ease forwards;
-  animation-delay: 0.35s;
-  opacity: 0;
-}
-
-.hero-cta {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  animation: fadeUp 0.7s ease forwards;
-  animation-delay: 0.5s;
-  opacity: 0;
-}
-
-.hero-cta .btn {
-  height: 48px;
-  padding: 0 var(--space-6);
-  font-size: var(--text-base);
-}
-
-.hero-cta .btn-secondary {
-  height: 48px;
-  padding: 0 var(--space-6);
-  font-size: var(--text-base);
-}
-
-/* ── Stats Strip ── */
-.stats-strip {
-  background: var(--bg-inset);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: var(--space-8) var(--space-8);
-}
-
-.stats-strip-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.stat-number {
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 800;
-  color: var(--primary-500);
-  line-height: 1;
-  letter-spacing: var(--tracking-tight);
-}
-
-.stat-label-big {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.stat-desc {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
-/* ── Sections ── */
-section {
-  padding: var(--space-16) var(--space-8);
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-
-.section-header {
   margin-bottom: var(--space-10);
-  max-width: 55ch;
-}
-
-.section-label {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  color: var(--primary-500);
-  margin-bottom: var(--space-3);
+  max-width: 50ch;
 }
 
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 800;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-primary);
-  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+  margin-top: var(--space-10);
 }
 
-.section-desc {
-  font-size: var(--text-md);
-  color: var(--text-secondary);
-  line-height: var(--leading-normal);
-}
-
-/* ── Card Grid — Asymmetric! ── */
-.card-grid {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.card-grid-3 {
-  grid-template-columns: 5fr 4fr 3fr;
-}
-
-.card-grid-2 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.card-grid-5 {
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.card-link {
-  text-decoration: none;
-  color: inherit;
+.link-list {
   display: flex;
   flex-direction: column;
+  gap: var(--space-2);
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
   gap: var(--space-4);
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-5);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  color: inherit;
+  transition: all 150ms ease;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
 }
 
-.card-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--card-accent, var(--primary-500));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 200ms ease;
-}
-
-.card-link:hover {
+.link-item:hover {
   border-color: var(--border-default);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
+  background: var(--bg-hover);
 }
 
-.card-link:hover::before {
-  transform: scaleX(1);
-}
-
-.card-link-large {
-  padding: var(--space-8);
-  gap: var(--space-5);
-}
-
-.card-link-large .card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-}
-
-.card-link-large .card-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-.card-link-large h2 {
-  font-size: var(--text-xl);
-}
-
-.card-link-large p {
-  font-size: var(--text-base);
-  max-width: 36ch;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-icon {
-  width: 40px;
-  height: 40px;
+.link-icon {
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -382,226 +112,73 @@ section {
   flex-shrink: 0;
 }
 
-.card-icon svg {
-  width: 20px;
-  height: 20px;
+.link-icon svg {
+  width: 18px;
+  height: 18px;
 }
 
-.card-badge {
-  font-size: var(--text-2xs);
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  letter-spacing: var(--tracking-wide);
+.link-body {
+  flex: 1;
+  min-width: 0;
 }
 
-.card-link h2 {
+.link-body h2 {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--text-base);
+  font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: 2px;
 }
 
-.card-link p {
+.link-body p {
   font-size: var(--text-sm);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: var(--leading-normal);
 }
 
-.card-arrow {
-  margin-top: auto;
-  padding-top: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: 600;
+.link-arrow {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+
+.link-item:hover .link-arrow {
+  transform: translateX(3px);
   color: var(--primary-500);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  transition: gap 150ms ease;
 }
 
-.card-link:hover .card-arrow {
-  gap: var(--space-2);
-}
-
-/* Icon color variants mapped to accent vars */
-.icon-blue   { background: var(--primary-50);   color: var(--primary-500); --card-accent: var(--primary-500); }
-.icon-amber  { background: var(--accent-50);    color: var(--accent-500);  --card-accent: var(--accent-500); }
-.icon-green  { background: var(--success-50);   color: var(--success-600); --card-accent: var(--success-600); }
-.icon-purple { background: oklch(96% 0.015 300); color: oklch(55% 0.1 300); --card-accent: oklch(55% 0.1 300); }
-.icon-rose   { background: var(--error-50);     color: var(--error-600);   --card-accent: var(--error-600); }
-.icon-slate  { background: var(--bg-inset);     color: var(--text-tertiary); --card-accent: var(--text-tertiary); }
-.icon-orange { background: var(--warning-50);   color: var(--warning-600); --card-accent: var(--warning-600); }
-
-/* ── Teacher Section ── */
-.teacher-section {
-  background: var(--bg-inset);
-  border-top: 3px solid var(--primary-200);
-  padding: var(--space-16) var(--space-8);
-  margin-top: var(--space-8);
-}
-
-.teacher-section > div {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.teacher-section .section-label {
-  color: var(--text-muted);
-}
-
-.lock-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.link-badge {
   font-size: var(--text-2xs);
   font-weight: 600;
   color: var(--text-muted);
-  background: var(--bg-page);
+  background: var(--bg-inset);
   border: 1px solid var(--border-subtle);
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: var(--radius-full);
   letter-spacing: var(--tracking-wide);
+  flex-shrink: 0;
 }
 
-/* ── Footer ── */
+/* Icon colors */
+.i-blue   { background: var(--primary-50);   color: var(--primary-500); }
+.i-amber  { background: var(--accent-50);    color: var(--accent-500); }
+.i-green  { background: var(--success-50);   color: var(--success-600); }
+.i-purple { background: oklch(96% 0.015 300); color: oklch(55% 0.1 300); }
+.i-slate  { background: var(--bg-inset);     color: var(--text-tertiary); }
+.i-orange { background: var(--warning-50);   color: var(--warning-600); }
+
 .site-footer {
-  padding: var(--space-8) var(--space-8);
+  padding: var(--space-6);
   border-top: 1px solid var(--border-subtle);
-  background: var(--bg-page);
-}
-
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-}
-
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.footer-logo-text {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-}
-
-.footer-logo-text span {
-  color: var(--primary-500);
-}
-
-.footer-desc {
+  text-align: center;
   font-size: var(--text-xs);
   color: var(--text-muted);
-  max-width: 40ch;
-}
-
-.footer-links {
-  display: flex;
-  gap: var(--space-4);
-}
-
-.footer-links a {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 150ms;
-}
-.footer-links a:hover {
-  color: var(--primary-500);
-}
-
-.footer-copy {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
-/* ── Scroll-driven entrance animations ── */
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.animate-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger children */
-.card-grid .card-link:nth-child(1) { transition-delay: 0ms; }
-.card-grid .card-link:nth-child(2) { transition-delay: 80ms; }
-.card-grid .card-link:nth-child(3) { transition-delay: 160ms; }
-.card-grid .card-link:nth-child(4) { transition-delay: 240ms; }
-.card-grid .card-link:nth-child(5) { transition-delay: 320ms; }
-
-/* ── Responsive ── */
-@media (max-width: 960px) {
-  .hero-visual { display: none; }
-  .card-grid-3,
-  .card-grid-5 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .card-link-large {
-    grid-column: span 2;
-  }
 }
 
 @media (max-width: 640px) {
-  .site-header {
-    padding: var(--space-3) var(--space-4);
-  }
-  .header-nav {
-    display: none;
-  }
-  .hero {
-    padding: var(--space-8) var(--space-4) var(--space-6);
-  }
-  section,
-  .teacher-section {
-    padding: var(--space-8) var(--space-4);
-  }
-  .stats-strip {
-    padding: var(--space-6) var(--space-4);
-  }
-  .stats-strip-inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-  .card-grid-3,
-  .card-grid-2,
-  .card-grid-5 {
-    grid-template-columns: 1fr;
-  }
-  .card-link-large {
-    grid-column: span 1;
-  }
-  .section-title {
-    font-size: var(--text-xl);
-  }
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-  .hero-cta {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .hero-cta .btn,
-  .hero-cta .btn-secondary {
-    width: 100%;
-  }
+  main { padding: var(--space-8) var(--space-4) var(--space-10); }
+  .link-item { padding: var(--space-3) var(--space-4); }
 }
 </style>
 </head>
@@ -609,285 +186,84 @@ section {
 
 <div class="page">
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="header-left">
-    <div class="logo-mark">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
+<main>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
     </div>
-    <span class="logo-text">Unterricht<span>.</span>Digital</span>
-  </div>
-  <nav class="header-nav">
-    <a href="#materials" class="nav-link">Materialien</a>
-    <a href="#lehrer" class="nav-link">Lehrkräfte</a>
-    <a href="index.html" class="nav-link">Übersicht →</a>
-  </nav>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-visual">
-    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="200" cy="200" r="150" stroke="var(--primary-200)" stroke-width="1" stroke-dasharray="4 8"/>
-      <circle cx="200" cy="200" r="100" stroke="var(--primary-300)" stroke-width="1" stroke-dasharray="2 6"/>
-      <circle cx="200" cy="200" r="50" fill="var(--primary-50)" opacity="0.5"/>
-      <rect x="120" y="120" width="160" height="160" rx="20" stroke="var(--primary-200)" stroke-width="1" transform="rotate(15 200 200)"/>
-      <rect x="150" y="150" width="100" height="100" rx="12" fill="var(--primary-100)" opacity="0.3" transform="rotate(-10 200 200)"/>
-    </svg>
+    <span class="brand-name">Unterricht<span>.</span>Digital</span>
   </div>
 
-  <div class="hero-eyebrow">
-    <span class="live-dot"></span>
-    <span id="live-count">Lädt…</span>
-  </div>
+  <h1>Digitale Unterrichtsmaterialien</h1>
+  <p class="lead">Interaktive HTML-Lerninhalte, Prüfungen und Fortschrittstracking für das Berufskolleg.</p>
 
-  <h1>Interaktive Materialien für den <em>beruflichen</em> Unterricht</h1>
-
-  <p class="hero-subtitle">
-    Digitale Lerninhalte, Prüfungen und Fortschrittstracking — direkt im Browser.
-    Ohne Installation. Für GPU, PBP, Englisch und mehr.
-  </p>
-
-  <div class="hero-cta">
-    <a href="index.html" class="btn btn-primary">Materialien entdecken</a>
-    <a href="pruefung.html" class="btn btn-secondary">Zur Prüfung</a>
-  </div>
-</section>
-
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="stats-strip-inner">
-    <div class="stat-item animate-on-scroll">
-      <div class="stat-number" id="stat-materials">—</div>
-      <div class="stat-label-big">Materialien</div>
-      <div class="stat-desc">Interaktive HTML-Seiten</div>
-    </div>
-    <div class="stat-item animate-on-scroll">
-      <div class="stat-number" id="stat-faecher">—</div>
-      <div class="stat-label-big">Fächer</div>
-      <div class="stat-desc">GPU, Englisch, PBP, SRS</div>
-    </div>
-    <div class="stat-item animate-on-scroll">
-      <div class="stat-number" id="stat-themen">—</div>
-      <div class="stat-label-big">Themen</div>
-      <div class="stat-desc">Von LF5 bis Business Letters</div>
-    </div>
-  </div>
-</div>
-
-<!-- STUDENT SECTION -->
-<section id="materials">
-  <div class="section-header animate-on-scroll">
-    <div class="section-label">Für Schülerinnen &amp; Schüler</div>
-    <h2 class="section-title">Lernen, üben, prüfen</h2>
-    <p class="section-desc">
-      Alle Materialien sind direkt im Browser nutzbar — ob am PC, Tablet oder Handy.
-      Kein Download, keine Registrierung nötig.
-    </p>
-  </div>
-
-  <div class="card-grid card-grid-3">
-    <a href="index.html" class="card-link card-link-large animate-on-scroll icon-blue">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
-        <span class="card-badge">Alle Klassen</span>
+  <div class="section-title">Schülerinnen &amp; Schüler</div>
+  <div class="link-list">
+    <a href="index.html" class="link-item">
+      <div class="link-icon i-blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       </div>
-      <h2>Lernmaterialien</h2>
-      <p>Interaktive HTML-Materialien nach Fach und Thema durchstöbern — Quizzes, Präsentationen und Übungen.</p>
-      <div class="card-arrow">Übersicht öffnen →</div>
+      <div class="link-body">
+        <h2>Lernmaterialien</h2>
+        <p>Materialien nach Fach und Thema durchstöbern</p>
+      </div>
+      <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
 
-    <a href="pruefung.html" class="card-link animate-on-scroll icon-amber">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
-        </div>
-        <span class="card-badge">Mit Code</span>
+    <a href="pruefung.html" class="link-item">
+      <div class="link-icon i-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
       </div>
-      <h2>Prüfung</h2>
-      <p>Zur laufenden Prüfung. Code und Prüfungs-ID werden vom Lehrenden mitgeteilt.</p>
-      <div class="card-arrow">Zur Prüfung →</div>
+      <div class="link-body">
+        <h2>Prüfung</h2>
+        <p>Zur laufenden Prüfung (Code erforderlich)</p>
+      </div>
+      <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
 
-    <a href="pruefung-test.html" class="card-link animate-on-scroll icon-green">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <span class="card-badge">Demo</span>
+    <a href="pruefung-test.html" class="link-item">
+      <div class="link-icon i-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
-      <h2>Probelauf</h2>
-      <p>Systemtest ohne echte Daten — ideal zum Kennenlernen des Prüfungsinterfaces.</p>
-      <div class="card-arrow">Probelauf starten →</div>
+      <div class="link-body">
+        <h2>Probelauf</h2>
+        <p>Systemtest ohne echte Daten</p>
+      </div>
+      <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
   </div>
-</section>
 
-<!-- TEACHER SECTION -->
-<div class="teacher-section" id="lehrer">
-  <div>
-    <div class="section-header animate-on-scroll">
-      <div class="section-label">Für Lehrkräfte</div>
-      <h2 class="section-title">Unterricht vorbereiten, Ergebnisse tracken</h2>
-      <p class="section-desc">
-        Mit Lehrer-Login: Materialien hochladen, Prüfungen erstellen, Fortschritte analysieren.
-      </p>
-    </div>
+  <div class="section-title">Lehrkräfte</div>
+  <div class="link-list">
+    <a href="login.html" class="link-item">
+      <div class="link-icon i-purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="link-body">
+        <h2>Dashboard</h2>
+        <p>Fortschritte, Prüfungen, Code-Generator</p>
+      </div>
+      <span class="link-badge">Login</span>
+    </a>
 
-    <div class="card-grid card-grid-5">
-      <a href="login.html" class="card-link animate-on-scroll icon-purple">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          </div>
-          <span class="lock-badge">🔒</span>
-        </div>
-        <h2>Lernfortschritt</h2>
-        <p>Wer hat welche Materialien geöffnet?</p>
-        <div class="card-arrow">Login →</div>
-      </a>
-
-      <a href="login.html" class="card-link animate-on-scroll icon-amber">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-          </div>
-          <span class="lock-badge">🔒</span>
-        </div>
-        <h2>Prüfung erstellen</h2>
-        <p>Fragen-Editor mit JSON-Import.</p>
-        <div class="card-arrow">Login →</div>
-      </a>
-
-      <a href="login.html" class="card-link animate-on-scroll icon-green">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <span class="lock-badge">🔒</span>
-        </div>
-        <h2>Live-Monitoring</h2>
-        <p>Echtzeit-Übersicht während Prüfungen.</p>
-        <div class="card-arrow">Login →</div>
-      </a>
-
-      <a href="login.html" class="card-link animate-on-scroll icon-slate">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </div>
-          <span class="lock-badge">🔒</span>
-        </div>
-        <h2>Code-Generator</h2>
-        <p>Schüler-Codes generieren &amp; drucken.</p>
-        <div class="card-arrow">Login →</div>
-      </a>
-
-      <a href="timer.html" class="card-link animate-on-scroll icon-orange">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-        </div>
+    <a href="timer.html" class="link-item">
+      <div class="link-icon i-orange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="link-body">
         <h2>Klassentimer</h2>
-        <p>Phasen steuern mit Countdown.</p>
-        <div class="card-arrow">Öffnen →</div>
-      </a>
-    </div>
+        <p>Phasen steuern mit Countdown</p>
+      </div>
+      <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
   </div>
-</div>
+</main>
 
-<!-- FOOTER -->
 <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-left">
-      <div class="logo-mark" style="width:28px;height:28px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      </div>
-      <div>
-        <div class="footer-logo-text">Unterricht<span>.</span>Digital</div>
-        <div class="footer-desc">Digitale Materialien für das Kaufmännische Berufskolleg NRW</div>
-      </div>
-    </div>
-    <div class="footer-links">
-      <a href="index.html">Materialien</a>
-      <a href="pruefung.html">Prüfung</a>
-      <a href="login.html">Login</a>
-    </div>
-    <div class="footer-copy">2026 · HBBK</div>
-  </div>
+  Unterricht.Digital · Berufskolleg
 </footer>
 
 </div>
-
-<script>
-/* ============================================================
-   LIVE DATA & ANIMATIONS
-   ============================================================ */
-
-// 1. Fetch material count from index.html
-async function loadStats() {
-  try {
-    const res = await fetch('index.html');
-    const text = await res.text();
-    // Parse the materialien array
-    const match = text.match(/const materialien\s*=\s*(\[.*?\]);/s);
-    if (match) {
-      const data = JSON.parse(match[1]);
-      const materials = data.length;
-      const faecher = new Set(data.map(m => m.fach)).size;
-      const themen = new Set(data.map(m => m.thema)).size;
-
-      animateNumber('stat-materials', materials);
-      animateNumber('stat-faecher', faecher);
-      animateNumber('stat-themen', themen);
-
-      document.getElementById('live-count').textContent = materials + ' Materialien online';
-    }
-  } catch (e) {
-    console.warn('Could not load stats:', e);
-    document.getElementById('live-count').textContent = 'Materialien online';
-  }
-}
-
-function animateNumber(id, target) {
-  const el = document.getElementById(id);
-  let current = 0;
-  const duration = 1000;
-  const start = performance.now();
-
-  function step(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
-    current = Math.round(eased * target);
-    el.textContent = current;
-    if (progress < 1) requestAnimationFrame(step);
-  }
-
-  requestAnimationFrame(step);
-}
-
-// 2. Scroll-triggered animations
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.animate-on-scroll').forEach(el => {
-  observer.observe(el);
-});
-
-// 3. Init
-loadStats();
-</script>
 
 </body>
 </html>
