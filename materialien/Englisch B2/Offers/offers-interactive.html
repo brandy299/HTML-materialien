@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing an Offer – Office Design Ltd.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --paper:#f5f0e8; --paper-dark:#ede5d5; --ink:#1a1410; --ink-mid:#3d3228; --ink-light:#7a6a5a; --ink-faint:#b8a898;
+  --accent:#1a6b4a; --accent-soft:#e4f5ed; --gold:#b8860b; --gold-soft:#faf3e0;
+  --red:#c0392b; --red-soft:#f5e6e4; --blue:#1a4a6b; --blue-soft:#e4edf5;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#1a2c1e;background-image:radial-gradient(ellipse at 20% 20%,#243d28 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,#101a12 0%,transparent 50%);min-height:100vh;font-family:'Source Serif 4',Georgia,serif;color:var(--ink);overflow-x:hidden}
+.app-shell{display:grid;grid-template-columns:280px 1fr;grid-template-rows:auto 1fr;min-height:100vh;max-width:1400px;margin:0 auto}
+.site-header{grid-column:1/-1;background:var(--paper);border-bottom:2px solid var(--ink);padding:18px 36px;display:flex;align-items:baseline;gap:20px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(26,20,16,0.25)}
+.site-header .kicker{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--ink-light);text-transform:uppercase;border:1px solid var(--ink-faint);padding:3px 8px;border-radius:3px}
+.site-header h1{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;font-style:italic;color:var(--ink);letter-spacing:-0.02em}
+.site-header .sub{font-size:0.8rem;color:var(--ink-light);margin-left:auto;font-style:italic}
+.sidebar{background:var(--paper-dark);border-right:1px solid rgba(26,20,16,0.15);padding:28px 0;position:sticky;top:61px;height:calc(100vh - 61px);overflow-y:auto}
+.sidebar-section{padding:0 20px 20px}
+.sidebar-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-faint);padding:0 4px;margin-bottom:10px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:6px;cursor:pointer;transition:all 0.2s ease;border:1px solid transparent;margin-bottom:3px}
+.nav-item:hover{background:rgba(26,20,16,0.06)}
+.nav-item.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.nav-item .num{font-family:'Playfair Display',serif;font-size:0.85rem;font-style:italic;width:20px;text-align:center;opacity:0.5;flex-shrink:0}
+.nav-item.active .num{opacity:0.7;color:var(--paper)}
+.nav-item .label{font-size:0.82rem;font-weight:600;color:var(--ink-mid)}
+.nav-item.active .label{color:var(--paper)}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:var(--ink-faint);margin-left:auto;flex-shrink:0;transition:background 0.2s}
+.nav-item.visited .dot{background:var(--accent)}
+.nav-item.active .dot{background:var(--gold)}
+.progress-ring{margin:20px;padding:16px;background:var(--paper);border-radius:8px;border:1px solid rgba(26,20,16,0.12);text-align:center}
+.progress-ring .pct{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--ink)}
+.progress-bar{height:4px;background:rgba(26,20,16,0.1);border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;background:var(--ink);border-radius:2px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.main-content{background:#ddd8ca;padding:40px 48px;overflow-y:auto}
+.section{display:none;animation:sectionIn 0.5s cubic-bezier(0.16,1,0.3,1) both}
+.section.visible{display:block}
+@keyframes sectionIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-light);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.section-eyebrow::after{content:'';flex:1;height:1px;background:var(--ink-faint)}
+.section-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--ink);letter-spacing:-0.03em;line-height:1.1;margin-bottom:6px}
+.section-sub{font-size:1rem;color:var(--ink-light);font-style:italic;margin-bottom:32px;max-width:560px}
+.ornament{text-align:center;color:var(--ink-faint);margin:28px 0;font-size:1rem;letter-spacing:0.5em}
+.card{background:var(--paper);border:1px solid rgba(26,20,16,0.12);border-radius:6px;padding:22px 26px;box-shadow:2px 2px 0 rgba(26,20,16,0.05);transition:box-shadow 0.2s}
+.card:hover{box-shadow:4px 4px 0 rgba(26,20,16,0.1)}
+.card-heavy{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:26px 30px;box-shadow:5px 5px 0 rgba(26,20,16,0.1)}
+.offer-paper{background:#fdfaf5;border:1px solid rgba(26,20,16,0.15);box-shadow:8px 8px 0 rgba(26,20,16,0.08),16px 16px 0 rgba(26,20,16,0.04);border-radius:2px;padding:32px 40px 32px 52px;position:relative;font-family:'Source Serif 4',serif;font-size:0.78rem;line-height:1.7;color:#1a1410}
+.offer-paper::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 28px 28px 0;border-color:transparent #ddd8ca transparent transparent}
+.email-header{background:rgba(26,20,16,0.04);border:1px solid rgba(26,20,16,0.1);border-radius:4px;padding:10px 14px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--ink-mid);line-height:1.8}
+.op{position:relative;padding:4px 8px;margin:3px -8px;border-radius:3px;border-left:3px solid transparent;transition:all 0.25s ease;cursor:pointer}
+.op:hover,.op.highlight{background:rgba(26,107,74,0.07);border-left-color:var(--accent)}
+.op.highlight{background:rgba(26,107,74,0.1)}
+.op-number{position:absolute;left:-30px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:0.65rem;font-style:italic;color:var(--ink-faint);font-weight:700;transition:color 0.2s;white-space:nowrap}
+.op:hover .op-number,.op.highlight .op-number{color:var(--accent)}
+.anatomy-grid{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start}
+.info-panel{position:sticky;top:20px}
+.info-card{background:var(--paper);border:2px solid var(--ink);border-radius:4px;overflow:hidden;box-shadow:6px 6px 0 rgba(26,20,16,0.12);min-height:280px}
+.info-card-header{background:var(--ink);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.info-card-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;font-style:italic;color:var(--paper);line-height:1;width:32px}
+.info-card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--paper)}
+.info-card-de{font-size:0.75rem;color:rgba(245,240,232,0.55);font-style:italic;margin-top:1px}
+.info-card-body{padding:20px}
+.info-card-desc{font-size:0.88rem;line-height:1.65;color:var(--ink-mid);margin-bottom:14px}
+.info-card-rule{background:var(--accent-soft);border-left:3px solid var(--accent);padding:10px 14px;font-size:0.8rem;color:var(--ink-mid);border-radius:0 4px 4px 0;margin-bottom:12px;white-space:pre-line}
+.info-card-example{background:rgba(26,20,16,0.04);border:1px solid rgba(26,20,16,0.1);padding:10px 14px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-mid);white-space:pre-line;line-height:1.6}
+.info-hint{background:var(--paper);border:2px dashed var(--ink-faint);border-radius:4px;padding:40px 20px;text-align:center;color:var(--ink-light);font-style:italic;font-size:0.88rem;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.info-hint .arrow-icon{font-size:2rem;opacity:0.3;animation:bobLeft 2s ease-in-out infinite}
+@keyframes bobLeft{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+.terms-table{width:100%;border-collapse:collapse;font-size:0.83rem}
+.terms-table th{background:var(--ink);color:var(--paper);padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500}
+.terms-table td{padding:11px 14px;border-bottom:1px solid rgba(26,20,16,0.08);vertical-align:top;color:var(--ink-mid);line-height:1.5}
+.terms-table tr:nth-child(even) td{background:rgba(245,240,232,0.5)}
+.terms-table tr:hover td{background:var(--accent-soft)}
+.terms-table .mono{font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:var(--ink)}
+.polite-pair{background:var(--paper);border:1px solid rgba(26,20,16,0.12);border-radius:8px;overflow:hidden;margin-bottom:12px;box-shadow:2px 2px 0 rgba(26,20,16,0.05)}
+.polite-top{padding:14px 18px;background:var(--red-soft);border-bottom:1px solid rgba(26,20,16,0.08);font-size:0.85rem;color:#7a1a10;font-family:'JetBrains Mono',monospace}
+.polite-bottom{padding:14px 18px;background:var(--accent-soft);font-size:0.85rem;color:#0e4a30;font-family:'JetBrains Mono',monospace;display:none}
+.polite-bottom.reveal{display:block;animation:sectionIn 0.3s ease both}
+.polite-toggle{display:flex;align-items:center;gap:8px;padding:8px 18px;font-size:0.78rem;color:var(--ink-light);cursor:pointer;transition:color 0.2s;border:none;background:none;font-family:'Source Serif 4',serif;width:100%}
+.polite-toggle:hover{color:var(--accent)}
+.builder-wrap{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+.builder-controls{position:sticky;top:20px}
+.build-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--paper);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;cursor:pointer;margin-bottom:5px;transition:all 0.2s ease;text-align:left;font-family:'Source Serif 4',serif}
+.build-btn:hover{border-color:var(--ink);background:white}
+.build-btn.done{border-color:var(--accent);background:var(--accent-soft)}
+.build-btn .b-num{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:1rem;color:var(--ink-faint);width:22px;flex-shrink:0}
+.build-btn.done .b-num{color:var(--accent)}
+.build-btn .b-label{font-size:0.8rem;font-weight:600;color:var(--ink-mid)}
+.build-btn.done .b-label{color:var(--accent)}
+.build-btn .b-check{margin-left:auto;color:var(--accent);font-size:0.9rem;opacity:0;transition:opacity 0.2s}
+.build-btn.done .b-check{opacity:1}
+.anim-letter{background:#fdfaf5;border:1px solid rgba(26,20,16,0.15);box-shadow:8px 8px 0 rgba(26,20,16,0.08);border-radius:2px;padding:28px 32px;font-family:'Source Serif 4',serif;font-size:0.78rem;line-height:1.7;color:#1a1410;min-height:380px;position:relative}
+.anim-letter::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 26px 26px 0;border-color:transparent #ddd8ca transparent transparent}
+.letter-block{opacity:0;transform:translateX(-10px);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);border-left:3px solid transparent;padding-left:8px;margin-left:-8px}
+.letter-block.reveal{opacity:1;transform:translateX(0);border-left-color:var(--accent)}
+.letter-block.settled{border-left-color:transparent}
+.letter-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:var(--accent);color:white;border-radius:2px;margin-bottom:3px;opacity:0;transition:opacity 0.3s ease 0.1s}
+.letter-block.reveal .letter-tag{opacity:1}
+.letter-block.settled .letter-tag{opacity:0}
+.quiz-wrap{max-width:680px}
+.quiz-q{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:28px;margin-bottom:20px;box-shadow:4px 4px 0 rgba(26,20,16,0.08)}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px}
+.q-text{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:18px;line-height:1.4}
+.q-options{display:grid;gap:8px}
+.q-opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;cursor:pointer;transition:all 0.2s ease;font-size:0.88rem;color:var(--ink-mid);background:rgba(255,255,255,0.5)}
+.q-opt:hover:not(.locked){border-color:var(--ink);background:white;transform:translateX(3px)}
+.q-opt .q-letter{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:0.9rem;color:var(--ink-faint);width:18px;flex-shrink:0}
+.q-opt.correct{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.q-opt.correct .q-letter{color:var(--accent)}
+.q-opt.wrong{border-color:var(--red);background:var(--red-soft);color:var(--red);animation:shake 0.4s ease}
+.q-opt.wrong .q-letter{color:var(--red)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
+.q-feedback{margin-top:14px;padding:12px 16px;border-radius:6px;font-size:0.82rem;line-height:1.55;display:none}
+.q-feedback.show{display:block;animation:feedbackIn 0.3s ease both}
+@keyframes feedbackIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.q-feedback.ok{background:var(--accent-soft);color:#0e4a30;border:1px solid rgba(26,107,74,0.2)}
+.q-feedback.bad{background:var(--red-soft);color:#8B2020;border:1px solid rgba(192,57,43,0.2)}
+.quiz-result{background:var(--ink);border-radius:8px;padding:32px;text-align:center;color:var(--paper);display:none}
+.quiz-result.show{display:block;animation:sectionIn 0.5s ease both}
+.result-score{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;line-height:1;margin:12px 0}
+.section-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid rgba(26,20,16,0.12)}
+.btn-nav{display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:6px;cursor:pointer;font-family:'Source Serif 4',serif;font-size:0.9rem;font-weight:600;transition:all 0.2s ease;border:2px solid var(--ink)}
+.btn-prev{background:transparent;color:var(--ink)}
+.btn-prev:hover{background:rgba(26,20,16,0.06)}
+.btn-next{background:var(--ink);color:var(--paper)}
+.btn-next:hover{background:#2d2418;box-shadow:3px 3px 0 rgba(26,20,16,0.2)}
+.btn-nav:disabled{opacity:0.3;pointer-events:none}
+@media(max-width:900px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto;display:flex;overflow-x:auto;padding:12px;gap:8px;flex-wrap:wrap}.sidebar-label{display:none}.anatomy-grid,.builder-wrap{grid-template-columns:1fr}.info-panel{position:static}.main-content{padding:24px 20px}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+<header class="site-header">
+  <span class="kicker">Business English · B1/B2 · Commercial Correspondence</span>
+  <h1>Writing an Offer</h1>
+  <span class="sub">Office Design Ltd. · Interactive Learning Module</span>
+</header>
+
+<nav class="sidebar">
+  <div style="padding:0 20px 8px;">
+    <div class="progress-ring">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:4px;">Progress</div>
+      <div class="pct" id="pct-display">0%</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Sections</div>
+    <div class="nav-item active" data-sec="0" onclick="gotoSection(0)"><span class="num">I</span><span class="label">What is an Offer?</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="1" onclick="gotoSection(1)"><span class="num">II</span><span class="label">The 8-Point Checklist</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="2" onclick="gotoSection(2)"><span class="num">III</span><span class="label">Offer Anatomy</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="3" onclick="gotoSection(3)"><span class="num">IV</span><span class="label">Terms &amp; Incoterms</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="4" onclick="gotoSection(4)"><span class="num">V</span><span class="label">Useful Phrases</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="5" onclick="gotoSection(5)"><span class="num">VI</span><span class="label">Build an Offer</span><span class="dot"></span></div>
+    <div class="nav-item" data-sec="6" onclick="gotoSection(6)"><span class="num">VII</span><span class="label">Quick Quiz</span><span class="dot"></span></div>
+  </div>
+</nav>
+
+<main class="main-content">
+
+<!-- SEC 0 -->
+<section class="section visible" id="sec-0">
+  <p class="section-eyebrow">Introduction</p>
+  <h2 class="section-title">What is a business offer?</h2>
+  <p class="section-sub">An offer is a seller's formal proposal to supply goods or services at defined terms — a central document in commercial correspondence.</p>
+
+  <div class="card-heavy" style="margin-bottom:24px;">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:18px;">The Commercial Correspondence Chain</p>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+      <div style="text-align:center;padding:14px 16px;background:rgba(26,20,16,0.05);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;min-width:100px;"><div style="font-size:1.2rem;margin-bottom:4px;">📩</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:600;color:var(--ink-light);text-transform:uppercase;">Enquiry</div></div>
+      <div style="font-size:1.2rem;color:var(--ink-faint);padding:0 8px;">→</div>
+      <div style="text-align:center;padding:14px 16px;background:var(--ink);border:1.5px solid var(--ink);border-radius:6px;min-width:100px;"><div style="font-size:1.2rem;margin-bottom:4px;">📋</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:600;color:var(--gold);text-transform:uppercase;">Offer ← here</div></div>
+      <div style="font-size:1.2rem;color:var(--ink-faint);padding:0 8px;">→</div>
+      <div style="text-align:center;padding:14px 16px;background:rgba(26,20,16,0.04);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;min-width:100px;"><div style="font-size:1.2rem;margin-bottom:4px;">🛒</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:600;color:var(--ink-light);text-transform:uppercase;">Order</div></div>
+      <div style="font-size:1.2rem;color:var(--ink-faint);padding:0 8px;">→</div>
+      <div style="text-align:center;padding:14px 16px;background:rgba(26,20,16,0.04);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;min-width:100px;"><div style="font-size:1.2rem;margin-bottom:4px;">✅</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:600;color:var(--ink-light);text-transform:uppercase;">Confirmation</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div class="card" style="border-top:4px solid var(--accent);">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:6px;">Solicited Offer</div>
+      <div style="font-size:0.72rem;font-style:italic;color:var(--ink-light);margin-bottom:10px;">Angefordertes Angebot</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">Sent in response to a customer's enquiry. Must contain all information necessary for the customer to reach a decision.</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--gold);">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:6px;">Unsolicited Offer</div>
+      <div style="font-size:0.72rem;font-style:italic;color:var(--ink-light);margin-bottom:10px;">Unaufgefordertes Angebot</div>
+      <p style="font-size:0.84rem;color:var(--ink-mid);line-height:1.55;">Sent on the seller's own initiative — "on the off chance that the individual or company may be interested." Must introduce the company convincingly.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--paper);border-left:5px solid var(--gold);padding:20px 24px;border-radius:0 6px 6px 0;margin-bottom:24px;box-shadow:3px 3px 0 rgba(26,20,16,0.06);">
+    <p style="font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--ink);line-height:1.5;">"A solicited offer should contain all the information necessary for the potential customer to reach a decision."</p>
+  </div>
+
+  <div class="card-heavy">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:16px;">What you'll learn:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;gap:10px;"><span style="color:var(--accent);margin-top:2px;">✦</span><span style="font-size:0.86rem;color:var(--ink-mid);">Apply the 8-point offers checklist</span></div>
+      <div style="display:flex;gap:10px;"><span style="color:var(--accent);margin-top:2px;">✦</span><span style="font-size:0.86rem;color:var(--ink-mid);">Identify all parts of a detailed offer</span></div>
+      <div style="display:flex;gap:10px;"><span style="color:var(--accent);margin-top:2px;">✦</span><span style="font-size:0.86rem;color:var(--ink-mid);">Use correct Incoterms and payment terms</span></div>
+      <div style="display:flex;gap:10px;"><span style="color:var(--accent);margin-top:2px;">✦</span><span style="font-size:0.86rem;color:var(--ink-mid);">Write in a polite, professional register</span></div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" disabled>← Previous</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(1)">The 8-Point Checklist →</button>
+  </div>
+</section>
+
+<!-- SEC 1: CHECKLIST -->
+<section class="section" id="sec-1">
+  <p class="section-eyebrow">Section II</p>
+  <h2 class="section-title">The 8-Point Checklist</h2>
+  <p class="section-sub">Every complete offer should contain these eight elements. Click each one to expand it.</p>
+  <div id="checklist-container"></div>
+  <div class="ornament">— ✦ —</div>
+  <div class="card-heavy">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:14px;">At a glance</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="glance-grid"></div>
+    <p style="font-size:0.78rem;color:var(--ink-light);font-style:italic;margin-top:12px;">Note: Letters have <em>enclosures</em>; emails have <em>attachments</em>.</p>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(0)">← Introduction</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(2)">Offer Anatomy →</button>
+  </div>
+</section>
+
+<!-- SEC 2: ANATOMY -->
+<section class="section" id="sec-2">
+  <p class="section-eyebrow">Section III</p>
+  <h2 class="section-title">Offer Anatomy</h2>
+  <p class="section-sub">A complete offer in practice. Click any numbered part to see the explanation and model phrases.</p>
+  <div class="anatomy-grid">
+    <div class="offer-paper">
+      <div class="email-header">
+        <div><strong>From:</strong> s.mitchell@officedesign.co.uk</div>
+        <div><strong>To:</strong> j.dickinson@eldarin-stationers.saf</div>
+        <div class="op" data-part="0" onclick="showPart(0)" style="font-weight:700;"><span class="op-number">①</span><strong>Subject:</strong> Offer for office furniture – your enquiry of 12 May 2025</div>
+        <div class="op" data-part="6" onclick="showPart(6)"><span class="op-number">②</span><strong>Attachment:</strong> Catalogue 2025; Price list 2025</div>
+      </div>
+      <div class="op" data-part="7" onclick="showPart(7)" style="margin-bottom:6px;"><span class="op-number">③</span>Dear Ms Dickinson</div>
+      <div class="op" data-part="0" onclick="showPart(0)" style="margin-bottom:8px;"><span class="op-number">④</span>Many thanks for your enquiry of 12 May 2025. We are pleased to submit the following offer and feel sure we can supply you with all the goods you need.</div>
+      <div class="op" data-part="1" onclick="showPart(1)" style="margin-bottom:8px;"><span class="op-number">⑤</span>Office Design Ltd. is a major distributor of office furniture with an excellent reputation throughout the European Union and beyond. Our company manufactures a wide range of high-quality products and already has many satisfied customers throughout Europe and North America.</div>
+      <div class="op" data-part="1" onclick="showPart(1)" style="margin-bottom:8px;">As regards the goods requested, we are pleased to submit the following quotation and will be pleased to supply you with our <em>ErgoLine</em> range of chairs and desks.</div>
+      <div class="op" data-part="2" onclick="showPart(2)" style="margin-bottom:8px;"><span class="op-number">⑥</span>Please refer to the attached catalogue for further information on our entire range. Samples are available on request.</div>
+      <div class="op" data-part="3" onclick="showPart(3)" style="margin-bottom:8px;"><span class="op-number">⑦</span>Our price is quoted CIP Frankfurt Airport. Wholesalers are granted a trade discount of 10%. A quantity discount of 5% is granted on orders for 20 or more items.</div>
+      <div class="op" data-part="4" onclick="showPart(4)" style="margin-bottom:8px;"><span class="op-number">⑧</span>Delivery will be made within 14 days after receipt of order. Delivery can be made immediately from stock for standard items.</div>
+      <div class="op" data-part="5" onclick="showPart(5)" style="margin-bottom:8px;"><span class="op-number">⑨</span>Our terms of payment for an initial order are CWO by bank transfer or letter of credit. Or, with favourable references, 10 days 2%, 30 days net for regular orders.</div>
+      <div class="op" data-part="6" onclick="showPart(6)" style="margin-bottom:8px;"><span class="op-number">⑩</span>Please find attached our current catalogue and price list for your information.</div>
+      <div class="op" data-part="7" onclick="showPart(7)"><span class="op-number">⑪</span>We hope our offer is to your liking. Please do not hesitate to contact us if you require further details. We feel sure that a trial order will convince you of the quality of our products and look forward to doing business with you.<br><br>Yours sincerely<br><em style="font-family:'Playfair Display',serif;font-size:1.2rem;color:rgba(26,20,16,0.3);display:block;margin:4px 0 2px;">Sarah Mitchell</em>Sarah Mitchell (Ms) · Sales Manager · Office Design Ltd.</div>
+    </div>
+    <div class="info-panel">
+      <div class="info-hint" id="anatomy-hint"><div class="arrow-icon">←</div><p>Click any numbered part to see the explanation.</p></div>
+      <div class="info-card" id="anatomy-card" style="display:none;">
+        <div class="info-card-header"><div class="info-card-num" id="ic-num">1</div><div><div class="info-card-title" id="ic-title"></div><div class="info-card-de" id="ic-de"></div></div></div>
+        <div class="info-card-body"><p class="info-card-desc" id="ic-desc"></p><div class="info-card-rule" id="ic-rule"></div><div class="info-card-example" id="ic-example"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(1)">← 8-Point Checklist</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(3)">Terms &amp; Incoterms →</button>
+  </div>
+</section>
+
+<!-- SEC 3: TERMS -->
+<section class="section" id="sec-3">
+  <p class="section-eyebrow">Section IV</p>
+  <h2 class="section-title">Terms &amp; Incoterms</h2>
+  <p class="section-sub">The commercial backbone of every offer. Be precise about payment, delivery and pricing clauses.</p>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:12px;">Terms of Payment</h3>
+  <div style="background:var(--paper);border-radius:6px;overflow:hidden;box-shadow:3px 3px 0 rgba(26,20,16,0.07);margin-bottom:28px;">
+    <table class="terms-table">
+      <thead><tr><th>English phrase</th><th>Abbreviation</th><th>Deutsch</th></tr></thead>
+      <tbody>
+        <tr><td>cash with order</td><td class="mono">CWO</td><td>Kasse bei Auftragserteilung</td></tr>
+        <tr><td>30% on order, 70% before loading</td><td class="mono">—</td><td>30% bei Bestellung, 70% vor Verladung</td></tr>
+        <tr><td>10 days 2%, 30 days net</td><td class="mono">—</td><td>10 Tage 2% Skonto, 30 Tage netto</td></tr>
+        <tr><td>by bank transfer</td><td class="mono">—</td><td>per Banküberweisung</td></tr>
+        <tr><td>by letter of credit (irrevocable)</td><td class="mono">L/C</td><td>per (unwiderrufliches) Akkreditiv</td></tr>
+        <tr><td>open account terms (regular customers)</td><td class="mono">—</td><td>offenes Zahlungsziel (Stammkunden)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:12px;">Incoterms® — Delivery Clauses</h3>
+  <div style="background:var(--accent-soft);border:1px solid rgba(26,107,74,0.2);border-radius:6px;padding:14px 18px;margin-bottom:14px;font-size:0.84rem;color:var(--ink-mid);">
+    <strong style="color:var(--accent);">Incoterms®</strong> define who is responsible for transport, insurance and customs. Always state them with a named location. The price includes all costs up to that named point.
+  </div>
+  <div style="background:var(--paper);border-radius:6px;overflow:hidden;box-shadow:3px 3px 0 rgba(26,20,16,0.07);margin-bottom:28px;">
+    <table class="terms-table">
+      <thead><tr><th>Incoterm</th><th>Full name</th><th>Seller pays to…</th><th>Example in offer</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">FCA [place]</td><td>Free Carrier</td><td>Named carrier</td><td class="mono">Our price is quoted FCA our premises.</td></tr>
+        <tr><td class="mono">CIP [place]</td><td>Carriage &amp; Insurance Paid To</td><td>Named destination incl. insurance</td><td class="mono">Delivery will be made CIP Frankfurt Airport.</td></tr>
+        <tr><td class="mono">CIF [port]</td><td>Cost, Insurance &amp; Freight</td><td>Destination port incl. insurance</td><td class="mono">Our price is quoted CIF Lagos.</td></tr>
+        <tr><td class="mono">DDP [place]</td><td>Delivered Duty Paid</td><td>Buyer's door incl. customs</td><td class="mono">Price quoted DDP your premises.</td></tr>
+        <tr><td class="mono">FOB [port]</td><td>Free on Board</td><td>Port of loading</td><td class="mono">Prices are to be understood FOB Dover.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:12px;">Discounts</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+    <div class="card" style="border-left:4px solid var(--accent);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:600;color:var(--accent);margin-bottom:6px;text-transform:uppercase;">Trade / Cash Discount</div>
+      <p style="font-size:0.83rem;color:var(--ink-mid);line-height:1.5;margin-bottom:8px;">Given to wholesalers and trade partners.</p>
+      <code style="font-size:0.75rem;background:rgba(26,20,16,0.05);padding:4px 8px;border-radius:3px;display:block;">Wholesalers are granted a trade/cash discount of 20%.</code>
+    </div>
+    <div class="card" style="border-left:4px solid var(--gold);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:600;color:var(--gold);margin-bottom:6px;text-transform:uppercase;">Quantity Discount</div>
+      <p style="font-size:0.83rem;color:var(--ink-mid);line-height:1.5;margin-bottom:8px;">Given for large orders above a threshold.</p>
+      <code style="font-size:0.75rem;background:rgba(26,20,16,0.05);padding:4px 8px;border-radius:3px;display:block;">A quantity discount of 5% is granted on orders for 10 or more items.</code>
+    </div>
+    <div class="card" style="border-left:4px solid var(--blue);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:600;color:var(--blue);margin-bottom:6px;text-transform:uppercase;">Preferential Terms</div>
+      <p style="font-size:0.83rem;color:var(--ink-mid);line-height:1.5;margin-bottom:8px;">For regular customers who place ongoing orders.</p>
+      <code style="font-size:0.75rem;background:rgba(26,20,16,0.05);padding:4px 8px;border-radius:3px;display:block;">Regular customers may be granted preferential terms.</code>
+    </div>
+    <div class="card" style="border-left:4px solid var(--red);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:600;color:var(--red);margin-bottom:6px;text-transform:uppercase;">Cash Discount (Skonto)</div>
+      <p style="font-size:0.83rem;color:var(--ink-mid);line-height:1.5;margin-bottom:8px;">Reward for early payment.</p>
+      <code style="font-size:0.75rem;background:rgba(26,20,16,0.05);padding:4px 8px;border-radius:3px;display:block;">10 days 2%, 30 days net (for regular orders).</code>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(2)">← Offer Anatomy</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(4)">Useful Phrases →</button>
+  </div>
+</section>
+
+<!-- SEC 4: PHRASES -->
+<section class="section" id="sec-4">
+  <p class="section-eyebrow">Section V</p>
+  <h2 class="section-title">Useful Phrases</h2>
+  <p class="section-sub">Standard formulas for each part of the offer. Click "Reveal" to see the polished version.</p>
+
+  <div class="card-heavy" style="margin-bottom:24px;">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:16px;">Reference to Enquiry — Opening Phrases</p>
+    <div style="display:grid;gap:8px;">
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">Many thanks for your enquiry of [date] / the above-mentioned enquiry.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">We were delighted to receive your enquiry dated [date] about our [products].</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">As agreed in our pleasant telephone conversation of this morning, I am pleased to let you have details of our offer in writing.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">As regards the goods requested, we are pleased to submit the following quotation and will be pleased to supply you with [quantity + article] at [price] each.</div>
+    </div>
+  </div>
+
+  <div class="card-heavy" style="margin-bottom:24px;">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:16px;">Company Description Phrases</p>
+    <div style="display:grid;gap:8px;">
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--gold);">We are a major distributor of [products] with an excellent reputation throughout the European Union and beyond.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--gold);">Our company manufactures a wide range of high-quality products and already has many satisfied customers throughout Europe and North America.</div>
+    </div>
+  </div>
+
+  <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:6px;">Direct vs. Standard — Polite Language Practice</p>
+  <p style="font-size:0.84rem;color:var(--ink-light);font-style:italic;margin-bottom:16px;">Click each "Reveal" button to see the standard formula used in business offers.</p>
+  <div id="polite-container"></div>
+
+  <div class="card-heavy" style="margin-top:24px;">
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;margin-bottom:16px;">Polite Endings</p>
+    <div style="display:grid;gap:8px;">
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">We hope our offer is to your liking.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">Please do not hesitate to contact us if you require further details.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">We feel sure that a trial order will convince you of the quality of our products and look forward to doing business with you.</div>
+      <div style="background:rgba(26,20,16,0.04);padding:9px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-mid);border-left:3px solid var(--accent);">We look forward to receiving your order.</div>
+    </div>
+  </div>
+
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(3)">← Terms &amp; Incoterms</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(5)">Build an Offer →</button>
+  </div>
+</section>
+
+<!-- SEC 5: BUILD -->
+<section class="section" id="sec-5">
+  <p class="section-eyebrow">Section VI</p>
+  <h2 class="section-title">Build an Offer</h2>
+  <p class="section-sub">The 8 checklist parts are shuffled. Click them in the correct order to assemble a complete offer.</p>
+  <div class="builder-wrap">
+    <div class="builder-controls">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px;">Click in the right order ↓</p>
+      <div id="build-controls"></div>
+      <button onclick="resetBuilder()" style="margin-top:16px;width:100%;padding:10px;background:transparent;border:1.5px solid rgba(26,20,16,0.2);border-radius:6px;cursor:pointer;font-size:0.8rem;color:var(--ink-light);font-family:'Source Serif 4',serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)';" onmouseout="this.style.borderColor='rgba(26,20,16,0.2)';this.style.color='var(--ink-light)';">Reset offer</button>
+    </div>
+    <div class="anim-letter" id="anim-letter">
+      <p class="bh" style="font-size:0.75rem;color:var(--ink-faint);font-style:italic;text-align:center;padding-top:60px;">Click parts in the correct order to build the offer...</p>
+      <div id="letter-build-content"></div>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(4)">← Useful Phrases</button>
+    <button class="btn-nav btn-next" onclick="gotoSection(6)">Quick Quiz →</button>
+  </div>
+</section>
+
+<!-- SEC 6: QUIZ -->
+<section class="section" id="sec-6">
+  <p class="section-eyebrow">Section VII</p>
+  <h2 class="section-title">Quick Quiz</h2>
+  <p class="section-sub">Six questions on offers. Instant feedback on every answer.</p>
+  <div class="quiz-wrap" id="quiz-container"></div>
+  <div class="section-nav">
+    <button class="btn-nav btn-prev" onclick="gotoSection(5)">← Build an Offer</button>
+    <button class="btn-nav btn-next" style="background:var(--accent);border-color:var(--accent);color:white;" onclick="gotoSection(0)">Start over ↺</button>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* DATA */
+const CHECKLIST = [
+  {num:1,title:"Reference to enquiry",de:"Bezug auf Anfrage",desc:"Always open a solicited offer by referring to the customer's enquiry — state the date and how it was received (letter, email, telephone).",rule:"Never start with 'I/We received your letter'. Use a formal, polished opening formula.",phrases:["Many thanks for your enquiry of [date] / the above-mentioned enquiry.","We were delighted to receive your enquiry dated [date] about our [products].","As agreed in our pleasant telephone conversation of this morning, I am pleased to let you have details of our offer in writing."]},
+  {num:2,title:"Description of company / goods / services",de:"Beschreibung der Firma / Waren / Dienstleistungen",desc:"Describe your company and/or the goods offered. Essential in unsolicited offers. For solicited offers, move quickly to the product description using the standard formula.",rule:"Standard formula for product description:\n'As regards the goods requested, we are pleased to submit the following quotation and will be pleased to supply you with [qty + article] at [price] each.'",phrases:["We are a major distributor of [products] with an excellent reputation throughout the European Union and beyond.","Our company manufactures a wide range of high-quality products and already has many satisfied customers throughout Europe.","As regards the goods requested, we are pleased to submit the following quotation."]},
+  {num:3,title:"Sales material",de:"Verkaufsmaterial",desc:"Mention any sales literature attached or enclosed — catalogue, price list, brochure. Also state whether samples are available on request.",rule:"Letters → enclosures (write 'Enc' / 'Encs' at foot). Emails → attachments (list under 'Attachment:' in header). Always cross-reference in the body text.",phrases:["We enclose our current catalogue and price list for your information.","Please refer to the attached brochure on the [product] for further information.","Samples are available on request.","To download our latest comprehensive catalogue and export price list, please visit our website."]},
+  {num:4,title:"Prices &amp; discounts",de:"Preise und Rabatte",desc:"State the unit price using an Incoterm and named location. Mention applicable discounts — trade, quantity, cash.",rule:"Always quote prices using an Incoterm (e.g. CIP Frankfurt Airport, FCA our premises).\nState the type and condition of each discount.",phrases:["Our price is quoted CIF Lagos / FCA our premises.","Delivery will be made CIP Frankfurt Airport.","Wholesalers are granted a trade/cash discount of [X]%.","A quantity discount of [X]% is granted on orders for 10 or more [items]."]},
+  {num:5,title:"Delivery",de:"Lieferung",desc:"State the delivery period — days after receipt of order or immediate availability. Mention packing where relevant.",rule:"Be precise: 'Delivery within 14 days after receipt of order' is the standard phrase.\n'While stocks last' = solange der Vorrat reicht.",phrases:["Delivery will be made within 14/30 days after receipt of order.","Delivery can be made immediately from stock.","While stocks last.","The goods will be packed in sturdy cartons / on pallets."]},
+  {num:6,title:"Terms of payment",de:"Zahlungsbedingungen",desc:"Specify when and how payment is to be made. Distinguish between initial order terms and regular order terms.",rule:"CWO = Cash With Order. L/C = Letter of Credit.\nFor initial orders: CWO or L/C.\nFor regular customers: 10 days 2%, 30 days net.",phrases:["Our terms of payment for an initial order are CWO by bank transfer or letter of credit.","Or, with favourable references, 10 days 2%, 30 days net (for regular orders).","Regular customers may be granted preferential terms.","If regular orders are placed with our company, open account terms may be granted."]},
+  {num:7,title:"Enclosure(s) / attachment(s)",de:"Anlage(n) / Anhang",desc:"List what is enclosed (letters) or attached (emails) in the header and in the body text.",rule:"Letters → Enc / Encs at the foot.\nEmails → list under 'Attachment:' in the header.\nAlways refer to the attachment in the body.",phrases:["Enc: Catalogue 2025; Price list 2025","Attachment: Current catalogue and export price list","Please find enclosed/attached our current catalogue and price list for your information."]},
+  {num:8,title:"Polite ending",de:"Höflicher Schluss",desc:"Every offer closes with a goodwill sentence. This keeps the relationship positive regardless of whether an order follows. Never omit this.",rule:"End with a forward-looking phrase expressing confidence and a willingness to assist.",phrases:["We hope our offer is to your liking.","Please do not hesitate to contact us if you require further details.","We feel sure that a trial order will convince you of the quality of our products and look forward to doing business with you.","We look forward to receiving your order."]}
+];
+
+const PARTS_DATA = [
+  {num:"1",title:"Reference to Enquiry",de:"Bezug auf Anfrage",desc:"The opening refers back to the customer's enquiry — by date and medium. This confirms the offer is solicited.",rule:"Use a formal formula. Never 'We received your letter'. Quote the date.",example:"Many thanks for your enquiry of 12 May 2025.\nWe were delighted to receive your enquiry dated 12 May.\nAs agreed in our pleasant telephone conversation of this morning..."},
+  {num:"2",title:"Description of Company / Goods",de:"Firmenbeschreibung / Warenbeschreibung",desc:"Introduce the company and describe the goods. 'As regards the goods requested, we are pleased to submit the following quotation' leads into the product details.",rule:"For unsolicited: company description first. For solicited: focus on the product.",example:"We are a major distributor of office furniture with an excellent reputation throughout the EU.\nAs regards the goods requested, we are pleased to submit the following quotation."},
+  {num:"3",title:"Sales Material",de:"Verkaufsmaterial",desc:"Reference any catalogue, price list or brochure. Mention that samples are available on request.",rule:"Letters → enclosures. Emails → attachments. Always refer to them in the body text.",example:"Please refer to the attached catalogue for further information.\nWe enclose our current catalogue and price list.\nSamples are available on request."},
+  {num:"4",title:"Prices, Discounts &amp; Incoterms",de:"Preise, Rabatte &amp; Incoterms",desc:"State the unit price with the applicable Incoterm and named location. List any discounts and their conditions.",rule:"Always use an Incoterm: CIP, FCA, CIF, DDP or FOB with a named place.",example:"Our price is quoted CIP Frankfurt Airport.\nWholesalers are granted a trade discount of 10%.\nA quantity discount of 5% on orders for 20 or more items."},
+  {num:"5",title:"Delivery",de:"Lieferung",desc:"State clearly when goods will be delivered — days after receipt of order, or immediately from stock.",rule:"'Delivery within 14 days after receipt of order' is the standard phrasing.",example:"Delivery will be made within 14 days after receipt of order.\nDelivery can be made immediately from stock.\nWhile stocks last."},
+  {num:"6",title:"Terms of Payment",de:"Zahlungsbedingungen",desc:"Distinguish initial order terms (CWO or L/C) from regular order terms (10 days 2%, 30 days net).",rule:"CWO = Cash With Order. L/C = Letter of Credit.\nRegular customers may be granted preferential / open account terms.",example:"Our terms of payment for an initial order are CWO by bank transfer or letter of credit.\n10 days 2%, 30 days net for regular orders.\nRegular customers may be granted preferential terms."},
+  {num:"7",title:"Enclosures / Attachments",de:"Anlage(n) / Anhang",desc:"List in both the header and body text. Use 'Enc'/'Encs' at the foot of letters. For emails, list under 'Attachment:' in the header.",rule:"Letters: Enc / Encs. Emails: Attachment: [...]. Always cross-reference in the body.",example:"Attachment: Catalogue 2025; Price list 2025\nPlease find attached our current catalogue and price list."},
+  {num:"8",title:"Polite Ending &amp; Complimentary Close",de:"Höflicher Schluss &amp; Schlussformel",desc:"Close with a goodwill sentence, then the complimentary close. The close is linked to the salutation.",rule:"Dear [name] → Yours sincerely.\nDear Sir or Madam → Yours faithfully.",example:"We hope our offer is to your liking.\nWe feel sure that a trial order will convince you of the quality of our products.\nWe look forward to doing business with you.\nYours sincerely"}
+];
+
+const POLITE_DATA = [
+  {direct:"We cannot give you a discount.",polite:"We regret that we are unable to offer you a discount on this occasion."},
+  {direct:"We do not have these products at the moment.",polite:"We regret to inform you that these products are not currently available."},
+  {direct:"We enclose brochures and our price list.",polite:"Please find enclosed our current catalogue and price list for your information."},
+  {direct:"Contact us if you have any questions.",polite:"Please do not hesitate to contact us if you require further details."},
+  {direct:"We are sure you will like the product.",polite:"We feel sure that a trial order will convince you of the quality of our products."},
+  {direct:"We want to do business with you.",polite:"We look forward to doing business with you."},
+];
+
+const BUILD_PARTS = [
+  {label:"Reference to enquiry",html:`<div style="margin-bottom:8px;">Many thanks for your enquiry of 12 May 2025. We are pleased to submit the following offer and feel sure we can supply you with all the goods you need.</div>`},
+  {label:"Description of company / goods",html:`<div style="margin-bottom:8px;">Office Design Ltd. is a major distributor of office furniture with an excellent reputation throughout the EU. As regards the goods requested, we are pleased to submit the following quotation and will be pleased to supply you with our <em>ErgoLine</em> range at competitive prices.</div>`},
+  {label:"Sales material",html:`<div style="margin-bottom:8px;">Please refer to the attached catalogue for further information on our entire range. Samples are available on request.</div>`},
+  {label:"Prices &amp; discounts",html:`<div style="margin-bottom:8px;">Our price is quoted CIP Frankfurt Airport. Wholesalers are granted a trade discount of 10%. A quantity discount of 5% is granted on orders for 20 or more items.</div>`},
+  {label:"Delivery",html:`<div style="margin-bottom:8px;">Delivery will be made within 14 days after receipt of order. Delivery can be made immediately from stock for standard items.</div>`},
+  {label:"Terms of payment",html:`<div style="margin-bottom:8px;">Our terms of payment for an initial order are CWO by bank transfer or letter of credit. Or, with favourable references, 10 days 2%, 30 days net for regular orders.</div>`},
+  {label:"Enclosures / attachments",html:`<div style="margin-bottom:8px;">Please find attached our current catalogue and price list for your information. <span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-light);">[Attachment: Catalogue 2025; Price list 2025]</span></div>`},
+  {label:"Polite ending",html:`<div style="margin-bottom:8px;">We hope our offer is to your liking. Please do not hesitate to contact us if you require further details. We feel sure that a trial order will convince you of the quality of our products and look forward to doing business with you.<br><br>Yours sincerely<br><em style="font-family:'Playfair Display',serif;font-size:1.1rem;color:rgba(26,20,16,0.3);">Sarah Mitchell</em><br>Sarah Mitchell (Ms) · Sales Manager · Office Design Ltd.</div>`},
+];
+
+const QUIZ_DATA = [
+  {q:"Which sentence is the correct opening for a solicited offer?",opts:["We received your letter and we write back to you.","As agreed in our pleasant telephone conversation of this morning, I am pleased to let you have details of our offer in writing.","We got your enquiry and want to make you an offer.","Regarding your letter: here is our offer."],correct:1,fb:{ok:"Correct! This is a standard opening formula — it references the specific occasion and uses a formal register.",bad:"The standard formula references the occasion precisely and uses polished language. 'We received your letter' is too direct; 'We got' is too informal."}},
+  {q:"'CWO' in terms of payment stands for...",opts:["Carriage Without Order — the seller pays transport","Cash With Order — payment is made when placing the order","Confirmed Written Order — the buyer confirms in writing","Credit Within 30 days"],correct:1,fb:{ok:"Correct! CWO = Cash With Order. The buyer pays in full when placing the order — the standard term for first-time customers.",bad:"CWO = Cash With Order. Payment is made in full when the order is placed. This is the standard initial-order payment term."}},
+  {q:"Which phrase correctly introduces the product description in an offer?",opts:["We would like to sell you the following products.","Here are the things we can offer you.","As regards the goods requested, we are pleased to submit the following quotation.","We have what you need in stock."],correct:2,fb:{ok:"Correct! 'As regards the goods requested, we are pleased to submit the following quotation' is the standard formula for introducing product details.",bad:"The correct standard formula is: 'As regards the goods requested, we are pleased to submit the following quotation.'"}},
+  {q:"'Delivery will be made CIP Frankfurt Airport' means...",opts:["The customer must collect goods from Frankfurt Airport","The seller pays carriage and insurance to Frankfurt Airport","Prices change at Frankfurt Airport","The goods are manufactured in Frankfurt"],correct:1,fb:{ok:"Correct! CIP = Carriage and Insurance Paid To. The seller pays all transport and insurance costs to the named destination.",bad:"CIP = Carriage and Insurance Paid To. The seller covers all costs including insurance to the named place."}},
+  {q:"What is the difference between an enclosure (letter) and an attachment (email)?",opts:["There is no difference","Enclosures are physical documents with a letter; attachments are digital files with an email","Attachments are more formal","Enclosures are optional; attachments are required"],correct:1,fb:{ok:"Correct! Letters have enclosures (write 'Enc'/'Encs'). Emails have attachments (list under 'Attachment:' in the header).",bad:"Letters have enclosures; emails have attachments. This distinction is important in commercial correspondence."}},
+  {q:"Which closing sentence is most appropriate for a business offer?",opts:["We want your order soon.","We hope our offer is to your liking and look forward to doing business with you.","Please order quickly as stocks are running out.","That's all from us."],correct:1,fb:{ok:"Correct! 'We hope our offer is to your liking' is the standard offer closing — polite, forward-looking and professional.",bad:"The standard closing is: 'We hope our offer is to your liking / We feel sure that a trial order will convince you of the quality of our products and look forward to doing business with you.'"}}
+];
+
+/* NAVIGATION */
+const TOTAL=7;let current=0;const visited=new Set([0]);
+function gotoSection(n){
+  document.getElementById(`sec-${current}`).classList.remove('visible');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.sec)===n));
+  current=n;visited.add(n);
+  document.getElementById(`sec-${n}`).classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(el=>{const s=parseInt(el.dataset.sec);el.classList.toggle('visited',visited.has(s)&&s!==n)});
+  const pct=Math.round((visited.size/TOTAL)*100);
+  document.getElementById('pct-display').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===1&&!checklistBuilt)buildChecklist();
+  if(n===4&&!politeBuilt)buildPolite();
+  if(n===5&&!builderInited)initBuilder();
+  if(n===6&&!quizBuilt)buildQuiz();
+}
+
+/* CHECKLIST ACCORDION */
+let checklistBuilt=false;
+function buildChecklist(){
+  checklistBuilt=true;
+  const c=document.getElementById('checklist-container');
+  const g=document.getElementById('glance-grid');
+  CHECKLIST.forEach((item,i)=>{
+    // glance grid
+    const gd=document.createElement('div');
+    gd.style.cssText='display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:rgba(26,20,16,0.04);border-radius:6px;border-left:3px solid var(--accent);';
+    gd.innerHTML=`<span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--ink-faint);font-size:1.1rem;line-height:1;">${item.num}</span><span style="font-size:0.83rem;color:var(--ink-mid);">${item.title}</span>`;
+    g.appendChild(gd);
+    // accordion
+    const div=document.createElement('div');div.style.cssText='margin-bottom:8px;';
+    div.innerHTML=`
+      <div onclick="toggleCL(${i})" id="clh-${i}" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--paper);border:1.5px solid rgba(26,20,16,0.15);border-radius:6px;cursor:pointer;transition:all 0.2s;box-shadow:2px 2px 0 rgba(26,20,16,0.05);" onmouseover="if(!document.getElementById('clb-${i}').classList.contains('open'))this.style.borderColor='rgba(26,20,16,0.4)'" onmouseout="if(!document.getElementById('clb-${i}').classList.contains('open'))this.style.borderColor='rgba(26,20,16,0.15)'">
+        <span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;font-style:italic;color:var(--ink-faint);width:28px;flex-shrink:0;">${item.num}</span>
+        <span style="font-weight:700;font-size:0.88rem;color:var(--ink-mid);flex:1;">${item.title}</span>
+        <span style="font-size:0.72rem;color:var(--ink-light);font-style:italic;margin-right:8px;">${item.de}</span>
+        <span id="cla-${i}" style="color:var(--ink-faint);font-size:0.8rem;transition:transform 0.25s;">▶</span>
+      </div>
+      <div id="clb-${i}" style="display:none;background:var(--paper);border:1.5px solid var(--ink);border-top:none;border-radius:0 0 6px 6px;padding:18px 20px;">
+        <p style="font-size:0.86rem;color:var(--ink-mid);line-height:1.6;margin-bottom:12px;">${item.desc}</p>
+        <div style="background:var(--accent-soft);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 4px 4px 0;font-size:0.8rem;color:var(--ink-mid);margin-bottom:12px;white-space:pre-line;">${item.rule}</div>
+        <div style="display:grid;gap:6px;">${item.phrases.map(p=>`<div style="background:rgba(26,20,16,0.04);padding:8px 12px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:var(--ink-mid);">${p}</div>`).join('')}</div>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+function toggleCL(i){
+  const b=document.getElementById(`clb-${i}`),a=document.getElementById(`cla-${i}`),h=document.getElementById(`clh-${i}`);
+  const open=b.classList.contains('open');
+  b.classList.toggle('open');b.style.display=open?'none':'block';
+  a.style.transform=open?'':'rotate(90deg)';
+  h.style.borderColor=open?'rgba(26,20,16,0.15)':'var(--ink)';
+  h.style.borderRadius=open?'6px':'6px 6px 0 0';
+}
+
+/* ANATOMY */
+function showPart(idx){
+  const p=PARTS_DATA[idx];
+  document.querySelectorAll('.op').forEach(el=>el.classList.remove('highlight'));
+  document.querySelectorAll(`.op[data-part="${idx}"]`).forEach(el=>el.classList.add('highlight'));
+  document.getElementById('anatomy-hint').style.display='none';
+  const card=document.getElementById('anatomy-card');
+  card.style.display='block';card.style.animation='none';card.offsetHeight;card.style.animation='sectionIn 0.35s ease both';
+  document.getElementById('ic-num').textContent=p.num;
+  document.getElementById('ic-title').textContent=p.title.replace('&amp;','&');
+  document.getElementById('ic-de').textContent=p.de;
+  document.getElementById('ic-desc').textContent=p.desc;
+  document.getElementById('ic-rule').textContent=p.rule;
+  document.getElementById('ic-example').textContent=p.example;
+}
+
+/* POLITE */
+let politeBuilt=false;
+function buildPolite(){
+  politeBuilt=true;
+  const c=document.getElementById('polite-container');
+  POLITE_DATA.forEach((item,i)=>{
+    const div=document.createElement('div');div.className='polite-pair';
+    div.innerHTML=`<div class="polite-top"><span style="font-size:0.62rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-right:8px;">✗ Direct</span>${item.direct}</div><button class="polite-toggle" onclick="togglePolite(${i})"><span>▶</span>&nbsp;Reveal standard phrase</button><div class="polite-bottom" id="pb-${i}"><span style="font-size:0.62rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-right:8px;">✓ Standard</span>${item.polite}</div>`;
+    c.appendChild(div);
+  });
+}
+function togglePolite(i){
+  const el=document.getElementById(`pb-${i}`);el.classList.toggle('reveal');
+  const btn=el.previousElementSibling;
+  btn.querySelector('span').textContent=el.classList.contains('reveal')?'▼':'▶';
+  btn.childNodes[1].textContent=el.classList.contains('reveal')?'\u00a0Hide':'\u00a0Reveal standard phrase';
+}
+
+/* BUILDER */
+let builderInited=false,builderState=[];
+function initBuilder(){
+  builderInited=true;
+  const ctrl=document.getElementById('build-controls');
+  const shuffled=[...BUILD_PARTS.map((_,i)=>i)];
+  for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+  shuffled.forEach(i=>{
+    const btn=document.createElement('button');btn.className='build-btn';btn.id=`bb-${i}`;
+    btn.onclick=()=>addBlock(i);
+    btn.innerHTML=`<span class="b-num">?</span><span class="b-label">${BUILD_PARTS[i].label}</span><span class="b-check">✓</span>`;
+    ctrl.appendChild(btn);
+  });
+}
+function addBlock(i){
+  if(builderState.includes(i))return;
+  if(i!==builderState.length){
+    const btn=document.getElementById(`bb-${i}`);
+    btn.style.borderColor='var(--red)';btn.style.background='var(--red-soft)';
+    btn.style.animation='none';btn.offsetHeight;btn.style.animation='shake 0.4s ease';
+    setTimeout(()=>{btn.style.borderColor='';btn.style.background='';},900);
+    showHint(`"${BUILD_PARTS[i].label}" is not the next part — what comes before it?`);
+    return;
+  }
+  builderState.push(i);hideHint();
+  const hintP=document.querySelector('#anim-letter p.bh');if(hintP)hintP.remove();
+  const content=document.getElementById('letter-build-content');
+  const block=document.createElement('div');block.className='letter-block';
+  block.innerHTML=`<div class="letter-tag">${BUILD_PARTS[i].label}</div>${BUILD_PARTS[i].html}`;
+  content.appendChild(block);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    block.classList.add('reveal');
+    setTimeout(()=>block.classList.add('settled'),1500);
+  }));
+  const btn=document.getElementById(`bb-${i}`);btn.classList.add('done');btn.querySelector('.b-num').textContent=builderState.length;
+  if(builderState.length===BUILD_PARTS.length)setTimeout(()=>confetti({particleCount:130,spread:75,origin:{y:0.6},colors:['#1a6b4a','#b8860b','#1a1410','#f5f0e8']}),600);
+}
+function showHint(msg){
+  let h=document.getElementById('builder-hint');
+  if(!h){h=document.createElement('div');h.id='builder-hint';h.style.cssText='margin-top:12px;padding:10px 14px;background:var(--red-soft);border:1px solid rgba(192,57,43,0.25);border-radius:6px;font-size:0.78rem;color:var(--red);line-height:1.5;';document.getElementById('build-controls').after(h);}
+  h.textContent='⚠ '+msg;h.style.display='block';
+}
+function hideHint(){const h=document.getElementById('builder-hint');if(h)h.style.display='none';}
+function resetBuilder(){
+  builderState=[];hideHint();
+  document.getElementById('letter-build-content').innerHTML='';
+  const letter=document.getElementById('anim-letter');
+  if(!letter.querySelector('p.bh')){const p=document.createElement('p');p.className='bh';p.style.cssText='font-size:0.75rem;color:var(--ink-faint);font-style:italic;text-align:center;padding-top:60px;';p.textContent='Click parts in the correct order to build the offer...';letter.insertBefore(p,document.getElementById('letter-build-content'));}
+  BUILD_PARTS.forEach((_,i)=>{const btn=document.getElementById(`bb-${i}`);if(btn){btn.classList.remove('done');btn.querySelector('.b-num').textContent='?';}});
+}
+
+/* QUIZ */
+let quizBuilt=false,quizScore=0,quizAnswered=0;
+const LETTERS=['A','B','C','D'];
+function buildQuiz(){
+  quizBuilt=true;
+  const c=document.getElementById('quiz-container');
+  QUIZ_DATA.forEach((q,qi)=>{
+    const div=document.createElement('div');div.className='quiz-q';
+    div.innerHTML=`<div class="q-num">Question ${qi+1} of ${QUIZ_DATA.length}</div><div class="q-text">${q.q}</div><div class="q-options">${q.opts.map((o,oi)=>`<div class="q-opt" onclick="answerQ(this,${qi},${oi},${q.correct})" id="qo-${qi}-${oi}"><span class="q-letter">${LETTERS[oi]}</span>${o}</div>`).join('')}</div><div class="q-feedback" id="qf-${qi}"></div>`;
+    c.appendChild(div);
+  });
+  const res=document.createElement('div');res.className='quiz-result';res.id='quiz-result';
+  res.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Your result</div><div class="result-score" id="result-score">0/6</div><div style="font-size:0.9rem;opacity:0.8;margin-top:8px;" id="result-msg"></div>`;
+  c.appendChild(res);
+}
+function answerQ(el,qi,oi,correct){
+  document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach(o=>{o.classList.add('locked');o.style.pointerEvents='none';});
+  const fb=document.getElementById(`qf-${qi}`);
+  if(oi===correct){el.classList.add('correct');quizScore++;fb.textContent='✓ '+QUIZ_DATA[qi].fb.ok;fb.className='q-feedback show ok';}
+  else{el.classList.add('wrong');document.getElementById(`qo-${qi}-${correct}`).classList.add('correct');fb.textContent='✗ '+QUIZ_DATA[qi].fb.bad;fb.className='q-feedback show bad';}
+  quizAnswered++;if(quizAnswered===QUIZ_DATA.length)setTimeout(showResult,700);
+}
+function showResult(){
+  const res=document.getElementById('quiz-result');
+  document.getElementById('result-score').textContent=`${quizScore}/${QUIZ_DATA.length}`;
+  const msgs=['Review the sections and try again.','Go back to the checklist and phrases.','Solid — check the points you missed.','Great work! Almost perfect.','Excellent!','Excellent!','Excellent! Full marks.'];
+  document.getElementById('result-msg').textContent=msgs[quizScore]||msgs[5];
+  res.classList.add('show');
+  if(quizScore===QUIZ_DATA.length)confetti({particleCount:150,spread:80,origin:{y:0.6},colors:['#1a6b4a','#b8860b','#1a1410','#c0392b','#f5f0e8']});
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowRight'&&current<TOTAL-1)gotoSection(current+1);
+  if(e.key==='ArrowLeft'&&current>0)gotoSection(current-1);
+});
+</script>
+</body>
+</html>
