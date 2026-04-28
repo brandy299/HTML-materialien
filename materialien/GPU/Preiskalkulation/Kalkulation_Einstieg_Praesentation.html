@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulation & Preisgestaltung – AS 7.1 | Böckler-Office GmbH</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+  :root {
+    --bg:#0d1b2a; --surf:#152232; --card:#1c2f42;
+    --a1:#f97316; /* orange */  --a2:#38bdf8; /* sky */
+    --a3:#34d399; /* emerald */ --a4:#f87171; /* red */
+    --a5:#a78bfa; /* purple */
+    --text:#e2eaf2; --muted:#6b8fa8; --border:rgba(255,255,255,0.07);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;height:100vh;overflow:hidden;}
+
+  .topbar{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(13,27,42,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:200;font-size:12px;color:var(--muted);}
+  .brand{font-weight:700;color:var(--a1);font-size:13px;letter-spacing:.02em;}
+  .tag{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);color:var(--a1);padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+  .ptag{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:var(--a3);padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+
+  .deck{width:100vw;height:100vh;position:relative;}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 56px 48px;opacity:0;pointer-events:none;transform:translateX(40px);transition:opacity .4s ease,transform .4s ease;}
+  .slide.active{opacity:1;pointer-events:all;transform:translateX(0);}
+  .slide.out{opacity:0;transform:translateX(-40px);}
+  .inner{max-width:1060px;width:100%;}
+
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--a1);margin-bottom:10px;}
+  .display{font-family:'Lora',serif;font-size:clamp(1.9rem,4vw,3.2rem);line-height:1.18;margin-bottom:18px;}
+  .display em{color:var(--a2);font-style:italic;}
+  .subtitle{font-size:.97rem;color:var(--muted);line-height:1.75;max-width:660px;}
+  h2{font-family:'Lora',serif;font-size:clamp(1.4rem,2.8vw,2rem);margin-bottom:6px;}
+  .div{width:40px;height:3px;background:var(--a1);border-radius:2px;margin:14px 0 22px;}
+
+  .grid{display:grid;gap:14px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:20px 22px;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .card.o::before{background:var(--a1);}
+  .card.s::before{background:var(--a2);}
+  .card.e::before{background:var(--a3);}
+  .card.r::before{background:var(--a4);}
+  .card.p::before{background:var(--a5);}
+  .card .ic{font-size:26px;margin-bottom:10px;}
+  .card h3{font-size:.82rem;font-weight:700;color:var(--a1);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
+  .card.s h3{color:var(--a2);}
+  .card.e h3{color:var(--a3);}
+  .card.r h3{color:var(--a4);}
+  .card.p h3{color:var(--a5);}
+  .card p{font-size:.85rem;color:var(--muted);line-height:1.6;}
+  .card strong{color:var(--text);}
+
+  .steps{display:flex;flex-direction:column;gap:10px;}
+  .step{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px 18px;}
+  .sn{min-width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0;}
+  .sn.o{background:rgba(249,115,22,.18);color:var(--a1);}
+  .sn.s{background:rgba(56,189,248,.18);color:var(--a2);}
+  .sn.e{background:rgba(52,211,153,.18);color:var(--a3);}
+  .sn.r{background:rgba(248,113,113,.18);color:var(--a4);}
+  .stit{font-weight:600;font-size:.93rem;margin-bottom:3px;}
+  .sdesc{font-size:.82rem;color:var(--muted);}
+
+  /* Kalkulations-Schema */
+  .schema{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:8px;}
+  .schema-row{display:flex;align-items:center;padding:10px 18px;border-bottom:1px solid var(--border);font-size:.88rem;}
+  .schema-row:last-child{border-bottom:none;}
+  .schema-row.total{background:rgba(249,115,22,.1);font-weight:700;}
+  .schema-row.sub{background:rgba(56,189,248,.06);}
+  .sr-op{width:28px;font-size:1rem;color:var(--muted);flex-shrink:0;}
+  .sr-label{flex:1;color:var(--text);}
+  .sr-pct{width:80px;text-align:right;color:var(--muted);font-size:.8rem;}
+  .sr-val{width:110px;text-align:right;font-weight:600;}
+  .sr-val.highlight{color:var(--a1);}
+  .sr-val.green{color:var(--a3);}
+  .sr-val.blue{color:var(--a2);}
+
+  .info{background:rgba(56,189,248,.08);border-left:4px solid var(--a2);border-radius:0 10px 10px 0;padding:13px 18px;font-size:.9rem;margin-top:14px;}
+  .info strong{color:var(--a2);}
+  .warn{background:rgba(248,113,113,.08);border-left:4px solid var(--a4);border-radius:0 10px 10px 0;padding:13px 18px;font-size:.9rem;margin-top:12px;}
+  .warn strong{color:var(--a4);}
+  .good{background:rgba(52,211,153,.08);border-left:4px solid var(--a3);border-radius:0 10px 10px 0;padding:13px 18px;font-size:.9rem;margin-top:12px;}
+  .good strong{color:var(--a3);}
+  .ambox{background:rgba(249,115,22,.08);border-left:4px solid var(--a1);border-radius:0 10px 10px 0;padding:13px 18px;font-size:.9rem;margin-top:12px;}
+  .ambox strong{color:var(--a1);}
+
+  .scenario{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(249,115,22,.03));border:1px solid rgba(249,115,22,.28);border-radius:15px;padding:24px 28px;margin-bottom:24px;position:relative;}
+  .scenario::before{content:'🧮';font-size:22px;position:absolute;top:20px;right:24px;}
+  .slabel{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1);margin-bottom:6px;}
+  .scenario p{font-size:.95rem;line-height:1.75;}
+
+  .tbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 50% at 85% 50%,rgba(249,115,22,.1) 0%,transparent 65%),radial-gradient(ellipse 35% 55% at 8% 75%,rgba(56,189,248,.07) 0%,transparent 60%);}
+  .tdeco{position:absolute;right:60px;top:50%;transform:translateY(-50%);font-size:160px;opacity:.03;font-family:'Lora',serif;pointer-events:none;user-select:none;}
+  .badge{display:inline-flex;align-items:center;gap:5px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);color:var(--a1);padding:4px 12px;border-radius:20px;font-size:.76rem;font-weight:700;letter-spacing:.04em;margin-bottom:18px;}
+
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+
+  /* Formel-Box */
+  .formula{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:12px;padding:16px 20px;text-align:center;font-family:'Lora',serif;font-size:1.05rem;color:var(--a1);margin:14px 0;}
+
+  /* Vergleichstabelle */
+  .vtbl{width:100%;border-collapse:collapse;font-size:.85rem;}
+  .vtbl th{background:rgba(249,115,22,.15);color:var(--a1);font-weight:700;font-size:.77rem;letter-spacing:.05em;text-transform:uppercase;padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);}
+  .vtbl td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--muted);}
+  .vtbl td strong{color:var(--text);}
+  .vtbl tr:last-child td{border-bottom:none;}
+  .vtbl tr:hover td{background:rgba(255,255,255,.02);}
+
+  .nav{position:fixed;bottom:22px;right:28px;display:flex;gap:9px;z-index:200;}
+  .nbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surf);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .2s;}
+  .nbtn:hover{background:var(--card);border-color:var(--a1);color:var(--a1);}
+  .nbtn:disabled{opacity:.28;cursor:default;}
+  .counter{position:fixed;bottom:28px;left:28px;font-size:12px;color:var(--muted);z-index:200;}
+  .counter span{color:var(--text);font-weight:700;}
+  .prog{position:fixed;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.06);z-index:200;}
+  .progf{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .4s ease;}
+
+  @media(max-width:740px){.g3,.g2,.twocol{grid-template-columns:1fr;}.slide{padding:58px 18px 50px;}.tdeco,.tbg{display:none;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">Böckler-Office GmbH</span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="ptag">↑ AS 7.1 Warenausgang ✓</span>
+    <span class="tag">LF 4 · AS 4.1 · GPU · HS2</span>
+  </div>
+  <span style="font-size:12px">Kalkulation & Preisgestaltung</span>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- S1 TITEL -->
+  <div class="slide active">
+    <div class="tbg"></div><div class="tdeco">€</div>
+    <div class="inner">
+      <div class="eyebrow">LF 4 · AS 4.1 · Aufbau auf AS 7.1</div>
+      <h1 class="display">Kalkulation &amp;<br><em>Preisgestaltung</em></h1>
+      <div class="div"></div>
+      <p class="subtitle">Wir haben den Auftrag der Wessel GmbH abgewickelt und die Rechnung gestellt.<br>Aber wie kommt eigentlich der <strong>Verkaufspreis</strong> zustande?</p>
+      <div style="margin-top:24px"><span class="badge">🧮 Böckler-Office GmbH · Oberhausen</span></div>
+    </div>
+  </div>
+
+  <!-- S2 BRÜCKE -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Rückblick & Brücke</div>
+      <h2>Von der Rechnung zum Preis</h2>
+      <div class="div"></div>
+      <div class="scenario">
+        <div class="slabel">Erinnerung: letzte Stunde</div>
+        <p>Wir haben an die <strong>Wessel GmbH</strong> 25 Schreibtische à <strong>320,00 € VK</strong> und 30 Stühle à <strong>139,00 € VK</strong> geliefert — Gesamtauftragswert netto: <strong>12.170,00 €</strong>. Herr Dönmez stellt jetzt die Frage: <em>„Stimmen unsere Preise eigentlich noch? Verdienen wir dabei wirklich genug?"</em></p>
+      </div>
+      <div class="grid g3">
+        <div class="card e">
+          <div class="ic">✅</div><h3>Bereits bekannt</h3>
+          <p>Auftragsabwicklung, Warenausgang, Mahnwesen, Ausgangsrechnung</p>
+        </div>
+        <div class="card o">
+          <div class="ic">🆕</div><h3>Heute neu</h3>
+          <p><strong>Wie entsteht der VK-Preis?</strong> Bezugskalkulation → Verkaufskalkulation → Preisstrategien</p>
+        </div>
+        <div class="card s">
+          <div class="ic">🔗</div><h3>Verbindung</h3>
+          <p>Der VK-Preis auf der Ausgangsrechnung ist das <strong>Ergebnis der Kalkulation</strong> — beides gehört zusammen</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 LERNZIELE -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Lernziele heute</div>
+      <h2>Was wir heute erarbeiten</h2>
+      <div class="div"></div>
+      <div class="steps">
+        <div class="step"><div class="sn o">Z4</div><div><div class="stit">Bezugskalkulation durchführen</div><div class="sdesc">Listeneinkaufspreis → Rabatt → Skonto → Bezugskosten = Einstandspreis</div></div></div>
+        <div class="step"><div class="sn s">Z4</div><div><div class="stit">Verkaufskalkulation (Handelskalkulation) aufstellen</div><div class="sdesc">Einstandspreis → Handlungskosten → Gewinn → Barverkaufspreis → Skonto → Rabatt = Listenverkaufspreis</div></div></div>
+        <div class="step"><div class="sn e">Z4</div><div><div class="stit">Kalkulationszuschlag & Kalkulationsfaktor berechnen</div><div class="sdesc">Vereinfachte Kalkulation für die Praxis — schnell und wiederholbar</div></div></div>
+        <div class="step"><div class="sn r">Z4</div><div><div class="stit">Preisstrategien unterscheiden</div><div class="sdesc">Kostenorientiert, nachfrageorientiert, konkurrenzorientiert — Vor- und Nachteile beurteilen</div></div></div>
+      </div>
+      <div class="info" style="margin-top:14px"><strong>Bildungsplan NRW 2023</strong> · LF 4 · AS 4.1 Z4 · Kalkulation & Preisgestaltung</div>
+    </div>
+  </div>
+
+  <!-- S4 BEZUGSKALKULATION -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Schritt 1 · Einkauf</div>
+      <h2>Bezugskalkulation: Was kostet die Ware wirklich?</h2>
+      <div class="div"></div>
+      <div class="twocol">
+        <div>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:12px;">Der <strong style="color:var(--text)">Einstandspreis</strong> ist der tatsächliche Einstandspreis einer Ware — alles inklusive.</p>
+          <div class="schema">
+            <div class="schema-row"><span class="sr-op"></span><span class="sr-label">Listeneinkaufspreis</span><span class="sr-pct">100 %</span><span class="sr-val blue">580,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Lieferantenrabatt (10 %)</span><span class="sr-pct">10 %</span><span class="sr-val">58,00 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Zieleinkaufspreis</span><span class="sr-pct"></span><span class="sr-val blue">522,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Lieferantenskonto (2 %)</span><span class="sr-pct">2 %</span><span class="sr-val">10,44 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Bareinkaufspreis</span><span class="sr-pct"></span><span class="sr-val blue">511,56 €</span></div>
+            <div class="schema-row"><span class="sr-op">+</span><span class="sr-label">Bezugskosten (Fracht)</span><span class="sr-pct"></span><span class="sr-val">18,44 €</span></div>
+            <div class="schema-row total"><span class="sr-op">=</span><span class="sr-label" style="color:var(--a1)">Bezugspreis (Einstandspreis)</span><span class="sr-pct"></span><span class="sr-val highlight">530,00 €</span></div>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:12px;">Böckler-Office kauft den <strong style="color:var(--text)">Schreibtisch „DeskLine 180"</strong> ein:</p>
+          <div class="card o" style="margin-bottom:12px">
+            <h3>Merkhilfe: Reihenfolge</h3>
+            <p><strong>1.</strong> Rabatt immer vom Listeneinkaufspreis<br><strong>2.</strong> Skonto immer vom Zieleinkaufspreis<br><strong>3.</strong> Bezugskosten immer addieren</p>
+          </div>
+          <div class="ambox"><strong>Wichtig:</strong> Rabatt und Skonto werden auf unterschiedliche Basen berechnet — nicht addieren und dann abziehen!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 VERKAUFSKALKULATION -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Schritt 2 · Verkauf</div>
+      <h2>Handelskalkulation: Vom Einstand zum Listenpreis</h2>
+      <div class="div"></div>
+      <div class="twocol">
+        <div>
+          <div class="schema">
+            <div class="schema-row total"><span class="sr-op"></span><span class="sr-label" style="color:var(--a1)">Bezugspreis (Einstandspreis)</span><span class="sr-pct">100 %</span><span class="sr-val highlight">530,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">+</span><span class="sr-label">Handlungskosten (Gemeinkosten 30 %)</span><span class="sr-pct">30 %</span><span class="sr-val">159,00 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Selbstkostenpreis</span><span class="sr-pct">130 %</span><span class="sr-val blue">689,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">+</span><span class="sr-label">Gewinnaufschlag (5 %)</span><span class="sr-pct">5 %</span><span class="sr-val">34,45 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Barverkaufspreis</span><span class="sr-pct">136,5 %</span><span class="sr-val blue">723,45 €</span></div>
+            <div class="schema-row"><span class="sr-op">+</span><span class="sr-label">Kundenskonto (2 %)</span><span class="sr-pct">2 %</span><span class="sr-val">14,76 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Zielverkaufspreis</span><span class="sr-pct"></span><span class="sr-val blue">738,21 €</span></div>
+            <div class="schema-row"><span class="sr-op">+</span><span class="sr-label">Kundenrabatt (15 %)</span><span class="sr-pct">15 %</span><span class="sr-val">130,27 €</span></div>
+            <div class="schema-row total"><span class="sr-op">=</span><span class="sr-label" style="color:var(--a3)">Listenverkaufspreis (netto)</span><span class="sr-pct"></span><span class="sr-val green">868,48 €</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card s" style="margin-bottom:12px">
+            <h3>Was sind Handlungskosten?</h3>
+            <p>Alle betrieblichen Kosten außer Wareneinsatz: Miete, Löhne, Strom, Transport, Versicherung — alles was „läuft" kostet Geld.</p>
+          </div>
+          <div class="card e" style="margin-bottom:12px">
+            <h3>Skonto vs. Rabatt</h3>
+            <p><strong>Kundenskonto:</strong> Nachlass bei schneller Zahlung<br><strong>Kundenrabatt:</strong> Nachlass auf den Listenpreis (z. B. Mengenrabatt)</p>
+          </div>
+          <div class="good"><strong>Merksatz:</strong> Skonto und Rabatt werden aufgeschlagen, weil Kunden sie abziehen — der Listenpreis muss das „abpuffern".</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6 KALKULATIONSZUSCHLAG & FAKTOR -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Vereinfachte Kalkulation</div>
+      <h2>Kalkulationszuschlag & Kalkulationsfaktor</h2>
+      <div class="div"></div>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:18px;">In der Praxis kein Zeit für das volle Schema — deshalb gibt es Vereinfachungen.</p>
+      <div class="grid g2">
+        <div>
+          <div class="card o">
+            <div class="ic">📐</div>
+            <h3>Kalkulationszuschlagssatz (KZS)</h3>
+            <p style="margin-bottom:10px">Wie viel Prozent wird auf den <strong>Einstandspreis</strong> aufgeschlagen, um den Nettoverkaufspreis zu erhalten?</p>
+          </div>
+          <div class="formula">KZS = (NVP − EP) ÷ EP × 100</div>
+          <div class="card" style="margin-top:10px;border-color:rgba(249,115,22,.2)">
+            <p style="font-size:.85rem"><strong style="color:var(--a1)">Beispiel:</strong> EP = 530,00 € · NVP = 723,45 €<br>KZS = (723,45 − 530,00) ÷ 530,00 × 100 = <strong style="color:var(--a3)">36,5 %</strong></p>
+            <p style="font-size:.82rem;color:var(--muted);margin-top:6px">→ Auf jeden Einstandspreis 36,5 % aufschlagen = Barverkaufspreis</p>
+          </div>
+        </div>
+        <div>
+          <div class="card s">
+            <div class="ic">✖️</div>
+            <h3>Kalkulationsfaktor (KF)</h3>
+            <p style="margin-bottom:10px">Mit welcher Zahl wird der <strong>Einstandspreis multipliziert</strong>, um direkt den Nettoverkaufspreis zu erhalten?</p>
+          </div>
+          <div class="formula" style="background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--a2)">KF = (100 + KZS) ÷ 100</div>
+          <div class="card" style="margin-top:10px;border-color:rgba(56,189,248,.2)">
+            <p style="font-size:.85rem"><strong style="color:var(--a2)">Beispiel:</strong> KZS = 36,5 %<br>KF = (100 + 36,5) ÷ 100 = <strong style="color:var(--a3)">1,365</strong></p>
+            <p style="font-size:.82rem;color:var(--muted);margin-top:6px">→ EP × 1,365 = Barverkaufspreis (530,00 × 1,365 = <strong>723,45 €</strong>)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7 PREISSTRATEGIEN -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Preisgestaltung</div>
+      <h2>Drei Wege zum Verkaufspreis</h2>
+      <div class="div"></div>
+      <div class="grid g3">
+        <div class="card o">
+          <div class="ic">💰</div>
+          <h3>Kostenorientiert</h3>
+          <p>Preis basiert auf <strong>Kosten + Gewinnzuschlag</strong>.<br><br>✅ Kosten immer gedeckt<br>✅ Einfach zu berechnen<br>❌ Ignoriert Marktlage<br>❌ Kann zu hoch oder zu niedrig sein</p>
+        </div>
+        <div class="card s">
+          <div class="ic">🎯</div>
+          <h3>Nachfrageorientiert</h3>
+          <p>Preis richtet sich nach <strong>Zahlungsbereitschaft der Kunden</strong>.<br><br>✅ Höhere Margen möglich<br>✅ Kundennähe<br>❌ Schwer zu ermitteln<br>❌ Kostendeckung nicht garantiert</p>
+        </div>
+        <div class="card e">
+          <div class="ic">🏆</div>
+          <h3>Konkurrenzorientiert</h3>
+          <p>Preis orientiert sich an <strong>Mitbewerbern</strong>.<br><br>✅ Wettbewerbsfähig<br>✅ Marktgerecht<br>❌ Eigene Kosten ggf. nicht gedeckt<br>❌ Preiskampf-Risiko</p>
+        </div>
+      </div>
+      <div class="info" style="margin-top:16px"><strong>Praxis bei Böckler-Office:</strong> Herr Dönmez kombiniert alle drei: Er kalkuliert kostenbasiert, prüft den Marktpreis und fragt, was Kunden wie die Wessel GmbH bereit sind zu zahlen.</div>
+    </div>
+  </div>
+
+  <!-- S8 RÜCKWÄRTSKALKULATION -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Rückwärtskalkulation</div>
+      <h2>Vom Marktpreis zum Einstandspreis</h2>
+      <div class="div"></div>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:16px">Manchmal ist der <strong style="color:var(--text)">Marktpreis vorgegeben</strong> — dann rechnet man rückwärts, um zu prüfen, ob man zu diesem Preis anbieten kann.</p>
+      <div class="twocol">
+        <div>
+          <div class="schema">
+            <div class="schema-row total"><span class="sr-op"></span><span class="sr-label" style="color:var(--a3)">Marktpreis / Listenverkaufspreis</span><span class="sr-pct"></span><span class="sr-val green">320,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Kundenrabatt (15 %)</span><span class="sr-pct">15 %</span><span class="sr-val">48,00 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Zielverkaufspreis</span><span class="sr-pct"></span><span class="sr-val blue">272,00 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Kundenskonto (2 %)</span><span class="sr-pct">2 %</span><span class="sr-val">5,44 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Barverkaufspreis</span><span class="sr-pct"></span><span class="sr-val blue">266,56 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Gewinn (5 %)</span><span class="sr-pct">5 %</span><span class="sr-val">13,33 €</span></div>
+            <div class="schema-row sub"><span class="sr-op">=</span><span class="sr-label">Selbstkostenpreis</span><span class="sr-pct"></span><span class="sr-val blue">253,23 €</span></div>
+            <div class="schema-row"><span class="sr-op">−</span><span class="sr-label">Handlungskosten (30 %)</span><span class="sr-pct">30 %</span><span class="sr-val">75,97 €</span></div>
+            <div class="schema-row total"><span class="sr-op">=</span><span class="sr-label" style="color:var(--a1)">max. Einstandspreis (Bezugspreis)</span><span class="sr-pct"></span><span class="sr-val highlight">177,26 €</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card r">
+            <div class="ic">❓</div>
+            <h3>Wann braucht man das?</h3>
+            <p>Wenn Herr Dönmez einen Schreibtisch für <strong>320,00 €</strong> verkaufen will (Marktpreis), muss er ihn für <strong>max. 177,26 €</strong> einkaufen — sonst macht er Verlust.</p>
+          </div>
+          <div class="warn" style="margin-top:12px"><strong>Achtung:</strong> Bei der Rückwärtskalkulation werden Skonto und Rabatt <em>subtrahiert</em> (umgekehrt zur Vorwärtskalkulation)!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S9 ZUSAMMENFASSUNG -->
+  <div class="slide">
+    <div class="inner">
+      <div class="eyebrow">Sicherung & Übergang</div>
+      <h2>Was haben wir gelernt?</h2>
+      <div class="div"></div>
+      <div class="twocol">
+        <div class="steps">
+          <div class="step"><div class="sn o">✓</div><div><div class="stit">Bezugskalkulation</div><div class="sdesc">LEP → Rabatt → Skonto → Bezugskosten = Einstandspreis</div></div></div>
+          <div class="step"><div class="sn s">✓</div><div><div class="stit">Handelskalkulation (vorwärts)</div><div class="sdesc">Einstandspreis → HK → Gewinn → Skonto → Rabatt = LVP</div></div></div>
+          <div class="step"><div class="sn e">✓</div><div><div class="stit">Kalkulationszuschlag & -faktor</div><div class="sdesc">Vereinfachung für die Praxis — KZS in % · KF als Multiplikator</div></div></div>
+          <div class="step"><div class="sn r">✓</div><div><div class="stit">Preisstrategien beurteilen</div><div class="sdesc">Kostenorientiert · Nachfrageorientiert · Konkurrenzorientiert</div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card o">
+            <div class="ic">🎯</div>
+            <h3>Jetzt seid ihr dran!</h3>
+            <p>Bearbeitet das SOL-Arbeitsblatt zur Kalkulation bei der Böckler-Office GmbH.<br><br>Startet mit der Kann-Liste — was könnt ihr schon?</p>
+          </div>
+          <div class="ambox"><strong>Tipp:</strong> Die Schemata aus der Präsentation dürft ihr als Vorlage nutzen. Füllt Schritt für Schritt aus — kein Schritt überspringen!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="prog"><div class="progf" id="pf"></div></div>
+<div class="counter">Folie <span id="cs">1</span> / <span id="ts">9</span></div>
+<div class="nav">
+  <button class="nbtn" id="pb" onclick="go(-1)" disabled>&#8592;</button>
+  <button class="nbtn" id="nb" onclick="go(1)">&#8594;</button>
+</div>
+<script>
+  const slides=document.querySelectorAll('.slide'),n=slides.length;let c=0;
+  function go(d){slides[c].classList.remove('active');slides[c].classList.add('out');const p=c;c=Math.max(0,Math.min(n-1,c+d));setTimeout(()=>{slides[p].classList.remove('out');slides[c].classList.add('active');upd();},45);}
+  function upd(){document.getElementById('cs').textContent=c+1;document.getElementById('ts').textContent=n;document.getElementById('pf').style.width=((c+1)/n*100)+'%';document.getElementById('pb').disabled=c===0;document.getElementById('nb').disabled=c===n-1;}
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);});
+  let tx=0;document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)go(d>0?1:-1);});
+  upd();
+</script>
+</body>
+</html>
