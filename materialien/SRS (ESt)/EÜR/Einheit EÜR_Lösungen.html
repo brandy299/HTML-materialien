@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonas Kern – Einnahmenüberschussrechnung 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf7f2;
+    --cream: #f0ebe0;
+    --warm-mid: #c4a882;
+    --accent: #8b3a1e;
+    --accent-light: #c4603a;
+    --gold: #b8860b;
+    --teal: #2a6b6e;
+    --teal-light: #e8f4f4;
+    --phase2: #5a2d82;
+    --phase2-light: #f0eaf8;
+    --border: #ddd5c4;
+    --shadow: rgba(26,18,8,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,58,30,0.3) 0%, transparent 70%);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-mid);
+    margin-bottom: 0.75rem;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .header-title span { color: var(--accent-light); }
+  .header-sub {
+    font-size: 0.95rem;
+    color: var(--warm-mid);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Gewinn-Banner */
+  .gewinn-banner {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .gewinn-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 0.75rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .gewinn-card .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--warm-mid);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .gewinn-card .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .gewinn-card .value.highlight { color: #f0c060; }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Aufgabenstellung */
+  .aufgabe-box {
+    background: var(--cream);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .aufgabe-box strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Phase-Trenner */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+  .phase-badge {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .phase-badge.p1 { background: var(--accent); color: white; }
+  .phase-badge.p2 { background: var(--phase2); color: white; }
+  .phase-line { flex: 1; height: 1px; background: var(--border); }
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ── SACHVERHALT KARTE ── */
+  .sv-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+  .sv-card:hover { box-shadow: 0 4px 16px var(--shadow); }
+  .sv-card.phase2 { border-left: 3px solid var(--phase2); }
+
+  .sv-head {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: default;
+  }
+  .sv-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .sv-card.phase2 .sv-number { background: var(--phase2); }
+
+  .sv-topic {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--warm-mid);
+    margin-bottom: 0.35rem;
+  }
+  .sv-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .sv-text .betrag {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--teal);
+    background: var(--teal-light);
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+  }
+
+  /* Tipp & Lösung Toggles */
+  .sv-toggles {
+    border-top: 1px solid var(--cream);
+    display: flex;
+  }
+  .toggle-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--cream);
+    padding: 0.65rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--warm-mid);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .toggle-btn:last-child { border-right: none; }
+  .toggle-btn:hover { background: var(--cream); color: var(--ink); }
+  .toggle-btn.active-tipp { background: #fff8e8; color: var(--gold); }
+  .toggle-btn.active-loesung { background: #e8f4f4; color: var(--teal); }
+  .toggle-btn .icon { font-size: 0.9rem; }
+
+  /* Panel */
+  .sv-panel {
+    display: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    border-top: 1px solid var(--cream);
+    animation: fadeIn 0.2s ease;
+  }
+  .sv-panel.show { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .panel-tipp {
+    background: #fffcf0;
+    border-left: 3px solid var(--gold);
+  }
+  .panel-loesung {
+    background: var(--teal-light);
+    border-left: 3px solid var(--teal);
+  }
+
+  .panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  .panel-tipp .panel-label { color: var(--gold); }
+  .panel-loesung .panel-label { color: var(--teal); }
+
+  .norm-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: var(--teal);
+    color: white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin: 0.1rem 0.15rem 0.1rem 0;
+  }
+  .loesung-typ {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .loesung-betrag {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--teal);
+  }
+  .loesung-jahr {
+    font-style: italic;
+    color: #666;
+    font-size: 0.85em;
+  }
+  .loesung-hinweis {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(42,107,110,0.2);
+    font-size: 0.85rem;
+    color: #4a7a7d;
+    font-style: italic;
+  }
+
+  /* ── GEWINNERMITTLUNG TABELLE ── */
+  .gewinn-section {
+    margin-top: 2.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .gewinn-section-head {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1rem 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .gewinn-section-head .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--accent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+  }
+  .gewinn-section-head.p2head .badge { background: var(--phase2); }
+
+  .gewinn-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .gewinn-table td {
+    padding: 0.65rem 1.5rem;
+    border-bottom: 1px solid var(--cream);
+  }
+  .gewinn-table tr:last-child td { border-bottom: none; }
+  .gewinn-table td:last-child {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+  }
+  .gewinn-table .row-label { color: #666; font-size: 0.82rem; }
+  .gewinn-table .row-plus td:last-child { color: var(--teal); }
+  .gewinn-table .row-minus td:last-child { color: var(--accent); }
+  .gewinn-table .row-neutral td:last-child { color: #999; font-style: italic; }
+  .gewinn-table .row-start td { background: var(--cream); font-weight: 600; }
+  .gewinn-table .row-result td {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .gewinn-table .row-result td:last-child {
+    color: #f0c060;
+    font-size: 1rem;
+  }
+  .gewinn-table .row-sv { font-size: 0.82rem; }
+  .sv-ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--warm-mid);
+    margin-right: 0.5rem;
+  }
+
+  /* Phase 2 intro box */
+  .phase2-intro {
+    background: var(--phase2-light);
+    border: 1px solid #c4b0e0;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .phase2-intro strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--phase2);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Footer */
+  .site-footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warm-mid);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .sv-toggles { flex-direction: column; }
+    .toggle-btn { border-right: none; border-bottom: 1px solid var(--cream); }
+    .toggle-btn:last-child { border-bottom: none; }
+    .gewinn-banner { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-eyebrow">Lernfeld 8 · Mittelstufe Steuerfachangestellte · § 4 Abs. 3 EStG · § 11 EStG</div>
+    <h1 class="header-title">Jonas Kern, <span>Maler</span></h1>
+    <p class="header-sub">Einnahmenüberschussrechnung 2025 — Sachverhalte zur Gewinnermittlung</p>
+    <div class="gewinn-banner">
+      <div class="gewinn-card">
+        <span class="label">Betriebseinnahmen (vorläufig)</span>
+        <span class="value">87.400,00 €</span>
+      </div>
+      <div class="gewinn-card">
+        <span class="label">Betriebsausgaben (vorläufig)</span>
+        <span class="value">34.600,00 €</span>
+      </div>
+      <div class="gewinn-card">
+        <span class="label">Vorläufiger Gewinn</span>
+        <span class="value highlight">52.800,00 €</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Aufgabenstellung -->
+  <div class="aufgabe-box">
+    <strong>Aufgabe</strong>
+    Jonas Kern ist freiberuflicher Maler in Münster. Er verkauft Gemälde an Galerien und Privatsammler, nimmt Auftragsarbeiten an und gibt gelegentlich Workshops an einer Kunsthochschule. Sein Gewinn wird nach § 4 Abs. 3 EStG ermittelt.<br><br>
+    Die nachfolgenden Sachverhalte wurden in den obigen Werten noch <em>nicht</em> berücksichtigt. Entscheiden und begründen Sie unter Angabe der Gesetzesgrundlage, in welcher <strong>Form</strong> (Betriebseinnahme / Betriebsausgabe), in welcher <strong>Höhe</strong> und in welchem <strong>Jahr</strong> die jeweiligen Sachverhalte zu erfassen sind. Ermitteln Sie anschließend den korrekten Gewinn für 2025.
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-header">
+    <span class="phase-badge p1">Phase 1</span>
+    <div class="phase-line"></div>
+    <span class="phase-title">Sachverhalte 1–9</span>
+    <div class="phase-line"></div>
+  </div>
+
+  <!-- SV 1 -->
+  <div class="sv-card" id="card1">
+    <div class="sv-head">
+      <span class="sv-number">SV 1</span>
+      <div>
+        <div class="sv-topic">Durchlaufender Posten</div>
+        <div class="sv-text">
+          Eine Galerie beauftragt Kern, drei fertige Gemälde rahmen zu lassen. Die Rechnung des Rahmenherstellers lautet auf die Galerie; Kern verauslagt den Betrag von <span class="betrag">480 €</span> lediglich im Namen und auf Rechnung der Galerie und erhält ihn von ihr in gleicher Höhe zurück.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(1,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(1,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp1">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Schau dir <strong>§ 4 Abs. 3 Satz 2 EStG</strong> an: Unter welchen Voraussetzungen sind durchlaufende Posten weder Betriebseinnahme noch Betriebsausgabe? Achte dabei besonders auf drei Kriterien: fremder Name, fremde Rechnung, identische Beträge.
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung1">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Kein Ansatz</span> — weder Betriebseinnahme noch Betriebsausgabe.<br>
+      Rechtsgrundlage: <span class="norm-tag">§ 4 Abs. 3 S. 2 EStG</span><br>
+      Die 480 € sind ein <strong>durchlaufender Posten</strong>: Kern verauslagt im fremden Namen und auf fremde Rechnung, die Rechnung lautet auf die Galerie, und der Betrag wird in identischer Höhe weitergeleitet. Alle drei Voraussetzungen sind erfüllt.<br>
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: keine.</div>
+    </div>
+  </div>
+
+  <!-- SV 2 -->
+  <div class="sv-card" id="card2">
+    <div class="sv-head">
+      <span class="sv-number">SV 2</span>
+      <div>
+        <div class="sv-topic">USt ist kein durchlaufender Posten</div>
+        <div class="sv-text">
+          Kern ist umsatzsteuerpflichtig. Im Dezember 2025 vereinnahmt er Umsatzsteuer i.H.v. <span class="betrag">3.800 €</span> von seinen Kunden. Aufgrund einer Dauerfristverlängerung führt er die USt erst im <strong>Februar 2026</strong> ans Finanzamt ab.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(2,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(2,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp2">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Vergleiche mit SV 1: Warum ist die Umsatzsteuer <em>kein</em> durchlaufender Posten i.S.d. <strong>§ 4 Abs. 3 Satz 2 EStG</strong>? Wer vereinnahmt die USt — im eigenen oder fremden Namen? Und wann gilt der Abfluss nach <strong>§ 11 Abs. 2 Satz 1 EStG</strong>?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung2">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebseinnahme 2025:</span> <span class="loesung-betrag">+3.800 €</span><br>
+      <span class="loesung-typ">Betriebsausgabe 2026:</span> <span class="loesung-betrag">−3.800 €</span><br>
+      Rechtsgrundlagen: <span class="norm-tag">§ 4 Abs. 3 S. 2 EStG</span> <span class="norm-tag">§ 11 Abs. 1 S. 1 EStG</span> <span class="norm-tag">§ 11 Abs. 2 S. 1 EStG</span><br>
+      Die USt wird im <strong>eigenen Namen</strong> vereinnahmt — damit kein durchlaufender Posten. Vereinnahmung Dez. 2025 → BE 2025 (Zuflussprinzip). Abführung Feb. 2026 → BA 2026 (Abflussprinzip). Die Dauerfristverlängerung ändert nichts am Zeitpunkt des tatsächlichen Abflusses.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: +3.800 €</div>
+    </div>
+  </div>
+
+  <!-- SV 3 -->
+  <div class="sv-card" id="card3">
+    <div class="sv-head">
+      <span class="sv-number">SV 3</span>
+      <div>
+        <div class="sv-topic">GWG-Sofortabschreibung</div>
+        <div class="sv-text">
+          Kern kauft am 12. März 2025 eine Digitalkamera zur Dokumentation seiner Werke für <span class="betrag">800 € netto</span> zzgl. 19 % USt (= <span class="betrag">152 €</span>, Gesamtbetrag 952 €). Bezahlung per Überweisung am 20. März 2025. Die betriebsgewöhnliche Nutzungsdauer beträgt 5 Jahre.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(3,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(3,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp3">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      <strong>§ 4 Abs. 3 Satz 3 EStG</strong> enthält eine wichtige Ausnahme vom reinen Abflussprinzip: Er verweist auf die allgemeinen Abschreibungsvorschriften. Schau dir dann <strong>§ 6 Abs. 2 EStG</strong> an — was gilt für Wirtschaftsgüter bis 800 € netto? Und wie wird die Umsatzsteuer behandelt?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung3">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebsausgabe 2025 (GWG):</span> <span class="loesung-betrag">−800 €</span><br>
+      <span class="loesung-typ">Betriebsausgabe 2025 (USt):</span> <span class="loesung-betrag">−152 €</span><br>
+      Rechtsgrundlagen: <span class="norm-tag">§ 4 Abs. 3 S. 3 EStG</span> <span class="norm-tag">§ 6 Abs. 2 EStG</span> <span class="norm-tag">§ 11 Abs. 2 S. 1 EStG</span><br>
+      Nettobetrag 800 € ≤ 800 € → <strong>GWG, Sofortabschreibung</strong> in 2025 (§ 6 Abs. 2 EStG). Trotz EÜR kein reines Abflussprinzip für den Nettobetrag — § 4 Abs. 3 S. 3 verweist auf die Abschreibungsvorschriften. USt 152 € → BA 2025 nach Abflussprinzip.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: −952 €</div>
+    </div>
+  </div>
+
+  <!-- SV 4 -->
+  <div class="sv-card" id="card4">
+    <div class="sv-head">
+      <span class="sv-number">SV 4</span>
+      <div>
+        <div class="sv-topic">Abnutzbares Anlagevermögen (AfA)</div>
+        <div class="sv-text">
+          Kern erwirbt am 2. Januar 2025 eine hochwertige Druckmaschine für Kunstdrucke für <span class="betrag">12.000 € netto</span> zzgl. 19 % USt (= <span class="betrag">2.280 €</span>). Bezahlung sofort per Überweisung. Die betriebsgewöhnliche Nutzungsdauer beträgt <strong>8 Jahre</strong>.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(4,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(4,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp4">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Wieder <strong>§ 4 Abs. 3 Satz 3 EStG</strong>: Der Verweis auf die Abschreibungsvorschriften gilt auch hier. Warum greift diesmal keine Sofortabschreibung? Schau dir <strong>§ 7 Abs. 1 EStG</strong> an — wie wird der Nettobetrag auf die Nutzungsdauer verteilt?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung4">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebsausgabe 2025 (AfA):</span> <span class="loesung-betrag">−1.500 €</span><br>
+      <span class="loesung-typ">Betriebsausgabe 2025 (USt):</span> <span class="loesung-betrag">−2.280 €</span><br>
+      Rechtsgrundlagen: <span class="norm-tag">§ 4 Abs. 3 S. 3 EStG</span> <span class="norm-tag">§ 7 Abs. 1 EStG</span> <span class="norm-tag">§ 11 Abs. 2 S. 1 EStG</span><br>
+      Nettobetrag 12.000 € > 800 € → kein GWG, kein Sofortabzug. Lineare AfA: 12.000 € ÷ 8 Jahre = <strong>1.500 € BA in 2025</strong>. USt 2.280 € → BA 2025 nach Abflussprinzip (trotz hohem Betrag — USt folgt dem Zahlungszeitpunkt).
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: −3.780 €</div>
+    </div>
+  </div>
+
+  <!-- SV 5 -->
+  <div class="sv-card" id="card5">
+    <div class="sv-head">
+      <span class="sv-number">SV 5</span>
+      <div>
+        <div class="sv-topic">Nicht abnutzbares Anlagevermögen — Erwerb</div>
+        <div class="sv-text">
+          Kern erwirbt im Mai 2025 ein Grundstück am Stadtrand von Münster für <span class="betrag">45.000 €</span>, auf dem er langfristig ein Atelier bauen möchte. Den Kaufpreis überweist er aus seinem Betriebskonto.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(5,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(5,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp5">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      <strong>§ 4 Abs. 3 Satz 4 EStG</strong> enthält eine weitere Ausnahme vom Abflussprinzip — diesmal für nicht abnutzbare Wirtschaftsgüter des Anlagevermögens. Wann dürfen die Anschaffungskosten angesetzt werden? Was ist ein nicht abnutzbares Wirtschaftsgut (Beispiele: Grund und Boden, Anteile an Kapitalgesellschaften)?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung5">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Keine Betriebsausgabe in 2025.</span><br>
+      Rechtsgrundlage: <span class="norm-tag">§ 4 Abs. 3 S. 4 EStG</span><br>
+      Grundstücke sind <strong>nicht abnutzbares Anlagevermögen</strong>. Trotz Abfluss von 45.000 € aus dem Betriebskonto dürfen die Anschaffungskosten erst im <strong>Zeitpunkt der Veräußerung</strong> als BA angesetzt werden. Das Abflussprinzip tritt ausnahmsweise zurück.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: keine.</div>
+    </div>
+  </div>
+
+  <!-- SV 6 -->
+  <div class="sv-card" id="card6">
+    <div class="sv-head">
+      <span class="sv-number">SV 6</span>
+      <div>
+        <div class="sv-topic">Nicht abnutzbares Anlagevermögen — Veräußerung Grundstück</div>
+        <div class="sv-text">
+          Kern hatte im Jahr 2021 ein weiteres Grundstück in Münster-Hiltrup für <span class="betrag">30.000 €</span> erworben und im Betriebsvermögen gehalten. Im Oktober 2025 veräußert er es für <span class="betrag">38.000 €</span>. Der Kaufpreis geht am 15. Oktober 2025 auf seinem Konto ein.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(6,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(6,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp6">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Zwei Normen spielen hier zusammen: Der Veräußerungserlös fließt zu — <strong>§ 11 Abs. 1 Satz 1 EStG</strong>. Und die Anschaffungskosten aus 2021 dürfen jetzt endlich angesetzt werden — <strong>§ 4 Abs. 3 Satz 4 EStG</strong>. Der Veräußerungszeitpunkt ist der maßgebliche Auslöser für beides.
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung6">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebseinnahme 2025:</span> <span class="loesung-betrag">+38.000 €</span><br>
+      <span class="loesung-typ">Betriebsausgabe 2025 (AK):</span> <span class="loesung-betrag">−30.000 €</span><br>
+      Rechtsgrundlagen: <span class="norm-tag">§ 11 Abs. 1 S. 1 EStG</span> <span class="norm-tag">§ 4 Abs. 3 S. 4 EStG</span><br>
+      Veräußerungserlös 38.000 € → BE 2025 (Zuflussprinzip). Gleichzeitig erstmaliger Ansatz der Anschaffungskosten von 30.000 € als BA (§ 4 Abs. 3 S. 4 EStG — der Veräußerungszeitpunkt ist der maßgebliche Zeitpunkt).
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: +8.000 €</div>
+    </div>
+  </div>
+
+  <!-- SV 7 -->
+  <div class="sv-card" id="card7">
+    <div class="sv-head">
+      <span class="sv-number">SV 7</span>
+      <div>
+        <div class="sv-topic">Nicht abnutzbares Anlagevermögen — Veräußerung GmbH-Anteile</div>
+        <div class="sv-text">
+          Kern hielt seit 2021 im Betriebsvermögen Anteile an einer Kunstvertriebs-GmbH, die er damals für <span class="betrag">15.000 €</span> erworben hatte. Im November 2025 veräußert er die Anteile für <span class="betrag">22.000 €</span>. Der Betrag wird am 20. November 2025 überwiesen.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(7,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(7,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp7">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Vergleiche mit SV 6: GmbH-Anteile sind ebenfalls nicht abnutzbares Anlagevermögen — <strong>§ 4 Abs. 3 Satz 4 EStG</strong> gilt also genauso. Was ist der Unterschied zum Grundstück in SV 6 — steuerlich und wirtschaftlich?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung7">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebseinnahme 2025:</span> <span class="loesung-betrag">+22.000 €</span><br>
+      <span class="loesung-typ">Betriebsausgabe 2025 (AK):</span> <span class="loesung-betrag">−15.000 €</span><br>
+      Rechtsgrundlagen: <span class="norm-tag">§ 11 Abs. 1 S. 1 EStG</span> <span class="norm-tag">§ 4 Abs. 3 S. 4 EStG</span><br>
+      Identische Behandlung wie beim Grundstück (SV 6). GmbH-Anteile sind nicht abnutzbares AV — die Anschaffungskosten werden erst bei Veräußerung angesetzt. Steuerlicher Unterschied zum Grundstück: keiner. Wirtschaftlicher Charakter: Finanzanlage statt Sachanlage.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: +7.000 €</div>
+    </div>
+  </div>
+
+  <!-- SV 8 -->
+  <div class="sv-card" id="card8">
+    <div class="sv-head">
+      <span class="sv-number">SV 8</span>
+      <div>
+        <div class="sv-topic">10-Tage-Regel — Einnahme und Ausgabe</div>
+        <div class="sv-text">
+          <strong>a)</strong> Kern hat mit der Kunsthochschule einen Vertrag über monatliche Workshop-Honorare von <span class="betrag">600 €</span>, fällig jeweils am Monatsletzten. Das Honorar für Dezember 2025 geht am <strong>3. Januar 2026</strong> auf seinem Konto ein.<br><br>
+          <strong>b)</strong> Seine Ateliermiete beträgt <span class="betrag">700 €</span> monatlich, fällig jeweils zum Monatsletzten. Die Dezembermiete wird am <strong>8. Januar 2026</strong> abgebucht.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(8,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(8,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp8">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      Schau dir <strong>§ 11 Abs. 1 Satz 2 EStG</strong> (Einnahmen) und <strong>§ 11 Abs. 2 Satz 2 EStG</strong> (Ausgaben) an — wann gilt die Ausnahme für regelmäßig wiederkehrende Zahlungen? Wie viele Tage sind „kurze Zeit"? Hinweis: Diese Grenze steht nicht direkt im Gesetz, sondern wurde durch den BFH konkretisiert.
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung8">
+      <div class="panel-label">Lösung</div>
+      <strong>a)</strong> <span class="loesung-typ">Betriebseinnahme 2025:</span> <span class="loesung-betrag">+600 €</span><br>
+      <span class="norm-tag">§ 11 Abs. 1 S. 2 EStG</span> Regelmäßig wiederkehrende Einnahme, fällig 31.12., zugeflossen 3.1.2026 (innerhalb 10 Tage), wirtschaftlich gehörig zu 2025.<br><br>
+      <strong>b)</strong> <span class="loesung-typ">Betriebsausgabe 2025:</span> <span class="loesung-betrag">−700 €</span><br>
+      <span class="norm-tag">§ 11 Abs. 2 S. 2 EStG</span> Regelmäßig wiederkehrende Ausgabe, fällig 31.12., abgeflossen 8.1.2026 (innerhalb 10 Tage).<br>
+      <div class="loesung-hinweis">Die 10-Tage-Grenze steht nicht im Gesetz — sie wurde durch den BFH festgelegt (BFH v. 11.11.2014, VIII R 34/12). Gewinnauswirkung 2025: +600 € − 700 € = −100 €</div>
+    </div>
+  </div>
+
+  <!-- SV 9 -->
+  <div class="sv-card" id="card9">
+    <div class="sv-head">
+      <span class="sv-number">SV 9</span>
+      <div>
+        <div class="sv-topic">Vorauszahlung Nutzungsüberlassung &gt; 5 Jahre (Pflicht zur Verteilung)</div>
+        <div class="sv-text">
+          Kern zahlt am 14. Juli 2025 eine einmalige Lizenzgebühr von <span class="betrag">8.400 €</span> für die Nutzung einer professionellen Bildbearbeitungssoftware. Die Lizenz läuft vom <strong>1. Juli 2025 bis 30. Juni 2032</strong> (7 Jahre = 84 Monate). Die Zahlung erfolgt als Einmalbetrag per Überweisung.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(9,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(9,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp9">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      <strong>§ 11 Abs. 2 Satz 3 EStG</strong> enthält eine Pflicht (kein Wahlrecht!) zur Verteilung bei Ausgaben für Nutzungsüberlassungen von mehr als 5 Jahren. Das Abflussprinzip tritt ausnahmsweise zurück. Auf wie viele Monate verteilt sich der Nutzungszeitraum? Wie viele Monate entfallen auf 2025?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung9">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebsausgabe 2025:</span> <span class="loesung-betrag">−600 €</span><br>
+      Rechtsgrundlage: <span class="norm-tag">§ 11 Abs. 2 S. 3 EStG</span><br>
+      Nutzungszeitraum: 84 Monate. Verteilung: 8.400 € ÷ 84 = <strong>100 € pro Monat</strong>.<br>
+      In 2025 entfallen 6 Monate (Juli–Dezember) → 6 × 100 € = <strong>600 € BA in 2025</strong>.<br>
+      Trotz Abfluss von 8.400 € im Juli 2025 darf nur der anteilige Betrag angesetzt werden — das Abflussprinzip wird durch § 11 Abs. 2 S. 3 EStG verdrängt.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: −600 €</div>
+    </div>
+  </div>
+
+  <!-- GEWINNERMITTLUNG PHASE 1 -->
+  <div class="gewinn-section">
+    <div class="gewinn-section-head">
+      <span class="badge">Phase 1</span>
+      Gewinnermittlung nach Sachverhalten 1–9
+    </div>
+    <table class="gewinn-table">
+      <tr class="row-start">
+        <td>Vorläufiger Gewinn</td>
+        <td>52.800,00 €</td>
+      </tr>
+      <tr class="row-sv row-plus">
+        <td><span class="sv-ref">SV 2</span><span class="row-label">USt-Vereinnahmung Dez. 2025</span></td>
+        <td>+3.800,00 €</td>
+      </tr>
+      <tr class="row-sv row-minus">
+        <td><span class="sv-ref">SV 3</span><span class="row-label">GWG Kamera 800 € + USt 152 €</span></td>
+        <td>−952,00 €</td>
+      </tr>
+      <tr class="row-sv row-minus">
+        <td><span class="sv-ref">SV 4</span><span class="row-label">AfA Druckmaschine 1.500 € + USt 2.280 €</span></td>
+        <td>−3.780,00 €</td>
+      </tr>
+      <tr class="row-sv row-neutral">
+        <td><span class="sv-ref">SV 1, 5</span><span class="row-label">Kein Ansatz in 2025</span></td>
+        <td>± 0,00 €</td>
+      </tr>
+      <tr class="row-sv row-plus">
+        <td><span class="sv-ref">SV 6</span><span class="row-label">Grundstücksveräußerung (38.000 − 30.000)</span></td>
+        <td>+8.000,00 €</td>
+      </tr>
+      <tr class="row-sv row-plus">
+        <td><span class="sv-ref">SV 7</span><span class="row-label">GmbH-Anteile (22.000 − 15.000)</span></td>
+        <td>+7.000,00 €</td>
+      </tr>
+      <tr class="row-sv row-minus">
+        <td><span class="sv-ref">SV 8</span><span class="row-label">10-Tage: Honorar +600 € / Miete −700 €</span></td>
+        <td>−100,00 €</td>
+      </tr>
+      <tr class="row-sv row-minus">
+        <td><span class="sv-ref">SV 9</span><span class="row-label">Lizenzgebühr anteilig (6 × 100 €)</span></td>
+        <td>−600,00 €</td>
+      </tr>
+      <tr class="row-result">
+        <td>Gewinn 2025 nach Phase 1</td>
+        <td>66.168,00 €</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase2-intro">
+    <strong>Phase 2 — Kern meldet sich zurück</strong>
+    Nachdem Jonas Kern die Aufstellung gesehen hat, meldet er sich erneut bei der Kanzlei. Er teilt mit, dass er zwei weitere Vorgänge vergessen hatte zu erwähnen.
+  </div>
+
+  <div class="phase-header">
+    <span class="phase-badge p2">Phase 2</span>
+    <div class="phase-line"></div>
+    <span class="phase-title">Sachverhalte 10–11</span>
+    <div class="phase-line"></div>
+  </div>
+
+  <!-- SV 10 -->
+  <div class="sv-card phase2" id="card10">
+    <div class="sv-head">
+      <span class="sv-number">SV 10</span>
+      <div>
+        <div class="sv-topic">Vorauszahlung Honorar — Zuflussprinzip</div>
+        <div class="sv-text">
+          Ein Verlag überweist Kern am 28. Dezember 2025 ein Honorar von <span class="betrag">4.200 €</span> als Vorschuss für ein Buchillustrierungsprojekt, das erst im Frühjahr 2026 fertiggestellt werden soll.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(10,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(10,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp10">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      <strong>§ 11 Abs. 1 Satz 1 EStG</strong>: Grundregel des Zuflussprinzips. Ist es relevant, <em>wann</em> die Leistung erbracht wird? Oder zählt ausschließlich der Zeitpunkt des Geldeingangs?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung10">
+      <div class="panel-label">Lösung</div>
+      <span class="loesung-typ">Betriebseinnahme 2025:</span> <span class="loesung-betrag">+4.200 €</span><br>
+      Rechtsgrundlage: <span class="norm-tag">§ 11 Abs. 1 S. 1 EStG</span><br>
+      Maßgeblich ist allein der Zufluss — das Geld geht am 28. Dezember 2025 ein. Der Zeitpunkt der Leistungserbringung (Frühjahr 2026) ist für die steuerliche Erfassung irrelevant.
+      <div class="loesung-hinweis">Gewinnauswirkung 2025: +4.200 €</div>
+    </div>
+  </div>
+
+  <!-- SV 11 -->
+  <div class="sv-card phase2" id="card11">
+    <div class="sv-head">
+      <span class="sv-number">SV 11</span>
+      <div>
+        <div class="sv-topic">Einnahme Nutzungsüberlassung &gt; 5 Jahre (Wahlrecht)</div>
+        <div class="sv-text">
+          Das Stadtmuseum Münster zahlt Kern am 10. Dezember 2025 einmalig <span class="betrag">9.600 €</span> für die Nutzungsüberlassung eines Gemäldes für Ausstellungszwecke. Der Nutzungsvertrag läuft vom <strong>1. Januar 2026 bis 31. Dezember 2035</strong> (10 Jahre). Kern möchte seinen Gewinn möglichst gering halten.
+        </div>
+      </div>
+    </div>
+    <div class="sv-toggles">
+      <button class="toggle-btn" onclick="togglePanel(11,'tipp')"><span class="icon">💡</span> Tipp</button>
+      <button class="toggle-btn" onclick="togglePanel(11,'loesung')"><span class="icon">✓</span> Lösung</button>
+    </div>
+    <div class="sv-panel panel-tipp" id="tipp11">
+      <div class="panel-label">Tipp — Gesetzeshinweis</div>
+      <strong>§ 11 Abs. 1 Satz 3 EStG</strong>: Bei Einnahmen aus Nutzungsüberlassungen &gt; 5 Jahre besteht ein <em>Wahlrecht</em> zur Verteilung — im Unterschied zu Ausgaben (§ 11 Abs. 2 Satz 3 EStG), wo die Verteilung <em>Pflicht</em> ist. Welche Option ist für Kern günstiger? Wie viel wäre pro Jahr bei Verteilung auf 10 Jahre anzusetzen?
+    </div>
+    <div class="sv-panel panel-loesung" id="loesung11">
+      <div class="panel-label">Lösung</div>
+      <strong>Option A</strong> (Zuflussprinzip): volle <span class="loesung-betrag">+9.600 €</span> in 2025 — <span class="norm-tag">§ 11 Abs. 1 S. 1 EStG</span><br>
+      <strong>Option B</strong> (Verteilung): <span class="loesung-betrag">+960 € p.a.</span> über 10 Jahre — <span class="norm-tag">§ 11 Abs. 1 S. 3 EStG</span><br><br>
+      Da Kern seinen Gewinn möglichst gering halten möchte, wählt er <strong>Option B</strong>. In 2025 ist der Nutzungszeitraum noch nicht gestartet (er beginnt am 1.1.2026) — der erste Jahresbetrag von 960 € fällt somit in 2026. <strong>In 2025: 0 € BE.</strong>
+      <div class="loesung-hinweis">Wichtig: Bei Ausgaben (SV 9) gilt die Pflicht zur Verteilung. Bei Einnahmen (SV 11) ist es ein Wahlrecht — ein asymmetrisches Konzept im Gesetz! Gewinnauswirkung 2025: 0 €</div>
+    </div>
+  </div>
+
+  <!-- GEWINNERMITTLUNG PHASE 2 -->
+  <div class="gewinn-section">
+    <div class="gewinn-section-head p2head">
+      <span class="badge">Phase 2</span>
+      Gewinnermittlung nach Sachverhalten 10–11
+    </div>
+    <table class="gewinn-table">
+      <tr class="row-start">
+        <td>Gewinn nach Phase 1</td>
+        <td>66.168,00 €</td>
+      </tr>
+      <tr class="row-sv row-plus">
+        <td><span class="sv-ref">SV 10</span><span class="row-label">Honorarvorschuss Dez. 2025</span></td>
+        <td>+4.200,00 €</td>
+      </tr>
+      <tr class="row-sv row-neutral">
+        <td><span class="sv-ref">SV 11</span><span class="row-label">Nutzungsüberlassung — Wahlrecht ausgeübt (Verteilung auf 10 J.)</span></td>
+        <td>± 0,00 €</td>
+      </tr>
+      <tr class="row-result">
+        <td>Endgültiger Gewinn 2025</td>
+        <td>70.368,00 €</td>
+      </tr>
+    </table>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  Lernfeld 8 · Mittelstufe Steuerfachangestellte · § 4 Abs. 3 EStG · § 11 EStG
+</footer>
+
+<script>
+  // State: track which panel is open per card
+  const state = {};
+
+  function togglePanel(n, type) {
+    const tippEl = document.getElementById('tipp' + n);
+    const loesungEl = document.getElementById('loesung' + n);
+    const btns = document.querySelectorAll('#card' + n + ' .toggle-btn');
+
+    const current = state[n] || null;
+
+    // close all panels for this card
+    tippEl.classList.remove('show');
+    loesungEl.classList.remove('show');
+    btns.forEach(b => b.classList.remove('active-tipp', 'active-loesung'));
+
+    if (current === type) {
+      // clicking same button again → close
+      state[n] = null;
+    } else {
+      // open requested panel
+      state[n] = type;
+      if (type === 'tipp') {
+        tippEl.classList.add('show');
+        btns[0].classList.add('active-tipp');
+      } else {
+        loesungEl.classList.add('show');
+        btns[1].classList.add('active-loesung');
+      }
+    }
+  }
+</script>
+</body>
+</html>
