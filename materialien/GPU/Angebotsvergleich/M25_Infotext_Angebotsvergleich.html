@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M25 – Der Angebotsvergleich</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #1a1a1a; background: #f5f5f5; padding: 2rem; }
+  .container { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 2rem 2.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .mat-header { display: grid; grid-template-columns: 100px 1fr 120px; border-radius: 10px; overflow: hidden; margin-bottom: 2rem; }
+  .mat-num { background: #2E75B6; color: #fff; font-size: 26px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+  .mat-title-block { background: #D6E4F0; padding: 1rem 1.25rem; }
+  .mat-title { font-size: 18px; font-weight: bold; color: #1F4E79; }
+  .mat-sub { font-size: 13px; color: #555; margin-top: 3px; }
+  .mat-tag { background: #D6E4F0; border: 2px solid #2E75B6; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #1F4E79; padding: 0.5rem; text-align: center; }
+  .sec-head { font-size: 12px; font-weight: bold; letter-spacing: 0.06em; text-transform: uppercase; color: #666; margin: 2rem 0 0.75rem; padding-bottom: 6px; border-bottom: 1px solid #ddd; }
+  .intro { font-size: 15px; line-height: 1.7; color: #1a1a1a; margin-bottom: 1.5rem; }
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2rem; }
+  .method-card { border-radius: 10px; border: 1px solid #ddd; padding: 1rem 1.25rem; background: #fff; }
+  .method-card.quant { border-left: 4px solid #185FA5; }
+  .method-card.qual { border-left: 4px solid #BA7517; }
+  .method-label { font-size: 11px; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px; }
+  .method-card.quant .method-label { color: #185FA5; }
+  .method-card.qual .method-label { color: #BA7517; }
+  .method-title { font-size: 15px; font-weight: bold; color: #1a1a1a; margin-bottom: 8px; }
+  .method-text { font-size: 13px; line-height: 1.65; color: #444; }
+  .kriterien { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .krit-card { border-radius: 8px; border: 1px solid #ddd; background: #fff; overflow: hidden; }
+  .krit-card.open { border-color: #999; }
+  .krit-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; user-select: none; }
+  .krit-header:hover { background: #f7f7f7; }
+  .krit-name { font-size: 14px; font-weight: bold; color: #1a1a1a; }
+  .krit-desc { font-size: 12px; color: #888; margin-top: 2px; }
+  .krit-arrow { font-size: 12px; color: #888; transition: transform 0.2s; flex-shrink: 0; }
+  .krit-card.open .krit-arrow { transform: rotate(90deg); }
+  .krit-body { display: none; padding: 10px 14px 14px; font-size: 13px; line-height: 1.65; color: #444; border-top: 1px solid #eee; }
+  .krit-card.open .krit-body { display: block; }
+  .sub-head { font-size: 12px; font-weight: bold; color: #1a1a1a; margin: 10px 0 4px; }
+  .bzp { background: #f4f4f4; border-radius: 6px; padding: 10px 12px; }
+  .bzp-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; color: #555; }
+  .bzp-row.minus { color: #2e7d32; }
+  .bzp-row.plus { color: #c62828; }
+  .bzp-row.total { border-top: 1px solid #ccc; margin-top: 4px; padding-top: 6px; font-weight: bold; color: #1a1a1a; font-size: 13px; }
+  .example { background: #f4f4f4; border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: 12px; font-style: italic; color: #555; }
+  table.info { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+  table.info th { text-align: left; font-weight: bold; color: #1a1a1a; padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  table.info td { padding: 4px 8px; color: #555; border-bottom: 1px solid #eee; vertical-align: top; }
+  .hinweis { margin-top: 1.5rem; padding: 10px 14px; border-radius: 8px; background: #f0f0f0; font-size: 13px; color: #555; border-left: 3px solid #aaa; }
+  .aufgabe { margin-top: 2rem; border: 2px solid #D6B656; border-radius: 10px; padding: 1.25rem; background: #FFF2CC; }
+  .aufgabe-title { font-size: 16px; font-weight: bold; color: #7B5800; margin-bottom: 0.75rem; }
+  .aufgabe-text { font-size: 14px; color: #444; margin-bottom: 1rem; }
+  .aufgabe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .aufgabe-box { border-radius: 8px; border: 1px solid #D6B656; padding: 1rem; background: #fff; min-height: 100px; }
+  .aufgabe-box-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-box.quant .aufgabe-box-title { color: #185FA5; }
+  .aufgabe-box.qual .aufgabe-box-title { color: #7B5800; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="mat-header">
+    <div class="mat-num">M25</div>
+    <div class="mat-title-block">
+      <div class="mat-title">Informationstext: Der Angebotsvergleich</div>
+      <div class="mat-sub">TSM AG | Unterrichtsreihe: Abwicklung eines Kundenauftrages</div>
+    </div>
+    <div class="mat-tag">&#128214; Informationstext</div>
+  </div>
+
+  <p class="sec-head">1. Warum Angebote vergleichen?</p>
+  <p class="intro">Bevor ein Unternehmen Waren oder Materialien beschafft, holt es in der Regel mehrere Angebote von verschiedenen Lieferanten ein. Ziel ist es, den geeignetsten Lieferanten zu finden – nicht zwingend den günstigsten, sondern denjenigen, der die Anforderungen des Unternehmens am besten erfüllt. Ein systematischer Angebotsvergleich schützt vor Fehlentscheidungen und macht die Lieferantenauswahl nachvollziehbar und begründbar.</p>
+
+  <p class="sec-head">2. Methoden des Angebotsvergleichs</p>
+  <div class="methods">
+    <div class="method-card quant">
+      <div class="method-label">Quantitativ</div>
+      <div class="method-title">Einfaktorenmodell</div>
+      <div class="method-text">Beim quantitativen Angebotsvergleich werden ausschließlich messbare, in Zahlen ausdrückbare Faktoren bewertet. Im Mittelpunkt steht der tatsächliche Einstandspreis, also der Preis, den das Unternehmen nach Abzug aller Rabatte und Zuschläge tatsächlich zahlt.<br><br>Diese Methode ist objektiv und nachvollziehbar, hat aber eine wichtige Einschränkung: Sie berücksichtigt nur den Preis – und nicht alles, was einen guten Lieferanten ausmacht.</div>
+    </div>
+    <div class="method-card qual">
+      <div class="method-label">Qualitativ</div>
+      <div class="method-title">Nutzwertanalyse / Scoring-Modell</div>
+      <div class="method-text">Beim qualitativen Angebotsvergleich werden zusätzlich nicht messbare Kriterien bewertet. Am Ende wird ein Gesamtwert (Nutzwert) für jeden Lieferanten ermittelt, der eine begründete Entscheidung auch jenseits des Preises ermöglicht.<br><br>Diese Methode ist aufwändiger, kann jedoch durch die Berücksichtigung mehrerer Kriterien eine fundiertere und umfassendere Lieferantenentscheidung ergeben.</div>
+    </div>
+  </div>
+
+  <p class="sec-head">3. Kriterien des Angebotsvergleichs – auf Karte klicken für Details</p>
+  <div class="kriterien">
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Preis</div><div class="krit-desc">Aufklappen: Bezugspreiskalkulation</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Mit Preis ist der <strong>Bezugspreis (Einstandspreis)</strong> gemeint – also nicht der Listenpreis des Lieferanten, sondern der tatsächliche Preis, den das Unternehmen nach allen Abzügen und Zuschlägen zahlt.
+        <div class="sub-head">Bezugspreiskalkulation</div>
+        <div class="bzp">
+          <div class="bzp-row"><span>Listeneinkaufspreis (LEP)</span><span>xxx,xx €</span></div>
+          <div class="bzp-row minus"><span>– Lieferantenrabatt</span><span>– xx,xx €</span></div>
+          <div class="bzp-row"><span>= Zieleinkaufspreis (ZEP)</span><span>xxx,xx €</span></div>
+          <div class="bzp-row minus"><span>– Lieferantenskonto</span><span>– xx,xx €</span></div>
+          <div class="bzp-row"><span>= Bareinkaufspreis (BEP)</span><span>xxx,xx €</span></div>
+          <div class="bzp-row plus"><span>+ Bezugskosten (z. B. Fracht)</span><span>+ xx,xx €</span></div>
+          <div class="bzp-row total"><span>= Einstandspreis (ESP)</span><span>xxx,xx €</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Zahlungsbedingungen</div><div class="krit-desc">Aufklappen: Vorkasse, Skonto, Zahlungsziel</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Unter welchen Bedingungen muss gezahlt werden? Besonders für Unternehmen mit knapper Liquidität kann das entscheidend sein.
+        <div class="sub-head">Typische Zahlungsbedingungen</div>
+        <table class="info">
+          <tr><th style="width:28%">Begriff</th><th style="width:30%">Bedeutung</th><th>Beispiel</th></tr>
+          <tr><td>Vorkasse</td><td>Zahlung vor Lieferung</td><td>Rechnung muss vor Versand beglichen sein</td></tr>
+          <tr><td>Zahlungsziel</td><td>Frist zur Zahlung nach Lieferung</td><td>"30 Tage netto" = 30 Tage Zeit, den ausgewiesenen Preis – also ohne Abzüge – zu bezahlen</td></tr>
+          <tr><td>Skonto</td><td>Preisnachlass bei früher Zahlung</td><td>"2 % Skonto bei Zahlung innerhalb 10 Tagen"</td></tr>
+        </table>
+        <div class="example">Typische Angabe im Angebot: "Zahlbar innerhalb 30 Tagen netto, oder innerhalb 10 Tagen mit 2 % Skonto."</div>
+      </div>
+    </div>
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Liefertreue</div><div class="krit-desc">Aufklappen: Erklärung und Beispiel</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Hält der Lieferant seine zugesagten Liefertermine zuverlässig ein? Erfahrungswerte, Kundenbewertungen und Referenzen geben hier Aufschluss. Liefertreue ist besonders wichtig, wenn – wie bei der TSM AG – just-in-time beschafft wird und Verzögerungen den gesamten Produktionsablauf gefährden.
+        <div class="example">Beispiel: Die TSM AG bestellte für einen Büroauftrag der Klinik am Westpark Gasfedergestelle bei einem neuen Lieferanten. Dieser hatte eine Lieferzeit von einer Woche zugesagt – die Ware kam jedoch erst nach drei Wochen an. Die Montage verzögerte sich, die TSM AG musste Vertragsstrafen zahlen. Seitdem prüft die Einkaufsabteilung die Liefertreue neuer Lieferanten anhand von Bewertungen und Referenzen.</div>
+        <div class="sub-head">Woran erkennt man Liefertreue?</div>
+        Kundenbewertungen, Referenzen anderer Unternehmen, eigene Vorerfahrungen mit dem Lieferanten oder Branchenportale können Hinweise geben.
+      </div>
+    </div>
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Qualität</div><div class="krit-desc">Aufklappen: ISO 9001, Nachweise</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Entsprechen die gelieferten Produkte den geforderten Standards? Qualität lässt sich auf verschiedene Weisen nachweisen.
+        <div class="sub-head">ISO 9001 – Qualitätsmanagementsystem</div>
+        ISO 9001 ist eine international anerkannte Norm für Qualitätsmanagementsysteme. Ein zertifiziertes Unternehmen hat nachgewiesen, dass es Prozesse zur Sicherung und Verbesserung der Produktqualität eingeführt hat. Die Zertifizierung wird von unabhängigen Stellen vergeben und muss regelmäßig erneuert werden.
+        <div class="sub-head">Woran erkennt man gute Qualität als Einkäufer?</div>
+        <table class="info">
+          <tr><th>Nachweis</th><th>Bedeutung</th></tr>
+          <tr><td>ISO 9001 Zertifikat</td><td>Grundstandard für Qualitätsmanagement</td></tr>
+          <tr><td>Branchenspezifische Normen</td><td>z. B. ISO/TS für Automobilindustrie</td></tr>
+          <tr><td>Produkttests / Prüfberichte</td><td>Unabhängige Prüfung der Produkte</td></tr>
+          <tr><td>Referenzen / Kundenstimmen</td><td>Erfahrungen anderer Unternehmen</td></tr>
+          <tr><td>Musterlieferung</td><td>Probebestellung vor Hauptauftrag</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Service</div><div class="krit-desc">Aufklappen: Erklärung</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Wie gut ist der Lieferant erreichbar? Gibt es einen persönlichen Ansprechpartner? Wie reagiert der Lieferant bei Problemen oder Reklamationen? Guter Service bedeutet auch, dass bei Lieferproblemen schnell und verlässlich kommuniziert wird.
+      </div>
+    </div>
+
+    <div class="krit-card" onclick="toggle(this)">
+      <div class="krit-header">
+        <div><div class="krit-name">Nachhaltigkeit</div><div class="krit-desc">Aufklappen: ISO 14001, Nachweise</div></div>
+        <span class="krit-arrow">&#9654;</span>
+      </div>
+      <div class="krit-body">
+        Produziert der Lieferant umweltfreundlich? Für viele Unternehmen und deren Kunden gewinnt dieses Kriterium zunehmend an Bedeutung.
+        <div class="sub-head">ISO 14001 – Umweltmanagementsystem</div>
+        ISO 14001 ist eine internationale Norm für Umweltmanagementsysteme. Ein zertifiziertes Unternehmen hat nachgewiesen, dass es systematisch daran arbeitet, seinen ökologischen Fußabdruck zu reduzieren – z. B. durch Energieeinsparung, Abfallreduzierung oder nachhaltige Beschaffung.
+        <div class="sub-head">Woran erkennt man Nachhaltigkeit als Einkäufer?</div>
+        <table class="info">
+          <tr><th>Nachweis</th><th>Bedeutung</th></tr>
+          <tr><td>ISO 14001 Zertifikat</td><td>Grundstandard für Umweltmanagement</td></tr>
+          <tr><td>Nachhaltigkeitsbericht</td><td>Jährlicher Bericht über Umweltmaßnahmen</td></tr>
+          <tr><td>CO&#8322;-Bilanz / Klimaneutral</td><td>Nachweis über Emissionsreduktion</td></tr>
+          <tr><td>Faire Lieferketten</td><td>z. B. Fair-Trade-Zertifizierung</td></tr>
+          <tr><td>Produktionsstandort</td><td>Kurze Transportwege = geringerer CO&#8322;-Ausstoß</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hinweis">Tipp: Klicken Sie auf eine Karte, um die Erklärung zu einem Kriterium ein- oder auszublenden.</div>
+
+  <div class="aufgabe">
+    <div class="aufgabe-title">Aufgabe</div>
+    <div class="aufgabe-text">Ordnen Sie die sechs Kriterien aus Abschnitt 3 den beiden Methoden des Angebotsvergleichs zu: Welche Kriterien sind Ihrer Meinung nach quantitativ, welche qualitativ? Begründen Sie Ihre Zuordnung.</div>
+    <div class="aufgabe-grid">
+      <div class="aufgabe-box quant">
+        <div class="aufgabe-box-title">Quantitative Kriterien:</div>
+      </div>
+      <div class="aufgabe-box qual">
+        <div class="aufgabe-box-title">Qualitative Kriterien:</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggle(card) { card.classList.toggle('open'); }
+</script>
+</body>
+</html>
