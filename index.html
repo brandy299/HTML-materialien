@@ -754,14 +754,6 @@ body.edit-mode .card-edit-actions {
   transition: width 300ms ease;
 }
 
-/* Token info */
-.token-info {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-1);
-  line-height: var(--leading-normal);
-}
-
 /* Toast */
 .toast {
   position: fixed;
@@ -925,13 +917,6 @@ body.edit-mode #editToggle { background: var(--primary-50); color: var(--primary
     <input type="text" id="search" placeholder="Suchen..." oninput="syncSearch(this.value)" autocomplete="off">
   </div>
 
-  <button class="hbtn" id="tokenBtn" onclick="showToken()" title="GitHub Token konfigurieren">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-    </svg>
-    Token
-  </button>
-
   <button class="hbtn" id="editToggle" onclick="toggleEdit()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -980,10 +965,6 @@ body.edit-mode #editToggle { background: var(--primary-50); color: var(--primary
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="text" id="search-desktop" placeholder="Suchen..." oninput="syncSearch(this.value)" autocomplete="off">
         </div>
-        <button class="hbtn-desktop" id="tokenBtn2" onclick="showToken()" title="GitHub Token">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-          Token
-        </button>
         <button class="hbtn-desktop" id="editToggle2" onclick="toggleEdit()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Bearbeiten
@@ -1097,22 +1078,6 @@ body.edit-mode #editToggle { background: var(--primary-50); color: var(--primary
   </div>
 </div>
 
-<!-- TOKEN -->
-<div class="modal-backdrop" id="modalToken">
-  <div class="modal">
-    <h2>GitHub Token</h2>
-    <p class="token-info">
-      Persönliches GitHub Access Token (klassisch) mit <strong>repo</strong>-Scope für Schreibzugriff auf das Repository.
-    </p>
-    <label>Token</label>
-    <input type="password" id="inputToken" class="input" placeholder="ghp_…">
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeModal('modalToken')">Abbrechen</button>
-      <button class="btn-primary" onclick="saveToken()">Speichern</button>
-    </div>
-  </div>
-</div>
-
 <!-- RENAME -->
 <div class="modal-backdrop" id="modalRename">
   <div class="modal">
@@ -1175,7 +1140,7 @@ window.__sb = createClient(_SB_URL, _SB_KEY);
 function hideTeacherButtons() {
   window.__kuerzel  = '';
   window.__session  = null;
-  ['tokenBtn','tokenBtn2','editToggle','editToggle2','mineToggle','mineToggle2'].forEach(id => {
+  ['editToggle','editToggle2','mineToggle','mineToggle2'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.querySelectorAll('.hbtn.primary, .hbtn-desktop.primary-desktop').forEach(el => {
@@ -1208,7 +1173,6 @@ if (typeof loadMaterialienFromDB === 'function') loadMaterialienFromDB();
 ═══════════════════════════════════════════ */
 const OWNER   = 'brandy299';
 const REPO    = 'HTML-materialien';
-const API     = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const BASE_URL = `https://${OWNER}.github.io/${REPO}/`;
 
 /* ═══════════════════════════════════════════
@@ -1855,69 +1819,43 @@ document.querySelectorAll('.modal-backdrop').forEach(function (bd) {
   });
 });
 
-/* ═══════════════════════════════════════════
-   TOKEN
-═══════════════════════════════════════════ */
-function showToken() {
-  document.getElementById('inputToken').value = getToken();
-  openModal('modalToken');
-}
-function saveToken() {
-  const t = document.getElementById('inputToken').value.trim();
-  if (t) { localStorage.setItem('gh_token', t); showToast('Token gespeichert'); }
-  closeModal('modalToken');
-}
-function getToken() { return localStorage.getItem('gh_token') || ''; }
-
-/* ═══════════════════════════════════════════
-   GITHUB API
-═══════════════════════════════════════════ */
-function ghHeaders() {
-  return {
-    Authorization: 'token ' + getToken(),
-    Accept: 'application/vnd.github.v3+json'
-  };
-}
+const PROXY_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co/functions/v1/github-proxy';
 
 function ghError(status, message) {
-  if (status === 401) return new Error('GitHub Token ungültig oder abgelaufen – bitte neu setzen (⚙️ Token-Button)');
-  if (status === 403) return new Error('GitHub Token hat keine Schreibrechte – bitte Token mit repo-Berechtigung erstellen');
-  if (status === 422) return new Error('Datei existiert bereits oder ungültige Daten (422)');
-  return new Error(message || 'GitHub Fehler ' + status);
+  if (status === 401) return new Error('GitHub 401: Zugriff abgelehnt – Server-Token prüfen');
+  if (status === 403) return new Error('GitHub 403: Keine Schreibrechte');
+  if (status === 404) return new Error('GitHub 404: Datei nicht gefunden');
+  if (status === 422) return new Error('GitHub 422: Datei existiert bereits oder ungültige Daten');
+  return new Error('GitHub ' + status + ': ' + (message || 'Unbekannter Fehler'));
 }
 
-// Encode each path segment individually (spaces → %20, umlauts → %C3%xx etc.)
-// Required because fetch() does not auto-encode non-ASCII characters in URLs.
-function ghPath(p) {
-  return p.split('/').map(encodeURIComponent).join('/');
-}
+async function proxyCall(method, path, body) {
+  const sb = window.__sb;
+  const session = window.__session;
+  if (!sb || !session) throw new Error('Nicht eingeloggt – bitte Seite neu laden');
 
-async function ghGet(path) {
-  const r = await fetch(API + '/contents/' + ghPath(path), { headers: ghHeaders() });
-  if (!r.ok) throw ghError(r.status, 'GET ' + path + ': ' + r.status);
-  return r.json();
-}
+  const { data: { session: freshSession } } = await sb.auth.getSession();
+  const token = freshSession?.access_token || session.access_token;
+  if (!token) throw new Error('Sitzung abgelaufen – bitte neu einloggen');
 
-async function ghPut(path, body) {
-  const r = await fetch(API + '/contents/' + ghPath(path), {
-    method: 'PUT',
-    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+  const resp = await fetch(PROXY_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ method, path, body }),
   });
-  if (!r.ok) {
-    const err = await r.json().catch(function () { return {}; });
-    throw ghError(r.status, err.message);
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(function () { return {}; });
+    throw new Error(err.error || 'Proxy Fehler ' + resp.status);
   }
-  return r.json();
-}
 
-async function ghDelete(path, sha, message) {
-  const r = await fetch(API + '/contents/' + ghPath(path), {
-    method: 'DELETE',
-    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: message, sha: sha })
-  });
-  if (!r.ok) throw ghError(r.status, 'DELETE ' + path + ': ' + r.status);
+  const result = await resp.json();
+  if (result.error) throw new Error(result.error);
+  if (result.status >= 400) throw ghError(result.status, result.data?.message);
+  return result.data;
 }
 
 /* ═══════════════════════════════════════════
@@ -1975,7 +1913,6 @@ async function doUpload() {
   const fach  = document.getElementById('uploadFach').value.trim();
   const thema = document.getElementById('uploadThema').value.trim();
   if (!titel || !fach || !thema) return showToast('Bitte alle Felder ausfüllen');
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnUpload');
   btn.disabled = true;
@@ -2010,12 +1947,12 @@ async function doUpload() {
 
     // Try upload; if 422 (file exists) fetch existing SHA and overwrite
     try {
-      await ghPut(pfad, { message: 'Upload: ' + titel, content: content });
+      await proxyCall('PUT', pfad, { message: 'Upload: ' + titel, content: content });
     } catch (putErr) {
       if (putErr.message && putErr.message.includes('422')) {
         // File already exists — fetch its SHA and update
-        const existing = await ghGet(pfad);
-        await ghPut(pfad, { message: 'Update: ' + titel, content: content, sha: existing.sha });
+        const existing = await proxyCall('GET', pfad);
+        await proxyCall('PUT', pfad, { message: 'Update: ' + titel, content: content, sha: existing.sha });
       } else {
         throw putErr;
       }
@@ -2155,7 +2092,6 @@ function _showDeleteError(msg) {
 
 async function doDelete() {
   if (!deleteTarget) return;
-  if (!getToken()) return showToast('Bitte zuerst GitHub Token setzen (⚙️)');
 
   const btn = document.getElementById('btnConfirmDelete');
   btn.disabled    = true;
@@ -2167,7 +2103,7 @@ async function doDelete() {
     // Step 1: get SHA (needed for file deletion later)
     let fileInfo;
     try {
-      fileInfo = await ghGet(target.pfad);
+      fileInfo = await proxyCall('GET', target.pfad);
     } catch (e) {
       // File not found on GitHub – offer to clean up the index entry only
       if (e.message && e.message.includes('404')) {
@@ -2208,7 +2144,7 @@ async function doDelete() {
     }
 
     // Step 3: delete the actual file (index already updated)
-    await ghDelete(target.pfad, fileInfo.sha, 'Delete: ' + target.name);
+    await proxyCall('DELETE', target.pfad, { message: 'Delete: ' + target.name, sha: fileInfo.sha });
 
     if (previewMaterial && previewMaterial.pfad === target.pfad) closePreview();
 
