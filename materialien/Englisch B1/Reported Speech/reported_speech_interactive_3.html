@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reported Speech in Meetings – Office Design Ltd.</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+
+  @keyframes fadeIn  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes shake   { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)} }
+  @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(99,102,241,.4)} 70%{box-shadow:0 0 0 10px rgba(99,102,241,0)} 100%{box-shadow:0 0 0 0 rgba(99,102,241,0)} }
+
+  .fade-in    { animation: fadeIn .35s ease forwards; }
+  .shake      { animation: shake .4s ease; }
+  .pulse-ring { animation: pulseRing 1.8s infinite; }
+
+  .phase { display:none; }
+  .phase.active { display:block; }
+
+  .nav-dot { width:10px; height:10px; border-radius:50%; background:#cbd5e1; transition:all .3s; cursor:pointer; flex-shrink:0; }
+  .nav-dot.active { background:#4f46e5; transform:scale(1.3); }
+  .nav-dot.done   { background:#10b981; }
+
+  .opt-btn {
+    width:100%; text-align:left; padding:11px 14px; border-radius:12px;
+    border:2px solid #e2e8f0; background:#fff; cursor:pointer;
+    transition:border-color .15s, background .15s; font-size:13px; color:#1e293b;
+    line-height:1.5;
+  }
+  .opt-btn:hover:not(:disabled) { border-color:#6366f1; background:#eef2ff; }
+  .opt-btn.selected  { border-color:#6366f1; background:#eef2ff; }
+  .opt-btn.correct   { border-color:#10b981 !important; background:#d1fae5 !important; color:#065f46 !important; }
+  .opt-btn.wrong     { border-color:#ef4444 !important; background:#fee2e2 !important; color:#991b1b !important; }
+  .opt-btn:disabled  { cursor:default; }
+
+  .fill-inp {
+    border:2px solid #e2e8f0; border-radius:8px; padding:6px 10px;
+    font-size:13px; outline:none; transition:border-color .15s; width:160px;
+  }
+  .fill-inp:focus   { border-color:#6366f1; }
+  .fill-inp.correct { border-color:#10b981; background:#d1fae5; }
+  .fill-inp.wrong   { border-color:#ef4444; background:#fee2e2; }
+
+  .tab-btn { padding:7px 16px; border-radius:9999px; font-size:12px; font-weight:600;
+    cursor:pointer; transition:all .2s; color:#64748b; white-space:nowrap; }
+  .tab-btn.active { background:#4f46e5; color:#fff; box-shadow:0 2px 8px rgba(79,70,229,.25); }
+
+  .pbar { height:5px; border-radius:9999px; background:#e2e8f0; overflow:hidden; }
+  .pbar-fill { height:100%; border-radius:9999px; background:linear-gradient(90deg,#6366f1,#8b5cf6); transition:width .5s; }
+
+  .fb { border-radius:9px; padding:9px 12px; font-size:12px; margin-top:8px; display:none; }
+  .fb.show { display:block; animation:fadeIn .25s ease; }
+  .fb.ok  { background:#d1fae5; color:#065f46; border-left:3px solid #10b981; }
+  .fb.err { background:#fee2e2; color:#991b1b; border-left:3px solid #ef4444; }
+
+  .chip { display:inline-block; padding:3px 10px; border-radius:9999px;
+    background:#eef2ff; color:#4338ca; font-size:11px; font-weight:600;
+    margin:2px; border:1px solid #c7d2fe; }
+
+  .score-ring {
+    width:96px; height:96px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .score-ring::before {
+    content:''; position:absolute; width:72px; height:72px;
+    border-radius:50%; background:#fff;
+  }
+  .score-inner { position:relative; z-index:1; text-align:center; }
+
+  /* drag & drop */
+  .d-word {
+    display:inline-block; padding:5px 12px; border-radius:8px;
+    background:#eef2ff; border:2px solid #c7d2fe; color:#3730a3;
+    font-size:13px; font-weight:600; cursor:grab; margin:3px; user-select:none;
+    transition:opacity .2s, transform .15s;
+  }
+  .d-word:hover { transform:scale(1.04); }
+  .d-word.used  { opacity:.3; cursor:not-allowed; pointer-events:none; }
+
+  .d-zone {
+    display:inline-block; min-width:110px; border-bottom:2px dashed #94a3b8;
+    padding:1px 6px; margin:0 3px; font-size:13px; color:#6366f1;
+    font-weight:600; vertical-align:middle; min-height:22px; transition:all .15s;
+  }
+  .d-zone.over  { border-color:#6366f1; background:#eef2ff; border-radius:4px; }
+  .d-zone.set   { border-style:solid; border-color:#94a3b8; background:#f8fafc; color:#334155; border-radius:4px; }
+  .d-zone.ok    { border-style:solid; border-color:#10b981; background:#d1fae5; color:#065f46; border-radius:4px; }
+  .d-zone.bad   { border-style:solid; border-color:#ef4444; background:#fee2e2; color:#991b1b; border-radius:4px; }
+
+  /* transfer step dots */
+  .t-dot { width:10px; height:10px; border-radius:50%; background:#cbd5e1; transition:all .3s; }
+  .t-dot.active { background:#6366f1; transform:scale(1.3); }
+  .t-dot.done   { background:#10b981; }
+  .t-dot.miss   { background:#f87171; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- TOP BAR -->
+<div class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+  <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div>
+      <span class="text-indigo-600 font-bold text-sm">Office Design Ltd.</span>
+      <span class="text-slate-400 text-xs ml-2 hidden sm:inline">Business English · HS2D</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-slate-500 font-medium" id="score-label">Score: 0</span>
+      <div class="flex gap-2" id="nav-dots"></div>
+    </div>
+  </div>
+  <div class="pbar mx-4 mb-2"><div class="pbar-fill" id="pbar-fill" style="width:0%"></div></div>
+</div>
+
+<div class="max-w-2xl mx-auto px-4 py-5">
+
+<!-- ════════════════════════════════════════
+     PHASE 0 · HOOK
+════════════════════════════════════════ -->
+<div class="phase active fade-in" id="phase-0">
+  <div class="bg-amber-50 border-l-4 border-amber-400 rounded-2xl p-5 mb-4">
+    <p class="text-xs font-bold text-amber-600 uppercase tracking-wide mb-1">Situation</p>
+    <h2 class="text-xl font-bold text-slate-800 mb-2">You missed the Monday meeting!</h2>
+    <p class="text-slate-600 text-sm leading-relaxed">You work at <strong>Office Design Ltd.</strong> in Düsseldorf. You were sick and missed the weekly team meeting. Your colleague Sarah tells you what happened.</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-5">
+    <p class="text-xs font-semibold text-slate-400 uppercase mb-3">What Sarah tells you …</p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3 bg-indigo-50 rounded-xl p-3">
+        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm flex-shrink-0">S</div>
+        <p class="text-slate-700 text-sm">"Ms Ellis <strong>said that</strong> we <strong>needed</strong> to finish the catalogue by Friday."</p>
+      </div>
+      <div class="flex items-start gap-3 bg-indigo-50 rounded-xl p-3">
+        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm flex-shrink-0">S</div>
+        <p class="text-slate-700 text-sm">"Jack <strong>added</strong> that he <strong>had already sent</strong> the draft to the designer."</p>
+      </div>
+      <div class="flex items-start gap-3 bg-indigo-50 rounded-xl p-3">
+        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm flex-shrink-0">S</div>
+        <p class="text-slate-700 text-sm">"Priya <strong>suggested</strong> <strong>holding</strong> a review session the following Monday."</p>
+      </div>
+    </div>
+    <p class="text-slate-400 text-xs mt-3">Notice the bold words — that's <strong>reported speech</strong>. Now practise it yourself!</p>
+  </div>
+
+  <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors pulse-ring flex items-center justify-center gap-2 text-sm"
+    onclick="goTo(1)">
+    Let's practise! →
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════
+     PHASE 1 · GRAMMAR
+════════════════════════════════════════ -->
+<div class="phase" id="phase-1">
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 mb-4">
+    <p class="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1">Grammar Reference</p>
+    <h2 class="text-xl font-bold text-slate-800">Reported Speech — How it works</h2>
+  </div>
+
+  <div class="flex gap-2 mb-4 bg-white rounded-2xl p-2 shadow-sm border border-slate-100 overflow-x-auto">
+    <button class="tab-btn active" id="gt-0" onclick="gTab(0)">Tense Shift</button>
+    <button class="tab-btn" id="gt-1" onclick="gTab(1)">Reporting Verbs</button>
+    <button class="tab-btn" id="gt-2" onclick="gTab(2)">Time &amp; Place</button>
+  </div>
+
+  <!-- Tab 0 -->
+  <div id="gc-0" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+    <p class="text-sm text-slate-600 mb-3">Shift all tenses <strong>one step back</strong> into the past:</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead><tr class="bg-slate-700 text-white">
+          <th class="px-3 py-2 text-left rounded-tl-lg">Direct Speech</th>
+          <th class="px-3 py-2 text-left rounded-tr-lg">Reported Speech</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="px-3 py-2 border-b border-slate-100 text-red-600 italic">"We <u>are working</u> on it."</td><td class="px-3 py-2 border-b border-slate-100 text-green-700 italic">She said they <u>were working</u> on it.</td></tr>
+          <tr class="bg-slate-50"><td class="px-3 py-2 border-b border-slate-100 text-red-600 italic">"I <u>have finished</u> the report."</td><td class="px-3 py-2 border-b border-slate-100 text-green-700 italic">He said he <u>had finished</u> the report.</td></tr>
+          <tr><td class="px-3 py-2 border-b border-slate-100 text-red-600 italic">"We <u>will send</u> it tomorrow."</td><td class="px-3 py-2 border-b border-slate-100 text-green-700 italic">She said they <u>would send</u> it the next day.</td></tr>
+          <tr class="bg-slate-50"><td class="px-3 py-2 border-b border-slate-100 text-red-600 italic">"The order <u>arrived</u>."</td><td class="px-3 py-2 border-b border-slate-100 text-green-700 italic">He said the order <u>had arrived</u>.</td></tr>
+          <tr><td class="px-3 py-2 text-red-600 italic">"<u>Can</u> you check this?"</td><td class="px-3 py-2 text-green-700 italic">She asked if he <u>could</u> check it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3 bg-indigo-50 rounded-xl p-3 text-xs text-slate-600">
+      💡 <strong>Rule:</strong> present→past &nbsp;|&nbsp; past→past perfect &nbsp;|&nbsp; will→would &nbsp;|&nbsp; can→could
+    </div>
+  </div>
+
+  <!-- Tab 1 -->
+  <div id="gc-1" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+    <div class="grid grid-cols-1 gap-3">
+      <div class="bg-slate-50 rounded-xl p-3"><p class="text-xs font-bold text-slate-500 uppercase mb-2">Statements</p>
+        <span class="chip">said (that)</span><span class="chip">told [sb] (that)</span><span class="chip">explained (that)</span><span class="chip">added (that)</span><span class="chip">reported (that)</span>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3"><p class="text-xs font-bold text-slate-500 uppercase mb-2">Suggestions</p>
+        <span class="chip">suggested + -ing</span><span class="chip">recommended (that)</span><span class="chip">proposed + -ing</span>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3"><p class="text-xs font-bold text-slate-500 uppercase mb-2">Questions</p>
+        <span class="chip">asked if / whether</span><span class="chip">wanted to know</span>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3"><p class="text-xs font-bold text-slate-500 uppercase mb-2">Instructions / Requests</p>
+        <span class="chip">told [sb] to do</span><span class="chip">asked [sb] to do</span>
+      </div>
+    </div>
+    <div class="mt-3 bg-amber-50 rounded-xl p-3 text-xs text-slate-600">
+      ⚠️ <strong>said</strong> has no object: <em>She said that …</em> &nbsp;|&nbsp; <strong>told</strong> needs one: <em>She told us that …</em>
+    </div>
+  </div>
+
+  <!-- Tab 2 -->
+  <div id="gc-2" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+    <p class="text-sm text-slate-600 mb-3">Time and place words also change:</p>
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="space-y-1">
+        <p class="font-bold text-red-500 uppercase mb-1">Direct Speech</p>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">now</div>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">today</div>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">tomorrow</div>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">yesterday</div>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">next week</div>
+        <div class="bg-red-50 rounded-lg px-3 py-1.5 text-red-700">here / this</div>
+      </div>
+      <div class="space-y-1">
+        <p class="font-bold text-green-600 uppercase mb-1">Reported Speech</p>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">then</div>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">that day</div>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">the next / following day</div>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">the day before</div>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">the following week</div>
+        <div class="bg-green-50 rounded-lg px-3 py-1.5 text-green-700">there / that</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <button onclick="goTo(0)" class="flex-1 border-2 border-slate-200 text-slate-600 font-semibold py-3 rounded-xl hover:bg-slate-100 transition-colors text-sm">← Back</button>
+    <button onclick="goTo(2)" class="flex-[2] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm">Start exercises →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PHASE 2 · EXERCISES
+════════════════════════════════════════ -->
+<div class="phase" id="phase-2">
+  <div class="bg-emerald-50 border-l-4 border-emerald-400 rounded-2xl p-5 mb-4">
+    <p class="text-xs font-bold text-emerald-600 uppercase tracking-wide mb-1">Check</p>
+    <h2 class="text-xl font-bold text-slate-800">Three exercises</h2>
+    <p class="text-slate-500 text-xs mt-1">Questions are randomly selected — try again for a new set!</p>
+  </div>
+
+  <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
+    <button class="tab-btn active whitespace-nowrap" id="et-0" onclick="eTab(0)">📝 Multiple Choice</button>
+    <button class="tab-btn whitespace-nowrap" id="et-1" onclick="eTab(1)">⌨️ Fill the Gap</button>
+    <button class="tab-btn whitespace-nowrap" id="et-2" onclick="eTab(2)">🎯 Drag &amp; Drop</button>
+  </div>
+
+  <!-- Ex 1: MC -->
+  <div id="ex-0">
+    <div id="mc-container"></div>
+    <div class="flex justify-between items-center mt-3">
+      <span class="text-xs text-slate-400" id="mc-status"></span>
+      <button id="mc-check" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors" onclick="checkMC()">Check answers</button>
+    </div>
+    <button id="mc-retry" class="hidden w-full mt-3 border-2 border-indigo-200 text-indigo-600 text-sm font-semibold py-2.5 rounded-xl hover:bg-indigo-50 transition-colors" onclick="buildMC()">↺ New questions</button>
+  </div>
+
+  <!-- Ex 2: Fill -->
+  <div id="ex-1" class="hidden">
+    <div id="fill-container"></div>
+    <div class="flex justify-between items-center mt-3">
+      <button onclick="showHints()" class="text-xs text-indigo-500 hover:text-indigo-700">💡 Hints</button>
+      <button id="fill-check" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors" onclick="checkFill()">Check answers</button>
+    </div>
+    <button id="fill-retry" class="hidden w-full mt-3 border-2 border-indigo-200 text-indigo-600 text-sm font-semibold py-2.5 rounded-xl hover:bg-indigo-50 transition-colors" onclick="buildFill()">↺ Try again</button>
+  </div>
+
+  <!-- Ex 3: Drag -->
+  <div id="ex-2" class="hidden">
+    <div id="drag-container"></div>
+    <div class="flex justify-between items-center mt-3">
+      <button onclick="buildDrag()" class="text-xs text-slate-500 hover:text-slate-700">↺ Reset</button>
+      <button id="drag-check" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors" onclick="checkDrag()">Check answers</button>
+    </div>
+    <button id="drag-retry" class="hidden w-full mt-3 border-2 border-indigo-200 text-indigo-600 text-sm font-semibold py-2.5 rounded-xl hover:bg-indigo-50 transition-colors" onclick="buildDrag()">↺ New set</button>
+  </div>
+
+  <div class="flex gap-3 mt-6">
+    <button onclick="goTo(1)" class="flex-1 border-2 border-slate-200 text-slate-600 font-semibold py-3 rounded-xl hover:bg-slate-100 transition-colors text-sm">← Grammar</button>
+    <button onclick="goTo(3)" class="flex-[2] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm">Final task →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PHASE 3 · TRANSFER
+════════════════════════════════════════ -->
+<div class="phase" id="phase-3">
+  <div class="bg-violet-50 border-l-4 border-violet-400 rounded-2xl p-5 mb-4">
+    <p class="text-xs font-bold text-violet-600 uppercase tracking-wide mb-1">Transfer — Build the Protocol</p>
+    <h2 class="text-xl font-bold text-slate-800">Write the Meeting Minutes</h2>
+    <p class="text-slate-500 text-sm mt-1">Choose the correct reported speech version for each quote. Your protocol builds up automatically!</p>
+  </div>
+
+  <div class="flex items-center justify-between mb-3">
+    <span class="text-xs text-slate-500" id="t-step-label">Step 1 of 5</span>
+    <div class="flex gap-2" id="t-dots"></div>
+  </div>
+
+  <div id="t-steps"></div>
+
+  <div id="t-protocol" class="hidden bg-white rounded-2xl border border-violet-200 p-5 mb-4">
+    <p class="text-xs font-bold text-violet-600 uppercase mb-3">📋 Your Meeting Protocol</p>
+    <div class="bg-violet-50 rounded-xl p-4 text-sm text-slate-700 leading-7 space-y-1" id="t-protocol-text"></div>
+  </div>
+
+  <button id="t-finish" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors text-sm" onclick="finish()">
+    🏆 Finish &amp; see my score
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════
+     PHASE 4 · RESULTS
+════════════════════════════════════════ -->
+<div class="phase" id="phase-4">
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 text-center mb-4">
+    <div class="score-ring mx-auto mb-4" id="s-ring">
+      <div class="score-inner">
+        <p class="text-2xl font-bold text-slate-800" id="s-num">0</p>
+        <p class="text-xs text-slate-400">pts</p>
+      </div>
+    </div>
+    <h2 class="text-2xl font-bold text-slate-800 mb-1" id="r-title"></h2>
+    <p class="text-slate-500 text-sm" id="r-msg"></p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-4">
+    <p class="text-sm font-semibold text-slate-700 mb-3">Score breakdown</p>
+    <div id="r-breakdown"></div>
+  </div>
+
+  <div class="bg-violet-50 rounded-2xl border border-violet-100 p-5 mb-4">
+    <p class="text-xs font-bold text-violet-600 uppercase mb-2">💡 Model Answer — Protocol Task</p>
+    <p class="text-sm text-slate-600 leading-relaxed italic">At the Tuesday morning meeting at Office Design Ltd., Ms Ellis said that they were planning to launch a new office chair collection the following month. Tom explained that he had already contacted their suppliers in Italy. Ms Ellis asked Tom to prepare a price list by Friday. Priya suggested organising a product presentation for their key clients. Tom added that the showroom would be ready the following week.</p>
+  </div>
+
+  <div class="flex gap-3">
+    <button onclick="restart()" class="flex-1 border-2 border-indigo-200 text-indigo-600 font-semibold py-3 rounded-xl hover:bg-indigo-50 transition-colors text-sm">↺ Start over</button>
+    <button onclick="goTo(2)" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm">Redo exercises</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════
+var MC_POOL = [
+  { q:'"We are preparing the new catalogue." — The team said they _____ the new catalogue.',
+    opts:["were preparing","are preparing","had prepared","will prepare"], cor:0,
+    exp:"Present continuous → past continuous: 'are preparing' → 'were preparing'." },
+  { q:'"I have already sent the invoice." — She explained she _____ the invoice.',
+    opts:["has already sent","had already sent","already sent","would send"], cor:1,
+    exp:"Present perfect → past perfect: 'have sent' → 'had sent'." },
+  { q:'"We will contact the supplier tomorrow." — He said they _____ the supplier the next day.',
+    opts:["will contact","would contact","contacted","had contacted"], cor:1,
+    exp:"Will → would in reported speech." },
+  { q:'"Let\'s postpone the meeting." — The manager _____ postponing the meeting.',
+    opts:["said","told","suggested","asked"], cor:2,
+    exp:"'Let's …' = suggestion → 'suggested + -ing'." },
+  { q:'"Can you prepare a report?" — She asked if he _____ prepare a report.',
+    opts:["can","could","will","would"], cor:1,
+    exp:"Can → could in reported speech." },
+  { q:'"The delivery arrived yesterday." — He said the delivery _____ the day before.',
+    opts:["arrived","has arrived","had arrived","was arriving"], cor:2,
+    exp:"Simple past → past perfect." },
+  { q:'"Please send the figures by Monday." — She _____ him to send the figures by Monday.',
+    opts:["said","told","suggested","asked"], cor:3,
+    exp:"A request → 'asked [sb] to do sth'." },
+  { q:'"The showroom is ready." — Tom reported the showroom _____ ready.',
+    opts:["is","was","has been","will be"], cor:1,
+    exp:"Present simple → past simple: 'is' → 'was'." },
+  { q:'"We will discuss this next week." — She said they _____ discuss it the following week.',
+    opts:["will","would","can","could"], cor:1,
+    exp:"'will' → 'would' when backshifting." },
+  { q:'"You should upgrade the website." — She _____ upgrading the website.',
+    opts:["said","told","recommended","asked"], cor:2,
+    exp:"A recommendation → 'recommended + -ing'." },
+  { q:'"Is the report finished?" — The manager asked _____ the report was finished.',
+    opts:["whether","what","who","when"], cor:0,
+    exp:"Yes/no questions use 'if' or 'whether' in reported speech." },
+  { q:'"I don\'t understand the contract." — He told her he _____ the contract.',
+    opts:["doesn't understand","didn't understand","hadn't understood","won't understand"], cor:1,
+    exp:"Present simple (negative) → past simple (negative)." }
+];
+
+var FILL_POOL = [
+  { before:"Ms Ellis told the team they", blank:"needed", after:"to finish the catalogue by Friday.", hint:"need → ?", accept:["needed"] },
+  { before:"Jack said he", blank:"had already sent", after:"the draft to the designer.", hint:"have sent → ?", accept:["had already sent","had sent"] },
+  { before:"Priya suggested", blank:"holding", after:"a review session the following Monday.", hint:"suggest + verb + -ing", accept:["holding"] },
+  { before:"The manager asked if the price list", blank:"was ready", after:"yet.", hint:"is ready → ?", accept:["was ready"] },
+  { before:"Tom reported the showroom", blank:"would be ready", after:"the following week.", hint:"will be ready → ?", accept:["would be ready"] },
+  { before:"She explained the delivery", blank:"had arrived", after:"the day before.", hint:"arrived → ?", accept:["had arrived"] },
+  { before:"The CEO said they", blank:"were planning", after:"a new product launch.", hint:"are planning → ?", accept:["were planning"] },
+  { before:"He asked her", blank:"to prepare", after:"a cost analysis.", hint:"asked [sb] … + infinitive", accept:["to prepare"] }
+];
+
+var DRAG_POOL = [
+  { s:"She ___ that the meeting ___ postponed.",
+    blanks:["explained","had been"], words:["explained","had been","said","was","told"] },
+  { s:"He ___ increasing the marketing budget.",
+    blanks:[["suggested","proposed","recommended"]], words:["suggested","proposed","said","told","recommended"],
+    multi:true },
+  { s:"The manager ___ us the supplier ___ already confirmed the order.",
+    blanks:["told","had"], words:["told","had","said","has","explained"] },
+  { s:"Priya ___ the team ___ organise a product presentation.",
+    blanks:["asked","to"], words:["asked","to","told","for","suggested"] },
+  { s:"He added the showroom ___ ready ___ following week.",
+    blanks:["would be","the"], words:["would be","the","will be","next","was"] }
+];
+
+var TRANSFER_STEPS = [
+  { speaker:"Ms Ellis",
+    direct:'"We are planning to launch a new office chair collection next month."',
+    opts:[
+      "Ms Ellis said that they were planning to launch a new office chair collection the following month.",
+      "Ms Ellis said that they are planning to launch a new office chair collection next month.",
+      "Ms Ellis told that they had planned to launch a new office chair collection next month.",
+      "Ms Ellis explained that they will plan to launch a new office chair collection the following month."
+    ], cor:0, exp:"present continuous → past continuous; 'next month' → 'the following month'" },
+  { speaker:"Tom",
+    direct:'"I have already contacted our suppliers in Italy."',
+    opts:[
+      "Tom said he has already contacted their suppliers in Italy.",
+      "Tom explained that he had already contacted their suppliers in Italy.",
+      "Tom told he had already contacted their suppliers in Italy.",
+      "Tom reported that he contacted their suppliers in Italy yesterday."
+    ], cor:1, exp:"present perfect → past perfect; 'told' always needs an object — use 'explained' or 'said'" },
+  { speaker:"Ms Ellis",
+    direct:'"Can you prepare a price list by Friday, Tom?"',
+    opts:[
+      "Ms Ellis suggested Tom to prepare a price list by Friday.",
+      "Ms Ellis said Tom can prepare a price list by Friday.",
+      "Ms Ellis asked Tom to prepare a price list by Friday.",
+      "Ms Ellis told that Tom prepares a price list by Friday."
+    ], cor:2, exp:"request → 'asked [sb] to do sth'" },
+  { speaker:"Priya",
+    direct:'"Let\'s organise a product presentation for our key clients."',
+    opts:[
+      "Priya said that they let's organise a product presentation.",
+      "Priya told to organise a product presentation for their key clients.",
+      "Priya recommended that they would organise a product presentation.",
+      "Priya suggested organising a product presentation for their key clients."
+    ], cor:3, exp:"'Let's …' = suggestion → 'suggested + -ing'" },
+  { speaker:"Tom",
+    direct:'"The showroom will be ready next week."',
+    opts:[
+      "Tom added that the showroom will be ready next week.",
+      "Tom added that the showroom would be ready the following week.",
+      "Tom said the showroom was ready the following week.",
+      "Tom explained the showroom will be ready the following week."
+    ], cor:1, exp:"will → would; 'next week' → 'the following week'" }
+];
+
+// ════════════════════════════════════════════════════════════
+// STATE (all declared once, at top level)
+// ════════════════════════════════════════════════════════════
+var phase = 0;
+var scores = { mc:0, fill:0, drag:0, transfer:0 };
+
+// MC
+var mcQs = [];
+var mcSel = {};
+
+// Fill
+var fillQs = [];
+
+// Drag
+var dragQs = [];
+var dragState = {};
+var dragWord = null;
+
+// Transfer
+var tStep = 0;
+var tScore = 0;
+var tAnswered = [];
+
+// ════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════
+function goTo(n) {
+  document.getElementById('phase-' + phase).classList.remove('active');
+  phase = n;
+  var el = document.getElementById('phase-' + n);
+  el.classList.add('active');
+  el.classList.remove('fade-in');
+  void el.offsetWidth; // reflow
+  el.classList.add('fade-in');
+
+  // progress bar
+  document.getElementById('pbar-fill').style.width = (n / 4 * 100) + '%';
+
+  // dots
+  for (var i = 0; i < 4; i++) {
+    var d = document.getElementById('dot-' + i);
+    if (!d) continue;
+    d.className = 'nav-dot';
+    if (i < phase) d.className += ' done';
+    if (i === phase) d.className += ' active';
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 2) {
+    buildMC();
+    buildFill();
+    buildDrag();
+  }
+  if (n === 3) buildTransfer();
+}
+
+function buildNav() {
+  var c = document.getElementById('nav-dots');
+  c.innerHTML = '';
+  for (var i = 0; i < 4; i++) {
+    var d = document.createElement('div');
+    d.id = 'dot-' + i;
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    c.appendChild(d);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// GRAMMAR TABS
+// ════════════════════════════════════════════════════════════
+function gTab(i) {
+  [0,1,2].forEach(function(j) {
+    document.getElementById('gt-' + j).classList.toggle('active', j === i);
+    document.getElementById('gc-' + j).classList.toggle('hidden', j !== i);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// EXERCISE TABS
+// ════════════════════════════════════════════════════════════
+function eTab(i) {
+  [0,1,2].forEach(function(j) {
+    document.getElementById('et-' + j).classList.toggle('active', j === i);
+    document.getElementById('ex-' + j).classList.toggle('hidden', j !== i);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function updScore() {
+  document.getElementById('score-label').textContent =
+    'Score: ' + (scores.mc + scores.fill + scores.drag + scores.transfer);
+}
+
+function shake(el) {
+  el.classList.add('shake');
+  setTimeout(function() { el.classList.remove('shake'); }, 500);
+}
+
+// ════════════════════════════════════════════════════════════
+// EXERCISE 1: MULTIPLE CHOICE
+// ════════════════════════════════════════════════════════════
+function buildMC() {
+  scores.mc = 0;
+  mcSel = {};
+  mcQs = shuffle(MC_POOL).slice(0, 5);
+  var c = document.getElementById('mc-container');
+  c.innerHTML = '';
+  mcQs.forEach(function(q, qi) {
+    var opts = shuffle(q.opts.map(function(o, i) { return { t: o, i: i }; }));
+    var html = '<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-3">' +
+      '<p class="text-sm font-semibold text-slate-700 mb-3"><span class="inline-flex items-center justify-center w-5 h-5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold mr-2">' + (qi+1) + '</span>' + q.q + '</p>' +
+      '<div class="space-y-2" id="mc-opts-' + qi + '">';
+    opts.forEach(function(o, oi) {
+      html += '<button class="opt-btn" onclick="mcPick(' + qi + ',' + o.i + ',this)" data-oi="' + o.i + '">' +
+        '<span class="inline-flex items-center justify-center w-5 h-5 border border-slate-300 rounded-full mr-2 text-xs" style="vertical-align:middle">' + String.fromCharCode(65+oi) + '</span>' +
+        o.t + '</button>';
+    });
+    html += '</div><div class="fb" id="mc-fb-' + qi + '"></div></div>';
+    c.innerHTML += html;
+  });
+  document.getElementById('mc-status').textContent = mcQs.length + ' questions';
+  document.getElementById('mc-check').classList.remove('hidden');
+  document.getElementById('mc-retry').classList.add('hidden');
+  updScore();
+}
+
+function mcPick(qi, oi, btn) {
+  document.querySelectorAll('#mc-opts-' + qi + ' .opt-btn').forEach(function(b) {
+    b.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+  mcSel[qi] = oi;
+}
+
+function checkMC() {
+  var pts = 0;
+  mcQs.forEach(function(q, qi) {
+    var btns = document.querySelectorAll('#mc-opts-' + qi + ' .opt-btn');
+    var fb = document.getElementById('mc-fb-' + qi);
+    btns.forEach(function(b) {
+      b.disabled = true;
+      if (parseInt(b.getAttribute('data-oi')) === q.cor) b.classList.add('correct');
+    });
+    var sel = mcSel[qi];
+    if (sel === q.cor) {
+      pts++;
+      fb.className = 'fb show ok';
+      fb.textContent = '✅ ' + q.exp;
+    } else {
+      if (sel !== undefined) {
+        btns.forEach(function(b) {
+          if (parseInt(b.getAttribute('data-oi')) === sel) b.classList.add('wrong');
+        });
+      }
+      fb.className = 'fb show err';
+      fb.textContent = '❌ ' + q.exp;
+      shake(fb);
+    }
+  });
+  scores.mc = pts;
+  updScore();
+  document.getElementById('mc-status').textContent = pts + '/' + mcQs.length + ' correct';
+  document.getElementById('mc-check').classList.add('hidden');
+  document.getElementById('mc-retry').classList.remove('hidden');
+  if (pts === mcQs.length) boom();
+}
+
+// ════════════════════════════════════════════════════════════
+// EXERCISE 2: FILL THE GAP
+// ════════════════════════════════════════════════════════════
+function buildFill() {
+  scores.fill = 0;
+  fillQs = shuffle(FILL_POOL).slice(0, 5);
+  var c = document.getElementById('fill-container');
+  c.innerHTML = '';
+  fillQs.forEach(function(q, qi) {
+    c.innerHTML +=
+      '<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-3">' +
+      '<div class="flex items-start gap-2">' +
+      '<span class="inline-flex items-center justify-center w-5 h-5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold flex-shrink-0 mt-0.5">' + (qi+1) + '</span>' +
+      '<p class="text-sm text-slate-700 leading-relaxed">' +
+        q.before + ' ' +
+        '<input id="fi-' + qi + '" class="fill-inp" autocomplete="off" spellcheck="false" placeholder="…"> ' +
+        q.after +
+      '</p></div>' +
+      '<div class="fb" id="fill-fb-' + qi + '"></div>' +
+      '</div>';
+  });
+  document.getElementById('fill-check').classList.remove('hidden');
+  document.getElementById('fill-retry').classList.add('hidden');
+  updScore();
+}
+
+function showHints() {
+  fillQs.forEach(function(q, qi) {
+    var fb = document.getElementById('fill-fb-' + qi);
+    fb.style.cssText = '';
+    fb.className = 'fb show';
+    fb.style.background = '#fef9c3';
+    fb.style.borderLeft = '3px solid #eab308';
+    fb.style.color = '#713f12';
+    fb.textContent = '💡 ' + q.hint;
+  });
+}
+
+function checkFill() {
+  var pts = 0;
+  fillQs.forEach(function(q, qi) {
+    var inp = document.getElementById('fi-' + qi);
+    var val = inp.value.trim().toLowerCase();
+    var ok = q.accept.some(function(a) { return a.toLowerCase() === val; });
+    inp.disabled = true;
+    var fb = document.getElementById('fill-fb-' + qi);
+    if (ok) {
+      pts++;
+      inp.classList.add('correct');
+      fb.className = 'fb show ok';
+      fb.textContent = '✅ Correct!';
+    } else {
+      inp.classList.add('wrong');
+      shake(inp);
+      fb.className = 'fb show err';
+      fb.textContent = '❌ Answer: "' + q.blank + '"';
+    }
+  });
+  scores.fill = pts;
+  updScore();
+  document.getElementById('fill-check').classList.add('hidden');
+  document.getElementById('fill-retry').classList.remove('hidden');
+  if (pts === fillQs.length) boom();
+}
+
+// ════════════════════════════════════════════════════════════
+// EXERCISE 3: DRAG & DROP
+// ════════════════════════════════════════════════════════════
+function buildDrag() {
+  scores.drag = 0;
+  dragWord = null;
+  dragState = {};
+  dragQs = shuffle(DRAG_POOL).slice(0, 3);
+  dragQs.forEach(function(q, qi) { dragState[qi] = {}; });
+
+  var c = document.getElementById('drag-container');
+  c.innerHTML = '';
+  dragQs.forEach(function(q, qi) {
+    var parts = q.s.split('___');
+    var sentHtml = '';
+    parts.forEach(function(p, pi) {
+      sentHtml += '<span class="text-slate-700">' + p + '</span>';
+      if (pi < parts.length - 1) {
+        sentHtml += '<span class="d-zone" id="dz-' + qi + '-' + pi + '" ' +
+          'ondragover="event.preventDefault();this.classList.add(\'over\')" ' +
+          'ondragleave="this.classList.remove(\'over\')" ' +
+          'ondrop="doDrop(event,' + qi + ',' + pi + ')" ' +
+          'onclick="clearZone(' + qi + ',' + pi + ')">drop</span>';
+      }
+    });
+
+    var words = shuffle(q.words);
+    var wordsHtml = words.map(function(w) {
+      return '<span class="d-word" draggable="true" ' +
+        'ondragstart="dragStart(event,\'' + w.replace(/'/g,"\\'") + '\',' + qi + ')" ' +
+        'id="dw-' + qi + '-' + w.replace(/\s/g,'_').replace(/'/g,'_') + '" ' +
+        'data-w="' + w + '">' + w + '</span>';
+    }).join('');
+
+    c.innerHTML +=
+      '<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-3">' +
+      '<div class="flex items-start gap-2 mb-3">' +
+      '<span class="inline-flex items-center justify-center w-5 h-5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold flex-shrink-0 mt-1">' + (qi+1) + '</span>' +
+      '<p class="text-sm leading-8">' + sentHtml + '</p></div>' +
+      '<div class="flex flex-wrap gap-1 pt-2 border-t border-slate-100" id="wb-' + qi + '">' + wordsHtml + '</div>' +
+      '<div class="fb" id="drag-fb-' + qi + '"></div>' +
+      '</div>';
+  });
+
+  document.getElementById('drag-check').classList.remove('hidden');
+  document.getElementById('drag-retry').classList.add('hidden');
+  updScore();
+}
+
+function dragStart(e, w, qi) {
+  dragWord = { w: w, qi: qi };
+  e.dataTransfer.setData('text/plain', w);
+}
+
+function doDrop(e, qi, pi) {
+  e.preventDefault();
+  if (!dragWord) return;
+  var zone = document.getElementById('dz-' + qi + '-' + pi);
+  zone.classList.remove('over');
+
+  // return previous word if zone was filled
+  if (dragState[qi][pi] !== undefined) {
+    var oldW = dragState[qi][pi];
+    var oldEl = document.getElementById('dw-' + qi + '-' + oldW.replace(/\s/g,'_').replace(/'/g,'_'));
+    if (oldEl) oldEl.classList.remove('used');
+  }
+
+  dragState[qi][pi] = dragWord.w;
+  zone.textContent = dragWord.w;
+  zone.className = 'd-zone set';
+
+  var wEl = document.getElementById('dw-' + qi + '-' + dragWord.w.replace(/\s/g,'_').replace(/'/g,'_'));
+  if (wEl) wEl.classList.add('used');
+  dragWord = null;
+}
+
+function clearZone(qi, pi) {
+  var zone = document.getElementById('dz-' + qi + '-' + pi);
+  if (dragState[qi][pi] !== undefined) {
+    var old = dragState[qi][pi];
+    var el = document.getElementById('dw-' + qi + '-' + old.replace(/\s/g,'_').replace(/'/g,'_'));
+    if (el) el.classList.remove('used');
+    delete dragState[qi][pi];
+    zone.textContent = 'drop';
+    zone.className = 'd-zone';
+  }
+}
+
+function checkDrag() {
+  var pts = 0;
+  dragQs.forEach(function(q, qi) {
+    var allOk = true;
+    q.blanks.forEach(function(correct, pi) {
+      var zone = document.getElementById('dz-' + qi + '-' + pi);
+      var placed = dragState[qi][pi] || '';
+      var ok;
+      if (q.multi && Array.isArray(correct)) {
+        ok = correct.some(function(c) { return c.toLowerCase() === placed.toLowerCase(); });
+      } else {
+        ok = placed.toLowerCase() === correct.toLowerCase();
+      }
+      zone.className = ok ? 'd-zone ok' : 'd-zone bad';
+      if (!ok) allOk = false;
+    });
+    var fb = document.getElementById('drag-fb-' + qi);
+    if (allOk) {
+      pts++;
+      fb.className = 'fb show ok';
+      fb.textContent = '✅ Correct!';
+    } else {
+      fb.className = 'fb show err';
+      var correctStr = q.blanks.map(function(b) { return Array.isArray(b) ? b[0] : b; }).join(' / ');
+      fb.textContent = '❌ Correct: ' + correctStr;
+    }
+  });
+  scores.drag = pts;
+  updScore();
+  document.getElementById('drag-check').classList.add('hidden');
+  document.getElementById('drag-retry').classList.remove('hidden');
+  if (pts === dragQs.length) boom();
+}
+
+// ════════════════════════════════════════════════════════════
+// TRANSFER — STEP-BY-STEP PROTOCOL BUILDER
+// ════════════════════════════════════════════════════════════
+function buildTransfer() {
+  tStep = 0;
+  tScore = 0;
+  tAnswered = [];
+  scores.transfer = 0;
+
+  // build step dots
+  var dots = document.getElementById('t-dots');
+  dots.innerHTML = '';
+  TRANSFER_STEPS.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.id = 't-dot-' + i;
+    d.className = 't-dot' + (i === 0 ? ' active' : '');
+    dots.appendChild(d);
+  });
+
+  document.getElementById('t-protocol').classList.add('hidden');
+  document.getElementById('t-protocol-text').innerHTML = '';
+  document.getElementById('t-finish').classList.add('hidden');
+  renderTStep(0);
+  updScore();
+}
+
+function renderTStep(si) {
+  if (si >= TRANSFER_STEPS.length) return;
+  var s = TRANSFER_STEPS[si];
+  var opts = shuffle(s.opts.map(function(o, i) { return { t: o, i: i }; }));
+  document.getElementById('t-step-label').textContent = 'Step ' + (si + 1) + ' of ' + TRANSFER_STEPS.length;
+
+  var html =
+    '<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-4 fade-in" id="t-card">' +
+    '<div class="flex items-start gap-2 bg-indigo-50 rounded-xl p-3 mb-4">' +
+    '<span class="font-bold text-indigo-600 text-sm min-w-fit">' + s.speaker + ':</span>' +
+    '<span class="text-slate-700 text-sm italic">' + s.direct + '</span></div>' +
+    '<p class="text-xs font-semibold text-slate-400 uppercase mb-3">Choose the correct reported speech version:</p>' +
+    '<div class="space-y-2" id="t-opts">';
+  opts.forEach(function(o, oi) {
+    html += '<button class="opt-btn" style="font-size:13px;line-height:1.5" ' +
+      'onclick="pickTStep(' + si + ',' + o.i + ',this)" data-oi="' + o.i + '">' +
+      '<span class="inline-flex items-center justify-center w-5 h-5 border border-slate-300 rounded-full mr-2 text-xs flex-shrink-0" style="vertical-align:middle">' +
+      String.fromCharCode(65 + oi) + '</span>' + o.t + '</button>';
+  });
+  html += '</div><div class="fb" id="t-fb"></div></div>';
+
+  document.getElementById('t-steps').innerHTML = html;
+}
+
+function pickTStep(si, oi, btn) {
+  // disable all options
+  var btns = document.querySelectorAll('#t-opts .opt-btn');
+  btns.forEach(function(b) { b.disabled = true; });
+
+  var s = TRANSFER_STEPS[si];
+  var ok = oi === s.cor;
+
+  btns.forEach(function(b) {
+    if (parseInt(b.getAttribute('data-oi')) === s.cor) b.classList.add('correct');
+  });
+  if (!ok) btn.classList.add('wrong');
+
+  var fb = document.getElementById('t-fb');
+  fb.className = ok ? 'fb show ok' : 'fb show err';
+  fb.textContent = (ok ? '✅ ' : '❌ ') + s.exp;
+
+  tAnswered.push(ok);
+  if (ok) tScore++;
+  scores.transfer = tScore;
+  updScore();
+
+  // update dot
+  var dot = document.getElementById('t-dot-' + si);
+  if (dot) dot.className = 't-dot ' + (ok ? 'done' : 'miss');
+
+  // add correct sentence to protocol
+  addProtocol(si, ok);
+
+  setTimeout(function() {
+    tStep = si + 1;
+    if (tStep < TRANSFER_STEPS.length) {
+      // activate next dot
+      var nd = document.getElementById('t-dot-' + tStep);
+      if (nd) nd.className = 't-dot active';
+      renderTStep(tStep);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      document.getElementById('t-steps').innerHTML =
+        '<div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center mb-4 fade-in">' +
+        '<p class="text-emerald-700 font-semibold">🎉 All 5 sentences done!</p>' +
+        '<p class="text-emerald-600 text-sm mt-1">You got <strong>' + tScore + '/5</strong> correct.</p></div>';
+      document.getElementById('t-finish').classList.remove('hidden');
+      if (tScore === 5) boom();
+    }
+  }, 1500);
+}
+
+function addProtocol(si, wasOk) {
+  var box = document.getElementById('t-protocol');
+  var txt = document.getElementById('t-protocol-text');
+  box.classList.remove('hidden');
+  var sentence = TRANSFER_STEPS[si].opts[TRANSFER_STEPS[si].cor];
+  var p = document.createElement('p');
+  p.className = 'fade-in';
+  p.style.color = wasOk ? '#1e293b' : '#94a3b8';
+  p.innerHTML = sentence + (wasOk ? '' : ' <span style="font-size:11px;color:#f87171">(corrected)</span>');
+  txt.appendChild(p);
+}
+
+// ════════════════════════════════════════════════════════════
+// RESULTS
+// ════════════════════════════════════════════════════════════
+function finish() {
+  var total = scores.mc + scores.fill + scores.drag + scores.transfer;
+  var max = 18;
+  goTo(4);
+
+  setTimeout(function() {
+    var pct = total / max;
+    var deg = Math.round(pct * 360);
+    document.getElementById('s-ring').style.background =
+      'conic-gradient(#10b981 ' + deg + 'deg, #e2e8f0 ' + deg + 'deg)';
+    document.getElementById('s-num').textContent = total;
+
+    var title, msg;
+    if (pct >= 0.88)     { title = '🏆 Outstanding!';      msg = 'Excellent work — you\'ve mastered reported speech!'; }
+    else if (pct >= 0.7) { title = '🌟 Well done!';         msg = 'Solid performance. Review the exercises you missed.'; }
+    else if (pct >= 0.5) { title = '💪 Good effort!';       msg = 'Go back to the grammar section and try again.'; }
+    else                  { title = '📖 Keep practising!';   msg = 'Focus on tense shift and reporting verbs.'; }
+
+    document.getElementById('r-title').textContent = title;
+    document.getElementById('r-msg').textContent = msg;
+    document.getElementById('r-breakdown').innerHTML =
+      row('📝 Multiple Choice', scores.mc, 5) +
+      row('⌨️ Fill the Gap', scores.fill, 5) +
+      row('🎯 Drag &amp; Drop', scores.drag, 3) +
+      row('📋 Protocol Builder', scores.transfer, 5) +
+      '<div class="flex justify-between items-center py-2 mt-1 bg-indigo-50 rounded-xl px-3">' +
+      '<span class="text-sm font-bold text-slate-700">Total</span>' +
+      '<span class="font-bold text-lg text-indigo-600">' + total + ' / ' + max + '</span></div>';
+
+    if (pct >= 0.85) boom();
+  }, 300);
+}
+
+function row(label, got, outof) {
+  return '<div class="flex justify-between items-center py-2 border-b border-slate-100">' +
+    '<span class="text-sm text-slate-600">' + label + '</span>' +
+    '<span class="font-bold text-indigo-600">' + got + ' / ' + outof + '</span></div>';
+}
+
+function restart() {
+  scores = { mc:0, fill:0, drag:0, transfer:0 };
+  mcSel = {};
+  tStep = 0; tScore = 0; tAnswered = [];
+  updScore();
+  goTo(0);
+}
+
+// ════════════════════════════════════════════════════════════
+// CONFETTI
+// ════════════════════════════════════════════════════════════
+function boom() {
+  if (typeof confetti !== 'undefined') {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 },
+      colors: ['#6366f1','#10b981','#f59e0b','#ec4899'] });
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// BOOT — single DOMContentLoaded, no pre-init of exercises
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  buildNav();
+});
+</script>
+</body>
+</html>
