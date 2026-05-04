@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LS 3.6 – Private Vorsorge · PBP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:        #0f0d0b;
+  --bg2:       #171410;
+  --bg3:       #1e1a15;
+  --amber:     #c45e00;
+  --amber-l:   #e8a000;
+  --gold:      #f5c842;
+  --gold-dim:  rgba(245,200,66,.15);
+  --warm:      #fff8f0;
+  --muted:     rgba(255,248,240,.45);
+  --dim:       rgba(255,248,240,.2);
+  --border:    rgba(255,248,240,.08);
+  --card:      rgba(255,255,255,.04);
+  --card2:     rgba(196,94,0,.12);
+  --green:     #22c55e;
+  --red:       #ef4444;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--warm);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 48px;
+  background: rgba(15,13,11,.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 28px; gap: 16px;
+}
+.topbar-label {
+  font-size: 12px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gold);
+}
+.topbar-sep { color: var(--dim); }
+.topbar-sub { font-size: 12px; color: var(--muted); }
+.phase-dots { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.phase-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--dim); cursor: pointer;
+  transition: all .2s;
+}
+.phase-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
+
+/* ── SECTIONS ── */
+section {
+  min-height: 100svh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80px 24px 60px;
+  position: relative;
+}
+section:nth-child(odd)  { background: var(--bg);  }
+section:nth-child(even) { background: var(--bg2); }
+
+/* ── PHASE CHIP ── */
+.phase-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(245,200,66,.25);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 20px;
+}
+.phase-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+/* ── HEADINGS ── */
+.section-inner {
+  width: 100%; max-width: 860px;
+}
+h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 400; line-height: 1.15;
+  color: var(--warm);
+  margin-bottom: 16px;
+}
+h1 em { font-style: italic; color: var(--gold); }
+h2 {
+  font-family: 'Lora', serif;
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 400; line-height: 1.2;
+  color: var(--warm); margin-bottom: 20px;
+}
+h2 em { font-style: italic; color: var(--amber-l); }
+.lead {
+  font-size: 16px; color: var(--muted); line-height: 1.7;
+  max-width: 640px; margin-bottom: 32px;
+}
+
+/* ── TIMELINE (title slide) ── */
+.timeline {
+  display: flex; flex-direction: column; gap: 0;
+  border-left: 2px solid var(--border);
+  padding-left: 20px; margin-top: 8px;
+}
+.timeline-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; position: relative;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute; left: -26px; top: 18px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--bg3); border: 2px solid var(--amber);
+}
+.timeline-item.new::before { background: var(--amber); }
+.tl-time { font-size: 11px; color: var(--amber-l); font-weight: 600; min-width: 42px; padding-top: 2px; }
+.tl-label { font-size: 14px; color: var(--warm); }
+.tl-badge {
+  margin-left: 8px; font-size: 9px; font-weight: 700;
+  letter-spacing: .08em; background: var(--amber);
+  color: #fff; padding: 1px 6px; border-radius: 3px;
+  text-transform: uppercase; vertical-align: middle;
+}
+
+/* ── INFO BOX ── */
+.infobox {
+  background: var(--card2);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  font-size: 14px; color: rgba(255,248,240,.85);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.infobox strong { color: var(--amber-l); }
+
+/* ── CARDS GRID ── */
+.cards {
+  display: grid; gap: 12px;
+  margin-bottom: 20px;
+}
+.cards.col2 { grid-template-columns: 1fr 1fr; }
+.cards.col3 { grid-template-columns: repeat(3, 1fr); }
+.cards.col5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 640px) {
+  .cards.col2, .cards.col3, .cards.col5 { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.card:hover { border-color: rgba(245,200,66,.25); transition: border-color .2s; }
+.card .card-icon { font-size: 24px; margin-bottom: 8px; }
+.card .card-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--amber-l); margin-bottom: 4px; }
+.card .card-title { font-size: 14px; font-weight: 600; color: var(--warm); margin-bottom: 8px; }
+.card .card-row { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--border); }
+.card .card-row:last-child { border-bottom: none; }
+.card .card-row span { color: var(--warm); font-weight: 500; }
+
+/* ── PILLAR CARDS (3-Säulen) ── */
+.pillar-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.pillar-head {
+  padding: 14px 16px;
+  text-align: center;
+}
+.pillar-nr { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .75; margin-bottom: 2px; }
+.pillar-name { font-family: 'Lora', serif; font-size: 18px; font-weight: 600; }
+.pillar-sub { font-size: 11px; opacity: .7; margin-top: 2px; }
+.pillar-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.pillar-row {
+  background: rgba(255,255,255,.04);
+  border-radius: 5px; padding: 7px 10px;
+  font-size: 12px; color: var(--muted);
+}
+.pillar-row .pl { font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--amber-l); display: block; margin-bottom: 2px; }
+.pillar-row span { color: var(--warm); }
+
+/* ── CALC TABLE ── */
+.calc-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 20px; }
+.calc-table tr { border-bottom: 1px solid var(--border); }
+.calc-table tr:last-child { border-bottom: none; }
+.calc-table td { padding: 10px 14px; vertical-align: middle; }
+.calc-table .op { color: var(--amber-l); font-weight: 700; text-align: center; width: 32px; font-size: 18px; }
+.calc-table .pos { color: var(--warm); font-weight: 500; }
+.calc-table .sub { color: var(--muted); font-size: 12px; }
+.calc-table .val { text-align: right; font-weight: 600; color: var(--warm); font-variant-numeric: tabular-nums; }
+.calc-table tr.result { background: var(--card2); border-radius: 8px; }
+.calc-table tr.result .pos { color: var(--gold); font-size: 15px; }
+.calc-table tr.result .val { color: var(--gold); font-size: 18px; }
+.calc-table tr.highlight .val { color: var(--amber-l); }
+
+/* ── STEP CALC ── */
+.steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.step-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 16px;
+}
+.step-row.highlight {
+  background: rgba(196,94,0,.18);
+  border-color: rgba(196,94,0,.4);
+}
+.step-nr {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--bg3); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  flex-shrink: 0;
+}
+.step-row.highlight .step-nr { background: var(--amber); border-color: var(--amber); color: #fff; }
+.step-label { font-size: 13px; color: var(--warm); flex: 1; }
+.step-row.highlight .step-label { font-weight: 600; color: var(--amber-l); }
+.step-calc { font-size: 12px; color: var(--muted); font-style: italic; }
+.step-result { font-size: 14px; font-weight: 700; color: var(--warm); margin-left: auto; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.step-row.highlight .step-result { font-size: 18px; color: var(--gold); }
+
+/* ── RATIO BADGES ── */
+.ratio-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.ratio-badge {
+  flex: 1; border-radius: 8px; padding: 12px 14px;
+  text-align: center;
+}
+.ratio-badge .ry { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+.ratio-badge .rv { font-family: 'Lora', serif; font-size: 26px; font-weight: 600; line-height: 1; }
+.ratio-badge .rs { font-size: 11px; margin-top: 4px; }
+.ratio-badge.g { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.25); }
+.ratio-badge.g .rv { color: #4ade80; }
+.ratio-badge.y { background: rgba(245,200,66,.1); border: 1px solid rgba(245,200,66,.2); }
+.ratio-badge.y .rv { color: var(--gold); }
+.ratio-badge.r { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.25); }
+.ratio-badge.r .rv { color: #f87171; }
+
+/* ── BAR CHART ── */
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.bc-row { display: flex; align-items: center; gap: 10px; }
+.bc-year { font-size: 12px; font-weight: 600; color: var(--muted); width: 38px; flex-shrink: 0; }
+.bc-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.bc-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.bc-bar { height: 14px; border-radius: 3px; transition: width 1s ease; min-width: 4px; }
+.bc-bar.earn { background: var(--amber); }
+.bc-bar.ret  { background: rgba(196,94,0,.3); border: 1px solid rgba(196,94,0,.4); }
+.bc-val { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bc-legend { display: flex; gap: 16px; font-size: 11px; color: var(--muted); }
+.bc-legend span { display: flex; align-items: center; gap: 5px; }
+.bc-legend .le { width: 10px; height: 10px; border-radius: 2px; background: var(--amber); flex-shrink: 0; }
+.bc-legend .lr { width: 10px; height: 10px; border-radius: 2px; background: rgba(196,94,0,.35); border: 1px solid rgba(196,94,0,.4); flex-shrink: 0; }
+
+/* ── GOAL ROWS ── */
+.goal-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.goal-row {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px;
+}
+.goal-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+.goal-text { font-size: 14px; color: var(--warm); flex: 1; line-height: 1.4; }
+.goal-text strong { color: var(--amber-l); }
+.goal-op {
+  font-size: 10px; font-weight: 600; letter-spacing: .05em;
+  color: var(--amber); background: rgba(196,94,0,.15);
+  padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── EXPERT CARD ── */
+.expert-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; }
+@media (max-width: 700px) { .expert-grid { grid-template-columns: 1fr; } }
+.expert-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.ec-head {
+  padding: 10px; text-align: center;
+  background: var(--amber);
+}
+.ec-nr { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .8; color: #fff; }
+.ec-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.2; margin-top: 2px; }
+.ec-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+.ec-row { font-size: 10px; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--border); }
+.ec-row:last-child { border-bottom: none; }
+.ec-row .ek { font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--amber-l); display: block; }
+.ec-row span { color: var(--warm); }
+
+/* ── CAN-DO / EXIT TICKET ── */
+.cando { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+.cando-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: var(--muted);
+}
+.cando-item::before {
+  content: '✓';
+  color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+
+.exit-questions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.eq-row {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.eq-nr {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--amber); color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.eq-text { font-size: 13px; color: var(--warm); line-height: 1.5; }
+.eq-text .op { font-size: 11px; color: var(--amber-l); font-weight: 600; display: block; margin-bottom: 3px; }
+
+/* ── AMPEL ── */
+.ampel-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 20px; }
+.ampel-item { border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.4; }
+.ampel-item.g { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); color: #4ade80; }
+.ampel-item.y { background: rgba(245,200,66,.1); border: 1px solid rgba(245,200,66,.2); color: var(--gold); }
+.ampel-item.r { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2); color: #f87171; }
+
+/* ── NEXT WEEK BOX ── */
+.next-box {
+  background: var(--card2); border: 1px solid rgba(196,94,0,.3);
+  border-radius: 10px; padding: 20px 24px;
+  margin-top: 20px;
+}
+.next-box h3 { font-family: 'Lora', serif; font-size: 20px; color: var(--warm); margin-bottom: 8px; }
+.next-box h3 em { color: var(--amber-l); font-style: italic; }
+.next-box .bridge {
+  font-size: 13px; color: var(--amber-l); font-style: italic;
+  border-top: 1px solid rgba(196,94,0,.2); margin-top: 12px; padding-top: 10px;
+}
+.next-steps { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.ns { display: flex; gap: 10px; font-size: 13px; color: var(--muted); }
+.ns-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--bg3); border: 1.5px solid var(--amber); color: var(--amber); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* ── NOTE ── */
+.note {
+  font-size: 12px; color: var(--dim);
+  margin-top: 8px;
+}
+
+/* ── NAV ARROWS ── */
+#nav {
+  position: fixed; bottom: 24px; right: 28px; z-index: 100;
+  display: flex; gap: 8px;
+}
+#nav button {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(15,13,11,.88); backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  color: var(--warm); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+#nav button:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <span class="topbar-label">PBP · LS 3.6</span>
+  <span class="topbar-sep">·</span>
+  <span class="topbar-sub">Gut vorsorgen – Wer zahlt im Alter?</span>
+  <div class="phase-dots" id="phaseDots"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 1 – TITEL
+══════════════════════════════════════ -->
+<section id="sec0">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>Überblick</div>
+    <h1><em>Gut vorsorgen —</em><br>Wer zahlt im Alter?</h1>
+    <p class="lead">Lernsituation 3.6 · Personalbezogene Prozesse · LF 8 · AS 8.4<br>
+    Böckler-Office GmbH, Oberhausen · 90 Minuten · AB 1–5</p>
+    <div class="timeline">
+      <div class="timeline-item new">
+        <span class="tl-time">0–10'</span>
+        <span class="tl-label">Einstieg: Generationenvertrag <span class="tl-badge">AB 1</span></span>
+      </div>
+      <div class="timeline-item new">
+        <span class="tl-time">10–25'</span>
+        <span class="tl-label">Das 3-Säulen-Modell <span class="tl-badge">AB 2</span></span>
+      </div>
+      <div class="timeline-item new">
+        <span class="tl-time">25–40'</span>
+        <span class="tl-label">Vorsorgelücke berechnen <span class="tl-badge">AB 3</span></span>
+      </div>
+      <div class="timeline-item new">
+        <span class="tl-time">40–75'</span>
+        <span class="tl-label">Expertenkarten · Gallery Walk <span class="tl-badge">AB 4</span></span>
+      </div>
+      <div class="timeline-item new">
+        <span class="tl-time">75–90'</span>
+        <span class="tl-label">Exit-Ticket · Ausblick LS 4.1 <span class="tl-badge">AB 5</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 2 – LERNZIELE
+══════════════════════════════════════ -->
+<section id="sec1">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>Lernziele</div>
+    <h2>Was du heute <em>lernst</em></h2>
+    <div class="infobox">
+      <strong>Maja Berger</strong> (28 J.) arbeitet Vollzeit bei der Böckler-Office GmbH in Oberhausen.
+      Bruttogehalt: <strong>2.600 € / Monat</strong> · Steuerklasse I · Frage: Reicht die gesetzliche Rente später zum Leben?
+    </div>
+    <div class="goal-list">
+      <div class="goal-row">
+        <div class="goal-icon">📊</div>
+        <div class="goal-text">Das <strong>3-Säulen-Modell</strong> der Altersvorsorge beschreiben und Beispiele zuordnen</div>
+        <div class="goal-op">beschreiben</div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-icon">🧮</div>
+        <div class="goal-text">Die monatliche <strong>Vorsorgelücke</strong> von Maja Berger berechnen und erläutern</div>
+        <div class="goal-op">berechnen · erläutern</div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-icon">👥</div>
+        <div class="goal-text">Private <strong>Vorsorgeformen</strong> vergleichen und eine begründete Empfehlung geben</div>
+        <div class="goal-op">vergleichen · beurteilen</div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-icon">🪞</div>
+        <div class="goal-text">Die eigene Vorsorgesituation <strong>persönlich einschätzen</strong></div>
+        <div class="goal-op">beurteilen</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 3 – GENERATIONENVERTRAG (AB 1)
+══════════════════════════════════════ -->
+<section id="sec2">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>AB 1 · Einstieg · 0–10 min</div>
+    <h2>Der Generationen­vertrag — <em>in Gefahr?</em></h2>
+    <div class="infobox">
+      <strong>Florian (22 J.):</strong> „Ich mache mir keine Sorgen — der Staat zahlt doch später."<br>
+      <strong>Maja (28 J.):</strong> „Ich bin da nicht so sicher. Habt ihr die Statistiken gesehen?"<br>
+      <strong>Herr Kamps (58 J.):</strong> „Als ich anfing, gab es 4 Beitragszahler pro Rentner. Heute?"
+    </div>
+
+    <div class="ratio-row">
+      <div class="ratio-badge g">
+        <div class="ry">1960</div>
+        <div class="rv">4 : 1</div>
+        <div class="rs">✅ Stabil</div>
+      </div>
+      <div class="ratio-badge y">
+        <div class="ry">2020</div>
+        <div class="rv">2,1 : 1</div>
+        <div class="rs">⚠️ Unter Druck</div>
+      </div>
+      <div class="ratio-badge r">
+        <div class="ry">2035*</div>
+        <div class="rv">1,5 : 1</div>
+        <div class="rs">🔴 Kritisch</div>
+      </div>
+      <div class="ratio-badge r">
+        <div class="ry">2050*</div>
+        <div class="rv">1,1 : 1</div>
+        <div class="rs">🔴 Sehr kritisch</div>
+      </div>
+    </div>
+
+    <div class="bar-chart">
+      <div class="bc-row">
+        <div class="bc-year">1960</div>
+        <div class="bc-bars">
+          <div class="bc-bar-wrap"><div class="bc-bar earn" style="width:180px"></div><div class="bc-val">36 Mio. Erwerbstätige</div></div>
+          <div class="bc-bar-wrap"><div class="bc-bar ret"  style="width:45px"></div><div class="bc-val">9 Mio. Rentner</div></div>
+        </div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-year">2020</div>
+        <div class="bc-bars">
+          <div class="bc-bar-wrap"><div class="bc-bar earn" style="width:225px"></div><div class="bc-val">45 Mio. Erwerbstätige</div></div>
+          <div class="bc-bar-wrap"><div class="bc-bar ret"  style="width:105px"></div><div class="bc-val">21 Mio. Rentner</div></div>
+        </div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-year">2050*</div>
+        <div class="bc-bars">
+          <div class="bc-bar-wrap"><div class="bc-bar earn" style="width:175px"></div><div class="bc-val">35 Mio. Erwerbstätige</div></div>
+          <div class="bc-bar-wrap"><div class="bc-bar ret"  style="width:160px"></div><div class="bc-val">32 Mio. Rentner</div></div>
+        </div>
+      </div>
+      <div class="bc-legend">
+        <span><div class="le"></div>Erwerbstätige</span>
+        <span><div class="lr"></div>Rentner</span>
+      </div>
+    </div>
+    <p class="note">*Prognose: Statistisches Bundesamt, 13. koordinierte Bevölkerungsvorausberechnung</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 4 – 3-SÄULEN-MODELL (AB 2)
+══════════════════════════════════════ -->
+<section id="sec3">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>AB 2 · Info I · 10–25 min</div>
+    <h2>Das <em>3-Säulen-Modell</em> der Altersvorsorge</h2>
+    <p class="lead">Maja fragt: „Was genau ist die Rentenversicherung — und gibt es noch andere Möglichkeiten vorzusorgen?"</p>
+
+    <div class="cards col3">
+      <div class="pillar-card">
+        <div class="pillar-head" style="background:rgba(30,26,21,1); border-bottom:2px solid var(--amber)">
+          <div class="pillar-nr" style="color:var(--amber)">Säule 1</div>
+          <div class="pillar-name">Staatlich</div>
+          <div class="pillar-sub">Pflichtversicherung</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-row"><span class="pl">Bezeichnung</span><span>Gesetzliche Rentenversicherung</span></div>
+          <div class="pillar-row"><span class="pl">Beitragssatz</span><span>18,6 % (je 9,3 % AG + AN)</span></div>
+          <div class="pillar-row"><span class="pl">Rentenquote</span><span>~48 % des Bruttogehalts</span></div>
+          <div class="pillar-row"><span class="pl">Förderung</span><span>Pflicht — keine Zulage</span></div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-head" style="background:rgba(196,94,0,.25); border-bottom:2px solid var(--amber-l)">
+          <div class="pillar-nr" style="color:var(--amber-l)">Säule 2</div>
+          <div class="pillar-name">Betrieblich</div>
+          <div class="pillar-sub">Freiwillig + AG-Zuschuss</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-row"><span class="pl">Bezeichnung</span><span>Betriebliche Altersvorsorge (bAV)</span></div>
+          <div class="pillar-row"><span class="pl">Beispiele</span><span>Direktversicherung, Pensionskasse</span></div>
+          <div class="pillar-row"><span class="pl">AG-Pflicht</span><span>mind. 15 % Zuschuss seit 2019</span></div>
+          <div class="pillar-row"><span class="pl">Förderung</span><span>Steuerfrei bis 3.624 €/Jahr</span></div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-head" style="background:rgba(245,200,66,.12); border-bottom:2px solid var(--gold)">
+          <div class="pillar-nr" style="color:var(--gold)">Säule 3</div>
+          <div class="pillar-name">Privat</div>
+          <div class="pillar-sub">Freiwillig</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-row"><span class="pl">Bezeichnung</span><span>Private Altersvorsorge</span></div>
+          <div class="pillar-row"><span class="pl">Beispiele</span><span>Riester · Rürup · ETF-Sparplan</span></div>
+          <div class="pillar-row"><span class="pl">Rendite</span><span>ETF historisch ~7–10 % p.a.</span></div>
+          <div class="pillar-row"><span class="pl">Förderung</span><span>Teilweise (Riester / Rürup)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="infobox" style="margin-top:8px">
+      💡 <strong>Fazit:</strong> Säule 1 allein reicht nicht — Maja Berger braucht <strong>Säule 2 + 3</strong>, um ihre Vorsorgelücke zu schließen.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 5 – VORSORGELÜCKE (AB 3)
+══════════════════════════════════════ -->
+<section id="sec4">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>AB 3 · Info II · 25–40 min</div>
+    <h2>Majas <em>Vorsorgelücke</em> — Schritt für Schritt</h2>
+    <div class="infobox">
+      <strong>Maja Berger</strong> · 28 J. · Vollzeit · Böckler-Office GmbH<br>
+      Bruttogehalt: <strong>2.600 €/Monat</strong> · SKl. I · keine Kinder<br>
+      <em>Annahmen: Netto ≈ 65 % des Bruttos · Rentenniveau: 48 % des Bruttos</em>
+    </div>
+
+    <div class="steps">
+      <div class="step-row">
+        <div class="step-nr">1</div>
+        <div class="step-label">Nettogehalt (65 %)</div>
+        <div class="step-calc">2.600 × 0,65</div>
+        <div class="step-result">1.690 €</div>
+      </div>
+      <div class="step-row">
+        <div class="step-nr">2</div>
+        <div class="step-label">Gesetzliche Rente (48 % vom Brutto)</div>
+        <div class="step-calc">2.600 × 0,48</div>
+        <div class="step-result">1.248 €</div>
+      </div>
+      <div class="step-row">
+        <div class="step-nr">3</div>
+        <div class="step-label">Rentenquote vom Netto</div>
+        <div class="step-calc">1.248 ÷ 1.690 × 100</div>
+        <div class="step-result">73,8 %</div>
+      </div>
+      <div class="step-row highlight">
+        <div class="step-nr">4</div>
+        <div class="step-label">⚠️ Monatliche Vorsorgelücke</div>
+        <div class="step-calc">1.690 − 1.248</div>
+        <div class="step-result">442 €</div>
+      </div>
+      <div class="step-row">
+        <div class="step-nr">5</div>
+        <div class="step-label">Jährliche Vorsorgelücke</div>
+        <div class="step-calc">442 × 12</div>
+        <div class="step-result">5.304 €</div>
+      </div>
+    </div>
+
+    <div class="infobox">
+      💡 <strong>Aufgaben auf AB 3:</strong><br>
+      A · erläutern — Was bedeutet die Vorsorgelücke?<br>
+      B · berechnen — Maja spart 200 €/Monat: Um wie viel % schließt sie die Lücke?<br>
+      C* · Erweiterung — Wie viel Gesamtkapital braucht sie für 20 Jahre?
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 6 – EXPERTENKARTEN (AB 4)
+══════════════════════════════════════ -->
+<section id="sec5">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>AB 4 · Erarbeitung · 40–75 min</div>
+    <h2>Gruppen­arbeit: Vorsorge­formen <em>im Vergleich</em></h2>
+    <div class="infobox">
+      Jede Gruppe erhält eine <strong>Expertenkarte</strong> → <strong>2-min-Präsentation</strong> → Sammelfolie: Welche Kombination empfehlt ihr Maja?
+    </div>
+
+    <div class="expert-grid">
+      <div class="expert-card">
+        <div class="ec-head"><div class="ec-nr">Gruppe 1</div><div class="ec-name">Riester-Rente</div></div>
+        <div class="ec-body">
+          <div class="ec-row"><span class="ek">Förderung</span><span>✅ 175 €/Jahr + Kinder</span></div>
+          <div class="ec-row"><span class="ek">Risiko</span><span>🟢 Gering</span></div>
+          <div class="ec-row"><span class="ek">Rendite</span><span>1–3 % p.a.</span></div>
+          <div class="ec-row"><span class="ek">Für wen?</span><span>Angestellte ✓</span></div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="ec-head" style="background:#2a1a0a"><div class="ec-nr">Gruppe 2</div><div class="ec-name">Rürup-Rente</div></div>
+        <div class="ec-body">
+          <div class="ec-row"><span class="ek">Förderung</span><span>✅ Steuervorteil</span></div>
+          <div class="ec-row"><span class="ek">Risiko</span><span>🟢 Gering</span></div>
+          <div class="ec-row"><span class="ek">Rendite</span><span>variabel</span></div>
+          <div class="ec-row"><span class="ek">Für wen?</span><span>Selbstständige</span></div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="ec-head" style="background:#1a2a1a"><div class="ec-nr">Gruppe 3</div><div class="ec-name">Betriebliche AV</div></div>
+        <div class="ec-body">
+          <div class="ec-row"><span class="ek">Förderung</span><span>✅ AG 15 % Pflicht</span></div>
+          <div class="ec-row"><span class="ek">Risiko</span><span>🟡 Mittel</span></div>
+          <div class="ec-row"><span class="ek">Rendite</span><span>3–5 % effektiv</span></div>
+          <div class="ec-row"><span class="ek">Für wen?</span><span>Alle AN ⭐</span></div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="ec-head" style="background:#1a1a2a"><div class="ec-nr">Gruppe 4</div><div class="ec-name">Private RV</div></div>
+        <div class="ec-body">
+          <div class="ec-row"><span class="ek">Förderung</span><span>❌ Keine</span></div>
+          <div class="ec-row"><span class="ek">Risiko</span><span>🟢 Gering</span></div>
+          <div class="ec-row"><span class="ek">Rendite</span><span>1–2 % p.a.</span></div>
+          <div class="ec-row"><span class="ek">Für wen?</span><span>Sicherheitsorient.</span></div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="ec-head" style="background:#0a2a1a"><div class="ec-nr">Gruppe 5</div><div class="ec-name">ETF-Sparplan</div></div>
+        <div class="ec-body">
+          <div class="ec-row"><span class="ek">Förderung</span><span>❌ Keine</span></div>
+          <div class="ec-row"><span class="ek">Risiko</span><span>🟡 Mittel</span></div>
+          <div class="ec-row"><span class="ek">Rendite</span><span>7–10 % p.a. ⭐</span></div>
+          <div class="ec-row"><span class="ek">Für wen?</span><span>Langfrist-Sparer</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 7 – EXIT-TICKET & AUSBLICK
+══════════════════════════════════════ -->
+<section id="sec6">
+  <div class="section-inner">
+    <div class="phase-chip"><div class="dot"></div>AB 5 · Sicherung · 75–90 min</div>
+    <h2>Das kannst du jetzt — <em>wirklich.</em></h2>
+
+    <div class="cando">
+      <div class="cando-item">Das 3-Säulen-Modell erklären und Beispiele zuordnen</div>
+      <div class="cando-item">Die 5 Zweige der Sozialversicherung benennen</div>
+      <div class="cando-item">Die Vorsorgelücke von Maja Berger berechnen</div>
+      <div class="cando-item">Riester, Rürup, bAV, private RV und ETF-Sparplan vergleichen</div>
+      <div class="cando-item">Eine begründete Vorsorge-Empfehlung für Maja geben</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:13px;font-weight:600;color:var(--amber-l);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;">Exit-Ticket · AB 5 · Einzelarbeit · 10 min</p>
+
+    <div class="exit-questions">
+      <div class="eq-row">
+        <div class="eq-nr">1</div>
+        <div class="eq-text"><span class="op">erläutern (AFB II)</span>Erkläre das 3-Säulen-Modell in 2–3 Sätzen. Nenne je ein Beispiel pro Säule.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-nr">2</div>
+        <div class="eq-text"><span class="op">erläutern (AFB II)</span>Was bedeutet Majas Vorsorgelücke und wie entsteht sie?</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-nr">3</div>
+        <div class="eq-text"><span class="op">beurteilen (AFB III)</span>Welche Vorsorgeform findest du persönlich sinnvoll? Begründe in 2 Sätzen.</div>
+      </div>
+    </div>
+
+    <div class="ampel-row">
+      <div class="ampel-item g">🟢 Ich kann alles erklären und vergleichen</div>
+      <div class="ampel-item y">🟡 Grundprinzip klar, Berechnung noch unsicher</div>
+      <div class="ampel-item r">🔴 Brauche mehr Unterstützung</div>
+    </div>
+
+    <div class="next-box">
+      <p style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-l);margin-bottom:8px;">Nächste Woche</p>
+      <h3>Mitarbeitergespräche <em>richtig führen</em></h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:2px;">LS 4.1 · 3 Unterrichtsstunden</p>
+      <div class="next-steps">
+        <div class="ns"><div class="ns-dot">1</div>Funktionen &amp; Arten des Mitarbeitergesprächs</div>
+        <div class="ns"><div class="ns-dot">2</div>Leitfaden entwickeln + Rollenspiel vorbereiten</div>
+        <div class="ns"><div class="ns-dot">3</div>Rollenspiel: Jahresgespräch Böckler-Office + Feedback</div>
+      </div>
+      <p class="bridge">💡 Brücke: Maja fragt in ihrem Jahresgespräch nach betrieblicher Altersvorsorge — wie führt man solche Gespräche richtig?</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── NAV ── -->
+<div id="nav">
+  <button onclick="scrollSection(-1)" title="Zurück">↑</button>
+  <button onclick="scrollSection(1)"  title="Weiter">↓</button>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('section');
+  const N = sections.length;
+  const dotsEl = document.getElementById('phaseDots');
+
+  // Build dots
+  sections.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'phase-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => sections[i].scrollIntoView({ behavior: 'smooth' });
+    dotsEl.appendChild(d);
+  });
+
+  // Update active dot on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(sections).indexOf(entry.target);
+        document.querySelectorAll('.phase-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+  sections.forEach(s => observer.observe(s));
+
+  function scrollSection(dir) {
+    const dots = document.querySelectorAll('.phase-dot');
+    const active = Array.from(dots).findIndex(d => d.classList.contains('active'));
+    const next = Math.max(0, Math.min(N - 1, active + dir));
+    sections[next].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); scrollSection(1); }
+    if (e.key === 'ArrowUp')                    { e.preventDefault(); scrollSection(-1); }
+  });
+</script>
+</body>
+</html>

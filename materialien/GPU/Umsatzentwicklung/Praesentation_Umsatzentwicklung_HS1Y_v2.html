@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU 2 · Umsatzentwicklung · HS1Y</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #1a1a18;
+  --ink-2:     #3d3d38;
+  --ink-3:     #6b6b62;
+  --ink-4:     #9a9a90;
+  --paper:     #f5f2eb;
+  --paper-2:   #ece8de;
+  --paper-3:   #e0dbd0;
+  --forest:    #1f4a35;
+  --forest-2:  #2d6b4d;
+  --forest-3:  #d0e8da;
+  --rust:      #b84a1e;
+  --rust-2:    #f0d5c8;
+  --gold:      #8a6a20;
+  --gold-2:    #f0e4c0;
+  --rule:      #c8c4b8;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 16px;
+}
+
+/* ── SLIDE ENGINE ────────────────────────────────── */
+.slide {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--paper);
+}
+.slide.active {
+  display: flex;
+  animation: arrive 0.35s ease both;
+}
+@keyframes arrive {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  65%  { transform: scale(1.03); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%,75% { transform: translateX(-5px); }
+  50%     { transform: translateX(5px); }
+}
+@keyframes barGrow { from { width: 0; } }
+
+/* ── NAVIGATION ──────────────────────────────────── */
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 200;
+}
+.nav-btn {
+  background: none;
+  border: 1px solid #555;
+  color: #d0cfc8;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0;
+}
+.nav-btn:hover { border-color: var(--paper); color: var(--paper); }
+.nav-btn.fwd   { background: var(--forest); border-color: var(--forest); color: #fff; }
+.nav-btn.fwd:hover { background: var(--forest-2); border-color: var(--forest-2); }
+
+.dots {
+  display: flex; gap: 7px; align-items: center;
+}
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.dot.active { background: #d0cfc8; width: 20px; border-radius: 3px; }
+.dot.done   { background: var(--forest-2); }
+
+.slide-n {
+  font-size: 12px;
+  color: #666;
+  font-family: 'Source Serif 4', serif;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ── SCROLL CONTAINER ────────────────────────────── */
+.body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 52px;
+  scroll-behavior: smooth;
+}
+.body::-webkit-scrollbar { width: 5px; }
+.body::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+/* ── TOP RULE ────────────────────────────────────── */
+.top-rule {
+  height: 5px;
+  background: var(--forest);
+  flex-shrink: 0;
+}
+
+/* ── PAGE HEADER ─────────────────────────────────── */
+.page-header {
+  padding: 16px 40px 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 10px;
+}
+.page-header .kicker {
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  font-style: italic;
+}
+.page-header .section-id {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+/* ── CONTENT AREAS ───────────────────────────────── */
+.content {
+  padding: 28px 40px 32px;
+}
+
+/* ── HEADINGS ────────────────────────────────────── */
+h1, h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  line-height: 1.15;
+  color: var(--ink);
+}
+h1 { font-size: clamp(32px, 5vw, 60px); }
+h2 { font-size: clamp(22px, 3.2vw, 34px); margin-bottom: 14px; }
+h3 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+/* ── TEXT ────────────────────────────────────────── */
+p { font-size: 15px; line-height: 1.65; color: var(--ink-2); margin-bottom: 10px; }
+.lead { font-size: 18px; line-height: 1.6; color: var(--ink-2); font-weight: 300; }
+.caption { font-size: 13px; color: var(--ink-3); font-style: italic; margin-top: 5px; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ── PULLQUOTE ───────────────────────────────────── */
+.pullquote {
+  padding: 14px 20px;
+  margin: 16px 0;
+  background: var(--forest-3);
+  border-radius: 3px;
+  border: 1px solid var(--forest);
+}
+.pullquote p { font-size: 16px; font-style: italic; color: var(--ink); margin: 0; }
+.pullquote .attr { font-size: 13px; color: var(--ink-3); margin-top: 6px; font-style: normal; }
+
+/* ── CALLOUT BOX ─────────────────────────────────── */
+.callout {
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  padding: 16px 20px;
+  background: var(--paper-2);
+  margin-bottom: 16px;
+}
+.callout.forest {
+  border-color: var(--forest);
+  background: var(--forest-3);
+}
+.callout.rust {
+  border-color: var(--rust);
+  background: var(--rust-2);
+}
+.callout.gold {
+  border-color: var(--gold);
+  background: var(--gold-2);
+}
+.callout-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  font-family: 'Source Serif 4', serif;
+}
+.callout.forest .callout-label { color: var(--forest); }
+.callout.rust   .callout-label { color: var(--rust); }
+.callout.gold   .callout-label { color: var(--gold); }
+
+/* ── TWO COLUMN ──────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.rule { height: 1px; background: var(--rule); margin: 18px 0; }
+
+/* ── TABLE ───────────────────────────────────────── */
+.data-table-wrap { overflow-x: auto; }
+table.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-family: 'Source Serif 4', serif;
+}
+.dt th {
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12px;
+  font-weight: 600;
+  font-style: italic;
+  border: none;
+}
+.dt td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+.dt tr:nth-child(even) td { background: var(--paper-2); }
+.dt tr.total td {
+  background: var(--forest-3);
+  font-weight: 600;
+  color: var(--ink);
+  border-top: 2px solid var(--forest);
+}
+.pos { color: #1a5e30; font-weight: 600; }
+.neg { color: #8a1f1f; font-weight: 600; }
+.muted { color: var(--ink-4); }
+.bar-wrap { height: 7px; background: var(--paper-3); border-radius: 2px; width: 90px; display: inline-block; vertical-align: middle; }
+.bar-fill { height: 100%; border-radius: 2px; animation: barGrow 1s ease both; }
+.bar-pos { background: var(--forest-2); }
+.bar-neg { background: var(--rust); }
+
+/* ── CONCEPT CARDS ───────────────────────────────── */
+.concept-card {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 18px 16px;
+  background: var(--paper);
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.concept-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.cc-1::after { background: var(--forest); }
+.cc-2::after { background: var(--rust); }
+.cc-3::after { background: var(--gold); }
+.cc-4::after { background: #4a7a8a; }
+.cc-5::after { background: #7a4a8a; }
+.cc-6::after { background: #4a5a8a; }
+.concept-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
+.concept-icon { font-size: 22px; margin-bottom: 8px; }
+.concept-title { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 6px; }
+.concept-def  { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.concept-eg   { margin-top: 8px; font-size: 12px; color: var(--ink-3); font-style: italic; border-top: 1px solid var(--rule); padding-top: 7px; }
+
+/* ── QUIZ ────────────────────────────────────────── */
+.quiz-wrap { max-width: 680px; }
+.quiz-prog-track { height: 3px; background: var(--paper-3); border-radius: 2px; margin-bottom: 24px; }
+.quiz-prog-fill  { height: 100%; background: var(--forest); border-radius: 2px; transition: transform 0.4s ease; transform-origin: left; }
+.quiz-q-label { font-size: 12px; color: var(--ink-3); font-style: italic; margin-bottom: 8px; }
+.quiz-q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.quiz-hint {
+  font-size: 13px; color: var(--ink-3); font-style: italic;
+  padding: 8px 12px; background: var(--gold-2);
+  border-left: 3px solid var(--gold); margin-bottom: 16px;
+}
+.opts { display: flex; flex-direction: column; gap: 9px; }
+.opt {
+  border: 1.5px solid var(--rule);
+  border-radius: 3px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: var(--ink) !important;
+  background: var(--paper);
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: left;
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Source Serif 4', serif;
+}
+.opt:hover:not(:disabled) { border-color: var(--forest); background: var(--forest-3); }
+.opt .letter {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  font-family: 'Source Serif 4', serif;
+  transition: all 0.18s;
+}
+.opt.correct { border-color: #1a5e30; background: #d4edda; color: #1a3d22; }
+.opt.correct .letter { background: #1a5e30; color: #fff; border-color: #1a5e30; }
+.opt.wrong   { border-color: #8a1f1f; background: #f5d5d5; color: #5a1010; animation: shake 0.35s ease; }
+.opt.wrong .letter { background: #8a1f1f; color: #fff; border-color: #8a1f1f; }
+
+.quiz-fb {
+  display: none; margin-top: 14px; padding: 12px 16px;
+  border-radius: 3px; font-size: 14px; line-height: 1.55;
+}
+.quiz-fb.show { display: block; animation: arrive 0.3s ease; }
+.quiz-fb.ok  { background: #d4edda; border: 1px solid #1a5e30; color: #1a3d22; }
+.quiz-fb.err { background: #f5d5d5; border: 1px solid #8a1f1f; color: #5a1010; }
+
+.quiz-next {
+  display: none; margin-top: 16px;
+  background: var(--forest); color: #fff;
+  border: none; padding: 10px 28px;
+  border-radius: 3px; cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px; font-weight: 600;
+  transition: background 0.18s;
+}
+.quiz-next:hover { background: var(--forest-2); }
+.quiz-next.show { display: inline-block; animation: pop 0.3s ease; }
+
+.score-box { text-align: center; padding: 48px 24px; animation: pop 0.4s ease; }
+.score-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 80px; font-weight: 800;
+  color: var(--forest); line-height: 1; margin-bottom: 8px;
+}
+.score-sub { font-size: 18px; color: var(--ink-3); margin-bottom: 24px; }
+
+/* ── CHECKLIST ───────────────────────────────────── */
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.check-item:last-child { border-bottom: none; }
+.check-box {
+  width: 20px; height: 20px; min-width: 20px;
+  border: 2px solid var(--rule);
+  border-radius: 3px;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  transition: all 0.18s;
+  color: transparent;
+}
+.check-item.done .check-box { background: var(--forest); border-color: var(--forest); color: #fff; }
+.check-item.done .check-text { color: var(--ink-4); text-decoration: line-through; }
+.check-text { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+
+/* ── TRANSFER TEXTAREA ───────────────────────────── */
+textarea.ta {
+  width: 100%;
+  border: 1.5px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  padding: 12px 14px;
+  resize: none;
+  line-height: 1.6;
+  transition: border-color 0.18s;
+}
+textarea.ta:focus { outline: none; border-color: var(--forest); }
+.wc { font-size: 12px; color: var(--ink-4); text-align: right; margin-top: 4px; }
+
+/* ── REVEAL BUTTON ───────────────────────────────── */
+.btn {
+  border: 1.5px solid var(--forest);
+  background: var(--forest);
+  color: #fff;
+  padding: 9px 22px;
+  border-radius: 3px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.btn:hover { background: var(--forest-2); border-color: var(--forest-2); }
+.btn.ghost {
+  background: none;
+  color: var(--ink-2);
+  border-color: var(--rule);
+}
+.btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ── COVER SPECIAL ───────────────────────────────── */
+#s1 {
+  background: var(--ink);
+}
+#s1 .body { background: var(--ink); }
+#s1 .top-rule { background: var(--forest-2); }
+
+/* ── OUTLOOK CARDS ───────────────────────────────── */
+.outlook-card {
+  border: 1px solid #3a3a35;
+  border-radius: 3px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.outlook-card:hover { border-color: var(--forest-2); }
+.outlook-num { font-family: 'Playfair Display', serif; font-size: 40px; color: var(--forest-2); margin-bottom: 6px; }
+
+/* ── AVATAR ──────────────────────────────────────── */
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--forest);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 16px; font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  flex-shrink: 0;
+}
+
+/* ── LEARNING GOALS LIST ─────────────────────────── */
+.goal-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--rule);
+}
+.goal-item:last-child { border-bottom: none; }
+.goal-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--forest); margin-top: 6px; flex-shrink: 0; }
+.goal-text { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — COVER (dark)
+══════════════════════════════════════════════ -->
+<div class="slide active" id="s1">
+  <div class="top-rule"></div>
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px 60px 80px;">
+
+    <p style="font-size:13px;color:#8a8a80;font-style:italic;margin-bottom:32px;border-bottom:1px solid #333;padding-bottom:16px;width:100%">
+      GPU 2 &nbsp;·&nbsp; LF 4 / AS 4.2 / LS 3.1.1 &nbsp;·&nbsp; Klasse HS1Y &nbsp;·&nbsp; Einstiegsstunde
+    </p>
+
+    <p style="font-size:13px;color:var(--forest-2);font-style:italic;margin-bottom:16px;letter-spacing:0.01em">Böckler-Office GmbH, Oberhausen</p>
+
+    <h1 style="color:var(--paper);max-width:760px;margin-bottom:20px;font-size:clamp(30px,5.5vw,64px)">
+      Die Umsatzentwicklung<br>
+      <em style="color:#1f4a35">analysieren</em><br>
+      und das Sortiment&nbsp;verändern
+    </h1>
+
+    <div style="height:2px;width:80px;background:var(--forest-2);margin:8px 0 28px;"></div>
+
+    <p style="font-size:17px;color:#b8b8a8;max-width:520px;line-height:1.6;font-weight:300">
+      Was passiert, wenn ein Unternehmen nicht auf seine eigenen Zahlen hört?
+      Heute finden wir es heraus.
+    </p>
+
+    <div style="display:flex;gap:16px;margin-top:40px;flex-wrap:wrap">
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px;">
+        <div style="font-size:12px;color:#666;margin-bottom:3px">Unterrichtsstunde</div>
+        <div style="font-size:15px;color:var(--paper);font-weight:600">90 Minuten</div>
+      </div>
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px;">
+        <div style="font-size:12px;color:#666;margin-bottom:3px">Modellunternehmen</div>
+        <div style="font-size:15px;color:var(--paper);font-weight:600">Böckler-Office GmbH</div>
+      </div>
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px;">
+        <div style="font-size:12px;color:#666;margin-bottom:3px">Einstieg in Reihe</div>
+        <div style="font-size:15px;color:var(--paper);font-weight:600">LS 3.1.1 — 3.1.x</div>
+      </div>
+    </div>
+
+    <p style="position:absolute;bottom:70px;right:40px;font-size:12px;color:#444;font-style:italic">
+      Hans-Böckler-Berufskolleg Oberhausen
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — ANFORDERUNGSSITUATION
+══════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="page-header">
+      <span class="kicker">Einstieg — Anforderungssituation</span>
+      <span class="section-id">Folie 2 / 7</span>
+    </div>
+    <div class="content">
+
+      <h2>Die Aufgabe wartet auf Sie</h2>
+      <p class="lead" style="margin-bottom:24px">
+        Sie sind Auszubildende/-r im zweiten Lehrjahr bei der <strong>Böckler-Office GmbH</strong> in Oberhausen —
+        einem mittelständischen Großhändler für Bürobedarf und Schreibwaren.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <div style="display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;">
+            <div class="avatar">W</div>
+            <div>
+              <p style="font-size:13px;color:var(--ink-3);margin-bottom:4px;font-style:italic">Frau Weißenberg · Ausbilderin, Abt. Vertrieb &amp; Einkauf</p>
+              <p style="font-size:14px;color:var(--ink-2);font-style:normal">sagt im Morgen-Meeting:</p>
+            </div>
+          </div>
+
+          <div class="pullquote">
+            <p>„Ich habe gerade die Umsatzzahlen des letzten Jahres auf dem Tisch. Ehrlich gesagt mache ich mir Sorgen — in einigen Warengruppen läuft es richtig gut, in anderen stagnieren wir oder verlieren sogar Kunden."</p>
+          </div>
+          <div class="pullquote">
+            <p>„Ich brauche Ihre Hilfe: Schauen Sie sich die Zahlen an, erkennen Sie die Trends und sagen Sie mir, was wir mit unserem Sortiment machen sollten."</p>
+            <div class="attr">— Frau Weißenberg</div>
+          </div>
+
+          <div class="callout rust" style="margin-top:16px">
+            <div class="callout-label">Ihre Aufgabe</div>
+            <p style="font-size:15px;margin:0;color:var(--ink)">
+              Analysieren Sie die Umsatzentwicklung der Böckler-Office GmbH und bereiten Sie erste Handlungsempfehlungen für das Sortiment vor.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="callout forest">
+            <div class="callout-label">Was Sie heute lernen</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div class="goal-item">
+                <div class="goal-dot"></div>
+                <div class="goal-text">Umsatzveränderungen berechnen — absolut und prozentual</div>
+              </div>
+              <div class="goal-item">
+                <div class="goal-dot"></div>
+                <div class="goal-text">Trends in Umsatzdaten erkennen und beschreiben</div>
+              </div>
+              <div class="goal-item">
+                <div class="goal-dot"></div>
+                <div class="goal-text">Den Begriff <em>Sortiment</em> (Breite &amp; Tiefe) erläutern</div>
+              </div>
+              <div class="goal-item">
+                <div class="goal-dot"></div>
+                <div class="goal-text">Sortimentsempfehlungen beurteilen und begründen</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout gold" style="margin-top:16px">
+            <div class="callout-label">Diskussionsfrage — 2–3 Minuten</div>
+            <p style="font-size:16px;color:var(--ink);font-style:italic;margin:0;line-height:1.55">
+              Kennen Sie Unternehmen, die ihr Sortiment in letzter Zeit verändert haben?
+              Warum könnte das sinnvoll sein?
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — UMSATZDATEN
+══════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="page-header">
+      <span class="kicker">Daten &amp; Berechnung</span>
+      <span class="section-id">Folie 3 / 7</span>
+    </div>
+    <div class="content">
+
+      <h2>Umsatzdaten der Böckler-Office GmbH</h2>
+      <p style="margin-bottom:20px">
+        Nettoumsätze in Tausend Euro (T€) — Geschäftsjahresvergleich. Berechnen Sie die fehlenden Werte.
+      </p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;font-size:13px">
+        <div style="padding:7px 14px;background:var(--forest-3);border:1px solid var(--forest);border-radius:3px;color:var(--forest)">
+          <strong>▲ Wachstum</strong> — positiver Trend
+        </div>
+        <div style="padding:7px 14px;background:var(--rust-2);border:1px solid var(--rust);border-radius:3px;color:var(--rust)">
+          <strong>▼ Rückgang</strong> — Handlungsbedarf
+        </div>
+        <div style="padding:7px 14px;background:var(--gold-2);border:1px solid var(--gold);border-radius:3px;color:var(--gold)">
+          Formel: <strong>(AJ − VJ) ÷ VJ × 100</strong>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th style="width:28%">Warengruppe</th>
+              <th style="text-align:right">Vorjahr (T€)</th>
+              <th style="text-align:right">Akt. Jahr (T€)</th>
+              <th style="text-align:right">Änd. (T€)</th>
+              <th style="text-align:right">Änd. (%)</th>
+              <th style="text-align:center">Trend</th>
+            </tr>
+          </thead>
+          <tbody id="dtbody"></tbody>
+        </table>
+      </div>
+      <p class="caption">Alle Werte sind Nettoumsätze ohne Mehrwertsteuer.</p>
+
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn" onclick="revealData()">Lösung einblenden</button>
+        <button class="btn ghost" onclick="resetData()">Zurücksetzen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — FACHBEGRIFFE
+══════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="page-header">
+      <span class="kicker">Fachbegriffe — Sortimentspolitik</span>
+      <span class="section-id">Folie 4 / 7</span>
+    </div>
+    <div class="content">
+
+      <h2>Was ist ein Sortiment?</h2>
+      <p class="lead" style="margin-bottom:20px;max-width:700px">
+        Handelsunternehmen entwickeln keine eigenen Produkte — sie <strong>beschaffen und verkaufen</strong> Waren.
+        Die Gesamtheit dieser Waren nennt man <strong>Sortiment</strong>.
+      </p>
+
+      <div class="three-col" style="margin-bottom:20px">
+        <div class="concept-card cc-1">
+          <div class="concept-icon">📦</div>
+          <div class="concept-title">Sortiment</div>
+          <div class="concept-def">Gesamtheit aller angebotenen Waren eines Handelsunternehmens.</div>
+          <div class="concept-eg">Böckler-Office: Schreibwaren, Bürostühle, Technik, Papier …</div>
+        </div>
+        <div class="concept-card cc-2">
+          <div class="concept-icon">↔</div>
+          <div class="concept-title">Sortimentsbreite</div>
+          <div class="concept-def">Anzahl der verschiedenen Warengruppen (Produktkategorien).</div>
+          <div class="concept-eg">Böckler-Office führt 7 Warengruppen → breites Sortiment</div>
+        </div>
+        <div class="concept-card cc-3">
+          <div class="concept-icon">↕</div>
+          <div class="concept-title">Sortimentstiefe</div>
+          <div class="concept-def">Anzahl der Artikel innerhalb einer einzelnen Warengruppe.</div>
+          <div class="concept-eg">20 verschiedene Bürostühle in der Kategorie „Ergonomie"</div>
+        </div>
+        <div class="concept-card cc-4">
+          <div class="concept-icon">+</div>
+          <div class="concept-title">Sortimentserweiterung</div>
+          <div class="concept-def">Neue Warengruppen oder Artikel werden aufgenommen (Diversifikation / Differenzierung).</div>
+          <div class="concept-eg">Böckler-Office nimmt „Digitale Endgeräte" neu ins Programm</div>
+        </div>
+        <div class="concept-card cc-5">
+          <div class="concept-icon">−</div>
+          <div class="concept-title">Sortimentsbereinigung</div>
+          <div class="concept-def">Schwach laufende Warengruppen oder Artikel werden gestrichen.</div>
+          <div class="concept-eg">Hygieneprodukte mit stetig sinkendem Umsatz werden ausgelistet</div>
+        </div>
+        <div class="concept-card cc-6">
+          <div class="concept-icon">€</div>
+          <div class="concept-title">Umsatz</div>
+          <div class="concept-def">Erlöse aus dem Verkauf von Waren in einem Zeitraum (netto = ohne MwSt.).</div>
+          <div class="concept-eg">Böckler-Office Gesamtumsatz: 1.858 T€ im aktuellen Jahr</div>
+        </div>
+      </div>
+
+      <div class="callout forest">
+        <div class="callout-label">Merksatz</div>
+        <p style="font-size:16px;font-style:italic;color:var(--ink);margin:0;line-height:1.6">
+          Ein <strong>breites Sortiment</strong> spricht viele Zielgruppen an.
+          Ein <strong>tiefes Sortiment</strong> befriedigt spezialisierte Kundenwünsche einer Zielgruppe besonders gut.
+          Die optimale Kombination ist das zentrale Ziel der <strong>Sortimentspolitik</strong>.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — QUIZ
+══════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="page-header">
+      <span class="kicker">Wissensüberprüfung</span>
+      <span class="section-id">Folie 5 / 7</span>
+    </div>
+    <div class="content">
+      <h2 style="margin-bottom:20px">Haben Sie aufgepasst?</h2>
+      <div class="quiz-wrap" id="quiz-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6 — TRANSFER
+══════════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="page-header">
+      <span class="kicker">Transfer — Handlungsempfehlung</span>
+      <span class="section-id">Folie 6 / 7</span>
+    </div>
+    <div class="content">
+      <h2>Jetzt sind Sie dran</h2>
+      <p class="lead" style="margin-bottom:24px;max-width:680px">
+        Frau Weißenberg wartet auf Ihre schriftliche Empfehlung.
+        Stützen Sie sich dabei auf die Umsatzdaten von Folie 3.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <div class="callout" style="margin-bottom:14px">
+            <div class="callout-label">Ihre Empfehlung</div>
+            <p style="font-size:14px;color:var(--ink-3);margin-bottom:10px">
+              Welche Warengruppe sollte ausgebaut, welche überprüft werden? Begründen Sie mit konkreten Zahlen.
+            </p>
+            <textarea class="ta" id="ta" rows="7" placeholder="Ich empfehle, die Warengruppe … auszubauen, weil im Vergleich zum Vorjahr …"></textarea>
+            <div class="wc" id="wc">0 Wörter</div>
+          </div>
+          <div class="callout gold">
+            <div class="callout-label">Nächste Stunde</div>
+            <p style="font-size:15px;font-style:italic;color:var(--ink);margin:0">
+              ABC-Analyse: Wie entscheiden Unternehmen systematisch, welche Artikel die größte Bedeutung haben? (LS 3.1.2)
+            </p>
+          </div>
+        </div>
+
+        <div class="callout" style="height:fit-content">
+          <div class="callout-label" style="margin-bottom:12px">Lernziel-Checkliste</div>
+          <div id="checklist">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box">✓</div>
+              <div class="check-text">Ich kann Umsatzveränderungen absolut und prozentual berechnen.</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box">✓</div>
+              <div class="check-text">Ich kann Trends in einer Umsatztabelle erkennen und beschreiben.</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box">✓</div>
+              <div class="check-text">Ich kenne den Unterschied zwischen Sortimentsbreite und -tiefe.</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box">✓</div>
+              <div class="check-text">Ich kann eine begründete Sortimentsempfehlung formulieren.</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box">✓</div>
+              <div class="check-text">Ich verstehe, warum Unternehmen ihr Sortiment regelmäßig überprüfen.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 7 — AUSBLICK
+══════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="top-rule"></div>
+  <div class="body" style="background:var(--ink);">
+    <div class="page-header" style="border-bottom:1px solid #333;">
+      <span class="kicker" style="color:#666">Zusammenfassung &amp; Ausblick</span>
+      <span class="section-id" style="color:#666">Folie 7 / 7</span>
+    </div>
+    <div class="content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 120px);text-align:center;padding-top:40px">
+
+      <p style="font-size:13px;color:#666;font-style:italic;margin-bottom:20px">Was haben wir heute gelernt?</p>
+      <h2 style="color:var(--paper);font-size:clamp(26px,4vw,44px);margin-bottom:10px;max-width:680px">
+        Umsatzdaten analysieren —<br><em style="color:#1f4a35">Sortiment als Steuerungsgröße</em>
+      </h2>
+      <div style="height:2px;width:60px;background:var(--forest-2);margin:16px auto 32px;"></div>
+
+      <div class="three-col" style="max-width:720px;width:100%;margin-bottom:32px">
+        <div class="outlook-card">
+          <div class="outlook-num">%</div>
+          <div style="font-size:14px;font-weight:600;color:var(--paper);font-family:'Source Serif 4',serif;margin-bottom:5px">Prozentrechnung</div>
+          <div style="font-size:13px;color:#aaa">Veränderungen absolut und relativ berechnen</div>
+        </div>
+        <div class="outlook-card">
+          <div class="outlook-num">📦</div>
+          <div style="font-size:14px;font-weight:600;color:var(--paper);font-family:'Source Serif 4',serif;margin-bottom:5px">Sortimentsbegriff</div>
+          <div style="font-size:13px;color:#aaa">Breite, Tiefe, Bereinigung, Erweiterung</div>
+        </div>
+        <div class="outlook-card">
+          <div class="outlook-num">→</div>
+          <div style="font-size:14px;font-weight:600;color:var(--paper);font-family:'Source Serif 4',serif;margin-bottom:5px">Handlungsempfehlung</div>
+          <div style="font-size:13px;color:#aaa">Datenbasiert beurteilen und begründen</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:20px 28px;max-width:580px;width:100%;text-align:left;background:#161614">
+        <p style="font-size:12px;color:var(--forest-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;font-weight:600">Nächste Stunde — LS 3.1.2</p>
+        <p style="font-size:16px;color:var(--paper);font-style:italic;line-height:1.5;margin-bottom:8px">
+          ABC-Analyse: Wie entscheiden Unternehmen systematisch, welche Artikel die größte Bedeutung haben?
+        </p>
+        <p style="font-size:13px;color:#999">Hausaufgabe: Arbeitsblatt A1–A4 vollständig ausfüllen</p>
+      </div>
+
+      <p style="margin-top:40px;font-size:12px;color:#444;font-style:italic">
+        Hans-Böckler-Berufskolleg Oberhausen · GPU 2 · HS1Y · LF 4 / AS 4.2
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════ -->
+<div class="nav">
+  <button class="nav-btn" id="btn-prev" onclick="go(-1)">← Zurück</button>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+    <div class="dots" id="dots"></div>
+    <span class="slide-n" id="slide-n">1 / 7</span>
+  </div>
+  <button class="nav-btn fwd" id="btn-next" onclick="go(1)">Weiter →</button>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────
+const rows = [
+  { name: "Schreibwaren klassisch",         vy: 320, ay: 295 },
+  { name: "Druckerpapier & Kopierbedarf",   vy: 480, ay: 512 },
+  { name: "Bürostühle & Ergonomie",         vy: 210, ay: 268 },
+  { name: "Tinte & Toner",                  vy: 395, ay: 371 },
+  { name: "Digitale Endgeräte (Tablets)",   vy: 115, ay: 187 },
+  { name: "Hygiene & Reinigungsbedarf",     vy:  88, ay:  76 },
+  { name: "Konferenz & Präsentation",       vy: 145, ay: 149 },
+];
+const TVY = rows.reduce((s,r)=>s+r.vy,0);
+const TAY = rows.reduce((s,r)=>s+r.ay,0);
+
+const qs = [
+  {
+    q: "Die Böckler-Office GmbH hat im Vorjahr 115.000 € mit Digitalen Endgeräten umgesetzt, im aktuellen Jahr 187.000 €. Wie hoch ist die prozentuale Veränderung?",
+    hint: "Formel: (AJ – VJ) ÷ VJ × 100",
+    opts: ["+ 38,3 %", "+ 62,6 %", "– 38,5 %", "+ 50,0 %"],
+    ans: 1,
+    ex: "Richtig! (187 – 115) ÷ 115 × 100 = 72 ÷ 115 × 100 ≈ 62,6 %. Ein starkes Wachstum — ein klarer Ausbaukandidat."
+  },
+  {
+    q: "Was beschreibt die Sortimentstiefe?",
+    hint: null,
+    opts: [
+      "Die Anzahl der verschiedenen Warengruppen eines Händlers",
+      "Die Anzahl der Artikel innerhalb einer Warengruppe",
+      "Den Gesamtumsatz aller Warengruppen",
+      "Den prozentualen Marktanteil eines Artikels"
+    ],
+    ans: 1,
+    ex: "Korrekt! Die Tiefe misst, wie viele verschiedene Artikel es in einer Warengruppe gibt — z. B. 20 verschiedene Bürostühle."
+  },
+  {
+    q: "Schreibwaren klassisch verliert 25.000 € Umsatz. Was ist der sinnvollste erste Schritt?",
+    hint: null,
+    opts: [
+      "Sofort alle Schreibwarenartikel aus dem Sortiment streichen",
+      "Den Rückgang zunächst auf Ursachen hin untersuchen (Nachfragetrend, Wettbewerb, Platzierung)",
+      "Den Verkaufspreis sofort um 50 % senken",
+      "Keine Maßnahmen — der Rückgang ist bedeutungslos"
+    ],
+    ans: 1,
+    ex: "Richtig! Vorschnelles Streichen wäre ein Fehler. Zuerst müssen Ursachen analysiert werden, bevor Konsequenzen gezogen werden."
+  },
+  {
+    q: "Frau Weißenberg möchte neue Warengruppen aufnehmen, ohne bestehende zu streichen. Welcher Begriff trifft zu?",
+    hint: null,
+    opts: ["Sortimentsbereinigung", "Sortimentstiefe erhöhen", "Sortimentserweiterung", "Sortimentsneugestaltung"],
+    ans: 2,
+    ex: "Korrekt! Sortimentserweiterung bedeutet: neue Warengruppen kommen hinzu (Diversifikation) oder vorhandene werden um weitere Artikel ergänzt (Differenzierung)."
+  },
+];
+
+// ── SLIDES ───────────────────────────────────────
+let cur = 1;
+const total = 7;
+
+function go(d) {
+  const nxt = cur + d;
+  if (nxt < 1 || nxt > total) return;
+  document.getElementById(`s${cur}`).classList.remove('active');
+  cur = nxt;
+  document.getElementById(`s${cur}`).classList.add('active');
+  updateNav();
+  if (cur === 3) buildTable(false);
+  if (cur === 5) initQuiz();
+}
+
+function updateNav() {
+  document.getElementById('slide-n').textContent = `${cur} / ${total}`;
+  const prev = document.getElementById('btn-prev');
+  const next = document.getElementById('btn-next');
+  prev.style.opacity = cur === 1 ? '0.25' : '1';
+  prev.disabled = cur === 1;
+  next.textContent = cur === total ? 'Ende ✓' : 'Weiter →';
+
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  for (let i = 1; i <= total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === cur ? ' active' : i < cur ? ' done' : '');
+    d.onclick = (function(n){ return function() {
+      document.getElementById(`s${cur}`).classList.remove('active');
+      cur = n;
+      document.getElementById(`s${cur}`).classList.add('active');
+      updateNav();
+      if(cur===3) buildTable(false);
+      if(cur===5) initQuiz();
+    }; })(i);
+    dotsEl.appendChild(d);
+  }
+}
+
+// ── TABLE ────────────────────────────────────────
+let revealed = false;
+function buildTable(show) {
+  revealed = show;
+  const tb = document.getElementById('dtbody');
+  tb.innerHTML = '';
+  const maxBar = 80;
+  rows.forEach(r => {
+    const diff = r.ay - r.vy;
+    const pct  = (diff / r.vy * 100).toFixed(1);
+    const pos  = diff >= 0;
+    const bw   = Math.min(Math.abs(diff) / maxBar * 100, 100);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.name}</td>
+      <td style="text-align:right">${r.vy.toLocaleString('de-DE')}</td>
+      <td style="text-align:right">${r.ay.toLocaleString('de-DE')}</td>
+      <td style="text-align:right" class="${show?(pos?'pos':'neg'):'muted'}">
+        ${show ? (pos?'+':'')+diff.toLocaleString('de-DE') : '—'}
+      </td>
+      <td style="text-align:right" class="${show?(pos?'pos':'neg'):'muted'}">
+        ${show ? (pos?'+':'')+pct+' %' : '—'}
+      </td>
+      <td style="text-align:center">
+        ${show ? `<span class="bar-wrap"><span class="bar-fill ${pos?'bar-pos':'bar-neg'}" style="width:${bw}%"></span></span>` : '—'}
+      </td>`;
+    tb.appendChild(tr);
+  });
+  const tdiff = TAY - TVY;
+  const tpct  = (tdiff / TVY * 100).toFixed(1);
+  const tr = document.createElement('tr');
+  tr.className = 'total';
+  tr.innerHTML = `
+    <td>Gesamt</td>
+    <td style="text-align:right">${TVY.toLocaleString('de-DE')}</td>
+    <td style="text-align:right">${TAY.toLocaleString('de-DE')}</td>
+    <td style="text-align:right" class="${show?'pos':'muted'}">${show?'+'+tdiff.toLocaleString('de-DE'):'—'}</td>
+    <td style="text-align:right" class="${show?'pos':'muted'}">${show?'+'+tpct+' %':'—'}</td>
+    <td></td>`;
+  tb.appendChild(tr);
+}
+
+function revealData() { buildTable(true); }
+function resetData()  { buildTable(false); }
+
+// ── QUIZ ─────────────────────────────────────────
+let qState = { i: 0, score: 0, done: false };
+
+function initQuiz() {
+  qState = { i: 0, score: 0, done: false };
+  renderQ();
+}
+
+function renderQ() {
+  const c = document.getElementById('quiz-container');
+  if (qState.i >= qs.length) {
+    const pct = Math.round(qState.score / qs.length * 100);
+    c.innerHTML = `
+      <div class="score-box">
+        <div class="score-num">${qState.score}/${qs.length}</div>
+        <div class="score-sub">${pct>=75?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Noch etwas üben!'} — ${pct}% richtig</div>
+        <button class="btn" onclick="initQuiz()">Nochmal versuchen</button>
+      </div>`;
+    if (pct===100) setTimeout(()=>confetti({particleCount:150,spread:70,origin:{y:0.5}}),250);
+    return;
+  }
+  const q = qs[qState.i];
+  const prog = qState.i / qs.length * 100;
+  c.innerHTML = `
+    <div class="quiz-prog-track"><div class="quiz-prog-fill" style="transform:scaleX(${prog/100})"></div></div>
+    <div class="quiz-q-label">Frage ${qState.i+1} von ${qs.length}</div>
+    <div class="quiz-q-text">${q.q}</div>
+    ${q.hint ? `<div class="quiz-hint">Hinweis: ${q.hint}</div>` : ''}
+    <div class="opts">
+      ${q.opts.map((o,i)=>`
+        <button class="opt" onclick="pick(${i})" id="o${i}">
+          <span class="letter">${String.fromCharCode(65+i)}</span>
+          ${o}
+        </button>`).join('')}
+    </div>
+    <div class="quiz-fb" id="fb"></div>
+    <button class="quiz-next" id="qn" onclick="nextQ()">
+      ${qState.i+1<qs.length ? 'Nächste Frage →' : 'Auswertung →'}
+    </button>`;
+  qState.done = false;
+}
+
+function pick(i) {
+  if (qState.done) return;
+  qState.done = true;
+  const q = qs[qState.i];
+  const ok = i === q.ans;
+  if (ok) qState.score++;
+  document.querySelectorAll('.opt').forEach((el,idx) => {
+    el.disabled = true;
+    if (idx === q.ans) el.classList.add('correct');
+    if (idx === i && !ok) el.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb');
+  fb.className = `quiz-fb show ${ok?'ok':'err'}`;
+  fb.innerHTML = `<strong>${ok?'Richtig!':'Leider falsch.'}</strong> ${q.ex}`;
+  document.getElementById('qn').classList.add('show');
+}
+
+function nextQ() { qState.i++; renderQ(); }
+
+// ── TRANSFER ─────────────────────────────────────
+document.addEventListener('input', e => {
+  if (e.target.id==='ta') {
+    const w = e.target.value.trim().split(/\s+/).filter(Boolean).length;
+    const el = document.getElementById('wc');
+    if (el) el.textContent = `${w} Wörter`;
+  }
+});
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  const done  = document.querySelectorAll('.check-item.done').length;
+  const total = document.querySelectorAll('.check-item').length;
+  if (done===total) confetti({particleCount:80,spread:50,origin:{y:0.6}});
+}
+
+// ── KEYBOARD ─────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); go(1); }
+  if (e.key==='ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+updateNav();
+buildTable(false);
+</script>
+</body>
+</html>

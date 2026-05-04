@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders & Acknowledgements — B2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────── */
+:root {
+  --paper:   #faf8f3;
+  --paper2:  #f0ebe0;
+  --ink:     #1c1a17;
+  --ink2:    #4a4640;
+  --ink3:    #8a8480;
+  --teal:    #0b6e72;
+  --teal-lt: #dff0f1;
+  --amber:   #c06010;
+  --amber-lt:#fdf0e0;
+  --ruby:    #9a1f1f;
+  --ruby-lt: #faeaea;
+  --sage:    #2a6347;
+  --sage-lt: #e6f4ec;
+  --rule:    rgba(28,26,23,0.1);
+  --r: 10px;
+}
+
+/* ── RESET ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--paper2);
+  color: var(--ink);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ── STICKY NAV ─────────────────────────────────── */
+#topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--ink);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  height: 48px;
+  border-bottom: 3px solid var(--teal);
+}
+.tb-logo {
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex-shrink: 1; min-width: 0;
+}
+#prog-track {
+  flex: 1; height: 3px; min-width: 40px;
+  background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden;
+}
+#prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--amber));
+  border-radius: 99px;
+  transition: width 0.35s ease;
+  width: 8.3%;
+}
+#slide-counter {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 11px; color: rgba(255,255,255,0.35);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── SLIDE CONTAINER ────────────────────────────── */
+/* On mobile: one slide = full screen block, user scrolls.
+   On desktop/beamer: slides stack like pages, we scroll to active. */
+#deck {
+  display: flex;
+  flex-direction: column;
+}
+
+.slide {
+  min-height: calc(100dvh - 48px - 48px); /* topbar + nav */
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 48px;
+  /* hidden by default on desktop */
+}
+
+/* Desktop: show only active slide, full-height */
+@media (min-width: 768px) {
+  #deck {
+    position: fixed;
+    top: 48px; left: 0; right: 0; bottom: 48px;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    min-height: unset; height: 100%;
+    opacity: 0; pointer-events: none;
+    transform: translateX(40px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    overflow-y: auto;
+    border-bottom: none;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: all; transform: translateX(0);
+  }
+  .slide.exiting {
+    opacity: 0; transform: translateX(-40px);
+  }
+}
+
+/* Mobile: all slides visible, scrollable */
+@media (max-width: 767px) {
+  .slide { opacity: 1 !important; transform: none !important; position: relative !important; }
+  #deck { position: relative; top: 0; bottom: 0; left: 0; right: 0; overflow: visible; }
+  #nav { position: fixed; }
+}
+
+/* ── BOTTOM NAV ─────────────────────────────────── */
+#nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: 48px;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+/* On mobile, nav shows jump buttons only */
+.nbtn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7); font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.18s; -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.nbtn:hover, .nbtn:active { background: var(--teal); border-color: var(--teal); color: #fff; }
+.dots { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: 200px; }
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.18); cursor: pointer;
+  transition: background 0.2s, transform 0.2s; flex-shrink: 0;
+}
+.dot.on { background: var(--amber); transform: scale(1.4); }
+
+/* Mobile: hide desktop dots, show slide number only */
+@media (max-width: 767px) {
+  .dots { display: none; }
+  #nav { display: none; }  /* on mobile we scroll — no need for fixed nav */
+}
+
+/* ── SLIDE ANATOMY ──────────────────────────────── */
+/* Header strip */
+.sh {
+  display: flex; align-items: stretch; flex-shrink: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.sh-bar { width: 5px; background: var(--teal); flex-shrink: 0; }
+.sh-bar.am { background: var(--amber); }
+.sh-bar.sa { background: var(--sage); }
+.sh-text { padding: 14px 20px 12px; flex: 1; }
+.sh-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 3px;
+}
+.sh-lbl.am { color: var(--amber); }
+.sh-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 3.5vw, 26px); color: var(--ink); line-height: 1.2;
+}
+
+/* Body */
+.sb {
+  flex: 1; padding: 16px 20px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .sh-text { padding: 16px 32px 14px; }
+  .sb { padding: 20px 32px 28px; gap: 14px; }
+  .sh-title { font-size: clamp(18px, 2.5vw, 28px); }
+}
+
+/* ── TITLE SLIDE ────────────────────────────────── */
+.s-title {
+  background: var(--ink);
+  justify-content: flex-end;
+  padding: 32px 24px;
+  position: relative; overflow: hidden;
+  min-height: calc(100dvh - 96px);
+}
+@media (min-width: 768px) { .s-title { padding: 48px 56px; } }
+.s-title::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 39px, rgba(255,255,255,0.025) 39px, rgba(255,255,255,0.025) 40px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 39px, rgba(255,255,255,0.025) 39px, rgba(255,255,255,0.025) 40px);
+  pointer-events: none;
+}
+.s-title-bar { position: absolute; top: 0; left: 0; bottom: 0; width: 5px; background: var(--teal); }
+.s-num-bg {
+  position: absolute; bottom: -30px; right: -15px;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(160px, 35vw, 300px);
+  font-weight: 700; font-style: italic;
+  color: rgba(255,255,255,0.03);
+  line-height: 1; pointer-events: none; user-select: none;
+}
+.s-title > *:not(.s-title-bar):not(.s-num-bg) { position: relative; }
+.t-ey {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--teal); font-weight: 700; margin-bottom: 16px;
+}
+.t-h {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 9vw, 84px); color: #fff; line-height: 1.0;
+  margin-bottom: 14px;
+}
+.t-h em { color: var(--amber); font-style: italic; }
+.t-sub {
+  font-size: clamp(14px, 2.2vw, 18px); color: rgba(255,255,255,0.5);
+  font-weight: 300; line-height: 1.6; max-width: 560px; margin-bottom: 28px;
+}
+.pills { display: flex; gap: 7px; flex-wrap: wrap; }
+.pill {
+  padding: 4px 12px; border-radius: 99px;
+  border: 1px solid rgba(192,96,16,0.4);
+  font-size: clamp(10px, 1.5vw, 12px); color: var(--amber); letter-spacing: 0.07em;
+}
+
+/* ── CYCLE SLIDE ────────────────────────────────── */
+.s-cycle {
+  background: var(--paper2);
+  justify-content: center; align-items: center;
+  padding: 24px 16px; gap: 20px;
+  min-height: calc(100dvh - 96px);
+}
+.cy-ttl {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(15px, 3vw, 24px); color: var(--ink2);
+  text-align: center;
+}
+/* Mobile: vertical cycle */
+.cy-row {
+  display: flex; flex-wrap: wrap;
+  align-items: center; justify-content: center;
+  gap: 6px; width: 100%;
+}
+.cy-step {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  opacity: 0.3;
+  min-width: 64px;
+}
+.cy-step.done { opacity: 0.6; }
+.cy-step.now  { opacity: 1; }
+.cy-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  background: #fff; border: 2px solid var(--rule);
+}
+.cy-step.done .cy-icon { background: var(--sage-lt); border-color: var(--sage); }
+.cy-step.now  .cy-icon { background: var(--teal); border-color: var(--teal); box-shadow: 0 3px 16px rgba(11,110,114,0.3); }
+.cy-lbl { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink3); font-weight: 600; text-align: center; }
+.cy-step.done .cy-lbl { color: var(--sage); }
+.cy-step.now  .cy-lbl { color: var(--teal); }
+.cy-arr { font-size: 14px; color: var(--rule); margin-bottom: 18px; }
+@media (min-width: 768px) {
+  .cy-icon { width: 60px; height: 60px; font-size: 26px; }
+  .cy-lbl { font-size: 11px; }
+  .cy-arr { font-size: 20px; }
+}
+
+/* ── OUTRO ──────────────────────────────────────── */
+.s-outro {
+  background: var(--teal);
+  justify-content: center;
+  padding: 32px 24px;
+  min-height: calc(100dvh - 96px);
+  position: relative; overflow: hidden;
+}
+.s-outro::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255,255,255,0.04) 19px, rgba(255,255,255,0.04) 20px);
+  pointer-events: none;
+}
+.s-outro > * { position: relative; }
+
+/* ── COMPONENTS ─────────────────────────────────── */
+
+/* Info box */
+.ibox {
+  border-radius: var(--r);
+  padding: 12px 16px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.ibox.te { background: var(--teal-lt); border-left: 4px solid var(--teal); }
+.ibox.am { background: var(--amber-lt); border-left: 4px solid var(--amber); }
+.ibox.ru { background: var(--ruby-lt);  border-left: 4px solid var(--ruby); }
+.ibox.sa { background: var(--sage-lt);  border-left: 4px solid var(--sage); }
+.ibox-ico { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.ibox-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.ibox.te .ibox-lbl { color: var(--teal); }
+.ibox.am .ibox-lbl { color: var(--amber); }
+.ibox.ru .ibox-lbl { color: var(--ruby); }
+.ibox.sa .ibox-lbl { color: var(--sage); }
+.ibox p, .ibox li { font-size: clamp(13px, 1.8vw, 15px); line-height: 1.65; color: var(--ink2); }
+.ibox ul { padding-left: 16px; }
+.ibox li { margin-bottom: 3px; }
+.ibox strong { color: var(--ink); font-weight: 700; }
+
+/* Two columns - stacks on mobile */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 640px) { .cols { grid-template-columns: 1fr 1fr; } }
+
+/* Card */
+.card {
+  background: #fff; border-radius: var(--r);
+  padding: 14px 16px;
+  border-top: 3px solid var(--teal);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.card.am { border-top-color: var(--amber); }
+.card.sa { border-top-color: var(--sage); }
+.card.ru { border-top-color: var(--ruby); }
+.card-ttl { font-family: 'Playfair Display', serif; font-size: clamp(14px, 2.5vw, 18px); color: var(--ink); margin-bottom: 6px; }
+.card-sub { font-size: 12px; color: var(--ink3); font-style: italic; margin-bottom: 8px; }
+.card p, .card li { font-size: clamp(12px, 1.7vw, 14px); line-height: 1.6; color: var(--ink2); }
+.card ul { padding-left: 16px; }
+.card li { margin-bottom: 3px; }
+
+/* Phrase table — scrollable on mobile */
+.ptbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--r); border: 1px solid var(--rule); }
+.ptbl { width: 100%; border-collapse: collapse; min-width: 360px; }
+.ptbl thead tr { border-bottom: 2px solid var(--ink); }
+.ptbl th { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); padding: 8px 12px 7px; text-align: left; background: var(--paper2); }
+.ptbl td { padding: 8px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.ptbl tr:last-child td { border-bottom: none; }
+.ptbl .fn { font-size: 11px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.07em; width: 120px; white-space: nowrap; }
+.ptbl .eg { font-family: 'Source Code Pro', monospace; font-size: clamp(11px, 1.5vw, 13px); color: var(--ink); line-height: 1.5; }
+
+/* Structure table */
+.stbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--r); overflow: hidden; border: 1px solid var(--rule); }
+.stbl { width: 100%; border-collapse: collapse; min-width: 380px; }
+.stbl th { background: var(--ink); color: rgba(255,255,255,0.8); padding: 9px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-align: left; }
+.stbl td { padding: 8px 12px; border-bottom: 1px solid var(--rule); font-size: clamp(11px, 1.6vw, 13px); }
+.stbl tr:last-child td { border-bottom: none; }
+.stbl tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+.stbl .pt { font-weight: 700; color: var(--teal); font-size: 11px; white-space: nowrap; width: 110px; }
+.stbl .eg { font-family: 'Source Code Pro', monospace; font-size: clamp(10px, 1.5vw, 12px); color: var(--ink2); line-height: 1.5; }
+
+/* Compare */
+.cmp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 480px) { .cmp-row { grid-template-columns: 1fr; } }
+.cmp { border-radius: var(--r); padding: 12px 14px; }
+.cmp::before { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; margin-bottom: 7px; }
+.cmp-bad  { background: var(--ruby-lt);  border: 1px solid rgba(154,31,31,0.2); }
+.cmp-bad::before  { content: '✗  AVOID'; color: var(--ruby); }
+.cmp-good { background: var(--sage-lt); border: 1px solid rgba(42,99,71,0.2); }
+.cmp-good::before { content: '✓  USE'; color: var(--sage); }
+.cmp p { font-family: 'Source Code Pro', monospace; font-size: clamp(11px, 1.5vw, 13px); line-height: 1.65; }
+.cmp-bad  p { color: #6b1010; }
+.cmp-good p { color: #1a4a30; }
+
+/* ── INTERACTIVE: ORDER TYPES ───────────────────── */
+.otype-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (min-width: 640px) { .otype-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.otype {
+  background: #fff; border-radius: var(--r);
+  border: 1.5px solid var(--rule);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative; overflow: hidden;
+}
+.otype::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.otype:nth-child(1)::before { background: var(--teal); }
+.otype:nth-child(2)::before { background: var(--amber); }
+.otype:nth-child(3)::before { background: var(--sage); }
+.otype:nth-child(4)::before { background: var(--ruby); }
+.otype:active { transform: scale(0.98); }
+.otype.open { border-color: var(--teal); box-shadow: 0 2px 12px rgba(11,110,114,0.15); }
+.otype:nth-child(2).open { border-color: var(--amber); }
+.otype:nth-child(3).open { border-color: var(--sage); }
+.otype:nth-child(4).open { border-color: var(--ruby); }
+.ot-tap {
+  position: absolute; top: 7px; right: 7px;
+  font-size: 9px; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase;
+  color: var(--ink3); background: var(--paper2); padding: 2px 6px; border-radius: 4px;
+}
+.otype.open .ot-tap { display: none; }
+.ot-en { font-family: 'Playfair Display', serif; font-size: clamp(13px, 2.2vw, 16px); color: var(--ink); margin: 4px 0 2px; }
+.ot-de { font-size: 11px; color: var(--ink3); font-style: italic; margin-bottom: 7px; }
+.ot-desc { font-size: clamp(11px, 1.5vw, 13px); line-height: 1.5; color: var(--ink2); }
+.ot-ex {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease, padding-top 0.3s;
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(10px, 1.4vw, 12px); color: var(--teal); line-height: 1.55;
+}
+.otype.open .ot-ex { max-height: 100px; padding-top: 9px; border-top: 1px solid var(--rule); margin-top: 9px; }
+
+/* ── INTERACTIVE: ACCORDION ─────────────────────── */
+.revlist { display: flex; flex-direction: column; gap: 7px; }
+.rev {
+  background: #fff; border-radius: var(--r);
+  border: 1px solid var(--rule);
+  overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.rev:active { transform: scale(0.995); }
+.rev.open { border-color: var(--teal); box-shadow: 0 2px 10px rgba(11,110,114,0.12); }
+.rev-hd {
+  display: flex; align-items: center;
+  padding: 11px 14px; gap: 10px;
+}
+.rev-bd {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--paper2); border: 1.5px solid var(--rule);
+  color: var(--teal); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.rev.open .rev-bd { background: var(--teal); border-color: var(--teal); color: #fff; }
+.rev-t { flex: 1; font-size: clamp(13px, 1.8vw, 15px); font-weight: 600; color: var(--ink); }
+.rev-ch { font-size: 14px; color: var(--ink3); transition: transform 0.25s; }
+.rev.open .rev-ch { transform: rotate(90deg); }
+.rev-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(.4,0,.2,1);
+  background: var(--teal-lt);
+  border-top: 1px solid transparent;
+}
+.rev.open .rev-body { max-height: 300px; border-top-color: rgba(11,110,114,0.12); }
+.rev-in { padding: 11px 14px; display: flex; flex-direction: column; gap: 7px; }
+.rev-in p, .rev-in li { font-size: clamp(12px, 1.6vw, 14px); line-height: 1.6; color: var(--ink2); }
+.rev-in ul { padding-left: 16px; }
+.rev-ph {
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(11px, 1.5vw, 13px); color: var(--teal);
+  background: rgba(11,110,114,0.1); padding: 7px 10px; border-radius: 7px;
+}
+.rev.ru-b { border-left: 3px solid var(--ruby); }
+.rev.ru-b .rev-bd { color: var(--ruby); }
+.rev.ru-b.open .rev-bd { background: var(--ruby); border-color: var(--ruby); color: #fff; }
+.rev.ru-b.open { border-color: var(--ruby); }
+.rev.ru-b.open .rev-body { background: var(--ruby-lt); border-top-color: rgba(154,31,31,0.12); }
+.rev.ru-b.open .rev-in p { color: #6b1010; }
+.rev.ru-b.open .rev-ph { color: var(--ruby); background: rgba(154,31,31,0.08); }
+
+/* ── QUIZ ───────────────────────────────────────── */
+.quiz-wrap { display: flex; flex-direction: column; gap: 12px; }
+.quiz-q {
+  background: #fff; border-radius: var(--r);
+  padding: 14px 16px; border: 1px solid var(--rule);
+}
+.q-t { font-size: clamp(13px, 1.9vw, 16px); font-weight: 600; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
+.q-opts { display: flex; flex-direction: column; gap: 7px; }
+.qbtn {
+  text-align: left; background: var(--paper);
+  border: 1.5px solid var(--rule); border-radius: 8px;
+  padding: 10px 14px;
+  font-size: clamp(13px, 1.7vw, 15px); color: var(--ink2);
+  cursor: pointer; font-family: 'Source Sans 3', sans-serif;
+  transition: all 0.18s; -webkit-tap-highlight-color: transparent;
+  line-height: 1.4;
+}
+.qbtn:hover:not(:disabled) { border-color: var(--teal); color: var(--ink); background: var(--teal-lt); }
+.qbtn:active:not(:disabled) { transform: scale(0.98); }
+.qbtn.correct { background: var(--sage-lt); border-color: var(--sage); color: var(--sage); font-weight: 600; }
+.qbtn.wrong   { background: var(--ruby-lt); border-color: var(--ruby); color: var(--ruby); }
+.qbtn:disabled { cursor: default; }
+.q-fb { display: none; margin-top: 8px; padding: 8px 12px; border-radius: 8px; font-size: clamp(12px, 1.6vw, 14px); line-height: 1.5; }
+.q-fb.show { display: block; }
+.q-fb.ok  { background: var(--sage-lt); color: var(--sage); }
+.q-fb.bad { background: var(--ruby-lt); color: var(--ruby); }
+
+/* ── SCENARIO ───────────────────────────────────── */
+.sc-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .sc-grid { grid-template-columns: 1fr 1fr; } }
+.sc {
+  background: #fff; border-radius: var(--r);
+  padding: 16px; border-top: 4px solid var(--teal);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  position: relative;
+}
+.sc.sell { border-top-color: var(--amber); }
+.sc-role {
+  display: inline-block; margin-bottom: 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 99px;
+  background: var(--teal-lt); color: var(--teal);
+}
+.sc.sell .sc-role { background: var(--amber-lt); color: var(--amber); }
+.sc h3 { font-family: 'Playfair Display', serif; font-size: clamp(15px, 2.5vw, 19px); color: var(--ink); margin-bottom: 2px; }
+.sc .co { font-size: 12px; color: var(--ink3); font-style: italic; margin-bottom: 10px; }
+.sc li { font-size: clamp(12px, 1.6vw, 14px); line-height: 1.6; color: var(--ink2); margin-bottom: 4px; }
+.sc ul { padding-left: 16px; }
+
+/* ── MOBILE SLIDE LABEL ─────────────────────────── */
+.mobile-lbl {
+  display: none;
+  background: var(--ink);
+  padding: 8px 20px;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); font-weight: 600;
+}
+@media (max-width: 767px) {
+  .mobile-lbl { display: block; }
+}
+
+/* ── ENTRY ANIM (desktop only) ──────────────────── */
+@keyframes upIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 768px) {
+  .slide.active .anim { opacity: 0; animation: upIn 0.38s ease forwards; }
+  .slide.active .anim:nth-child(1) { animation-delay: 0.04s; }
+  .slide.active .anim:nth-child(2) { animation-delay: 0.10s; }
+  .slide.active .anim:nth-child(3) { animation-delay: 0.16s; }
+  .slide.active .anim:nth-child(4) { animation-delay: 0.22s; }
+  .slide.active .anim:nth-child(5) { animation-delay: 0.28s; }
+  .slide.active .anim:nth-child(6) { animation-delay: 0.34s; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <span class="tb-logo">Business English B2 · BMUD</span>
+  <div id="prog-track"><div id="prog-fill"></div></div>
+  <span id="slide-counter">1 / 12</span>
+</div>
+
+<!-- DECK -->
+<div id="deck">
+
+  <!-- ══ 1: TITLE ════════════════════════════════════════════ -->
+  <div class="slide s-title active" data-i="0">
+    <div class="s-title-bar"></div>
+    <div class="s-num-bg">1</div>
+    <p class="t-ey">Unit 3 · Building on Enquiries & Offers</p>
+    <h1 class="t-h">Orders &<br><em>Acknowledgements</em></h1>
+    <p class="t-sub">The transaction cycle continues — from accepted offer to binding contract.</p>
+    <div class="pills">
+      <span class="pill">B2 Level</span>
+      <span class="pill">2 × 45 min</span>
+      <span class="pill">SOL Worksheet</span>
+      <span class="pill">Office Design Ltd.</span>
+    </div>
+  </div>
+
+  <!-- ══ 2: CYCLE ══════════════════════════════════════════════ -->
+  <div class="slide s-cycle" data-i="1">
+    <div class="mobile-lbl">Slide 2 · Transaction Cycle</div>
+    <p class="cy-ttl anim">Where are we in the business transaction cycle?</p>
+    <div class="cy-row anim">
+      <div class="cy-step done"><div class="cy-icon">📩</div><div class="cy-lbl">Enquiry</div></div>
+      <div class="cy-arr">›</div>
+      <div class="cy-step done"><div class="cy-icon">📋</div><div class="cy-lbl">Offer</div></div>
+      <div class="cy-arr">›</div>
+      <div class="cy-step now"><div class="cy-icon">🛒</div><div class="cy-lbl">Order</div></div>
+      <div class="cy-arr">›</div>
+      <div class="cy-step now"><div class="cy-icon">✅</div><div class="cy-lbl">Acknowledgement</div></div>
+      <div class="cy-arr">›</div>
+      <div class="cy-step"><div class="cy-icon">📦</div><div class="cy-lbl">Delivery</div></div>
+      <div class="cy-arr">›</div>
+      <div class="cy-step"><div class="cy-icon">💳</div><div class="cy-lbl">Invoice</div></div>
+    </div>
+  </div>
+
+  <!-- ══ 3: DEFINITIONS ═══════════════════════════════════════ -->
+  <div class="slide" data-i="2">
+    <div class="mobile-lbl">Slide 3 · Definitions</div>
+    <div class="sh"><div class="sh-bar"></div><div class="sh-text"><div class="sh-lbl">Definitions</div><h2 class="sh-title">What are Orders & Acknowledgements?</h2></div></div>
+    <div class="sb">
+      <div class="ibox te anim"><div class="ibox-ico">📄</div><div><div class="ibox-lbl">Order (Bestellung)</div><p>A formal request to purchase specific goods or services after accepting a supplier's offer. Once acknowledged, a <strong>binding contract</strong> exists.</p></div></div>
+      <div class="ibox sa anim"><div class="ibox-ico">✅</div><div><div class="ibox-lbl">Acknowledgement of Order (Auftragsbestätigung)</div><p>The seller's written confirmation that the order has been received and <strong>accepted</strong>. Must confirm all key details.</p></div></div>
+      <div class="ibox am anim"><div class="ibox-ico">⚠️</div><div><div class="ibox-lbl">Key Legal Point</div><p>Any <strong>discrepancy</strong> between order and acknowledgement must be flagged immediately. Silence = acceptance of the seller's revised terms.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ══ 4: ORDER TYPES ═══════════════════════════════════════ -->
+  <div class="slide" data-i="3">
+    <div class="mobile-lbl">Slide 4 · Order Types (tap cards)</div>
+    <div class="sh"><div class="sh-bar am"></div><div class="sh-text"><div class="sh-lbl am">Tap each card to reveal an example</div><h2 class="sh-title">Four Types of Orders</h2></div></div>
+    <div class="sb">
+      <div class="otype-grid anim">
+        <div class="otype" onclick="this.classList.toggle('open')">
+          <span class="ot-tap">tap</span>
+          <div class="ot-en">Trial Order</div><div class="ot-de">Probeauftrag</div>
+          <div class="ot-desc">Testing a new supplier before committing to larger volumes.</div>
+          <div class="ot-ex">"We would like to place a trial order for 60 chairs to assess quality before committing to a regular supply agreement."</div>
+        </div>
+        <div class="otype" onclick="this.classList.toggle('open')">
+          <span class="ot-tap">tap</span>
+          <div class="ot-en">Repeat Order</div><div class="ot-de">Nachbestellung</div>
+          <div class="ot-desc">Reordering the same goods from a known supplier on the same terms.</div>
+          <div class="ot-ex">"As the goods met our requirements, we would like to place a repeat order on the same terms as before."</div>
+        </div>
+        <div class="otype" onclick="this.classList.toggle('open')">
+          <span class="ot-tap">tap</span>
+          <div class="ot-en">Standing Order</div><div class="ot-de">Dauerauftrag</div>
+          <div class="ot-desc">Regular automatic delivery at fixed intervals.</div>
+          <div class="ot-ex">"Please arrange monthly delivery of 20 units on the first working day of each month."</div>
+        </div>
+        <div class="otype" onclick="this.classList.toggle('open')">
+          <span class="ot-tap">tap</span>
+          <div class="ot-en">Call-off Order</div><div class="ot-de">Abrufauftrag</div>
+          <div class="ot-desc">Total quantity agreed; released in batches as needed.</div>
+          <div class="ot-ex">"We confirm an annual call-off of 500 units. Please dispatch the first batch of 100 units by 15 December."</div>
+        </div>
+      </div>
+      <div class="ibox te anim"><div class="ibox-ico">💼</div><div><div class="ibox-lbl">Today's scenario</div><p>Office Design Ltd. is placing a <strong>trial order</strong> — their very first purchase from Prestige Seating Solutions Ltd.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ══ 5: ORDER STRUCTURE ════════════════════════════════════ -->
+  <div class="slide" data-i="4">
+    <div class="mobile-lbl">Slide 5 · Order Structure</div>
+    <div class="sh"><div class="sh-bar"></div><div class="sh-text"><div class="sh-lbl">Structure</div><h2 class="sh-title">Structure of an Order Email</h2></div></div>
+    <div class="sb">
+      <div class="stbl-wrap anim">
+        <table class="stbl">
+          <tr><th style="width:110px">Part</th><th>Content / Example</th></tr>
+          <tr><td class="pt">Subject line</td><td class="eg">Order for Ergonomic Chairs — Purchase Order No. OD-2024-047</td></tr>
+          <tr><td class="pt">Ref. to offer</td><td class="eg">Thank you for your offer of [date] regarding …</td></tr>
+          <tr><td class="pt">Acceptance</td><td class="eg">We are pleased to accept the terms stated in your quotation and would like to place the following order.</td></tr>
+          <tr><td class="pt">Article</td><td class="eg">60 × Ergo Pro 3 (ref. EP3-BLK) @ £189.00 | Less 10% | Total: £10,206.00</td></tr>
+          <tr><td class="pt">Delivery</td><td class="eg">Please deliver DDP Dusseldorf by 15 December at the latest.</td></tr>
+          <tr><td class="pt">Packing</td><td class="eg">We would ask you to pack each chair in an individual protective carton.</td></tr>
+          <tr><td class="pt">Payment</td><td class="eg">Payment will be made by EFT within 30 days of receipt of invoice.</td></tr>
+          <tr><td class="pt">Confirmation</td><td class="eg">Please confirm receipt and advise the expected dispatch date.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 6: KEY PHRASES — ORDER ════════════════════════════════ -->
+  <div class="slide" data-i="5">
+    <div class="mobile-lbl">Slide 6 · Key Phrases: Orders</div>
+    <div class="sh"><div class="sh-bar"></div><div class="sh-text"><div class="sh-lbl">Language</div><h2 class="sh-title">Key Phrases — Orders</h2></div></div>
+    <div class="sb">
+      <div class="ptbl-wrap anim">
+        <table class="ptbl">
+          <thead><tr><th>Function</th><th>Phrase</th></tr></thead>
+          <tbody>
+            <tr><td class="fn">Place order</td><td class="eg">'We would like to place an order for the following items.'</td></tr>
+            <tr><td class="fn">Note discount</td><td class="eg">'We note the 10% quantity discount as stated in your offer.'</td></tr>
+            <tr><td class="fn">Delivery</td><td class="eg">'Please deliver DDP Dusseldorf by [date] at the latest.'</td></tr>
+            <tr><td class="fn">Packing</td><td class="eg">'We would ask you to ensure the goods are packed in sturdy cartons.'</td></tr>
+            <tr><td class="fn">Payment</td><td class="eg">'Payment will be made by EFT within 30 days of receipt of invoice.'</td></tr>
+            <tr><td class="fn">Confirmation</td><td class="eg">'Please confirm receipt and advise the expected dispatch date.'</td></tr>
+            <tr><td class="fn">Future orders</td><td class="eg">'We intend to place further orders if this one is executed to our full satisfaction.'</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 7: QUIZ ═══════════════════════════════════════════════ -->
+  <div class="slide" data-i="6">
+    <div class="mobile-lbl">Slide 7 · Quick Check (interactive)</div>
+    <div class="sh"><div class="sh-bar am"></div><div class="sh-text"><div class="sh-lbl am">Interactive — tap to answer</div><h2 class="sh-title">Quick Check</h2></div></div>
+    <div class="sb">
+      <div class="quiz-wrap">
+        <div class="quiz-q anim">
+          <div class="q-t">1 · "Please arrange automatic monthly delivery of 20 chairs on the first working day of each month."</div>
+          <div class="q-opts">
+            <button class="qbtn" onclick="qa(this,'wrong','fb1','Not quite — trial orders test a new supplier, they are not recurring.')">Trial Order</button>
+            <button class="qbtn" onclick="qa(this,'wrong','fb1','A call-off releases batches from a total — not at fixed calendar intervals.')">Call-off Order</button>
+            <button class="qbtn" onclick="qa(this,'correct','fb1','✓ Correct! Fixed interval, recurring → Standing Order (Dauerauftrag).')">Standing Order</button>
+            <button class="qbtn" onclick="qa(this,'wrong','fb1','Repeat orders reorder the same goods, but they are not automatic.')">Repeat Order</button>
+          </div>
+          <div class="q-fb" id="fb1"></div>
+        </div>
+        <div class="quiz-q anim">
+          <div class="q-t">2 · Which phrase uses the correct formal register for placing an order?</div>
+          <div class="q-opts">
+            <button class="qbtn" onclick="qa(this,'wrong','fb2','Too informal and vague — no article details, no reference to the offer.')">We want to buy some chairs.</button>
+            <button class="qbtn" onclick="qa(this,'correct','fb2','✓ Correct! Formal register + reference to offer = professional B2 language.')">We are pleased to accept the terms in your quotation and would like to place the following order.</button>
+            <button class="qbtn" onclick="qa(this,'wrong','fb2','Imperative + "ASAP" is impolite — never acceptable in formal B2 correspondence.')">Send us the chairs ASAP.</button>
+          </div>
+          <div class="q-fb" id="fb2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 8: ACKNOWLEDGEMENT ════════════════════════════════════ -->
+  <div class="slide" data-i="7">
+    <div class="mobile-lbl">Slide 8 · Acknowledgement (tap to expand)</div>
+    <div class="sh"><div class="sh-bar"></div><div class="sh-text"><div class="sh-lbl">Tap each section to expand</div><h2 class="sh-title">Structure of an Acknowledgement</h2></div></div>
+    <div class="sb">
+      <div class="revlist anim">
+        <div class="rev" onclick="this.classList.toggle('open')">
+          <div class="rev-hd"><div class="rev-bd">1</div><div class="rev-t">Acknowledge receipt of order</div><span class="rev-ch">›</span></div>
+          <div class="rev-body"><div class="rev-in"><div class="rev-ph">'Thank you for your order no. OD-2024-047 of [date].'</div></div></div>
+        </div>
+        <div class="rev" onclick="this.classList.toggle('open')">
+          <div class="rev-hd"><div class="rev-bd">2</div><div class="rev-t">Confirm all article details + discount</div><span class="rev-ch">›</span></div>
+          <div class="rev-body"><div class="rev-in"><div class="rev-ph">'We confirm: 60 × EP3-BLK @ £189.00, less 10% = £10,206.00.'</div></div></div>
+        </div>
+        <div class="rev" onclick="this.classList.toggle('open')">
+          <div class="rev-hd"><div class="rev-bd">3</div><div class="rev-t">Delivery terms & expected dispatch</div><span class="rev-ch">›</span></div>
+          <div class="rev-body"><div class="rev-in"><p>Use <strong>tentative</strong> language unless 100% certain.</p><div class="rev-ph">'We expect to dispatch DDP Dusseldorf within 10 working days.'</div></div></div>
+        </div>
+        <div class="rev" onclick="this.classList.toggle('open')">
+          <div class="rev-hd"><div class="rev-bd">4</div><div class="rev-t">Payment terms + enclosures</div><span class="rev-ch">›</span></div>
+          <div class="rev-body"><div class="rev-in"><div class="rev-ph">'Payment is due within 30 days. We enclose our pro-forma invoice.'</div></div></div>
+        </div>
+        <div class="rev ru-b" onclick="this.classList.toggle('open')">
+          <div class="rev-hd"><div class="rev-bd">!</div><div class="rev-t">If unable to fulfil the order</div><span class="rev-ch">›</span></div>
+          <div class="rev-body"><div class="rev-in">
+            <ul><li>Inform buyer <strong>immediately</strong></li><li>Explain the reason honestly</li><li>Offer substitute, partial delivery, or revised date</li></ul>
+            <div class="rev-ph">'We regret to inform you that [item] is temporarily out of stock. We would like to suggest [alternative] …'</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 9: REGISTER ═══════════════════════════════════════════ -->
+  <div class="slide" data-i="8">
+    <div class="mobile-lbl">Slide 9 · Register</div>
+    <div class="sh"><div class="sh-bar am"></div><div class="sh-text"><div class="sh-lbl am">B2 Style</div><h2 class="sh-title">Tentative vs. Definite Language</h2></div></div>
+    <div class="sb">
+      <p class="anim" style="font-size:clamp(13px,1.8vw,16px);color:var(--ink2);line-height:1.6;">Use <strong>tentative</strong> language when not 100% certain — overpromising damages trust.</p>
+      <div class="cmp-row anim">
+        <div class="cmp cmp-bad"><p>"The goods will be dispatched on 10 December."<br>→ Only if 100% certain.</p></div>
+        <div class="cmp cmp-good"><p>"We expect to dispatch within 10 working days."<br>"We anticipate dispatch by 15 December."</p></div>
+      </div>
+      <div class="cmp-row anim">
+        <div class="cmp cmp-bad"><p>"If you can't deliver, tell us."</p></div>
+        <div class="cmp cmp-good"><p>"Should you be unable to meet the delivery date, please inform us immediately."</p></div>
+      </div>
+      <div class="ibox am anim"><div class="ibox-ico">💡</div><div><div class="ibox-lbl">Grammar Pattern</div><p><strong>Should + subject + infinitive</strong> = formal alternative to <em>if</em>. Common in B2 business writing.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ══ 10: KEY PHRASES — ACK ═════════════════════════════════ -->
+  <div class="slide" data-i="9">
+    <div class="mobile-lbl">Slide 10 · Key Phrases: Acknowledgements</div>
+    <div class="sh"><div class="sh-bar"></div><div class="sh-text"><div class="sh-lbl">Language</div><h2 class="sh-title">Key Phrases — Acknowledgements</h2></div></div>
+    <div class="sb">
+      <div class="ptbl-wrap anim">
+        <table class="ptbl">
+          <thead><tr><th>Function</th><th>Phrase</th></tr></thead>
+          <tbody>
+            <tr><td class="fn">Acknowledge</td><td class="eg">'Thank you for your order no. [XXX] of [date].'</td></tr>
+            <tr><td class="fn">Confirm</td><td class="eg">'We are pleased to confirm your order as follows:'</td></tr>
+            <tr><td class="fn">Dispatch</td><td class="eg">'The consignment will be dispatched within 10 working days.'</td></tr>
+            <tr><td class="fn">Enclosure</td><td class="eg">'We enclose our pro-forma invoice for your reference.'</td></tr>
+            <tr><td class="fn">Out of stock</td><td class="eg">'We regret to inform you that [item] is temporarily out of stock.'</td></tr>
+            <tr><td class="fn">Closing</td><td class="eg">'We trust the goods will arrive in perfect condition and look forward to further orders.'</td></tr>
+            <tr><td class="fn">Further contact</td><td class="eg">'Should you have any queries, please do not hesitate to contact us.'</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 11: SCENARIO ══════════════════════════════════════════ -->
+  <div class="slide" data-i="10">
+    <div class="mobile-lbl">Slide 11 · Today's Tasks</div>
+    <div class="sh"><div class="sh-bar am"></div><div class="sh-text"><div class="sh-lbl am">Your Tasks Today</div><h2 class="sh-title">The Scenario</h2></div></div>
+    <div class="sb">
+      <div class="sc-grid anim">
+        <div class="sc">
+          <span class="sc-role">Task 4 — Buyer</span>
+          <h3>Office Design Ltd.</h3>
+          <div class="co">Dusseldorf, Germany</div>
+          <ul>
+            <li>Place a <strong>trial order</strong> for 60 × Ergo Pro 3 (ref. EP3-BLK)</li>
+            <li>£189.00 per unit | 10% quantity discount</li>
+            <li>DDP Dusseldorf by 15 December</li>
+            <li>Individual protective cartons</li>
+            <li>Payment: 30 days net by EFT</li>
+            <li>Request confirmation + dispatch date</li>
+          </ul>
+        </div>
+        <div class="sc sell">
+          <span class="sc-role">Task 6 — Seller</span>
+          <h3>Prestige Seating Solutions Ltd.</h3>
+          <div class="co">Birmingham, UK</div>
+          <ul>
+            <li>Acknowledge the order from Office Design Ltd.</li>
+            <li>Confirm all details + 10% discount</li>
+            <li>Dispatch within 10 working days DDP Dusseldorf</li>
+            <li>Individual carton packing confirmed</li>
+            <li>Payment: 30 days net confirmed</li>
+            <li>Enclose pro-forma invoice</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ibox te anim"><div class="ibox-ico">🔗</div><div><div class="ibox-lbl">Connection to last unit</div><p>The offer you wrote in the Enquiries & Offers worksheet is now the basis for today's order — same scenario, same companies.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ══ 12: OUTRO ══════════════════════════════════════════════ -->
+  <div class="slide s-outro" data-i="11">
+    <div class="mobile-lbl" style="background:rgba(0,0,0,0.2);color:rgba(255,255,255,0.5);">Slide 12 · Start Worksheet</div>
+    <p class="t-ey" style="color:rgba(255,255,255,0.55);">SOL — Self-Organised Learning</p>
+    <h1 class="t-h" style="font-size:clamp(32px,7vw,70px);">Open your<br><em>worksheet.</em></h1>
+    <p class="t-sub">Work through Phases 1–7. Use the phrase tables and scaffolding — but try your own words where possible.</p>
+    <div class="pills" style="margin-top:20px;">
+      <span class="pill" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65);">Phase 1 · Advance Organizer</span>
+      <span class="pill" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65);">Phase 2–3 · Input & Check</span>
+      <span class="pill" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65);">Phase 4 · Order</span>
+      <span class="pill" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65);">Phase 5–6 · Acknowledgement</span>
+      <span class="pill" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65);">Phase 7 · Peer Feedback</span>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV (desktop only via CSS) -->
+<div id="nav">
+  <button class="nbtn" onclick="go(-1)" aria-label="Previous">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nbtn" onclick="go(1)" aria-label="Next">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const N = slides.length;
+let cur = 0;
+const isDesktop = () => window.innerWidth >= 768;
+
+// build dots
+const dotWrap = document.getElementById('dots');
+for (let i = 0; i < N; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.onclick = () => goTo(i);
+  dotWrap.appendChild(d);
+}
+
+function goTo(n) {
+  if (n < 0 || n >= N) return;
+  if (isDesktop()) {
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exiting');
+    const prev = cur;
+    setTimeout(() => slides[prev].classList.remove('exiting'), 350);
+    cur = n;
+    slides[cur].classList.add('active');
+  } else {
+    // on mobile, scroll to slide
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.getElementById('prog-fill').style.width = ((cur + 1) / N * 100) + '%';
+  document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + N;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
+}
+
+function go(d) { goTo(cur + d); }
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if (!isDesktop()) return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+// touch swipe (desktop only — mobile scrolls natively)
+let tx = 0;
+document.getElementById('deck').addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+document.getElementById('deck').addEventListener('touchend', e => {
+  if (!isDesktop()) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+// intersection observer on mobile to track visible slide
+if (!isDesktop() || true) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !isDesktop()) {
+        const i = Array.from(slides).indexOf(entry.target);
+        if (i !== -1) {
+          cur = i;
+          document.getElementById('prog-fill').style.width = ((cur + 1) / N * 100) + '%';
+          document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + N;
+          document.querySelectorAll('.dot').forEach((d, j) => d.classList.toggle('on', j === cur));
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => obs.observe(s));
+}
+
+// quiz handler
+function qa(btn, result, fbId, msg) {
+  const q = btn.closest('.quiz-q');
+  q.querySelectorAll('.qbtn').forEach(b => { b.disabled = true; if (b === btn) b.classList.add(result); });
+  const fb = document.getElementById(fbId);
+  fb.textContent = msg; fb.className = 'q-fb show ' + (result === 'correct' ? 'ok' : 'bad');
+}
+</script>
+</body>
+</html>

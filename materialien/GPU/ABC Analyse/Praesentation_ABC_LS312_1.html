@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU 2 · ABC-Analyse · HS1Y</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:     #1a1a18; --ink2: #3d3d38; --ink3: #6b6b62; --ink4: #9a9a90;
+  --paper:   #f5f2eb; --p2:   #ece8de; --p3: #e0dbd0; --rule: #c8c4b8;
+  --forest:  #1f4a35; --fmid: #2d6b4d; --fl: #d0e8da;
+  --rust:    #b84a1e; --rl:   #f4ddd5;
+  --gold:    #7a5c10; --gl:   #f0e4c0;
+  --teal:    #0e5a6a; --tl:   #cceef5;
+}
+html,body { width:100vw; height:100vh; overflow:hidden; background:var(--paper);
+  color:var(--ink); font-family:'Source Serif 4',Georgia,serif; font-size:16px; }
+
+/* SLIDES */
+.slide { position:fixed; inset:0; display:none; flex-direction:column; background:var(--paper); }
+.slide.active { display:flex; animation:arrive .35s ease both; }
+@keyframes arrive { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+@keyframes pop { 0%{transform:scale(.85);opacity:0} 65%{transform:scale(1.03)} 100%{transform:scale(1);opacity:1} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%,75%{transform:translateX(-5px)} 50%{transform:translateX(5px)} }
+@keyframes barGrow { from{width:0} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* NAV */
+.nav { position:fixed; bottom:0; left:0; right:0; height:52px; background:var(--ink);
+  display:flex; align-items:center; justify-content:space-between; padding:0 28px; z-index:200; }
+.nbtn { background:none; border:1px solid #555; color:#d0cfc8; padding:6px 20px;
+  border-radius:4px; font-family:'Source Serif 4',serif; font-size:13px; cursor:pointer; transition:all .18s; }
+.nbtn:hover { border-color:var(--paper); color:var(--paper); }
+.nbtn.fwd { background:var(--forest); border-color:var(--forest); color:#fff; }
+.nbtn.fwd:hover { background:var(--fmid); }
+.dots { display:flex; gap:7px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:#555; cursor:pointer; transition:all .25s; }
+.dot.active { background:#d0cfc8; width:20px; border-radius:3px; }
+.dot.done   { background:var(--fmid); }
+.snum { font-size:12px; color:#666; font-family:'Source Serif 4',serif; }
+
+/* SCROLL */
+.body { flex:1; overflow-y:auto; overflow-x:hidden; padding-bottom:52px; scroll-behavior:smooth; }
+.body::-webkit-scrollbar{width:5px} .body::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+
+/* TOP RULE */
+.top-rule { height:5px; background:var(--forest); flex-shrink:0; }
+#s1 .top-rule { background:var(--fmid); }
+
+/* PAGE HEADER */
+.ph { padding:14px 40px 10px; display:flex; align-items:baseline; justify-content:space-between;
+  border-bottom:1px solid var(--rule); }
+.ph .kicker { font-size:12px; color:var(--ink3); font-style:italic; }
+.ph .sid    { font-size:12px; color:var(--ink3); font-style:italic; }
+
+/* CONTENT */
+.ct { padding:24px 40px 32px; }
+
+/* TYPE */
+h1,h2 { font-family:'Playfair Display',Georgia,serif; line-height:1.15; color:var(--ink); }
+h1 { font-size:clamp(30px,5vw,58px); }
+h2 { font-size:clamp(20px,3vw,32px); margin-bottom:12px; }
+h3 { font-family:'Source Serif 4',serif; font-size:16px; font-weight:600; margin-bottom:8px; }
+p  { font-size:15px; line-height:1.65; color:var(--ink2); margin-bottom:10px; }
+.lead { font-size:18px; line-height:1.6; font-weight:300; color:var(--ink2); }
+em { font-style:italic; }
+strong { font-weight:600; color:var(--ink); }
+
+/* CALLOUTS */
+.callout { border:1.5px solid var(--rule); border-radius:4px; padding:14px 18px; background:var(--p2); margin-bottom:14px; }
+.callout.forest { border-color:var(--forest); background:var(--fl); }
+.callout.rust   { border-color:var(--rust);   background:var(--rl); }
+.callout.gold   { border-color:var(--gold);   background:var(--gl); }
+.callout.teal   { border-color:var(--teal);   background:var(--tl); }
+.callout.dark   { border-color:#444; background:#1e1e1c; color:#d0cfc8; }
+.cl { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; color:var(--ink3); }
+.callout.forest .cl { color:var(--forest); }
+.callout.rust   .cl { color:var(--rust); }
+.callout.gold   .cl { color:var(--gold); }
+.callout.teal   .cl { color:var(--teal); }
+.callout.dark   .cl { color:#8ab89a; }
+
+/* GRID */
+.two  { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.three{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+/* RULE */
+.rule { height:1px; background:var(--rule); margin:16px 0; }
+
+/* ABC CATEGORY CARDS */
+.abc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:20px 0; }
+.abc-card { border-radius:4px; padding:20px; position:relative; overflow:hidden; }
+.abc-card::after { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+.abc-a { background:#fef9c3; border:1px solid #ca8a04; }
+.abc-a::after { background:#ca8a04; }
+.abc-b { background:#dbeafe; border:1px solid #2563eb; }
+.abc-b::after { background:#2563eb; }
+.abc-c { background:#f3f4f6; border:1px solid #9ca3af; }
+.abc-c::after { background:#9ca3af; }
+.abc-letter { font-family:'Playfair Display',serif; font-size:48px; font-weight:800; line-height:1; margin-bottom:8px; }
+.abc-a .abc-letter { color:#92400e; }
+.abc-b .abc-letter { color:#1e3a8a; }
+.abc-c .abc-letter { color:#374151; }
+.abc-stat { font-size:13px; font-style:italic; color:var(--ink3); margin-top:8px; border-top:1px solid rgba(0,0,0,.1); padding-top:8px; }
+
+/* TABLE */
+table.dt { width:100%; border-collapse:collapse; font-size:14px; }
+.dt th { background:var(--ink); color:var(--paper); padding:9px 11px; font-size:12px; font-weight:600; font-style:italic; text-align:left; }
+.dt td { padding:8px 11px; border-bottom:1px solid var(--rule); color:var(--ink2); }
+.dt tr:nth-child(even) td { background:var(--p2); }
+.dt tr.total td { background:var(--fl); font-weight:600; color:var(--ink); border-top:2px solid var(--forest); }
+.dt tr.a-row td { background:#fef9c3; }
+.dt tr.b-row td { background:#dbeafe; }
+.dt tr.c-row td { background:#f3f4f6; }
+.badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+.badge-a { background:#fef9c3; color:#92400e; border:1px solid #ca8a04; }
+.badge-b { background:#dbeafe; color:#1e3a8a; border:1px solid #2563eb; }
+.badge-c { background:#f3f4f6; color:#374151; border:1px solid #9ca3af; }
+
+/* STEPS */
+.steps { display:flex; flex-direction:column; gap:10px; }
+.step { display:flex; gap:14px; align-items:flex-start; padding:12px 16px;
+  border:1px solid var(--rule); border-radius:3px; background:var(--paper); }
+.step-num { width:28px; height:28px; border-radius:50%; background:var(--forest); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
+  font-family:'Playfair Display',serif; flex-shrink:0; margin-top:1px; }
+.step-body { font-size:14px; color:var(--ink2); line-height:1.55; }
+.step-body strong { color:var(--ink); }
+
+/* QUIZ */
+.qwrap { max-width:680px; }
+.qpbar { height:3px; background:var(--p3); border-radius:2px; margin-bottom:22px; }
+.qpfill { height:100%; background:var(--forest); border-radius:2px; transition:transform .4s ease; transform-origin:left; }
+.qlabel { font-size:12px; color:var(--ink3); font-style:italic; margin-bottom:8px; }
+.qtext { font-family:'Playfair Display',serif; font-size:20px; line-height:1.4; color:var(--ink); margin-bottom:18px; }
+.qhint { font-size:13px; color:var(--ink3); font-style:italic; padding:8px 12px; background:var(--gl); border-left:3px solid var(--gold); margin-bottom:14px; }
+.opts { display:flex; flex-direction:column; gap:8px; }
+.opt { border:1.5px solid var(--rule); border-radius:3px; padding:12px 16px; font-size:15px; color:var(--ink); background:var(--paper); cursor:pointer; transition:all .18s; text-align:left; display:flex; align-items:center; gap:12px; font-family:'Source Serif 4',serif; }
+.opt:hover:not(:disabled) { border-color:var(--forest); background:var(--fl); }
+.opt .let { width:26px; height:26px; border-radius:50%; background:var(--p2); border:1px solid var(--rule); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; transition:all .18s; }
+.opt.ok  { border-color:#1a5e30; background:#d4edda; color:#1a3d22; animation:pop .35s ease; }
+.opt.ok .let { background:#1a5e30; color:#fff; border-color:#1a5e30; }
+.opt.no  { border-color:#8a1f1f; background:#f5d5d5; color:#5a1010; animation:shake .35s ease; }
+.opt.no .let { background:#8a1f1f; color:#fff; border-color:#8a1f1f; }
+.qfb { display:none; margin-top:12px; padding:12px 16px; border-radius:3px; font-size:14px; line-height:1.55; }
+.qfb.show { display:block; animation:arrive .3s ease; }
+.qfb.ok  { background:#d4edda; border:1px solid #1a5e30; color:#1a3d22; }
+.qfb.no  { background:#f5d5d5; border:1px solid #8a1f1f; color:#5a1010; }
+.qnext { display:none; margin-top:14px; background:var(--forest); color:#fff; border:none; padding:10px 28px; border-radius:3px; cursor:pointer; font-family:'Source Serif 4',serif; font-size:14px; font-weight:600; transition:background .18s; }
+.qnext:hover { background:var(--fmid); }
+.qnext.show { display:inline-block; animation:pop .3s ease; }
+.scorebox { text-align:center; padding:48px 24px; animation:pop .4s ease; }
+.scorenum { font-family:'Playfair Display',serif; font-size:80px; font-weight:800; color:var(--forest); line-height:1; margin-bottom:6px; }
+.scoresub { font-size:18px; color:var(--ink3); margin-bottom:24px; }
+
+/* GOAL LIST */
+.goal { display:flex; gap:12px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--rule); }
+.goal:last-child { border-bottom:none; }
+.gdot { width:8px; height:8px; border-radius:50%; background:var(--forest); margin-top:6px; flex-shrink:0; }
+.gtext { font-size:14px; color:var(--ink2); line-height:1.5; }
+
+/* CHECKLIST */
+.ci { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--rule); cursor:pointer; transition:all .18s; }
+.ci:last-child { border-bottom:none; }
+.cbox { width:20px; height:20px; min-width:20px; border:2px solid var(--rule); border-radius:3px; margin-top:2px; display:flex; align-items:center; justify-content:center; font-size:12px; transition:all .18s; color:transparent; }
+.ci.done .cbox { background:var(--forest); border-color:var(--forest); color:#fff; }
+.ci.done .ctext { color:var(--ink4); text-decoration:line-through; }
+.ctext { font-size:14px; color:var(--ink2); line-height:1.5; }
+
+textarea.ta { width:100%; border:1.5px solid var(--rule); border-radius:3px; background:var(--paper); color:var(--ink); font-family:'Source Serif 4',serif; font-size:14px; padding:12px 14px; resize:none; line-height:1.6; transition:border-color .18s; }
+textarea.ta:focus { outline:none; border-color:var(--forest); }
+.wc { font-size:12px; color:var(--ink4); text-align:right; margin-top:4px; }
+
+/* COVER */
+#s1 { background:var(--ink); }
+#s1 .body { background:var(--ink); }
+.ocard { border:1px solid #3a3a35; border-radius:3px; padding:20px; text-align:center; transition:border-color .2s; }
+.ocard:hover { border-color:var(--fmid); }
+.onum { font-family:'Playfair Display',serif; font-size:38px; color:var(--fmid); margin-bottom:5px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ S1 COVER ══════════════ -->
+<div class="slide active" id="s1">
+  <div class="top-rule"></div>
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;padding:40px 60px 80px;">
+    <p style="font-size:13px;color:#6a6a60;font-style:italic;margin-bottom:32px;border-bottom:1px solid #2a2a28;padding-bottom:16px">
+      GPU 2 &nbsp;·&nbsp; LF 4 / AS 4.2 / LS 3.1.2 &nbsp;·&nbsp; Klasse HS1Y &nbsp;·&nbsp; Aufbau auf LS 3.1.1
+    </p>
+    <p style="font-size:13px;color:var(--fmid);font-style:italic;margin-bottom:16px">Böckler-Office GmbH, Oberhausen</p>
+    <h1 style="color:var(--paper);max-width:780px;margin-bottom:18px">
+      Das Sortiment systematisch<br>
+      <em style="color:#8ab89a">kontrollieren:</em><br>
+      Die ABC-Analyse
+    </h1>
+    <div style="height:2px;width:80px;background:var(--fmid);margin:0 0 26px;"></div>
+    <p style="font-size:17px;color:#9a9a8a;max-width:560px;line-height:1.6;font-weight:300;margin-bottom:40px">
+      Wie trennen wir das Wesentliche vom Unwesentlichen?
+      Heute lernen wir das wichtigste Instrument der Sortimentskontrolle.
+    </p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px">
+        <div style="font-size:11px;color:#555;margin-bottom:3px">Aufbau auf</div>
+        <div style="font-size:14px;color:var(--paper);font-weight:600">LS 3.1.1 — Umsatzentwicklung</div>
+      </div>
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px">
+        <div style="font-size:11px;color:#555;margin-bottom:3px">Methode</div>
+        <div style="font-size:14px;color:var(--paper);font-weight:600">ABC-Analyse</div>
+      </div>
+      <div style="border:1px solid #3a3a35;border-radius:3px;padding:10px 18px">
+        <div style="font-size:11px;color:#555;margin-bottom:3px">Unterrichtszeit</div>
+        <div style="font-size:14px;color:var(--paper);font-weight:600">90 Minuten</div>
+      </div>
+    </div>
+    <p style="position:absolute;bottom:68px;right:40px;font-size:11px;color:#3a3a35;font-style:italic">Hans-Böckler-Berufskolleg Oberhausen</p>
+  </div>
+</div>
+
+<!-- ══════════════ S2 HOOK ══════════════ -->
+<div class="slide" id="s2">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Einstieg — Problemstellung</span><span class="sid">2 / 8</span></div>
+    <div class="ct">
+      <h2>Frau Weißenberg hat ein neues Problem</h2>
+      <p class="lead" style="margin-bottom:22px;max-width:700px">
+        In der letzten Stunde haben Sie die Umsatzentwicklung analysiert.
+        Frau Weißenberg ist mit Ihren Ergebnissen zufrieden — aber sie hat eine neue Frage.
+      </p>
+      <div class="two">
+        <div>
+          <div style="display:flex;gap:12px;margin-bottom:14px">
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;font-family:'Playfair Display',serif;flex-shrink:0">W</div>
+            <div>
+              <p style="font-size:13px;color:var(--ink3);margin-bottom:2px;font-style:italic">Frau Weißenberg · Ausbilderin</p>
+              <p style="font-size:14px;color:var(--ink2)">sagt nach Ihrer Präsentation:</p>
+            </div>
+          </div>
+          <div class="callout forest">
+            <p style="font-style:italic;font-size:15px;color:var(--ink)">"Ihre Analyse war gut — aber ich brauche mehr Detail. Wir haben in der Warengruppe <strong>IT-Zubehör & Peripherie</strong> 23 verschiedene Artikel. Welche davon machen unseren Umsatz? Und welche nehmen nur Regalplatz weg?"</p>
+          </div>
+          <div class="callout gold" style="margin-top:12px">
+            <div class="cl">Einstiegsfrage — 2 min. Partnerarbeit</div>
+            <p style="font-size:15px;font-style:italic;color:var(--ink)">
+              Sie haben 100 Artikel im Lager. Wie würden Sie herausfinden, welche 10 davon den meisten Umsatz bringen — ohne alle 100 einzeln zu analysieren?
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="callout" style="margin-bottom:14px">
+            <div class="cl">Rückblick letzte Stunde</div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Umsatzveränderungen berechnet (absolut + %)</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Trends in Warengruppen identifiziert</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Sortimentsbegriffe erläutert (Breite, Tiefe)</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Erste Handlungsempfehlung formuliert</div></div>
+          </div>
+          <div class="callout forest">
+            <div class="cl">Lernziele heute</div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Das Prinzip der ABC-Analyse verstehen</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Artikel nach Umsatzanteil rangieren und klassifizieren</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Kumulierte Prozentwerte berechnen</div></div>
+            <div class="goal"><div class="gdot"></div><div class="gtext">Sortimentsentscheidungen datenbasiert begründen</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S3 GRUNDPRINZIP ══════════════ -->
+<div class="slide" id="s3">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Theorie — Grundprinzip</span><span class="sid">3 / 8</span></div>
+    <div class="ct">
+      <h2>Was ist die ABC-Analyse?</h2>
+      <p class="lead" style="margin-bottom:20px;max-width:740px">
+        Die ABC-Analyse teilt Artikel nach ihrer <strong>Wertbedeutung</strong> in drei Klassen ein.
+        Sie basiert auf der Erkenntnis, dass wenige Artikel den Großteil des Umsatzes ausmachen.
+      </p>
+
+      <div class="abc-grid">
+        <div class="abc-card abc-a">
+          <div class="abc-letter">A</div>
+          <h3 style="color:#92400e;margin-bottom:6px">A-Güter</h3>
+          <p style="font-size:14px;color:#78350f;margin-bottom:0">Wenige Artikel, <strong>hoher Umsatzanteil</strong>.<br>Intensive Betreuung notwendig.</p>
+          <div class="abc-stat">ca. 10–20 % der Artikel<br>≈ 70 % des Umsatzes</div>
+        </div>
+        <div class="abc-card abc-b">
+          <div class="abc-letter">B</div>
+          <h3 style="color:#1e3a8a;margin-bottom:6px">B-Güter</h3>
+          <p style="font-size:14px;color:#1e3a8a;margin-bottom:0">Mittlere Anzahl, <strong>mittlerer Umsatzanteil</strong>.<br>Normales Management.</p>
+          <div class="abc-stat">ca. 20–30 % der Artikel<br>≈ 25 % des Umsatzes</div>
+        </div>
+        <div class="abc-card abc-c">
+          <div class="abc-letter">C</div>
+          <h3 style="color:#374151;margin-bottom:6px">C-Güter</h3>
+          <p style="font-size:14px;color:#374151;margin-bottom:0">Viele Artikel, <strong>geringer Umsatzanteil</strong>.<br>Kandidaten für Bereinigung.</p>
+          <div class="abc-stat">ca. 50–70 % der Artikel<br>≈ 5 % des Umsatzes</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px">
+        <div class="callout gold">
+          <div class="cl">Das Pareto-Prinzip (80/20-Regel)</div>
+          <p style="font-size:15px;font-style:italic;color:var(--ink);margin-bottom:0">
+            „<strong>20 % der Ursachen</strong> erklären <strong>80 % der Wirkungen</strong>."
+            Auf Sortimente übertragen: Ein kleiner Teil der Artikel erwirtschaftet den Großteil des Umsatzes.
+            Die ABC-Analyse macht diesen Zusammenhang sichtbar und quantifiziert ihn.
+          </p>
+        </div>
+        <div class="callout teal" style="margin-top:12px">
+          <div class="cl">Anwendungsgebiete der ABC-Analyse</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px">
+            <div style="font-size:13px;color:var(--teal)"><strong>Sortimentskontrolle</strong><br><span style="color:var(--ink3)">Welche Artikel lohnen sich?</span></div>
+            <div style="font-size:13px;color:var(--teal)"><strong>Lagerverwaltung</strong><br><span style="color:var(--ink3)">Was braucht mehr Bestand?</span></div>
+            <div style="font-size:13px;color:var(--teal)"><strong>Lieferantenmanagement</strong><br><span style="color:var(--ink3)">Wer ist systemkritisch?</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S4 DURCHFÜHRUNG ══════════════ -->
+<div class="slide" id="s4">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Methodik — Schrittweise Durchführung</span><span class="sid">4 / 8</span></div>
+    <div class="ct">
+      <h2>So führen Sie eine ABC-Analyse durch</h2>
+      <p style="margin-bottom:20px;max-width:680px">5 Schritte — immer in dieser Reihenfolge. Die Schritte 1–3 erledigen Sie in der Tabelle, Schritte 4–5 erfordern Bewertung.</p>
+
+      <div class="steps" style="margin-bottom:22px">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Datenbasis erfassen:</strong> Alle Artikel mit Jahresumsatz (€) auflisten.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Rangordnung bilden:</strong> Artikel nach Umsatz absteigend sortieren — Rang 1 = höchster Umsatz.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Umsatzanteile berechnen:</strong> Anteil jedes Artikels am Gesamtumsatz in Prozent. <span style="font-style:italic;color:var(--ink3)">Anteil (%) = Umsatz ÷ Gesamtumsatz × 100</span></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Kumulierte Anteile berechnen:</strong> Jeden Prozentwert zum vorherigen addieren. Wenn ≥ 70 % → A-Grenze erreicht; ≥ 95 % → B-Grenze erreicht.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body"><strong>Klassen zuweisen:</strong> A-Güter (kum. ≤ 70 %), B-Güter (70–95 %), C-Güter (&gt; 95 %) — und Konsequenzen ableiten.</div>
+        </div>
+      </div>
+
+      <div class="callout rust">
+        <div class="cl">Wichtiger Hinweis zu den Grenzwerten</div>
+        <p style="font-size:14px;margin:0;color:var(--ink)">Die Grenzen 70 % / 95 % sind <strong>Richtwerte</strong>, keine starren Regeln. In der Praxis werden sie unternehmensspezifisch angepasst. Entscheidend ist die Idee dahinter: <em>Ressourcen auf die wichtigsten Artikel konzentrieren.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S5 BEISPIEL ══════════════ -->
+<div class="slide" id="s5">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Anwendung — Durchgerechnetes Beispiel</span><span class="sid">5 / 8</span></div>
+    <div class="ct">
+      <h2>Beispiel: IT-Zubehör bei der Böckler-Office GmbH</h2>
+      <p style="margin-bottom:6px">Frau Weißenberg hat 8 Artikel aus der Warengruppe IT-Zubehör herausgegeben. Hier das Ergebnis der ABC-Analyse:</p>
+      <p class="caption" style="margin-bottom:16px;font-size:13px;color:var(--ink3);font-style:italic">Gesamtumsatz IT-Zubehör: 158.000 € · Kumulierte Grenze A: 70 % = 110.600 € · B-Grenze: 95 % = 150.100 €</p>
+
+      <div style="overflow-x:auto">
+        <table class="dt" id="abc-table">
+          <thead>
+            <tr>
+              <th>Rang</th><th>Artikel</th><th style="text-align:right">Umsatz (€)</th>
+              <th style="text-align:right">Anteil (%)</th><th style="text-align:right">Kumuliert (%)</th><th>Klasse</th>
+            </tr>
+          </thead>
+          <tbody id="abc-tbody">
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="nbtn fwd" onclick="revealABC()">Ergebnisse einblenden</button>
+        <button class="nbtn" onclick="resetABC()">Zurücksetzen</button>
+      </div>
+
+      <div class="callout forest" style="margin-top:16px">
+        <div class="cl">Interpretation</div>
+        <p style="font-size:14px;margin:0;color:var(--ink)">
+          <strong>2 A-Artikel</strong> (USB-Hub & Tastatur) erzielen gemeinsam <strong>73,4 % des Umsatzes</strong> dieser Warengruppe — mit nur 25 % der Artikel.
+          Die 4 C-Artikel unten (Webcam-Abdeckung, Reinigungsset …) bringen zusammen nur <strong>3,8 %</strong>. → Klassisches Pareto-Muster.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S6 KONSEQUENZEN ══════════════ -->
+<div class="slide" id="s6">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Konsequenzen — Was tun mit A, B, C?</span><span class="sid">6 / 8</span></div>
+    <div class="ct">
+      <h2>Vom Ergebnis zur Entscheidung</h2>
+      <p class="lead" style="margin-bottom:22px;max-width:740px">Die ABC-Einteilung ist kein Selbstzweck — sie führt zu konkreten Maßnahmen in der Sortiments- und Einkaufspolitik.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+        <div class="abc-card abc-a">
+          <div class="abc-letter" style="font-size:36px;margin-bottom:6px">A</div>
+          <h3 style="color:#92400e;font-size:15px;margin-bottom:8px">Maßnahmen A-Güter</h3>
+          <div style="font-size:13px;color:#78350f;display:flex;flex-direction:column;gap:5px">
+            <div>→ Sortimentstiefe <strong>ausbauen</strong></div>
+            <div>→ Lagerhaltung optimieren (hoher Bestand)</div>
+            <div>→ Lieferantenbeziehung pflegen</div>
+            <div>→ Regal-Platzierung bevorzugen</div>
+          </div>
+        </div>
+        <div class="abc-card abc-b">
+          <div class="abc-letter" style="font-size:36px;margin-bottom:6px">B</div>
+          <h3 style="color:#1e3a8a;font-size:15px;margin-bottom:8px">Maßnahmen B-Güter</h3>
+          <div style="font-size:13px;color:#1e3a8a;display:flex;flex-direction:column;gap:5px">
+            <div>→ Regelmäßig beobachten</div>
+            <div>→ Entwicklung zu A oder C prüfen</div>
+            <div>→ Mittlere Lagerbestände halten</div>
+            <div>→ Standardmäßige Regalfläche</div>
+          </div>
+        </div>
+        <div class="abc-card abc-c">
+          <div class="abc-letter" style="font-size:36px;margin-bottom:6px">C</div>
+          <h3 style="color:#374151;font-size:15px;margin-bottom:8px">Maßnahmen C-Güter</h3>
+          <div style="font-size:13px;color:#374151;display:flex;flex-direction:column;gap:5px">
+            <div>→ Bereinigung prüfen</div>
+            <div>→ Minimalbestand, günstige Lagerplätze</div>
+            <div>→ Ggf. nur auf Bestellung führen</div>
+            <div>→ Nicht mit Marketingbudget bewerben</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout gold">
+        <div class="cl">Aber Achtung — ABC ist nicht alles</div>
+        <p style="font-size:14px;color:var(--ink);margin:0">
+          Manche C-Artikel sind <strong>strategisch wichtig</strong>, auch wenn ihr Umsatz gering ist —
+          z. B. weil sie als Ergänzung zu A-Artikeln gebraucht werden (Komplementärgüter)
+          oder weil sie das Sortiment für eine wichtige Zielgruppe komplett machen.
+          Die ABC-Analyse ist ein <em>Hilfsinstrument</em>, kein automatischer Streichungsbescheid.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S7 QUIZ ══════════════ -->
+<div class="slide" id="s7">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Wissensüberprüfung</span><span class="sid">7 / 8</span></div>
+    <div class="ct">
+      <h2 style="margin-bottom:20px">Haben Sie aufgepasst?</h2>
+      <div class="qwrap" id="qc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ S8 TRANSFER + AUSBLICK ══════════════ -->
+<div class="slide" id="s8">
+  <div class="top-rule"></div>
+  <div class="body">
+    <div class="ph"><span class="kicker">Transfer &amp; Ausblick</span><span class="sid">8 / 8</span></div>
+    <div class="ct">
+      <h2 style="margin-bottom:6px">Zusammenfassung &amp; nächste Schritte</h2>
+      <p style="margin-bottom:22px;max-width:700px">Das Arbeitsblatt vertieft die ABC-Analyse mit neuen Zahlen aus der Böckler-Office GmbH.</p>
+
+      <div class="two">
+        <div>
+          <div class="callout forest" style="margin-bottom:14px">
+            <div class="cl">Was wir heute gelernt haben</div>
+            <div class="ci" onclick="chk(this)"><div class="cbox">✓</div><div class="ctext">Das Prinzip und die drei Klassen der ABC-Analyse</div></div>
+            <div class="ci" onclick="chk(this)"><div class="cbox">✓</div><div class="ctext">Alle 5 Schritte der Durchführung</div></div>
+            <div class="ci" onclick="chk(this)"><div class="cbox">✓</div><div class="ctext">Kumulierte Umsatzanteile berechnen</div></div>
+            <div class="ci" onclick="chk(this)"><div class="cbox">✓</div><div class="ctext">Konsequenzen für A-, B- und C-Artikel ableiten</div></div>
+            <div class="ci" onclick="chk(this)"><div class="cbox">✓</div><div class="ctext">Das Pareto-Prinzip erklären</div></div>
+          </div>
+          <div class="callout gold">
+            <div class="cl">Hausaufgabe</div>
+            <p style="font-size:14px;color:var(--ink);margin:0">Arbeitsblatt ABC-Analyse (LS 3.1.2) vollständig bearbeiten. Für A1–A3 benötigen Sie Taschenrechner und die Formeln aus dem Kasten auf dem Arbeitsblatt.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="callout" style="margin-bottom:14px">
+            <div class="cl">Ihre Transferaufgabe</div>
+            <p style="font-size:14px;color:var(--ink3);margin-bottom:10px">Welche Konsequenz würden <em>Sie</em> aus dem Beispiel (Folie 5) für die Warengruppe IT-Zubehör empfehlen?</p>
+            <textarea class="ta" rows="4" id="ta" placeholder="Ich würde empfehlen …"></textarea>
+            <div class="wc" id="wc">0 Wörter</div>
+          </div>
+          <div class="callout teal">
+            <div class="cl">Nächste Stunde — LS 3.1.3</div>
+            <p style="font-size:14px;color:var(--ink);margin:0;font-style:italic">Renner-Penner-Listen: Wie erkennt man saisonal schwankende Artikel und wie reagiert man richtig?</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NAV ══════════════ -->
+<div class="nav">
+  <button class="nbtn" id="bp" onclick="go(-1)">← Zurück</button>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+    <div class="dots" id="dots"></div>
+    <span class="snum" id="sn">1 / 8</span>
+  </div>
+  <button class="nbtn fwd" id="bn" onclick="go(1)">Weiter →</button>
+</div>
+
+<script>
+// ── ABC DATA ─────────────────────────────────────
+const abcData = [
+  {name:"USB-Hub 7-Port",         sales:58400},
+  {name:"Wireless-Tastatur Set",  sales:38500},
+  {name:"Monitor-Kabel HDMI",     sales:16200},
+  {name:"Laptop-Ständer alumin.", sales:13900},
+  {name:"Maus ergonomisch",       sales: 6300},
+  {name:"USB-Stick 64 GB",        sales: 3200},
+  {name:"Webcam-Abdeckung",       sales: 1400},
+  {name:"Reinigungsset Tastatur", sales:  800},
+];
+const total=abcData.reduce((s,r)=>s+r.sales,0);
+let abcRevealed=false;
+
+function buildABC(show){
+  abcRevealed=show;
+  const tb=document.getElementById('abc-tbody');
+  tb.innerHTML='';
+  let cum=0;
+  abcData.forEach((r,i)=>{
+    const pct=(r.sales/total*100);
+    cum+=pct;
+    const cls=cum<=70?'A':cum<=95?'B':'C';
+    const rowCls=cls==='A'?'a-row':cls==='B'?'b-row':'c-row';
+    const tr=document.createElement('tr');
+    if(show) tr.className=rowCls;
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td>${r.name}</td>
+      <td style="text-align:right">${r.sales.toLocaleString('de-DE')}</td>
+      <td style="text-align:right">${show?pct.toFixed(1)+' %':'—'}</td>
+      <td style="text-align:right">${show?cum.toFixed(1)+' %':'—'}</td>
+      <td>${show?`<span class="badge badge-${cls.toLowerCase()}">${cls}</span>`:'—'}</td>`;
+    tb.appendChild(tr);
+  });
+  // total
+  const tr=document.createElement('tr');
+  tr.className='total';
+  tr.innerHTML=`<td colspan="2">Gesamt</td><td style="text-align:right">${total.toLocaleString('de-DE')}</td><td style="text-align:right">${show?'100,0 %':'—'}</td><td></td><td></td>`;
+  tb.appendChild(tr);
+}
+function revealABC(){buildABC(true);}
+function resetABC(){buildABC(false);}
+
+// ── QUIZ ─────────────────────────────────────────
+const qs=[
+  {q:"Ein Artikel macht 2 % des Umsatzes aus, obwohl er 15 % der Artikel ausmacht. Welcher Klasse gehört er an?",
+   hint:null,
+   opts:["A-Gut — hoher Mengenanteil","B-Gut — mittlerer Wertanteil","C-Gut — geringer Wertanteil","Keiner der drei Klassen"],
+   ans:2,ex:"Richtig! Geringer Wertanteil trotz hohem Mengenanteil → typisches C-Gut."},
+  {q:"Der kumulierte Umsatzanteil der ersten 3 Artikel beträgt 72 %. Was trifft zu?",
+   hint:"Denken Sie an die A-Grenze (ca. 70 %).",
+   opts:["Alle 3 Artikel sind A-Güter","Die A-Grenze ist überschritten — Artikel 3 könnte B sein","Die B-Grenze ist überschritten","Es gibt keine A-Güter in dieser Liste"],
+   ans:1,ex:"Korrekt! Ab ~70 % kumuliertem Anteil beginnt der B-Bereich. Artikel 1–2 sind A, Artikel 3 liegt knapp drüber — je nach Unternehmen B oder noch A."},
+  {q:"Welche Aussage zur ABC-Analyse ist FALSCH?",
+   hint:null,
+   opts:[
+     "C-Güter können strategisch wichtig sein, auch wenn ihr Umsatz gering ist.",
+     "Die ABC-Analyse basiert auf dem Pareto-Prinzip.",
+     "A-Güter sollten immer aus dem Sortiment gestrichen werden.",
+     "Die Grenzwerte 70 %/95 % sind Richtwerte, keine starren Regeln."
+   ],
+   ans:2,ex:"Richtig erkannt! A-Güter sind die umsatzstärksten — sie sollten ausgebaut, nicht gestrichen werden. Gestrichen werden eher C-Güter ohne strategische Bedeutung."},
+  {q:"Frau Weißenberg möchte Regalfläche einsparen. Welcher Artikel aus der Beispieltabelle (Folie 5) ist der erste Kandidat?",
+   hint:"Schauen Sie auf den niedrigsten Umsatz.",
+   opts:["USB-Hub 7-Port","Monitor-Kabel HDMI","Webcam-Abdeckung","Wireless-Tastatur Set"],
+   ans:2,ex:"Genau! Das Reinigungsset (800 €) hat den niedrigsten Umsatz — aber da die Frage nach dem ersten Kandidaten fragt, ist die Webcam-Abdeckung (1.400 €) der letzte C-Artikel vor dem Reinigungsset. Tatsächlich hätte auch 'Reinigungsset' als Antwort gezählt — beide sind C-Güter."},
+];
+let qs2={i:0,score:0,done:false};
+function initQ(){qs2={i:0,score:0,done:false};renderQ();}
+function renderQ(){
+  const c=document.getElementById('qc');
+  if(qs2.i>=qs.length){
+    const pct=Math.round(qs2.score/qs.length*100);
+    c.innerHTML=`<div class="scorebox"><div class="scorenum">${qs2.score}/${qs.length}</div><div class="scoresub">${pct>=75?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Noch etwas üben!'} — ${pct}% richtig</div><button class="nbtn fwd" onclick="initQ()">Nochmal</button></div>`;
+    if(pct===100) setTimeout(()=>confetti({particleCount:150,spread:70,origin:{y:0.5}}),250);
+    return;
+  }
+  const q=qs[qs2.i];
+  c.innerHTML=`
+    <div class="qpbar"><div class="qpfill" style="transform:scaleX(${qs2.i/qs.length})"></div></div>
+    <div class="qlabel">Frage ${qs2.i+1} von ${qs.length}</div>
+    <div class="qtext">${q.q}</div>
+    ${q.hint?`<div class="qhint">Hinweis: ${q.hint}</div>`:''}
+    <div class="opts">${q.opts.map((o,i)=>`<button class="opt" onclick="pick(${i})" id="o${i}"><span class="let">${String.fromCharCode(65+i)}</span>${o}</button>`).join('')}</div>
+    <div class="qfb" id="fb"></div>
+    <button class="qnext" id="qn" onclick="nextQ()">${qs2.i+1<qs.length?'Nächste Frage →':'Auswertung →'}</button>`;
+  qs2.done=false;
+}
+function pick(i){
+  if(qs2.done)return;qs2.done=true;
+  const q=qs[qs2.i];const ok=i===q.ans;if(ok)qs2.score++;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.disabled=true;
+    if(idx===q.ans)el.classList.add('ok');
+    if(idx===i&&!ok)el.classList.add('no');
+  });
+  const fb=document.getElementById('fb');
+  fb.className=`qfb show ${ok?'ok':'no'}`;
+  fb.innerHTML=`<strong>${ok?'Richtig!':'Leider falsch.'}</strong> ${q.ex}`;
+  document.getElementById('qn').classList.add('show');
+}
+function nextQ(){qs2.i++;renderQ();}
+
+// ── CHECKLIST ─────────────────────────────────────
+function chk(el){
+  el.classList.toggle('done');
+  if(document.querySelectorAll('.ci.done').length===document.querySelectorAll('.ci').length)
+    confetti({particleCount:80,spread:50,origin:{y:0.6}});
+}
+
+// ── WORD COUNT ────────────────────────────────────
+document.addEventListener('input',e=>{
+  if(e.target.id==='ta'){
+    const w=e.target.value.trim().split(/\s+/).filter(Boolean).length;
+    const el=document.getElementById('wc');if(el)el.textContent=`${w} Wörter`;
+  }
+});
+
+// ── SLIDES ────────────────────────────────────────
+let cur=1; const tot=8;
+function go(d){
+  const n=cur+d; if(n<1||n>tot)return;
+  document.getElementById(`s${cur}`).classList.remove('active');
+  cur=n; document.getElementById(`s${cur}`).classList.add('active');
+  upNav();
+  if(cur===5)buildABC(false);
+  if(cur===7)initQ();
+}
+function upNav(){
+  document.getElementById('sn').textContent=`${cur} / ${tot}`;
+  const bp=document.getElementById('bp'),bn=document.getElementById('bn');
+  bp.style.opacity=cur===1?'.25':'1'; bp.disabled=cur===1;
+  bn.textContent=cur===tot?'Ende ✓':'Weiter →';
+  const d=document.getElementById('dots');d.innerHTML='';
+  for(let i=1;i<=tot;i++){
+    const el=document.createElement('div');
+    el.className='dot'+(i===cur?' active':i<cur?' done':'');
+    el.onclick=(function(n){return function(){
+      document.getElementById(`s${cur}`).classList.remove('active');
+      cur=n; document.getElementById(`s${cur}`).classList.add('active');
+      upNav();
+      if(cur===5)buildABC(false);
+      if(cur===7)initQ();
+    };})(i);
+    d.appendChild(el);
+  }
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+});
+upNav();buildABC(false);
+</script>
+</body>
+</html>
