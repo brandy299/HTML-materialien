@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Minutes — Muster-Protokoll | HS2D</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --ink:    #1A1A1A;
+  --ink2:   #3D3D3D;
+  --ink3:   #6B6B6B;
+  --paper:  #F7F4EF;
+  --paper2: #EEEBE4;
+  --paper3: #E2DDD6;
+  --rule:   #C8C2B8;
+  --accent: #1A1A1A;
+  --red:    #B03020;
+  --white:  #FFFFFF;
+
+  --f-display: 'Fraunces', serif;
+  --f-body:    'DM Sans', sans-serif;
+  --f-mono:    'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--f-body);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 80px;
+}
+
+/* ── PAGE HEADER ─────────────────────────────────────── */
+.page-header {
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 3px double var(--ink);
+  padding-bottom: 16px;
+  gap: 24px;
+}
+.page-header h1 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: clamp(22px, 3.5vw, 36px);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.page-header h1 span {
+  font-style: italic;
+  font-weight: 300;
+}
+.header-meta {
+  font-size: 12px;
+  color: var(--ink3);
+  text-align: right;
+  line-height: 1.7;
+  flex-shrink: 0;
+}
+
+/* ── MAIN LAYOUT ─────────────────────────────────────── */
+.layout {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 0 40px;
+  align-items: start;
+}
+
+/* ── DOCUMENT ────────────────────────────────────────── */
+.document {
+  background: var(--white);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  position: relative;
+}
+
+.doc-header-bar {
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+}
+
+.doc-meta-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: #FAFAFA;
+}
+.meta-key {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 3px 0;
+  white-space: nowrap;
+}
+.meta-val {
+  font-size: 13px;
+  color: var(--ink);
+  padding: 3px 0;
+}
+
+.doc-section {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  transition: background .2s;
+}
+.doc-section:last-child { border-bottom: none; }
+.doc-section.highlight { background: #FFFBF0; }
+
+.section-num {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 5px;
+}
+.section-text {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ink2);
+}
+.section-text strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.action {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  padding: 2px 8px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Highlight ring when annotation is active */
+.doc-section.active {
+  background: #FFFBF0;
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+/* ── ANNOTATIONS PANEL ───────────────────────────────── */
+.annotations {
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ann {
+  background: var(--white);
+  border: 1.5px solid var(--paper3);
+  border-radius: 2px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+  opacity: .55;
+}
+.ann:hover, .ann.active {
+  border-color: var(--ink);
+  opacity: 1;
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translateX(-2px);
+}
+.ann-tag {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ann-tag::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: var(--ink);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ann.active .ann-tag { color: var(--ink); }
+.ann-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.ann-body {
+  font-size: 12px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+.ann-example {
+  margin-top: 7px;
+  padding: 7px 10px;
+  background: var(--paper);
+  border-left: 3px solid var(--ink);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+
+/* ── CONNECTOR LINE ──────────────────────────────────── */
+.connector {
+  position: absolute;
+  right: -42px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 2px;
+  background: var(--ink);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.connector::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid var(--ink);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.doc-section.active .connector { opacity: 1; }
+
+/* ── LEGEND ──────────────────────────────────────────── */
+.legend {
+  grid-column: 1 / -1;
+  margin-top: 28px;
+  padding: 16px 20px;
+  background: var(--paper2);
+  border: 1.5px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+.legend-title {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  width: 100%;
+  margin-bottom: 4px;
+}
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink2);
+  flex: 1;
+  min-width: 200px;
+}
+.leg-num {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--ink);
+  color: var(--white);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.leg-text { line-height: 1.5; }
+.leg-text strong { font-weight: 600; color: var(--ink); }
+
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 28px;
+  gap: 16px;
+  z-index: 50;
+}
+.school-tag {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #888;
+}
+.step-indicator {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.step-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  transition: background .2s;
+}
+.step-dot.on { background: var(--white); }
+.nav-btns { display: flex; gap: 8px; }
+.nav-btn {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  padding: 7px 18px;
+  border: 1.5px solid #555;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  transition: all .15s;
+}
+.nav-btn:hover { border-color: var(--white); color: var(--white); }
+.nav-btn.primary { background: var(--white); color: var(--ink); border-color: var(--white); font-weight: 600; }
+.nav-btn:disabled { opacity: .3; pointer-events: none; }
+.progress-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: #777;
+}
+
+/* ── INTRO OVERLAY ───────────────────────────────────── */
+.intro {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 32px;
+  text-align: center;
+  transition: opacity .5s;
+}
+.intro h2 {
+  font-family: var(--f-display);
+  font-size: clamp(28px, 5vw, 56px);
+  color: var(--white);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.intro h2 em { font-style: italic; font-weight: 300; }
+.intro p {
+  font-size: clamp(14px, 2vw, 18px);
+  color: #888;
+  max-width: 500px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+.intro-btn {
+  font-family: var(--f-mono);
+  font-size: 14px;
+  letter-spacing: .08em;
+  padding: 14px 36px;
+  background: var(--white);
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .15s;
+}
+.intro-btn:hover { transform: translateY(-2px); }
+.intro-sub {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #555;
+  font-family: var(--f-mono);
+  letter-spacing: .06em;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+  .annotations { position: static; margin-top: 24px; }
+  .connector { display: none; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.layout { animation: fadeIn .4s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- INTRO OVERLAY -->
+<div class="intro" id="intro">
+  <h2>Meeting Minutes<br><em>— so geht's</em></h2>
+  <p>Ein annotiertes Muster-Protokoll für Abschnitt 3 · Aufgabe 4.<br>Klicke auf die Bereiche oder die Pfeile rechts, um die Erklärungen zu sehen.</p>
+  <button class="intro-btn" onclick="startApp()">Los geht's →</button>
+  <div class="intro-sub">HS2D · Business English A2/B1 · LK Brand</div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Meeting Minutes<br><span>— Muster &amp; Erklärung</span></h1>
+  <div class="header-meta">
+    HS2D · Business English A2/B1<br>
+    Abschnitt 3 · Aufgabe 4<br>
+    LK Brand
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: THE DOCUMENT -->
+  <div class="document">
+
+    <div class="doc-header-bar">Meeting Minutes — Office Design Ltd., Düsseldorf</div>
+
+    <!-- META -->
+    <div class="doc-section" id="sec-meta" onclick="activate(0)">
+      <div class="connector"></div>
+      <div class="doc-meta-grid">
+        <span class="meta-key">Meeting:</span>
+        <span class="meta-val">Weekly Team Meeting, Düsseldorf Office</span>
+        <span class="meta-key">Date:</span>
+        <span class="meta-val">Tuesday, 6 May 2025 &nbsp;·&nbsp; 10:00 am</span>
+        <span class="meta-key">Present:</span>
+        <span class="meta-val">P. Webb (Chair), M. Bauer, S. Richter, K. Lange, [Your Name] (Minutes)</span>
+        <span class="meta-key">Apologies:</span>
+        <span class="meta-val">T. Fischer (illness)</span>
+      </div>
+    </div>
+
+    <!-- MATTERS ARISING -->
+    <div class="doc-section" id="sec-matters" onclick="activate(1)">
+      <div class="connector"></div>
+      <div class="section-num">1. Matters Arising</div>
+      <div class="section-text">
+        P. Webb <strong>confirmed</strong> that the new furniture catalogue <strong>had been sent</strong> to all key clients on 28 April.
+      </div>
+    </div>
+
+    <!-- AGENDA ITEM 2 -->
+    <div class="doc-section" id="sec-q2" onclick="activate(2)">
+      <div class="connector"></div>
+      <div class="section-num">2. Q2 Sales Update</div>
+      <div class="section-text">
+        M. Bauer <strong>reported</strong> that Q2 sales <strong>were</strong> up 12% compared to Q1, driven mainly by ergonomic chair sales. The team <strong>agreed</strong> this <strong>was</strong> a positive result.<br><br>
+        <span class="action">ACTION</span> M. Bauer to prepare a detailed breakdown report by <strong>Friday 16 May</strong>.
+      </div>
+    </div>
+
+    <!-- AGENDA ITEM 3 -->
+    <div class="doc-section" id="sec-launch" onclick="activate(3)">
+      <div class="connector"></div>
+      <div class="section-num">3. New Product Range — June Launch</div>
+      <div class="section-text">
+        P. Webb <strong>announced</strong> that the ActiveDesk standing desk range <strong>would</strong> launch in June. S. Richter <strong>raised</strong> a concern about stock availability.<br><br>
+        <span class="action">ACTION</span> S. Richter to confirm stock levels with the logistics team by <strong>9 May</strong>.
+      </div>
+    </div>
+
+    <!-- AOB -->
+    <div class="doc-section" id="sec-aob" onclick="activate(4)">
+      <div class="connector"></div>
+      <div class="section-num">4. AOB &amp; Next Meeting</div>
+      <div class="section-text">
+        Next meeting: <strong>Tuesday 20 May, 10:00 am</strong>.<br>
+        Minutes to be circulated by P. Webb by end of day.
+      </div>
+    </div>
+
+  </div><!-- /document -->
+
+  <!-- RIGHT: ANNOTATIONS -->
+  <div class="annotations" id="annotations">
+
+    <div class="ann active" id="ann-0" onclick="activate(0)">
+      <div class="ann-tag">Element 1</div>
+      <div class="ann-title">Header — Kopfdaten</div>
+      <div class="ann-body">
+        Das Protokoll beginnt immer mit den Basisdaten: Datum, Uhrzeit, Ort, Anwesende und Entschuldigte.
+        <br><br>
+        <strong>Apologies</strong> = wer fehlt und warum.<br>
+        <strong>Minutes</strong> = wer das Protokoll schreibt (das bist du!).
+      </div>
+      <div class="ann-example">Present: P. Webb (Chair), M. Bauer,<br>
+[Your Name] (Minutes)<br>
+Apologies: T. Fischer (illness)</div>
+    </div>
+
+    <div class="ann" id="ann-1" onclick="activate(1)">
+      <div class="ann-tag">Element 2</div>
+      <div class="ann-title">Matters Arising</div>
+      <div class="ann-body">
+        Offene Punkte aus dem <em>letzten</em> Meeting. Wurde das Vorherige erledigt? Kurze Bestätigung genügt.
+        <br><br>
+        ⚠️ Immer <strong>Vergangenheitsform</strong> verwenden — nicht "Webb says", sondern "Webb confirmed".
+      </div>
+      <div class="ann-example">✓  P. Webb confirmed that the<br>
+&nbsp;&nbsp;&nbsp;catalogue had been sent.</div>
+    </div>
+
+    <div class="ann" id="ann-2" onclick="activate(2)">
+      <div class="ann-tag">Element 3</div>
+      <div class="ann-title">Agenda Item + Action Point</div>
+      <div class="ann-body">
+        Was wurde besprochen? Was entschieden? <strong>Reported Speech</strong> ist Pflicht.
+        <br><br>
+        Ein <strong>Action Point</strong> = eine Aufgabe mit Namen und Deadline. Format:<br>
+        <em>Name + to + Infinitiv + by + Datum</em>
+      </div>
+      <div class="ann-example">ACTION: M. Bauer to prepare<br>
+the report by Friday 16 May.</div>
+    </div>
+
+    <div class="ann" id="ann-3" onclick="activate(3)">
+      <div class="ann-tag">Element 4</div>
+      <div class="ann-title">Reporting Verbs</div>
+      <div class="ann-body">
+        Nicht immer "said" — nutze präzise <strong>Reporting Verbs</strong>:
+        <br><br>
+        <strong>announced</strong> → neue Info<br>
+        <strong>reported</strong> → Bericht/Zahlen<br>
+        <strong>raised</strong> → Bedenken/Kritik<br>
+        <strong>agreed / decided</strong> → Entscheidung<br>
+        <strong>confirmed</strong> → Bestätigung
+      </div>
+      <div class="ann-example">P. Webb announced that…<br>
+S. Richter raised a concern…</div>
+    </div>
+
+    <div class="ann" id="ann-4" onclick="activate(4)">
+      <div class="ann-tag">Element 5</div>
+      <div class="ann-title">AOB &amp; Next Meeting</div>
+      <div class="ann-body">
+        AOB = <strong>Any Other Business</strong> (= Sonstiges). Hier kommen Punkte, die nicht auf der Agenda standen.
+        <br><br>
+        Das Protokoll endet immer mit dem <strong>nächsten Termin</strong> und einem Hinweis, wer die Minutes versendet.
+      </div>
+      <div class="ann-example">Next meeting: Tuesday 20 May,<br>
+10:00 am.<br>
+Minutes: circulated by P. Webb.</div>
+    </div>
+
+  </div><!-- /annotations -->
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-title">Wichtige Regeln auf einen Blick</div>
+
+    <div class="legend-item">
+      <div class="leg-num">1</div>
+      <div class="leg-text"><strong>Immer Vergangenheitsform</strong><br>said / confirmed / reported — nie present tense</div>
+    </div>
+    <div class="legend-item">
+      <div class="leg-num">2</div>
+      <div class="leg-text"><strong>Vollständige Namen</strong><br>"Ms Webb stated" — nie "she said"</div>
+    </div>
+    <div class="legend-item">
+      <div class="leg-num">3</div>
+      <div class="leg-text"><strong>Reported Speech</strong><br>will → would · can → could · is → was</div>
+    </div>
+    <div class="legend-item">
+      <div class="leg-num">4</div>
+      <div class="leg-text"><strong>Action Points</strong><br>Name + to + Infinitiv + by + Datum</div>
+    </div>
+    <div class="legend-item">
+      <div class="leg-num">5</div>
+      <div class="leg-text"><strong>Präzise Reporting Verbs</strong><br>announced · raised · confirmed · agreed</div>
+    </div>
+    <div class="legend-item">
+      <div class="leg-num">6</div>
+      <div class="leg-text"><strong>Aufbau einhalten</strong><br>Header → Matters → Items → AOB → Next Meeting</div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <span class="school-tag">HS2D · Meeting Minutes · Muster</span>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="step-indicator" id="dots"></div>
+    <span class="progress-label" id="prog-label">1 / 5</span>
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn" id="btn-prev" onclick="step(-1)" disabled>← Zurück</button>
+    <button class="nav-btn primary" id="btn-next" onclick="step(1)">Weiter →</button>
+  </div>
+</div>
+
+<script>
+const TOTAL = 5;
+let cur = 0;
+
+const sections  = ['sec-meta','sec-matters','sec-q2','sec-launch','sec-aob'];
+const anns      = ['ann-0','ann-1','ann-2','ann-3','ann-4'];
+const dotsEl    = document.getElementById('dots');
+const progLabel = document.getElementById('prog-label');
+const btnPrev   = document.getElementById('btn-prev');
+const btnNext   = document.getElementById('btn-next');
+
+// Build dots
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('button');
+  d.className = 'step-dot' + (i === 0 ? ' on' : '');
+  d.onclick = () => activate(i);
+  dotsEl.appendChild(d);
+}
+
+function activate(n) {
+  cur = n;
+  // Sections
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('active', i === n);
+  });
+  // Annotations
+  anns.forEach((id, i) => {
+    document.getElementById(id).classList.toggle('active', i === n);
+  });
+  // Dots
+  dotsEl.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('on', i === n);
+  });
+  // Progress
+  progLabel.textContent = (n + 1) + ' / ' + TOTAL;
+  // Buttons
+  btnPrev.disabled = n === 0;
+  btnNext.disabled = n === TOTAL - 1;
+  btnNext.textContent = n === TOTAL - 2 ? 'Letzter →' : 'Weiter →';
+  // Scroll section into view
+  const secEl = document.getElementById(sections[n]);
+  secEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function step(dir) {
+  const next = cur + dir;
+  if (next >= 0 && next < TOTAL) activate(next);
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); step(1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); step(-1); }
+});
+
+function startApp() {
+  const intro = document.getElementById('intro');
+  intro.style.opacity = '0';
+  setTimeout(() => intro.style.display = 'none', 500);
+  activate(0);
+}
+</script>
+</body>
+</html>
