@@ -2,7 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN");
 const OWNER = Deno.env.get("GITHUB_OWNER") || "brandy299";
-const REPO = Deno.env.get("GITHUB_REPO") || "HTML-materialien";
+const REPO  = Deno.env.get("GITHUB_REPO")  || "HTML-materialien";
 const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}`;
 
 function corsHeaders() {
@@ -37,8 +37,9 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // GITHUB_TOKEN must be set as a Supabase Function Secret
   if (!GITHUB_TOKEN) {
-    return new Response(JSON.stringify({ error: "GITHUB_TOKEN not configured" }), {
+    return new Response(JSON.stringify({ error: "GITHUB_TOKEN not configured on server" }), {
       status: 500,
       headers: { ...corsHeaders(), "Content-Type": "application/json" },
     });
@@ -71,9 +72,9 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  // Only allow access to contents under materialien/ or known root files
+  // Only allow file operations under materialien/
   const normalizedPath = path.replace(/^\/+/, "");
-  if (!normalizedPath.startsWith("materialien/") && normalizedPath !== "index.json") {
+  if (!normalizedPath.startsWith("materialien/")) {
     return new Response(JSON.stringify({ error: "Path not allowed: " + path }), {
       status: 403,
       headers: { ...corsHeaders(), "Content-Type": "application/json" },
@@ -82,10 +83,7 @@ Deno.serve(async (req: Request) => {
 
   const url = `${API_BASE}/contents/${encodePath(normalizedPath)}`;
 
-  const fetchInit: RequestInit = {
-    method,
-    headers: ghHeaders(),
-  };
+  const fetchInit: RequestInit = { method, headers: ghHeaders() };
 
   if (body && (method === "PUT" || method === "DELETE")) {
     fetchInit.headers = { ...ghHeaders(), "Content-Type": "application/json" };
@@ -95,14 +93,9 @@ Deno.serve(async (req: Request) => {
   try {
     const ghResp = await fetch(url, fetchInit);
     const ghStatus = ghResp.status;
-    let ghData;
-
     const text = await ghResp.text();
-    try {
-      ghData = JSON.parse(text);
-    } catch {
-      ghData = { raw: text };
-    }
+    let ghData;
+    try { ghData = JSON.parse(text); } catch { ghData = { raw: text }; }
 
     return new Response(JSON.stringify({ status: ghStatus, data: ghData }), {
       status: 200,
