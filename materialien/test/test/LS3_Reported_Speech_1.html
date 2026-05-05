@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reported Speech — The Transformation Machine | HS2D</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0E0E0E;
+  --surface:  #1A1A1A;
+  --surface2: #242424;
+  --surface3: #2E2E2E;
+  --line:     #3A3A3A;
+  --line2:    #4E4E4E;
+  --text:     #E8E4DC;
+  --text2:    #9A9690;
+  --text3:    #5E5B57;
+  --gold:     #C8A84B;
+  --gold-l:   #F0D070;
+  --red:      #D94F3D;
+  --green:    #4A9D6F;
+  --blue:     #4A7FA8;
+
+  --f-display: 'Bebas Neue', sans-serif;
+  --f-serif:   'Crimson Pro', serif;
+  --f-mono:    'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--f-serif);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════ TOPBAR ═══════════════ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.topbar-logo {
+  font-family: var(--f-display);
+  font-size: 18px;
+  letter-spacing: .12em;
+  color: var(--gold);
+}
+.topbar-sep { width: 1px; height: 20px; background: var(--line); }
+.topbar-title {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--text2);
+  flex: 1;
+}
+.topbar-badge {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ═══════════════ PROGRESS ═══════════════ */
+#prog-rail {
+  position: fixed; top: 48px; left: 0; right: 0;
+  height: 2px; background: var(--line); z-index: 100;
+}
+#prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l));
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+
+/* ═══════════════ SECTIONS ═══════════════ */
+.section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ═══════════════ INTRO ═══════════════ */
+#intro {
+  background: var(--bg);
+  text-align: center;
+}
+.big-title {
+  font-family: var(--f-display);
+  font-size: clamp(60px, 12vw, 140px);
+  letter-spacing: .06em;
+  line-height: .9;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.big-title span { color: var(--gold); }
+.intro-sub {
+  font-family: var(--f-serif);
+  font-size: clamp(16px, 2.5vw, 24px);
+  color: var(--text2);
+  font-style: italic;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+.gear-row {
+  display: flex; gap: 0; justify-content: center;
+  margin-bottom: 40px;
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 1;
+}
+.gear { display: inline-block; animation: spin 4s linear infinite; }
+.gear.r { animation-direction: reverse; animation-duration: 3s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scroll-hint {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--text3);
+  text-transform: uppercase;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+/* ═══════════════ SECTION LABEL ═══════════════ */
+.section-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 4px 14px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+.section-title {
+  font-family: var(--f-display);
+  font-size: clamp(32px, 6vw, 72px);
+  letter-spacing: .06em;
+  line-height: 1;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.section-intro {
+  font-size: clamp(15px, 2vw, 19px);
+  color: var(--text2);
+  max-width: 600px;
+  text-align: center;
+  line-height: 1.75;
+  font-style: italic;
+  margin-bottom: 40px;
+}
+
+/* ═══════════════ THE MACHINE ═══════════════ */
+.machine-wrapper {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.machine {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.machine::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l), var(--gold));
+}
+
+.machine-header {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.m-light {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--line2);
+  transition: background .3s;
+}
+.m-light.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.m-light.processing { background: var(--gold); box-shadow: 0 0 6px var(--gold); animation: flicker .3s infinite; }
+@keyframes flicker { 50% { opacity: .4; } }
+
+.machine-body {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+}
+
+.m-input, .m-output {
+  padding: 24px 20px;
+}
+.m-input { border-right: 1px solid var(--line); }
+
+.m-zone-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.m-zone-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.speech-bubble {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 14px 16px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  position: relative;
+  min-height: 60px;
+  transition: all .3s;
+}
+.speech-bubble .speaker {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--text3);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.speech-bubble em { font-style: italic; color: var(--text2); }
+
+/* Highlighted words */
+.hl-change {
+  display: inline-block;
+  position: relative;
+  font-weight: 600;
+  color: var(--text);
+}
+.hl-change.before {
+  background: #8B3020;
+  color: #FFD0C8;
+  padding: 0 4px;
+  border-radius: 2px;
+}
+.hl-change.after {
+  background: #1A4A30;
+  color: #90EEB8;
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+.m-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 22px;
+  flex-direction: column;
+  gap: 4px;
+}
+.arrow-label {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--text3);
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+}
+
+/* Rule tags below output */
+.rule-tags {
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface2);
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.rule-tag {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  padding: 4px 10px;
+  border: 1px solid var(--line2);
+  color: var(--text2);
+  border-radius: 2px;
+}
+.rule-tag.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(200,168,75,.08);
+}
+
+/* Machine controls */
+.machine-controls {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: 12px;
+}
+.example-dots {
+  display: flex; gap: 6px; flex: 1;
+}
+.ex-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--line2); cursor: pointer;
+  transition: all .2s; border: none;
+}
+.ex-dot.on { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+.m-btn {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  padding: 8px 18px;
+  border: 1px solid var(--line2);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .2s;
+  text-transform: uppercase;
+}
+.m-btn:hover { border-color: var(--gold); color: var(--gold); }
+.m-btn.primary { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+.m-btn.primary:hover { background: var(--gold-l); border-color: var(--gold-l); }
+
+/* ═══════════════ RULES GRID ═══════════════ */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2px;
+  width: 100%;
+  max-width: 900px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.rule-card {
+  background: var(--surface);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s;
+}
+.rule-card:hover { background: var(--surface2); }
+.rc-number {
+  font-family: var(--f-display);
+  font-size: 64px;
+  letter-spacing: .04em;
+  color: var(--line);
+  position: absolute;
+  top: -8px; right: 12px;
+  line-height: 1;
+  pointer-events: none;
+  transition: color .2s;
+}
+.rule-card:hover .rc-number { color: var(--line2); }
+.rc-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.rc-title {
+  font-family: var(--f-display);
+  font-size: 26px;
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.rc-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.tense-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tense-table td {
+  padding: 5px 8px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  border-bottom: 1px solid var(--line);
+}
+.tense-table tr:last-child td { border-bottom: none; }
+.tense-table .from {
+  color: var(--red);
+  width: 45%;
+}
+.tense-table .arrow {
+  color: var(--text3);
+  text-align: center;
+  width: 10%;
+}
+.tense-table .to {
+  color: var(--green);
+  width: 45%;
+}
+
+/* ═══════════════ VERBS SECTION ═══════════════ */
+.verbs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 860px;
+}
+.verb-card {
+  background: var(--surface);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 3px solid transparent;
+}
+.verb-card:hover { background: var(--surface2); border-left-color: var(--gold); }
+.verb-card.selected { background: var(--surface2); border-left-color: var(--gold); }
+.verb-name {
+  font-family: var(--f-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 4px;
+  letter-spacing: .04em;
+}
+.verb-de {
+  font-size: 13px;
+  color: var(--text2);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.verb-use {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--text3);
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+.verb-example-box {
+  width: 100%;
+  max-width: 860px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  padding: 18px 22px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text2);
+  font-style: italic;
+  min-height: 60px;
+  transition: all .3s;
+}
+.verb-example-box strong { color: var(--gold); font-style: normal; font-weight: 600; }
+
+/* ═══════════════ QUIZ ═══════════════ */
+.quiz-wrapper {
+  width: 100%;
+  max-width: 700px;
+}
+.quiz-progress {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--text3);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.qprog-bar {
+  flex: 1; height: 2px; background: var(--line);
+}
+.qprog-fill {
+  height: 100%; background: var(--gold);
+  transition: width .4s;
+}
+.quiz-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 28px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.quiz-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--line2);
+  transition: background .3s;
+}
+.quiz-card.correct::before { background: var(--green); }
+.quiz-card.wrong::before   { background: var(--red); }
+
+.q-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.q-text {
+  font-family: var(--f-serif);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+.q-text em { color: var(--gold); font-style: italic; }
+
+.gap-inline {
+  display: inline-block;
+  border: none;
+  border-bottom: 2px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--f-mono);
+  font-size: 15px;
+  font-weight: 700;
+  width: 110px;
+  outline: none;
+  padding: 2px 6px;
+  transition: border-color .2s;
+  vertical-align: baseline;
+}
+.gap-inline:focus { border-color: var(--gold-l); }
+.gap-inline.ok    { border-color: var(--green); color: var(--green); }
+.gap-inline.err   { border-color: var(--red);   color: var(--red);   animation: shake .4s; }
+@keyframes shake { 20%{transform:translateX(-6px)} 60%{transform:translateX(6px)} }
+
+.mc-opts {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.mc-opt {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  padding: 11px 16px;
+  font-size: 14px;
+  font-family: var(--f-serif);
+  color: var(--text2);
+  cursor: pointer;
+  text-align: left;
+  transition: all .2s;
+  display: flex; align-items: center; gap: 10px;
+}
+.mc-opt::before {
+  content: attr(data-key);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  width: 18px;
+  flex-shrink: 0;
+}
+.mc-opt:hover:not(:disabled) { border-color: var(--gold); color: var(--text); }
+.mc-opt.correct { border-color: var(--green); color: var(--green); background: rgba(74,157,111,.08); }
+.mc-opt.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(217,79,61,.08); animation: shake .3s; }
+.mc-opt.reveal  { border-color: var(--green); color: var(--green); background: rgba(74,157,111,.08); }
+
+.fb-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .03em;
+  display: none;
+  line-height: 1.6;
+}
+.fb-box.show { display: block; animation: fadeIn .2s; }
+.fb-box.ok  { background: rgba(74,157,111,.1); border-left: 2px solid var(--green); color: #90EEB8; }
+.fb-box.err { background: rgba(217,79,61,.1);  border-left: 2px solid var(--red);   color: #FFB0A0; }
+
+.check-btn {
+  margin-top: 12px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  padding: 8px 20px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all .2s;
+}
+.check-btn:hover { background: var(--gold-l); }
+
+/* Final score */
+.score-box {
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  padding: 36px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  display: none;
+}
+.score-num {
+  font-family: var(--f-display);
+  font-size: 96px;
+  letter-spacing: .04em;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.score-label {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.score-msg {
+  font-size: 17px;
+  color: var(--text2);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ═══════════════ BOTTOM NAV ═══════════════ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 50px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  z-index: 100;
+}
+.nav-section-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--text3);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.section-dots { display: flex; gap: 5px; }
+.sdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--line2);
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
+}
+.sdot:hover { background: var(--text3); }
+.sdot.on { background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+.bnav-btn {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .08em;
+  padding: 8px 20px;
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--line2);
+  cursor: pointer;
+  transition: all .2s;
+}
+.bnav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+.bnav-btn:disabled { opacity: .25; pointer-events: none; }
+.bnav-btn.primary { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+
+/* Section transitions */
+.section { display: none; }
+.section.active { display: flex; animation: fadeIn .4s ease-out; }
+
+@media (max-width:600px) {
+  .machine-body { grid-template-columns: 1fr; }
+  .m-input { border-right: none; border-bottom: 1px solid var(--line); }
+  .m-arrow { flex-direction: row; padding: 12px 0; }
+  .arrow-label { writing-mode: initial; }
+  .rules-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog-rail"><div id="prog-fill"></div></div>
+
+<div class="topbar">
+  <span class="topbar-logo">RS</span>
+  <div class="topbar-sep"></div>
+  <span class="topbar-title">Reported Speech — The Transformation Machine</span>
+  <span class="topbar-badge">HS2D · B1</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+  SECTION 0: INTRO
+════════════════════════════════════════════════════════ -->
+<section class="section active" id="s0">
+  <div class="gear-row">
+    <span class="gear">⚙️</span>
+    <span class="gear r">⚙️</span>
+    <span class="gear">⚙️</span>
+  </div>
+  <div class="big-title">THE<br><span>TRANS</span><br>FORMA<br>TION.</div>
+  <div class="intro-sub">Direkte Rede rein.<br>Indirekte Rede raus.<br>Reported Speech auf Englisch — visuell erklärt.</div>
+  <div class="scroll-hint">↓ &nbsp; Pfeiltasten oder Buttons &nbsp; ↓</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+  SECTION 1: DIE MASCHINE — INTERAKTIVE DEMO
+════════════════════════════════════════════════════════ -->
+<section class="section" id="s1">
+  <div class="section-label">Schritt 1 — Die Maschine</div>
+  <div class="section-title">WAS PASSIERT?</div>
+  <div class="section-intro">Wähle ein Beispiel. Die Maschine zeigt dir, was sich in der Reported Speech ändert.</div>
+
+  <div class="machine-wrapper">
+    <div class="machine">
+      <div class="machine-header">
+        <div class="m-light" id="light-idle"></div>
+        <div class="m-light" id="light-proc"></div>
+        <div class="m-light" id="light-done"></div>
+        <span style="margin-left:8px">transformation engine v1.0</span>
+        <span style="margin-left:auto;color:var(--gold)" id="machine-status">idle</span>
+      </div>
+
+      <div class="machine-body">
+        <div class="m-input">
+          <div class="m-zone-label">Input — Direkte Rede</div>
+          <div class="speech-bubble" id="bubble-in">
+            <div class="speaker">Speaker says:</div>
+            <div id="in-text">"The order <span class="hl-change before">is</span> ready."</div>
+          </div>
+        </div>
+
+        <div class="m-arrow">
+          <span style="font-size:22px;color:var(--gold)">⚙</span>
+          <div class="arrow-label">transform</div>
+        </div>
+
+        <div class="m-output">
+          <div class="m-zone-label">Output — Reported Speech</div>
+          <div class="speech-bubble" id="bubble-out">
+            <div class="speaker">Minutes / Protokoll:</div>
+            <div id="out-text">She said the order <span class="hl-change after">was</span> ready.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-tags" id="rule-tags">
+        <div class="rule-tag active" id="tag-tense">Tense Backshift</div>
+        <div class="rule-tag" id="tag-pronoun">Pronoun Change</div>
+        <div class="rule-tag" id="tag-time">Time Expression</div>
+        <div class="rule-tag" id="tag-verb">Reporting Verb</div>
+      </div>
+
+      <div class="machine-controls">
+        <div class="example-dots" id="ex-dots"></div>
+        <button class="m-btn" onclick="prevEx()">← Prev</button>
+        <button class="m-btn primary" onclick="nextEx()">Next →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+  SECTION 2: REGELN
+════════════════════════════════════════════════════════ -->
+<section class="section" id="s2">
+  <div class="section-label">Schritt 2 — Die Regeln</div>
+  <div class="section-title">ZWEI REGELN.</div>
+  <div class="section-intro">Das ist alles was du brauchst. Zwei Regeln — konsequent angewendet.</div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rc-number">01</div>
+      <div class="rc-label">Regel 1</div>
+      <div class="rc-title">TENSE<br>BACKSHIFT</div>
+      <div class="rc-body">Alle Verben verschieben sich um eine Stufe in die Vergangenheit. <em>Think of it as pressing "rewind".</em></div>
+      <table class="tense-table">
+        <tr><td class="from">is / are</td><td class="arrow">→</td><td class="to">was / were</td></tr>
+        <tr><td class="from">will</td><td class="arrow">→</td><td class="to">would</td></tr>
+        <tr><td class="from">can</td><td class="arrow">→</td><td class="to">could</td></tr>
+        <tr><td class="from">have / has</td><td class="arrow">→</td><td class="to">had</td></tr>
+        <tr><td class="from">do / does</td><td class="arrow">→</td><td class="to">did</td></tr>
+        <tr><td class="from">must / shall</td><td class="arrow">→</td><td class="to">had to / should</td></tr>
+      </table>
+    </div>
+
+    <div class="rule-card">
+      <div class="rc-number">02</div>
+      <div class="rc-label">Regel 2</div>
+      <div class="rc-title">PRONOUN<br>SHIFT</div>
+      <div class="rc-body">Pronomen wechseln mit der Perspektive. Die Aussage wird aus einer anderen Sicht wiedergegeben.</div>
+      <table class="tense-table">
+        <tr><td class="from">I</td><td class="arrow">→</td><td class="to">he / she / they</td></tr>
+        <tr><td class="from">we</td><td class="arrow">→</td><td class="to">they</td></tr>
+        <tr><td class="from">my</td><td class="arrow">→</td><td class="to">his / her / their</td></tr>
+        <tr><td class="from">our</td><td class="arrow">→</td><td class="to">their</td></tr>
+        <tr><td class="from">you</td><td class="arrow">→</td><td class="to">I / he / she / they</td></tr>
+        <tr><td class="from">tomorrow</td><td class="arrow">→</td><td class="to">the following day</td></tr>
+      </table>
+    </div>
+
+    <div class="rule-card">
+      <div class="rc-number">03</div>
+      <div class="rc-label">Bonus-Regel</div>
+      <div class="rc-title">INTRO<br>VERBS</div>
+      <div class="rc-body">Reported speech braucht ein Einleitungsverb. Nutze nicht immer "said" — sei präzise:</div>
+      <table class="tense-table">
+        <tr><td class="from">Fakten</td><td class="arrow">→</td><td class="to">stated / confirmed</td></tr>
+        <tr><td class="from">Neue Info</td><td class="arrow">→</td><td class="to">announced</td></tr>
+        <tr><td class="from">Zahlen</td><td class="arrow">→</td><td class="to">reported</td></tr>
+        <tr><td class="from">Entscheid.</td><td class="arrow">→</td><td class="to">agreed / decided</td></tr>
+        <tr><td class="from">Bedenken</td><td class="arrow">→</td><td class="to">raised / pointed out</td></tr>
+        <tr><td class="from">Vorschlag</td><td class="arrow">→</td><td class="to">suggested / proposed</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+  SECTION 3: REPORTING VERBS EXPLORER
+════════════════════════════════════════════════════════ -->
+<section class="section" id="s3">
+  <div class="section-label">Schritt 3 — Reporting Verbs</div>
+  <div class="section-title">WÄHLE<br>DEIN VERB.</div>
+  <div class="section-intro">Klicke auf ein Verb — sieh, was es bedeutet und wie es im Protokoll eingesetzt wird.</div>
+
+  <div class="verbs-grid" id="verbs-grid"></div>
+  <div style="height:16px"></div>
+  <div class="verb-example-box" id="verb-example">
+    ← Klicke ein Verb um ein Beispiel zu sehen.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+  SECTION 4: PRACTICE
+════════════════════════════════════════════════════════ -->
+<section class="section" id="s4">
+  <div class="section-label">Schritt 4 — Üben</div>
+  <div class="section-title">JETZT<br>DU.</div>
+  <div class="section-intro">5 Aufgaben — Lückentexte und Multiple Choice. Sofortiges Feedback.</div>
+
+  <div class="quiz-wrapper">
+    <div class="quiz-progress">
+      <span id="q-counter">0 / 5</span>
+      <div class="qprog-bar"><div class="qprog-fill" id="q-prog" style="width:0%"></div></div>
+      <span id="q-score-live">0 ✓</span>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-card" id="qc1">
+      <div class="q-label">Aufgabe 1 — Tense Backshift</div>
+      <div class="q-text">
+        Direct: "The delivery <em>is</em> delayed."<br>
+        Reported: M. Bauer said the delivery <input class="gap-inline" id="g1" placeholder="..."> delayed.
+      </div>
+      <button class="check-btn" onclick="checkGap('g1',['was'],'qc1','✓ Korrekt! &quot;is&quot; → &quot;was&quot; — Tense Backshift Regel 1.')">Prüfen</button>
+      <div class="fb-box" id="fb-g1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card" id="qc2">
+      <div class="q-label">Aufgabe 2 — Will → Would</div>
+      <div class="q-text">
+        Direct: "We <em>will</em> launch the product in June."<br>
+        Reported: P. Webb announced that they <input class="gap-inline" id="g2" placeholder="..."> launch the product in June.
+      </div>
+      <button class="check-btn" onclick="checkGap('g2',['would'],'qc2','✓ Korrekt! &quot;will&quot; → &quot;would&quot; — klassische Tense Backshift.')">Prüfen</button>
+      <div class="fb-box" id="fb-g2"></div>
+    </div>
+
+    <!-- Q3 — MC -->
+    <div class="quiz-card" id="qc3">
+      <div class="q-label">Aufgabe 3 — Richtiges Reporting Verb</div>
+      <div class="q-text">S. Fischer spricht über ein Problem mit dem Lagerbestand. Welches Verb passt?<br><em>"S. Fischer ___ a concern about stock availability."</em></div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-key="A" onclick="mc(this,'qc3',false,'✗ &quot;announced&quot; benutzt man für neue Informationen oder Ankündigungen — nicht für Bedenken.')">announced</button>
+        <button class="mc-opt" data-key="B" onclick="mc(this,'qc3',false,'✗ &quot;agreed&quot; benutzt man wenn jemand einer Entscheidung zustimmt.')">agreed</button>
+        <button class="mc-opt" data-key="C" onclick="mc(this,'qc3',true,'✓ Korrekt! &quot;raised a concern&quot; = einen Einwand / Bedenken ansprechen. Perfekt für Protokolle.')">raised</button>
+        <button class="mc-opt" data-key="D" onclick="mc(this,'qc3',false,'✗ &quot;confirmed&quot; benutzt man um etwas zu bestätigen, das bereits bekannt war.')">confirmed</button>
+      </div>
+      <div class="fb-box" id="fb-qc3"></div>
+    </div>
+
+    <!-- Q4 — gap fill -->
+    <div class="quiz-card" id="qc4">
+      <div class="q-label">Aufgabe 4 — Can → Could</div>
+      <div class="q-text">
+        Direct: "I <em>can</em> prepare the presentation by Friday."<br>
+        Reported: K. Lange confirmed that she <input class="gap-inline" id="g4" placeholder="..."> prepare the presentation by Friday.
+      </div>
+      <button class="check-btn" onclick="checkGap('g4',['could'],'qc4','✓ Korrekt! &quot;can&quot; → &quot;could&quot; — Tense Backshift. Einfach merken: beide enden auf -ould.')">Prüfen</button>
+      <div class="fb-box" id="fb-g4"></div>
+    </div>
+
+    <!-- Q5 — MC -->
+    <div class="quiz-card" id="qc5">
+      <div class="q-label">Aufgabe 5 — Alles zusammen</div>
+      <div class="q-text">Direct: "We have decided to postpone the launch."<br>Welche Reported-Speech-Version ist korrekt?</div>
+      <div class="mc-opts">
+        <button class="mc-opt" data-key="A" onclick="mc(this,'qc5',false,'✗ &quot;have decided&quot; muss zu &quot;had decided&quot; werden — Tense Backshift (Present Perfect → Past Perfect).')">The team said they have decided to postpone the launch.</button>
+        <button class="mc-opt" data-key="B" onclick="mc(this,'qc5',false,'✗ &quot;decided&quot; ist zwar Vergangenheitsform, aber das Reporting Verb &quot;said&quot; ohne &quot;that&quot; klingt unvollständig und das Verb im Hauptsatz fehlt die Verschiebung aus Present Perfect.')">The team said they decided to postpone the launch.</button>
+        <button class="mc-opt" data-key="C" onclick="mc(this,'qc5',true,'✓ Perfekt! &quot;announced&quot; (passendes Reporting Verb) + &quot;that&quot; + &quot;had decided&quot; (Present Perfect → Past Perfect) + vollständige Namen statt &quot;we&quot;.')">The team announced that they had decided to postpone the launch.</button>
+      </div>
+      <div class="fb-box" id="fb-qc5"></div>
+    </div>
+
+    <div class="score-box" id="score-box">
+      <div class="score-num" id="score-num">0</div>
+      <div class="score-label">von 5 Aufgaben korrekt</div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+  BOTTOM NAV
+════════════════════════════════════════════════════════ -->
+<div class="bottom-nav">
+  <span class="nav-section-label" id="nav-lbl">Intro — The Transformation</span>
+  <div class="section-dots" id="sdots"></div>
+  <button class="bnav-btn" id="bnav-prev" onclick="goSection(curSec-1)" disabled>← Zurück</button>
+  <button class="bnav-btn primary" id="bnav-next" onclick="goSection(curSec+1)">Weiter →</button>
+</div>
+
+<script>
+// ─── SECTION NAV ─────────────────────────────────────────
+const SEC_IDS = ['s0','s1','s2','s3','s4'];
+const SEC_LABELS = [
+  'Intro — The Transformation',
+  'Die Maschine — Live Demo',
+  'Die zwei Regeln',
+  'Reporting Verbs Explorer',
+  'Üben — 5 Aufgaben',
+];
+const TOTAL_SECS = SEC_IDS.length;
+let curSec = 0;
+
+const sdotsEl  = document.getElementById('sdots');
+const navLbl   = document.getElementById('nav-lbl');
+const bnavPrev = document.getElementById('bnav-prev');
+const bnavNext = document.getElementById('bnav-next');
+const progFill = document.getElementById('prog-fill');
+
+// Build dots
+for (let i = 0; i < TOTAL_SECS; i++) {
+  const d = document.createElement('button');
+  d.className = 'sdot' + (i===0?' on':'');
+  d.onclick = () => goSection(i);
+  sdotsEl.appendChild(d);
+}
+
+function goSection(n) {
+  if (n < 0 || n >= TOTAL_SECS) return;
+  document.getElementById(SEC_IDS[curSec]).classList.remove('active');
+  curSec = n;
+  document.getElementById(SEC_IDS[curSec]).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  navLbl.textContent = SEC_LABELS[curSec];
+  sdotsEl.querySelectorAll('.sdot').forEach((d,i)=>d.classList.toggle('on',i===curSec));
+  bnavPrev.disabled = curSec === 0;
+  bnavNext.textContent = curSec === TOTAL_SECS-2 ? 'Üben →' : curSec === TOTAL_SECS-1 ? '✓ Fertig' : 'Weiter →';
+  bnavNext.disabled = curSec === TOTAL_SECS-1;
+  progFill.style.width = ((curSec)/(TOTAL_SECS-1)*100)+'%';
+}
+
+document.addEventListener('keydown', e => {
+  if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') { e.preventDefault(); goSection(curSec+1); }
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp')    { e.preventDefault(); goSection(curSec-1); }
+});
+
+// ─── MACHINE EXAMPLES ────────────────────────────────────
+const EXAMPLES = [
+  {
+    in:   '"The order <span class="hl-change before">is</span> ready."',
+    out:  'She said the order <span class="hl-change after">was</span> ready.',
+    speaker: 'Ms Webb says:',
+    reporter: 'In the minutes (Protokoll):',
+    tags: ['tense'],
+    explain: 'is → was (Tense Backshift)',
+  },
+  {
+    in:   '"We <span class="hl-change before">will</span> launch the product in <span class="hl-change before">June</span>."',
+    out:  'P. Webb announced that <span class="hl-change after">they</span> <span class="hl-change after">would</span> launch the product in June.',
+    speaker: 'P. Webb says:',
+    reporter: 'In the minutes:',
+    tags: ['tense','pronoun'],
+    explain: 'will → would + We → they',
+  },
+  {
+    in:   '"<span class="hl-change before">I</span> <span class="hl-change before">can</span> prepare <span class="hl-change before">my</span> report by <span class="hl-change before">tomorrow</span>."',
+    out:  'K. Lange confirmed that <span class="hl-change after">she</span> <span class="hl-change after">could</span> prepare <span class="hl-change after">her</span> report by <span class="hl-change after">the following day</span>.',
+    speaker: 'K. Lange says:',
+    reporter: 'In the minutes:',
+    tags: ['tense','pronoun','time'],
+    explain: 'can → could + I → she + my → her + tomorrow → the following day',
+  },
+  {
+    in:   '"<span class="hl-change before">We have decided</span> to postpone the launch."',
+    out:  'The team announced that <span class="hl-change after">they had decided</span> to postpone the launch.',
+    speaker: 'Ms Webb says:',
+    reporter: 'In the minutes:',
+    tags: ['tense','pronoun','verb'],
+    explain: 'have decided → had decided (Present Perfect → Past Perfect) + we → they + announced (präzises Verb)',
+  },
+  {
+    in:   '"<span class="hl-change before">Sales are</span> up 12% this quarter."',
+    out:  'M. Bauer reported that <span class="hl-change after">sales were</span> up 12% that quarter.',
+    speaker: 'M. Bauer says:',
+    reporter: 'In the minutes:',
+    tags: ['tense','verb'],
+    explain: 'are → were + "reported" als passendes Reporting Verb für Zahlen',
+  },
+];
+
+let curEx = 0;
+
+// Build ex dots
+const exDots = document.getElementById('ex-dots');
+EXAMPLES.forEach((_,i) => {
+  const d = document.createElement('button');
+  d.className = 'ex-dot'+(i===0?' on':'');
+  d.onclick = () => setEx(i);
+  exDots.appendChild(d);
+});
+
+function setEx(n, animate=true) {
+  curEx = n;
+  const ex = EXAMPLES[n];
+
+  if (animate) {
+    // Processing animation
+    const status = document.getElementById('machine-status');
+    const lp = document.getElementById('light-proc');
+    const ld = document.getElementById('light-done');
+    const li = document.getElementById('light-idle');
+    status.textContent = 'processing...';
+    lp.classList.add('processing');
+    li.classList.remove('active');
+    ld.classList.remove('active');
+
+    document.getElementById('bubble-out').style.opacity = '0.2';
+    setTimeout(() => {
+      lp.classList.remove('processing');
+      ld.classList.add('active');
+      status.textContent = 'output ready';
+      document.getElementById('bubble-out').style.opacity = '1';
+      document.getElementById('bubble-out').style.transition = 'opacity .3s';
+      renderEx(ex);
+    }, 600);
+  } else {
+    renderEx(ex);
+  }
+
+  // dots
+  exDots.querySelectorAll('.ex-dot').forEach((d,i)=>d.classList.toggle('on',i===n));
+}
+
+function renderEx(ex) {
+  document.querySelector('#bubble-in .speaker').textContent = ex.speaker;
+  document.getElementById('in-text').innerHTML = ex.in;
+  document.querySelector('#bubble-out .speaker').textContent = ex.reporter;
+  document.getElementById('out-text').innerHTML = ex.out;
+
+  // rule tags
+  ['tense','pronoun','time','verb'].forEach(t => {
+    document.getElementById('tag-'+t).classList.toggle('active', ex.tags.includes(t));
+  });
+}
+
+function nextEx() { setEx((curEx+1)%EXAMPLES.length); }
+function prevEx() { setEx((curEx+EXAMPLES.length-1)%EXAMPLES.length); }
+
+// ─── REPORTING VERBS ─────────────────────────────────────
+const VERBS = [
+  { name:'stated',    de:'behauptete / sagte',     use:'Neutrale Fakten',       ex:'Ms Webb <strong>stated</strong> that the meeting would start at 10 am.' },
+  { name:'confirmed', de:'bestätigte',              use:'Bestätigung einer Info', ex:'P. Webb <strong>confirmed</strong> that the catalogue had been sent to all clients.' },
+  { name:'reported',  de:'berichtete',              use:'Bericht / Zahlen',      ex:'M. Bauer <strong>reported</strong> that Q2 sales were up 12% compared to Q1.' },
+  { name:'announced', de:'kündigte an',             use:'Neue Ankündigung',      ex:'P. Webb <strong>announced</strong> that the ActiveDesk range would launch in June.' },
+  { name:'agreed',    de:'stimmte zu',              use:'Einigung / Konsens',    ex:'The team <strong>agreed</strong> that the new design was an improvement.' },
+  { name:'decided',   de:'entschied',               use:'Entscheidung',          ex:'The board <strong>decided</strong> that production would begin in September.' },
+  { name:'raised',    de:'sprach an / thematisierte',use:'Bedenken / Problem',   ex:'S. Richter <strong>raised</strong> a concern about stock availability.' },
+  { name:'pointed out',de:'wies darauf hin',        use:'Hinweis / Anmerkung',   ex:'K. Lange <strong>pointed out</strong> that the deadline had already passed.' },
+  { name:'suggested', de:'schlug vor',              use:'Vorschlag',             ex:'M. Bauer <strong>suggested</strong> that the team should meet weekly.' },
+  { name:'proposed',  de:'schlug vor (formell)',    use:'Formeller Vorschlag',   ex:'Ms Webb <strong>proposed</strong> that the launch date be moved to July.' },
+  { name:'asked',     de:'fragte',                  use:'Frage (direkt)',        ex:'P. Webb <strong>asked</strong> whether S. Fischer could prepare the report.' },
+  { name:'enquired',  de:'erkundigte sich',         use:'Höfliche Nachfrage',    ex:'K. Lange <strong>enquired</strong> whether the shipment had arrived yet.' },
+];
+
+const verbsGrid = document.getElementById('verbs-grid');
+const verbExample = document.getElementById('verb-example');
+
+VERBS.forEach((v,i) => {
+  const card = document.createElement('div');
+  card.className = 'verb-card';
+  card.innerHTML = `<div class="verb-name">${v.name}</div>
+    <div class="verb-de">${v.de}</div>
+    <div class="verb-use">${v.use}</div>`;
+  card.onclick = () => {
+    verbsGrid.querySelectorAll('.verb-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    verbExample.innerHTML = `<strong>${v.name}</strong> (${v.de}) — Beispiel:<br>${v.ex}`;
+  };
+  verbsGrid.appendChild(card);
+});
+
+// ─── QUIZ ─────────────────────────────────────────────────
+let qScore = 0;
+let qAnswered = 0;
+const Q_TOTAL = 5;
+
+function updateQProg() {
+  document.getElementById('q-counter').textContent = qAnswered+' / '+Q_TOTAL;
+  document.getElementById('q-prog').style.width = (qAnswered/Q_TOTAL*100)+'%';
+  document.getElementById('q-score-live').textContent = qScore+' ✓';
+  if (qAnswered === Q_TOTAL) showScore();
+}
+
+function checkGap(inputId, answers, cardId, fbOk) {
+  const inp = document.getElementById(inputId);
+  const card = document.getElementById(cardId);
+  const fbId = 'fb-'+inputId;
+  const fb   = document.getElementById(fbId);
+  if (card.dataset.done) return;
+  const val = inp.value.trim().toLowerCase();
+  if (answers.includes(val)) {
+    inp.classList.add('ok');
+    fb.className = 'fb-box show ok'; fb.textContent = fbOk;
+    card.classList.add('correct');
+    card.dataset.done='1'; qScore++; qAnswered++;
+  } else {
+    inp.classList.add('err');
+    setTimeout(()=>inp.classList.remove('err'),500);
+    fb.className = 'fb-box show err';
+    fb.textContent = '✗ Nicht ganz. Überprüfe die Tense-Backshift-Tabelle oben.';
+    if (!card.dataset.tried) { card.dataset.tried='1'; qAnswered++; card.dataset.done='1'; }
+  }
+  updateQProg();
+}
+
+function mc(btn, cardId, correct, fbText) {
+  const card = document.getElementById(cardId);
+  if (card.dataset.done) return;
+  card.dataset.done='1';
+  card.querySelectorAll('.mc-opt').forEach(b=>b.disabled=true);
+  const fb = document.getElementById('fb-'+cardId);
+  if (correct) {
+    btn.classList.add('correct');
+    fb.className='fb-box show ok'; fb.textContent=fbText;
+    card.classList.add('correct'); qScore++;
+  } else {
+    btn.classList.add('wrong');
+    fb.className='fb-box show err'; fb.textContent=fbText;
+    card.classList.add('wrong');
+    card.querySelectorAll('.mc-opt').forEach(b=>{
+      if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(',true,')) b.classList.add('reveal');
+    });
+  }
+  qAnswered++; updateQProg();
+}
+
+function showScore() {
+  const box = document.getElementById('score-box');
+  box.style.display='block';
+  document.getElementById('score-num').textContent = qScore;
+  const msgs = {
+    5:'Ausgezeichnet! Du beherrschst Reported Speech perfekt.',
+    4:'Sehr gut! Fast perfekt — eine kleine Unaufmerksamkeit.',
+    3:'Gut! Wiederhole die Tense-Backshift-Tabelle noch einmal.',
+    2:'Weiter üben! Die Regeln sitzen noch nicht ganz.',
+    1:'Schau dir die Regeln nochmal an — dann klappt\'s!',
+    0:'Geh zurück zu Schritt 1 und lies die Regeln nochmal durch.',
+  };
+  document.getElementById('score-msg').textContent = msgs[qScore]||'';
+  box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// Init
+setEx(0, false);
+</script>
+</body>
+</html>
