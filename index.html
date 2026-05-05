@@ -523,6 +523,72 @@ body.edit-mode .card-edit-actions {
   margin-top: var(--space-1);
 }
 
+/* Sammlung-Button auf Karte (nur für eingeloggte Lehrkräfte) */
+.card-collect-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 150ms;
+  flex-shrink: 0;
+}
+body.logged-in .file-card:hover .card-collect-btn { display: flex; }
+body.logged-in .file-card .card-collect-btn.in-collection {
+  display: flex;
+  color: var(--primary-500);
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+}
+.card-collect-btn:hover { border-color: var(--primary-500); color: var(--primary-500); }
+
+/* Collection modal list */
+.coll-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: var(--space-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+.coll-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-default);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  transition: background 100ms;
+}
+.coll-list-item:last-child { border-bottom: none; }
+.coll-list-item:hover { background: var(--bg-hover); }
+.coll-list-item input[type="checkbox"] {
+  flex-shrink: 0;
+  accent-color: var(--primary-500);
+  width: 15px; height: 15px;
+}
+.coll-item-name { flex: 1; }
+.coll-item-count { font-size: var(--text-2xs); color: var(--text-muted); }
+.coll-new-row {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.coll-new-row input {
+  flex: 1;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  outline: none;
+}
+.coll-new-row input:focus { border-color: var(--border-focus); }
+
 /* ---- EMPTY STATE ---- */
 .empty-state {
   text-align: center;
@@ -1125,6 +1191,24 @@ body.edit-mode #editToggle { background: var(--primary-50); color: var(--primary
   </div>
 </div>
 
+<!-- SAMMLUNG MODAL -->
+<div class="modal-backdrop" id="modalCollection">
+  <div class="modal">
+    <h2>Zu Sammlung hinzufügen</h2>
+    <p id="collModalMaterialName" style="font-size:var(--text-xs);color:var(--text-muted);margin-top:calc(-1 * var(--space-2));margin-bottom:var(--space-1)"></p>
+    <div id="collList" class="coll-list">
+      <div style="padding:var(--space-4);text-align:center;color:var(--text-muted);font-size:var(--text-sm)">Lade Sammlungen…</div>
+    </div>
+    <div class="coll-new-row">
+      <input type="text" id="collNewName" placeholder="Neue Sammlung…" maxlength="60" onkeydown="if(event.key==='Enter')collCreateAndAdd()">
+      <button class="btn-primary" onclick="collCreateAndAdd()">Erstellen</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalCollection')">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
@@ -1158,6 +1242,7 @@ try {
     window.__kuerzel = kuerzel;
     const el = document.getElementById('uploadAutor'); if (el) el.value = kuerzel;
     ['mineToggle','mineToggle2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
+    document.body.classList.add('logged-in');
   }
 } catch (e) {
   hideTeacherButtons();
@@ -1737,6 +1822,11 @@ function makeCard(m) {
     '    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>' +
     '    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>' +
     '  </svg>' +
+    '</button>' +
+    '<button class="card-collect-btn" title="Zu Sammlung hinzufügen" onclick="event.preventDefault();event.stopPropagation();showAddToCollection(' + JSON.stringify(m.id || '') + ')">' +
+    '  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+    '    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>' +
+    '  </svg>' +
     '</button>';
 
   // Edit-mode inline actions
@@ -2212,6 +2302,151 @@ document.addEventListener('keydown', function (e) {
     document.getElementById('search').focus();
   }
 });
+
+/* ═══════════════════════════════════════════
+   SAMMLUNGEN
+═══════════════════════════════════════════ */
+let _collTargetMaterialId = null;
+let _collData = [];   // [{id, name, item_count, has_material}]
+
+async function showAddToCollection(materialId) {
+  if (!window.__sb || !window.__session) {
+    showToast('Bitte einloggen um Sammlungen zu nutzen', 3500);
+    return;
+  }
+  if (!materialId) {
+    showToast('Material noch nicht in Datenbank – bitte Seite neu laden', 3500);
+    return;
+  }
+  _collTargetMaterialId = materialId;
+  const m = materialien.find(function (x) { return x.id === materialId; });
+  document.getElementById('collModalMaterialName').textContent = m ? '"' + m.name + '"' : '';
+  document.getElementById('collNewName').value = '';
+  renderCollList('<div style="padding:var(--space-4);text-align:center;color:var(--text-muted);font-size:var(--text-sm)">Lade Sammlungen…</div>');
+  openModal('modalCollection');
+  await _refreshCollList(materialId);
+}
+
+async function _refreshCollList(materialId) {
+  if (!window.__sb || !window.__session) return;
+  try {
+    // Get all own collections
+    const { data: cols, error: ce } = await window.__sb
+      .from('collections')
+      .select('id, name')
+      .eq('owner_id', window.__session.user.id)
+      .order('created_at');
+    if (ce) throw ce;
+
+    if (!cols || cols.length === 0) {
+      _collData = [];
+      renderCollList('<div style="padding:var(--space-4);text-align:center;color:var(--text-muted);font-size:var(--text-sm)">Noch keine Sammlungen – erstelle deine erste!</div>');
+      return;
+    }
+
+    // For each collection, check if material is already in it + count items
+    const ids = cols.map(function (c) { return c.id; });
+    const { data: items } = await window.__sb
+      .from('collection_items')
+      .select('collection_id, material_id')
+      .in('collection_id', ids);
+
+    _collData = cols.map(function (c) {
+      const myItems = (items || []).filter(function (i) { return i.collection_id === c.id; });
+      const hasMaterial = myItems.some(function (i) { return i.material_id === materialId; });
+      return { id: c.id, name: c.name, item_count: myItems.length, has_material: hasMaterial };
+    });
+    renderCollList(null);
+  } catch (e) {
+    console.error('[Collections]', e);
+    renderCollList('<div style="padding:var(--space-3);color:var(--color-error);font-size:var(--text-sm)">Fehler: ' + esc(e.message) + '</div>');
+  }
+}
+
+function renderCollList(loadingHtml) {
+  const el = document.getElementById('collList');
+  if (!el) return;
+  if (loadingHtml !== null) { el.innerHTML = loadingHtml; return; }
+  if (_collData.length === 0) {
+    el.innerHTML = '<div style="padding:var(--space-4);text-align:center;color:var(--text-muted);font-size:var(--text-sm)">Noch keine Sammlungen – erstelle deine erste!</div>';
+    return;
+  }
+  el.innerHTML = _collData.map(function (c) {
+    return '<label class="coll-list-item">' +
+      '<input type="checkbox"' + (c.has_material ? ' checked' : '') + ' onchange="collToggleItem(this,\'' + c.id + '\')">' +
+      '<span class="coll-item-name">' + esc(c.name) + '</span>' +
+      '<span class="coll-item-count">' + c.item_count + ' Material' + (c.item_count !== 1 ? 'ien' : '') + '</span>' +
+      '</label>';
+  }).join('');
+}
+
+async function collToggleItem(checkbox, collectionId) {
+  if (!window.__sb || !window.__session || !_collTargetMaterialId) return;
+  checkbox.disabled = true;
+  try {
+    if (checkbox.checked) {
+      const { error } = await window.__sb.from('collection_items').insert({
+        collection_id: collectionId,
+        material_id: _collTargetMaterialId,
+        sort_order: 0
+      });
+      if (error && error.code !== '23505') throw error; // ignore unique violation
+      showToast('Zur Sammlung hinzugefügt ✓');
+    } else {
+      const { error } = await window.__sb.from('collection_items')
+        .delete()
+        .eq('collection_id', collectionId)
+        .eq('material_id', _collTargetMaterialId);
+      if (error) throw error;
+      showToast('Aus Sammlung entfernt');
+    }
+    // Update local state
+    const c = _collData.find(function (x) { return x.id === collectionId; });
+    if (c) {
+      c.has_material = checkbox.checked;
+      c.item_count = Math.max(0, c.item_count + (checkbox.checked ? 1 : -1));
+    }
+  } catch (e) {
+    checkbox.checked = !checkbox.checked; // revert
+    showToast('Fehler: ' + e.message, 4000);
+  } finally {
+    checkbox.disabled = false;
+  }
+}
+
+async function collCreateAndAdd() {
+  const name = document.getElementById('collNewName').value.trim();
+  if (!name) return;
+  if (!window.__sb || !window.__session) return;
+  const btn = document.querySelector('#modalCollection .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    const { data: col, error: ce } = await window.__sb
+      .from('collections')
+      .insert({ name: name, owner_id: window.__session.user.id })
+      .select('id, name')
+      .single();
+    if (ce) throw ce;
+
+    if (_collTargetMaterialId) {
+      const { error: ie } = await window.__sb.from('collection_items').insert({
+        collection_id: col.id,
+        material_id: _collTargetMaterialId,
+        sort_order: 0
+      });
+      if (ie) throw ie;
+    }
+    document.getElementById('collNewName').value = '';
+    showToast('"' + name + '" erstellt ✓');
+    await _refreshCollList(_collTargetMaterialId);
+  } catch (e) {
+    showToast('Fehler: ' + e.message, 4000);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Erstellen';
+  }
+}
 
 /* ═══════════════════════════════════════════
    INIT

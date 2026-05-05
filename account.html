@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mein Konto – Unterricht.Digital</title>
+<link rel="stylesheet" href="styles/design-system.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-size: var(--text-base);
+}
+
+.page-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-16);
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.page-header-info h1 {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.page-header-info .email {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-default);
+  margin-bottom: var(--space-6);
+}
+
+.tab {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 150ms, border-color 150ms;
+  font-family: inherit;
+}
+
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--primary-500); border-bottom-color: var(--primary-500); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION HEADERS ── */
+.section-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* ── PROFILE CARD ── */
+.profile-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-default);
+  font-size: var(--text-sm);
+}
+
+.profile-row:last-child { border-bottom: none; }
+
+.profile-label {
+  width: 120px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.profile-value { color: var(--text-primary); flex: 1; }
+
+/* ── MATERIAL TABLE ── */
+.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.mat-table th {
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: var(--space-1) var(--space-3);
+  border-bottom: 2px solid var(--border-default);
+}
+
+.mat-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+
+.mat-table tr:last-child td { border-bottom: none; }
+
+.mat-table tr:hover td { background: var(--bg-hover); }
+
+.mat-table td a {
+  color: var(--primary-500);
+  text-decoration: none;
+  font-weight: 500;
+}
+.mat-table td a:hover { text-decoration: underline; }
+
+.badge-fach {
+  display: inline-block;
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  background: var(--primary-50);
+  color: var(--primary-600);
+  white-space: nowrap;
+}
+
+/* ── COLLECTION GRID ── */
+.coll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.coll-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.coll-card:hover {
+  border-color: var(--primary-400);
+  box-shadow: var(--shadow-md);
+}
+
+.coll-card-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--primary-50);
+  color: var(--primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coll-card-name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.coll-card-meta {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.coll-card-actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-default);
+}
+
+.coll-public-badge {
+  position: absolute;
+  top: var(--space-3); right: var(--space-3);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  background: var(--success-50);
+  color: var(--success-600, #16a34a);
+}
+
+/* New collection form */
+.new-coll-form {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.new-coll-form input {
+  flex: 1;
+  min-width: 180px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  outline: none;
+}
+
+.new-coll-form input:focus { border-color: var(--border-focus); }
+
+/* ── COLLECTION ITEMS DRAWER ── */
+.coll-drawer {
+  display: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-5);
+  overflow: hidden;
+}
+
+.coll-drawer.open { display: block; }
+
+.coll-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--primary-50);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.coll-drawer-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--primary-700);
+}
+
+.coll-drawer-items {
+  padding: var(--space-1) 0;
+}
+
+.coll-drawer-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+  font-size: var(--text-sm);
+}
+
+.coll-drawer-row:last-child { border-bottom: none; }
+
+.coll-drawer-row a {
+  flex: 1;
+  color: var(--primary-500);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.coll-drawer-row a:hover { text-decoration: underline; }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  color: var(--text-secondary);
+}
+
+.empty svg { margin-bottom: var(--space-3); color: var(--border-strong); }
+.empty h3 { font-size: var(--text-sm); font-weight: 600; margin-bottom: var(--space-1); }
+.empty p { font-size: var(--text-sm); }
+
+/* ── LOADING SPINNER ── */
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+  color: var(--text-muted);
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+/* ── MODALS ── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: color-mix(in oklch, var(--text-primary) 40%, transparent);
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-xl);
+}
+
+.modal h2 {
+  font-size: var(--text-md);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.modal label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.modal input[type="text"] {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  outline: none;
+}
+
+.modal input:focus { border-color: var(--border-focus); }
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-default);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: var(--space-5);
+  right: var(--space-5);
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  z-index: 999;
+  animation: slideUp 200ms ease;
+  display: none;
+}
+
+.toast.show { display: block; }
+
+@keyframes slideUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .page-header { flex-wrap: wrap; }
+  .header-actions { width: 100%; margin-left: 0; }
+  .mat-table th:nth-child(4),
+  .mat-table td:nth-child(4) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<script src="nav.js" defer></script>
+
+<div class="page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="avatar" id="avatarInitials">?</div>
+    <div class="page-header-info">
+      <h1 id="headerName">Mein Konto</h1>
+      <div class="email" id="headerEmail">Nicht eingeloggt</div>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:var(--space-1);">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Materialien
+      </a>
+      <button class="btn-danger" id="logoutBtn" onclick="doLogout()" style="display:none">Abmelden</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('profile')">Profil</button>
+    <button class="tab" onclick="switchTab('materials')">Meine Materialien</button>
+    <button class="tab" onclick="switchTab('collections')">Sammlungen</button>
+  </div>
+
+  <!-- TAB: PROFIL -->
+  <div class="tab-panel active" id="tab-profile">
+    <div class="profile-card" id="profileCard">
+      <div class="profile-row">
+        <div class="profile-label">E-Mail</div>
+        <div class="profile-value" id="profEmail">–</div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-label">Kürzel</div>
+        <div class="profile-value" id="profKuerzel">–</div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-label">Mitglied seit</div>
+        <div class="profile-value" id="profSince">–</div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-label">Passwort</div>
+        <div class="profile-value">
+          <button class="btn-secondary" onclick="showPwModal()" style="font-size:var(--text-xs)">Passwort ändern</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="section-title" style="margin-bottom:var(--space-3)">Schnellzugriff</div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);">
+        <a href="index.html" class="btn-secondary" style="text-decoration:none;font-size:var(--text-sm);">📚 Materialien</a>
+        <a href="dashboard.html" class="btn-secondary" style="text-decoration:none;font-size:var(--text-sm);">📊 Tracking</a>
+        <a href="pruefung-erstellen.html" class="btn-secondary" style="text-decoration:none;font-size:var(--text-sm);">📝 Prüfung erstellen</a>
+        <a href="codegenerator.html" class="btn-secondary" style="text-decoration:none;font-size:var(--text-sm);">🔢 Codes</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MATERIALIEN -->
+  <div class="tab-panel" id="tab-materials">
+    <div class="section-title">
+      <span>Meine hochgeladenen Materialien</span>
+      <span id="matCount" style="font-size:var(--text-xs);font-weight:400;color:var(--text-muted)"></span>
+    </div>
+    <div id="matList">
+      <div class="spinner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        Lade Materialien…
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SAMMLUNGEN -->
+  <div class="tab-panel" id="tab-collections">
+    <div class="section-title">
+      <span>Meine Sammlungen</span>
+      <span id="collCount" style="font-size:var(--text-xs);font-weight:400;color:var(--text-muted)"></span>
+    </div>
+
+    <div class="new-coll-form">
+      <input type="text" id="newCollName" placeholder="Name der neuen Sammlung…" maxlength="60"
+             onkeydown="if(event.key==='Enter')createCollection()">
+      <button class="btn-primary" onclick="createCollection()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Neue Sammlung
+      </button>
+    </div>
+
+    <div id="collGrid">
+      <div class="spinner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        Lade Sammlungen…
+      </div>
+    </div>
+
+    <!-- Drawer for collection items -->
+    <div class="coll-drawer" id="collDrawer">
+      <div class="coll-drawer-header">
+        <span class="coll-drawer-title" id="drawerTitle">Materialien</span>
+        <button class="btn-secondary" style="font-size:var(--text-xs)" onclick="closeDrawer()">Schließen</button>
+      </div>
+      <div class="coll-drawer-items" id="drawerItems"></div>
+    </div>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<!-- PASSWORD MODAL -->
+<div class="modal-backdrop" id="modalPw">
+  <div class="modal">
+    <h2>Passwort ändern</h2>
+    <label>Neues Passwort</label>
+    <input type="text" id="pwNew" placeholder="Mindestens 8 Zeichen" autocomplete="new-password">
+    <div id="pwError" style="display:none;color:var(--color-error);font-size:var(--text-sm);margin-top:var(--space-2);"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalPw')">Abbrechen</button>
+      <button class="btn-primary" id="btnSavePw" onclick="savePw()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- RENAME COLLECTION MODAL -->
+<div class="modal-backdrop" id="modalRenColl">
+  <div class="modal">
+    <h2>Sammlung umbenennen</h2>
+    <label>Neuer Name</label>
+    <input type="text" id="renCollName" placeholder="Name" maxlength="60"
+           onkeydown="if(event.key==='Enter')saveCollRename()">
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modalRenColl')">Abbrechen</button>
+      <button class="btn-primary" id="btnRenColl" onclick="saveCollRename()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- AUTH + MAIN SCRIPT -->
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SB_URL = 'https://yodanvzkkhlqemlvtvey.supabase.co';
+const SB_KEY = 'sb_publishable_MnsZVbYHDBQglcv3wPacvg_mkXwOl7R';
+const sb = createClient(SB_URL, SB_KEY);
+window.__sb = sb;
+
+const { data: { session }, error } = await sb.auth.getSession();
+
+if (!session) {
+  // Redirect to login
+  location.href = 'login.html?next=account.html';
+} else {
+  window.__session = session;
+  const user = session.user;
+  const email = user.email || '';
+  const kuerzel = email.split('@')[0].slice(0, 3).toUpperCase();
+  const since = new Date(user.created_at).toLocaleDateString('de-DE', { year:'numeric', month:'long', day:'numeric' });
+
+  document.getElementById('avatarInitials').textContent = kuerzel;
+  document.getElementById('headerName').textContent = kuerzel;
+  document.getElementById('headerEmail').textContent = email;
+  document.getElementById('profEmail').textContent = email;
+  document.getElementById('profKuerzel').textContent = kuerzel;
+  document.getElementById('profSince').textContent = since;
+  document.getElementById('logoutBtn').style.display = '';
+
+  window.__kuerzel = kuerzel;
+  window.__userId  = user.id;
+
+  // Load materials and collections on their tabs when first clicked
+  if (typeof initTabs === 'function') initTabs();
+}
+</script>
+
+<script>
+/* ── UTILITIES ── */
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+let _toastTimer;
+function showToast(msg, dur) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function() { el.classList.remove('show'); }, dur || 2600);
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-backdrop').forEach(function(bd) {
+  bd.addEventListener('click', function(e) { if (e.target === bd) bd.classList.remove('open'); });
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
+});
+
+/* ── TABS ── */
+let _materialsLoaded = false;
+let _collectionsLoaded = false;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t, i) {
+    const names = ['profile','materials','collections'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p, i) {
+    const names = ['profile','materials','collections'];
+    p.classList.toggle('active', names[i] === name);
+  });
+  if (name === 'materials' && !_materialsLoaded) { _materialsLoaded = true; loadMaterials(); }
+  if (name === 'collections' && !_collectionsLoaded) { _collectionsLoaded = true; loadCollections(); }
+}
+
+function initTabs() {
+  // profile tab is default — materials/collections loaded on demand
+}
+
+/* ── LOGOUT ── */
+async function doLogout() {
+  if (!window.__sb) return;
+  await window.__sb.auth.signOut();
+  location.href = 'landing.html';
+}
+
+/* ── PASSWORD ── */
+function showPwModal() {
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwError').style.display = 'none';
+  openModal('modalPw');
+  setTimeout(function() { document.getElementById('pwNew').focus(); }, 50);
+}
+
+async function savePw() {
+  const pw = document.getElementById('pwNew').value.trim();
+  const errEl = document.getElementById('pwError');
+  errEl.style.display = 'none';
+  if (pw.length < 8) {
+    errEl.textContent = 'Passwort muss mindestens 8 Zeichen haben.';
+    errEl.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('btnSavePw');
+  btn.disabled = true;
+  btn.textContent = 'Speichern…';
+  const { error } = await window.__sb.auth.updateUser({ password: pw });
+  btn.disabled = false;
+  btn.textContent = 'Speichern';
+  if (error) {
+    errEl.textContent = error.message;
+    errEl.style.display = 'block';
+  } else {
+    closeModal('modalPw');
+    showToast('Passwort gespeichert ✓');
+  }
+}
+
+/* ── MATERIALS TAB ── */
+async function loadMaterials() {
+  const el = document.getElementById('matList');
+  if (!window.__sb || !window.__userId) {
+    el.innerHTML = '<div class="empty"><h3>Nicht eingeloggt</h3></div>';
+    return;
+  }
+  el.innerHTML = '<div class="spinner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Lade…</div>';
+
+  const { data, error } = await window.__sb
+    .from('materialien')
+    .select('id, name, fach, thema, pfad, datum, autor')
+    .eq('created_by', window.__userId)
+    .order('fach').order('thema').order('name');
+
+  if (error) {
+    el.innerHTML = '<div class="empty"><h3>Fehler</h3><p>' + esc(error.message) + '</p></div>';
+    return;
+  }
+
+  document.getElementById('matCount').textContent = data.length + ' Material' + (data.length !== 1 ? 'ien' : '');
+
+  if (data.length === 0) {
+    el.innerHTML = '<div class="empty">' +
+      '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+      '<h3>Noch keine Materialien</h3>' +
+      '<p>Lade dein erstes Material in der <a href="index.html" style="color:var(--primary-500)">Materialübersicht</a> hoch.</p></div>';
+    return;
+  }
+
+  const BASE = 'https://brandy299.github.io/HTML-materialien/';
+  let html = '<div style="background:var(--bg-surface);border:1px solid var(--border-default);border-radius:var(--radius-lg);overflow:hidden;">';
+  html += '<table class="mat-table"><thead><tr>' +
+    '<th>Name</th><th>Fach</th><th>Thema</th><th>Datum</th>' +
+    '</tr></thead><tbody>';
+
+  data.forEach(function(m) {
+    html += '<tr>' +
+      '<td><a href="' + encodeURI(BASE + m.pfad) + '" target="_blank">' + esc(m.name) + '</a></td>' +
+      '<td><span class="badge-fach">' + esc(m.fach) + '</span></td>' +
+      '<td style="color:var(--text-secondary)">' + esc(m.thema) + '</td>' +
+      '<td style="color:var(--text-muted)">' + esc(m.datum || '–') + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+}
+
+/* ── COLLECTIONS TAB ── */
+let _collList = [];
+let _openCollId = null;
+let _renameCollId = null;
+
+async function loadCollections() {
+  const el = document.getElementById('collGrid');
+  if (!window.__sb || !window.__userId) {
+    el.innerHTML = '<div class="empty"><h3>Nicht eingeloggt</h3></div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="spinner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Lade…</div>';
+
+  const { data: cols, error: ce } = await window.__sb
+    .from('collections')
+    .select('id, name, is_public, created_at')
+    .eq('owner_id', window.__userId)
+    .order('created_at');
+
+  if (ce) {
+    el.innerHTML = '<div class="empty"><h3>Fehler</h3><p>' + esc(ce.message) + '</p></div>';
+    return;
+  }
+
+  // Get item counts for all collections
+  let countMap = {};
+  if (cols && cols.length > 0) {
+    const ids = cols.map(c => c.id);
+    const { data: items } = await window.__sb
+      .from('collection_items')
+      .select('collection_id')
+      .in('collection_id', ids);
+    (items || []).forEach(function(i) {
+      countMap[i.collection_id] = (countMap[i.collection_id] || 0) + 1;
+    });
+  }
+
+  _collList = (cols || []).map(function(c) {
+    return { id: c.id, name: c.name, is_public: c.is_public, item_count: countMap[c.id] || 0, created_at: c.created_at };
+  });
+
+  renderCollGrid();
+}
+
+function renderCollGrid() {
+  const el = document.getElementById('collGrid');
+  document.getElementById('collCount').textContent = _collList.length + ' Sammlung' + (_collList.length !== 1 ? 'en' : '');
+
+  if (_collList.length === 0) {
+    el.innerHTML = '<div class="empty">' +
+      '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      '<h3>Noch keine Sammlungen</h3><p>Erstelle deine erste Sammlung mit dem Formular oben.</p></div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="coll-grid">' + _collList.map(function(c) {
+    return '<div class="coll-card" id="ccard-' + c.id + '">' +
+      (c.is_public ? '<span class="coll-public-badge">Öffentlich</span>' : '') +
+      '<div class="coll-card-icon">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      '</div>' +
+      '<div class="coll-card-name">' + esc(c.name) + '</div>' +
+      '<div class="coll-card-meta">' + c.item_count + ' Material' + (c.item_count !== 1 ? 'ien' : '') + '</div>' +
+      '<div class="coll-card-actions">' +
+        '<button class="btn-secondary" style="font-size:var(--text-xs);flex:1" onclick="openDrawer(\'' + c.id + '\')" title="Materialien anzeigen">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:3px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+          'Anzeigen' +
+        '</button>' +
+        '<button class="btn-secondary" style="font-size:var(--text-xs)" onclick="showRenColl(\'' + c.id + '\',\'' + esc(c.name) + '\')" title="Umbenennen">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+        '</button>' +
+        '<button class="btn-secondary" style="font-size:var(--text-xs);color:var(--color-error)" onclick="deleteColl(\'' + c.id + '\',\'' + esc(c.name) + '\')" title="Löschen">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
+        '</button>' +
+        '<button class="btn-secondary" style="font-size:var(--text-xs)" onclick="togglePublic(\'' + c.id + '\')" title="Sichtbarkeit umschalten">' +
+          (c.is_public ? '🔓' : '🔒') +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+/* ── CREATE COLLECTION ── */
+async function createCollection() {
+  const name = document.getElementById('newCollName').value.trim();
+  if (!name) { showToast('Bitte Name eingeben'); return; }
+  if (!window.__sb || !window.__userId) return;
+
+  const { data: col, error } = await window.__sb
+    .from('collections')
+    .insert({ name: name, owner_id: window.__userId })
+    .select('id, name, is_public, created_at')
+    .single();
+
+  if (error) { showToast('Fehler: ' + error.message, 4000); return; }
+  document.getElementById('newCollName').value = '';
+  _collList.push({ id: col.id, name: col.name, is_public: col.is_public, item_count: 0, created_at: col.created_at });
+  renderCollGrid();
+  showToast('"' + name + '" erstellt ✓');
+}
+
+/* ── RENAME COLLECTION ── */
+function showRenColl(id, name) {
+  _renameCollId = id;
+  document.getElementById('renCollName').value = name;
+  openModal('modalRenColl');
+  setTimeout(function() { document.getElementById('renCollName').focus(); document.getElementById('renCollName').select(); }, 50);
+}
+
+async function saveCollRename() {
+  const name = document.getElementById('renCollName').value.trim();
+  if (!name || !_renameCollId || !window.__sb) return;
+  const btn = document.getElementById('btnRenColl');
+  btn.disabled = true; btn.textContent = '…';
+  const { error } = await window.__sb.from('collections').update({ name }).eq('id', _renameCollId);
+  btn.disabled = false; btn.textContent = 'Speichern';
+  if (error) { showToast('Fehler: ' + error.message, 4000); return; }
+  const c = _collList.find(x => x.id === _renameCollId);
+  if (c) { c.name = name; renderCollGrid(); }
+  closeModal('modalRenColl');
+  showToast('Umbenannt ✓');
+}
+
+/* ── DELETE COLLECTION ── */
+async function deleteColl(id, name) {
+  if (!confirm('Sammlung "' + name + '" wirklich löschen? Die Materialien selbst bleiben erhalten.')) return;
+  const { error } = await window.__sb.from('collections').delete().eq('id', id);
+  if (error) { showToast('Fehler: ' + error.message, 4000); return; }
+  _collList = _collList.filter(c => c.id !== id);
+  if (_openCollId === id) closeDrawer();
+  renderCollGrid();
+  showToast('"' + name + '" gelöscht');
+}
+
+/* ── TOGGLE PUBLIC ── */
+async function togglePublic(id) {
+  const c = _collList.find(x => x.id === id);
+  if (!c) return;
+  const newVal = !c.is_public;
+  const { error } = await window.__sb.from('collections').update({ is_public: newVal }).eq('id', id);
+  if (error) { showToast('Fehler: ' + error.message, 4000); return; }
+  c.is_public = newVal;
+  renderCollGrid();
+  showToast(newVal ? 'Sammlung ist jetzt öffentlich' : 'Sammlung ist jetzt privat');
+}
+
+/* ── DRAWER: show collection items ── */
+async function openDrawer(collId) {
+  _openCollId = collId;
+  const c = _collList.find(x => x.id === collId);
+  const drawer = document.getElementById('collDrawer');
+  const titleEl = document.getElementById('drawerTitle');
+  const itemsEl = document.getElementById('drawerItems');
+
+  titleEl.textContent = c ? c.name : 'Sammlung';
+  itemsEl.innerHTML = '<div class="spinner"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Lade…</div>';
+  drawer.classList.add('open');
+
+  // scroll drawer into view
+  drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  const { data: items, error } = await window.__sb
+    .from('collection_items')
+    .select('material_id, sort_order, materialien(id, name, fach, thema, pfad)')
+    .eq('collection_id', collId)
+    .order('sort_order');
+
+  if (error) {
+    itemsEl.innerHTML = '<div style="padding:var(--space-3);color:var(--color-error);font-size:var(--text-sm)">Fehler: ' + esc(error.message) + '</div>';
+    return;
+  }
+
+  if (!items || items.length === 0) {
+    itemsEl.innerHTML = '<div style="padding:var(--space-4);text-align:center;color:var(--text-muted);font-size:var(--text-sm)">Noch keine Materialien in dieser Sammlung.</div>';
+    return;
+  }
+
+  const BASE = 'https://brandy299.github.io/HTML-materialien/';
+  itemsEl.innerHTML = items.map(function(item) {
+    const m = item.materialien;
+    if (!m) return '';
+    return '<div class="coll-drawer-row">' +
+      '<a href="' + encodeURI(BASE + m.pfad) + '" target="_blank">' + esc(m.name) + '</a>' +
+      '<span style="font-size:var(--text-xs);color:var(--text-muted)">' + esc(m.fach) + ' · ' + esc(m.thema) + '</span>' +
+      '<button title="Entfernen" style="background:none;border:none;cursor:pointer;color:var(--color-error);padding:2px 4px;font-size:var(--text-xs)" ' +
+        'onclick="removeFromColl(\'' + collId + '\',\'' + m.id + '\')">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>' +
+      '</div>';
+  }).join('');
+}
+
+function closeDrawer() {
+  document.getElementById('collDrawer').classList.remove('open');
+  _openCollId = null;
+}
+
+async function removeFromColl(collId, materialId) {
+  const { error } = await window.__sb.from('collection_items')
+    .delete()
+    .eq('collection_id', collId)
+    .eq('material_id', materialId);
+  if (error) { showToast('Fehler: ' + error.message, 4000); return; }
+  // Update count
+  const c = _collList.find(x => x.id === collId);
+  if (c) c.item_count = Math.max(0, c.item_count - 1);
+  renderCollGrid();
+  // Refresh drawer
+  await openDrawer(collId);
+  showToast('Aus Sammlung entfernt');
+}
+</script>
+</body>
+</html>

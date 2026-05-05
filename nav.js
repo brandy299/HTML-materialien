@@ -33,6 +33,11 @@
       label: 'Skills',
       svg: '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',
     },
+    {
+      href: 'account.html',
+      label: 'Konto',
+      svg: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    },
   ];
 
   const current = location.pathname.split('/').pop() || 'index.html';
