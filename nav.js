@@ -278,24 +278,46 @@ body {
   style.textContent = css;
   document.head.appendChild(style);
 
+  /* ─── Open / Close / Toggle  (defined FIRST so inject() can use them) ── */
+  function snavOpen() {
+    expanded = true;
+    var nav = document.getElementById('snav');
+    var ov  = document.getElementById('snav-overlay');
+    if (nav) nav.classList.add('snav-open');
+    if (ov)  ov.classList.add('snav-open');
+  }
+
+  function snavClose() {
+    expanded = false;
+    var nav = document.getElementById('snav');
+    var ov  = document.getElementById('snav-overlay');
+    if (nav) nav.classList.remove('snav-open');
+    if (ov)  ov.classList.remove('snav-open');
+  }
+
+  function snavToggle() {
+    expanded ? snavClose() : snavOpen();
+  }
+
+  /* Export to window so inline onclick="snavToggle()" works */
+  window.snavToggle = snavToggle;
+  window.snavOpen   = snavOpen;
+  window.snavClose  = snavClose;
+
   /* ─── Inject HTML ────────────────────────────────────────────────────── */
   function inject() {
     document.body.insertAdjacentHTML('afterbegin', html);
 
-    /* Overlay click closes drawer */
     document.getElementById('snav-overlay').addEventListener('click', snavClose);
 
-    /* ESC closes drawer */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && expanded) snavClose();
     });
 
-    /* Close drawer when a nav link is clicked (but stay on strip) */
     document.querySelectorAll('#snav-links .snav-link').forEach(function (el) {
       el.addEventListener('click', snavClose);
     });
 
-    /* Load auth info for admin link + email */
     loadAuthInfo();
   }
 
@@ -323,21 +345,4 @@ body {
   } else {
     inject();
   }
-
-  /* ─── Toggle / Close ─────────────────────────────────────────────────── */
-  window.snavToggle = function () {
-    expanded ? snavClose() : snavOpen();
-  };
-
-  window.snavOpen = function () {
-    expanded = true;
-    document.getElementById('snav').classList.add('snav-open');
-    document.getElementById('snav-overlay').classList.add('snav-open');
-  };
-
-  window.snavClose = function () {
-    expanded = false;
-    document.getElementById('snav').classList.remove('snav-open');
-    document.getElementById('snav-overlay').classList.remove('snav-open');
-  };
 })();
