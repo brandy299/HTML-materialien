@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M25 – Informationstext: Der Angebotsvergleich</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 2rem; color: #1a1a1a; font-size: 15px; }
+  .wrap { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 2rem 2.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+  /* Header */
+  .mat-header { display: grid; grid-template-columns: 100px 1fr 120px; border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem; }
+  .mat-num { background: #2E75B6; color: #fff; font-size: 26px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+  .mat-title-block { background: #D6E4F0; padding: 1rem 1.25rem; }
+  .mat-title { font-size: 18px; font-weight: bold; color: #1F4E79; }
+  .mat-sub { font-size: 13px; color: #555; margin-top: 3px; }
+  .mat-tag { background: #D6E4F0; border: 2px solid #2E75B6; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #1F4E79; padding: 0.5rem; text-align: center; }
+
+  /* Section headers */
+  .sec-head { font-size: 12px; font-weight: bold; letter-spacing: 0.06em; text-transform: uppercase; color: #666; margin: 1.5rem 0 0.75rem; padding-bottom: 6px; border-bottom: 1px solid #ddd; }
+
+  /* Intro text */
+  .intro { font-size: 15px; line-height: 1.7; color: #1a1a1a; margin-bottom: 1.25rem; }
+
+  /* Collapsible section */
+  .collapsible { border: 0.5px solid #ddd; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .collapsible-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; background: #f9f9f9; user-select: none; }
+  .collapsible-header:hover { background: #f0f0f0; }
+  .collapsible.open .collapsible-header { background: #EBF3FB; border-bottom: 0.5px solid #ddd; }
+  .collapsible-title { font-size: 15px; font-weight: bold; color: #1F4E79; }
+  .collapsible-arrow { font-size: 13px; color: #888; transition: transform 0.2s; }
+  .collapsible.open .collapsible-arrow { transform: rotate(90deg); }
+  .collapsible-body { display: none; padding: 1rem 1.25rem; }
+  .collapsible.open .collapsible-body { display: block; }
+
+  /* Methods grid */
+  .methods-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .method-card { border-radius: 8px; padding: 1rem; }
+  .method-card.quant { background: #EBF3FB; border-left: 4px solid #185FA5; }
+  .method-card.qual { background: #FFF8EC; border-left: 4px solid #BA7517; }
+  .method-label { font-size: 11px; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px; }
+  .method-card.quant .method-label { color: #185FA5; }
+  .method-card.qual .method-label { color: #BA7517; }
+  .method-title { font-size: 14px; font-weight: bold; color: #1a1a1a; margin-bottom: 6px; }
+  .method-text { font-size: 13px; line-height: 1.65; color: #444; }
+
+  /* Criteria cards */
+  .krit-card { border-radius: 8px; border: 0.5px solid #ddd; overflow: hidden; margin-bottom: 8px; }
+  .krit-card.open { border-color: #999; }
+  .krit-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; background: #f9f9f9; }
+  .krit-header:hover { background: #f0f0f0; }
+  .krit-card.open .krit-header { background: #EBF3FB; }
+  .krit-name { font-size: 14px; font-weight: bold; color: #1a1a1a; }
+  .krit-desc { font-size: 12px; color: #888; margin-top: 2px; }
+  .krit-arrow { font-size: 12px; color: #888; transition: transform 0.2s; }
+  .krit-card.open .krit-arrow { transform: rotate(90deg); }
+  .krit-body { display: none; padding: 12px 14px; font-size: 13px; line-height: 1.65; color: #444; border-top: 0.5px solid #eee; }
+  .krit-card.open .krit-body { display: block; }
+
+  /* Sub-heads inside criteria */
+  .sub-head { font-size: 12px; font-weight: bold; color: #1F4E79; margin: 10px 0 4px; }
+
+  /* BZP Schema */
+  .bzp { background: #f4f4f4; border-radius: 6px; padding: 10px 12px; margin-top: 8px; }
+  .bzp-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; color: #555; }
+  .bzp-row.minus { color: #2e7d32; }
+  .bzp-row.plus { color: #c62828; }
+  .bzp-row.total { border-top: 0.5px solid #ccc; margin-top: 4px; padding-top: 5px; font-weight: bold; color: #1a1a1a; }
+
+  /* Tables inside criteria */
+  .info-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+  .info-table th { text-align: left; font-weight: bold; padding: 4px 8px; border-bottom: 0.5px solid #ddd; color: #1a1a1a; }
+  .info-table td { padding: 4px 8px; border-bottom: 0.5px solid #eee; color: #555; vertical-align: top; }
+
+  /* Example box */
+  .example { background: #f4f4f4; border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: 12px; font-style: italic; color: #555; }
+
+  /* Aufgabe box */
+  .aufgabe { margin-top: 1.5rem; border: 2px solid #D6B656; border-radius: 10px; padding: 1.25rem; background: #FFF2CC; }
+  .aufgabe-title { font-size: 16px; font-weight: bold; color: #7B5800; margin-bottom: 0.75rem; }
+  .aufgabe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.75rem; }
+  .aufgabe-box { border-radius: 8px; border: 1px solid #D6B656; padding: 1rem; background: #fff; min-height: 80px; }
+  .aufgabe-box-title { font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #1F4E79; }
+
+  #krit-preis { border-color: #85B7EB; }
+  #krit-preis .krit-name { color: #0C447C; }
+  #krit-preis .krit-desc { color: #0C447C; opacity: 0.7; }
+  #krit-preis .krit-header { background: #D6EAF8; }
+  #krit-preis .krit-header:hover { filter: brightness(0.96); }
+  #krit-preis.open .krit-header { background: #D6EAF8; border-bottom: 0.5px solid #85B7EB; }
+  #krit-preis.open .krit-body { background: #E8F4FD; }
+  #krit-preis .sub-head { color: #0C447C; }
+
+  #krit-zahlung { border-color: #EDD96A; }
+  #krit-zahlung .krit-name { color: #7B5800; }
+  #krit-zahlung .krit-desc { color: #7B5800; opacity: 0.7; }
+  #krit-zahlung .krit-header { background: #FEFCE8; }
+  #krit-zahlung .krit-header:hover { filter: brightness(0.96); }
+  #krit-zahlung.open .krit-header { background: #FEFCE8; border-bottom: 0.5px solid #EDD96A; }
+  #krit-zahlung.open .krit-body { background: #FFFEF5; }
+  #krit-zahlung .sub-head { color: #7B5800; }
+
+  #krit-liefertreue { border-color: #C39BD3; }
+  #krit-liefertreue .krit-name { color: #6C3483; }
+  #krit-liefertreue .krit-desc { color: #6C3483; opacity: 0.7; }
+  #krit-liefertreue .krit-header { background: #EAD9F5; }
+  #krit-liefertreue .krit-header:hover { filter: brightness(0.96); }
+  #krit-liefertreue.open .krit-header { background: #EAD9F5; border-bottom: 0.5px solid #C39BD3; }
+  #krit-liefertreue.open .krit-body { background: #F5EEF8; }
+  #krit-liefertreue .sub-head { color: #6C3483; }
+
+  #krit-qualitaet { border-color: #F0A070; }
+  #krit-qualitaet .krit-name { color: #784212; }
+  #krit-qualitaet .krit-desc { color: #784212; opacity: 0.7; }
+  #krit-qualitaet .krit-header { background: #FAD7A0; }
+  #krit-qualitaet .krit-header:hover { filter: brightness(0.96); }
+  #krit-qualitaet.open .krit-header { background: #FAD7A0; border-bottom: 0.5px solid #F0A070; }
+  #krit-qualitaet.open .krit-body { background: #FEF0E7; }
+  #krit-qualitaet .sub-head { color: #784212; }
+
+  #krit-service { border-color: #F0A0C0; }
+  #krit-service .krit-name { color: #922B21; }
+  #krit-service .krit-desc { color: #922B21; opacity: 0.7; }
+  #krit-service .krit-header { background: #FADDE9; }
+  #krit-service .krit-header:hover { filter: brightness(0.96); }
+  #krit-service.open .krit-header { background: #FADDE9; border-bottom: 0.5px solid #F0A0C0; }
+  #krit-service.open .krit-body { background: #FDE8F0; }
+  #krit-service .sub-head { color: #922B21; }
+
+  #krit-nachhaltigkeit { border-color: #82C9A0; }
+  #krit-nachhaltigkeit .krit-name { color: #145A32; }
+  #krit-nachhaltigkeit .krit-desc { color: #145A32; opacity: 0.7; }
+  #krit-nachhaltigkeit .krit-header { background: #D5F5E3; }
+  #krit-nachhaltigkeit .krit-header:hover { filter: brightness(0.96); }
+  #krit-nachhaltigkeit.open .krit-header { background: #D5F5E3; border-bottom: 0.5px solid #82C9A0; }
+  #krit-nachhaltigkeit.open .krit-body { background: #E9F7EF; }
+  #krit-nachhaltigkeit .sub-head { color: #145A32; }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="mat-header">
+    <div class="mat-num">M25</div>
+    <div class="mat-title-block">
+      <div class="mat-title">Informationstext: Der Angebotsvergleich</div>
+      <div class="mat-sub">TSM AG | Unterrichtsreihe: Abwicklung eines Kundenauftrages</div>
+    </div>
+    <div class="mat-tag">&#128214; Informationstext</div>
+  </div>
+
+  <!-- 1. Warum -->
+  <p class="sec-head">1. Warum Angebote vergleichen?</p>
+  <p class="intro">Bevor ein Unternehmen Waren oder Materialien beschafft, holt es in der Regel mehrere Angebote von verschiedenen Lieferanten ein. Ziel ist es, den geeignetsten Lieferanten zu finden &ndash; nicht zwingend den g&uuml;nstigsten, sondern denjenigen, der die Anforderungen des Unternehmens am besten erf&uuml;llt. Ein systematischer Angebotsvergleich sch&uuml;tzt vor Fehlentscheidungen und macht die Lieferantenauswahl nachvollziehbar und begr&uuml;ndbar.</p>
+
+  <!-- 2. Methoden – collapsible -->
+  <div class="collapsible" id="sec-methoden">
+    <div class="collapsible-header" onclick="toggleSection('sec-methoden')">
+      <span class="collapsible-title">2. Methoden des Angebotsvergleichs</span>
+      <span class="collapsible-arrow">&#9654;</span>
+    </div>
+    <div class="collapsible-body">
+      <p style="font-size:14px;color:#444;margin-bottom:12px;">Grunds&auml;tzlich gibt es zwei Methoden, um Angebote zu vergleichen:</p>
+      <div class="methods-grid">
+        <div class="method-card quant">
+          <div class="method-label">Quantitativ</div>
+          <div class="method-title">Einfaktorenmodell</div>
+          <div class="method-text">Beim quantitativen Angebotsvergleich werden ausschlie&szlig;lich messbare, in Zahlen ausdr&uuml;ckbare Faktoren bewertet. Im Mittelpunkt steht der tats&auml;chliche Einstandspreis, also der Preis, den das Unternehmen nach Abzug aller Rabatte und Zuschl&auml;ge tats&auml;chlich zahlt.<br><br>Diese Methode ist objektiv und nachvollziehbar, hat aber eine wichtige Einschr&auml;nkung: Sie ber&uuml;cksichtigt nur den Preis &ndash; und nicht alles, was einen guten Lieferanten ausmacht.</div>
+        </div>
+        <div class="method-card qual">
+          <div class="method-label">Qualitativ</div>
+          <div class="method-title">Nutzwertanalyse / Scoring-Modell</div>
+          <div class="method-text">Beim qualitativen Angebotsvergleich werden zus&auml;tzlich nicht messbare Kriterien bewertet. Am Ende wird ein Gesamtwert (Nutzwert) f&uuml;r jeden Lieferanten ermittelt, der eine begr&uuml;ndete Entscheidung auch jenseits des Preises erm&ouml;glicht.<br><br>Diese Methode ist aufw&auml;ndiger, kann jedoch durch die Ber&uuml;cksichtigung mehrerer Kriterien eine fundiertere und umfassendere Lieferantenentscheidung ergeben.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Kriterien -->
+  <p class="sec-head" style="margin-top:1.25rem;">3. Kriterien des Angebotsvergleichs &ndash; auf Karte klicken f&uuml;r Details</p>
+
+  <!-- Preis -->
+  <div class="krit-card" id="krit-preis">
+    <div class="krit-header" onclick="toggleKrit('krit-preis')">
+      <div><div class="krit-name">Preis</div><div class="krit-desc">Aufklappen: Bezugspreiskalkulation</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      Mit Preis ist der <strong>Bezugspreis (Einstandspreis)</strong> gemeint &ndash; also nicht der Listenpreis des Lieferanten, sondern der tats&auml;chliche Preis, den das Unternehmen nach allen Abz&uuml;gen und Zuschl&auml;gen zahlt.
+      <div class="sub-head">Bezugspreiskalkulation</div>
+      <div class="bzp">
+        <div class="bzp-row"><span>Listeneinkaufspreis (LEP)</span><span>xxx,xx &euro;</span></div>
+        <div class="bzp-row minus"><span>&ndash; Lieferantenrabatt</span><span>&ndash; xx,xx &euro;</span></div>
+        <div class="bzp-row"><span>= Zieleinkaufspreis (ZEP)</span><span>xxx,xx &euro;</span></div>
+        <div class="bzp-row minus"><span>&ndash; Lieferantenskonto</span><span>&ndash; xx,xx &euro;</span></div>
+        <div class="bzp-row"><span>= Bareinkaufspreis (BEP)</span><span>xxx,xx &euro;</span></div>
+        <div class="bzp-row plus"><span>+ Bezugskosten (z. B. Fracht)</span><span>+ xx,xx &euro;</span></div>
+        <div class="bzp-row total"><span>= Einstandspreis (ESP)</span><span>xxx,xx &euro;</span></div>
+      </div>
+      <div class="example"><strong>Wichtig:</strong> Skonto &ndash; also die Verg&uuml;nstigung f&uuml;r fr&uuml;hes Bezahlen &ndash; geh&ouml;rt zum Kriterium des Preises, da es bei der Bezugspreisermittlung bereits abgezogen wird. Es wird in Angeboten zumeist aber unter Zahlungsbedingungen aufgef&uuml;hrt.</div>
+    </div>
+  </div>
+
+  <!-- Zahlungsbedingungen -->
+  <div class="krit-card" id="krit-zahlung">
+    <div class="krit-header" onclick="toggleKrit('krit-zahlung')">
+      <div><div class="krit-name">Zahlungsbedingungen</div><div class="krit-desc">Aufklappen: Vorkasse, Skonto, Zahlungsziel</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      Unter welchen Bedingungen muss gezahlt werden? Besonders f&uuml;r Unternehmen mit knapper Liquidit&auml;t kann das entscheidend sein.
+      <div class="sub-head">Typische Zahlungsbedingungen</div>
+      <table class="info-table">
+        <tr><th style="width:25%">Begriff</th><th style="width:30%">Bedeutung</th><th>Beispiel</th></tr>
+        <tr><td>Vorkasse</td><td>Zahlung vor Lieferung</td><td>Rechnung muss vor Versand beglichen sein</td></tr>
+        <tr><td>Zahlungsziel</td><td>Frist zur Zahlung nach Lieferung</td><td>„30 Tage netto" = 30 Tage Zeit, den ausgewiesenen Preis &ndash; also ohne Abz&uuml;ge &ndash; zu bezahlen</td></tr>
+        <tr><td>Frist f&uuml;r Skontoabzug</td><td>Bei Einhaltung wird ein zus&auml;tzlicher Preisnachlass gew&auml;hrt</td><td>2 % netto bei Zahlung innerhalb von 10 Tagen</td></tr>
+      </table>
+      <div class="example"><strong>Wichtig:</strong> Skonto geh&ouml;rt zum Kriterium des Preises, da es bei der Bezugspreisermittlung bereits abgezogen wird. Es wird in Angeboten zumeist aber unter Zahlungsbedingungen aufgef&uuml;hrt. Es geht also hierbei nur um die Frist, innerhalb der der Abzug von Skonto m&ouml;glich ist.</div>
+    </div>
+  </div>
+
+  <!-- Liefertreue -->
+  <div class="krit-card" id="krit-liefertreue">
+    <div class="krit-header" onclick="toggleKrit('krit-liefertreue')">
+      <div><div class="krit-name">Liefertreue</div><div class="krit-desc">Aufklappen: Erkl&auml;rung und Beispiel</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      H&auml;lt der Lieferant seine zugesagten Liefertermine zuverl&auml;ssig ein? Liefertreue ist besonders wichtig, wenn &ndash; wie bei der TSM AG &ndash; Just-in-Time beschafft wird und Verz&ouml;gerungen den gesamten Produktionsablauf gef&auml;hrden.
+      <div class="sub-head">Woran erkennt man Liefertreue?</div>
+      Kundenbewertungen, Referenzen anderer Unternehmen, eigene Vorerfahrungen mit dem Lieferanten oder Branchenportale k&ouml;nnen Hinweise geben.
+      <div class="example">Beispiel: Die TSM AG bestellte f&uuml;r einen B&uuml;roauftrag der Klinik am Westpark Gasfedergestelle bei einem neuen Lieferanten. Dieser hatte eine Lieferzeit von einer Woche zugesagt &ndash; die Ware kam jedoch erst nach drei Wochen an. Die Montage verz&ouml;gerte sich, die TSM AG musste Vertragsstrafen zahlen.</div>
+    </div>
+  </div>
+
+  <!-- Qualität -->
+  <div class="krit-card" id="krit-qualitaet">
+    <div class="krit-header" onclick="toggleKrit('krit-qualitaet')">
+      <div><div class="krit-name">Qualit&auml;t</div><div class="krit-desc">Aufklappen: ISO 9001, Nachweise</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      Entsprechen die gelieferten Produkte den geforderten Standards? Qualit&auml;t l&auml;sst sich auf verschiedene Weisen nachweisen.
+      <div class="sub-head">ISO 9001 &ndash; Qualit&auml;tsmanagementsystem</div>
+      ISO 9001 ist eine international anerkannte Norm f&uuml;r Qualit&auml;tsmanagementsysteme. Ein zertifiziertes Unternehmen hat nachgewiesen, dass es Prozesse zur Sicherung und Verbesserung der Produktqualit&auml;t eingef&uuml;hrt hat. Die Zertifizierung wird von unabh&auml;ngigen Stellen vergeben und muss regelm&auml;&szlig;ig erneuert werden.
+      <div class="sub-head">Woran erkennt man gute Qualit&auml;t als Einк&auml;ufer?</div>
+      <table class="info-table">
+        <tr><th>Nachweis</th><th>Bedeutung</th></tr>
+        <tr><td>ISO 9001 Zertifikat</td><td>Grundstandard f&uuml;r Qualit&auml;tsmanagement</td></tr>
+        <tr><td>Branchenspezifische Normen</td><td>z. B. ISO/TS f&uuml;r Automobilindustrie</td></tr>
+        <tr><td>Produkttests / Pr&uuml;fberichte</td><td>Unabh&auml;ngige Pr&uuml;fung der Produkte</td></tr>
+        <tr><td>Referenzen / Kundenstimmen</td><td>Erfahrungen anderer Unternehmen</td></tr>
+        <tr><td>Musterlieferung</td><td>Probebestellung vor Hauptauftrag</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Service -->
+  <div class="krit-card" id="krit-service">
+    <div class="krit-header" onclick="toggleKrit('krit-service')">
+      <div><div class="krit-name">Service</div><div class="krit-desc">Aufklappen: Erkl&auml;rung und Nachweise</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      Wie gut ist der Lieferant erreichbar? Gibt es einen pers&ouml;nlichen Ansprechpartner? Wie reagiert der Lieferant bei Problemen oder Reklamationen? Guter Service bedeutet auch, dass bei Lieferproblemen schnell und verl&auml;sslich kommuniziert wird.
+      <div class="sub-head">Woran erkennt man guten Service?</div>
+      Erkennbar ist guter Service an Kundenbewertungen, Referenzen, Erfahrungsberichten sowie ggf. vertraglichen Vereinbarungen (z.&nbsp;B. Service-Level-Agreements).
+    </div>
+  </div>
+
+  <!-- Nachhaltigkeit -->
+  <div class="krit-card" id="krit-nachhaltigkeit">
+    <div class="krit-header" onclick="toggleKrit('krit-nachhaltigkeit')">
+      <div><div class="krit-name">Nachhaltigkeit</div><div class="krit-desc">Aufklappen: ISO 14001, Nachweise</div></div>
+      <span class="krit-arrow">&#9654;</span>
+    </div>
+    <div class="krit-body">
+      Produziert der Lieferant umweltfreundlich? F&uuml;r viele Unternehmen und deren Kunden gewinnt dieses Kriterium zunehmend an Bedeutung.
+      <div class="sub-head">ISO 14001 &ndash; Umweltmanagementsystem</div>
+      ISO 14001 ist eine internationale Norm f&uuml;r Umweltmanagementsysteme. Ein zertifiziertes Unternehmen hat nachgewiesen, dass es systematisch daran arbeitet, seinen &ouml;kologischen Fu&szlig;abdruck zu reduzieren &ndash; z. B. durch Energieeinsparung, Abfallreduzierung oder nachhaltige Beschaffung.
+      <div class="sub-head">Woran erkennt man Nachhaltigkeit als Einк&auml;ufer?</div>
+      <table class="info-table">
+        <tr><th>Nachweis</th><th>Bedeutung</th></tr>
+        <tr><td>ISO 14001 Zertifikat</td><td>Grundstandard f&uuml;r Umweltmanagement</td></tr>
+        <tr><td>Nachhaltigkeitsbericht</td><td>J&auml;hrlicher Bericht &uuml;ber Umweltma&szlig;nahmen</td></tr>
+        <tr><td>CO&#8322;-Bilanz / Klimaneutral</td><td>Nachweis &uuml;ber Emissionsreduktion</td></tr>
+        <tr><td>Faire Lieferketten</td><td>z. B. Fair-Trade-Zertifizierung</td></tr>
+        <tr><td>Produktionsstandort</td><td>Kurze Transportwege = geringerer CO&#8322;-Aussto&szlig;</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+
+<script>
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function toggleKrit(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+</script>
+</body>
+</html>
