@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaints & Reclamations — BMUD B2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:     #FAF7F2;
+      --paper:     #F4EFE6;
+      --sand:      #E8DFD0;
+      --sand-d:    #D4C9B8;
+      --stone:     #A89880;
+      --ink:       #2D2418;
+      --ink-soft:  #5A4A38;
+      --ink-muted: #8C7A66;
+      --acc:       #C8522A;
+      --acc-light: #F7E8E2;
+      --acc-mid:   #E8876A;
+      --teal:      #2A7C8C;
+      --teal-light:#E2F2F5;
+      --ok:        #2D7A4F;
+      --ok-light:  #E3F5EB;
+      --err:       #B83232;
+      --err-light: #FAE8E8;
+      --font-d: 'Righteous', sans-serif;
+      --font-b: 'Lexend', sans-serif;
+      --r: 8px;
+    }
+    html, body { height: 100%; background: var(--cream); color: var(--ink); font-family: var(--font-b); overflow: hidden; }
+    #app { display: grid; grid-template-rows: 52px 1fr 56px; height: 100vh; }
+
+    /* TOP BAR */
+    #topbar { background: var(--acc); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; position: relative; flex-shrink: 0; }
+    .tb-l { font-family: var(--font-d); font-size: 1rem; color: #fff; letter-spacing: 0.04em; }
+    .tb-c { font-size: 0.75rem; font-weight: 500; color: rgba(255,255,255,0.85); letter-spacing: 0.07em; text-transform: uppercase; }
+    .tb-r { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+    #prog-wrap { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.25); }
+    #prog-fill { height: 100%; background: #fff; transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+    /* STAGE */
+    #stage { position: relative; overflow: hidden; }
+    .slide { position: absolute; inset: 0; padding: 2rem 3.5rem 1.2rem; opacity: 0; pointer-events: none; transform: translateX(28px); transition: opacity .36s ease, transform .36s cubic-bezier(.4,0,.2,1); overflow-y: auto; display: flex; flex-direction: column; }
+    .slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+    .slide.exit { opacity: 0; transform: translateX(-28px); }
+
+    /* TYPOGRAPHY */
+    .lbl { font-size: 0.68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: .35rem; }
+    .disp { font-family: var(--font-d); font-size: clamp(2.6rem,5vw,4.2rem); line-height: 1.0; color: var(--ink); }
+    .disp .hl { color: var(--acc); }
+    .disp-md { font-family: var(--font-d); font-size: clamp(1.9rem,3.8vw,3rem); line-height: 1.05; color: var(--ink); }
+    .sub { font-size: 1rem; font-weight: 300; color: var(--ink-soft); line-height: 1.65; max-width: 580px; margin-top: .4rem; }
+    .rule { width: 40px; height: 3px; background: var(--acc); border-radius: 2px; margin: .8rem 0; flex-shrink: 0; }
+
+    /* CARDS */
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .8rem; }
+    .card { background: var(--paper); border: 1.5px solid var(--sand); border-radius: var(--r); padding: 1rem 1.2rem; }
+    .card.acc { background: var(--acc-light); border-color: var(--acc-mid); }
+    .card.teal { background: var(--teal-light); border-color: #9ECDD6; }
+    .card.ok { background: var(--ok-light); border-color: #74C49A; }
+    .c-num { font-family: var(--font-d); font-size: 1.7rem; color: var(--acc-mid); line-height: 1; margin-bottom: .15rem; }
+    .c-title { font-size: .82rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .3rem; }
+    .card p { font-size: .8rem; color: var(--ink-soft); line-height: 1.55; }
+    .card em { font-style: italic; color: var(--ink-muted); font-size: .76rem; display: block; margin-top: .3rem; }
+
+    /* LIST ROWS */
+    .rows { border: 1.5px solid var(--sand); border-radius: var(--r); overflow: hidden; }
+    .row { display: flex; gap: .8rem; align-items: flex-start; padding: .65rem .9rem; border-bottom: 1px solid var(--sand); background: var(--paper); }
+    .row:last-child { border-bottom: none; }
+    .row-arr { color: var(--acc); font-weight: 700; flex-shrink: 0; font-size: .85rem; margin-top: .08rem; }
+    .row span { font-size: .86rem; color: var(--ink-soft); line-height: 1.5; }
+    .row strong { font-weight: 600; color: var(--ink); }
+
+    /* ADJ TYPES */
+    .adj-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .7rem; margin-top: .3rem; }
+    .adj-card { background: var(--paper); border: 1.5px solid var(--sand); border-radius: var(--r); padding: .85rem 1rem; text-align: center; }
+    .adj-icon { font-size: 1.6rem; margin-bottom: .3rem; }
+    .adj-name { font-size: .78rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .2rem; }
+    .adj-card p { font-size: .74rem; color: var(--ink-muted); line-height: 1.45; }
+
+    /* LANG */
+    .lang-lbl { font-size: .65rem; font-weight: 600; letter-spacing: .17em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: .35rem; margin-top: .7rem; }
+    .phrase { font-size: .86rem; font-style: italic; color: var(--ink-soft); padding: .4rem .8rem; background: var(--paper); border: 1.5px solid var(--sand); border-radius: var(--r); margin-bottom: .28rem; line-height: 1.5; }
+    .phrase strong { font-style: normal; color: var(--acc); font-weight: 600; }
+    .phrase.bad { background: var(--err-light); border-color: #E8A0A0; color: var(--err); }
+
+    /* SCENARIO BOX */
+    .scenario { background: var(--paper); border: 1.5px solid var(--sand); border-radius: var(--r); padding: 1.2rem 1.5rem; max-width: 620px; margin-top: .9rem; position: relative; }
+    .scenario::before { content: '"'; font-family: var(--font-d); font-size: 4.5rem; color: var(--acc-mid); opacity: .2; position: absolute; top: -.7rem; left: .7rem; line-height: 1; pointer-events: none; }
+    .scenario .s-who { font-size: .65rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--acc); margin-bottom: .35rem; }
+    .scenario p { font-size: .92rem; font-weight: 300; font-style: italic; color: var(--ink-soft); line-height: 1.7; }
+    .pills { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .9rem; }
+    .pill { font-size: .7rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: .28rem .7rem; border: 1.5px solid var(--sand-d); border-radius: 100px; color: var(--ink-soft); background: var(--paper); }
+
+    /* INFO BOX */
+    .info { background: var(--acc-light); border: 1.5px solid var(--acc-mid); border-radius: var(--r); padding: .75rem 1rem; margin-top: .8rem; }
+    .info .i-lbl { font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--acc); margin-bottom: .2rem; }
+    .info p { font-size: .85rem; color: var(--ink-soft); line-height: 1.6; }
+
+    /* STRUCTURE TABLE */
+    .struct { width: 100%; border-collapse: collapse; margin-top: .3rem; font-size: .82rem; }
+    .struct th { background: var(--acc); color: #fff; font-family: var(--font-b); font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: .5rem .8rem; text-align: left; }
+    .struct td { padding: .5rem .8rem; border-bottom: 1px solid var(--sand); color: var(--ink-soft); line-height: 1.5; vertical-align: top; }
+    .struct tr:last-child td { border-bottom: none; }
+    .struct tr:nth-child(even) td { background: var(--paper); }
+    .struct td:first-child { font-weight: 600; color: var(--acc); white-space: nowrap; }
+
+    /* QUIZ */
+    .q-block { margin-bottom: 1.1rem; }
+    .q-text { font-size: .93rem; font-weight: 500; color: var(--ink); margin-bottom: .45rem; line-height: 1.5; }
+    .q-num { font-family: var(--font-d); font-size: 1.25rem; color: var(--acc); margin-right: .3rem; }
+    .opts { display: flex; flex-direction: column; gap: .28rem; }
+    .opt { display: flex; align-items: center; gap: .65rem; padding: .5rem .85rem; background: var(--paper); border: 1.5px solid var(--sand); border-radius: var(--r); cursor: pointer; font-size: .83rem; color: var(--ink-soft); transition: background .12s, border-color .12s; user-select: none; }
+    .opt:hover:not(.locked) { background: var(--sand); border-color: var(--sand-d); }
+    .opt-k { font-family: var(--font-d); font-size: .9rem; color: var(--stone); flex-shrink: 0; width: 1rem; }
+    .opt.correct { background: var(--ok-light); border-color: #74C49A; color: var(--ok); }
+    .opt.correct .opt-k { color: var(--ok); }
+    .opt.wrong { background: var(--err-light); border-color: #E8A0A0; }
+    .opt.wrong .opt-k { color: var(--err); }
+    .opt.locked { cursor: default; }
+    .q-fb { font-size: .76rem; font-weight: 500; margin-top: .2rem; padding: .28rem .65rem; border-radius: var(--r); display: none; }
+    .q-fb.ok { display: block; background: var(--ok-light); color: var(--ok); }
+    .q-fb.err { display: block; background: var(--err-light); color: var(--err); }
+    #quiz-res { font-size: .92rem; font-weight: 600; padding: .65rem 1rem; border-radius: var(--r); display: none; margin-top: .5rem; }
+    #quiz-res.ok { background: var(--ok-light); color: var(--ok); border: 1.5px solid #74C49A; }
+    #quiz-res.err { background: var(--err-light); color: var(--err); border: 1.5px solid #E8A0A0; }
+
+    /* BOTTOM BAR */
+    #bottombar { background: var(--paper); border-top: 1.5px solid var(--sand); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; flex-shrink: 0; }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 7px; height: 7px; background: var(--sand-d); border-radius: 50%; cursor: pointer; transition: background .18s, width .18s; }
+    .dot.active { background: var(--acc); width: 20px; border-radius: 4px; }
+    .dot:hover:not(.active) { background: var(--stone); }
+    .btn { font-family: var(--font-b); font-size: .8rem; font-weight: 600; letter-spacing: .05em; padding: .48rem 1.3rem; border-radius: var(--r); border: 1.5px solid; cursor: pointer; transition: background .13s, color .13s, transform .1s; }
+    .btn:active { transform: scale(.97); }
+    .btn-ghost { border-color: var(--sand-d); color: var(--stone); background: transparent; }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--stone); color: var(--ink-soft); background: var(--sand); }
+    .btn-ghost:disabled { opacity: .35; cursor: default; }
+    .btn-pri { border-color: var(--acc); color: #fff; background: var(--acc); }
+    .btn-pri:hover { background: #B34420; border-color: #B34420; }
+    .kbd-hint { font-size: .66rem; color: var(--stone); }
+    kbd { display: inline-block; padding: .08rem .32rem; border: 1px solid var(--sand-d); border-radius: 3px; background: var(--cream); font-family: var(--font-b); font-size: .62rem; color: var(--stone); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div id="topbar">
+    <div class="tb-l">HBBK</div>
+    <div class="tb-c">BMUD · Business English B2 · Complaints &amp; Reclamations</div>
+    <div class="tb-r"><span id="cur">1</span>&thinsp;/&thinsp;<span id="tot">7</span></div>
+    <div id="prog-wrap"><div id="prog-fill"></div></div>
+  </div>
+
+  <div id="stage">
+
+    <!-- ═══ SLIDE 1: HOOK ════════════════════════════ -->
+    <div class="slide active" data-slide="1">
+      <div class="lbl">Office Design Ltd. · Customer Service</div>
+      <h1 class="disp">Complaints &amp;<br><span class="hl">Reclamations</span></h1>
+      <div class="rule"></div>
+      <p class="sub">How to raise, respond to, and resolve complaints professionally — and turn a dissatisfied customer into a loyal one.</p>
+      <div class="scenario">
+        <div class="s-who">Office Design Ltd. · Bristol Warehouse</div>
+        <p>A key client in Hamburg, Meyer &amp; Partner GmbH, has just received their order of 80 ergonomic desk chairs. Twenty of them are the wrong colour, and ten arrived with visible damage to the upholstery. They paid in full three weeks ago. Now they want answers — and a solution.</p>
+      </div>
+      <div class="pills">
+        <span class="pill">Write a complaint</span>
+        <span class="pill">Respond &amp; adjust</span>
+        <span class="pill">Offer goodwill gestures</span>
+        <span class="pill">Reclamation vocabulary</span>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 2: TYPES OF COMPLAINT ════════════ -->
+    <div class="slide" data-slide="2">
+      <div class="lbl">Input — Types of Complaint</div>
+      <h2 class="disp-md">What Customers<br>Complain About</h2>
+      <div class="rule"></div>
+      <div class="g2" style="margin-top:.3rem; flex:1;">
+        <div class="card">
+          <div class="c-num">01</div>
+          <div class="c-title">Wrong Goods</div>
+          <p>Items delivered do not match the order — wrong model, colour, size, or article number.</p>
+          <em>"We ordered item #A-204 in beige — you sent #A-204 in grey."</em>
+        </div>
+        <div class="card">
+          <div class="c-num">02</div>
+          <div class="c-title">Damaged Goods</div>
+          <p>Items arrived broken, scratched, stained, or unusable — often due to poor packaging.</p>
+          <em>"Ten chairs have visible damage to the upholstery, apparently due to inadequate packing."</em>
+        </div>
+        <div class="card acc">
+          <div class="c-num">03</div>
+          <div class="c-title">Late / Incomplete Delivery</div>
+          <p>Goods arrived later than agreed, or part of the consignment is missing.</p>
+          <em>"The delivery arrived five days after the agreed date with 15 items missing."</em>
+        </div>
+        <div class="card teal">
+          <div class="c-num">04</div>
+          <div class="c-title">Quality Below Standard</div>
+          <p>Goods do not meet the agreed specification, sample, or catalogue description.</p>
+          <em>"The fabric quality differs considerably from the approved sample."</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 3: COMPLAINT STRUCTURE ════════════ -->
+    <div class="slide" data-slide="3">
+      <div class="lbl">Input — How to Write a Complaint</div>
+      <h2 class="disp-md">Structure of a<br>Complaint Email</h2>
+      <div class="rule"></div>
+      <table class="struct">
+        <thead>
+          <tr><th style="width:22%">Section</th><th style="width:35%">Purpose</th><th>Example phrase</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reference</td>
+            <td>Identify the order and delivery</td>
+            <td><em>"We refer to our order No. OD-447 dated 3 May …"</em></td>
+          </tr>
+          <tr>
+            <td>Acknowledge receipt</td>
+            <td>Confirm delivery arrived</td>
+            <td><em>"The consignment was received on 10 May."</em></td>
+          </tr>
+          <tr>
+            <td>State the problem</td>
+            <td>Describe clearly what is wrong</td>
+            <td><em>"We regret to inform you that 10 chairs arrived damaged due to insufficient packaging."</em></td>
+          </tr>
+          <tr>
+            <td>Provide evidence</td>
+            <td>Mention photos, packing list, etc.</td>
+            <td><em>"Please find enclosed photos of the damaged items."</em></td>
+          </tr>
+          <tr>
+            <td>Suggest adjustment</td>
+            <td>State what you expect</td>
+            <td><em>"We would ask you to arrange an immediate replacement delivery."</em></td>
+          </tr>
+          <tr>
+            <td>Closing / tone</td>
+            <td>Stay firm but professional</td>
+            <td><em>"We trust you will deal with this matter promptly."</em></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="info">
+        <div class="i-lbl">Golden Rule</div>
+        <p>Always be <strong>firm but polite</strong>. A complaint is a business communication — not a personal attack. Aggressive language damages the relationship without solving the problem.</p>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 4: ADJUSTMENT TYPES ═══════════════ -->
+    <div class="slide" data-slide="4">
+      <div class="lbl">Input — Types of Adjustment (Kulanzregelung)</div>
+      <h2 class="disp-md">How Suppliers<br>Can Adjust</h2>
+      <div class="rule"></div>
+      <div class="adj-grid">
+        <div class="adj-card">
+          <div class="adj-icon">🔄</div>
+          <div class="adj-name">Replacement</div>
+          <p>A new delivery of identical goods to replace the faulty or missing items.</p>
+        </div>
+        <div class="adj-card">
+          <div class="adj-icon">🚚</div>
+          <div class="adj-name">Express Delivery</div>
+          <p>Fastest possible dispatch of the correct or replacement goods, at the supplier's expense.</p>
+        </div>
+        <div class="adj-card">
+          <div class="adj-icon">💰</div>
+          <div class="adj-name">Discount</div>
+          <p>A price reduction allowing the customer to keep the substandard goods at a lower cost.</p>
+        </div>
+        <div class="adj-card">
+          <div class="adj-icon">🔧</div>
+          <div class="adj-name">Repair</div>
+          <p>Restoring damaged goods to working condition at the supplier's expense.</p>
+        </div>
+        <div class="adj-card">
+          <div class="adj-icon">🔀</div>
+          <div class="adj-name">Substitute</div>
+          <p>A delivery of similar (not identical) products when the original is unavailable.</p>
+        </div>
+        <div class="adj-card" style="background:var(--err-light);border-color:#E8A0A0;">
+          <div class="adj-icon">❌</div>
+          <div class="adj-name">Release from Contract</div>
+          <p>Terminating the supplier relationship due to persistent failure — last resort.</p>
+        </div>
+      </div>
+      <div class="info" style="margin-top:.7rem;">
+        <div class="i-lbl">Kulanz / Goodwill Gesture</div>
+        <p>A supplier may also offer a goodwill gesture — e.g. a voucher, free gift, or partial refund — even if not legally required, to preserve the business relationship.</p>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 5: LANGUAGE ═══════════════════════ -->
+    <div class="slide" data-slide="5">
+      <div class="lbl">Language Focus — Complaint &amp; Adjustment Phrases</div>
+      <h2 class="disp-md">Useful Language</h2>
+      <div class="rule"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:.3rem;flex:1;">
+        <div>
+          <div class="lang-lbl">Making a complaint (customer)</div>
+          <div class="phrase">"We <strong>regret to inform</strong> you that the consignment was not in order."</div>
+          <div class="phrase">"<strong>We refer to</strong> our order No. … and wish to <strong>draw your attention</strong> to …"</div>
+          <div class="phrase">"We must <strong>insist on</strong> an immediate replacement / full refund."</div>
+          <div class="lang-lbl">Suggesting an adjustment (customer)</div>
+          <div class="phrase">"We would be <strong>prepared to keep</strong> the goods if you grant us a discount of …%."</div>
+          <div class="phrase">"Please <strong>arrange for</strong> the missing items to be delivered <strong>at your expense</strong>."</div>
+        </div>
+        <div>
+          <div class="lang-lbl">Responding to a complaint (supplier)</div>
+          <div class="phrase">"<strong>Please accept our sincere apologies</strong> for the inconvenience caused."</div>
+          <div class="phrase">"We have <strong>investigated</strong> the matter and found that …"</div>
+          <div class="phrase">"The correct items have already been arranged for <strong>immediate dispatch</strong>."</div>
+          <div class="lang-lbl">Goodwill &amp; closing</div>
+          <div class="phrase">"As a <strong>gesture of goodwill</strong>, we are pleased to offer you a 10% discount."</div>
+          <div class="phrase">"We <strong>assure you</strong> that this will not happen again."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 6: PHONE COMPLAINTS ═══════════════ -->
+    <div class="slide" data-slide="6">
+      <div class="lbl">Input — Complaining &amp; Adjusting by Phone</div>
+      <h2 class="disp-md">On the Phone:<br>Firm but Polite</h2>
+      <div class="rule"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.3rem;">
+        <div>
+          <div style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.4rem;padding:.35rem .7rem;background:var(--sand);border-radius:4px 4px 0 0;">Caller — Making the complaint</div>
+          <div class="phrase" style="border-radius:0;">"I'm calling about our order No. … — <strong>something went wrong</strong>."</div>
+          <div class="phrase" style="border-radius:0;">"When we unpacked the goods, we <strong>found that</strong> two cases were missing."</div>
+          <div class="phrase" style="border-radius:0;">"We need them <strong>urgently</strong> — could you send them out today?"</div>
+          <div class="phrase" style="border-radius:0 0 var(--r) var(--r);">"A 5% discount isn't enough — we'd need at least 15%."</div>
+        </div>
+        <div>
+          <div style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:.4rem;padding:.35rem .7rem;background:var(--acc);border-radius:4px 4px 0 0;">Supplier — Handling the complaint</div>
+          <div class="phrase" style="border-radius:0;">"I'm <strong>sorry to hear that</strong> — let me check your order right away."</div>
+          <div class="phrase" style="border-radius:0;">"I really <strong>must apologise</strong> for that mistake."</div>
+          <div class="phrase" style="border-radius:0;">"I'll <strong>send out</strong> the missing items <strong>as soon as possible</strong>."</div>
+          <div class="phrase" style="border-radius:0 0 var(--r) var(--r);">"Let me <strong>check with my manager</strong> and get back to you today."</div>
+        </div>
+      </div>
+      <div class="info" style="margin-top:.7rem;">
+        <div class="i-lbl">Common Mistakes to Avoid</div>
+        <p style="font-size:.82rem;color:var(--ink-soft);">
+          ✗ <em>"I refer to our order <u>about</u>"</em> → ✓ <strong>for</strong> &nbsp;·&nbsp;
+          ✗ <em>"replace <u>by</u>"</em> → ✓ <strong>with</strong> &nbsp;·&nbsp;
+          ✗ <em>"at our <u>risk and expense</u>"</em> ✓ correct &nbsp;·&nbsp;
+          ✗ <em>"the damages are"</em> → ✓ <strong>the damage is</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 7: QUIZ ════════════════════════════ -->
+    <div class="slide" data-slide="7">
+      <div class="lbl">Quick Check</div>
+      <h2 class="disp-md">Check Your<br>Understanding</h2>
+      <div class="rule"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 2rem;margin-top:.4rem;">
+
+        <div class="q-block">
+          <div class="q-text"><span class="q-num">1 </span>Office Design Ltd. offers to let the customer keep the damaged chairs at a reduced price. What type of adjustment is this?</div>
+          <div class="opts" data-correct="b">
+            <div class="opt" data-val="a"><span class="opt-k">A</span> Replacement</div>
+            <div class="opt" data-val="b"><span class="opt-k">B</span> Discount</div>
+            <div class="opt" data-val="c"><span class="opt-k">C</span> Substitute</div>
+          </div>
+          <div class="q-fb" id="fb1"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-text"><span class="q-num">2 </span>Which phrase correctly opens a written complaint?</div>
+          <div class="opts" data-correct="c">
+            <div class="opt" data-val="a"><span class="opt-k">A</span> "Your delivery was a complete disaster."</div>
+            <div class="opt" data-val="b"><span class="opt-k">B</span> "I refer to our order about office chairs."</div>
+            <div class="opt" data-val="c"><span class="opt-k">C</span> "We refer to our order No. OD-447 and regret to inform you …"</div>
+          </div>
+          <div class="q-fb" id="fb2"></div>
+        </div>
+
+        <div class="q-block" style="grid-column:1/-1;">
+          <div class="q-text"><span class="q-num">3 </span>A supplier says: <em>"As a gesture of goodwill, we are pleased to offer you a 10% discount on your next order."</em> What is the German term for this type of offer?</div>
+          <div class="opts" data-correct="b" style="flex-direction:row;flex-wrap:wrap;gap:.35rem;">
+            <div class="opt" style="flex:1;min-width:180px;" data-val="a"><span class="opt-k">A</span> Mängelrüge</div>
+            <div class="opt" style="flex:1;min-width:180px;" data-val="b"><span class="opt-k">B</span> Kulanzregelung</div>
+            <div class="opt" style="flex:1;min-width:180px;" data-val="c"><span class="opt-k">C</span> Ersatzlieferung</div>
+          </div>
+          <div class="q-fb" id="fb3"></div>
+        </div>
+
+      </div>
+      <div id="quiz-res"></div>
+    </div>
+
+  </div><!-- /stage -->
+
+  <div id="bottombar">
+    <button class="btn btn-ghost" id="prev-btn" onclick="navigate(-1)" disabled>← Prev</button>
+    <div class="dots" id="dots"></div>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <span class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd></span>
+      <button class="btn btn-pri" id="next-btn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 7;
+  let cur = 1;
+  const dotsEl = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    d.id = 'dot' + i;
+    dotsEl.appendChild(d);
+  }
+  function updateUI() {
+    document.getElementById('cur').textContent = cur;
+    document.getElementById('prog-fill').style.width = ((cur-1)/(TOTAL-1)*100)+'%';
+    document.getElementById('prev-btn').disabled = cur === 1;
+    document.getElementById('next-btn').textContent = cur === TOTAL ? 'Finish ✓' : 'Next →';
+    for (let i = 1; i <= TOTAL; i++)
+      document.getElementById('dot'+i).className = 'dot'+(i===cur?' active':'');
+  }
+  function goTo(n) {
+    if (n<1||n>TOTAL||n===cur) return;
+    const from = document.querySelector('.slide.active');
+    from.classList.replace('active','exit');
+    setTimeout(()=>from.classList.remove('exit'),380);
+    cur = n;
+    document.querySelector(`[data-slide="${cur}"]`).classList.add('active');
+    updateUI();
+  }
+  function navigate(d) { goTo(cur+d); }
+  document.addEventListener('keydown', e=>{
+    if(['ArrowRight','ArrowDown'].includes(e.key)) navigate(1);
+    if(['ArrowLeft','ArrowUp'].includes(e.key))   navigate(-1);
+  });
+
+  // Quiz
+  let answered=[false,false,false], score=0;
+  document.querySelectorAll('.opts').forEach((group,idx)=>{
+    const correct=group.dataset.correct;
+    const fb=document.getElementById('fb'+(idx+1));
+    group.querySelectorAll('.opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        if(answered[idx]) return;
+        answered[idx]=true;
+        const val=opt.dataset.val;
+        group.querySelectorAll('.opt').forEach(o=>{
+          o.classList.add('locked');
+          if(o.dataset.val===correct) o.classList.add('correct');
+        });
+        if(val===correct){
+          opt.classList.add('correct');
+          fb.textContent='✓ Correct!'; fb.className='q-fb ok'; score++;
+        } else {
+          opt.classList.add('wrong');
+          fb.textContent='✗ Not quite — the correct answer is highlighted.'; fb.className='q-fb err';
+        }
+        if(answered.every(Boolean)){
+          const res=document.getElementById('quiz-res');
+          if(score===3){
+            res.textContent='🎉 Perfect — 3/3 correct! Well done.'; res.className='ok'; res.style.display='block';
+            confetti({particleCount:100,spread:65,origin:{y:.65},colors:['#C8522A','#F4EFE6','#E8876A','#2A7C8C']});
+          } else {
+            res.textContent=score+'/3 correct — review the slides and try again!'; res.className='err'; res.style.display='block';
+          }
+        }
+      });
+    });
+  });
+  updateUI();
+</script>
+</body>
+</html>
