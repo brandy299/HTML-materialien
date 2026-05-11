@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#faf9f6">
+<title>SchiLF Companion · KI-Arbeitsabläufe HBBK</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --bg:#faf9f6;--bg2:#f3ede3;--bg3:#ede4d6;
+  --fg:#1e1b18;--fg2:#4a4038;--muted:#6b6560;
+  --border:#e2ded8;--accent:#b8512e;--accent2:#d4734f;
+  --accent-bg:#fdf0eb;--accent-mid:#f8ddd4;
+  --ok:#3f7a3f;--ok-bg:#eef5ee;
+  --font-d:'Georgia','Times New Roman',serif;
+  --font-b:system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-m:'Courier New','SF Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);line-height:1.55;font-size:16px;min-height:100vh;padding-bottom:4rem;}
+img{max-width:100%;display:block;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ===== HEADER ===== */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(250,249,246,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;max-width:780px;margin:0 auto;}
+.brand{display:flex;align-items:center;gap:.6rem;}
+.brand-mark{width:32px;height:32px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-mid);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700;font-family:var(--font-d);font-style:italic;}
+.brand-text{font-family:var(--font-d);font-size:.95rem;letter-spacing:-.01em;}
+.brand-text em{color:var(--accent);font-style:italic;}
+.brand-sub{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:1px;}
+#prog{height:3px;background:var(--accent);width:0;transition:width .25s ease;}
+
+/* ===== HERO ===== */
+.hero{max-width:780px;margin:0 auto;padding:2.4rem 1.4rem 1.4rem;}
+.eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.eyebrow::before{content:'';display:block;width:1.4rem;height:2px;background:var(--accent);border-radius:2px;}
+h1{font-family:var(--font-d);font-weight:400;line-height:1.08;letter-spacing:-.02em;font-size:clamp(2rem,7vw,2.8rem);margin-bottom:.6rem;}
+h1 em{color:var(--accent);font-style:italic;}
+.lede{font-size:1.05rem;color:var(--muted);line-height:1.55;max-width:46ch;margin-bottom:1.2rem;}
+.host{display:flex;align-items:center;gap:.7rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.84rem;}
+.host-mark{width:32px;height:32px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-mid);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700;flex-shrink:0;}
+.host-text strong{font-family:var(--font-d);font-weight:400;color:var(--fg);}
+.host-text span{display:block;font-size:.7rem;color:var(--muted);margin-top:1px;}
+
+/* ===== JOURNEY NAV ===== */
+.journey{max-width:780px;margin:0 auto;padding:.6rem 1.4rem 2rem;}
+.journey-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.55rem;}
+.j-card{background:white;border:1px solid var(--border);border-radius:10px;padding:.75rem .85rem;display:flex;align-items:center;gap:.55rem;text-decoration:none;color:inherit;transition:all .18s ease;cursor:pointer;}
+.j-card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(184,81,46,.15);text-decoration:none;}
+.j-num{font-family:var(--font-d);font-style:italic;color:var(--accent);font-size:1.1rem;width:1.5rem;flex-shrink:0;}
+.j-label{font-size:.83rem;font-weight:600;line-height:1.25;}
+
+/* ===== MODULE SECTIONS ===== */
+.module{max-width:780px;margin:0 auto;padding:0 1.4rem 2.2rem;scroll-margin-top:80px;}
+.module-head{margin-bottom:1.2rem;padding-top:1.4rem;border-top:1px solid var(--border);}
+.module-head .eyebrow{margin-bottom:.4rem;}
+h2{font-family:var(--font-d);font-weight:400;line-height:1.15;letter-spacing:-.015em;font-size:clamp(1.55rem,5.5vw,2rem);margin-bottom:.55rem;}
+h2 em{color:var(--accent);font-style:italic;}
+.module-sub{font-size:.95rem;color:var(--muted);max-width:52ch;margin-bottom:1rem;}
+
+/* ===== CARDS ===== */
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:.8rem;transition:border-color .18s;}
+.card-warm{background:var(--accent-bg);border-color:var(--accent-mid);}
+.card-dark{background:#1a1714;color:#c9b89e;border:1px solid #3a3028;}
+.card h3{font-family:var(--font-d);font-weight:400;font-size:1.1rem;margin-bottom:.55rem;}
+.card h3 em{color:var(--accent);font-style:italic;}
+.clabel{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;}
+.clabel-a{color:var(--accent);}
+.cbody{font-size:.92rem;color:var(--fg2);line-height:1.55;}
+.cbody p+p{margin-top:.55rem;}
+.cbody strong{color:var(--fg);}
+
+/* ===== TOKEN DEMO ===== */
+.token-demo{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.95rem 1rem;margin-top:.8rem;}
+.token-row{display:flex;align-items:center;gap:.65rem;margin:.4rem 0;font-size:.88rem;}
+.token-word{font-family:var(--font-m);font-weight:600;width:5.6rem;font-size:.95rem;}
+.token-bar{flex:1;background:white;border:1px solid var(--border);border-radius:4px;height:1.2rem;overflow:hidden;}
+.token-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .8s ease;}
+.token-pct{font-size:.78rem;color:var(--muted);width:2.6rem;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* ===== COMPARE TABLE ===== */
+.compare{display:grid;grid-template-columns:1fr;gap:.6rem;margin-top:.8rem;}
+@media(min-width:600px){.compare{grid-template-columns:1fr 1fr 1fr;}}
+.prov{background:white;border:1px solid var(--border);border-radius:10px;padding:.95rem 1rem;display:flex;flex-direction:column;gap:.55rem;}
+.prov-strip{height:3px;border-radius:2px;}
+.prov-head{display:flex;align-items:center;gap:.45rem;font-family:var(--font-d);font-size:1.05rem;}
+.prov-head .ptag{font-size:.6rem;color:var(--muted);font-family:var(--font-b);text-transform:uppercase;letter-spacing:.1em;font-weight:600;}
+.prov-tip{font-size:.78rem;color:var(--muted);}
+.prov a.prov-link{display:inline-flex;align-items:center;gap:.35rem;font-size:.8rem;font-weight:700;margin-top:auto;padding-top:.3rem;}
+
+/* ===== COPY BLOCK ===== */
+.copybox{position:relative;background:#1a1714;color:#c9b89e;border-radius:10px;border:1px solid #3a3028;overflow:hidden;margin:.6rem 0;}
+.copybox-chrome{background:#2a2420;padding:.5rem .85rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3a3028;font-size:.7rem;}
+.copybox-chrome-left{display:flex;align-items:center;gap:.45rem;}
+.dots{display:flex;gap:5px;}
+.dot{width:8px;height:8px;border-radius:50%;}
+.dot.r{background:#ff5f57;}.dot.y{background:#ffbd2e;}.dot.g{background:#28c840;}
+.copybox-name{font-family:var(--font-m);color:#6e6058;font-size:.7rem;}
+.copy-btn{background:var(--accent);color:white;border:none;padding:.32rem .7rem;border-radius:5px;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:all .15s;font-family:inherit;}
+.copy-btn:hover{background:var(--accent2);}
+.copy-btn.done{background:var(--ok);}
+.copy-btn:active{transform:scale(.96);}
+.copybox pre{padding:1rem 1.15rem;font-family:var(--font-m);font-size:.78rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;overflow-x:auto;}
+.copybox .k{color:#e8795a;font-weight:600;}
+.copybox .v{color:#c9a96e;}
+.copybox .c{color:#7a7068;font-style:italic;}
+
+/* ===== STEPS ===== */
+.steps{margin-top:.6rem;}
+.step{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{width:1.7rem;height:1.7rem;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;}
+.step-body{flex:1;}
+.step-body strong{display:block;color:var(--fg);font-family:var(--font-d);font-weight:400;font-size:1rem;margin-bottom:.18rem;}
+.step-body span{font-size:.88rem;color:var(--fg2);line-height:1.5;}
+
+/* ===== SKILL TABLE ===== */
+.skills-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.6rem;}
+.skill-row{background:white;border:1px solid var(--border);border-radius:8px;padding:.7rem .85rem;display:grid;grid-template-columns:1fr;gap:.2rem;}
+@media(min-width:520px){.skill-row{grid-template-columns:1fr 1.3fr;align-items:center;gap:.8rem;}}
+.skill-trigger{font-size:.86rem;color:var(--fg2);}
+.skill-trigger strong{color:var(--fg);font-family:var(--font-d);font-weight:400;}
+.skill-file{font-family:var(--font-m);font-size:.78rem;color:var(--accent);font-weight:700;}
+
+/* ===== LIVE DEMO ===== */
+.demo-grid{display:grid;grid-template-columns:1fr;gap:.7rem;}
+@media(min-width:600px){.demo-grid{grid-template-columns:1fr 1fr;}}
+.demo-card{background:white;border:2px solid var(--accent-mid);border-radius:12px;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;transition:all .18s;}
+.demo-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(184,81,46,.2);}
+.demo-tag{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);}
+.demo-title{font-family:var(--font-d);font-size:1.1rem;}
+.demo-title em{color:var(--accent);font-style:italic;}
+.demo-desc{font-size:.85rem;color:var(--muted);line-height:1.5;}
+.demo-link{margin-top:auto;display:inline-flex;align-items:center;gap:.4rem;background:var(--accent);color:white;padding:.55rem 1rem;border-radius:7px;font-size:.85rem;font-weight:700;align-self:flex-start;}
+.demo-link:hover{background:var(--accent2);color:white;text-decoration:none;}
+
+/* ===== CHECKLIST ===== */
+.checklist{display:flex;flex-direction:column;gap:.5rem;margin-top:.7rem;}
+.check{background:white;border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:all .18s;user-select:none;}
+.check:hover{border-color:var(--accent-mid);}
+.check.done{background:var(--ok-bg);border-color:#c8e0c8;}
+.check-box{width:1.4rem;height:1.4rem;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;margin-top:1px;}
+.check.done .check-box{background:var(--ok);border-color:var(--ok);color:white;}
+.check-box::after{content:'';width:.55rem;height:.3rem;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) scale(0);transition:transform .18s;margin-top:-2px;}
+.check.done .check-box::after{transform:rotate(-45deg) scale(1);}
+.check-text{font-size:.92rem;color:var(--fg2);line-height:1.45;}
+.check-text strong{color:var(--fg);font-family:var(--font-d);font-weight:400;display:block;margin-bottom:.1rem;}
+.check.done .check-text{text-decoration:line-through;text-decoration-color:rgba(0,0,0,.25);}
+
+/* ===== PROGRESS RING ===== */
+.progress-banner{background:var(--accent-bg);border:1px solid var(--accent-mid);border-radius:12px;padding:.85rem 1rem;display:flex;align-items:center;gap:.85rem;margin-bottom:.8rem;}
+.progress-ring{width:42px;height:42px;flex-shrink:0;}
+.progress-banner-text{font-size:.85rem;color:var(--fg2);}
+.progress-banner-text strong{color:var(--accent);font-family:var(--font-d);font-weight:400;display:block;font-size:1rem;}
+
+/* ===== FOOTER ===== */
+footer{max-width:780px;margin:0 auto;padding:2rem 1.4rem 3rem;border-top:1px solid var(--border);font-size:.82rem;color:var(--muted);text-align:center;}
+footer p+p{margin-top:.35rem;}
+footer em{font-family:var(--font-d);color:var(--accent);font-style:italic;}
+
+/* ===== UTILITIES ===== */
+.muted{color:var(--muted);font-size:.82rem;}
+.tag{display:inline-block;background:var(--bg2);color:var(--fg2);border:1px solid var(--border);padding:.18rem .55rem;border-radius:4px;font-size:.7rem;font-weight:600;letter-spacing:.04em;}
+.tag-a{background:var(--accent-bg);border-color:var(--accent-mid);color:var(--accent);}
+.kbd{background:white;border:1px solid var(--border);border-bottom-width:2px;padding:.1rem .4rem;border-radius:4px;font-family:var(--font-m);font-size:.78rem;color:var(--fg2);}
+hr.soft{border:none;border-top:1px solid var(--border);margin:1rem 0;}
+
+/* ===== ANIM ===== */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes pop{0%{transform:scale(.95);opacity:0}100%{transform:scale(1);opacity:1}}
+.pop{animation:pop .25s ease;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--fg);color:white;padding:.7rem 1.1rem;border-radius:24px;font-size:.84rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .3s ease;z-index:200;display:flex;align-items:center;gap:.5rem;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast-icon{width:14px;height:14px;border-radius:50%;background:var(--accent);display:inline-block;}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">K</div>
+      <div>
+        <div class="brand-text"><em>KI-</em>Companion</div>
+        <div class="brand-sub">SchiLF · HBBK · 12.05.2026</div>
+      </div>
+    </div>
+    <a href="#checklist" style="font-size:.74rem;font-weight:700;letter-spacing:.06em;color:var(--accent);">Checkliste →</a>
+  </div>
+  <div id="prog"></div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="eyebrow">Begleit-Hub · zum Mitnehmen</div>
+  <h1>KI im Unterricht — <em>jetzt selbst loslegen.</em></h1>
+  <p class="lede">Die SchiLF-Inhalte als interaktiver Hub. Alle Vorlagen zum Kopieren, alle Demos zum Antippen, dein Einstieg in fünf Minuten — von zuhause aus.</p>
+  <div class="host">
+    <div class="host-mark">Y</div>
+    <div class="host-text">
+      <strong>Yannik Brand</strong>
+      <span>Hans-Böckler-Berufskolleg Oberhausen</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== JOURNEY ===== -->
+<nav class="journey" aria-label="Module">
+  <div class="journey-grid">
+    <a class="j-card" href="#m1"><span class="j-num">01</span><span class="j-label">Wie KI denkt</span></a>
+    <a class="j-card" href="#m2"><span class="j-num">02</span><span class="j-label">Welcher Anbieter?</span></a>
+    <a class="j-card" href="#m3"><span class="j-num">03</span><span class="j-label">Aktenkoffer einrichten</span></a>
+    <a class="j-card" href="#m4"><span class="j-num">04</span><span class="j-label">Master-Anweisung</span></a>
+    <a class="j-card" href="#m5"><span class="j-num">05</span><span class="j-label">Skills verstehen</span></a>
+    <a class="j-card" href="#m6"><span class="j-num">06</span><span class="j-label">Live-Demos</span></a>
+    <a class="j-card" href="#m7"><span class="j-num">07</span><span class="j-label">Dein Starter-Prompt</span></a>
+    <a class="j-card" href="#checklist"><span class="j-num">✓</span><span class="j-label">Checkliste & Abschluss</span></a>
+  </div>
+</nav>
+
+<!-- ===== MODUL 1 ===== -->
+<section class="module" id="m1">
+  <div class="module-head">
+    <div class="eyebrow">01 Fundament</div>
+    <h2>KI <em>rät</em> — und das ist der ganze Trick.</h2>
+    <p class="module-sub">Ein Taschenrechner berechnet. Ein Sprachmodell wählt das wahrscheinlichste nächste Wort. Wer das versteht, hört auf, der KI zu vertrauen — und fängt an, sie zu steuern.</p>
+  </div>
+
+  <div class="card">
+    <div class="clabel clabel-a">Was im Modell passiert</div>
+    <p class="cbody">Bei der Eingabe <em>„Der Lehrer sagte zu seinem …"</em> berechnet das Modell für jedes mögliche nächste Wort eine Wahrscheinlichkeit. <strong>Ohne weiteren Kontext</strong> bedient es immer den kleinsten gemeinsamen Nenner:</p>
+    <div class="token-demo">
+      <div class="token-row"><span class="token-word">"Student"</span><div class="token-bar"><div class="token-fill" style="width:85%"></div></div><span class="token-pct">85 %</span></div>
+      <div class="token-row"><span class="token-word">"Learner"</span><div class="token-bar"><div class="token-fill" style="width:12%;opacity:.45"></div></div><span class="token-pct">12 %</span></div>
+      <div class="token-row"><span class="token-word">"Pupil"</span><div class="token-bar"><div class="token-fill" style="width:3%;opacity:.25"></div></div><span class="token-pct">3 %</span></div>
+    </div>
+  </div>
+
+  <div class="card card-warm">
+    <div class="clabel clabel-a">Konsequenz für uns</div>
+    <p class="cbody"><strong>Mehr Kontext = bessere Vorhersage.</strong> Wer der KI nur eine kurze Frage stellt, bekommt einen Durchschnitts-Output. Wer Rolle, Schulform, Lernfeld und Format mitliefert, bekommt das, was an unsere Schule passt. <em>Genau dafür gibt es Projekte, Gems und Custom GPTs.</em></p>
+  </div>
+</section>
+
+<!-- ===== MODUL 2 ===== -->
+<section class="module" id="m2">
+  <div class="module-head">
+    <div class="eyebrow">02 Anbieter</div>
+    <h2>Projekte, Gems & <em>Custom GPTs.</em></h2>
+    <p class="module-sub">Jeder Anbieter nennt es anders, das Prinzip ist identisch: Anweisungen und Wissen, die in <strong>jede Unterhaltung eingebacken</strong> werden.</p>
+  </div>
+
+  <div class="compare">
+    <div class="prov">
+      <div class="prov-strip" style="background:#b8512e;"></div>
+      <div class="prov-head">🔶 Claude <span class="ptag">Projekte</span></div>
+      <p class="prov-tip"><strong>Empfehlung für Einsteiger.</strong> Sauberer Editor, sehr lange Anweisungen möglich, gute Skill-Logik. Free-Plan reicht für den Start.</p>
+      <a class="prov-link" href="https://claude.ai" target="_blank" rel="noopener">claude.ai →</a>
+    </div>
+    <div class="prov">
+      <div class="prov-strip" style="background:#1A73E8;"></div>
+      <div class="prov-head">💎 Gemini <span class="ptag">Gems</span></div>
+      <p class="prov-tip"><strong>Alternative für Google-Welt.</strong> Native Anbindung an Drive und Docs. Free-Plan ebenfalls solide.</p>
+      <a class="prov-link" href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com →</a>
+    </div>
+    <div class="prov">
+      <div class="prov-strip" style="background:#10A37F;"></div>
+      <div class="prov-head">🤖 ChatGPT <span class="ptag">Custom GPTs</span></div>
+      <p class="prov-tip">Funktional gleich, aber Custom GPTs sind nur im Plus-Plan voll nutzbar (kostenpflichtig).</p>
+      <a class="prov-link" href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com →</a>
+    </div>
+  </div>
+
+  <div class="card card-warm" style="margin-top:.85rem;">
+    <div class="clabel clabel-a">Vorteile (anbieterübergreifend)</div>
+    <p class="cbody">✓ Dauerhafter Kontext &nbsp;·&nbsp; ✓ Eigene Dateien hochladen &nbsp;·&nbsp; ✓ Feste Anweisungen zu Ton & Format &nbsp;·&nbsp; ✓ Weniger Halluzinationen &nbsp;·&nbsp; ✓ Wiederholbare Ergebnisse.</p>
+  </div>
+</section>
+
+<!-- ===== MODUL 3 ===== -->
+<section class="module" id="m3">
+  <div class="module-head">
+    <div class="eyebrow">03 Einrichtung</div>
+    <h2>Der digitale <em>Aktenkoffer.</em></h2>
+    <p class="module-sub">Ein Projekt = ein Aktenkoffer. Innen drin: deine Anweisungen (Rolle, Stil, Workflow) und dein Wissen (Dateien, Beispiele, Vorlagen).</p>
+  </div>
+
+  <div class="card">
+    <div class="clabel">3-Schritte-Setup (5 Minuten)</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Neues Projekt anlegen</strong><span>In Claude: linke Sidebar → „Projekte" → „Neues Projekt". In Gemini: linke Sidebar → „Gems" → „Neues Gem".</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Custom Instructions einfügen</strong><span>Master-Anweisung aus Modul 4 unten kopieren, im Projekt-Editor einfügen, speichern.</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Wissen hochladen (optional, aber stark)</strong><span>Lehrplan-PDF, Klausurmuster, Schul-Vorlagen, Glossare. Alles, was die KI als Referenz nutzen soll.</span></div></div>
+    </div>
+  </div>
+
+  <div class="card card-warm">
+    <div class="clabel clabel-a">Faustregel</div>
+    <p class="cbody">Was du dreimal pro Halbjahr brauchst, gehört ins Projekt. Was du einmal brauchst, gehört in den Chat-Anhang.</p>
+  </div>
+</section>
+
+<!-- ===== MODUL 4 — MASTER ANWEISUNG ===== -->
+<section class="module" id="m4">
+  <div class="module-head">
+    <div class="eyebrow">04 Master-Anweisung</div>
+    <h2>Die <em>Custom Instructions.</em> Zum Kopieren.</h2>
+    <p class="module-sub">Das Grundgerüst. Fach, Schulformen und Modellunternehmen unten anpassen, alles andere kann bleiben.</p>
+  </div>
+
+  <div class="copybox" data-copy-id="master">
+    <div class="copybox-chrome">
+      <div class="copybox-chrome-left">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="copybox-name">Custom_Instructions.md</span>
+      </div>
+      <button class="copy-btn" onclick="copyBlock('master', this)">Kopieren</button>
+    </div>
+<pre id="copy-master"><span class="k">## ROLLE &amp; FOKUS</span>
+Du bist ein spezialisierter KI-Assistenzlehrer für <span class="v">[dein Fach]</span> am Hans-Böckler-Berufskolleg (HBBK), Oberhausen, NRW. Dein einziger Aufgabenbereich ist die Planung und Materialerstellung für den <span class="v">[dein Fach]</span>-Unterricht.
+
+<span class="k">## SCHULE &amp; KONTEXT</span>
+Schule: Hans-Böckler-Berufskolleg (HBBK), Oberhausen, NRW
+Schulformen: <span class="v">Handelsschule (B1)</span> | <span class="v">Höhere Handelsschule (B2)</span>
+Modellunternehmen: <span class="v">„Office Design Ltd."</span> (Standard) — alternativ: GlobalTrade GmbH, NexaTech Solutions
+
+<span class="k">## PFLICHT-WORKFLOW (IMMER, BEI JEDER MATERIALANFRAGE)</span>
+<span class="v">Schritt 1</span> — Skill identifizieren anhand der Tabelle unten.
+<span class="v">Schritt 2</span> — Skill-Datei lesen <span class="c">(ZWINGEND, VOR jeder Ausgabe)</span>
+  view-Tool auf den genauen Pfad aufrufen.
+<span class="v">Schritt 3</span> — <span class="c">lehrer-core.md</span> lesen (IMMER zusätzlich)
+<span class="v">Schritt 4</span> — Material erstellen — exakt nach Vorgabe
+
+<span class="k">## SKILL-MAPPING</span>
+Klausur / Test / EHZ / Bewertung   → <span class="c">/mnt/project/klausur.md</span>
+Verlaufsplan / Stundenplanung      → <span class="c">/mnt/project/verlaufsplan.md</span>
+HTML / Quiz / interaktiv           → <span class="c">/mnt/project/html-modul.md</span>
+Lernsituation / Unterrichtsreihe   → <span class="c">/mnt/project/lernsituation.md</span>
+Quiz als JSON                      → <span class="c">/mnt/project/json-pruefungen.md</span>
+Immer zusätzlich                   → <span class="c">/mnt/project/lehrer-core.md</span>
+
+<span class="k">## SPRACHE &amp; TONALITÄT</span>
+Kommunikation mit Lehrkraft: <span class="v">Deutsch</span>
+Schülermaterialien: <span class="v">[Zielsprache deines Fachs — z. B. fehlerfreies Business English, präzises Deutsch, Französisch B1, …]</span>
+Tonalität: Professionell, kollegial, strukturierend
+
+<span class="k">## OUTPUT-VERHALTEN</span>
+Skill-Datei lesen → Material erstellen → kurz bestätigen, welche Vorgaben angewendet wurden
+Bei unklaren Parametern (Klasse, Niveau, Dauer): kurz nachfragen vor dem Erstellen
+Modellunternehmen „Office Design Ltd." als Standard, wenn kein anderer Kontext angegeben</pre>
+  </div>
+
+  <p class="muted">Tipp: Die <span class="tag tag-a">[…]</span>-Platzhalter sind die einzigen Stellen, die du anpassen musst. Der Rest ist universell.</p>
+</section>
+
+<!-- ===== MODUL 5 — SKILLS ===== -->
+<section class="module" id="m5">
+  <div class="module-head">
+    <div class="eyebrow">05 Skills</div>
+    <h2>Skills sind <em>ausgelagerte Baupläne.</em></h2>
+    <p class="module-sub">Jeder Materialtyp hat seinen eigenen Bauplan als Markdown-Datei. Die KI lädt automatisch den passenden Skill — abhängig von deiner Anfrage.</p>
+  </div>
+
+  <div class="card">
+    <div class="clabel clabel-a">Skill-Mapping</div>
+    <div class="skills-list">
+      <div class="skill-row"><div class="skill-trigger"><strong>Klausur, EHZ, Bewertung</strong>Aufgabenstruktur, AFB-Verteilung, EHZ-Format</div><div class="skill-file">klausur.md</div></div>
+      <div class="skill-row"><div class="skill-trigger"><strong>Unterrichtsverlauf</strong>Phasenmodell, Sozialformen, Zeitplanung</div><div class="skill-file">verlaufsplan.md</div></div>
+      <div class="skill-row"><div class="skill-trigger"><strong>HTML-Lernmodul / Quiz</strong>4-Phasen, Feedback-Logik, Design-System</div><div class="skill-file">html-modul.md</div></div>
+      <div class="skill-row"><div class="skill-trigger"><strong>Lernsituation / Reihe</strong>Sequenzplanung, Kompetenzbezug, Materialübersicht</div><div class="skill-file">lernsituation.md</div></div>
+      <div class="skill-row"><div class="skill-trigger"><strong>Quiz als JSON</strong>Struktur für Web-Vokabeltests</div><div class="skill-file">json-pruefungen.md</div></div>
+      <div class="skill-row"><div class="skill-trigger"><strong>Immer zusätzlich</strong>Design-System, AFB-Operatoren, Didaktik-Grundlagen</div><div class="skill-file">lehrer-core.md</div></div>
+    </div>
+  </div>
+
+  <div class="card card-warm">
+    <div class="clabel clabel-a">Beispiel im Klartext</div>
+    <p class="cbody">Anfrage: <em>„Klausur zu Lernfeld 5, Klasse HH2"</em><br>→ KI liest automatisch <span class="tag">klausur.md</span> + <span class="tag">lehrer-core.md</span><br>→ erstellt Klausur mit korrekter AFB-Verteilung, Erwartungshorizont und HBBK-Design.</p>
+  </div>
+</section>
+
+<!-- ===== MODUL 6 — LIVE DEMOS ===== -->
+<section class="module" id="m6">
+  <div class="module-head">
+    <div class="eyebrow">06 Live-Demos</div>
+    <h2>Sehen, anfassen, <em>einsetzen.</em></h2>
+    <p class="module-sub">Diese beiden Module sind tatsächlich mit dem oben gezeigten Setup entstanden. Direkt im Browser ausprobieren — kein Login.</p>
+  </div>
+
+  <div class="demo-grid">
+    <div class="demo-card">
+      <span class="demo-tag">HTML-Lernmodul</span>
+      <div class="demo-title"><em>Enquiries</em> & Small Talk</div>
+      <p class="demo-desc">Business English B2 · Mobil-optimiert · 4-Phasen-Aufbau mit Sofort-Feedback.</p>
+      <a class="demo-link" href="https://brandy299.github.io/HTML-materialien/materialien/Englisch%20B2/small%20talk/BMUD_B2_Enquiries_SmallTalk_Mobile.html" target="_blank" rel="noopener">Modul öffnen →</a>
+    </div>
+    <div class="demo-card">
+      <span class="demo-tag">Vokabeltest · JSON</span>
+      <div class="demo-title">Business <em>Letters</em></div>
+      <p class="demo-desc">Multiple Choice · Sofort-Auswertung · in unter 2 Minuten mit dem <span class="tag">json-pruefungen.md</span>-Skill generiert.</p>
+      <a class="demo-link" href="https://brandy299.github.io/HTML-materialien/pruefung.html?id=englisch-business-letter-vocabulary-v1" target="_blank" rel="noopener">Test starten →</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.85rem;">
+    <div class="clabel">Warum HTML statt PDF?</div>
+    <p class="cbody">✓ Sofortiges Feedback — richtig/falsch ohne Lehrkraft<br>✓ Offline-fähig — kein WLAN, kein Login, keine App<br>✓ Portabel — eine Datei, per Mail oder Link<br>✓ Mobilfähig — funktioniert auf jedem Smartphone<br>✓ Anpassbar — KI ändert Inhalte in Sekunden</p>
+  </div>
+</section>
+
+<!-- ===== MODUL 7 — STARTER PROMPT ===== -->
+<section class="module" id="m7">
+  <div class="module-head">
+    <div class="eyebrow">07 Dein Einstieg</div>
+    <h2>Hilfe zur <em>Selbsthilfe.</em></h2>
+    <p class="module-sub">Wenn du dir die Master-Anweisung oben nicht selbst zusammenstellen willst: <strong>lass die KI sie für dich bauen</strong>. Diesen Prompt kopieren, in ChatGPT, Claude oder Gemini einfügen.</p>
+  </div>
+
+  <div class="copybox" data-copy-id="starter">
+    <div class="copybox-chrome">
+      <div class="copybox-chrome-left">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="copybox-name">Starter-Prompt.txt</span>
+      </div>
+      <button class="copy-btn" onclick="copyBlock('starter', this)">Kopieren</button>
+    </div>
+<pre id="copy-starter">Ich bin Lehrer*in an einem Berufskolleg in NRW.
+Ich unterrichte <span class="v">[dein Fach]</span>.
+Meine Schüler sind <span class="v">[Bildungsgang &amp; Ausbildungsjahr]</span>.
+
+Erstelle mir einen <span class="k">Custom Instruction Prompt</span> für einen
+KI-Assistenten, der mir bei der Unterrichtsvorbereitung hilft.
+
+<span class="c">Frag mich zuerst nach meinen 3 größten Zeitfressern.</span></pre>
+  </div>
+
+  <div class="card card-warm" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+    <span class="muted" style="flex:1;min-width:200px;">Direkt loslegen — Prompt einfügen:</span>
+    <a class="demo-link" href="https://claude.ai" target="_blank" rel="noopener" style="background:var(--accent);">Claude →</a>
+    <a class="demo-link" href="https://gemini.google.com" target="_blank" rel="noopener" style="background:#1A73E8;">Gemini →</a>
+    <a class="demo-link" href="https://chatgpt.com" target="_blank" rel="noopener" style="background:#10A37F;">ChatGPT →</a>
+  </div>
+</section>
+
+<!-- ===== CHECKLIST ===== -->
+<section class="module" id="checklist">
+  <div class="module-head">
+    <div class="eyebrow">✓ Endrunde</div>
+    <h2>Deine <em>nächsten Schritte.</em></h2>
+    <p class="module-sub">Häkchen setzen, sobald erledigt. Dein Fortschritt wird im Browser gespeichert.</p>
+  </div>
+
+  <div class="progress-banner">
+    <svg class="progress-ring" viewBox="0 0 42 42">
+      <circle cx="21" cy="21" r="18" fill="none" stroke="#f8ddd4" stroke-width="4"/>
+      <circle id="ring" cx="21" cy="21" r="18" fill="none" stroke="#b8512e" stroke-width="4" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round" transform="rotate(-90 21 21)" style="transition:stroke-dashoffset .4s ease"/>
+      <text x="21" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#b8512e" id="ring-text">0</text>
+    </svg>
+    <div class="progress-banner-text">
+      <strong id="prog-headline">Los geht's</strong>
+      <span id="prog-sub">Häkchen unten setzen, sobald du einen Schritt erledigt hast.</span>
+    </div>
+  </div>
+
+  <div class="checklist" id="checklist-items">
+    <div class="check" data-key="c1"><div class="check-box"></div><div class="check-text"><strong>Account angelegt</strong>Bei Claude oder Gemini einen kostenlosen Account erstellt.</div></div>
+    <div class="check" data-key="c2"><div class="check-box"></div><div class="check-text"><strong>Projekt / Gem erstellt</strong>Im gewählten Tool ein leeres Projekt (Claude) oder Gem (Gemini) angelegt und benannt.</div></div>
+    <div class="check" data-key="c3"><div class="check-box"></div><div class="check-text"><strong>Master-Anweisung eingefügt</strong>Custom Instructions aus Modul 4 kopiert, Platzhalter ersetzt, gespeichert.</div></div>
+    <div class="check" data-key="c4"><div class="check-box"></div><div class="check-text"><strong>Erste Anfrage gestellt</strong>Z. B. „Erstelle einen Verlaufsplan zu …" — geprüft, ob die KI im richtigen Ton antwortet.</div></div>
+    <div class="check" data-key="c5"><div class="check-box"></div><div class="check-text"><strong>Eine HTML-Demo geöffnet</strong>Modul 6: Enquiries oder Vokabeltest am Handy ausprobiert.</div></div>
+    <div class="check" data-key="c6"><div class="check-box"></div><div class="check-text"><strong>Idee für den eigenen Unterricht</strong>Mindestens ein konkretes Material identifiziert, das nächste Woche entstehen soll.</div></div>
+  </div>
+</section>
+
+<footer>
+  <p>SchiLF 2026 · KI-Arbeitsabläufe am <em>HBBK Oberhausen</em></p>
+  <p>Gehalten von Yannik Brand · 12.05.2026</p>
+  <p style="margin-top:.6rem;font-size:.74rem;">Diese Seite funktioniert offline nach erstem Aufruf. Lesezeichen setzen — und am Montag damit weitermachen.</p>
+</footer>
+
+<div class="toast" id="toast"><span class="toast-icon"></span><span id="toast-text">Kopiert!</span></div>
+
+<script>
+/* ===== TOP-PROGRESS BAR ===== */
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  prog.style.width = max > 0 ? (h.scrollTop / max * 100) + '%' : '0';
+}, {passive:true});
+
+/* ===== COPY-TO-CLIPBOARD ===== */
+function copyBlock(id, btn){
+  const el = document.getElementById('copy-' + id);
+  if(!el) return;
+  // Plain text without HTML tags
+  const text = el.innerText;
+  const done = () => {
+    const original = btn.textContent;
+    btn.textContent = '✓ Kopiert';
+    btn.classList.add('done');
+    showToast(id === 'master' ? 'Master-Anweisung kopiert' : 'Starter-Prompt kopiert');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('done'); }, 2200);
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else fallback();
+  function fallback(){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); }
+    catch(e){ showToast('Kopieren fehlgeschlagen — bitte manuell markieren', true); }
+    document.body.removeChild(ta);
+  }
+}
+
+/* ===== TOAST ===== */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ===== CHECKLIST + LOCAL STORAGE + CONFETTI ===== */
+const STORAGE_KEY = 'schilf2026.checklist';
+const items = document.querySelectorAll('.check');
+const totalChecks = items.length;
+const ring = document.getElementById('ring');
+const ringText = document.getElementById('ring-text');
+const progHead = document.getElementById('prog-headline');
+const progSub = document.getElementById('prog-sub');
+const CIRC = 2 * Math.PI * 18;
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e){ state = {}; }
+
+function paint(){
+  let done = 0;
+  items.forEach(i => {
+    const k = i.dataset.key;
+    if(state[k]){ i.classList.add('done'); done++; }
+    else i.classList.remove('done');
+  });
+  const ratio = done / totalChecks;
+  ring.style.strokeDashoffset = CIRC * (1 - ratio);
+  ringText.textContent = done + '/' + totalChecks;
+  if(done === 0){
+    progHead.textContent = 'Los geht’s';
+    progSub.textContent = 'Häkchen unten setzen, sobald du einen Schritt erledigt hast.';
+  } else if(done < totalChecks){
+    progHead.textContent = 'Du bist dabei.';
+    progSub.textContent = 'Noch ' + (totalChecks - done) + ' Schritt' + (totalChecks - done === 1 ? '' : 'e') + ' bis zur ersten eigenen KI-Werkstatt.';
+  } else {
+    progHead.textContent = 'Fertig — gratuliere.';
+    progSub.textContent = 'Du hast deinen eigenen KI-Assistenten. Zeit für die erste echte Klausur.';
+  }
+}
+paint();
+
+let celebrated = !!state.__celebrated;
+items.forEach(i => {
+  i.addEventListener('click', () => {
+    const k = i.dataset.key;
+    state[k] = !state[k];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+    paint();
+    const done = Object.keys(state).filter(x => x !== '__celebrated' && state[x]).length;
+    if(done === totalChecks && !celebrated){
+      celebrated = true;
+      state.__celebrated = true;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+      celebrate();
+    }
+    if(done < totalChecks) celebrated = false;
+  });
+});
+
+function celebrate(){
+  if(typeof confetti !== 'function') return;
+  const colors = ['#b8512e','#d4734f','#c9a96e','#3f7a3f'];
+  confetti({particleCount:90, spread:75, origin:{y:.62}, colors});
+  setTimeout(() => confetti({particleCount:60, angle:60, spread:55, origin:{x:0,y:.65}, colors}), 200);
+  setTimeout(() => confetti({particleCount:60, angle:120, spread:55, origin:{x:1,y:.65}, colors}), 360);
+}
+
+/* ===== JOURNEY SMOOTH SCROLL (with offset for sticky bar) ===== */
+document.querySelectorAll('.j-card, a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const href = a.getAttribute('href');
+    if(!href || !href.startsWith('#')) return;
+    const t = document.querySelector(href);
+    if(!t) return;
+    e.preventDefault();
+    const top = t.getBoundingClientRect().top + window.pageYOffset - 64;
+    window.scrollTo({top, behavior:'smooth'});
+    history.replaceState(null, '', href);
+  });
+});
+</script>
+</body>
+</html>
