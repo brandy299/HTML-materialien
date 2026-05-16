@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IndustrieMarkt Insider</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f0f0; color: #1a1a1a; }
+
+  /* Portal Header */
+  .portal-top { background: #1a1a2e; padding: 0; }
+  .portal-topbar { display: flex; align-items: center; justify-content: space-between; padding: 6px 24px; border-bottom: 1px solid #333; }
+  .portal-topbar-left { font-size: 11px; color: #888; }
+  .portal-topbar-right { font-size: 11px; color: #888; display: flex; gap: 16px; }
+  .portal-nameplate { padding: 18px 24px 14px; display: flex; align-items: flex-end; justify-content: space-between; }
+  .portal-logo-wrap { display: flex; align-items: center; gap: 12px; }
+  .portal-logo-icon { width: 44px; height: 44px; background: #E8A020; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .portal-logo-icon i { color: #1a1a2e; font-size: 24px; }
+  .portal-name { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+  .portal-tagline { font-size: 12px; color: #aaa; margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .portal-edition { font-size: 12px; color: #888; text-align: right; line-height: 1.6; }
+  .portal-nav { background: #E8A020; padding: 0 24px; display: flex; gap: 0; }
+  .portal-nav-item { padding: 8px 16px; font-size: 12px; font-weight: bold; color: #1a1a2e; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; border-right: 1px solid #c4881a; }
+  .portal-nav-item:hover { background: #c4881a; }
+  .portal-nav-item.active { background: #fff; color: #1a1a2e; }
+
+  /* Main layout */
+  .portal-wrap { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+
+  /* Section cards */
+  .section-card { background: #fff; border-radius: 8px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; }
+  .section-header:hover { filter: brightness(0.97); }
+  .section-header-left { display: flex; align-items: center; gap: 12px; }
+  .section-badge { font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-title { font-size: 17px; font-weight: bold; }
+  .section-arrow { font-size: 13px; transition: transform 0.2s; }
+  .section-card.open .section-arrow { transform: rotate(90deg); }
+  .section-body { display: none; padding: 0 18px 18px; border-top: 1px solid #eee; }
+  .section-card.open .section-body { display: block; }
+  .section-intro { font-size: 13px; color: #555; line-height: 1.6; margin: 12px 0; padding: 10px 14px; background: #f9f9f9; border-radius: 6px; border-left: 3px solid; }
+
+  /* Tables */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .data-table th { text-align: left; padding: 8px 10px; font-size: 11px; font-weight: bold; color: #fff; border-bottom: 2px solid rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.04em; }
+  .data-table td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #fafafa; }
+  .data-table td strong { font-weight: 600; }
+
+  /* Price bar */
+  .price-bar-wrap { width: 100px; height: 5px; background: #e8e8e8; border-radius: 99px; display: inline-block; vertical-align: middle; margin-left: 8px; }
+  .price-bar { height: 5px; border-radius: 99px; }
+
+  /* Liefertreue percent */
+  .pct-bar-wrap { width: 80px; height: 5px; background: #e8e8e8; border-radius: 99px; display: inline-block; vertical-align: middle; margin-left: 6px; }
+  .pct-bar { height: 5px; border-radius: 99px; background: #2E75B6; }
+
+  /* Rating stars area */
+  .rating-num { font-weight: bold; font-size: 15px; }
+  .review-count { font-size: 11px; color: #888; margin-left: 4px; }
+
+  /* Qualität notes */
+  .note-badge { display: inline-block; font-size: 13px; font-weight: bold; padding: 2px 8px; border-radius: 4px; }
+
+  /* Metrics row */
+  .metrics-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+  .metric-box { background: #f9f9f9; border-radius: 6px; padding: 10px 14px; }
+  .metric-label { font-size: 11px; color: #888; margin-bottom: 3px; }
+  .metric-val { font-size: 20px; font-weight: bold; }
+  .metric-sub { font-size: 11px; color: #aaa; }
+
+  /* Avg divider */
+  .avg-divider { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 11px; color: #999; }
+  .avg-divider::before, .avg-divider::after { content: ""; flex: 1; height: 1px; background: #eee; }
+
+  /* Nachhaltigkeit legend */
+  .legend-box { display: flex; gap: 16px; flex-wrap: wrap; padding: 8px 12px; background: #f9f9f9; border-radius: 6px; margin-bottom: 10px; font-size: 12px; color: #555; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+
+  /* Footer */
+  .portal-footer { background: #1a1a2e; color: #666; font-size: 11px; text-align: center; padding: 16px; margin-top: 24px; }
+
+  /* Minimal color accents per criterion */
+  .section-card { border-left: 4px solid #ddd; }
+  .c-preis { border-left-color: #2E75B6; }
+  .c-zahlung { border-left-color: #D4AC0D; }
+  .c-liefertreue { border-left-color: #8E44AD; }
+  .c-qualitaet { border-left-color: #E67E22; }
+  .c-service { border-left-color: #C0392B; }
+  .c-nachhaltigkeit { border-left-color: #1E8449; }
+  .c-tipp { border-left-color: #2a2a2a; }
+
+  .section-header { background: #fff; }
+  .section-header:hover { background: #f9f9f9; }
+  .section-card.open .section-header { background: #f9f9f9; }
+  .section-title { color: #1a1a1a; }
+  .section-arrow { color: #888; }
+
+  .section-badge { background: #f0f0f0; color: #444; }
+
+  .section-intro { border-color: #ddd; background: #fafafa; }
+
+  .data-table th { background: #2a2a2a; color: #fff; }
+
+  .c-preis .dot { background: #2E75B6; }
+  .c-zahlung .dot { background: #D4AC0D; }
+  .c-liefertreue .dot { background: #8E44AD; }
+  .c-liefertreue .pct-bar { background: #8E44AD; }
+  .c-qualitaet .dot { background: #E67E22; }
+  .c-service .dot { background: #C0392B; }
+  .c-nachhaltigkeit .dot { background: #1E8449; }
+  .c-preis .price-bar { background: #2E75B6; }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- Portal Header -->
+<div class="portal-top">
+  <div class="portal-topbar">
+    <span class="portal-topbar-left">Fachportal für Beschaffung &amp; Lieferantenmanagement</span>
+    <div class="portal-topbar-right">
+      <span>Stand: 20.05.2026</span>
+      <span>Segment: Antriebstechnik</span>
+    </div>
+  </div>
+  <div class="portal-nameplate">
+    <div class="portal-logo-wrap">
+      <div class="portal-logo-icon"><i class="ti ti-building-factory-2" aria-hidden="true"></i></div>
+      <div>
+        <div class="portal-name">IndustrieMarkt Insider</div>
+        <div class="portal-tagline">Marktdaten &middot; Lieferantenvergleich &middot; Branchenberichte</div>
+      </div>
+    </div>
+    <div class="portal-edition">Ausgabe Mai 2026<br>Elektromotor-Hubbein Sets</div>
+  </div>
+  <div class="portal-nav">
+    <div class="portal-nav-item active">Marktdaten</div>
+    <div class="portal-nav-item">Lieferanten</div>
+    <div class="portal-nav-item">Branchenberichte</div>
+    <div class="portal-nav-item">Nachhaltigkeit</div>
+  </div>
+</div>
+
+<div class="portal-wrap">
+
+  <!-- ══ PREIS ══════════════════════════════════════════ -->
+  <div class="section-card c-preis" id="s-preis">
+    <div class="section-header" onclick="toggle('s-preis')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Marktpreise</span>
+        <span class="section-title">Preisübersicht – Einstandspreise je Stück</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Marktübersicht der aktuellen Einstandspreise für Elektromotor-Hubbein Sets im B2B-Segment. Alle Preise verstehen sich als Einstandspreise je Stück, netto.</div>
+
+      <div class="metrics-row">
+        <div class="metric-box">
+          <div class="metric-label">Marktdurchschnitt</div>
+          <div class="metric-val" style="color:#2E75B6">271,20 €</div>
+          <div class="metric-sub">je Stück</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Günstigstes Angebot</div>
+          <div class="metric-val">241,00 €</div>
+          <div class="metric-sub">TechMove GmbH</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Teuerstes Angebot</div>
+          <div class="metric-val">308,00 €</div>
+          <div class="metric-sub">MasterDrive GmbH</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Einstandspreis je Stück</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td><td>268,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:40%"></div></div></td><td></td></tr>
+          <tr><td><strong>DriveBasic Ltd.</strong></td><td>248,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:10%"></div></div></td><td></td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td><td>271,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:45%"></div></div></td><td></td></tr>
+          <tr><td><strong>EliteDrive GmbH</strong></td><td>285,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:65%"></div></div></td><td></td></tr>
+          <tr><td><strong>HubTech AG</strong></td><td>262,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:31%"></div></div></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="avg-divider">Marktdurchschnitt: 271,20 €</div>
+      <table class="data-table">
+        <tbody>
+          <tr><td><strong>MasterDrive GmbH</strong></td><td>308,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:100%"></div></div></td><td></td></tr>
+          <tr><td><strong>MotorPlus GmbH</strong></td><td>255,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:21%"></div></div></td><td></td></tr>
+          <tr><td><strong>PrecisionHub AG</strong></td><td>278,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:55%"></div></div></td><td></td></tr>
+          <tr><td><strong>ProMotion AG</strong></td><td>294,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:79%"></div></div></td><td></td></tr>
+          <tr><td><strong>TechMove GmbH</strong></td><td>241,00 €<div class="price-bar-wrap"><div class="price-bar" style="width:0%"></div></div></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ ZAHLUNGSBEDINGUNGEN ══════════════════════════ -->
+  <div class="section-card c-zahlung" id="s-zahlung">
+    <div class="section-header" onclick="toggle('s-zahlung')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Zahlungskonditionen</span>
+        <span class="section-title">Zahlungsbedingungen im Segment</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Übersicht der im Segment üblichen Zahlungsfristen und Skontofristen. Das Zahlungsziel gibt an, innerhalb welcher Frist nach Lieferung gezahlt werden muss. Die Skontofrist gibt an, innerhalb welcher Frist ein zusätzlicher Preisnachlass (Skonto) in Anspruch genommen werden kann.</div>
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Zahlungsziel</th><th>Skontofrist</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td><td>30 Tage netto</td><td>10 Tage</td></tr>
+          <tr><td><strong>Bergmann &amp; Co. KG</strong></td><td>Vorkasse</td><td style="color:#aaa">–</td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td><td>30 Tage netto</td><td style="color:#aaa">–</td></tr>
+          <tr><td><strong>EliteDrive GmbH</strong></td><td>30 Tage netto</td><td>14 Tage</td></tr>
+          <tr><td><strong>HubTech AG</strong></td><td>30 Tage netto</td><td style="color:#aaa">–</td></tr>
+          <tr><td><strong>MasterDrive GmbH</strong></td><td>30 Tage netto</td><td>10 Tage</td></tr>
+          <tr><td><strong>MotorPlus GmbH</strong></td><td>30 Tage netto</td><td>14 Tage</td></tr>
+          <tr><td><strong>NordTech GmbH</strong></td><td>14 Tage netto</td><td style="color:#aaa">–</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ LIEFERTREUE ══════════════════════════════════ -->
+  <div class="section-card c-liefertreue" id="s-liefertreue">
+    <div class="section-header" onclick="toggle('s-liefertreue')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Bewertungsplattform</span>
+        <span class="section-title">Liefertreue – Kundenbewertungen</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Verifizierte Kundenbewertungen zur Liefertreue im Segment. Der Prozentwert gibt den Anteil pünktlicher Lieferungen an, basierend auf verifizierten Kundenmeldungen.</div>
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Pünktliche Lieferungen</th><th>Bewertungen</th><th>Kundenstimmen</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsProfi GmbH</strong></td>
+            <td>78 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:78%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">34</span></td>
+            <td style="font-size:12px;color:#555"><em>„Von 9 Lieferungen im letzten Jahr kamen 7 pünktlich. Die Verzögerungen lagen zwischen 3 und 5 Tagen, meist ohne Vorankündigung."</em></td></tr>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td>
+            <td>89 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:89%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">63</span></td>
+            <td style="font-size:12px;color:#555"><em>„Von 20 Lieferungen kamen 17 pünktlich, Verzögerungen meist 1–2 Tage. Kommuniziert Probleme meist rechtzeitig."</em></td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td>
+            <td>65 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:65%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">29</span></td>
+            <td style="font-size:12px;color:#555"><em>„In einem Quartal kamen 3 von 6 Lieferungen zu spät, davon eine um fast zwei Wochen. Erreichbarkeit bei Problemen schwierig."</em></td></tr>
+          <tr><td><strong>DriveSupply GmbH</strong></td>
+            <td>95 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:95%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">54</span></td>
+            <td style="font-size:12px;color:#555"><em>„Seit zwei Jahren JIT-Lieferant bei uns – vereinzelte Verzögerungen von 1–2 Tagen. Referenz auf Anfrage verfügbar."</em></td></tr>
+          <tr><td><strong>ElektroDynamik AG</strong></td>
+            <td>91 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:91%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">58</span></td>
+            <td style="font-size:12px;color:#555"><em>„In der Regel pünktlich. In einem Jahr gab es zwei Verzögerungen – beide wurden rechtzeitig kommuniziert."</em></td></tr>
+          <tr><td><strong>HubTech AG</strong></td>
+            <td>83 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:83%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">41</span></td>
+            <td style="font-size:12px;color:#555"><em>„Überwiegend zuverlässig, in Hochphasen gelegentlich 2–3 Tage Verzug ohne Vorwarnung."</em></td></tr>
+          <tr><td><strong>MotorPlus GmbH</strong></td>
+            <td>74 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:74%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">38</span></td>
+            <td style="font-size:12px;color:#555"><em>„Etwa jede vierte Lieferung kommt mit Verzögerung – meist ohne Vorwarnung."</em></td></tr>
+          <tr><td><strong>NordTech GmbH</strong></td>
+            <td>58 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:58%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">18</span></td>
+            <td style="font-size:12px;color:#555"><em>„Haben uns zweimal kurzfristig ohne Begründung vertröstet. Für zeitkritische Beschaffung nicht geeignet."</em></td></tr>
+          <tr><td><strong>PrecisionLogistics AG</strong></td>
+            <td>98 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:98%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">87</span></td>
+            <td style="font-size:12px;color:#555"><em>„In 24 Monaten gab es eine einzige Verzögerung – drei Tage vorher angekündigt. Liefert auf den Tag genau."</em></td></tr>
+          <tr><td><strong>PremiumDrive GmbH</strong></td>
+            <td>98 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:98%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">71</span></td>
+            <td style="font-size:12px;color:#555"><em>„Seit 18 Monaten JIT-Lieferant bei uns – in dieser Zeit eine einzige Verzögerung von einem Tag, vorher angekündigt. Würden wir jederzeit weiterempfehlen."</em></td></tr>
+          <tr><td><strong>TechMove GmbH</strong></td>
+            <td>41 %<div class="pct-bar-wrap"><div class="pct-bar" style="width:41%"></div></div></td>
+            <td><span style="color:#888;font-size:12px">22</span></td>
+            <td style="font-size:12px;color:#555"><em>„Lieferung kam viermal hintereinander zu spät – einmal um drei Wochen. Keine proaktive Kommunikation, Reklamationen wurden ignoriert."</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ QUALITÄT ══════════════════════════════════════ -->
+  <div class="section-card c-qualitaet" id="s-qualitaet">
+    <div class="section-header" onclick="toggle('s-qualitaet')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Produkttest</span>
+        <span class="section-title">Qualitätstest – IndustrieTest e.V.</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Unabhängige Produkttests des IndustrieTest e.V. für Elektromotor-Hubbein Sets. Bewertet werden Verarbeitung, Belastbarkeit und Langlebigkeit. Note 1 = sehr gut, Note 5 = mangelhaft. Nicht alle Anbieter haben ein Testmuster eingereicht.</div>
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Gesamtnote</th><th>Verarbeitung</th><th>Belastbarkeit</th><th>Langlebigkeit</th><th>Testkommentar</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsProfi GmbH</strong></td>
+            <td><span class="note-badge" style="background:#FAD7A0;color:#784212">2,8</span></td>
+            <td style="color:#888;font-size:12px">2,7</td><td style="color:#888;font-size:12px">2,9</td><td style="color:#888;font-size:12px">2,8</td>
+            <td style="font-size:12px;color:#555"><em>Durchschnittliches Ergebnis. Verarbeitung akzeptabel, Belastbarkeit im oberen Lastbereich eingeschränkt.</em></td></tr>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td>
+            <td><span class="note-badge" style="background:#FAD7A0;color:#784212">3,0</span></td>
+            <td style="color:#888;font-size:12px">2,9</td><td style="color:#888;font-size:12px">3,1</td><td style="color:#888;font-size:12px">3,0</td>
+            <td style="font-size:12px;color:#555"><em>Ausreichende Qualität für Standardanwendungen, für Hochlastbetrieb nicht empfohlen.</em></td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td>
+            <td><span class="note-badge" style="background:#FAD7A0;color:#784212">3,2</span></td>
+            <td style="color:#888;font-size:12px">3,1</td><td style="color:#888;font-size:12px">3,3</td><td style="color:#888;font-size:12px">3,2</td>
+            <td style="font-size:12px;color:#555"><em>Mängel bei der Verarbeitung festgestellt. Belastbarkeit deutlich unter Herstellerangaben.</em></td></tr>
+          <tr><td><strong>ElektroDynamik AG</strong></td>
+            <td><span class="note-badge" style="background:#FDEBD0;color:#784212">2,1</span></td>
+            <td style="color:#888;font-size:12px">2,0</td><td style="color:#888;font-size:12px">2,1</td><td style="color:#888;font-size:12px">2,3</td>
+            <td style="font-size:12px;color:#555"><em>Gutes Produkt mit solider Verarbeitung. Geringfügige Schwächen bei Dauerlastbetrieb.</em></td></tr>
+          <tr><td><strong>EliteDrive GmbH</strong></td>
+            <td><span class="note-badge" style="background:#FDEBD0;color:#784212">2,4</span></td>
+            <td style="color:#888;font-size:12px">2,3</td><td style="color:#888;font-size:12px">2,5</td><td style="color:#888;font-size:12px">2,5</td>
+            <td style="font-size:12px;color:#555"><em>Ordentliche Qualität, bei intensivem Dauerbetrieb leichte Abnutzungserscheinungen.</em></td></tr>
+          <tr><td><strong>HubTech AG</strong></td>
+            <td><span class="note-badge" style="background:#FAD7A0;color:#784212">3,4</span></td>
+            <td style="color:#888;font-size:12px">3,3</td><td style="color:#888;font-size:12px">3,5</td><td style="color:#888;font-size:12px">3,4</td>
+            <td style="font-size:12px;color:#555"><em>Erhebliche Qualitätsmängel. Produkt erfüllt die angegebenen Spezifikationen nicht vollständig.</em></td></tr>
+          <tr><td><strong>NordTech GmbH</strong></td>
+            <td style="color:#aaa;font-size:12px">nicht getestet</td>
+            <td style="color:#aaa">–</td><td style="color:#aaa">–</td><td style="color:#aaa">–</td>
+            <td style="font-size:12px;color:#aaa"><em>Kein Testmuster eingereicht.</em></td></tr>
+          <tr><td><strong>PrecisionHub AG</strong></td>
+            <td><span class="note-badge" style="background:#FEF0E7;color:#784212">1,7</span></td>
+            <td style="color:#888;font-size:12px">1,6</td><td style="color:#888;font-size:12px">1,8</td><td style="color:#888;font-size:12px">1,7</td>
+            <td style="font-size:12px;color:#555"><em>Sehr gutes Gesamtergebnis. Minimale Abzüge bei der Langlebigkeit im Extremtest.</em></td></tr>
+          <tr><td><strong>PremiumDrive GmbH</strong></td>
+            <td><span class="note-badge" style="background:#FEF0E7;color:#784212">1,4</span></td>
+            <td style="color:#888;font-size:12px">1,2</td><td style="color:#888;font-size:12px">1,3</td><td style="color:#888;font-size:12px">1,6</td>
+            <td style="font-size:12px;color:#555"><em>Überzeugt in allen Kategorien. Verarbeitung auf höchstem Niveau, Dauerlasttest ohne Beanstandungen.</em></td></tr>
+          <tr><td><strong>TechMove GmbH</strong></td>
+            <td style="color:#aaa;font-size:12px">nicht getestet</td>
+            <td style="color:#aaa">–</td><td style="color:#aaa">–</td><td style="color:#aaa">–</td>
+            <td style="font-size:12px;color:#aaa"><em>Kein Testmuster eingereicht.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ SERVICE ══════════════════════════════════════ -->
+  <div class="section-card c-service" id="s-service">
+    <div class="section-header" onclick="toggle('s-service')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Vergleichsportal</span>
+        <span class="section-title">Service-Level-Vergleich</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Übersicht der angebotenen Service-Level im Segment. Erreichbarkeit beschreibt, wie und wann der Anbieter kontaktiert werden kann. Sendungsverfolgung beschreibt, ob und wie Kunden den aktuellen Lieferstatus einsehen können.</div>
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Service-Level</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsProfi GmbH</strong></td><td>Persönlicher Ansprechpartner (Geschäftszeiten) / Sendungsverfolgung auf Anfrage</td></tr>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td><td>Persönlicher Ansprechpartner (Geschäftszeiten) / Sendungsverfolgung auf Anfrage</td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td><td>Allgemeine Hotline / Sendungsverfolgung auf Anfrage</td></tr>
+          <tr><td><strong>ElektroDynamik AG</strong></td><td>Persönlicher Ansprechpartner (Geschäftszeiten) / Sendungsverfolgung Echtzeit</td></tr>
+          <tr><td><strong>EliteDrive GmbH</strong></td><td>Persönlicher Ansprechpartner (Geschäftszeiten) / Sendungsverfolgung Echtzeit</td></tr>
+          <tr><td><strong>HubTech AG</strong></td><td>Allgemeine Hotline / Sendungsverfolgung auf Anfrage</td></tr>
+          <tr><td><strong>NordTech GmbH</strong></td><td>Nur E-Mail / Keine Sendungsverfolgung</td></tr>
+          <tr><td><strong>PrecisionHub AG</strong></td><td>Persönlicher Ansprechpartner 24/7 / Sendungsverfolgung Echtzeit</td></tr>
+          <tr><td><strong>PremiumDrive GmbH</strong></td><td>Persönlicher Ansprechpartner 24/7 / Sendungsverfolgung Echtzeit</td></tr>
+          <tr><td><strong>TechMove GmbH</strong></td><td>Nur E-Mail / Keine Sendungsverfolgung</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ NACHHALTIGKEIT ════════════════════════════════ -->
+  <div class="section-card c-nachhaltigkeit" id="s-nachhaltigkeit">
+    <div class="section-header" onclick="toggle('s-nachhaltigkeit')">
+      <div class="section-header-left"><span class="dot"></span>
+        <span class="section-badge">Nachhaltigkeitsportal</span>
+        <span class="section-title">Nachhaltigkeitsprofil – CO₂ &amp; Sozialstandards</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Übersicht der Nachhaltigkeitsprofile im Segment. CO₂-Status beschreibt den aktuellen Stand der Emissionsreduktion. Sozialstandards beziehen sich auf: Keine Zwangsarbeit/Kinderarbeit · Tarifverhandlungen · Diskriminierungsverbot · Arbeitszeitbegrenzung · Existenzlohn.</div>
+      <table class="data-table">
+        <thead><tr><th>Anbieter</th><th>Nachhaltigkeitsprofil</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AntriebsProfi GmbH</strong></td><td>CO₂-Reduktion laufend / Sozialstandards Selbstauskunft</td></tr>
+          <tr><td><strong>AntriebsWerk GmbH</strong></td><td>CO₂-Reduktion laufend / Sozialstandards Selbstauskunft</td></tr>
+          <tr><td><strong>DriveCore GmbH</strong></td><td>Keine Angaben / Keine Angaben</td></tr>
+          <tr><td><strong>ElektroDynamik AG</strong></td><td>CO₂-Reduktion laufend / Sozialstandards unabhängig geprüft</td></tr>
+          <tr><td><strong>EliteDrive GmbH</strong></td><td>CO₂-Reduktion laufend / Sozialstandards Selbstauskunft</td></tr>
+          <tr><td><strong>HubTech AG</strong></td><td>Keine Angaben / Sozialstandards Selbstauskunft</td></tr>
+          <tr><td><strong>NordTech GmbH</strong></td><td>Keine Angaben / Keine Angaben</td></tr>
+          <tr><td><strong>PrecisionHub AG</strong></td><td>Klimaneutral / Sozialstandards unabhängig geprüft</td></tr>
+          <tr><td><strong>PremiumDrive GmbH</strong></td><td>Klimaneutral / Sozialstandards unabhängig geprüft</td></tr>
+          <tr><td><strong>TechMove GmbH</strong></td><td>Keine Angaben / Keine Angaben</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- ══ BUSINESSTIPP ════════════════════════════════ -->
+  <div class="section-card c-tipp" id="s-tipp">
+    <div class="section-header" onclick="toggle('s-tipp')">
+      <div class="section-header-left">
+        <span class="dot" style="background:#2a2a2a;"></span>
+        <span class="section-badge">Businesstipp</span>
+        <span class="section-title">Hinweise zur Auswertung</span>
+      </div>
+      <span class="section-arrow">&#9654;</span>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Nutzen Sie die folgenden Hinweise, um aus den Marktdaten eine Punkteskala (1&ndash;5) f&uuml;r Ihr Kriterium abzuleiten.</div>
+      <table class="data-table">
+        <thead><tr><th style="width:40px">#</th><th>Hinweis</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:bold;text-align:center;color:#fff;">1</td>
+            <td>Schauen Sie sich die Daten an. Welcher Anbieter schneidet am besten ab &ndash; und welcher am schlechtesten? Markieren Sie diese beiden als Ausgangspunkt f&uuml;r Ihre Skala.</td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold;text-align:center;color:#fff;">2</td>
+            <td>&Uuml;berlegen Sie: Welche Auspr&auml;gungen des Kriteriums sind gleichwertig und k&ouml;nnen zu einer Kategorie zusammengefasst werden? Ziel ist es, f&uuml;nf klar unterscheidbare Stufen zu beschreiben &ndash; von einer kaum vorhandenen (1 Punkt) bis zu einer hervorragenden Auspr&auml;gung (5 Punkte).</td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold;text-align:center;color:#fff;">3</td>
+            <td>&Uuml;berlegen Sie: Was w&auml;re f&uuml;r die TSM AG ein akzeptabler Mindestwert &ndash; und ab wann w&auml;re ein Anbieter besonders gut? Nutzen Sie das, um Ihre Grenzen zu ziehen.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<div class="portal-footer">
+  IndustrieMarkt Insider &copy; 2026 &middot; Alle Angaben ohne Gewähr &middot; Segment: Elektromotor-Hubbein Sets &middot; Stand: 20.05.2026
+</div>
+
+<script>
+function toggle(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+</script>
+</body>
+</html>
