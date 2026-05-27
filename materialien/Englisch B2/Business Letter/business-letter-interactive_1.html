@@ -971,8 +971,132 @@ body {
   .sidebar-label { display: none; }
   .nav-item { padding: 8px 12px; white-space: nowrap; }
   .anatomy-grid, .builder-wrap { grid-template-columns: 1fr; }
-  .info-panel { position: static; }
+  .info-panel { display: none; } /* Overlay stattdessen */
   .main-content { padding: 24px 20px; }
+  .letter-paper { padding: 24px 20px; padding-left: 36px !important; }
+  .lp-number { left: -22px; }
+}
+
+/* ═══════════════════════════════════════
+   LETTER PART OVERLAY (replaces info-panel)
+═══════════════════════════════════════ */
+.lp-overlay {
+  display: none;
+  position: relative;
+  margin: 8px -8px 16px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 6px 6px 0 rgba(26,20,16,0.12);
+  padding: 0;
+  z-index: 50;
+  animation: sectionIn 0.35s ease both;
+}
+
+.lp-overlay.show { display: block; }
+
+.lp-overlay-header {
+  background: var(--ink);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.lp-overlay-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--paper);
+  line-height: 1;
+  width: 32px;
+}
+
+.lp-overlay-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: -0.01em;
+}
+
+.lp-overlay-de {
+  font-size: 0.75rem;
+  color: rgba(245,240,232,0.55);
+  font-style: italic;
+  margin-top: 1px;
+}
+
+.lp-overlay-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: rgba(245,240,232,0.6);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.lp-overlay-close:hover {
+  color: var(--paper);
+  background: rgba(255,255,255,0.1);
+}
+
+.lp-overlay-body {
+  padding: 20px;
+}
+
+.lp-overlay-desc {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  margin-bottom: 14px;
+}
+
+.lp-overlay-rule {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 12px;
+}
+
+.lp-overlay-example {
+  background: rgba(26,20,16,0.04);
+  border: 1px solid rgba(26,20,16,0.1);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  color: var(--ink-mid);
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* Desktop: Overlay als Inline-Block neben dem Brief-Element */
+@media (min-width: 901px) {
+  .lp-overlay {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: 480px;
+    margin: 8px 0 16px;
+  }
 }
 </style>
 </head>
@@ -1201,26 +1325,22 @@ body {
       </div>
     </div>
 
-    <!-- INFO PANEL -->
-    <div class="info-panel">
-      <div class="info-hint" id="anatomy-hint">
-        <div class="arrow-icon">←</div>
-        <p>Click on any numbered part of the letter to see an explanation.</p>
+  </div>
+
+  <!-- OVERLAY: appears inline when a letter part is clicked -->
+  <div id="lp-overlay" class="lp-overlay">
+    <div class="lp-overlay-header">
+      <button class="lp-overlay-close" onclick="closeOverlay()">×</button>
+      <div class="lp-overlay-num" id="lpo-num">1</div>
+      <div>
+        <div class="lp-overlay-title" id="lpo-title">Letterhead</div>
+        <div class="lp-overlay-de" id="lpo-de">Briefkopf</div>
       </div>
-      <div class="info-card" id="anatomy-card" style="display:none;">
-        <div class="info-card-header">
-          <div class="info-card-num" id="ic-num">1</div>
-          <div>
-            <div class="info-card-title" id="ic-title">Letterhead</div>
-            <div class="info-card-en" id="ic-de">Briefkopf</div>
-          </div>
-        </div>
-        <div class="info-card-body">
-          <p class="info-card-desc" id="ic-desc"></p>
-          <div class="info-card-rule" id="ic-rule" style="display:none;"></div>
-          <div class="info-card-example" id="ic-example" style="display:none;"></div>
-        </div>
-      </div>
+    </div>
+    <div class="lp-overlay-body">
+      <p class="lp-overlay-desc" id="lpo-desc"></p>
+      <div class="lp-overlay-rule" id="lpo-rule" style="display:none;"></div>
+      <div class="lp-overlay-example" id="lpo-example" style="display:none;"></div>
     </div>
   </div>
 
@@ -1555,28 +1675,49 @@ function gotoSection(n) {
 /* ─── ANATOMY ─── */
 function showPart(num) {
   const p = PARTS_DATA[num - 1];
+  
+  // Remove previous highlights
   document.querySelectorAll('.lp').forEach(el => el.classList.remove('highlight'));
-  document.querySelector(`.lp[data-part="${num}"]`).classList.add('highlight');
-
-  document.getElementById('anatomy-hint').style.display = 'none';
-  const card = document.getElementById('anatomy-card');
-  card.style.display = 'block';
-  card.style.animation = 'none';
-  card.offsetHeight; // reflow
-  card.style.animation = 'sectionIn 0.35s ease both';
-
-  document.getElementById('ic-num').textContent = num;
-  document.getElementById('ic-title').textContent = p.title;
-  document.getElementById('ic-de').textContent = p.de;
-  document.getElementById('ic-desc').textContent = p.desc;
-
-  const ruleEl = document.getElementById('ic-rule');
+  
+  // Highlight clicked part
+  const clickedEl = document.querySelector(`.lp[data-part="${num}"]`);
+  clickedEl.classList.add('highlight');
+  
+  // Fill overlay content
+  document.getElementById('lpo-num').textContent = num;
+  document.getElementById('lpo-title').textContent = p.title;
+  document.getElementById('lpo-de').textContent = p.de;
+  document.getElementById('lpo-desc').textContent = p.desc;
+  
+  const ruleEl = document.getElementById('lpo-rule');
   if (p.rule) { ruleEl.textContent = p.rule; ruleEl.style.display = ''; }
   else ruleEl.style.display = 'none';
-
-  const exEl = document.getElementById('ic-example');
+  
+  const exEl = document.getElementById('lpo-example');
   if (p.example) { exEl.textContent = p.example; exEl.style.display = ''; }
   else exEl.style.display = 'none';
+  
+  // Move overlay directly after clicked element
+  const overlay = document.getElementById('lp-overlay');
+  clickedEl.after(overlay);
+  
+  // Show with animation
+  overlay.classList.remove('show');
+  void overlay.offsetHeight; // trigger reflow
+  overlay.classList.add('show');
+  
+  // Scroll overlay into view on mobile
+  if (window.innerWidth <= 900) {
+    setTimeout(() => {
+      overlay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  }
+}
+
+function closeOverlay() {
+  const overlay = document.getElementById('lp-overlay');
+  overlay.classList.remove('show');
+  document.querySelectorAll('.lp').forEach(el => el.classList.remove('highlight'));
 }
 
 /* ─── SALUTATION MATCH ─── */
