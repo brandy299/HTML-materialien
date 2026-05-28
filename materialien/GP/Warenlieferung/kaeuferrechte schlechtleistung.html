@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rechte des Käufers bei Schlechtleistung</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e; --paper: #f5f0e8; --cream: #ede8dc;
+    --accent: #c0392b; --gold: #b8860b; --gold-light: #f0e6c0;
+    --border: #c8c0b0; --muted: #6b6358;
+    --tip-bg: #eaf3ea; --tip-border: #4a7c59; --tip-text: #2d5a3d;
+    --s1-col: #2c5282; --s1-bg: #eef2f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--paper);
+    background-image: radial-gradient(ellipse at 20% 10%, rgba(184,134,11,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 90%, rgba(192,57,43,0.05) 0%, transparent 50%);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink); min-height: 100vh; padding: 2rem 1rem 4rem;
+  }
+  .page-wrapper { max-width: 860px; margin: 0 auto; }
+  .header { border-top: 4px double var(--ink); border-bottom: 4px double var(--ink); padding: 1.5rem 0; margin-bottom: 2.5rem; text-align: center; position: relative; }
+  .header::before, .header::after { content: 'S'; position: absolute; top: 50%; transform: translateY(-50%); font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--border); line-height: 1; pointer-events: none; }
+  .header::before { left: 0; content: '\00a7'; }
+  .header::after  { right: 0; content: '\00a7'; }
+  .kurs-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; line-height: 1.15; }
+  .header h1 span { color: var(--accent); }
+  .header-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; font-style: italic; }
+  .lernziel { background: var(--cream); border-left: 4px solid var(--gold); padding: 0.9rem 1.2rem; margin-bottom: 2rem; font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+  .lernziel strong { color: var(--ink); font-weight: 600; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; margin-bottom: 1rem; }
+  .leitfall { background: var(--ink); color: var(--paper); border-radius: 2px; padding: 1.6rem 2rem; margin-bottom: 2.5rem; position: relative; overflow: hidden; }
+  .leitfall::before { content: 'FALL'; position: absolute; top: -0.2rem; right: 1.5rem; font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 900; color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none; }
+  .leitfall-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--gold-light); margin-bottom: 0.8rem; }
+  .leitfall p { font-size: 0.92rem; line-height: 1.75; color: #e8e4dc; }
+  .leitfall p + p { margin-top: 0.6rem; }
+  .leitfall .hl { background: rgba(192,57,43,0.35); padding: 0.1em 0.3em; border-radius: 2px; }
+  .aufgabe-inline { background: var(--cream); border-left: 3px solid var(--gold); padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.87rem; }
+  .aufgaben-nr { font-weight: 700; color: var(--gold); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
+  .aufgabe-inline p { color: var(--ink); line-height: 1.6; }
+  .lines { margin-top: 0.6rem; }
+  .lines span { display: block; border-bottom: 1px solid var(--border); height: 1.8rem; margin-bottom: 0.2rem; }
+  .tipp-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem; cursor: pointer; font-size: 0.78rem; font-weight: 600; color: var(--tip-border); letter-spacing: 0.05em; text-transform: uppercase; background: none; border: 1px solid var(--tip-border); padding: 0.3em 0.8em; border-radius: 2px; transition: background 0.2s; font-family: 'Source Serif 4', serif; }
+  .tipp-toggle:hover { background: var(--tip-bg); }
+  .tipp-box { display: none; background: var(--tip-bg); border: 1px solid var(--tip-border); border-radius: 2px; padding: 0.8rem 1rem; margin-top: 0.5rem; font-size: 0.84rem; color: var(--tip-text); line-height: 1.65; }
+  .tipp-box ul { margin: 0.4rem 0 0 1.2rem; }
+  .tipp-box ul li { margin-bottom: 0.25rem; }
+
+  /* MÄNGELRÜGE */
+  .maengelruege { border: 2px solid var(--accent); border-radius: 2px; padding: 1.4rem 1.6rem; margin-bottom: 1.5rem; background: #fdf8f8; position: relative; }
+  .maengelruege-badge { position: absolute; top: -0.7rem; left: 1.2rem; background: var(--accent); color: white; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.2em 0.7em; border-radius: 2px; }
+  .maengelruege h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--accent); }
+  .maengelruege p { font-size: 0.88rem; line-height: 1.7; color: var(--ink); margin-bottom: 0.8rem; }
+
+  /* STUFEN-LABEL */
+  .stufe-label { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+  .stufe-badge { font-family: 'Playfair Display', serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3em 0.9em; border-radius: 2px; white-space: nowrap; }
+  .stufe-badge.s1 { background: var(--s1-col); color: white; }
+  .stufe-badge.s2 { background: var(--accent); color: white; }
+  .stufe-line { flex: 1; height: 1px; background: var(--border); }
+  .stufe-desc { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+  /* NACHERFÜLLUNG */
+  .nacherfuellung-block { border: 2px solid var(--s1-col); border-radius: 2px; background: white; margin-bottom: 1.5rem; overflow: hidden; }
+  .nacherfuellung-header { background: var(--s1-bg); padding: 0.9rem 1.2rem; border-bottom: 1px solid #c5d3e8; display: flex; align-items: center; gap: 0.8rem; }
+  .nf-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--s1-col); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .nf-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--s1-col); display: block; margin-bottom: 0.1rem; }
+  .nf-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--s1-col); }
+  .nacherfuellung-body { padding: 1rem 1.2rem 1.2rem; }
+  .nacherfuellung-body .erkl { font-size: 0.86rem; line-height: 1.7; color: var(--ink); margin-bottom: 0.9rem; }
+  .nacherfuellung-body .erkl em { font-style: italic; color: var(--muted); }
+  .nacherfuellung-body .tipp-toggle { color: var(--s1-col); border-color: var(--s1-col); }
+  .nacherfuellung-body .tipp-toggle:hover { background: var(--s1-bg); }
+  .nacherfuellung-body .tipp-box { background: var(--s1-bg); border-color: var(--s1-col); color: #1a365d; }
+
+  /* ÜBERGANG */
+  .uebergang { background: var(--ink); color: white; border-radius: 2px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .uebergang-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .uebergang-text { font-size: 0.85rem; line-height: 1.6; }
+  .uebergang-text strong { color: #f0c84a; font-weight: 700; display: block; margin-bottom: 0.2rem; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+
+  /* RECHTE GRID */
+  .rechte-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem; }
+  @media (max-width: 600px) { .rechte-grid { grid-template-columns: 1fr; } }
+  .recht-card { border: 1px solid var(--border); border-radius: 2px; background: white; overflow: hidden; transition: box-shadow 0.2s; }
+  .recht-card:hover { box-shadow: 0 4px 16px rgba(26,26,46,0.08); }
+  .recht-header { padding: 0.9rem 1.2rem 0.7rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.8rem; }
+  .recht-icon { width: 2.2rem; height: 2.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .recht-num { font-family: 'Playfair Display', serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; display: block; color: var(--muted); margin-bottom: 0.15rem; }
+  .recht-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+  .recht-body { padding: 1rem 1.2rem 1.2rem; }
+  .recht-body .erkl { font-size: 0.86rem; line-height: 1.7; color: var(--ink); margin-bottom: 0.9rem; }
+  .recht-body .erkl em { font-style: italic; color: var(--muted); }
+
+  .card-red .recht-header { background: #fdf2f2; }
+  .card-red .recht-icon { background: var(--accent); color: white; }
+  .card-red .recht-name { color: var(--accent); }
+  .card-red .tipp-toggle { color: var(--accent); border-color: var(--accent); }
+  .card-red .tipp-toggle:hover { background: #fdf2f2; }
+  .card-red .tipp-box { background: #fdf2f2; border-color: var(--accent); color: #7b1a1a; }
+
+  .card-green .recht-header { background: #f0f7f0; }
+  .card-green .recht-icon { background: #2d6a4f; color: white; }
+  .card-green .recht-name { color: #2d6a4f; }
+  .card-green .tipp-toggle { color: #2d6a4f; border-color: #2d6a4f; }
+  .card-green .tipp-toggle:hover { background: #f0f7f0; }
+  .card-green .tipp-box { background: #f0f7f0; border-color: #2d6a4f; color: #1a3d2b; }
+
+  .card-purple .recht-header { background: #f4f0f9; }
+  .card-purple .recht-icon { background: #553c8b; color: white; }
+  .card-purple .recht-name { color: #553c8b; }
+  .card-purple .tipp-toggle { color: #553c8b; border-color: #553c8b; }
+  .card-purple .tipp-toggle:hover { background: #f4f0f9; }
+  .card-purple .tipp-box { background: #f4f0f9; border-color: #553c8b; color: #2d1f4d; }
+
+  .card-orange .recht-header { background: #fef6ee; }
+  .card-orange .recht-icon { background: #c06010; color: white; }
+  .card-orange .recht-name { color: #c06010; }
+  .card-orange .tipp-toggle { color: #c06010; border-color: #c06010; }
+  .card-orange .tipp-toggle:hover { background: #fef6ee; }
+  .card-orange .tipp-box { background: #fef6ee; border-color: #c06010; color: #6b3508; }
+
+  /* ABSCHLUSS */
+  .abschluss { border: 2px solid var(--ink); border-radius: 2px; padding: 1.5rem 1.8rem; background: var(--cream); margin-bottom: 2rem; }
+  .abschluss h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.7rem; }
+  .abschluss p { font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.6rem; }
+  .scenario-tag { display: inline-block; background: var(--ink); color: var(--paper); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.2em 0.7em; border-radius: 2px; margin-bottom: 0.5rem; }
+  .footer { text-align: center; font-size: 0.75rem; color: var(--border); border-top: 1px solid var(--border); padding-top: 1rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="header">
+    <p class="kurs-label">Ausbildungsvorbereitungsklasse &middot; Wirtschaft &amp; Verwaltung</p>
+    <h1>Rechte des Käufers bei <span>Schlechtleistung</span></h1>
+    <p class="header-sub">Arbeitsblatt &middot; Kaufrecht im B2B-Kontext</p>
+  </header>
+
+  <div class="lernziel">
+    <strong>Lernziel:</strong> Du kennst die fünf Rechte, die einem Käufer bei mangelhafter Lieferung zustehen. Du verstehst, dass die Nacherfüllung immer zuerst verlangt werden muss – und welche weiteren Rechte erst greifen, wenn sie scheitert.
+  </div>
+
+  <p class="section-title">Der Ausgangsfall</p>
+  <div class="leitfall">
+    <p class="leitfall-title">&#x1F4CB; Schmidt GmbH kauft neue Bürostühle</p>
+    <p>Die Schmidt GmbH richtet ihr neues Büro ein und bestellt <strong>20 Bürostühle</strong> beim Großhändler Komfort AG für <strong>4.000 €</strong>. Die Stühle werden pünktlich geliefert und bezahlt.</p>
+    <p>Wenige Tage später meldet sich die Büroleitung: <span class="hl">Die Rollen sämtlicher Stühle sind defekt</span> – sie brechen bei normaler Benutzung ab. Die Stühle sind für das Büro nicht nutzbar.</p>
+    <p>Die Schmidt GmbH möchte wissen, welche rechtlichen Möglichkeiten sie hat – und in welcher Reihenfolge sie vorgehen muss.</p>
+  </div>
+
+  <!-- VORAUSSETZUNG: MÄNGELRÜGE -->
+  <p class="section-title">Voraussetzung – Die Mängelrüge</p>
+  <div class="maengelruege">
+    <span class="maengelruege-badge">Wichtig im Handelsrecht</span>
+    <h3>Was ist eine Mängelrüge?</h3>
+    <p>Im kaufmännischen Bereich gilt: Wer als Unternehmen eine mangelhafte Ware erhält, muss den Mangel <strong>unverzüglich</strong> (= ohne unnötige Verzögerung) beim Verkäufer <strong>schriftlich rügen</strong> – also anzeigen. Wer das versäumt, verliert alle Rechte.</p>
+    <p>Erst nach der Mängelrüge kann die Schmidt GmbH die unten beschriebenen Rechte geltend machen.</p>
+    <div class="aufgabe-inline">
+      <span class="aufgaben-nr">Aufgabe 1</span>
+      <p>Formuliere in eigenen Worten, warum die Mängelrüge so wichtig ist. Warum sollte man sie schriftlich und schnell abschicken?</p>
+      <div class="lines"><span></span><span></span><span></span></div>
+    </div>
+    <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+    <div class="tipp-box">
+      <ul>
+        <li>Überlege: Was passiert, wenn man zu lange wartet? Könnte der Verkäufer denken, der Käufer ist zufrieden?</li>
+        <li>Schriftlich = Beweis. Was könnte ohne Beweis im Streitfall passieren?</li>
+        <li>Im Handelsrecht zählt Zeit – anders als bei Privatpersonen.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STUFE 1: NACHERFÜLLUNG -->
+  <div class="stufe-label">
+    <span class="stufe-badge s1">Stufe 1 &ndash; Immer zuerst</span>
+    <span class="stufe-line"></span>
+    <span class="stufe-desc">Muss vor allen anderen Rechten verlangt werden</span>
+  </div>
+
+  <div class="nacherfuellung-block">
+    <div class="nacherfuellung-header">
+      <div class="nf-icon">&#x1F527;</div>
+      <div>
+        <span class="nf-sub">Recht 1 &middot; Vorrang</span>
+        <span class="nf-title">Nacherfüllung</span>
+      </div>
+    </div>
+    <div class="nacherfuellung-body">
+      <p class="erkl">
+        Der Käufer verlangt vom Verkäufer, den Mangel zu beheben. Der Verkäufer bekommt zunächst die Chance, seinen Fehler selbst zu korrigieren. Es gibt zwei Möglichkeiten:<br><br>
+        <strong>a) Reparatur</strong> – die defekten Rollen werden ausgetauscht.<br>
+        <strong>b) Ersatzlieferung</strong> – alle 20 Stühle werden gegen neue ausgetauscht.<br><br>
+        <em>Die Nacherfüllung hat immer Vorrang. Solange sie noch möglich ist und der Verkäufer kooperiert, können die Rechte aus Stufe 2 grundsätzlich noch nicht verlangt werden.</em>
+      </p>
+      <div class="aufgabe-inline">
+        <span class="aufgaben-nr">Aufgabe 2</span>
+        <p>Welche der beiden Formen der Nacherfüllung würdest du der Schmidt GmbH empfehlen – und warum?</p>
+        <div class="lines"><span></span><span></span></div>
+      </div>
+      <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+      <div class="tipp-box">
+        <ul>
+          <li>Ist nur ein Teil der Stühle defekt, oder betrifft das Problem alle 20?</li>
+          <li>Was wäre schneller und weniger aufwändig für die Schmidt GmbH?</li>
+          <li>Wäre eine Reparatur bei 20 Stühlen noch wirtschaftlich sinnvoll?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÜBERGANGSBANNER -->
+  <div class="uebergang">
+    <div class="uebergang-icon">&#x26A0;&#xFE0F;</div>
+    <div class="uebergang-text">
+      <strong>Nacherfüllung gescheitert – was nun?</strong>
+      Die Komfort AG hat versucht, die Rollen zu reparieren. Doch die neuen Rollen sind ebenfalls defekt – die Reparatur ist fehlgeschlagen. Erst jetzt kann die Schmidt GmbH eines der folgenden vier Rechte wählen.
+    </div>
+  </div>
+
+  <!-- STUFE 2: WEITERE RECHTE -->
+  <div class="stufe-label">
+    <span class="stufe-badge s2">Stufe 2 &ndash; Nach gescheiterter Nacherfüllung</span>
+    <span class="stufe-line"></span>
+    <span class="stufe-desc">Eines (oder mehrere) davon wählen</span>
+  </div>
+
+  <div class="rechte-grid">
+
+    <div class="recht-card card-red">
+      <div class="recht-header">
+        <div class="recht-icon">&#x21A9;&#xFE0F;</div>
+        <div>
+          <span class="recht-num">Recht 2</span>
+          <span class="recht-name">Rücktritt</span>
+        </div>
+      </div>
+      <div class="recht-body">
+        <p class="erkl">
+          Der Käufer tritt vom Kaufvertrag zurück: Er gibt die Ware zurück und erhält den gesamten Kaufpreis (4.000 €) erstattet. Der Vertrag wird vollständig rückgängig gemacht.<br><br>
+          <em>Sinnvoll, wenn: Die Schmidt GmbH die Stühle überhaupt nicht mehr haben möchte.</em>
+        </p>
+        <div class="aufgabe-inline">
+          <span class="aufgaben-nr">Aufgabe 3</span>
+          <p>Was genau bedeutet es, von einem Vertrag „zurückzutreten"? Was muss die Schmidt GmbH tun – und was bekommt sie?</p>
+          <div class="lines"><span></span><span></span></div>
+        </div>
+        <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+        <div class="tipp-box">
+          <ul>
+            <li>Was passiert mit der Ware (den Stühlen) beim Rücktritt?</li>
+            <li>Was passiert mit dem bereits gezahlten Kaufpreis?</li>
+            <li>Denke an: Rücktritt = Vertrag aufheben – als wäre er nie geschlossen worden.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="recht-card card-green">
+      <div class="recht-header">
+        <div class="recht-icon">&#x1F4C9;</div>
+        <div>
+          <span class="recht-num">Recht 3</span>
+          <span class="recht-name">Minderung</span>
+        </div>
+      </div>
+      <div class="recht-body">
+        <p class="erkl">
+          Der Käufer behält die mangelhafte Ware, verlangt aber eine Herabsetzung des Kaufpreises entsprechend dem tatsächlichen Wert der Ware.<br><br>
+          <em>Sinnvoll, wenn: Die Stühle trotz des Defekts noch teilweise nutzbar sind und die Schmidt GmbH sie behalten möchte.</em>
+        </p>
+        <div class="aufgabe-inline">
+          <span class="aufgaben-nr">Aufgabe 4</span>
+          <p>Wann wäre eine Minderung sinnvoller als ein Rücktritt? Nenne ein konkretes Beispiel aus dem Leitfall.</p>
+          <div class="lines"><span></span><span></span></div>
+        </div>
+        <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+        <div class="tipp-box">
+          <ul>
+            <li>Wann will ein Käufer die Ware trotz Defekt behalten?</li>
+            <li>Was wäre, wenn die Stühle optisch perfekt sind, aber die Rollen nur manchmal klemmen?</li>
+            <li>Unterschied: Rücktritt = Ware zurück. Minderung = Ware behalten, aber weniger zahlen.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="recht-card card-purple">
+      <div class="recht-header">
+        <div class="recht-icon">&#x1F4B6;</div>
+        <div>
+          <span class="recht-num">Recht 4</span>
+          <span class="recht-name">Schadensersatz</span>
+        </div>
+      </div>
+      <div class="recht-body">
+        <p class="erkl">
+          Der Käufer verlangt Ersatz für alle Schäden, die durch die mangelhafte Ware entstanden sind – z. B. Arztkosten, Produktionsausfall oder entgangene Gewinne.<br><br>
+          <em>Voraussetzung: Der Verkäufer muss den Mangel zu vertreten haben, d. h. er ist dafür verantwortlich.</em>
+        </p>
+        <div class="aufgabe-inline">
+          <span class="aufgaben-nr">Aufgabe 5</span>
+          <p>Ein Mitarbeiter stürzt wegen eines abgebrochenen Rollers und verletzt sich (Arztkosten: 800 €, eine Woche Ausfall). Welche Schäden kann die Schmidt GmbH geltend machen?</p>
+          <div class="lines"><span></span><span></span></div>
+        </div>
+        <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+        <div class="tipp-box">
+          <ul>
+            <li>Direkte Kosten: Arztrechnung, Lohnfortzahlung für den ausgefallenen Mitarbeiter …</li>
+            <li>Könnte auch ein Umsatzverlust geltend gemacht werden?</li>
+            <li>Warum muss der Verkäufer den Mangel „zu vertreten haben"? Was wäre, wenn er es nicht wusste?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="recht-card card-orange">
+      <div class="recht-header">
+        <div class="recht-icon">&#x1F9FE;</div>
+        <div>
+          <span class="recht-num">Recht 5</span>
+          <span class="recht-name">Aufwendungsersatz</span>
+        </div>
+      </div>
+      <div class="recht-body">
+        <p class="erkl">
+          Der Käufer verlangt Ersatz für Ausgaben, die er im Vertrauen auf eine einwandfreie Lieferung gemacht hat und die nun nutzlos sind. Es geht nicht um entstandene Schäden, sondern um <strong>vergeblich gemachte Ausgaben</strong>.<br><br>
+          <em>Beispiel: Die Schmidt GmbH hat eine Spezial-Bodenmatte für 300 € gekauft – die nun nutzlos ist, weil die Stühle zurückgehen.</em>
+        </p>
+        <div class="aufgabe-inline">
+          <span class="aufgaben-nr">Aufgabe 6</span>
+          <p>Was ist der Unterschied zwischen Schadensersatz und Aufwendungsersatz? Erkläre in eigenen Worten und nenne je ein Beispiel.</p>
+          <div class="lines"><span></span><span></span><span></span></div>
+        </div>
+        <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+        <div class="tipp-box">
+          <ul>
+            <li>Schadensersatz: Etwas Schlimmes ist <em>passiert</em> – wegen der mangelhaften Ware.</li>
+            <li>Aufwendungsersatz: Geld wurde <em>vorab ausgegeben</em> im Vertrauen auf die Ware – und ist jetzt umsonst.</li>
+            <li>Wäre die Bodenmatte noch sinnvoll, wenn die Stühle einwandfrei wären?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ABSCHLUSSAUFGABE -->
+  <p class="section-title">Abschlussaufgabe</p>
+  <div class="abschluss">
+    <h3>Was empfiehlst du der Schmidt GmbH?</h3>
+    <p>Bearbeite die folgenden drei Szenarien. Entscheide jeweils, welche Rechte die Schmidt GmbH geltend machen kann – und begründe, warum.</p>
+
+    <div style="margin-top:1rem;">
+      <span class="scenario-tag">Szenario A</span>
+      <p>Die Komfort AG erklärt sich sofort bereit, alle 20 Stühle gegen neue auszutauschen. Die Schmidt GmbH möchte die Angelegenheit schnell und unkompliziert lösen.</p>
+      <div class="lines"><span></span><span></span><span></span></div>
+      <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+      <div class="tipp-box">
+        Greift hier Stufe 1 oder Stufe 2? Ist die Nacherfüllung bereits fehlgeschlagen – oder läuft sie gerade erst? Welches der fünf Rechte kommt also zum Einsatz?
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <span class="scenario-tag">Szenario B</span>
+      <p>Die Komfort AG hat einen Techniker geschickt, der die Rollen aller 20 Stühle ausgetauscht hat. Nach einer Woche stellt sich heraus: Bei 15 Stühlen funktionieren die neuen Rollen einwandfrei. Bei 5 Stühlen wackeln die Rollen noch leicht – die Stühle sind aber nutzbar. Die Schmidt GmbH möchte alle Stühle behalten, findet aber, dass der ursprüngliche Preis nicht mehr gerechtfertigt ist.</p>
+      <div class="lines"><span></span><span></span><span></span></div>
+      <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+      <div class="tipp-box">
+        <ul>
+          <li>Die Nacherfüllung war teilweise erfolgreich – aber nicht vollständig. Ist Stufe 2 damit erreichbar?</li>
+          <li>Die Schmidt GmbH möchte die Stühle behalten: Welches Recht kommt in Frage, wenn man die Ware behält, aber den Preis anpassen will?</li>
+          <li>Betrifft das alle 20 Stühle oder nur die 5 noch mangelhaften?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <span class="scenario-tag">Szenario C</span>
+      <p>Die Komfort AG verweigert jede Zusammenarbeit und lehnt eine Nachbesserung ausdrücklich ab. Die Schmidt GmbH hat außerdem bereits eine Spezial-Bodenmatte für 500 € gekauft (jetzt nutzlos). Ein Mitarbeiter hat sich bei einem Sturz den Arm gebrochen (Krankenhauskosten: 800 €).</p>
+      <div class="lines"><span></span><span></span><span></span></div>
+      <button class="tipp-toggle" onclick="toggleTipp(this)"><span class="arrow">&#9658;</span> Tipp anzeigen</button>
+      <div class="tipp-box">
+        <ul>
+          <li>Wenn Nacherfüllung verweigert wird: Darf die Schmidt GmbH jetzt direkt zu Stufe 2?</li>
+          <li>Kann sie mehrere Rechte aus Stufe 2 gleichzeitig geltend machen?</li>
+          <li>Bodenmatte = nutzlose Ausgabe → welches Recht aus Stufe 2 passt?</li>
+          <li>Krankenhauskosten = entstandener Schaden → welches Recht passt?</li>
+          <li>Was passiert mit dem Kaufvertrag selbst – will die Schmidt GmbH die Stühle zurückgeben oder behalten?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Ausbildungsvorbereitung &middot; Kaufrecht BGB &middot; Mängelrechte nach &sect;&sect; 437 ff. BGB / &sect; 377 HGB
+  </footer>
+
+</div>
+<script>
+  function toggleTipp(btn) {
+    const box = btn.nextElementSibling;
+    const isOpen = box.style.display === 'block';
+    box.style.display = isOpen ? 'none' : 'block';
+    btn.querySelector('.arrow').innerHTML = isOpen ? '&#9658;' : '&#9660;';
+    btn.childNodes[2].textContent = isOpen ? ' Tipp anzeigen' : ' Tipp ausblenden';
+  }
+</script>
+</body>
+</html>
