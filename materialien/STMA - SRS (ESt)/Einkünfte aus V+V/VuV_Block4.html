@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VuV – Block 4: Vermietung an Angehörige (Tipps)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --ink: #1a1a18;
+    --muted: #6b6860;
+    --rule: #c8c3b8;
+    --card-bg: #ffffff;
+    --tag-bg: #edeae3;
+    --b4: #7a3060;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    padding: 3rem 2rem 6rem;
+    line-height: 1.6;
+  }
+
+  header {
+    max-width: 860px;
+    margin: 0 auto 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  header h1 span {
+    display: block;
+    font-size: 0.5em;
+    font-weight: 400;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    letter-spacing: 0;
+  }
+  .meta-row { margin-top: 0.9rem; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    background: var(--tag-bg);
+    border: 1px solid var(--rule);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    color: var(--muted);
+  }
+
+  /* ── PRÜFSCHEMA (ohne Schwellen-Grafik) ── */
+  .pruefschema {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    border: 1px solid var(--b4);
+    background: #faf5f8;
+  }
+  .pruefschema-header {
+    background: var(--b4);
+    padding: 0.7rem 1.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .pruefschema-body { padding: 1.2rem 1.4rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .pruef-step { display: flex; gap: 1rem; align-items: flex-start; }
+  .pruef-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--b4);
+    opacity: 0.3;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: center;
+  }
+  .pruef-content { flex: 1; }
+  .pruef-title { font-size: 0.9rem; font-weight: 600; color: var(--b4); margin-bottom: 0.2rem; }
+  .pruef-text { font-size: 0.85rem; color: #3a3a38; line-height: 1.55; }
+  .pruef-arrow { text-align: center; color: var(--b4); font-size: 1.1rem; opacity: 0.4; margin-left: 2rem; }
+
+  /* ── BLOCK ── */
+  .block { max-width: 860px; margin: 0 auto 3.5rem; }
+  .block-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 3px solid var(--b4);
+  }
+  .block-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--b4);
+    opacity: 0.25;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .block-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--b4);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .block-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .law-box {
+    background: var(--tag-bg);
+    border-left: 3px solid var(--b4);
+    padding: 0.55rem 0.9rem;
+    margin-bottom: 1.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .law-box strong {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+  }
+
+  /* ── SV CARD ── */
+  .sv-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--b4);
+    margin-bottom: 1rem;
+  }
+  .sv-header {
+    padding: 1.2rem 1.5rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .sv-header:hover { background: #faf9f6; }
+  .sv-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--b4);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .sv-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .sv-chevron {
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--b4);
+    transition: transform 0.3s ease;
+    margin-top: 0.2rem;
+  }
+  .sv-card.open .sv-chevron { transform: rotate(180deg); }
+
+  .sv-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease; }
+  .sv-card.open .sv-body { grid-template-rows: 1fr; }
+  .sv-body-inner { overflow: hidden; }
+  .sv-body-content { border-top: 1px solid var(--rule); padding: 1.4rem 1.5rem 1.6rem; }
+
+  .sv-text { font-size: 0.9rem; line-height: 1.65; margin-bottom: 1.2rem; }
+  .sv-text p + p { margin-top: 0.7rem; }
+
+  /* ── DATENTABELLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1rem; }
+  .data-table th {
+    background: var(--tag-bg);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    border-bottom: 2px solid var(--rule);
+  }
+  .data-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+
+  /* ── AUFGABE ── */
+  .aufgabe-box {
+    background: var(--tag-bg);
+    border: 1px solid var(--rule);
+    padding: 1rem 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .aufgabe-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--b4);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .aufgabe-box ol { padding-left: 1.2rem; font-size: 0.875rem; line-height: 1.6; }
+  .aufgabe-box ol li + li { margin-top: 0.5rem; }
+  .aufgabe-box p { font-size: 0.875rem; line-height: 1.6; }
+
+  /* ── ABWANDLUNG ── */
+  .abwandlung {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--b4);
+    background: #faf5f8;
+    padding: 1rem 1.2rem;
+    margin-top: 1.2rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+  .abwandlung-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--b4);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── TIPP (kombiniert Info + Hinweis, Gold) ── */
+  .tipp-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7a5c1e;
+    background: none;
+    border: 1px solid #c9a96e;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .tipp-toggle:hover { border-color: #7a5c1e; background: #fdf6e9; }
+  .tipp-toggle svg { width: 0.8rem; height: 0.8rem; transition: transform 0.3s ease; }
+  .tipp-toggle.open svg { transform: rotate(180deg); }
+
+  .tipp-box { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; margin-top: 0.6rem; }
+  .tipp-box.open { grid-template-rows: 1fr; }
+  .tipp-box-inner { overflow: hidden; }
+  .tipp-content {
+    background: #fdf6e9;
+    border: 1px solid #c9a96e;
+    border-left: 3px solid #c9a96e;
+    padding: 1.1rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: #3a2a10;
+  }
+  .tipp-content p + p { margin-top: 0.6rem; }
+  .tipp-content ul { padding-left: 1.1rem; list-style: none; margin-top: 0.4rem; }
+  .tipp-content ul li {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 0.35rem;
+    padding-left: 0.2rem;
+  }
+  .tipp-content ul li::before {
+    content: '→ ';
+    font-family: 'IBM Plex Mono', monospace;
+    color: #c9a96e;
+    font-size: 0.75rem;
+  }
+  .ref {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    background: rgba(201,169,110,0.15);
+    border: 1px solid #c9a96e;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    color: #5a3e0e;
+  }
+  .tipp-divider {
+    border: none;
+    border-top: 1px solid #c9a96e;
+    opacity: 0.4;
+    margin: 0.8rem 0;
+  }
+
+  .footer-note {
+    max-width: 860px;
+    margin: 3rem auto 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Lernfeld 8 · Einkommensteuer · Berufsschule Steuerfachangestellte</p>
+  <h1>Einkünfte aus Vermietung und Verpachtung
+    <span>Block 4 · Vermietung an nahe Angehörige und nahestehende Personen · § 21 Abs. 2 EStG</span>
+  </h1>
+  <div class="meta-row">
+    <span class="pill">§ 21 Abs. 2 EStG</span>
+    <span class="pill">Fremdvergleich · R 21.4 EStR</span>
+    <span class="pill">Verbilligte Vermietung</span>
+    <span class="pill">Totalüberschussprognose</span>
+  </div>
+</header>
+
+<!-- ── PRÜFSCHEMA (ohne Schwellen-Grafik) ── -->
+<div class="pruefschema">
+  <div class="pruefschema-header">Prüfschema — Vermietung an Angehörige und nahestehende Personen</div>
+  <div class="pruefschema-body">
+    <div class="pruef-step">
+      <div class="pruef-num">1</div>
+      <div class="pruef-content">
+        <div class="pruef-title">Steuerliche Anerkennung des Mietvertrags</div>
+        <div class="pruef-text">Bevor eine steuerliche Einordnung möglich ist, muss der Mietvertrag überhaupt anerkannt werden. Voraussetzungen: (a) bürgerlich-rechtliche Wirksamkeit und (b) Fremdvergleich — Gestaltung und tatsächliche Durchführung müssen dem zwischen fremden Dritten Üblichen entsprechen. Wird der Vertrag nicht anerkannt, sind alle Aufwendungen nicht abziehbare Kosten der privaten Lebensführung (§ 12 EStG). Gilt nicht nur für nahe Angehörige i. S. d. § 15 AO, sondern für alle nahestehenden Personen.</div>
+      </div>
+    </div>
+    <div class="pruef-arrow">↓ Vertrag anerkannt</div>
+    <div class="pruef-step">
+      <div class="pruef-num">2</div>
+      <div class="pruef-content">
+        <div class="pruef-title">Verbilligungsgrad bestimmen — § 21 Abs. 2 EStG</div>
+        <div class="pruef-text">Vereinbarte Warmmiete (Kaltmiete + Umlagen) im Verhältnis zur ortsüblichen Warmmiete berechnen. Lesen Sie § 21 Abs. 2 EStG und entnehmen Sie dem Gesetz, welche Rechtsfolgen sich je nach Höhe des Verbilligungsgrades ergeben.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BLOCK 4 ── -->
+<section class="block">
+
+  <div class="block-header">
+    <div class="block-num">04</div>
+    <div>
+      <span class="block-label">Vermietung an Angehörige &amp; nahestehende Personen</span>
+      <div class="block-title">Verbilligte Vermietung · § 21 Abs. 2 EStG</div>
+    </div>
+  </div>
+
+  <div class="law-box">
+    <strong>Rechtsgrundlagen</strong>
+    § 21 Abs. 2 EStG · § 15 AO · R 21.3 S. 2 EStR · R 21.4 EStR · H 21.4 EStH
+  </div>
+
+  <!-- ══ SV 4.1 ══ -->
+  <div class="sv-card open" id="sv-4-1">
+    <div class="sv-header" onclick="toggleSV('sv-4-1')">
+      <div>
+        <span class="sv-badge">Sachverhalt 4.1</span>
+        <div class="sv-title">Vermietung an die Tochter</div>
+      </div>
+      <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="sv-body"><div class="sv-body-inner"><div class="sv-body-content">
+
+      <div class="sv-text">
+        <p>Dr. Joachim Gerner vermietet seit dem 1. Januar 2025 eine Wohnung in seinem Mehrfamilienhaus in Dortmund (Hermannstraße 14) an seine Tochter Laura Gerner. Laura ist 28 Jahre alt, berufstätig und lebt seit ihrer Ausbildung in Dortmund. Sie zahlt die Miete monatlich pünktlich per Dauerauftrag auf das Konto ihres Vaters. Ein schriftlicher Mietvertrag liegt vor, der Mietgegenstand, Miethöhe, Zahlungszeitpunkt und Nebenkostenregelung enthält.</p>
+        <p>Die Wohnung hat eine Größe von <strong>75 m²</strong>. Die vereinbarte <strong>Kaltmiete beträgt 820,00 €</strong> monatlich, zuzüglich einer Nebenkostenvorauszahlung von <strong>110,00 €</strong> monatlich. Der örtliche Mietspiegel für Dortmund weist für vergleichbare Wohnungen eine ortsübliche Kaltmiete von <strong>11,80 €/m²</strong> aus. Die umlagefähigen Nebenkosten für vergleichbare Wohnungen betragen ortsüblich <strong>130,00 €</strong> monatlich.</p>
+        <p>Im Jahr 2025 entstehen Dr. Gerner für diese Wohnung folgende Werbungskosten:</p>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Position</th><th class="num">Betrag/Jahr</th></tr></thead>
+        <tbody>
+          <tr><td>AfA (anteilig auf diese Wohnung)</td><td class="num">3.800,00 €</td></tr>
+          <tr><td>Schuldzinsen (anteilig)</td><td class="num">4.200,00 €</td></tr>
+          <tr><td>Grundsteuer, Versicherung, Verwaltung (anteilig)</td><td class="num">1.640,00 €</td></tr>
+          <tr><td>Instandhaltungskosten</td><td class="num">890,00 €</td></tr>
+        </tbody>
+      </table>
+
+      <div class="aufgabe-box">
+        <span class="aufgabe-label">Aufgabe</span>
+        <ol>
+          <li>Prüfen Sie, ob der Mietvertrag zwischen Dr. Gerner und seiner Tochter steuerlich anerkannt werden kann.</li>
+          <li>Berechnen Sie den Verbilligungsgrad der Vermietung.</li>
+          <li>Ermitteln Sie die Einkünfte aus Vermietung und Verpachtung für das Jahr 2025.</li>
+        </ol>
+      </div>
+
+      <button class="tipp-toggle" onclick="toggleTipp(this)">
+        💡 Tipps einblenden
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="tipp-box"><div class="tipp-box-inner"><div class="tipp-content">
+        <p><strong>Information — Steuerliche Anerkennung von Mietverträgen unter Angehörigen</strong></p>
+        <p>Mietverträge unter nahen Angehörigen und nahestehenden Personen werden steuerlich nur anerkannt, wenn sie einem Fremdvergleich standhalten. Das bedeutet: Gestaltung und tatsächliche Durchführung müssen dem entsprechen, was auch zwischen fremden Dritten üblich ist. Die Hauptpflichten — insbesondere Mietsache, Miethöhe, Nebenkosten und Zahlungsmodalitäten — müssen klar und eindeutig vereinbart und entsprechend durchgeführt werden. Prüfen Sie den Sachverhalt anhand dieser Kriterien.</p>
+        <hr class="tipp-divider">
+        <p><strong>Information — R 21.3 S. 2 EStR</strong></p>
+        <p>„Die ortsübliche Marktmiete umfasst die ortsübliche Kaltmiete zuzüglich der nach der Betriebskostenverordnung umlagefähigen Kosten."</p>
+        <hr class="tipp-divider">
+        <ul>
+          <li>Lesen Sie <span class="ref">§ 21 Abs. 2 EStG</span>: Welche Rechtsfolge ergibt sich, wenn die Miete mindestens 66 % der ortsüblichen Miete beträgt?</li>
+          <li>Berechnen Sie Warmmiete und ortsübliche Warmmiete getrennt, bevor Sie das Verhältnis bilden.</li>
+          <li>Die ortsübliche Kaltmiete ergibt sich aus Wohnungsgröße × Mietpreis je m².</li>
+        </ul>
+      </div></div></div>
+
+    </div></div></div>
+  </div>
+
+  <!-- ══ SV 4.2 ══ -->
+  <div class="sv-card" id="sv-4-2">
+    <div class="sv-header" onclick="toggleSV('sv-4-2')">
+      <div>
+        <span class="sv-badge">Sachverhalt 4.2</span>
+        <div class="sv-title">Vermietung an den Sohn</div>
+      </div>
+      <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="sv-body"><div class="sv-body-inner"><div class="sv-body-content">
+
+      <div class="sv-text">
+        <p>Renate Hoffmann ist Eigentümerin eines Zweifamilienhauses in Münster. Sie vermietet ab dem 1. Januar 2025 die Erdgeschosswohnung (80 m²) an ihren Sohn Markus Hoffmann. Markus ist volljährig, berufstätig und zahlt die Miete monatlich per Überweisung. Ein schriftlicher Mietvertrag mit allen wesentlichen Regelungen liegt vor. Der Mietvertrag ist steuerlich anzuerkennen.</p>
+        <p>Die vereinbarte <strong>Kaltmiete beträgt 560,00 €</strong> monatlich, zuzüglich einer Nebenkostenvorauszahlung von <strong>100,00 €</strong>. Die ortsübliche Kaltmiete für vergleichbare Wohnungen beträgt laut Mietspiegel Münster <strong>10,50 €/m²</strong>. Die ortsüblichen umlagefähigen Nebenkosten betragen <strong>120,00 €</strong> monatlich.</p>
+        <p>Für die Wohnung entstehen Frau Hoffmann folgende jährliche Werbungskosten, die konstant über die Laufzeit anfallen:</p>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Position</th><th class="num">Betrag/Jahr</th></tr></thead>
+        <tbody>
+          <tr><td>AfA</td><td class="num">4.200,00 €</td></tr>
+          <tr><td>Schuldzinsen</td><td class="num">5.800,00 €</td></tr>
+          <tr><td>Grundsteuer, Versicherung, Verwaltung</td><td class="num">1.900,00 €</td></tr>
+          <tr><td>Instandhaltungsrücklage (Durchschnitt)</td><td class="num">600,00 €</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:0.875rem; line-height:1.6; margin-bottom:0.6rem;">Für die Totalüberschussprognose ist vereinfachend anzunehmen: Die Restnutzungsdauer des Gebäudes beträgt <strong>30 Jahre</strong>. Einnahmen und Werbungskosten bleiben über den gesamten Zeitraum konstant. Eine Wertsteigerung des Grundstücks bleibt unberücksichtigt.</p>
+
+      <div class="aufgabe-box">
+        <span class="aufgabe-label">Aufgabe</span>
+        <ol>
+          <li>Berechnen Sie den Verbilligungsgrad und bestimmen Sie, welche Prüfung nach § 21 Abs. 2 EStG erforderlich ist.</li>
+          <li>Führen Sie die Totalüberschussprognose durch.</li>
+          <li>Ermitteln Sie die Einkünfte aus Vermietung und Verpachtung für das Jahr 2025, wenn die Prognose positiv ausfällt.</li>
+        </ol>
+      </div>
+
+      <!-- Abwandlung -->
+      <div class="abwandlung">
+        <span class="abwandlung-label">Abwandlung zu Sachverhalt 4.2</span>
+        <p>Frau Hoffmann senkt ab dem 1. Januar 2025 die Kaltmiete auf <strong>480,00 €</strong> monatlich. Alle anderen Angaben (Nebenkosten, Werbungskosten, Restnutzungsdauer) bleiben unverändert. Die Totalüberschussprognose fällt bei dieser Miethöhe negativ aus.</p>
+        <p style="margin-top:0.7rem;"><strong>Aufgabe:</strong> Berechnen Sie den neuen Verbilligungsgrad, beurteilen Sie die steuerliche Konsequenz und ermitteln Sie die Einkünfte aus Vermietung und Verpachtung für das Jahr 2025.</p>
+      </div>
+
+      <button class="tipp-toggle" onclick="toggleTipp(this)">
+        💡 Tipps einblenden
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="tipp-box"><div class="tipp-box-inner"><div class="tipp-content">
+        <p><strong>Information — Totalüberschussprognose im Bereich 50 % bis 66 %</strong></p>
+        <p>Liegt die vereinbarte Miete zwischen 50 % und weniger als 66 % der ortsüblichen Marktmiete, ist die Einkünfteerzielungsabsicht zu überprüfen. Es wird geprüft, ob über die gesamte voraussichtliche Nutzungsdauer ein Überschuss der Einnahmen über die Werbungskosten zu erwarten ist. Fällt die Prognose positiv aus, sind die Werbungskosten voll abziehbar. Fällt sie negativ aus, sind die Werbungskosten nur anteilig — im Verhältnis der gezahlten zur ortsüblichen Miete — abziehbar.</p>
+        <hr class="tipp-divider">
+        <ul>
+          <li>Lesen Sie <span class="ref">§ 21 Abs. 2 EStG</span>: Welche drei Bereiche unterscheidet das Gesetz — und was gilt jeweils?</li>
+          <li>Multiplizieren Sie die jährlichen Einnahmen und Werbungskosten mit der Restnutzungsdauer und bilden Sie den Saldo. Was sagt ein negativer Gesamtsaldo über die Einkünfteerzielungsabsicht?</li>
+          <li>Lesen Sie <span class="ref">§ 21 Abs. 2 S. 1 EStG</span>: Nach welchem Verhältnis werden die Werbungskosten bei negativer Prognose aufgeteilt?</li>
+          <li><strong>Zur Abwandlung:</strong> Berechnen Sie zunächst den neuen Verbilligungsgrad. In welchen Bereich des § 21 Abs. 2 EStG fällt er — und welche Konsequenz ergibt sich bei negativer Prognose?</li>
+        </ul>
+      </div></div></div>
+
+    </div></div></div>
+  </div>
+
+  <!-- ══ SV 4.3 ══ -->
+  <div class="sv-card" id="sv-4-3">
+    <div class="sv-header" onclick="toggleSV('sv-4-3')">
+      <div>
+        <span class="sv-badge">Sachverhalt 4.3</span>
+        <div class="sv-title">Vermietung unter nahestehenden Personen</div>
+      </div>
+      <svg class="sv-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="sv-body"><div class="sv-body-inner"><div class="sv-body-content">
+
+      <div class="sv-text">
+        <p>Claudia Wendt ist Eigentümerin einer Eigentumswohnung (65 m²) in Bochum. Sie vermietet die Wohnung seit dem 1. Januar 2025 an ihren Stiefsohn Felix Wendt. Felix ist volljährig und berufstätig. Zwischen Claudia und Felix besteht kein Verwandtschaftsverhältnis i. S. d. § 15 AO — Claudia heiratete Felix' Vater erst, als Felix bereits erwachsen war.</p>
+        <p>Ein schriftlicher Mietvertrag liegt vor. Die vereinbarte <strong>Kaltmiete beträgt 370,00 €</strong> monatlich, zuzüglich <strong>80,00 €</strong> Nebenkostenvorauszahlung. Felix zahlt die Miete regelmäßig per Dauerauftrag. Der Mietspiegel Bochum weist für vergleichbare Wohnungen eine ortsübliche Kaltmiete von <strong>10,20 €/m²</strong> aus. Die ortsüblichen umlagefähigen Nebenkosten betragen <strong>110,00 €</strong> monatlich.</p>
+        <p>Im Jahr 2025 entstehen Frau Wendt folgende Werbungskosten für diese Wohnung:</p>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Position</th><th class="num">Betrag/Jahr</th></tr></thead>
+        <tbody>
+          <tr><td>AfA</td><td class="num">3.100,00 €</td></tr>
+          <tr><td>Schuldzinsen</td><td class="num">4.800,00 €</td></tr>
+          <tr><td>Grundsteuer, Versicherung, Verwaltung</td><td class="num">1.560,00 €</td></tr>
+          <tr><td>Instandhaltungskosten</td><td class="num">740,00 €</td></tr>
+        </tbody>
+      </table>
+
+      <div class="aufgabe-box">
+        <span class="aufgabe-label">Aufgabe</span>
+        <ol>
+          <li>Frau Wendts Steuerberater weist darauf hin, dass trotz fehlendem Verwandtschaftsverhältnis i. S. d. § 15 AO ein Fremdvergleich vorzunehmen ist. Erläutern Sie, warum das so ist, und beurteilen Sie, ob der Mietvertrag steuerlich anerkannt werden kann.</li>
+          <li>Berechnen Sie den Verbilligungsgrad und bestimmen Sie die steuerliche Konsequenz nach § 21 Abs. 2 EStG. Gehen Sie davon aus, dass eine Totalüberschussprognose nicht erforderlich ist.</li>
+          <li>Ermitteln Sie die Einkünfte aus Vermietung und Verpachtung für das Jahr 2025.</li>
+        </ol>
+      </div>
+
+      <button class="tipp-toggle" onclick="toggleTipp(this)">
+        💡 Tipps einblenden
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="tipp-box"><div class="tipp-box-inner"><div class="tipp-content">
+        <ul>
+          <li>Der Fremdvergleich ist nicht auf den Personenkreis des <span class="ref">§ 15 AO</span> beschränkt. Entscheidend ist, ob zwischen den Vertragsparteien ein Näheverhältnis besteht, das auf einen Gleichklang wirtschaftlicher Interessen schließen lässt. Prüfen Sie, ob das auf Stiefmutter und Stiefsohn zutrifft.</li>
+          <li>Berechnen Sie die vereinbarte und die ortsübliche Warmmiete und bilden Sie das Verhältnis. Lesen Sie dann <span class="ref">§ 21 Abs. 2 S. 1 EStG</span>: Welche Rechtsfolge gilt, wenn keine Prognose erforderlich ist?</li>
+          <li>Der abziehbare Anteil der Werbungskosten entspricht dem Verhältnis der gezahlten Miete zur ortsüblichen Miete — also dem Verbilligungsgrad aus Aufgabe 2.</li>
+        </ul>
+      </div></div></div>
+
+    </div></div></div>
+  </div>
+
+</section>
+
+<div class="footer-note">
+  <span>§ 21 Abs. 2 EStG · Block 4 · Berufsschule Steuerfachangestellte</span>
+  <span>R 21.3 S. 2 EStR · R 21.4 EStR · H 21.4 EStH</span>
+</div>
+
+<script>
+  function toggleSV(id) { document.getElementById(id).classList.toggle('open'); }
+  function toggleTipp(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
+</script>
+
+</body>
+</html>
