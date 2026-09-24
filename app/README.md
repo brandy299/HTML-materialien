@@ -114,12 +114,13 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 { type: "cards", title: "…", cards: [ { front: "Begriff", back: "Erklärung" } ] }
 ```
 
-**Freitext mit Erwartungshorizont** – Schüler schreiben, sehen dann die Musterlösung und haken Kriterien selbst ab
+**Antwortsatz aus Bausteinen** – für deuten, erklären, Stellung nehmen; wird vollständig automatisch geprüft
 ```js
-{ type: "open", title: "A6 · Ergebnis deuten", task: "Deute dein Ergebnis …",
-  model: "Musterlösung …",
-  criteria: [ { text: "Vorzeichen richtig gedeutet", points: 1 }, … ] }
+{ type: "sentence", title: "Antwortsatz bauen", case: "Aufgabenstellung (HTML, optional)",
+  text: "Das Ergebnis ist {*positiv|negativ}. Mediaworld muss {*2|20} Personen {*einstellen|entlassen}.",
+  explain: "wird nach dem Prüfen angezeigt" }
 ```
+In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
 ### Übungsklausur
 
