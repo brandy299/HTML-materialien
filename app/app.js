@@ -617,7 +617,8 @@
 
     /* Bestehendes Material */
     link(step, ctx) {
-      const href = encodeURI(step.href || "#");
+      let href = "#";
+      try { href = new URL(encodeURI(step.href), DATA.materialBase || location.href).href; } catch { /* ungültig */ }
       ctx.body.append(h(`<div class="material">
         <div class="icon">${ICON.link}</div>
         <p class="h2">${esc(step.title)}</p>
@@ -715,12 +716,25 @@
       b.classList.toggle("on", b.dataset.t === theme);
       b.onclick = () => { store.set("theme", b.dataset.t); applyTheme(); render(); };
     });
-    v.querySelector("#rename").onclick = () => {
-      const n = prompt("Wie sollen wir dich nennen?", name);
-      if (n && n.trim()) { store.set("name", n.trim().slice(0, 24)); render(); }
+    const rename = v.querySelector("#rename");
+    rename.onclick = () => {
+      const row = h(`<form class="list-row" style="gap:8px;padding:8px 8px 8px 18px">
+        <input class="input" id="newname" style="min-height:44px" maxlength="24" value="${esc(name)}" aria-label="Neuer Name">
+        <button class="btn" style="min-height:44px;padding:0 18px" type="submit">Speichern</button></form>`);
+      row.onsubmit = (e) => {
+        e.preventDefault();
+        const n = row.querySelector("input").value.trim();
+        if (n) { store.set("name", n.slice(0, 24)); toast("Name gespeichert"); render(); }
+      };
+      rename.replaceWith(row);
+      row.querySelector("input").focus();
     };
-    v.querySelector("#reset").onclick = () => {
-      if (confirm("Wirklich den gesamten Fortschritt löschen?")) { progress.reset(); toast("Fortschritt gelöscht"); render(); }
+    const reset = v.querySelector("#reset");
+    reset.onclick = () => {
+      if (reset.dataset.armed) { progress.reset(); toast("Fortschritt gelöscht"); render(); return; }
+      reset.dataset.armed = "1";
+      reset.firstElementChild.textContent = "Zum Löschen nochmal tippen";
+      setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = "Fortschritt zurücksetzen"; } }, 4000);
     };
     return v;
   }

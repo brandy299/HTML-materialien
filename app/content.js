@@ -17,6 +17,8 @@
 
 window.LERNRAUM = {
   school: "Berufskolleg",
+  // Basis für "link"-Schritte: dort liegen die bestehenden Materialien
+  materialBase: "https://brandy299.github.io/HTML-materialien/",
   subjects: [
 
     /* ────────────────────────────────────────────────────── */
@@ -185,7 +187,7 @@ window.LERNRAUM = {
               type: "link",
               title: "Fallarbeit im Original",
               text: "Die ausführliche Fallarbeit zur Schmidt GmbH mit Mängelrüge.",
-              href: "../materialien/GP/Warenlieferung/kaeuferrechte schlechtleistung.html"
+              href: "materialien/GP/Warenlieferung/kaeuferrechte schlechtleistung.html"
             }
           ]
         },
@@ -353,7 +355,7 @@ window.LERNRAUM = {
               type: "link",
               title: "Full presentation",
               text: "The original classroom presentation on complaints.",
-              href: "../materialien/Englisch B2/Complaints/complaints_presentation_1.html"
+              href: "materialien/Englisch B2/Complaints/complaints_presentation_1.html"
             }
           ]
         }
@@ -420,7 +422,7 @@ window.LERNRAUM = {
               type: "link",
               title: "Interactive practice",
               text: "More exercises in the interactive module.",
-              href: "../materialien/Englisch B1/Reported Speech/reported_speech_interactive_3.html"
+              href: "materialien/Englisch B1/Reported Speech/reported_speech_interactive_3.html"
             }
           ]
         }
@@ -481,7 +483,7 @@ window.LERNRAUM = {
               type: "link",
               title: "Präsentation im Original",
               text: "Die vollständige Präsentation zu LF 8.",
-              href: "../materialien/PBP/Personalbedarf/PBP_LF8_Praesentation.html"
+              href: "materialien/PBP/Personalbedarf/PBP_LF8_Praesentation.html"
             }
           ]
         }
