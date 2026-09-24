@@ -34,7 +34,8 @@
       Object.values(this.of(s.id, t.id).done).forEach((v) => { if (v && typeof v === "object") { c += v.c; n += v.t; } });
       return { c, n };
     },
-    reset() { store.set("progress", {}); store.set("self", {}); }
+    resetTopic(s, t) { const all = this.all(); delete all[s.id + "/" + t.id]; store.set("progress", all); },
+    reset() { store.set("progress", {}); store.set("self", {}); store.set("drafts", {}); }
   };
 
   /* ── Helfer ─────────────────────────────────────────────── */
@@ -72,9 +73,10 @@
     calc: "Tippe ein Feld an und gib die Zahl über das Zahlenfeld ein. Mit ± machst du eine Zahl negativ, mit ↓ springst du ins nächste Feld.",
     cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
-    link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“."
+    link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
+    open: "Schreib deine Antwort in ganzen Sätzen. Danach siehst du den Erwartungshorizont und hakst ab, was du geschafft hast."
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material" };
+  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", open: "Freitext" };
 
   function stepMeta(st) {
     switch (st.type) {
@@ -85,6 +87,7 @@
       case "calc": return st.rows.length + " Felder";
       case "cards": return st.cards.length + " Karten";
       case "selfcheck": return st.items.length + " Aussagen";
+      case "open": return st.criteria.reduce((a, c) => a + c.points, 0) + " Punkte · Freitext";
       default: return "öffnet sich neu";
     }
   }
@@ -126,6 +129,43 @@
       img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
     }
     g.putImageData(img, 0, 0);
+  }
+
+  /* ── Übungsklausur ─────────────────────────────────────────── */
+  const GRADING = [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]];
+  const examPoints = (t) => t.steps.reduce((a, st) => a + (st.points || 0), 0);
+  const stepPoints = (st, d) => (d && typeof d === "object" && d.t ? Math.round((st.points || 0) * d.c / d.t * 2) / 2 : 0);
+  const fmtP = (x) => String(x).replace(".", ",");
+  const clock = (sec) => { const a = Math.abs(Math.round(sec)); return (sec < 0 ? "+" : "") + String(Math.floor(a / 60)).padStart(2, "0") + ":" + String(a % 60).padStart(2, "0"); };
+  function examRemaining(s, t) {
+    const p = progress.of(s.id, t.id);
+    if (!p.examStart) return t.exam.minutes * 60;
+    const end = p.examEnd || Date.now();
+    return t.exam.minutes * 60 - (end - p.examStart) / 1000;
+  }
+  function grade(pct, t) {
+    return (t.exam.grading || GRADING).find(([min]) => pct >= min) || GRADING[GRADING.length - 1];
+  }
+
+  /* Erwartungshorizont je Aufgabe */
+  function solutionHTML(st) {
+    switch (st.type) {
+      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${esc(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
+      case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
+      case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
+      case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value) : num(r.value)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
+      case "open": return `<p>${st.model || ""}</p><ul class="sol-crit">${st.criteria.map((c) => `<li>${esc(c.text)} <b>(${fmtP(c.points)} P)</b></li>`).join("")}</ul>`;
+      default: return "";
+    }
+  }
+  function mistakesHTML(st, d) {
+    if (!d || typeof d !== "object" || !d.wrong || !d.wrong.length) return "";
+    const w = d.wrong;
+    const txt = st.type === "quiz" ? "Falsch beantwortet: Frage " + w.join(", ")
+      : st.type === "sort" ? "Falsch zugeordnet: " + w.map(esc).join(" · ")
+      : st.type === "cloze" ? "Falsche Lücken, richtig wäre: " + w.map(esc).join(", ")
+      : st.type === "calc" ? "Fehler in: " + w.map(esc).join(" · ") : "";
+    return txt ? `<p class="sol-wrong">${txt}</p>` : "";
   }
 
   /* ── Router ─────────────────────────────────────────────── */
@@ -224,6 +264,17 @@
     }
     const n = progress.count(s, t), total = t.steps.length, sc = progress.score(s, t);
     const done = n >= total;
+    if (t.exam) {
+      const pts = t.steps.reduce((a, st, k) => a + stepPoints(st, progress.of(s.id, t.id).done[k]), 0);
+      return h(`<a class="win topic-win exam-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
+        <div class="bar"><span class="d"></span>${esc(t.kicker || "Übungsklausur")}<span class="r">${t.exam.minutes} min · ${examPoints(t)} P</span></div>
+        <div class="body">
+          <span class="title">${esc(t.title)}</span>
+          ${blocks(s, t)}
+          <span class="meta">${done ? `Ergebnis: ${fmtP(pts)} von ${examPoints(t)} Punkten · Note ${grade(pts / examPoints(t) * 100, t)[1]}` : n ? `${n}/${total} Aufgaben · läuft` : "Wie in der echten Klausur: Timer, keine Hilfe, Note am Ende"}</span>
+        </div>
+      </a>`);
+    }
     return h(`<a class="win topic-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
       <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? "✓ erledigt" : `ca. ${t.minutes || 10} min`}</span></div>
       <div class="body">
@@ -321,6 +372,7 @@
   function viewTopic(sid, tid) {
     const s = findSubject(sid), t = findTopic(s, tid);
     if (!t || t.soon || !t.steps.length) { location.hash = "#/"; return h("<div></div>"); }
+    if (t.exam) return viewExamIntro(s, t);
     const p = progress.of(s.id, t.id);
     const next = nextStepIndex(s, t);
     const allDone = progress.ratio(s, t) >= 1;
@@ -352,21 +404,73 @@
     return v;
   }
 
+  function viewExamIntro(s, t) {
+    const p = progress.of(s.id, t.id);
+    const n = progress.count(s, t), done = n >= t.steps.length;
+    const running = !!p.examStart && !done;
+    const rest = examRemaining(s, t);
+    const next = nextStepIndex(s, t);
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const v = h(`<main class="view no-tabbar">
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span></div>
+      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <div class="stat-row" style="margin-top:22px">
+        <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">Minuten</div></div>
+        <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">Punkte</div></div>
+        <div class="stat"><div class="v">${t.steps.length}</div><div class="k">Aufgaben</div></div>
+      </div>
+      <div class="win" style="margin-top:22px">
+        <div class="bar"><span class="d"></span>Klausurbedingungen<span class="r">bitte lesen</span></div>
+        <div class="body merk" style="background:var(--paper)">
+          <ul>
+            <li>Der <strong>Timer</strong> startet mit der ersten Aufgabe und läuft weiter, auch wenn du die App schließt.</li>
+            <li>Während der Klausur gibt es <strong>keine Rückmeldung und keine Hilfe</strong>.</li>
+            <li>Freitext-Aufgaben bewertest du direkt nach dem Schreiben selbst mit dem Erwartungshorizont. Sei ehrlich!</li>
+            <li>Am Ende siehst du Punkte, Note, Lösungen und was du wiederholen solltest.</li>
+            ${t.exam.tools ? `<li>Hilfsmittel: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
+          </ul>
+        </div>
+      </div>
+      <div class="win" style="margin-top:22px">
+        <div class="bar"><span class="d"></span>Aufgaben<span class="r">${examPoints(t)} P</span></div>
+        <ol class="list" style="border:0;list-style:none">${t.steps.map((st, k) => `<li class="list-row" style="min-height:48px;gap:12px;justify-content:flex-start">
+          <span style="flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink);font:700 13px/1 var(--mono);${p.done[k] ? "background:var(--ink);color:var(--paper)" : ""}">${p.done[k] ? "✓" : String(k + 1).padStart(2, "0")}</span>
+          <span style="flex:1;font-weight:600;line-height:1.25">${esc(st.title)}</span><span class="v">${fmtP(st.points || 0)} P</span></li>`).join("")}</ol>
+      </div>
+      <div class="dock"><div class="dock-inner col"></div></div>
+    </main>`);
+    const dock = v.querySelector(".dock-inner");
+    if (done) {
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/fertig">Ergebnis ansehen ${ICON.arrow}</a>`));
+      const again = h(`<button class="btn ghost block">Neu schreiben</button>`);
+      again.onclick = () => {
+        if (!again.dataset.armed) { again.dataset.armed = "1"; again.textContent = "Ergebnis löschen und neu starten?"; return; }
+        progress.resetTopic(s, t); location.hash = `#/f/${s.id}/${t.id}/0`;
+      };
+      dock.append(again);
+    } else {
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${running ? `Weiter schreiben · ${clock(rest)} übrig` : "Klausur starten"} ${ICON.arrow}</a>`));
+    }
+    return v;
+  }
+
   /* ── Player ─────────────────────────────────────────────── */
   function viewPlayer(sid, tid, idx) {
     const s = findSubject(sid), t = findTopic(s, tid), i = +idx;
     const step = t && t.steps[i];
     if (!step) { location.hash = t ? `#/f/${sid}/${tid}` : "#/"; return h("<div></div>"); }
     progress.touch(s.id, t.id, i);
+    const exam = !!t.exam;
+    if (exam && !progress.of(s.id, t.id).examStart) { const p = progress.of(s.id, t.id); p.examStart = Date.now(); progress.save(s.id, t.id, p); }
 
     const v = h(`<main class="player">
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Schließen">${ICON.close}</a>
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
-        <button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>
+        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>`}
       </div>
       <header class="player-head">
-        <p class="eyebrow">${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}</p>
+        <p class="eyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
         <h1 class="h1">${esc(step.title)}</h1>
       </header>
       <section class="player-body"></section>
@@ -390,16 +494,30 @@
       },
       finish(score) {
         progress.complete(s.id, t.id, i, score);
+        if (exam && progress.count(s, t) >= t.steps.length) { const p = progress.of(s.id, t.id); if (!p.examEnd) { p.examEnd = Date.now(); progress.save(s.id, t.id, p); } }
         buzz(15);
         location.hash = i + 1 < t.steps.length ? `#/f/${s.id}/${t.id}/${i + 1}` : `#/f/${s.id}/${t.id}/fertig`;
       },
       key: `${s.id}/${t.id}/${i}`,
       hintsFor: null,      // Player können aufgabenspezifische Tipps liefern
       hintKey: () => "0",  // z. B. Frage-Index im Quiz
-      revealed: {}
+      revealed: {},
+      exam
     };
-    ctx.openHelp = (tab) => openHelp(s, t, step, ctx, tab);
-    v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
+    ctx.openHelp = (tab) => (exam ? toast("› In der Klausur gibt es keine Hilfe") : openHelp(s, t, step, ctx, tab));
+    if (exam) {
+      const timer = v.querySelector("#timer");
+      const tick = () => {
+        const r = examRemaining(s, t);
+        timer.textContent = clock(r);
+        timer.classList.toggle("low", r < 300 && r >= 0);
+        timer.classList.toggle("over", r < 0);
+      };
+      tick();
+      const iv = setInterval(tick, 1000);
+      const prev = cleanup;
+      cleanup = () => { clearInterval(iv); prev && prev(); };
+    } else v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
 
     (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
     return v;
@@ -453,6 +571,7 @@
     quiz(step, ctx) {
       const qs = step.questions;
       let k = 0, correct = 0;
+      const wrong = [];
       const show = () => {
         const q = qs[k];
         let sel = -1;
@@ -471,16 +590,22 @@
             sel = j;
             opts.querySelectorAll(".option").forEach((x, m) => x.classList.toggle("sel", m === j));
             buzz(8);
-            ctx.action("Prüfen", check);
+            ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check);
           };
           opts.append(b);
         });
         ctx.body.replaceChildren(node);
-        ctx.action("Prüfen", check, { enabled: false });
+        ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check, { enabled: false });
 
         function check() {
           const ok = sel === q.answer;
           if (ok) correct++;
+          else wrong.push(k + 1);
+          if (ctx.exam) {
+            buzz(8);
+            if (k === qs.length - 1) return ctx.finish({ c: correct, t: qs.length, wrong });
+            k++; return show();
+          }
           opts.classList.add("locked");
           const buttons = opts.querySelectorAll(".option");
           buttons.forEach((b) => b.classList.remove("sel"));
@@ -494,7 +619,7 @@
           ctx.setProgress((k + 1) / qs.length);
           const last = k === qs.length - 1;
           ctx.action(last ? `Weiter ${ICON.arrow}` : `Nächste Frage ${ICON.arrow}`, () => {
-            if (last) ctx.finish({ c: correct, t: qs.length });
+            if (last) ctx.finish({ c: correct, t: qs.length, wrong });
             else { k++; show(); }
           });
         }
@@ -507,6 +632,7 @@
       const items = shuffle(step.items);
       const cats = step.categories;
       let k = 0, correct = 0;
+      const wrong = [];
       const counts = cats.map(() => 0);
       const node = h(`<div>
         <p class="lead">${esc(step.prompt || "")}</p>
@@ -532,21 +658,27 @@
         const it = items[k];
         const ok = j === it.cat;
         if (ok) correct++;
-        counts[it.cat]++;
-        bins.children[it.cat].querySelector(".cnt").textContent = counts[it.cat];
+        else wrong.push(it.text);
+        const shown = ctx.exam ? j : it.cat;
+        counts[shown]++;
+        bins.children[shown].querySelector(".cnt").textContent = counts[shown];
         bins.classList.add("locked");
         const c = stage.firstElementChild;
-        c.classList.add(ok ? "right" : "wrong");
-        c.querySelector(".bar .r").textContent = ok ? "✓ richtig" : "✗ " + cats[it.cat];
-        buzz(ok ? 15 : [30, 40, 30]);
+        if (ctx.exam) c.querySelector(".bar .r").textContent = "→ " + cats[j];
+        else {
+          c.classList.add(ok ? "right" : "wrong");
+          c.querySelector(".bar .r").textContent = ok ? "✓ richtig" : "✗ " + cats[it.cat];
+        }
+        buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
         k++;
         ctx.setProgress(k / items.length);
         setTimeout(() => {
           if (k < items.length) return card();
+          if (ctx.exam) return ctx.finish({ c: correct, t: items.length, wrong });
           stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Auswertung<span class="r">${correct}/${items.length}</span></div>
             <div class="body"><span class="txt">${correct} von ${items.length} richtig zugeordnet.</span></div></div>`));
-          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length }));
-        }, ok ? 650 : 1500);
+          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
+        }, ctx.exam ? 350 : ok ? 650 : 1500);
       };
       card();
     },
@@ -585,7 +717,7 @@
         bank.querySelectorAll(".word").forEach((b) => b.classList.toggle("used", filled.includes(+b.dataset.j)));
         const n = filled.filter((x) => x !== null).length;
         ctx.setProgress(n / answers.length);
-        ctx.action("Prüfen", check, { enabled: n === answers.length });
+        ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === answers.length });
       };
       const place = (j) => {
         if (active < 0) return;
@@ -602,6 +734,10 @@
       });
 
       function check() {
+        if (ctx.exam) {
+          const wrong = answers.filter((a, i) => words[filled[i]] !== a);
+          return ctx.finish({ c: answers.length - wrong.length, t: answers.length, wrong });
+        }
         let correct = 0;
         gaps.forEach((g, i) => {
           const ok = words[filled[i]] === answers[i];
@@ -649,7 +785,7 @@
         ${["7", "8", "9"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="del" aria-label="Löschen">${ICON.del}</button>
         ${["4", "5", "6"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="neg" aria-label="Vorzeichen">±</button>
         ${["1", "2", "3"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="next" aria-label="Nächstes Feld">↓</button>
-        <button data-k="0" style="grid-column:span 2">0</button><button class="fn" data-k="hint" style="grid-column:span 2">Hilfe</button>
+        <button data-k="0" style="grid-column:span 2">0</button>${ctx.exam ? `<button class="fn" data-k="next" style="grid-column:span 2">nächstes Feld ↓</button>` : `<button class="fn" data-k="hint" style="grid-column:span 2">Hilfe</button>`}
       </div>`);
       ctx.dock.prepend(pad);
       ctx.root.classList.add("has-pad");
@@ -690,9 +826,14 @@
         });
         const n = vals.filter((x) => x !== "" && x !== "-").length;
         ctx.setProgress(n / rows.length);
-        if (!locked) ctx.action("Prüfen", check, { enabled: n === rows.length });
+        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === rows.length });
       }
       function check() {
+        if (ctx.exam) {
+          const wrong = rows.filter((r, k) => { const x = parseInt(vals[k], 10); return !(x === r.value || (r.either && Math.abs(x) === Math.abs(r.value))); }).map((r) => r.label);
+          cleanup && cleanup(); cleanup = null;
+          return ctx.finish({ c: rows.length - wrong.length, t: rows.length, wrong });
+        }
         locked = true;
         let correct = 0;
         rows.forEach((r, k) => {
@@ -807,6 +948,61 @@
         const a = store.get("self", {}); a[ctx.key] = vals; store.set("self", a);
         ctx.finish(true);
       });
+    },
+
+    /* Freitext mit Erwartungshorizont und Selbstbewertung */
+    open(step, ctx) {
+      const drafts = store.get("drafts", {});
+      const total = step.criteria.reduce((a, c) => a + c.points, 0);
+      const node = h(`<div>
+        <div class="win case"><div class="bar"><span class="d"></span>Aufgabe<span class="r">${fmtP(total)} P</span></div><div class="body">${step.task}</div></div>
+        <label class="field" for="ans" style="margin-top:18px"><span>Deine Antwort</span>
+          <textarea class="input answer" id="ans" rows="6" placeholder="Schreib in ganzen Sätzen …"></textarea></label>
+        <p class="hint" id="count"></p>
+        <div id="eval"></div>
+      </div>`);
+      const ta = node.querySelector("textarea");
+      ta.value = drafts[ctx.key] || "";
+      const upd = () => {
+        const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+        node.querySelector("#count").textContent = `${words} Wörter`;
+        const a = store.get("drafts", {}); a[ctx.key] = ta.value; store.set("drafts", a);
+        ctx.setProgress(Math.min(1, words / 25));
+        ctx.action("Abgeben", submit, { enabled: words >= 5 });
+      };
+      ta.addEventListener("input", upd);
+      ctx.body.append(node);
+      upd();
+
+      function submit() {
+        ta.readOnly = true;
+        const checked = step.criteria.map(() => false);
+        const ev = h(`<div class="win" style="margin-top:18px">
+          <div class="bar"><span class="d"></span>Erwartungshorizont<span class="r" id="sum">0/${fmtP(total)} P</span></div>
+          <div class="body" style="background:var(--paper)">
+            ${step.model ? `<p class="merk"><b>Musterlösung:</b> ${step.model}</p>` : ""}
+            <p class="hint">Hake ab, was in <b>deiner</b> Antwort steht:</p>
+            <ul class="kann crit" style="margin-top:10px;box-shadow:none"></ul>
+          </div></div>`);
+        const ul = ev.querySelector("ul");
+        step.criteria.forEach((c, k) => {
+          const li = h(`<li><button type="button"><span class="st" data-v="0"></span><span style="flex:1">${esc(c.text)}</span><span class="v" style="font:700 13px/1 var(--mono)">${fmtP(c.points)} P</span></button></li>`);
+          li.querySelector("button").onclick = () => {
+            checked[k] = !checked[k];
+            li.querySelector(".st").dataset.v = checked[k] ? "2" : "0";
+            const got = step.criteria.reduce((a, cc, m) => a + (checked[m] ? cc.points : 0), 0);
+            ev.querySelector("#sum").textContent = `${fmtP(got)}/${fmtP(total)} P`;
+            buzz(6);
+          };
+          ul.append(li);
+        });
+        node.querySelector("#eval").append(ev);
+        ev.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
+        ctx.action(`Bewerten & weiter ${ICON.arrow}`, () => {
+          const got = step.criteria.reduce((a, cc, m) => a + (checked[m] ? cc.points : 0), 0);
+          ctx.finish({ c: got, t: total, self: true });
+        });
+      }
     },
 
     /* Bestehendes Material */
@@ -964,6 +1160,7 @@
     const s = findSubject(sid), t = findTopic(s, tid);
     if (!t) { location.hash = "#/"; return h("<div></div>"); }
     if (!progress.count(s, t)) { location.hash = `#/f/${s.id}/${t.id}`; return h("<div></div>"); }
+    if (t.exam) return viewExamResult(s, t);
     const p = progress.of(s.id, t.id);
     const sc = progress.score(s, t);
     const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : 100;
@@ -994,6 +1191,56 @@
     dither(v.querySelector("canvas"), 2);
     buzz([20, 60, 20]);
     confetti();
+    return v;
+  }
+
+  function viewExamResult(s, t) {
+    const p = progress.of(s.id, t.id);
+    const total = examPoints(t);
+    const got = t.steps.reduce((a, st, k) => a + stepPoints(st, p.done[k]), 0);
+    const pct = total ? got / total * 100 : 0;
+    const [, note, word] = grade(pct, t);
+    const used = p.examStart ? ((p.examEnd || Date.now()) - p.examStart) / 1000 : 0;
+    const over = used > t.exam.minutes * 60;
+    const review = [];
+    t.steps.forEach((st, k) => {
+      if (st.review && stepPoints(st, p.done[k]) < (st.points || 0) * .75) {
+        const rt = findTopic(s, st.review);
+        if (rt && !review.includes(rt)) review.push(rt);
+      }
+    });
+    const v = h(`<main class="view no-tabbar finish">
+      <section class="hero">
+        <canvas aria-hidden="true"></canvas>
+        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.title)} · Ergebnis</span></div>
+        <p class="finish-num">${fmtP(got)}<small>/${total} P</small></p>
+        <p class="h2" style="margin-top:16px">Note ${note} · ${word}</p>
+        <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} % · Zeit ${clock(used).replace("+", "")} min${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
+      </section>
+      <p class="section-head">Punkte je Aufgabe</p>
+      <div class="win"><div class="bar"><span class="d"></span>Auswertung<span class="r">${fmtP(got)}/${total}</span></div>
+        <div id="tasks"></div></div>
+      ${review.length ? `<p class="section-head">Das solltest du wiederholen</p><div class="topics" id="review"></div>` : ""}
+      <p class="hint" style="margin-top:18px">Notenschlüssel: ${(t.exam.grading || GRADING).map(([m, n]) => `${n} ab ${m} %`).join(" · ")}</p>
+      <div class="dock"><div class="dock-inner col">
+        <a class="btn block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
+      </div></div>
+    </main>`);
+    const tasks = v.querySelector("#tasks");
+    t.steps.forEach((st, k) => {
+      const d = p.done[k];
+      const pts = stepPoints(st, d);
+      const full = pts >= (st.points || 0);
+      tasks.append(h(`<details class="task-row">
+        <summary><span class="tn">${String(k + 1).padStart(2, "0")}</span><span class="tt">${esc(st.title)}${d && d.self ? ' <em>(selbst bewertet)</em>' : ""}</span>
+          <span class="tp ${full ? "ok" : pts ? "part" : "no"}">${fmtP(pts)}/${fmtP(st.points || 0)}</span></summary>
+        <div class="sol">${mistakesHTML(st, d)}<p class="sol-h">Erwartungshorizont</p>${solutionHTML(st)}</div>
+      </details>`));
+    });
+    const rv = v.querySelector("#review");
+    if (rv) review.forEach((rt) => rv.append(topicWin(s, rt)));
+    dither(v.querySelector("canvas"), 2);
+    if (pct >= 67) confetti();
     return v;
   }
 

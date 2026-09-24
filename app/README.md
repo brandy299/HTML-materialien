@@ -114,6 +114,26 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 { type: "cards", title: "…", cards: [ { front: "Begriff", back: "Erklärung" } ] }
 ```
 
+**Freitext mit Erwartungshorizont** – Schüler schreiben, sehen dann die Musterlösung und haken Kriterien selbst ab
+```js
+{ type: "open", title: "A6 · Ergebnis deuten", task: "Deute dein Ergebnis …",
+  model: "Musterlösung …",
+  criteria: [ { text: "Vorzeichen richtig gedeutet", points: 1 }, … ] }
+```
+
+### Übungsklausur
+
+Ein Thema mit `exam` wird zur Klausur: Timer, keine Rückmeldung und keine Hilfe während des Schreibens,
+am Ende Punkte, Note, Erwartungshorizont je Aufgabe und Empfehlungen zum Wiederholen.
+```js
+{ id: "uebungsklausur-1", title: "Übungsklausur Personalbedarf", exam: {
+    minutes: 45, tools: "Taschenrechner",
+    grading: [[92, "1", "sehr gut"], [81, "2", "gut"], …]   // Notenschlüssel: ab Prozent
+  },
+  steps: [ { type: "quiz", title: "A1 · …", points: 6, review: "fachbegriffe", … } ] }
+```
+`points` = Punkte der Aufgabe (anteilig nach richtigen Teilen), `review` = Thema, das bei weniger als 75 % empfohlen wird.
+
 **Vorhandenes Material verlinken**
 ```js
 { type: "link", title: "…", text: "…", href: "../materialien/GP/…/datei.html" }
