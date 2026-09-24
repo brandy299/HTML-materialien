@@ -479,6 +479,39 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
   .sheet { border-bottom: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); max-height: 80vh; }
 }
 
+/* ── Übungsklausur ─────────────────────────────────────── */
+.timer {
+  flex: none; height: 44px; min-width: 76px; padding: 0 10px; display: grid; place-items: center;
+  font: 700 17px/1 var(--mono); background: var(--ink); color: var(--paper); border: 2px solid var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.timer.low { background: var(--pink); color: var(--ink); animation: blink 1s steps(1) infinite; }
+.timer.over { background: var(--bad); color: #fff; }
+@keyframes blink { 50% { opacity: .55; } }
+.exam-win .bar { background: var(--pink-deep); }
+.exam-win.done .bar { background: var(--pink); }
+textarea.answer { min-height: 150px; padding: 12px 14px; line-height: 1.5; font: 400 15px/1.5 var(--grot); resize: vertical; }
+textarea.answer[readonly] { background: var(--panel); }
+.task-row { border-top: 1px solid var(--panel-2); }
+.task-row:first-child { border-top: 0; }
+.task-row summary { display: flex; align-items: center; gap: 10px; padding: 12px; cursor: pointer; list-style: none; }
+.task-row summary::-webkit-details-marker { display: none; }
+.task-row .tn { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 2px solid var(--ink); font: 700 12px/1 var(--mono); }
+.task-row .tt { flex: 1; font-weight: 600; font-size: 14.5px; line-height: 1.3; }
+.task-row .tt em { font: 400 11px/1 var(--mono); color: var(--ink-2); }
+.task-row .tp { flex: none; font: 700 14px/1 var(--mono); padding: 6px 8px; border: 1.5px solid var(--ink); font-variant-numeric: tabular-nums; }
+.task-row .tp.ok { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+.task-row .tp.part { background: var(--pink-soft); }
+.task-row .tp.no { background: var(--bad-soft); color: var(--bad); border-color: var(--bad); }
+.task-row[open] summary { background: var(--panel); }
+.sol { padding: 12px 14px 16px; font-size: 14px; line-height: 1.5; color: var(--ink-2); display: grid; gap: 10px; }
+.sol b { color: var(--ink); }
+.sol-h { font: 700 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.sol-wrong { padding: 8px 10px; background: var(--bad-soft); color: var(--bad); font-size: 13.5px; }
+.sol-list { padding-left: 20px; display: grid; gap: 8px; }
+.sol-crit { padding-left: 18px; display: grid; gap: 4px; }
+.kann.crit button { font-size: 14px; }
+
 /* ── Toast ──────────────────────────────────────────────── */
 .toast {
   position: fixed; left: 50%; bottom: calc(var(--safe-b) + 90px); z-index: 60; transform: translateX(-50%);

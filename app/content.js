@@ -739,7 +739,7 @@ window.LERNRAUM = {
 
           group: "Klausurtraining",
           title: "Mini-Klausur 1",
-          kicker: "ca. 12 Minuten",
+          kicker: "Übungsblatt 4",
           minutes: 12,
           steps: [
             {
@@ -796,7 +796,7 @@ window.LERNRAUM = {
 
           group: "Klausurtraining",
           title: "Mini-Klausur 2",
-          kicker: "ca. 12 Minuten",
+          kicker: "Übungsblatt 4",
           minutes: 12,
           steps: [
             {
@@ -841,7 +841,7 @@ window.LERNRAUM = {
 
           group: "Klausurtraining",
           title: "Mini-Klausur 3",
-          kicker: "ca. 12 Minuten",
+          kicker: "Übungsblatt 4",
           minutes: 12,
           steps: [
             {
@@ -883,6 +883,153 @@ window.LERNRAUM = {
                   answer: 1,
                   explain: "Negativ heißt: Es sind zu viele da."
                 }
+              ]
+            }
+          ]
+        },
+
+        /* ══════════════ ÜBUNGSKLAUSUR ══════════════ */
+        {
+          id: "uebungsklausur-1",
+          group: "Klausurtraining",
+          title: "Übungsklausur Personalbedarf",
+          kicker: "Übungsklausur · Klausur 1",
+          minutes: 45,
+          exam: {
+            minutes: 45,
+            tools: "Taschenrechner, Heft für Nebenrechnungen",
+            // Notenschlüssel: [ab Prozent, Note, Bezeichnung] – bei Bedarf an den eigenen Schlüssel anpassen
+            grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+          },
+          steps: [
+            {
+              type: "quiz",
+              title: "A1 · Fachbegriffe",
+              points: 6,
+              review: "fachbegriffe",
+              questions: [
+                { q: "So viele Beschäftigte arbeiten zurzeit im Betrieb.", options: ["Bruttopersonalbedarf", "Ist-Personalbestand", "Nettopersonalbedarf", "Ersatzbedarf"], answer: 1 },
+                { q: "Wie viele Beschäftigte der Betrieb laut Plan insgesamt braucht.", options: ["Bruttopersonalbedarf", "Fortschreibung", "Ist-Personalbestand", "Neubedarf"], answer: 0 },
+                { q: "Ist-Bestand − Abgänge + Zugänge", options: ["Nettopersonalbedarf", "Kennzahlenmethode", "Fortschreibung", "Ersatzbedarf"], answer: 2 },
+                { q: "Der Teil des Bedarfs, der durch zusätzliche Stellen entsteht.", options: ["Ersatzbedarf", "Neubedarf", "Ausbildungsbedarf", "Ist-Personalbestand"], answer: 1 },
+                { q: "Der Teil des Bedarfs, der ausscheidende Beschäftigte ersetzt.", options: ["Neubedarf", "Bruttopersonalbedarf", "Ersatzbedarf", "Zugang"], answer: 2 },
+                { q: "Umsatz ÷ Umsatz je Vollzeitstelle", options: ["Stellenplanmethode", "Kennzahlenmethode", "Fortschreibung", "Ausbildungsbedarf"], answer: 1 }
+              ]
+            },
+            {
+              type: "sort",
+              title: "A2 · Autonom oder initiiert?",
+              points: 3,
+              review: "fachbegriffe",
+              prompt: "Ordne jede Veränderung zu.",
+              categories: ["autonom", "initiiert"],
+              items: [
+                { text: "Eine Kassiererin geht in den Ruhestand.", cat: 0 },
+                { text: "Der Betrieb stellt einen Lageristen ein.", cat: 1 },
+                { text: "Ein Verkäufer kündigt, weil er studieren möchte.", cat: 0 },
+                { text: "Die Chefin versetzt eine Kraft ins Lager.", cat: 1 },
+                { text: "Ein Mitarbeiter geht in Elternzeit.", cat: 0 },
+                { text: "Einem Mitarbeiter wird wegen Diebstahls gekündigt.", cat: 1 }
+              ]
+            },
+            {
+              type: "sort",
+              title: "A3 · Extern oder intern?",
+              points: 3,
+              review: "fachbegriffe",
+              prompt: "Ordne jeden Einflussfaktor zu.",
+              categories: ["extern", "intern"],
+              items: [
+                { text: "Die Wirtschaft wächst stark.", cat: 0 },
+                { text: "Der Betrieb führt eine neue Kassensoftware ein.", cat: 1 },
+                { text: "Ein neues Gesetz verlängert die Ladenöffnungszeiten.", cat: 0 },
+                { text: "Die Geschäftsleitung eröffnet eine zweite Filiale.", cat: 1 },
+                { text: "In der Region gibt es kaum Fachkräfte.", cat: 0 },
+                { text: "Der Betrieb verlängert seine Öffnungszeiten am Samstag.", cat: 1 }
+              ]
+            },
+            {
+              type: "cloze",
+              title: "A4 · Lückentext",
+              points: 5,
+              review: "fachbegriffe",
+              prompt: "Zwei Wörter passen nicht.",
+              text: "Zuerst schreibt man den {Ist-Personalbestand} fort: Man zieht die {Abgänge} ab und zählt die {Zugänge} dazu. Vom {Soll-Bestand} zieht man den fortgeschriebenen Ist-Bestand ab. Das Ergebnis ist der {Nettopersonalbedarf}.",
+              distractors: ["Umsatzrendite", "Bruttolohn"]
+            },
+            {
+              type: "calc",
+              title: "A5 · Elektro Schulte OHG",
+              points: 8,
+              review: "ersatz-neubedarf",
+              case: `Die Elektro Schulte OHG hat <b>34 Beschäftigte</b>. Herr Brandt geht im März in Rente, Frau Yilmaz geht in Elternzeit. Ein Verkäufer kündigt, weil er studieren möchte. Zwei Auszubildende werden nach bestandener Prüfung übernommen. Im letzten Monat waren drei Beschäftigte krank. Für die neue Smart-Home-Abteilung wird eine zusätzliche Stelle geschaffen – insgesamt werden <b>35 Beschäftigte</b> gebraucht.<br><br>Berechne den Nettopersonalbedarf und zerlege ihn in Ersatz- und Neubedarf.`,
+              rows: bedarfRows(34, 3, 2, 35, { klausur: true, split: true }),
+              result: "Nettopersonalbedarf + 2 = Ersatzbedarf 1 + Neubedarf 1."
+            },
+            {
+              type: "open",
+              title: "A6 · Ergebnis deuten",
+              points: 3,
+              review: "bedarf-berechnen",
+              task: `Deute dein Ergebnis aus A5 in ganzen Sätzen. Nenne eine Möglichkeit, wie Elektro Schulte den Bedarf <b>kurzfristig</b> decken kann, und begründe sie.`,
+              model: "Der Nettopersonalbedarf ist positiv (+ 2). Elektro Schulte fehlen also zwei Beschäftigte, der Betrieb muss Personal beschaffen. Kurzfristig bietet sich Zeitarbeit an, weil Leiharbeitskräfte schnell verfügbar sind.",
+              criteria: [
+                { text: "Vorzeichen richtig gedeutet: positiv → es fehlt Personal", points: 1 },
+                { text: "Konkrete Zahl genannt: 2 Beschäftigte einstellen", points: 1 },
+                { text: "Passende kurzfristige Maßnahme mit Begründung (z. B. Zeitarbeit, weil schnell verfügbar)", points: 1 }
+              ]
+            },
+            {
+              type: "calc",
+              title: "A7 · Kennzahlenmethode",
+              points: 3,
+              review: "stellenplan-kennzahlen",
+              case: `Ein Baumarkt erwartet <b>5 400 000 €</b> Umsatz. Je Vollzeitstelle werden <b>180 000 €</b> Umsatz angesetzt.`,
+              rows: [{ label: "Vollzeitstellen: 5 400 000 € ÷ 180 000 €", value: 30 }],
+              result: "Der Baumarkt braucht 30 Vollzeitstellen."
+            },
+            {
+              type: "quiz",
+              title: "A8 · Methode beurteilen",
+              points: 2,
+              review: "stellenplan-kennzahlen",
+              questions: [
+                {
+                  q: "Ein Friseursalon mit 6 Beschäftigten plant seinen Personalbedarf. Welche Methode ist geeigneter?",
+                  options: ["Stellenplanmethode, weil man jede Stelle genau durchzählen kann", "Kennzahlenmethode, weil sie genauer ist", "Kennzahlenmethode, weil kleine Betriebe keinen Umsatz haben", "Keine Methode, kleine Betriebe brauchen keine Planung"],
+                  answer: 0
+                },
+                {
+                  q: "Der Umsatz des Baumarkts schwankt stark. Was bedeutet das für die Kennzahlenmethode?",
+                  options: ["Sie wird genauer.", "Das Ergebnis ist schnell veraltet.", "Nichts, der Umsatz spielt keine Rolle.", "Man muss dann die Stellen zählen."],
+                  answer: 1
+                }
+              ]
+            },
+            {
+              type: "calc",
+              title: "A9 · Ausbildungsbedarf",
+              points: 3,
+              review: "ausbildungsbedarf",
+              case: `Elektro Schulte braucht in <b>drei Jahren zwölf Fachkräfte</b> aus eigener Ausbildung. Die Ausbildung dauert drei Jahre.`,
+              rows: [
+                { label: "Ausbildungsplätze pro Jahr: 12 ÷ 3", value: 4 },
+                { label: "Azubis gleichzeitig im Betrieb, wenn drei Jahrgänge laufen", value: 12 }
+              ],
+              result: "4 Plätze pro Jahr. Bei drei Ausbildungsjahren sind dann 12 Azubis gleichzeitig im Betrieb."
+            },
+            {
+              type: "open",
+              title: "A10 · Stellung nehmen",
+              points: 4,
+              review: "ersatz-neubedarf",
+              task: `Die Geschäftsführung von Elektro Schulte schlägt vor: „Den Bedarf aus A5 decken wir komplett mit Überstunden.“ <b>Nimm Stellung</b> (3–4 Sätze).`,
+              model: "Überstunden haben den Vorteil, dass kein neues Personal gesucht werden muss und es sofort geht. Auf Dauer werden die Beschäftigten aber überlastet, und der Bedarf von zwei Personen ist dauerhaft. Deshalb empfehle ich, die zwei Stellen fest neu zu besetzen und Überstunden nur für die Übergangszeit zu nutzen.",
+              criteria: [
+                { text: "Einen Vorteil von Überstunden genannt (kein neues Personal, sofort möglich)", points: 1 },
+                { text: "Einen Nachteil genannt (Überlastung, keine Dauerlösung, Kosten für Zuschläge)", points: 1 },
+                { text: "Eine Alternative genannt (Neueinstellung, Zeitarbeit, Teilzeit aufstocken)", points: 1 },
+                { text: "Eigene, begründete Entscheidung formuliert", points: 1 }
               ]
             }
           ]
