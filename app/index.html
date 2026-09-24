@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lernraum</title>
+  <meta name="description" content="Lernmodule, Präsentationen und Übungen für deine Fächer – gemacht fürs Handy.">
+  <meta name="theme-color" content="#FEFEFE">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Lernraum">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" aria-live="polite"></div>
+
+  <nav class="tabbar hidden" id="tabbar" aria-label="Hauptnavigation">
+    <a href="#/" data-tab="home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>
+      <span>Start</span>
+    </a>
+    <a href="#/" data-tab="karten">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="13" height="15"/><path d="M4 7v14h12"/></svg>
+      <span>Lernkarten</span>
+    </a>
+    <a href="#/profil" data-tab="profil">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="4" width="8" height="8"/><path d="M4 21v-4h16v4"/></svg>
+      <span>Ich</span>
+    </a>
+  </nav>
+
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
