@@ -61,7 +61,18 @@
     arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     link: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
+    help: '<svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15M12 18.5v.5"/></svg>',
     del: '<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6zM12 9l5 6M17 9l-5 6"/></svg>'
+  };
+  const HOWTO = {
+    slides: "Wische nach links, um weiterzublättern. Lies jede Folie in Ruhe – die Aufgaben danach bauen darauf auf.",
+    quiz: "Tippe eine Antwort an und dann auf „Prüfen“. Genau eine Antwort ist richtig.",
+    sort: "Lies die Karte und tippe auf die Kategorie, zu der sie gehört.",
+    cloze: "Tippe zuerst eine Lücke an und dann das passende Wort unten. Einige Wörter passen nirgends.",
+    calc: "Tippe ein Feld an und gib die Zahl über das Zahlenfeld ein. Mit ± machst du eine Zahl negativ, mit ↓ springst du ins nächste Feld.",
+    cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
+    selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
+    link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“."
   };
   const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material" };
 
@@ -121,6 +132,7 @@
   const routes = [
     [/^#?\/?$/, viewHome, "home"],
     [/^#\/profil$/, viewProfile, "profil"],
+    [/^#\/hilfe$/, viewHelp, "hilfe"],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
@@ -351,6 +363,7 @@
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Schließen">${ICON.close}</a>
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
+        <button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>
       </div>
       <header class="player-head">
         <p class="eyebrow">${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}</p>
@@ -380,8 +393,13 @@
         buzz(15);
         location.hash = i + 1 < t.steps.length ? `#/f/${s.id}/${t.id}/${i + 1}` : `#/f/${s.id}/${t.id}/fertig`;
       },
-      key: `${s.id}/${t.id}/${i}`
+      key: `${s.id}/${t.id}/${i}`,
+      hintsFor: null,      // Player können aufgabenspezifische Tipps liefern
+      hintKey: () => "0",  // z. B. Frage-Index im Quiz
+      revealed: {}
     };
+    ctx.openHelp = (tab) => openHelp(s, t, step, ctx, tab);
+    v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
 
     (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
     return v;
@@ -438,6 +456,8 @@
       const show = () => {
         const q = qs[k];
         let sel = -1;
+        ctx.hintsFor = () => [].concat(q.hint || [], q.hints || []);
+        ctx.hintKey = () => String(k);
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
           <p class="q-count">Frage ${k + 1} von ${qs.length}</p>
@@ -641,7 +661,7 @@
         else if (k === "del") v = v.slice(0, -1);
         else if (k === "neg") v = v.startsWith("-") ? v.slice(1) : "-" + v;
         else if (k === "next") { active = (active + 1) % rows.length; return paint(); }
-        else if (k === "hint") return showHint();
+        else if (k === "hint") return ctx.openHelp("tipps");
         vals[active] = v;
         buzz(5);
         paint();
@@ -649,6 +669,7 @@
       pad.querySelectorAll("button").forEach((b) => b.onclick = () => press(b.dataset.k));
 
       const onKey = (e) => {
+        if (document.querySelector(".sheet-back")) return;
         if (/^\d$/.test(e.key)) press(e.key);
         else if (e.key === "Backspace") press("del");
         else if (e.key === "-") press("neg");
@@ -670,9 +691,6 @@
         const n = vals.filter((x) => x !== "" && x !== "-").length;
         ctx.setProgress(n / rows.length);
         if (!locked) ctx.action("Prüfen", check, { enabled: n === rows.length });
-      }
-      function showHint() {
-        node.querySelector("#out").replaceChildren(term([["mut", "› " + esc(step.hint || "Rechne Zeile für Zeile.")]]));
       }
       function check() {
         locked = true;
@@ -804,6 +822,142 @@
       ctx.action(`Erledigt ${ICON.check}`, () => ctx.finish(true));
     }
   };
+
+  /* ── Hilfe ──────────────────────────────────────────────── */
+  function glossary(subject) {
+    const list = [];
+    const seen = new Set();
+    const subs = subject ? [subject] : DATA.subjects;
+    subs.forEach((s) => (s.glossary || []).concat(...s.topics.flatMap((t) => t.steps.filter((x) => x.type === "cards").map((x) => x.cards)))
+      .forEach((c) => { const k = c.front.toLowerCase(); if (!seen.has(k)) { seen.add(k); list.push(c); } }));
+    return list.sort((a, b) => a.front.localeCompare(b.front, "de"));
+  }
+
+  function glossaryBox(subject) {
+    const items = glossary(subject);
+    const box = h(`<div>
+      <label class="field" for="gsearch"><span>Begriff suchen</span>
+        <input class="input" id="gsearch" type="search" placeholder="z. B. Zugang" autocomplete="off"></label>
+      <dl class="terms glossary" style="margin-top:12px"></dl>
+      <p class="hint" id="gempty" hidden>Kein Begriff gefunden.</p>
+    </div>`);
+    const dl = box.querySelector("dl");
+    const draw = (q) => {
+      q = (q || "").trim().toLowerCase();
+      const hits = items.filter((c) => !q || c.front.toLowerCase().includes(q) || c.back.toLowerCase().includes(q));
+      dl.innerHTML = hits.map((c) => `<dt>${esc(c.front)}</dt><dd>${esc(c.back)}</dd>`).join("");
+      box.querySelector("#gempty").hidden = hits.length > 0;
+      dl.hidden = !hits.length;
+    };
+    box.querySelector("input").addEventListener("input", (e) => draw(e.target.value));
+    draw("");
+    return box;
+  }
+
+  function hintsOf(step, ctx) {
+    const list = [].concat(ctx && ctx.hintsFor ? ctx.hintsFor() : [], step.hint || [], step.hints || []);
+    return [...new Set(list)];
+  }
+
+  function openHelp(s, t, step, ctx, tab = "tipps") {
+    if (document.querySelector(".sheet-back")) return;
+    const back = h(`<div class="sheet-back">
+      <div class="sheet win" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+        <div class="bar"><span class="d"></span><span id="sheetTitle">Hilfe · ${esc(step.title)}</span>
+          <button class="r sheet-x" aria-label="Hilfe schließen">✕ schließen</button></div>
+        <div class="tabs" role="tablist">
+          <button role="tab" data-tab="tipps">Tipps</button>
+          <button role="tab" data-tab="merk">Merkkasten</button>
+          <button role="tab" data-tab="begriffe">Begriffe</button>
+        </div>
+        <div class="sheet-body"></div>
+      </div>
+    </div>`);
+    const bodyEl = back.querySelector(".sheet-body");
+    const prevFocus = document.activeElement;
+
+    const renderTipps = () => {
+      const hints = hintsOf(step, ctx);
+      const key = ctx.hintKey();
+      const shown = ctx.revealed[key] || 0;
+      const wrap = h(`<div>
+        <p class="howto"><b>So geht's:</b> ${esc(HOWTO[step.type] || "")}</p>
+        <div class="tip-list"></div>
+      </div>`);
+      const listEl = wrap.querySelector(".tip-list");
+      if (!hints.length) {
+        listEl.append(h(`<p class="hint">Für diese Aufgabe gibt es keine extra Tipps. Schau in den <b>Merkkasten</b> oder in die <b>Begriffe</b>.</p>`));
+      } else {
+        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">Tipp ${n + 1}</span><span>${x}</span></div>`)));
+        if (shown < hints.length) {
+          const last = shown === hints.length - 1 && hints.length > 1;
+          const solution = /^Lösungsweg/.test(hints[shown]);
+          const b = h(`<button class="btn ${shown ? "ghost" : "pink"} block" style="margin-top:12px">${solution ? "Lösungsweg zeigen" : last ? "Letzten Tipp zeigen" : shown ? "Noch ein Tipp" : "Ersten Tipp zeigen"} <span style="font:500 12px/1 var(--mono);opacity:.7">${shown + 1}/${hints.length}</span></button>`);
+          b.onclick = () => { ctx.revealed[key] = shown + 1; buzz(6); renderTipps(); };
+          listEl.append(b);
+        } else {
+          listEl.append(h(`<p class="hint">Das waren alle Tipps. Versuch es jetzt nochmal selbst!</p>`));
+        }
+      }
+      bodyEl.replaceChildren(wrap);
+    };
+    const renderMerk = () => {
+      bodyEl.replaceChildren(t.help
+        ? h(`<div class="merk">${t.help}</div>`)
+        : h(`<p class="hint">Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.</p>`));
+    };
+    const renderBegriffe = () => bodyEl.replaceChildren(glossaryBox(s));
+
+    const select = (name) => {
+      back.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+      ({ tipps: renderTipps, merk: renderMerk, begriffe: renderBegriffe })[name]();
+      bodyEl.scrollTop = 0;
+    };
+    back.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => select(b.dataset.tab));
+
+    const close = () => {
+      if (cleanup === myCleanup) cleanup = prevCleanup;
+      document.removeEventListener("keydown", onEsc);
+      back.classList.add("closing");
+      setTimeout(() => back.remove(), reduced() ? 0 : 180);
+      if (prevFocus && prevFocus.focus) prevFocus.focus();
+    };
+    const onEsc = (e) => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", onEsc);
+    back.addEventListener("click", (e) => { if (e.target === back) close(); });
+    back.querySelector(".sheet-x").onclick = close;
+    const prevCleanup = cleanup;
+    const myCleanup = () => { back.remove(); document.removeEventListener("keydown", onEsc); prevCleanup && prevCleanup(); };
+    cleanup = myCleanup;
+
+    document.body.append(back);
+    select(tab);
+    back.querySelector(".sheet-x").focus();
+  }
+
+  function viewHelp() {
+    const subjects = SINGLE ? [SINGLE] : DATA.subjects;
+    const v = h(`<main class="view">
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Hilfe</span></div>
+      <h1 class="display" style="margin-top:26px">Hilfe.<small>Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.</small></h1>
+      <p class="section-head">Merkkästen</p>
+      <div id="merk" class="topics"></div>
+      <p class="section-head">Begriffe</p>
+      <div id="gloss"></div>
+      <p class="section-head">So funktioniert die App</p>
+      <div class="win"><div class="bar"><span class="d"></span>Aufgabentypen<span class="r">${Object.keys(HOWTO).length}</span></div>
+        <dl class="terms" style="border:0">${Object.keys(HOWTO).map((k) => `<dt>${STEP_LABEL[k]}</dt><dd>${esc(HOWTO[k])}</dd>`).join("")}</dl></div>
+    </main>`);
+    const merk = v.querySelector("#merk");
+    subjects.forEach((s) => s.topics.filter((t) => t.help).forEach((t) => {
+      merk.append(h(`<details class="win merk-win">
+        <summary class="bar"><span class="d"></span>${esc(t.title)}<span class="r">${esc(t.kicker || "")} ▾</span></summary>
+        <div class="body merk">${t.help}</div>
+      </details>`));
+    }));
+    v.querySelector("#gloss").append(glossaryBox(SINGLE));
+    return v;
+  }
 
   /* ── Abschluss ──────────────────────────────────────────── */
   function viewFinish(sid, tid) {

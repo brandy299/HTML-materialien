@@ -42,6 +42,18 @@ Alles steht in `content.js`: **Fach → Themen → Schritte**.
 }
 ```
 
+### Hilfe („Ich brauche Hilfe“)
+
+Jede Aufgabe hat oben rechts einen **?-Knopf**. Er öffnet ein Fenster mit drei Reitern:
+
+- **Tipps** – gestufte Hinweise, die Schüler einzeln aufdecken. Quelle: `hints: [...]` am Schritt
+  oder `hint`/`hints` an einer Quizfrage. Ein Tipp, der mit „Lösungsweg“ beginnt, bekommt den Knopf „Lösungsweg zeigen“.
+  Rechenschemata mit `...bedarf(ist, abgaenge, zugaenge, soll)` erzeugen ihre Tipps automatisch.
+- **Merkkasten** – `help: \`<h3>…</h3><p class="formula">…</p><ul><li>…</li></ul>\`` am Thema
+- **Begriffe** – durchsuchbares Lexikon aus allen Karteikarten des Kurses (plus optional `glossary: [...]` am Fach)
+
+Der Tab **Hilfe** unten sammelt alle Merkkästen, das Lexikon und eine Anleitung zu den Aufgabentypen.
+
 ### Schritt-Typen
 
 **Präsentation**

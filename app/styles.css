@@ -192,9 +192,9 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 }
 .tabbar.hidden { transform: translateY(110%); pointer-events: none; }
 .tabbar a {
-  flex: 1; max-width: 170px; display: flex; align-items: center; justify-content: center; gap: 7px;
+  flex: 1; max-width: 150px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px;
   height: 42px; border: 1px solid var(--ink); background: var(--paper);
-  font: 600 14px/1 var(--grot); color: var(--ink);
+  font: 600 13.5px/1 var(--grot); color: var(--ink);
 }
 .tabbar a.active { background: var(--ink); color: var(--paper); }
 .tabbar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; }
@@ -430,6 +430,54 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 .list-row + .list-row { border-top: 1px solid var(--panel-2); }
 .list-row .v { font: 500 13px/1 var(--mono); color: var(--ink-2); }
 .list-row.danger { color: var(--bad); font-weight: 600; }
+
+/* ── Hilfe ──────────────────────────────────────────────── */
+.help-btn { background: var(--pink); }
+.sheet-back {
+  position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(30, 30, 30, .45); animation: fade .18s ease both;
+  padding: calc(var(--safe-t) + 24px) 0 0;
+}
+.sheet-back.closing { animation: fade .18s ease reverse both; }
+.sheet-back.closing .sheet { animation: rise .18s ease reverse both; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { transform: translateY(40px); opacity: 0; } }
+.sheet {
+  width: 100%; max-width: 560px; max-height: 88dvh; display: flex; flex-direction: column;
+  border-bottom: 0; box-shadow: 0 -4px 0 var(--ink); animation: rise .25s var(--ease) both;
+}
+.sheet .bar { min-height: 40px; }
+.sheet-x { font: 500 12px/1 var(--mono); color: var(--paper); padding: 8px 0 8px 12px; opacity: .85; }
+.tabs { display: flex; border-bottom: 2px solid var(--ink); background: var(--paper); }
+.tabs button { flex: 1; height: 46px; font: 700 14px/1 var(--grot); border-right: 1.5px solid var(--ink); }
+.tabs button:last-child { border-right: 0; }
+.tabs button[aria-selected="true"] { background: var(--pink); }
+.sheet-body { overflow-y: auto; overscroll-behavior: contain; padding: 16px var(--gutter) calc(var(--safe-b) + 24px); background: var(--paper); }
+.howto { font-size: 14.5px; color: var(--ink-2); padding-bottom: 14px; border-bottom: 1px dashed var(--ink-3); }
+.howto b { color: var(--ink); }
+.tip-list { display: grid; gap: 10px; margin-top: 14px; }
+.tip { display: grid; gap: 4px; padding: 12px 14px; background: var(--ink); color: var(--term-text); font: 500 14px/1.55 var(--mono); animation: enter .25s var(--ease) both; }
+.tip b { color: var(--paper); }
+.tip-n { color: var(--pink); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.merk { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.merk > * + * { margin-top: 12px; }
+.merk h3 { font: 700 12px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink); margin-top: 18px; }
+.merk h3:first-child { margin-top: 0; }
+.merk strong { color: var(--ink); }
+.merk .formula { font: 700 14px/1.5 var(--mono); padding: 10px 12px; border: 2px solid var(--ink); background: var(--panel); color: var(--ink); }
+.merk ul { list-style: none; display: grid; gap: 6px; }
+.merk li { position: relative; padding-left: 18px; }
+.merk li::before { content: "■"; position: absolute; left: 0; font-size: 10px; line-height: 2.2; color: var(--pink-deep); }
+.merk-win summary { cursor: pointer; list-style: none; }
+.merk-win summary::-webkit-details-marker { display: none; }
+.merk-win[open] summary .r { opacity: 1; }
+.merk-win .body { background: var(--paper); }
+.glossary dt { background: var(--panel); }
+
+@media (min-width: 720px) {
+  .sheet-back { align-items: center; padding: 40px 16px; }
+  .sheet { border-bottom: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); max-height: 80vh; }
+}
 
 /* ── Toast ──────────────────────────────────────────────── */
 .toast {
