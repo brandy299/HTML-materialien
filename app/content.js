@@ -51,6 +51,22 @@ function bedarfRows(ist, ab, zu, soll, opts = {}) {
   return rows;
 }
 
+/* Rechenschema + gestufte Tipps aus den Zahlen des Falls */
+function bedarf(ist, ab, zu, soll, opts = {}) {
+  const zw = ist - ab + zu, nb = soll - zw;
+  const sig = (v) => (v > 0 ? "+ " + v : v < 0 ? "− " + Math.abs(v) : "0");
+  const hints = [
+    "Übertrage zuerst die Zahlen aus dem Fall: <b>Ist-Bestand</b>, <b>Abgänge</b>, <b>Zugänge</b> und <b>Soll</b>. Zähle die Namen – jede Person ist 1.",
+    `Zwischensumme: Vom Ist-Bestand ziehst du die Abgänge ab und zählst die Zugänge dazu.<br><b>${ist} − ${ab} + ${zu} = ?</b>`,
+    `Personalbedarf: <b>Soll minus Zwischensumme</b> – nicht andersherum! Achte auf das Vorzeichen.<br><b>${soll} − ${zw} = ?</b>`
+  ];
+  if (opts.split) hints.push(`Ersatzbedarf = Abgänge − Zugänge = <b>${ab} − ${zu}</b>.<br>Neubedarf = Soll − ursprünglicher Ist = <b>${soll} − ${ist}</b>.`);
+  hints.push(`Lösungsweg: ${ist} − ${ab} + ${zu} = <b>${zw}</b> → ${soll} − ${zw} = <b>${sig(nb)}</b>` +
+    (opts.split ? ` → Ersatz ${ab - zu} + Neu ${soll - ist} = ${sig(nb)}` : "") +
+    `<br>${nb > 0 ? "Positiv: Es muss eingestellt werden." : nb < 0 ? "Negativ: Es sind zu viele da." : "Null: Es passt genau."}`);
+  return { rows: bedarfRows(ist, ab, zu, soll, opts), hints };
+}
+
 window.LERNRAUM = {
   school: "Hans-Böckler-Berufskolleg",
   // Basis für "link"-Schritte: dort liegen die bestehenden Materialien
@@ -69,6 +85,17 @@ window.LERNRAUM = {
         /* ══════════════ LS 2.1 · TEIL 1 ══════════════ */
         {
           id: "bedarf-berechnen",
+          help: `<h3>Das Rechenschema</h3>
+                 <p class="formula">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p>
+                 <h3>Abgang oder Zugang?</h3>
+                 <ul><li><strong>Abgang (−):</strong> Jemand verlässt das Unternehmen – Rente, Elternzeit, Kündigung.</li>
+                 <li><strong>Zugang (+):</strong> Jemand kommt fest dazu – Übernahme nach der Ausbildung, Rückkehr aus der Elternzeit, unterschriebener Vertrag.</li></ul>
+                 <h3>Ergebnis deuten</h3>
+                 <ul><li><strong>positiv (+):</strong> Es fehlen Leute → einstellen.</li><li><strong>negativ (−):</strong> Zu viele da → Personal abbauen.</li></ul>
+                 <h3>Häufige Fehler</h3>
+                 <ul><li>Soll und Zwischensumme vertauscht: Es heißt immer <strong>Soll − Zwischensumme</strong>.</li>
+                 <li>Die gesuchte neue Stelle als Zugang gezählt – sie steckt schon im Soll.</li></ul>`,
+
           group: "Lernsituation 2.1",
           title: "Personalbedarf berechnen",
           kicker: "LS 2.1 · Teil 1",
@@ -130,6 +157,7 @@ window.LERNRAUM = {
               type: "sort",
               title: "Abgang oder Zugang?",
               prompt: "Verlässt jemand das Unternehmen oder kommt jemand dazu?",
+              hints: ["Frag dich: Ist die Person danach <b>noch im Unternehmen</b> tätig – oder nicht mehr?", "Elternzeit zählt als Abgang, weil die Person im Planungszeitraum nicht arbeitet. Die Rückkehr aus der Elternzeit ist ein Zugang."],
               categories: ["Abgang (−)", "Zugang (+)"],
               items: [
                 { text: "Florian Peek geht in Rente.", cat: 0 },
@@ -147,8 +175,7 @@ window.LERNRAUM = {
                      <b>Abgänge:</b> Peek (Rente), Hauser (Elternzeit)<br>
                      <b>Zugänge:</b> Lenz (nach der Ausbildung, Buchhaltung)<br>
                      <b>Soll:</b> 22 – zweite Kraft für den Verkaufsshop`,
-              rows: bedarfRows(21, 2, 1, 22),
-              hint: "Erst den Ist-Bestand fortschreiben: 21 − 2 + 1. Dann vom Soll abziehen.",
+              ...bedarf(21, 2, 1, 22),
               result: "Mediaworld e. K. muss 2 neue Mitarbeiter/innen einstellen."
             },
             {
@@ -157,6 +184,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Der Personalbedarf von Mediaworld beträgt +2. Was bedeutet das?",
+                  hint: "Positives Vorzeichen heißt: Es <b>fehlen</b> Leute.",
                   options: [
                     "Mediaworld hat 2 Mitarbeiter/innen zu viel.",
                     "Mediaworld muss 2 neue Mitarbeiter/innen einstellen.",
@@ -168,6 +196,7 @@ window.LERNRAUM = {
                 },
                 {
                   q: "★ Sabine Hauser kommt aus der Elternzeit zurück. Wie hoch ist der Personalbedarf jetzt?",
+                  hints: ["Die Rückkehr ist ein zusätzlicher <b>Zugang</b>. Die Zwischensumme steigt also um 1.", "Neue Zwischensumme: 20 + 1 = 21. Dann: 22 − 21 = ?"],
                   options: ["+ 3", "+ 2", "+ 1", "0"],
                   answer: 2,
                   explain: "Neuer Zugang: 20 + 1 = 21. Dann 22 − 21 = + 1."
@@ -182,8 +211,7 @@ window.LERNRAUM = {
                      <b>Abgänge:</b> Frau Boldt (Elternzeit), Herr Sahin (Kündigung, Umzug)<br>
                      <b>Zugänge:</b> David (nach der Ausbildung übernommen)<br>
                      <b>Soll:</b> 10 – Herr Krause eröffnet eine zweite Filiale`,
-              rows: bedarfRows(8, 2, 1, 10),
-              hint: "8 − 2 + 1 = Zwischensumme. Dann Soll minus Zwischensumme.",
+              ...bedarf(8, 2, 1, 10),
               result: "Die Fahrradwelt Krause muss 3 neue Mitarbeiter/innen einstellen."
             },
             {
@@ -198,6 +226,7 @@ window.LERNRAUM = {
                 },
                 {
                   q: "Um wie viele Mitarbeiter/innen ist der Bedarf größer?",
+                  hint: "Ziehe den kleineren vom größeren Bedarf ab: 3 − 2.",
                   options: ["um 1", "um 2", "um 3", "um 5"],
                   answer: 0,
                   explain: "3 − 2 = 1"
@@ -221,6 +250,19 @@ window.LERNRAUM = {
         /* ══════════════ LS 2.1 · TEIL 2 ══════════════ */
         {
           id: "ersatz-neubedarf",
+          help: `<h3>Gesamter Personalbedarf zerlegt</h3>
+                 <p class="formula">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Gesamt = Ersatzbedarf + Neubedarf</p>
+                 <ul><li><strong>Ersatzbedarf:</strong> Leute, die gehen und ersetzt werden müssen.</li>
+                 <li><strong>Neubedarf:</strong> zusätzliche Stellen durch Wachstum.</li></ul>
+                 <h3>Informationen filtern</h3>
+                 <ul><li>Wichtig: Wer geht (Abgang), wer kommt fest dazu (Zugang), welche Stelle ist neu (Soll).</li>
+                 <li>Unwichtig: Beschwerden, kurze Krankheit, Zufriedenheit – das ändert den Personalbestand nicht.</li></ul>
+                 <h3>Bedarf decken</h3>
+                 <ul><li><strong>Neueinstellung:</strong> planbar, hohe Bindung – dauert lange.</li>
+                 <li><strong>Zeitarbeit:</strong> schnell, flexibel – teurer, geringe Bindung.</li>
+                 <li><strong>Überstunden:</strong> kein neues Personal – überlastet, nicht dauerhaft.</li>
+                 <li><strong>Teilzeit aufstocken:</strong> kennen den Betrieb – reicht oft nicht.</li></ul>`,
+
           group: "Lernsituation 2.1",
           title: "Ersatz- und Neubedarf",
           kicker: "LS 2.1 · Teil 2",
@@ -265,6 +307,7 @@ window.LERNRAUM = {
               type: "sort",
               title: "A5 · Filtern",
               prompt: "Ein Jahr später bei der Fahrradwelt Krause. Nicht alles ist für die Rechnung wichtig!",
+              hints: ["Frag bei jedem Satz: Verändert das die <b>Zahl der Beschäftigten</b>?", "Eine Beschwerde oder eine kurze Krankheit ändert nichts am Personalbestand → nicht wichtig.", "Eine zusätzlich geschaffene Stelle ist kein Zugang, sondern erhöht das <b>Soll</b> → Neue Stelle."],
               categories: ["Abgang", "Zugang", "Neue Stelle", "Nicht wichtig"],
               items: [
                 { text: "Die Verkäuferin Frau Nowak kündigt zum Jahresende.", cat: 0 },
@@ -283,8 +326,7 @@ window.LERNRAUM = {
                      <b>Abgänge:</b> Nowak, Öztürk<br>
                      <b>Zugang:</b> Celik<br>
                      <b>Soll:</b> 12 Mitarbeiter/innen`,
-              rows: bedarfRows(10, 2, 1, 12, { split: true }),
-              hint: "Ersatzbedarf: 2 − 1. Neubedarf: 12 − 10. Zusammen ergibt das den Personalbedarf.",
+              ...bedarf(10, 2, 1, 12, { split: true }),
               result: "Personalbedarf + 3 = Ersatzbedarf 1 + Neubedarf 2."
             },
             {
@@ -302,7 +344,7 @@ window.LERNRAUM = {
                 { label: "Zugänge gesamt", value: 2 },
                 { label: "Neue Stellen gesamt", value: 2 }
               ],
-              hint: "Addiere jede Spalte von oben nach unten.",
+              hints: ["Lies die Tabelle <b>spaltenweise</b>: Verkaufsshop + Lager + Buchhaltung.", "Abgänge: 2 + 1 + 0. Zugänge: 1 + 0 + 1. Neue Stellen: 1 + 0 + 1."],
               result: "Abgänge 3 · Zugänge 2 · Neue Stellen 2"
             },
             {
@@ -311,8 +353,7 @@ window.LERNRAUM = {
               case: `<b>Ist:</b> 21 Mitarbeiter/innen<br>
                      <b>Abgänge:</b> 3 · <b>Zugänge:</b> 2 (aus A7)<br>
                      <b>Soll:</b> 21 + 2 neue Stellen`,
-              rows: bedarfRows(21, 3, 2, 23, { split: true }),
-              hint: "Soll-Bestand = 21 + 2 = 23.",
+              ...bedarf(21, 3, 2, 23, { split: true }),
               result: "Mediaworld braucht 3 neue Mitarbeiter/innen: Ersatzbedarf 1 + Neubedarf 2."
             },
             {
@@ -321,6 +362,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Welche Möglichkeit ist schnell verfügbar und flexibel, aber teurer?",
+                  hint: "Man „leiht“ sich Personal von einer anderen Firma – dafür zahlt man extra.",
                   options: ["Neueinstellung (fest)", "Zeitarbeit (Leiharbeit)", "Überstunden", "Teilzeitkräfte aufstocken"],
                   answer: 1,
                   explain: "Zeitarbeit: schnell und flexibel – aber teurer und mit geringerer Bindung ans Unternehmen."
@@ -361,6 +403,16 @@ window.LERNRAUM = {
         /* ══════════════ ÜBUNGSBLATT 1 ══════════════ */
         {
           id: "fachbegriffe",
+          help: `<h3>Die Begriffe</h3>
+                 <ul><li><strong>Ist-Personalbestand:</strong> wer JETZT da ist.</li>
+                 <li><strong>Fortschreibung:</strong> Ist − Abgänge + Zugänge.</li>
+                 <li><strong>Bruttopersonalbedarf:</strong> der Soll-Bestand – wie viele insgesamt gebraucht werden.</li>
+                 <li><strong>Nettopersonalbedarf:</strong> Soll − fortgeschriebener Ist – was neu beschafft werden muss.</li></ul>
+                 <h3>Autonom oder initiiert?</h3>
+                 <p>Frag dich: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert (einstellen, versetzen, entlassen, ausbilden). Nein → autonom (Rente, Elternzeit, eigene Kündigung).</p>
+                 <h3>Extern oder intern?</h3>
+                 <p>Frag dich: <strong>Kann der Betrieb das selbst beschließen?</strong> Ja → intern (Online-Shop, Wachstum, neue Aufgaben). Nein → extern (Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison).</p>`,
+
           group: "Übungspaket · Klausur 1",
           title: "Fachbegriffe & Einflussfaktoren",
           kicker: "Übungsblatt 1",
@@ -400,6 +452,7 @@ window.LERNRAUM = {
             {
               type: "quiz",
               title: "A1 · Begriffe zuordnen",
+              hints: ["Achte auf Signalwörter: <b>JETZT</b> → Ist-Bestand. <b>Soll</b> → Brutto. <b>neu beschaffen</b> → Netto. <b>Ist − Abgänge + Zugänge</b> → Fortschreibung."],
               questions: [
                 { q: "Wie viele Beschäftigte der Betrieb insgesamt braucht (Soll).", options: ["Ist-Personalbestand", "Bruttopersonalbedarf", "Nettopersonalbedarf", "Fortschreibung"], answer: 1 },
                 { q: "Rechnung: Ist-Bestand − Abgänge + Zugänge.", options: ["Fortschreibung", "Stellenplanmethode", "Bruttopersonalbedarf", "Ausbildungsbedarf"], answer: 0 },
@@ -413,6 +466,7 @@ window.LERNRAUM = {
               type: "sort",
               title: "A2 · Autonom oder initiiert?",
               prompt: "Passiert das von selbst – oder handelt der Betrieb bewusst?",
+              hints: ["Frag dich: <b>Wer hat entschieden?</b> Die Beschäftigten selbst oder das Leben (Rente, Elternzeit) → autonom.", "Hat der Betrieb bewusst gehandelt – einstellen, versetzen, entlassen, ausbilden → initiiert."],
               categories: ["autonom", "initiiert"],
               items: [
                 { text: "Eine Verkäuferin kündigt.", cat: 0 },
@@ -429,6 +483,7 @@ window.LERNRAUM = {
               type: "sort",
               title: "A3 · Extern oder intern?",
               prompt: "Kommt der Einfluss von außen – oder entscheidet der Betrieb selbst?",
+              hints: ["Frag dich: <b>Kann Mediaworld das selbst beschließen?</b> Ja → intern. Nein → extern.", "Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt und Jahreszeiten kann ein Betrieb nicht steuern → extern."],
               categories: ["extern", "intern"],
               items: [
                 { text: "Die Konjunktur schwächelt.", cat: 0 },
@@ -445,6 +500,7 @@ window.LERNRAUM = {
               type: "cloze",
               title: "A4 · Lücken füllen",
               prompt: "Achtung: Drei Wörter passen nicht!",
+              hints: ["Die drei Wörter, die nicht passen, haben nichts mit der Personalplanung zu tun: Rendite, Anzeige, Blindheit.", "Soll-Bestand = Brutto. Was tatsächlich fehlt = Netto."],
               text: "Der {Ist-Personalbestand} sagt, wie viele Beschäftigte JETZT im Betrieb arbeiten. Bei der Fortschreibung zieht man die voraussichtlichen {Abgänge} ab. Bereits fest vereinbarte Einstellungen zählen als {Zugänge}. Der Soll-Bestand heißt auch {Bruttopersonalbedarf}. Was tatsächlich neu eingestellt werden muss, ist der {Nettopersonalbedarf}. Die {Stellenplanmethode} zählt jede benötigte Stelle einzeln durch.",
               distractors: ["Betriebsblindheit", "Umsatzrendite", "Stellenanzeige"]
             },
@@ -454,6 +510,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Was ist der Unterschied zwischen Brutto- und Nettopersonalbedarf?",
+                  hint: "Hier geht es nicht ums Gehalt! Brutto = <b>Soll</b>, Netto = was nach der Fortschreibung noch <b>fehlt</b>.",
                   options: [
                     "Brutto ist mit Steuern, Netto ohne Steuern.",
                     "Brutto = wie viele insgesamt gebraucht werden; Netto = wie viele davon neu beschafft werden müssen.",
@@ -482,6 +539,14 @@ window.LERNRAUM = {
         /* ══════════════ ÜBUNGSBLATT 2 ══════════════ */
         {
           id: "stellenplan-kennzahlen",
+          help: `<h3>Stellenplanmethode</h3>
+                 <p>Jede Stelle einzeln durchzählen. <strong>Genau, aber aufwendig</strong> – gut für kleine Betriebe.</p>
+                 <h3>Kennzahlenmethode</h3>
+                 <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen</p>
+                 <p><strong>Schnell, aber grob</strong> – gut für große Betriebe und einen ersten Überblick. Sie zeigt nicht, welche Bereiche Personal brauchen.</p>
+                 <h3>Rechentrick</h3>
+                 <p>Bei beiden Zahlen gleich viele Nullen streichen: 3 600 000 ÷ 200 000 = 36 ÷ 2 = 18.</p>`,
+
           group: "Übungspaket · Klausur 1",
           title: "Stellenplan & Kennzahlen",
           kicker: "Übungsblatt 2",
@@ -512,6 +577,7 @@ window.LERNRAUM = {
               type: "sort",
               title: "A1 · Welche Methode?",
               prompt: "Passt die Aussage zur Stellenplan- oder zur Kennzahlenmethode?",
+              hints: ["Stellenplan = <b>zählen</b>: jede Stelle einzeln. Genau, aber aufwendig.", "Kennzahlen = <b>rechnen</b> mit dem Umsatz. Schnell, aber grob – und abhängig vom Umsatz."],
               categories: ["Stellenplan", "Kennzahlen"],
               items: [
                 { text: "Zählt jede Stelle einzeln durch.", cat: 0 },
@@ -533,7 +599,7 @@ window.LERNRAUM = {
                 { label: "Möbelhaus: 2 800 000 € ÷ 140 000 €", value: 20 },
                 { label: "Mediaworld: 3 400 000 € ÷ 200 000 €", value: 17 }
               ],
-              hint: "Tipp: Streiche bei beiden Zahlen gleich viele Nullen. 3 600 000 ÷ 200 000 = 36 ÷ 2.",
+              hints: ["Formel: <b>Umsatz ÷ Umsatz je Vollzeitstelle</b>.", "Streiche bei beiden Zahlen gleich viele Nullen: 3 600 000 ÷ 200 000 = 36 ÷ 2.", "Lösungsweg: 36 ÷ 2 = 18 · 280 ÷ 14 = 20 · 34 ÷ 2 = 17"],
               result: "Elektromarkt 18 · Möbelhaus 20 · Mediaworld 17 Vollzeitstellen."
             },
             {
@@ -542,18 +608,21 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Ein kleiner Familienbetrieb mit 8 Beschäftigten plant seinen Personalbedarf. Welche Methode passt?",
+                  hint: "Bei 8 Stellen kann man jede einzelne gut durchzählen.",
                   options: ["Stellenplanmethode", "Kennzahlenmethode"],
                   answer: 0,
                   explain: "Bei wenigen Stellen kann man jede einzeln durchzählen – das ist genauer."
                 },
                 {
                   q: "Eine Kaufhauskette mit 600 Beschäftigten will schnell einen Überblick. Welche Methode passt?",
+                  hint: "Das Stichwort ist <b>schnell</b>.",
                   options: ["Stellenplanmethode", "Kennzahlenmethode"],
                   answer: 1,
                   explain: "Bei 600 Stellen wäre das Durchzählen sehr aufwendig. Die Kennzahl liefert schnell eine Schätzung."
                 },
                 {
                   q: "Warum ist die Kennzahlenmethode nur eine grobe Schätzung?",
+                  hint: "Womit rechnet die Kennzahlenmethode – und was schaut sie sich <b>nicht</b> an?",
                   options: [
                     "Weil man dafür einen Taschenrechner braucht.",
                     "Weil sie nur mit dem Umsatz rechnet und nicht zeigt, welche Aufgaben wirklich Personal brauchen.",
@@ -571,6 +640,14 @@ window.LERNRAUM = {
         /* ══════════════ AUSBILDUNG ══════════════ */
         {
           id: "ausbildungsbedarf",
+          help: `<h3>Ausbildungsbedarf</h3>
+                 <p class="formula">benötigte Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>
+                 <h3>Merksatz</h3>
+                 <p>Azubis lösen <strong>keinen akuten</strong> Personalbedarf – Ausbildung dauert drei Jahre.</p>
+                 <h3>Kosten und Nutzen</h3>
+                 <ul><li><strong>Kosten:</strong> Ausbildungsvergütung, Berufsschulzeiten, Zeit der Ausbilder/innen.</li>
+                 <li><strong>Nutzen:</strong> Azubis kennen die Abläufe, Übernahme sichert Fachkräfte.</li></ul>`,
+
           group: "Übungspaket · Klausur 1",
           title: "Ausbildungsbedarf",
           kicker: "Fachkräfte von morgen",
@@ -611,13 +688,14 @@ window.LERNRAUM = {
                 { label: "12 Fachkräfte in 3 Jahren", value: 4 },
                 { label: "15 Fachkräfte in 3 Jahren", value: 5 }
               ],
-              hint: "Teile die Zahl der Fachkräfte durch die Zahl der Jahre.",
+              hints: ["Formel: <b>benötigte Fachkräfte ÷ Ausbildungsjahre</b>.", "Lösungsweg: 9 ÷ 3 = 3 · 12 ÷ 3 = 4 · 15 ÷ 3 = 5"],
               result: "3 · 4 · 5 Ausbildungsplätze pro Jahr."
             },
             {
               type: "sort",
               title: "Kosten oder Nutzen?",
               prompt: "Ist das ein Kostenpunkt oder ein Nutzen der Ausbildung?",
+              hints: ["Kosten: Alles, was den Betrieb <b>Geld oder Arbeitszeit</b> kostet.", "Nutzen: Alles, was der Betrieb durch eigene Azubis <b>gewinnt</b>."],
               categories: ["Kosten", "Nutzen"],
               items: [
                 { text: "Ausbildungsvergütung", cat: 0 },
@@ -634,6 +712,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Mediaworld fehlen ab sofort zwei Verkäufer/innen. Hilft es, jetzt zwei Azubis einzustellen?",
+                  hint: "Wie lange dauert eine Ausbildung?",
                   options: [
                     "Ja, das Problem ist damit gelöst.",
                     "Nein – Ausbildung dauert drei Jahre. Der akute Bedarf muss anders gedeckt werden.",
@@ -651,6 +730,13 @@ window.LERNRAUM = {
         /* ══════════════ MINI-KLAUSUREN ══════════════ */
         {
           id: "mini-klausur-1",
+          help: `<h3>In der Klausur</h3>
+                 <ul><li>Erst alle Aufgaben lesen, dann arbeiten.</li>
+                 <li>Beim Rechnen jeden Schritt aufschreiben – auch der Weg bringt Punkte.</li>
+                 <li>Ergebnis immer mit Vorzeichen deuten und einen Antwortsatz schreiben.</li></ul>
+                 <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
+                 <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
+
           group: "Klausurtraining",
           title: "Mini-Klausur 1",
           kicker: "ca. 12 Minuten",
@@ -661,6 +747,7 @@ window.LERNRAUM = {
               title: "A1 · Autonom oder initiiert?",
               prompt: "2 Punkte",
               categories: ["autonom", "initiiert"],
+              hints: ["Hat der Betrieb entschieden? Ja → initiiert. Nein → autonom."],
               items: [
                 { text: "Ein Verkäufer geht in Rente.", cat: 0 },
                 { text: "Der Betrieb stellt eine Aushilfe ein.", cat: 1 },
@@ -675,8 +762,7 @@ window.LERNRAUM = {
                      <b>Abgänge:</b> eine Kündigung, ein Renteneintritt<br>
                      <b>Zugang:</b> eine fest zugesagte Aushilfe<br>
                      <b>Soll:</b> 14`,
-              rows: bedarfRows(12, 2, 1, 14, { klausur: true }),
-              hint: "12 − 2 + 1 = fortgeschriebener Ist-Bestand.",
+              ...bedarf(12, 2, 1, 14, { klausur: true }),
               result: "Die Bäckerei muss 3 Personen einstellen."
             },
             {
@@ -685,6 +771,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Nettopersonalbedarf + 3. Was bedeutet das für die Bäckerei Korn?",
+                  hint: "Positives Vorzeichen → es <b>fehlen</b> Leute.",
                   options: [
                     "Sie hat 3 Beschäftigte zu viel.",
                     "Es fehlen 3 Beschäftigte – sie muss 3 Personen einstellen.",
@@ -700,6 +787,13 @@ window.LERNRAUM = {
         },
         {
           id: "mini-klausur-2",
+          help: `<h3>In der Klausur</h3>
+                 <ul><li>Erst alle Aufgaben lesen, dann arbeiten.</li>
+                 <li>Beim Rechnen jeden Schritt aufschreiben – auch der Weg bringt Punkte.</li>
+                 <li>Ergebnis immer mit Vorzeichen deuten und einen Antwortsatz schreiben.</li></ul>
+                 <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
+                 <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
+
           group: "Klausurtraining",
           title: "Mini-Klausur 2",
           kicker: "ca. 12 Minuten",
@@ -710,6 +804,7 @@ window.LERNRAUM = {
               title: "A1 · Extern oder intern?",
               prompt: "2 Punkte",
               categories: ["extern", "intern"],
+              hints: ["Kann der Betrieb das selbst beschließen? Ja → intern. Nein → extern."],
               items: [
                 { text: "Die Konjunktur zieht an.", cat: 0 },
                 { text: "Das Weihnachtsgeschäft steht bevor.", cat: 0 },
@@ -722,7 +817,7 @@ window.LERNRAUM = {
               title: "A2 · Kennzahlenmethode",
               case: `Ein Warenhaus macht <b>4 800 000 €</b> Umsatz. Je Vollzeitstelle werden <b>200 000 €</b> angesetzt.`,
               rows: [{ label: "Vollzeitstellen: 4 800 000 € ÷ 200 000 €", value: 24 }],
-              hint: "48 ÷ 2",
+              hints: ["Umsatz ÷ Umsatz je Vollzeitstelle. Streiche gleich viele Nullen.", "4 800 000 ÷ 200 000 = 48 ÷ 2 = ?"],
               result: "Das Warenhaus braucht 24 Vollzeitstellen."
             },
             {
@@ -730,13 +825,20 @@ window.LERNRAUM = {
               title: "A3 · Ausbildungsbedarf",
               case: `Ein Betrieb braucht in <b>drei Jahren neun Fachkräfte</b> aus eigener Ausbildung.`,
               rows: [{ label: "Ausbildungsplätze pro Jahr: 9 ÷ 3", value: 3 }],
-              hint: "benötigte Fachkräfte ÷ Ausbildungsjahre",
+              hints: ["benötigte Fachkräfte ÷ Ausbildungsjahre", "9 ÷ 3 = ?"],
               result: "3 Ausbildungsplätze pro Jahr."
             }
           ]
         },
         {
           id: "mini-klausur-3",
+          help: `<h3>In der Klausur</h3>
+                 <ul><li>Erst alle Aufgaben lesen, dann arbeiten.</li>
+                 <li>Beim Rechnen jeden Schritt aufschreiben – auch der Weg bringt Punkte.</li>
+                 <li>Ergebnis immer mit Vorzeichen deuten und einen Antwortsatz schreiben.</li></ul>
+                 <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
+                 <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
+
           group: "Klausurtraining",
           title: "Mini-Klausur 3",
           kicker: "ca. 12 Minuten",
@@ -762,8 +864,7 @@ window.LERNRAUM = {
                      <b>Abgang:</b> eine Kündigung<br>
                      <b>Zugänge:</b> drei neue Verträge für den Kursbereich<br>
                      <b>Soll:</b> 16`,
-              rows: bedarfRows(15, 1, 3, 16, { klausur: true }),
-              hint: "15 − 1 + 3 = 17. Dann 16 − 17.",
+              ...bedarf(15, 1, 3, 16, { klausur: true }),
               result: "Nettopersonalbedarf − 1: eine Person zu viel."
             },
             {
@@ -772,6 +873,7 @@ window.LERNRAUM = {
               questions: [
                 {
                   q: "Das Ergebnis ist negativ (− 1). Was muss das Fitnessstudio tun?",
+                  hint: "Negativ heißt: Es sind <b>mehr</b> Leute da als gebraucht.",
                   options: [
                     "Eine Person einstellen.",
                     "Personal abbauen – zum Beispiel einen Abgang nicht ersetzen.",
