@@ -179,6 +179,14 @@ window.LERNRAUM = {
               result: "Mediaworld e. K. muss 2 neue Mitarbeiter/innen einstellen."
             },
             {
+              type: "sentence",
+              title: "Antwortsatz bauen",
+              case: `In der Klausur gehört zu jeder Rechnung ein <b>Antwortsatz</b>. Bau ihn für Mediaworld aus den Bausteinen.`,
+              text: "Der Personalbedarf beträgt {*+ 2|− 2|22}. Das Ergebnis ist {*positiv|negativ}. Mediaworld e. K. muss {*2|20|22} neue Mitarbeiter/innen {*einstellen|entlassen}.",
+              hints: ["Das Ergebnis aus A1 steht in der letzten Zeile des Rechenschemas.", "Positiv heißt: Es fehlen Leute → einstellen."],
+              explain: "Ein guter Antwortsatz: Ergebnis mit Vorzeichen → Bedeutung → was das Unternehmen tun muss."
+            },
+            {
               type: "quiz",
               title: "A2 · Ergebnis deuten",
               questions: [
@@ -766,22 +774,11 @@ window.LERNRAUM = {
               result: "Die Bäckerei muss 3 Personen einstellen."
             },
             {
-              type: "quiz",
+              type: "sentence",
               title: "A3 · Deuten",
-              questions: [
-                {
-                  q: "Nettopersonalbedarf + 3. Was bedeutet das für die Bäckerei Korn?",
-                  hint: "Positives Vorzeichen → es <b>fehlen</b> Leute.",
-                  options: [
-                    "Sie hat 3 Beschäftigte zu viel.",
-                    "Es fehlen 3 Beschäftigte – sie muss 3 Personen einstellen.",
-                    "Sie braucht insgesamt 3 Beschäftigte.",
-                    "3 Beschäftigte gehen in Rente."
-                  ],
-                  answer: 1,
-                  explain: "Positives Vorzeichen → Personal beschaffen."
-                }
-              ]
+              case: "Was bedeutet dein Ergebnis aus A2 für die Bäckerei Korn? (2 Punkte)",
+              text: "Der Nettopersonalbedarf ist {*positiv|negativ}. Der Bäckerei Korn {*fehlen|bleiben} {*3|11|14} Beschäftigte, deshalb muss sie Personal {*beschaffen|abbauen}.",
+              hints: ["Positives Vorzeichen → es fehlen Leute."]
             }
           ]
         },
@@ -868,22 +865,11 @@ window.LERNRAUM = {
               result: "Nettopersonalbedarf − 1: eine Person zu viel."
             },
             {
-              type: "quiz",
+              type: "sentence",
               title: "A3 · Deuten",
-              questions: [
-                {
-                  q: "Das Ergebnis ist negativ (− 1). Was muss das Fitnessstudio tun?",
-                  hint: "Negativ heißt: Es sind <b>mehr</b> Leute da als gebraucht.",
-                  options: [
-                    "Eine Person einstellen.",
-                    "Personal abbauen – zum Beispiel einen Abgang nicht ersetzen.",
-                    "Nichts, das Ergebnis ist falsch.",
-                    "Den Soll-Bestand auf 17 erhöhen."
-                  ],
-                  answer: 1,
-                  explain: "Negativ heißt: Es sind zu viele da."
-                }
-              ]
+              case: "Dein Ergebnis aus A2 ist negativ. Was muss das Fitnessstudio tun? (2 Punkte)",
+              text: "Der Nettopersonalbedarf ist {*negativ|positiv}. Das Fitnessstudio hat {*eine Person zu viel|eine Person zu wenig}. Es muss Personal {*abbauen|einstellen}, zum Beispiel indem es einen Abgang {*nicht ersetzt|doppelt ersetzt}.",
+              hints: ["Negativ heißt: Es sind mehr Leute da als gebraucht."]
             }
           ]
         },
@@ -967,17 +953,13 @@ window.LERNRAUM = {
               result: "Nettopersonalbedarf + 2 = Ersatzbedarf 1 + Neubedarf 1."
             },
             {
-              type: "open",
+              type: "sentence",
               title: "A6 · Ergebnis deuten",
               points: 3,
               review: "bedarf-berechnen",
-              task: `Deute dein Ergebnis aus A5 in ganzen Sätzen. Nenne eine Möglichkeit, wie Elektro Schulte den Bedarf <b>kurzfristig</b> decken kann, und begründe sie.`,
-              model: "Der Nettopersonalbedarf ist positiv (+ 2). Elektro Schulte fehlen also zwei Beschäftigte, der Betrieb muss Personal beschaffen. Kurzfristig bietet sich Zeitarbeit an, weil Leiharbeitskräfte schnell verfügbar sind.",
-              criteria: [
-                { text: "Vorzeichen richtig gedeutet: positiv → es fehlt Personal", points: 1 },
-                { text: "Konkrete Zahl genannt: 2 Beschäftigte einstellen", points: 1 },
-                { text: "Passende kurzfristige Maßnahme mit Begründung (z. B. Zeitarbeit, weil schnell verfügbar)", points: 1 }
-              ]
+              case: `Deute dein Ergebnis aus A5 und nenne eine Möglichkeit, wie Elektro Schulte den Bedarf <b>kurzfristig</b> decken kann. Baue dazu den Antwortsatz.`,
+              text: "Der Nettopersonalbedarf ist {*positiv|negativ}. Elektro Schulte fehlen {*zwei|drei|keine} Beschäftigte, der Betrieb muss Personal {*einstellen|abbauen}. Kurzfristig hilft {*Zeitarbeit|Ausbildung}, weil Leiharbeitskräfte {*schnell verfügbar|günstiger} sind.",
+              explain: "Deuten heißt: Vorzeichen → Bedeutung → Zahl → Maßnahme mit Begründung."
             },
             {
               type: "calc",
@@ -1019,18 +1001,13 @@ window.LERNRAUM = {
               result: "4 Plätze pro Jahr. Bei drei Ausbildungsjahren sind dann 12 Azubis gleichzeitig im Betrieb."
             },
             {
-              type: "open",
+              type: "sentence",
               title: "A10 · Stellung nehmen",
               points: 4,
               review: "ersatz-neubedarf",
-              task: `Die Geschäftsführung von Elektro Schulte schlägt vor: „Den Bedarf aus A5 decken wir komplett mit Überstunden.“ <b>Nimm Stellung</b> (3–4 Sätze).`,
-              model: "Überstunden haben den Vorteil, dass kein neues Personal gesucht werden muss und es sofort geht. Auf Dauer werden die Beschäftigten aber überlastet, und der Bedarf von zwei Personen ist dauerhaft. Deshalb empfehle ich, die zwei Stellen fest neu zu besetzen und Überstunden nur für die Übergangszeit zu nutzen.",
-              criteria: [
-                { text: "Einen Vorteil von Überstunden genannt (kein neues Personal, sofort möglich)", points: 1 },
-                { text: "Einen Nachteil genannt (Überlastung, keine Dauerlösung, Kosten für Zuschläge)", points: 1 },
-                { text: "Eine Alternative genannt (Neueinstellung, Zeitarbeit, Teilzeit aufstocken)", points: 1 },
-                { text: "Eigene, begründete Entscheidung formuliert", points: 1 }
-              ]
+              case: `Die Geschäftsführung schlägt vor: „Den Bedarf aus A5 decken wir komplett mit Überstunden.“ <b>Nimm Stellung</b>, indem du die Stellungnahme aus Bausteinen baust.`,
+              text: "Überstunden haben den Vorteil, dass {*kein neues Personal gesucht werden muss|die Beschäftigten mehr Freizeit haben}. Ein Nachteil ist, dass die Beschäftigten {*überlastet werden|weniger verdienen}. Da die zwei Stellen {*dauerhaft|nur ein paar Tage} fehlen, empfehle ich {*zwei feste Neueinstellungen|noch mehr Überstunden}.",
+              explain: "Stellung nehmen: Vorteil → Nachteil → Begründung → eigene Entscheidung."
             }
           ]
         },

@@ -35,7 +35,7 @@
       return { c, n };
     },
     resetTopic(s, t) { const all = this.all(); delete all[s.id + "/" + t.id]; store.set("progress", all); },
-    reset() { store.set("progress", {}); store.set("self", {}); store.set("drafts", {}); }
+    reset() { store.set("progress", {}); store.set("self", {}); }
   };
 
   /* ── Helfer ─────────────────────────────────────────────── */
@@ -74,9 +74,9 @@
     cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
-    open: "Schreib deine Antwort in ganzen Sätzen. Danach siehst du den Erwartungshorizont und hakst ab, was du geschafft hast."
+    sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz."
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", open: "Freitext" };
+  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz" };
 
   function stepMeta(st) {
     switch (st.type) {
@@ -87,7 +87,7 @@
       case "calc": return st.rows.length + " Felder";
       case "cards": return st.cards.length + " Karten";
       case "selfcheck": return st.items.length + " Aussagen";
-      case "open": return st.criteria.reduce((a, c) => a + c.points, 0) + " Punkte · Freitext";
+      case "sentence": return (st.text.match(/\{/g) || []).length + " Bausteine";
       default: return "öffnet sich neu";
     }
   }
@@ -154,7 +154,7 @@
       case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
       case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value) : num(r.value)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
-      case "open": return `<p>${st.model || ""}</p><ul class="sol-crit">${st.criteria.map((c) => `<li>${esc(c.text)} <b>(${fmtP(c.points)} P)</b></li>`).join("")}</ul>`;
+      case "sentence": return `<p>${sentenceParts(st.text).map((x) => (typeof x === "string" ? esc(x) : `<mark>${esc(x.right)}</mark>`)).join("")}</p>`;
       default: return "";
     }
   }
@@ -164,8 +164,24 @@
     const txt = st.type === "quiz" ? "Falsch beantwortet: Frage " + w.join(", ")
       : st.type === "sort" ? "Falsch zugeordnet: " + w.map(esc).join(" · ")
       : st.type === "cloze" ? "Falsche Lücken, richtig wäre: " + w.map(esc).join(", ")
-      : st.type === "calc" ? "Fehler in: " + w.map(esc).join(" · ") : "";
+      : st.type === "calc" ? "Fehler in: " + w.map(esc).join(" · ")
+      : st.type === "sentence" ? "Falsche Bausteine, richtig wäre: " + w.map(esc).join(", ") : "";
     return txt ? `<p class="sol-wrong">${txt}</p>` : "";
+  }
+
+  /* Satzbausteine: „Das Ergebnis ist {*positiv|negativ}.“ – * markiert den richtigen Baustein */
+  function sentenceParts(text) {
+    const out = [];
+    let last = 0;
+    text.replace(/\{([^}]+)\}/g, (m, inner, pos) => {
+      if (pos > last) out.push(text.slice(last, pos));
+      const opts = inner.split("|").map((o) => o.trim());
+      const right = (opts.find((o) => o.startsWith("*")) || opts[0]).replace(/^\*/, "");
+      out.push({ right, options: opts.map((o) => o.replace(/^\*/, "")) });
+      last = pos + m.length;
+    });
+    if (last < text.length) out.push(text.slice(last));
+    return out;
   }
 
   /* ── Router ─────────────────────────────────────────────── */
@@ -425,7 +441,7 @@
           <ul>
             <li>Der <strong>Timer</strong> startet mit der ersten Aufgabe und läuft weiter, auch wenn du die App schließt.</li>
             <li>Während der Klausur gibt es <strong>keine Rückmeldung und keine Hilfe</strong>.</li>
-            <li>Freitext-Aufgaben bewertest du direkt nach dem Schreiben selbst mit dem Erwartungshorizont. Sei ehrlich!</li>
+            <li>Antwortsätze baust du aus Bausteinen. Alles wird automatisch ausgewertet.</li>
             <li>Am Ende siehst du Punkte, Note, Lösungen und was du wiederholen solltest.</li>
             ${t.exam.tools ? `<li>Hilfsmittel: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
           </ul>
@@ -950,59 +966,80 @@
       });
     },
 
-    /* Freitext mit Erwartungshorizont und Selbstbewertung */
-    open(step, ctx) {
-      const drafts = store.get("drafts", {});
-      const total = step.criteria.reduce((a, c) => a + c.points, 0);
+    /* Antwortsatz aus Bausteinen – vollständig automatisch geprüft */
+    sentence(step, ctx) {
+      const parts = sentenceParts(step.text);
+      const gapsData = parts.filter((x) => typeof x !== "string").map((g) => ({ ...g, options: shuffle(g.options) }));
+      const chosen = gapsData.map(() => null);
+      let active = 0;
+      let gi = 0;
+      const html = parts.map((x) => (typeof x === "string" ? esc(x) : `<button class="gap sgap" data-i="${gi++}"></button>`)).join("");
       const node = h(`<div>
-        <div class="win case"><div class="bar"><span class="d"></span>Aufgabe<span class="r">${fmtP(total)} P</span></div><div class="body">${step.task}</div></div>
-        <label class="field" for="ans" style="margin-top:18px"><span>Deine Antwort</span>
-          <textarea class="input answer" id="ans" rows="6" placeholder="Schreib in ganzen Sätzen …"></textarea></label>
-        <p class="hint" id="count"></p>
-        <div id="eval"></div>
+        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>Aufgabe<span class="r">${gapsData.length} Bausteine</span></div><div class="body">${step.case}</div></div>` : ""}
+        <div class="win" style="margin-top:${step.case ? 18 : 0}px"><div class="bar"><span class="d"></span>Dein Antwortsatz<span class="r" id="cnt"></span></div>
+          <div class="cloze sentence">${html}</div></div>
+        <p class="eyebrow" style="margin-top:18px" id="pickLbl"></p>
+        <div class="picks"></div>
+        <div id="out"></div>
       </div>`);
-      const ta = node.querySelector("textarea");
-      ta.value = drafts[ctx.key] || "";
-      const upd = () => {
-        const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
-        node.querySelector("#count").textContent = `${words} Wörter`;
-        const a = store.get("drafts", {}); a[ctx.key] = ta.value; store.set("drafts", a);
-        ctx.setProgress(Math.min(1, words / 25));
-        ctx.action("Abgeben", submit, { enabled: words >= 5 });
-      };
-      ta.addEventListener("input", upd);
-      ctx.body.append(node);
-      upd();
+      const gaps = [...node.querySelectorAll(".sgap")];
+      const picks = node.querySelector(".picks");
+      let locked = false;
 
-      function submit() {
-        ta.readOnly = true;
-        const checked = step.criteria.map(() => false);
-        const ev = h(`<div class="win" style="margin-top:18px">
-          <div class="bar"><span class="d"></span>Erwartungshorizont<span class="r" id="sum">0/${fmtP(total)} P</span></div>
-          <div class="body" style="background:var(--paper)">
-            ${step.model ? `<p class="merk"><b>Musterlösung:</b> ${step.model}</p>` : ""}
-            <p class="hint">Hake ab, was in <b>deiner</b> Antwort steht:</p>
-            <ul class="kann crit" style="margin-top:10px;box-shadow:none"></ul>
-          </div></div>`);
-        const ul = ev.querySelector("ul");
-        step.criteria.forEach((c, k) => {
-          const li = h(`<li><button type="button"><span class="st" data-v="0"></span><span style="flex:1">${esc(c.text)}</span><span class="v" style="font:700 13px/1 var(--mono)">${fmtP(c.points)} P</span></button></li>`);
-          li.querySelector("button").onclick = () => {
-            checked[k] = !checked[k];
-            li.querySelector(".st").dataset.v = checked[k] ? "2" : "0";
-            const got = step.criteria.reduce((a, cc, m) => a + (checked[m] ? cc.points : 0), 0);
-            ev.querySelector("#sum").textContent = `${fmtP(got)}/${fmtP(total)} P`;
-            buzz(6);
-          };
-          ul.append(li);
+      const paint = () => {
+        gaps.forEach((g, i) => {
+          g.classList.toggle("active", i === active && !locked);
+          g.classList.toggle("filled", chosen[i] !== null);
+          g.textContent = chosen[i] !== null ? chosen[i] : String(i + 1);
         });
-        node.querySelector("#eval").append(ev);
-        ev.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
-        ctx.action(`Bewerten & weiter ${ICON.arrow}`, () => {
-          const got = step.criteria.reduce((a, cc, m) => a + (checked[m] ? cc.points : 0), 0);
-          ctx.finish({ c: got, t: total, self: true });
+        const n = chosen.filter((x) => x !== null).length;
+        node.querySelector("#cnt").textContent = `${n}/${gapsData.length}`;
+        picks.replaceChildren();
+        if (!locked && active >= 0) {
+          node.querySelector("#pickLbl").textContent = `Baustein ${active + 1} wählen`;
+          gapsData[active].options.forEach((o) => {
+            const b = h(`<button class="pick ${chosen[active] === o ? "sel" : ""}">${esc(o)}</button>`);
+            b.onclick = () => {
+              chosen[active] = o;
+              buzz(8);
+              const nextEmpty = chosen.findIndex((x, i) => x === null && i > active);
+              active = nextEmpty !== -1 ? nextEmpty : chosen.indexOf(null);
+              paint();
+            };
+            picks.append(b);
+          });
+        } else if (!locked) node.querySelector("#pickLbl").textContent = "Fertig? Tippe eine Lücke an, um sie zu ändern.";
+        ctx.setProgress(n / gapsData.length);
+        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === gapsData.length });
+      };
+      gaps.forEach((g, i) => g.onclick = () => { if (!locked) { active = i; paint(); } });
+
+      function check() {
+        const wrong = gapsData.filter((g, i) => chosen[i] !== g.right).map((g) => g.right);
+        const correct = gapsData.length - wrong.length;
+        if (ctx.exam) return ctx.finish({ c: correct, t: gapsData.length, wrong });
+        locked = true;
+        gaps.forEach((g, i) => {
+          const ok = chosen[i] === gapsData[i].right;
+          g.classList.remove("active", "filled");
+          g.classList.add(ok ? "right" : "wrong");
+          g.disabled = true;
+          if (!ok) g.insertAdjacentHTML("afterend", `<span class="gap right">${esc(gapsData[i].right)}</span>`);
         });
+        picks.replaceChildren();
+        node.querySelector("#pickLbl").textContent = "";
+        const all = correct === gapsData.length;
+        node.querySelector("#out").replaceChildren(term([
+          ["p", "$ prüfe antwortsatz …"],
+          ["", all ? `› <span class="ok">${correct}/${gapsData.length} richtig.</span> Ein vollständiger Antwortsatz!` : `› <span class="no">${correct}/${gapsData.length} richtig.</span> Die richtigen Bausteine stehen grün im Satz.`],
+          ...(step.explain ? [["", `› <span class="p">${esc(step.explain)}</span>`]] : [])
+        ]));
+        buzz(all ? 20 : [30, 40, 30]);
+        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: gapsData.length, wrong }));
       }
+
+      ctx.body.append(node);
+      paint();
     },
 
     /* Bestehendes Material */
@@ -1232,7 +1269,7 @@
       const pts = stepPoints(st, d);
       const full = pts >= (st.points || 0);
       tasks.append(h(`<details class="task-row">
-        <summary><span class="tn">${String(k + 1).padStart(2, "0")}</span><span class="tt">${esc(st.title)}${d && d.self ? ' <em>(selbst bewertet)</em>' : ""}</span>
+        <summary><span class="tn">${String(k + 1).padStart(2, "0")}</span><span class="tt">${esc(st.title)}</span>
           <span class="tp ${full ? "ok" : pts ? "part" : "no"}">${fmtP(pts)}/${fmtP(st.points || 0)}</span></summary>
         <div class="sol">${mistakesHTML(st, d)}<p class="sol-h">Erwartungshorizont</p>${solutionHTML(st)}</div>
       </details>`));
