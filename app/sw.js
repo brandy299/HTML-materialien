@@ -1,5 +1,5 @@
 /* Lernraum – Offline-Cache. Netzwerk zuerst, damit neue Inhalte sofort ankommen. */
-const CACHE = "lernraum-v1";
+const CACHE = "lernraum-v2";
 const SHELL = ["./", "index.html", "styles.css", "app.js", "content.js", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => {

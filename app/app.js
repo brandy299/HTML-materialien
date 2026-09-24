@@ -8,6 +8,7 @@
   const DATA = window.LERNRAUM;
   const $app = document.getElementById("app");
   const $tabbar = document.getElementById("tabbar");
+  const SINGLE = DATA.subjects.length === 1 ? DATA.subjects[0] : null;
 
   /* ── Speicher ───────────────────────────────────────────── */
   const store = {
@@ -16,7 +17,7 @@
       catch { return fallback; }
     },
     set(key, value) {
-      try { localStorage.setItem("lernraum." + key, JSON.stringify(value)); } catch { /* privat-Modus */ }
+      try { localStorage.setItem("lernraum." + key, JSON.stringify(value)); } catch { /* privater Modus */ }
     }
   };
 
@@ -24,18 +25,16 @@
     all() { return store.get("progress", {}); },
     of(s, t) { return this.all()[s + "/" + t] || { done: {}, last: 0 }; },
     save(s, t, p) { const all = this.all(); all[s + "/" + t] = { ...p, ts: Date.now() }; store.set("progress", all); },
-    complete(s, t, i, score) {
-      const p = this.of(s, t);
-      p.done = { ...p.done, [i]: score || true };
-      p.last = i;
-      this.save(s, t, p);
-    },
+    complete(s, t, i, score) { const p = this.of(s, t); p.done = { ...p.done, [i]: score || true }; p.last = i; this.save(s, t, p); },
     touch(s, t, i) { const p = this.of(s, t); p.last = i; this.save(s, t, p); },
-    ratio(subject, topic) {
-      if (!topic.steps.length) return 0;
-      return Object.keys(this.of(subject.id, topic.id).done).length / topic.steps.length;
+    count(s, t) { return Object.keys(this.of(s.id, t.id).done).length; },
+    ratio(s, t) { return t.steps.length ? this.count(s, t) / t.steps.length : 0; },
+    score(s, t) {
+      let c = 0, n = 0;
+      Object.values(this.of(s.id, t.id).done).forEach((v) => { if (v && typeof v === "object") { c += v.c; n += v.t; } });
+      return { c, n };
     },
-    reset() { store.set("progress", {}); }
+    reset() { store.set("progress", {}); store.set("self", {}); }
   };
 
   /* ── Helfer ─────────────────────────────────────────────── */
@@ -45,45 +44,40 @@
   const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch { /* egal */ } };
   const findSubject = (id) => DATA.subjects.find((s) => s.id === id);
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
-  const setColor = (el, color) => el.style.setProperty("--c", color || "#1B1916");
   const firstName = () => store.get("name", "");
+  const num = (v) => (v < 0 ? "− " + Math.abs(v) : String(v));
+  const signed = (v) => (v > 0 ? "+ " + v : num(v));
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cardsTopic = () => {
+    for (const s of DATA.subjects) for (const t of s.topics) if (t.steps.length && t.steps.every((x) => x.type === "cards")) return { s, t };
+    return null;
+  };
+
+  let cleanup = null;
 
   const ICON = {
     back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
     close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
-    chev: '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
-    slides: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-    quiz: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>',
-    sort: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/><path d="M15 4h4a2 2 0 0 1 2 2v3M9 20H5a2 2 0 0 1-2-2v-3"/></svg>',
-    cloze: '<svg viewBox="0 0 24 24"><path d="M4 7h6M14 7h6M4 12h3M11 12h9M4 17h9M17 17h3"/></svg>',
-    cards: '<svg viewBox="0 0 24 24"><rect x="6" y="3" width="13" height="16" rx="2"/><path d="M4 7v12a2 2 0 0 0 2 2h9"/></svg>',
-    link: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>',
-    lock: '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
-    trophy: '<svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M10 17h4"/></svg>'
+    link: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
+    del: '<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6zM12 9l5 6M17 9l-5 6"/></svg>'
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", cards: "Karteikarten", link: "Material" };
+  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material" };
 
-  function ring(ratio, size = 42) {
-    const r = 17, c = 2 * Math.PI * r;
-    const pct = Math.round(ratio * 100);
-    return `<div class="ring ${ratio >= 1 ? "full" : ""}" style="width:${size}px;height:${size}px">
-      <svg viewBox="0 0 42 42"><circle class="bg" cx="21" cy="21" r="${r}"/>
-      <circle class="fg" cx="21" cy="21" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - ratio)}"/></svg>
-      <span class="lbl">${ratio >= 1 ? "✓" : pct + "%"}</span></div>`;
+  function stepMeta(st) {
+    switch (st.type) {
+      case "slides": return st.slides.length + " Folien";
+      case "quiz": return st.questions.length + (st.questions.length === 1 ? " Frage" : " Fragen");
+      case "sort": return st.items.length + " Karten";
+      case "cloze": return (st.text.match(/\{/g) || []).length + " Lücken";
+      case "calc": return st.rows.length + " Felder";
+      case "cards": return st.cards.length + " Karten";
+      case "selfcheck": return st.items.length + " Aussagen";
+      default: return "öffnet sich neu";
+    }
   }
-
-  function stepMeta(step) {
-    if (step.type === "slides") return step.slides.length + " Folien";
-    if (step.type === "quiz") return step.questions.length + " Fragen";
-    if (step.type === "sort") return step.items.length + " Karten";
-    if (step.type === "cloze") return (step.text.match(/\{/g) || []).length + " Lücken";
-    if (step.type === "cards") return step.cards.length + " Karten";
-    return "öffnet sich neu";
-  }
-
-  function scoreText(v) { return v && typeof v === "object" ? `${v.c}/${v.t}` : ""; }
+  const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
 
   function toast(msg) {
     const t = h(`<div class="toast">${esc(msg)}</div>`);
@@ -91,20 +85,52 @@
     setTimeout(() => t.remove(), 2200);
   }
 
+  function term(lines) {
+    return h(`<div class="term">${lines.map(([cls, txt]) => `<span class="ln ${cls}">${txt}</span>`).join("")}</div>`);
+  }
+
+  function blocks(s, t) {
+    const done = progress.of(s.id, t.id).done;
+    return `<div class="blocks">${t.steps.map((_, i) => `<i class="${done[i] ? "on" : ""}"></i>`).join("")}</div>`;
+  }
+
+  /* Gerasterte Pixelwolke (Bayer 8×8), angelehnt an die Typesafe-Stilstudie */
+  function dither(canvas, seed = 1) {
+    const W = 96, H = 120, g = canvas.getContext("2d");
+    canvas.width = W; canvas.height = H;
+    const pal = [[254, 254, 254], [251, 219, 229], [248, 176, 201], [243, 134, 161], [221, 109, 181], [212, 91, 182]];
+    const B = [[0, 32, 8, 40, 2, 34, 10, 42], [48, 16, 56, 24, 50, 18, 58, 26], [12, 44, 4, 36, 14, 46, 6, 38], [60, 28, 52, 20, 62, 30, 54, 22],
+      [3, 35, 11, 43, 1, 33, 9, 41], [51, 19, 59, 27, 49, 17, 57, 25], [15, 47, 7, 39, 13, 45, 5, 37], [63, 31, 55, 23, 61, 29, 53, 21]];
+    const blobs = seed === 1
+      ? [{ x: .05, y: .25, r: .55, a: 1 }, { x: .95, y: .15, r: .6, a: 1 }, { x: .9, y: .7, r: .45, a: .8 }, { x: .1, y: .8, r: .5, a: .7 }, { x: .5, y: .02, r: .3, a: .5 }]
+      : [{ x: .2, y: .1, r: .5, a: 1 }, { x: .8, y: .3, r: .55, a: 1 }, { x: .5, y: .6, r: .4, a: .6 }];
+    const img = g.createImageData(W, H), L = pal.length;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let d = 0;
+      for (const b of blobs) { const dx = x / W - b.x, dy = (y / H - b.y) * 1.25, dd = Math.sqrt(dx * dx + dy * dy) / b.r; d += b.a * Math.max(0, 1 - dd * dd); }
+      d += .08 * Math.sin(x * .31) * Math.cos(y * .27);
+      d = Math.min(1, Math.max(0, d / 1.6));
+      const lvl = Math.min(L - 1, Math.max(0, Math.round(d * (L - 1) + (B[y & 7][x & 7] / 64 - .5))));
+      const c = pal[lvl], i = (y * W + x) * 4;
+      img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+  }
+
   /* ── Router ─────────────────────────────────────────────── */
   const routes = [
     [/^#?\/?$/, viewHome, "home"],
-    [/^#\/faecher$/, viewSubjects, "faecher"],
     [/^#\/profil$/, viewProfile, "profil"],
-    [/^#\/f\/([\w-]+)$/, viewSubject, "faecher"],
+    [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/(\d+)$/, viewPlayer, null]
   ];
 
   function render() {
+    if (cleanup) { cleanup(); cleanup = null; }
     const hash = location.hash || "#/";
-    if (!firstName() && hash !== "#/profil") return mount(viewWelcome(), null);
+    if (!firstName()) return mount(viewWelcome(), null);
     for (const [re, fn, tab] of routes) {
       const m = hash.match(re);
       if (m) return mount(fn(...m.slice(1)), tab);
@@ -119,9 +145,8 @@
       window.scrollTo(0, 0);
       $tabbar.classList.toggle("hidden", !tab);
       $tabbar.querySelectorAll("a").forEach((a) => a.classList.toggle("active", a.dataset.tab === tab));
-      document.documentElement.style.setProperty("--c", node.style.getPropertyValue("--c") || "#1B1916");
     };
-    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(swap);
+    if (document.startViewTransition && !reduced()) document.startViewTransition(swap);
     else swap();
   }
 
@@ -129,177 +154,187 @@
 
   /* ── Willkommen ─────────────────────────────────────────── */
   function viewWelcome() {
-    const v = h(`<main class="view no-tabbar" style="display:flex;flex-direction:column;min-height:100dvh">
-      <div style="margin-top:12vh">
-        <p class="eyebrow">Lernraum · ${esc(DATA.school)}</p>
-        <h1 class="display" style="margin-top:14px">Lernen, <em>wann</em> es dir passt.</h1>
-        <p class="lead" style="margin-top:16px">Präsentationen, Übungen und Karteikarten aus deinem Unterricht – alles auf deinem Handy.</p>
-      </div>
-      <form style="margin-top:auto;padding-top:40px">
-        <label class="field"><span>Wie sollen wir dich nennen?</span>
-          <input class="input" name="n" autocomplete="given-name" placeholder="Vorname" maxlength="24" required></label>
+    const s = SINGLE;
+    const v = h(`<main class="view no-tabbar">
+      <section class="hero">
+        <canvas aria-hidden="true"></canvas>
+        <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span></div>
+        <div class="win">
+          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
+          <div class="body">
+            <p class="kick">Neu hier?</p>
+            <p class="say">Lernen, wann es dir passt.</p>
+            <p class="sub">Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.</p>
+          </div>
+        </div>
+        <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
+      </section>
+      <form style="margin-top:32px">
+        <label class="field" for="n"><span>Wie heißt du?</span>
+          <input class="input" id="n" name="n" autocomplete="given-name" placeholder="Vorname" maxlength="24" required></label>
         <button class="btn block" style="margin-top:14px" type="submit">Los geht's ${ICON.arrow}</button>
-        <p class="hint" style="text-align:center">Dein Fortschritt wird nur auf diesem Gerät gespeichert.</p>
+        <p class="hint">Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.</p>
       </form>
     </main>`);
+    dither(v.querySelector("canvas"));
     v.querySelector("form").addEventListener("submit", (e) => {
       e.preventDefault();
       const n = e.target.n.value.trim();
-      if (!n) return;
-      store.set("name", n);
-      render();
+      if (n) { store.set("name", n.slice(0, 24)); render(); }
     });
     return v;
   }
 
   /* ── Start ──────────────────────────────────────────────── */
-  function lastActivity() {
-    const all = progress.all();
-    let best = null;
-    for (const key in all) {
-      const [sid, tid] = key.split("/");
-      const s = findSubject(sid), t = findTopic(s, tid);
-      if (!t || !t.steps.length) continue;
-      const r = progress.ratio(s, t);
-      if (r >= 1) continue;
-      if (!best || all[key].ts > best.ts) best = { s, t, ts: all[key].ts, r };
-    }
-    return best;
-  }
-
   function nextStepIndex(s, t) {
     const done = progress.of(s.id, t.id).done;
-    const i = t.steps.findIndex((_, i) => !done[i]);
+    const i = t.steps.findIndex((_, k) => !done[k]);
     return i === -1 ? 0 : i;
   }
 
-  function viewHome() {
-    const name = firstName();
-    const hour = new Date().getHours();
-    const greet = hour < 11 ? "Guten Morgen" : hour < 18 ? "Hallo" : "Guten Abend";
-    const last = lastActivity();
-    const v = h(`<main class="view">
-      <header class="topbar">
-        <p class="eyebrow">${new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" })}</p>
-        <a class="avatar" href="#/profil" aria-label="Profil">${esc(name.charAt(0).toUpperCase())}</a>
-      </header>
-      <h1 class="display">${greet},<br><em>${esc(name)}.</em></h1>
-      <div id="resume"></div>
-      <div class="section-head"><p class="eyebrow">Deine Fächer</p></div>
-      <div class="subject-grid" id="grid"></div>
-    </main>`);
+  function resumeTarget(subjects) {
+    const all = progress.all();
+    let best = null;
+    for (const s of subjects) for (const t of s.topics) {
+      const p = all[s.id + "/" + t.id];
+      if (!p || !t.steps.length || progress.ratio(s, t) >= 1) continue;
+      if (!best || p.ts > best.ts) best = { s, t, ts: p.ts };
+    }
+    if (best) return best;
+    for (const s of subjects) for (const t of s.topics) if (t.steps.length && progress.ratio(s, t) < 1) return { s, t, fresh: true };
+    return null;
+  }
 
-    const box = v.querySelector("#resume");
-    if (last) {
-      const i = nextStepIndex(last.s, last.t);
-      const a = h(`<a class="resume pressable" style="margin-top:28px" href="#/f/${last.s.id}/${last.t.id}/${i}">
-        <p class="eyebrow">Weitermachen · ${esc(last.s.name)}</p>
-        <p class="h2">${esc(last.t.title)}</p>
-        <p class="meta">Schritt ${i + 1} von ${last.t.steps.length} · ${esc(last.t.steps[i].title)}</p>
-        <div class="bar"><i style="width:${Math.round(last.r * 100)}%"></i></div>
-        <span class="go">${ICON.arrow}</span>
-      </a>`);
-      setColor(a, last.s.color);
-      box.append(a);
+  function topicWin(s, t) {
+    if (t.soon || !t.steps.length) {
+      return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">bald</span></div>
+        <div class="body"><span class="title">${esc(t.title)}</span></div></div>`);
+    }
+    const n = progress.count(s, t), total = t.steps.length, sc = progress.score(s, t);
+    const done = n >= total;
+    return h(`<a class="win topic-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
+      <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? "✓ erledigt" : `ca. ${t.minutes || 10} min`}</span></div>
+      <div class="body">
+        <span class="title">${esc(t.title)}</span>
+        ${blocks(s, t)}
+        <span class="meta">${n}/${total} Schritte${sc.n ? ` · ${Math.round((sc.c / sc.n) * 100)} % richtig` : ""}</span>
+      </div>
+    </a>`);
+  }
+
+  function topicList(s) {
+    const frag = document.createDocumentFragment();
+    let group = null, list = null;
+    s.topics.forEach((t) => {
+      if (!list || t.group !== group) {
+        group = t.group;
+        if (group) frag.append(h(`<p class="section-head">${esc(group)}</p>`));
+        list = h(`<div class="topics"></div>`);
+        if (!group) list.style.marginTop = "16px";
+        frag.append(list);
+      }
+      list.append(topicWin(s, t));
+    });
+    return frag;
+  }
+
+  function viewHome() {
+    const subjects = SINGLE ? [SINGLE] : DATA.subjects;
+    const s = SINGLE;
+    const name = firstName();
+    const target = resumeTarget(subjects);
+    const open = subjects.flatMap((x) => x.topics.filter((t) => t.steps.length).map((t) => [x, t]));
+    const doneCount = open.filter(([x, t]) => progress.ratio(x, t) >= 1).length;
+
+    let winBody;
+    if (target) {
+      const i = nextStepIndex(target.s, target.t);
+      winBody = `<p class="kick">Hallo ${esc(name)} · ${doneCount}/${open.length} Themen</p>
+        <p class="say">${target.fresh ? "Starte mit:" : "Weiter mit:"} ${esc(target.t.title)}</p>
+        <p class="sub">Schritt ${i + 1} von ${target.t.steps.length} · ${esc(target.t.steps[i].title)}</p>
+        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${target.fresh ? "Starten" : "Weitermachen"} ${ICON.arrow}</a></div>`;
     } else {
-      box.append(h(`<p class="lead" style="margin-top:14px">Wähle ein Fach und starte mit deinem ersten Lernmodul.</p>`));
+      winBody = `<p class="kick">Hallo ${esc(name)} · alles erledigt</p><p class="say">Alle Themen geschafft.</p>
+        <p class="sub">Wiederhole die Lernkarten vor der Klausur.</p>`;
     }
 
-    const grid = v.querySelector("#grid");
-    DATA.subjects.forEach((s) => {
-      const open = s.topics.filter((t) => !t.soon);
-      const avg = open.length ? open.reduce((sum, t) => sum + progress.ratio(s, t), 0) / open.length : 0;
-      const a = h(`<a class="subject pressable" href="#/f/${s.id}">
-        <span class="glyph">${esc(s.glyph)}</span>
-        ${avg > 0 ? ring(avg, 36) : ""}
-        <span><span class="name">${esc(s.name)}</span><span class="count" style="display:block">${open.length} ${open.length === 1 ? "Thema" : "Themen"}</span></span>
-      </a>`);
-      setColor(a, s.color);
-      grid.append(a);
-    });
-    return v;
-  }
-
-  /* ── Fächerliste ────────────────────────────────────────── */
-  function viewSubjects() {
     const v = h(`<main class="view">
-      <header class="topbar"><p class="eyebrow">Übersicht</p></header>
-      <h1 class="display">Alle <em>Fächer</em></h1>
-      <div id="list" style="margin-top:28px"></div>
+      <section class="hero">
+        <canvas aria-hidden="true"></canvas>
+        <div class="topstrip">
+          <span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>
+          <a class="tag-box ink" href="#/profil">${esc(name)}</a>
+        </div>
+        <div class="win">
+          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company + " · Personalplanung" : "Lernraum")}<span class="r">${new Date().getFullYear()}</span></div>
+          <div class="body">${winBody}</div>
+        </div>
+        <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Deine Fächer."}${s && s.description ? `<small>${esc(s.description)}</small>` : ""}</h1>
+      </section>
+      <div id="list"></div>
     </main>`);
+    dither(v.querySelector("canvas"));
+
     const list = v.querySelector("#list");
-    DATA.subjects.forEach((s) => {
-      const open = s.topics.filter((t) => !t.soon).length;
-      const a = h(`<a class="subject-row pressable" href="#/f/${s.id}">
-        <span class="glyph">${esc(s.glyph)}</span>
-        <span><span class="t" style="display:block">${esc(s.name)}</span><span class="s">${open} ${open === 1 ? "Thema" : "Themen"}</span></span>
-        <span class="chev">${ICON.chev}</span>
-      </a>`);
-      setColor(a, s.color);
-      list.append(a);
-    });
+    if (s) list.append(topicList(s));
+    else {
+      const grid = h(`<div class="topics" style="margin-top:24px"></div>`);
+      DATA.subjects.forEach((x) => {
+        const tops = x.topics.filter((t) => t.steps.length);
+        const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
+        grid.append(h(`<a class="win topic-win" href="#/f/${x.id}">
+          <div class="bar"><span class="d"></span>${esc(x.course || "Fach")}<span class="r">${done}/${tops.length}</span></div>
+          <div class="body"><span class="title">${esc(x.name)}</span><span class="meta">${esc(x.description || "")}</span></div></a>`));
+      });
+      list.append(grid);
+    }
     return v;
   }
 
-  /* ── Fach ───────────────────────────────────────────────── */
+  /* ── Fach (nur bei mehreren Kursen) ─────────────────────── */
   function viewSubject(sid) {
     const s = findSubject(sid);
     if (!s) { location.hash = "#/"; return h("<div></div>"); }
+    if (SINGLE) { location.hash = "#/"; return h("<div></div>"); }
     const v = h(`<main class="view">
-      <header class="topbar"><a class="icon-btn" href="#/faecher" aria-label="Zurück">${ICON.back}</a></header>
-      <section class="hero">
-        <p class="eyebrow">Fach</p>
-        <h1 class="display">${esc(s.name)}</h1>
-        <p class="lead">${esc(s.description || "")}</p>
-      </section>
-      <div class="section-head"><p class="eyebrow">Themen</p></div>
-      <div id="topics"></div>
+      <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span></div>
+      <h1 class="display" style="margin-top:24px">${esc(s.name)}.<small>${esc(s.description || "")}</small></h1>
+      <div id="list"></div>
     </main>`);
-    setColor(v, s.color);
-    const box = v.querySelector("#topics");
-    s.topics.forEach((t) => {
-      const r = progress.ratio(s, t);
-      const inner = `<span class="kicker">${esc(t.kicker || "")}</span>
-        <span class="title">${esc(t.title)}</span>
-        <span class="info">${t.soon ? "Bald verfügbar" : `${t.steps.length} Schritte · ca. ${t.minutes || 10} Min.`}</span>
-        ${t.soon ? `<span class="chev" style="grid-column:2;grid-row:1/span 3;color:var(--ink-3)">${ICON.lock}</span>` : ring(r)}`;
-      box.append(t.soon
-        ? h(`<div class="topic locked">${inner}</div>`)
-        : h(`<a class="topic pressable" href="#/f/${s.id}/${t.id}">${inner}</a>`));
-    });
+    v.querySelector("#list").append(topicList(s));
     return v;
   }
 
   /* ── Thema (Lernpfad) ───────────────────────────────────── */
   function viewTopic(sid, tid) {
     const s = findSubject(sid), t = findTopic(s, tid);
-    if (!t || t.soon) { location.hash = s ? "#/f/" + sid : "#/"; return h("<div></div>"); }
+    if (!t || t.soon || !t.steps.length) { location.hash = "#/"; return h("<div></div>"); }
     const p = progress.of(s.id, t.id);
     const next = nextStepIndex(s, t);
     const allDone = progress.ratio(s, t) >= 1;
+    const started = Object.keys(p.done).length > 0;
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view no-tabbar">
-      <header class="topbar"><a class="icon-btn" href="#/f/${s.id}" aria-label="Zurück">${ICON.back}</a>${ring(progress.ratio(s, t))}</header>
-      <section class="hero">
-        <p class="eyebrow">${esc(s.name)} · ${esc(t.kicker || "")}</p>
-        <h1 class="display">${esc(t.title)}</h1>
-        <div class="chips"><span class="chip c">${t.steps.length} Schritte</span><span class="chip">ca. ${t.minutes || 10} Min.</span></div>
-      </section>
-      <div class="section-head"><p class="eyebrow">Dein Lernpfad</p></div>
-      <ol class="path" id="path"></ol>
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span></div>
+      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <p class="eyebrow" style="margin-top:14px">${t.steps.length} Schritte · ca. ${t.minutes || 10} min${t.group ? " · " + esc(t.group) : ""}</p>
+      <div class="win" style="margin-top:24px">
+        <div class="bar"><span class="d"></span>Lernpfad<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
+        <ol class="list" id="path" style="border:0;list-style:none"></ol>
+      </div>
       <div class="dock"><div class="dock-inner">
-        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${allDone ? "Nochmal durchgehen" : Object.keys(p.done).length ? "Weitermachen" : "Starten"} ${ICON.arrow}</a>
+        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten"} ${ICON.arrow}</a>
       </div></div>
     </main>`);
-    setColor(v, s.color);
     const path = v.querySelector("#path");
     t.steps.forEach((st, i) => {
-      const done = p.done[i];
-      const cls = done ? "done" : i === next && !allDone ? "next" : "";
-      path.append(h(`<li><a class="step ${cls}" href="#/f/${s.id}/${t.id}/${i}">
-        <span class="dot">${done ? ICON.check : ICON[st.type] || ICON.slides}</span>
-        <span class="body"><span class="t" style="display:block">${esc(st.title)}</span>
-        <span class="s">${STEP_LABEL[st.type]} · ${stepMeta(st)}</span></span>
-        ${scoreText(done) ? `<span class="score">${scoreText(done)}</span>` : ""}
+      const d = p.done[i];
+      const isNext = i === next && !allDone;
+      path.append(h(`<li><a class="list-row" href="#/f/${s.id}/${t.id}/${i}" style="padding:10px 12px;gap:12px;justify-content:flex-start${isNext ? ";background:var(--pink-soft)" : ""}">
+        <span style="flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink);font:700 13px/1 var(--mono);${d ? "background:var(--ink);color:var(--paper)" : isNext ? "background:var(--pink)" : ""}">${d ? "✓" : String(i + 1).padStart(2, "0")}</span>
+        <span style="flex:1;min-width:0"><span style="display:block;font-weight:700;line-height:1.25">${esc(st.title)}</span>
+        <span style="display:block;font:400 12px/1.4 var(--mono);color:var(--ink-2)">${STEP_LABEL[st.type]} · ${stepMeta(st)}</span></span>
+        ${scoreText(d) ? `<span class="v">${scoreText(d)}</span>` : ""}
       </a></li>`));
     });
     return v;
@@ -318,13 +353,12 @@
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
       </div>
       <header class="player-head">
-        <p class="eyebrow">${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length}</p>
+        <p class="eyebrow">${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}</p>
         <h1 class="h1">${esc(step.title)}</h1>
       </header>
       <section class="player-body"></section>
       <div class="dock"><div class="dock-inner"><button class="btn block" id="act"></button></div></div>
     </main>`);
-    setColor(v, s.color);
 
     const body = v.querySelector(".player-body");
     const btn = v.querySelector("#act");
@@ -332,6 +366,7 @@
 
     const ctx = {
       body,
+      root: v,
       dock: v.querySelector(".dock-inner"),
       setProgress(f) { bar.style.setProperty("--f", Math.max(0, Math.min(1, f))); },
       action(label, fn, { enabled = true, variant = "" } = {}) {
@@ -344,7 +379,8 @@
         progress.complete(s.id, t.id, i, score);
         buzz(15);
         location.hash = i + 1 < t.steps.length ? `#/f/${s.id}/${t.id}/${i + 1}` : `#/f/${s.id}/${t.id}/fertig`;
-      }
+      },
+      key: `${s.id}/${t.id}/${i}`
     };
 
     (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
@@ -357,16 +393,18 @@
     slides(step, ctx) {
       const n = step.slides.length;
       const wrap = h(`<div class="slides"><div class="slide-track"></div><div class="dots"></div>
-        <p class="swipe-hint">Wische zur Seite ←</p></div>`);
+        <p class="swipe-hint">← zur Seite wischen →</p></div>`);
       const track = wrap.querySelector(".slide-track");
       const dots = wrap.querySelector(".dots");
       step.slides.forEach((sl, k) => {
         track.append(h(`<article class="slide ${sl.style || ""}" aria-label="Folie ${k + 1} von ${n}">
-          <p class="s-kicker">${sl.kicker || ""}</p>
-          ${sl.big ? `<p class="s-big">${sl.big}</p>` : ""}
-          <h2 class="s-title">${sl.title || ""}</h2>
-          <div class="s-body">${sl.body || ""}</div>
-          <p class="s-foot">${k + 1} / ${n}</p>
+          <div class="bar"><span class="d"></span>Folie ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
+          <div class="slide-in">
+            <p class="s-kicker">${sl.kicker || ""}</p>
+            ${sl.big ? `<p class="s-big">${sl.big}</p>` : ""}
+            <h2 class="s-title">${sl.title || ""}</h2>
+            <div class="s-body">${sl.body || ""}</div>
+          </div>
         </article>`));
         dots.append(document.createElement("i"));
       });
@@ -401,7 +439,7 @@
         const q = qs[k];
         let sel = -1;
         ctx.setProgress(k / qs.length);
-        const node = h(`<div style="animation:enter .35s var(--ease) both">
+        const node = h(`<div style="animation:enter .3s var(--ease) both">
           <p class="q-count">Frage ${k + 1} von ${qs.length}</p>
           <p class="q-text">${esc(q.q)}</p>
           <div class="options"></div>
@@ -425,17 +463,20 @@
           if (ok) correct++;
           opts.classList.add("locked");
           const buttons = opts.querySelectorAll(".option");
+          buttons.forEach((b) => b.classList.remove("sel"));
           buttons[q.answer].classList.add("right");
           if (!ok) buttons[sel].classList.add("wrong");
-          buttons.forEach((b) => b.classList.remove("sel"));
-          node.append(h(`<div class="feedback ${ok ? "good" : "bad"}"><b>${ok ? "Richtig!" : "Nicht ganz."}</b>${esc(q.explain || "")}</div>`));
+          node.append(term([
+            ["p", "$ prüfe …"],
+            ["", ok ? `› <span class="ok">richtig.</span> ${esc(q.explain || "")}` : `› <span class="no">stimmt nicht.</span> Richtig ist ${"ABCDEF"[q.answer]}. ${esc(q.explain || "")}`]
+          ]));
           buzz(ok ? 20 : [30, 40, 30]);
           ctx.setProgress((k + 1) / qs.length);
           const last = k === qs.length - 1;
           ctx.action(last ? `Weiter ${ICON.arrow}` : `Nächste Frage ${ICON.arrow}`, () => {
             if (last) ctx.finish({ c: correct, t: qs.length });
             else { k++; show(); }
-          }, { variant: ok ? "good" : "" });
+          });
         }
       };
       show();
@@ -448,9 +489,9 @@
       let k = 0, correct = 0;
       const counts = cats.map(() => 0);
       const node = h(`<div>
-        <p class="lead" style="font-size:16px">${esc(step.prompt || "")}</p>
+        <p class="lead">${esc(step.prompt || "")}</p>
         <div class="sort-stage"></div>
-        <div class="bins ${cats.length === 2 || cats.length === 4 ? "two" : ""}"></div>
+        <div class="bins ${cats.length % 2 === 0 ? "two" : ""}"></div>
       </div>`);
       const stage = node.querySelector(".sort-stage");
       const bins = node.querySelector(".bins");
@@ -460,11 +501,11 @@
         bins.append(b);
       });
       ctx.body.append(node);
-      ctx.action("Wähle eine Kategorie", null, { enabled: false, variant: "ghost" });
+      ctx.action("Tippe auf eine Kategorie", null, { enabled: false, variant: "ghost" });
 
       const card = () => {
-        const it = items[k];
-        stage.replaceChildren(h(`<div class="sort-card"><span class="n">Karte ${k + 1} von ${items.length}</span><span class="txt">${esc(it.text)}</span></div>`));
+        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Karte ${k + 1} / ${items.length}<span class="r">?</span></div>
+          <div class="body"><span class="txt">${esc(items[k].text)}</span></div></div>`));
         bins.classList.remove("locked");
       };
       const pick = (j) => {
@@ -476,16 +517,15 @@
         bins.classList.add("locked");
         const c = stage.firstElementChild;
         c.classList.add(ok ? "right" : "wrong");
-        c.append(h(`<span class="verdict">${ok ? "✓ Richtig" : "✗ Richtig wäre: " + esc(cats[it.cat])}</span>`));
+        c.querySelector(".bar .r").textContent = ok ? "✓ richtig" : "✗ " + cats[it.cat];
         buzz(ok ? 15 : [30, 40, 30]);
         k++;
         ctx.setProgress(k / items.length);
         setTimeout(() => {
-          if (k < items.length) card();
-          else {
-            stage.replaceChildren(h(`<div class="sort-card"><span class="n">Geschafft</span><span class="txt">${correct} von ${items.length} richtig zugeordnet.</span></div>`));
-            ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length }));
-          }
+          if (k < items.length) return card();
+          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Auswertung<span class="r">${correct}/${items.length}</span></div>
+            <div class="body"><span class="txt">${correct} von ${items.length} richtig zugeordnet.</span></div></div>`));
+          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length }));
         }, ok ? 650 : 1500);
       };
       card();
@@ -496,16 +536,17 @@
       const answers = [];
       const html = esc(step.text).replace(/\{([^}]+)\}/g, (_, w) => {
         answers.push(w);
-        return `<button class="gap" data-i="${answers.length - 1}">…</button>`;
+        return `<button class="gap" data-i="${answers.length - 1}"></button>`;
       });
       const words = shuffle([...answers, ...(step.distractors || [])]);
       const filled = answers.map(() => null);
       let active = 0;
 
       const node = h(`<div>
-        <div class="cloze">${html}</div>
+        <div class="win"><div class="bar"><span class="d"></span>Text<span class="r">${answers.length} Lücken</span></div>
+          <div class="cloze">${html}</div></div>
         <div class="bank"></div>
-        <p class="hint">${esc(step.prompt || "")}</p>
+        <p class="hint">${esc(step.prompt || "Tippe eine Lücke an und dann das passende Wort.")}</p>
       </div>`);
       const gaps = [...node.querySelectorAll(".gap")];
       const bank = node.querySelector(".bank");
@@ -519,7 +560,7 @@
         gaps.forEach((g, i) => {
           g.classList.toggle("active", i === active);
           g.classList.toggle("filled", filled[i] !== null);
-          g.textContent = filled[i] !== null ? words[filled[i]] : "…";
+          g.textContent = filled[i] !== null ? words[filled[i]] : String(i + 1);
         });
         bank.querySelectorAll(".word").forEach((b) => b.classList.toggle("used", filled.includes(+b.dataset.j)));
         const n = filled.filter((x) => x !== null).length;
@@ -548,12 +589,119 @@
           g.classList.remove("active", "filled");
           g.classList.add(ok ? "right" : "wrong");
           g.disabled = true;
-          if (!ok) g.insertAdjacentHTML("afterend", `<span class="gap right" style="margin-left:0">${esc(answers[i])}</span>`);
+          if (!ok) g.insertAdjacentHTML("afterend", `<span class="gap right">${esc(answers[i])}</span>`);
         });
         bank.classList.add("locked");
-        node.querySelector(".hint").textContent = `${correct} von ${answers.length} Lücken richtig.`;
+        node.querySelector(".hint").remove();
+        node.append(term([["p", "$ prüfe …"], ["", `› ${correct === answers.length ? '<span class="ok">alles richtig.</span>' : `<span class="no">${correct} von ${answers.length} richtig.</span> Die Lösungen stehen grün im Text.`}`]]));
         buzz(correct === answers.length ? 20 : [30, 40, 30]);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }), { variant: correct === answers.length ? "good" : "" });
+        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }));
+      }
+
+      ctx.body.append(node);
+      paint();
+    },
+
+    /* Rechenschema mit eigenem Zahlenfeld (funktioniert auch ohne Minus-Taste) */
+    calc(step, ctx) {
+      const rows = step.rows;
+      const vals = rows.map(() => "");
+      let active = 0, locked = false;
+
+      const node = h(`<div>
+        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>Fall<span class="r">Angaben</span></div><div class="body">${step.case}</div></div>` : ""}
+        <div class="calc">
+          <div class="bar"><span class="d"></span>Rechenschema<span class="r">${rows.length} Felder</span></div>
+          <div id="rows"></div>
+        </div>
+        <div id="out"></div>
+      </div>`);
+      const rowsBox = node.querySelector("#rows");
+      const rowEls = rows.map((r, k) => {
+        const el = h(`<button class="crow ${r.sum ? "sum" : ""} ${r.sep ? "sep" : ""}" type="button">
+          <span class="lbl">${esc(r.label)}</span><span class="cell" aria-label="Wert"></span></button>`);
+        el.onclick = () => { if (!locked) { active = k; paint(); } };
+        rowsBox.append(el);
+        return el;
+      });
+
+      const pad = h(`<div class="pad" role="group" aria-label="Zahlenfeld">
+        ${["7", "8", "9"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="del" aria-label="Löschen">${ICON.del}</button>
+        ${["4", "5", "6"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="neg" aria-label="Vorzeichen">±</button>
+        ${["1", "2", "3"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="next" aria-label="Nächstes Feld">↓</button>
+        <button data-k="0" style="grid-column:span 2">0</button><button class="fn" data-k="hint" style="grid-column:span 2">Hilfe</button>
+      </div>`);
+      ctx.dock.prepend(pad);
+      ctx.root.classList.add("has-pad");
+
+      const press = (k) => {
+        if (locked) return;
+        let v = vals[active];
+        if (/^\d$/.test(k)) { if (v.replace("-", "").length < 7) v = (v === "0" ? "" : v) + k; }
+        else if (k === "del") v = v.slice(0, -1);
+        else if (k === "neg") v = v.startsWith("-") ? v.slice(1) : "-" + v;
+        else if (k === "next") { active = (active + 1) % rows.length; return paint(); }
+        else if (k === "hint") return showHint();
+        vals[active] = v;
+        buzz(5);
+        paint();
+      };
+      pad.querySelectorAll("button").forEach((b) => b.onclick = () => press(b.dataset.k));
+
+      const onKey = (e) => {
+        if (/^\d$/.test(e.key)) press(e.key);
+        else if (e.key === "Backspace") press("del");
+        else if (e.key === "-") press("neg");
+        else if (e.key === "Tab" || e.key === "ArrowDown") { e.preventDefault(); press("next"); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); active = (active - 1 + rows.length) % rows.length; paint(); }
+        else if (e.key === "Enter" && vals.every((x) => x !== "" && x !== "-")) check();
+        else return;
+      };
+      document.addEventListener("keydown", onKey);
+      cleanup = () => document.removeEventListener("keydown", onKey);
+
+      const show = (v) => (v === "" ? "" : v === "-" ? "−" : num(parseInt(v, 10)));
+      function paint() {
+        rowEls.forEach((el, k) => {
+          el.classList.toggle("active", k === active && !locked);
+          if (k === active && !locked && el.isConnected) el.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
+          if (!locked) el.querySelector(".cell").textContent = show(vals[k]);
+        });
+        const n = vals.filter((x) => x !== "" && x !== "-").length;
+        ctx.setProgress(n / rows.length);
+        if (!locked) ctx.action("Prüfen", check, { enabled: n === rows.length });
+      }
+      function showHint() {
+        node.querySelector("#out").replaceChildren(term([["mut", "› " + esc(step.hint || "Rechne Zeile für Zeile.")]]));
+      }
+      function check() {
+        locked = true;
+        let correct = 0;
+        rows.forEach((r, k) => {
+          const x = parseInt(vals[k], 10);
+          const ok = x === r.value || (r.either && Math.abs(x) === Math.abs(r.value));
+          if (ok) correct++;
+          const cell = rowEls[k].querySelector(".cell");
+          cell.classList.add(ok ? "right" : "wrong");
+          cell.innerHTML = ok ? (r.signed ? signed(x) : show(vals[k]))
+            : `<span class="was">${show(vals[k])}</span>${r.signed ? signed(r.value) : num(r.value)}`;
+          rowEls[k].disabled = true;
+          rowEls[k].classList.remove("active");
+        });
+        pad.remove();
+        ctx.root.classList.remove("has-pad");
+        cleanup && cleanup();
+        cleanup = null;
+        const all = correct === rows.length;
+        node.querySelector("#out").replaceChildren(term([
+          ["p", "$ prüfe rechenschema …"],
+          ["", all ? `› <span class="ok">${correct}/${rows.length} richtig.</span>` : `› <span class="no">${correct}/${rows.length} richtig.</span> Korrekturen stehen im Schema.`],
+          ...(step.result ? [["", `› <span class="p">${esc(step.result)}</span>`]] : [])
+        ]));
+        buzz(all ? 20 : [30, 40, 30]);
+        ctx.setProgress(1);
+        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: rows.length }));
+        requestAnimationFrame(() => node.querySelector("#out").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "nearest" }));
       }
 
       ctx.body.append(node);
@@ -562,18 +710,19 @@
 
     /* Karteikarten: umdrehen, "kann ich" / "nochmal" */
     cards(step, ctx) {
-      let queue = step.cards.map((_, i) => i);
+      const queue = shuffle(step.cards.map((_, i) => i));
       const total = step.cards.length;
       let known = 0;
       const node = h(`<div>
         <div class="flash-meta"><span id="left"></span><span id="known"></span></div>
         <div class="flash-wrap"><div class="flash" role="button" tabindex="0" aria-label="Karte umdrehen">
-          <div class="face front"><span class="lbl">Begriff</span><span class="txt"></span><span class="tap">Tippen zum Umdrehen</span></div>
-          <div class="face back"><span class="lbl">Erklärung</span><span class="txt"></span></div>
+          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">tippen ↻</span></div><div class="in"><span class="txt"></span><span class="tap">Tippen zum Umdrehen</span></div></div>
+          <div class="face back"><div class="bar"><span class="d"></span>Erklärung<span class="r">↻</span></div><div class="in"><span class="txt"></span></div></div>
         </div></div>
       </div>`);
       const flash = node.querySelector(".flash");
       const flip = () => {
+        if (!queue.length) return;
         flash.classList.toggle("flipped");
         buzz(6);
         if (flash.classList.contains("flipped")) twoButtons();
@@ -583,15 +732,15 @@
       ctx.body.append(node);
 
       const again = h(`<button class="btn ghost">Nochmal</button>`);
-
       const show = () => {
+        again.remove();
         if (!queue.length) {
-          again.remove();
           flash.classList.remove("flipped");
-          flash.querySelector(".front .txt").textContent = "Alle Karten sitzen!";
-          flash.querySelector(".front .lbl").textContent = "Stark";
+          flash.querySelector(".front .txt").textContent = "Alle Karten sitzen.";
+          flash.querySelector(".front .bar").firstChild.nextSibling.textContent = "Fertig";
           flash.querySelector(".tap").textContent = "";
-          flash.onclick = null;
+          node.querySelector("#left").textContent = "0 übrig";
+          node.querySelector("#known").textContent = `${total}/${total} sicher`;
           ctx.setProgress(1);
           ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish(true));
           return;
@@ -604,7 +753,6 @@
         node.querySelector("#left").textContent = `${queue.length} übrig`;
         node.querySelector("#known").textContent = `${known}/${total} sicher`;
         ctx.setProgress(known / total);
-        again.remove();
         ctx.action("Umdrehen", flip, { variant: "ghost" });
       };
       const twoButtons = () => {
@@ -615,15 +763,42 @@
       show();
     },
 
+    /* Kann-Liste: ○ noch unsicher · ◐ geht so · ● sitzt */
+    selfcheck(step, ctx) {
+      const all = store.get("self", {});
+      const vals = all[ctx.key] || step.items.map(() => 0);
+      const node = h(`<div>
+        <p class="lead">Wie sicher fühlst du dich? Tippe, bis es stimmt.</p>
+        <ul class="kann" style="margin-top:16px"></ul>
+        <p class="kann-legend"><span><i></i>noch unsicher</span><span><i style="background:linear-gradient(90deg,var(--pink) 50%,var(--paper) 50%)"></i>geht so</span><span><i style="background:var(--ink)"></i>sitzt</span></p>
+      </div>`);
+      const ul = node.querySelector(".kann");
+      step.items.forEach((txt, k) => {
+        const li = h(`<li><button type="button"><span class="st" data-v="${vals[k]}"></span><span>${esc(txt)}</span></button></li>`);
+        li.querySelector("button").onclick = () => {
+          vals[k] = (vals[k] + 1) % 3;
+          li.querySelector(".st").dataset.v = vals[k];
+          buzz(6);
+          ctx.setProgress(vals.filter(Boolean).length / vals.length);
+        };
+        ul.append(li);
+      });
+      ctx.body.append(node);
+      ctx.setProgress(vals.filter(Boolean).length / vals.length);
+      ctx.action(`Speichern ${ICON.check}`, () => {
+        const a = store.get("self", {}); a[ctx.key] = vals; store.set("self", a);
+        ctx.finish(true);
+      });
+    },
+
     /* Bestehendes Material */
     link(step, ctx) {
       let href = "#";
       try { href = new URL(encodeURI(step.href), DATA.materialBase || location.href).href; } catch { /* ungültig */ }
-      ctx.body.append(h(`<div class="material">
-        <div class="icon">${ICON.link}</div>
-        <p class="h2">${esc(step.title)}</p>
-        <p>${esc(step.text || "")}</p>
-        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">Material öffnen ${ICON.link}</a>
+      ctx.body.append(h(`<div class="win material">
+        <div class="bar"><span class="d"></span>Material<span class="r">extern</span></div>
+        <div class="body"><p class="h2">${esc(step.title)}</p><p>${esc(step.text || "")}</p>
+        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">Material öffnen ${ICON.link}</a></div>
       </div>`));
       ctx.setProgress(1);
       ctx.action(`Erledigt ${ICON.check}`, () => ctx.finish(true));
@@ -634,122 +809,119 @@
   function viewFinish(sid, tid) {
     const s = findSubject(sid), t = findTopic(s, tid);
     if (!t) { location.hash = "#/"; return h("<div></div>"); }
+    if (!progress.count(s, t)) { location.hash = `#/f/${s.id}/${t.id}`; return h("<div></div>"); }
     const p = progress.of(s.id, t.id);
-    let c = 0, total = 0;
-    Object.values(p.done).forEach((v) => { if (v && typeof v === "object") { c += v.c; total += v.t; } });
-    const pct = total ? Math.round((c / total) * 100) : 100;
-    const msg = pct >= 90 ? "Hervorragend!" : pct >= 70 ? "Richtig gut!" : pct >= 50 ? "Solide Arbeit." : "Dranbleiben!";
-    const nextTopic = s.topics.find((x) => x !== t && !x.soon && progress.ratio(s, x) < 1);
+    const sc = progress.score(s, t);
+    const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : 100;
+    const msg = pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.";
+    const idx = s.topics.indexOf(t);
+    const nextTopic = s.topics.slice(idx + 1).concat(s.topics.slice(0, idx)).find((x) => x.steps.length && progress.ratio(s, x) < 1);
+    const log = t.steps.map((st, k) => {
+      const d = p.done[k];
+      const label = esc(st.title).padEnd(28, ".").slice(0, 28);
+      return ["", `› ${label} <span class="${d ? "ok" : "mut"}">${scoreText(d) || "–"}</span>`];
+    });
 
     const v = h(`<main class="view no-tabbar finish">
-      <div class="medal">${ICON.trophy}</div>
-      <p class="eyebrow">${esc(t.title)}</p>
-      <h1 class="display" style="margin-top:10px">${msg}</h1>
-      <div class="stats">
-        <div class="stat"><div class="v">${pct}%</div><div class="k">richtige Antworten</div></div>
-        <div class="stat"><div class="v">${t.steps.length}</div><div class="k">Schritte erledigt</div></div>
-      </div>
-      <div class="dock"><div class="dock-inner" style="flex-direction:column">
-        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">Nächstes Thema ${ICON.arrow}</a>` : ""}
-        <a class="btn ${nextTopic ? "ghost" : ""} block" href="#/f/${s.id}">Zurück zu ${esc(s.name)}</a>
+      <section class="hero">
+        <canvas aria-hidden="true"></canvas>
+        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · erledigt</span></div>
+        <p class="finish-num">${pct}<small>%</small></p>
+        <p class="h2" style="margin-top:16px">${msg}</p>
+        <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? `${sc.c} von ${sc.n} Punkten` : "abgeschlossen"}</p>
+      </section>
+      <div id="log"></div>
+      <div class="dock"><div class="dock-inner col">
+        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">Weiter: ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
+        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
       </div></div>
     </main>`);
-    setColor(v, s.color);
+    v.querySelector("#log").append(term([["p", "$ auswertung " + esc(t.id)], ...log]));
+    dither(v.querySelector("canvas"), 2);
     buzz([20, 60, 20]);
-    confetti(s.color);
+    confetti();
     return v;
   }
 
-  function confetti(color) {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  function confetti() {
+    if (reduced()) return;
     const box = h(`<div class="confetti" aria-hidden="true"></div>`);
-    const colors = [color, "#1B1916", "#E9B949", "#F3EFE7"];
-    for (let i = 0; i < 60; i++) {
+    const colors = ["#F386A1", "#1E1E1E", "#D45BB6", "#5CE0A8"];
+    for (let i = 0; i < 48; i++) {
       const p = document.createElement("i");
       p.style.left = Math.random() * 100 + "vw";
       p.style.background = colors[i % colors.length];
-      p.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
-      p.style.setProperty("--r", (Math.random() * 720 - 360) + "deg");
-      p.style.animationDuration = 1.6 + Math.random() * 1.6 + "s";
+      p.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+      p.style.animationDuration = 1.4 + Math.random() * 1.6 + "s";
       p.style.animationDelay = Math.random() * .4 + "s";
+      p.style.animationTimingFunction = "steps(" + (14 + Math.floor(Math.random() * 10)) + ")";
       box.append(p);
     }
     document.body.append(box);
-    setTimeout(() => box.remove(), 4000);
+    setTimeout(() => box.remove(), 3800);
   }
 
   /* ── Profil ─────────────────────────────────────────────── */
   function viewProfile() {
     const name = firstName();
-    let topicsDone = 0, stepsDone = 0, c = 0, total = 0;
+    let topicsDone = 0, stepsDone = 0, c = 0, n = 0;
     DATA.subjects.forEach((s) => s.topics.forEach((t) => {
       if (!t.steps.length) return;
-      const p = progress.of(s.id, t.id);
-      stepsDone += Object.keys(p.done).length;
+      stepsDone += progress.count(s, t);
       if (progress.ratio(s, t) >= 1) topicsDone++;
-      Object.values(p.done).forEach((v) => { if (v && typeof v === "object") { c += v.c; total += v.t; } });
+      const sc = progress.score(s, t); c += sc.c; n += sc.n;
     }));
-    const theme = store.get("theme", "auto");
 
     const v = h(`<main class="view">
-      <header class="topbar"><p class="eyebrow">Profil</p></header>
-      <h1 class="display">${name ? esc(name) : "Profil"}</h1>
-      <div class="section-head"><p class="eyebrow">Dein Fortschritt</p></div>
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Profil</span></div>
+      <h1 class="display" style="margin-top:26px">${esc(name)}.</h1>
+      <p class="section-head">Fortschritt</p>
       <div class="stat-row">
         <div class="stat"><div class="v">${topicsDone}</div><div class="k">Themen fertig</div></div>
         <div class="stat"><div class="v">${stepsDone}</div><div class="k">Schritte</div></div>
-        <div class="stat"><div class="v">${total ? Math.round((c / total) * 100) + "%" : "–"}</div><div class="k">Trefferquote</div></div>
+        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">Treffer</div></div>
       </div>
-      <div class="section-head"><p class="eyebrow">Einstellungen</p></div>
+      <p class="section-head">Einstellungen</p>
       <div class="list">
         <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
-        <div class="list-row"><span>Darstellung</span>
-          <div class="seg" id="theme">
-            <button data-t="auto">Auto</button><button data-t="light">Hell</button><button data-t="dark">Dunkel</button>
-          </div></div>
         <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
       </div>
-      <p class="hint" style="margin-top:18px">Alles wird nur auf diesem Gerät gespeichert.</p>
+      <p class="hint" style="margin-top:14px">Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.</p>
     </main>`);
 
-    v.querySelectorAll("#theme button").forEach((b) => {
-      b.classList.toggle("on", b.dataset.t === theme);
-      b.onclick = () => { store.set("theme", b.dataset.t); applyTheme(); render(); };
-    });
     const rename = v.querySelector("#rename");
     rename.onclick = () => {
-      const row = h(`<form class="list-row" style="gap:8px;padding:8px 8px 8px 18px">
+      const row = h(`<form class="list-row" style="gap:8px;padding:8px">
         <input class="input" id="newname" style="min-height:44px" maxlength="24" value="${esc(name)}" aria-label="Neuer Name">
-        <button class="btn" style="min-height:44px;padding:0 18px" type="submit">Speichern</button></form>`);
+        <button class="btn small" type="submit">OK</button></form>`);
       row.onsubmit = (e) => {
         e.preventDefault();
-        const n = row.querySelector("input").value.trim();
-        if (n) { store.set("name", n.slice(0, 24)); toast("Name gespeichert"); render(); }
+        const nn = row.querySelector("input").value.trim();
+        if (nn) { store.set("name", nn.slice(0, 24)); toast("› Name gespeichert"); render(); }
       };
       rename.replaceWith(row);
       row.querySelector("input").focus();
     };
     const reset = v.querySelector("#reset");
     reset.onclick = () => {
-      if (reset.dataset.armed) { progress.reset(); toast("Fortschritt gelöscht"); render(); return; }
+      if (reset.dataset.armed) { progress.reset(); toast("› Fortschritt gelöscht"); render(); return; }
       reset.dataset.armed = "1";
-      reset.firstElementChild.textContent = "Zum Löschen nochmal tippen";
+      reset.firstElementChild.textContent = "Nochmal tippen zum Löschen";
       setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = "Fortschritt zurücksetzen"; } }, 4000);
     };
     return v;
   }
 
-  function applyTheme() {
-    const t = store.get("theme", "auto");
-    if (t === "auto") document.documentElement.removeAttribute("data-theme");
-    else document.documentElement.setAttribute("data-theme", t);
-  }
-
   /* ── Start ──────────────────────────────────────────────── */
-  applyTheme();
+  const ct = cardsTopic();
+  const cardsTab = $tabbar.querySelector('[data-tab="karten"]');
+  if (cardsTab) {
+    if (ct) cardsTab.href = `#/f/${ct.s.id}/${ct.t.id}/0`;
+    else cardsTab.hidden = true;
+  }
   render();
 
-  if ("serviceWorker" in navigator && location.protocol === "https:") {
+  if ("serviceWorker" in navigator && location.protocol === "https:" && location.hostname.endsWith("github.io")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
 })();

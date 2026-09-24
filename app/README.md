@@ -3,6 +3,10 @@
 Mobile Web-App, in der Schüler ihre Fächer öffnen und Themen als Lernpfad durcharbeiten:
 erst eine Präsentation zum Wischen, dann kleine Aufgaben.
 
+Erster Kurs: **PBP · HS1 – Personalbedarf** (LF 8.1, Modellunternehmen Mediaworld e. K.),
+gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rückmeldungen, Pixelwolke.
+Gibt es nur ein Fach in `content.js`, zeigt die Startseite direkt dessen Themen.
+
 - Läuft ohne Build-Schritt: reines HTML, CSS und JS.
 - Auf GitHub Pages erreichbar unter `…/HTML-materialien/app/`.
 - Lässt sich auf dem Handy als App installieren (Safari: Teilen → „Zum Home-Bildschirm“).
@@ -22,11 +26,17 @@ erst eine Präsentation zum Wischen, dann kleine Aufgaben.
 Alles steht in `content.js`: **Fach → Themen → Schritte**.
 
 ```js
+// Fach / Kurs
+{ id: "pbp", name: "Personalbedarf", course: "PBP · HS1", company: "Mediaworld e.K.",
+  color: "#F386A1", description: "…", topics: [ … ] }
+
+// Thema
 {
-  id: "schlechtleistung",          // nur a–z, 0–9, Bindestrich
-  title: "Käuferrechte bei Schlechtleistung",
-  kicker: "Kaufvertragsstörungen",
-  minutes: 15,
+  id: "bedarf-berechnen",          // nur a–z, 0–9, Bindestrich
+  group: "Lernsituation 2.1",      // Überschrift, unter der das Thema steht
+  title: "Personalbedarf berechnen",
+  kicker: "LS 2.1 · Teil 1",
+  minutes: 20,
   // soon: true,                   // zeigt das Thema gesperrt als „Bald verfügbar“
   steps: [ … ]
 }
@@ -43,7 +53,9 @@ Alles steht in `content.js`: **Fach → Themen → Schritte**.
   { big: "1.", kicker: "…", title: "…", body: "…" }                  // große Zahl
 ]}
 ```
-Im `body` funktionieren `<p>`, `<ul><li>`, `<strong>`, `<p class="quote">`, `<p class="box">`
+Im `body` funktionieren `<p>`, `<ul><li>`, `<strong>`, `<mark>`, `<p class="box">`, `<p class="formula">`,
+`<p class="note">`, `<ul class="pm"><li class="m">…</li><li class="p">…</li></ul>` (Minus/Plus-Liste),
+`<dl class="terms"><dt>Begriff</dt><dd>Erklärung</dd></dl>`, `schema([…])` für das Rechenschema
 sowie `<div class="pair"><div><b>Titel</b>Text</div>…</div>` für Gegenüberstellungen.
 
 **Quiz** – `answer` zählt ab 0
@@ -65,7 +77,27 @@ sowie `<div class="pair"><div><b>Titel</b>Text</div>…</div>` für Gegenüberst
   distractors: ["Mahnung"] }
 ```
 
-**Karteikarten**
+**Rechenschema** – Schüler tippen Zahlen über ein eigenes Zahlenfeld (mit ±-Taste)
+```js
+{ type: "calc", title: "A1 · Mediaworld",
+  case: "<b>Ist:</b> 21 …",                // Angaben zum Fall (HTML)
+  rows: [
+    { label: "Ist-Personalbestand", value: 21 },
+    { label: "− Abgänge", value: 2, either: true },   // either: 2 und −2 zählen als richtig
+    { label: "= Zwischensumme", value: 20, sum: true },
+    { label: "= Personalbedarf", value: 2, sum: true, signed: true }  // zeigt „+ 2“
+  ],
+  hint: "Tipp für den Hilfe-Knopf", result: "Antwortsatz nach dem Prüfen" }
+```
+Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaenge, soll)`
+(mit `{ split: true }` zusätzlich Ersatz- und Neubedarf, mit `{ klausur: true }` Klausur-Begriffe).
+
+**Kann-Liste** (Selbsteinschätzung ○ ◐ ●)
+```js
+{ type: "selfcheck", title: "Kann-Liste", items: ["Ich kann …", "Ich kann …"] }
+```
+
+**Karteikarten** – ein Thema, das nur aus Karteikarten besteht, erscheint unten als Tab „Lernkarten“
 ```js
 { type: "cards", title: "…", cards: [ { front: "Begriff", back: "Erklärung" } ] }
 ```
