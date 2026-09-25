@@ -63,6 +63,8 @@
     check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     link: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
     help: '<svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15M12 18.5v.5"/></svg>',
+    qr: '<svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM6.5 6.5h1v1h-1zM16.5 6.5h1v1h-1zM6.5 16.5h1v1h-1z"/></svg>',
+    ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
     del: '<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6zM12 9l5 6M17 9l-5 6"/></svg>'
   };
   const HOWTO = {
@@ -189,6 +191,7 @@
     [/^#?\/?$/, viewHome, "home"],
     [/^#\/profil$/, viewProfile, "profil"],
     [/^#\/hilfe$/, viewHelp, "hilfe"],
+    [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
@@ -327,70 +330,143 @@
     return frag;
   }
 
+  const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
+  const courseTopics = (x) => x.topics.filter((t) => t.steps.length || t.drill);
+
   function viewHome() {
-    const subjects = SINGLE ? [SINGLE] : DATA.subjects;
+    if (!SINGLE) return viewLanding();
     const s = SINGLE;
     const name = firstName();
-    const target = resumeTarget(subjects);
-    const open = subjects.flatMap((x) => x.topics.filter((t) => t.steps.length).map((t) => [x, t]));
-    const doneCount = open.filter(([x, t]) => progress.ratio(x, t) >= 1).length;
-
-    let winBody;
-    if (target) {
-      const i = nextStepIndex(target.s, target.t);
-      winBody = `<p class="kick">Hallo ${esc(name)} · ${doneCount}/${open.length} Themen</p>
-        <p class="say">${target.fresh ? "Starte mit:" : "Weiter mit:"} ${esc(target.t.title)}</p>
-        <p class="sub">Schritt ${i + 1} von ${target.t.steps.length} · ${esc(target.t.steps[i].title)}</p>
-        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${target.fresh ? "Starten" : "Weitermachen"} ${ICON.arrow}</a></div>`;
-    } else {
-      winBody = `<p class="kick">Hallo ${esc(name)} · alles erledigt</p><p class="say">Alle Themen geschafft.</p>
-        <p class="sub">Wiederhole die Lernkarten vor der Klausur.</p>`;
-    }
-
+    const target = resumeTarget([s]);
+    const open = s.topics.filter((t) => t.steps.length);
+    const doneCount = open.filter((t) => progress.ratio(s, t) >= 1).length;
     const v = h(`<main class="view">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip">
-          <span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>
+          <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
           <a class="tag-box ink" href="#/profil">${esc(name)}</a>
         </div>
         <div class="win">
-          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company + " · Personalplanung" : "Lernraum")}<span class="r">${new Date().getFullYear()}</span></div>
-          <div class="body">${winBody}</div>
+          <div class="bar"><span class="d"></span>${esc(s.company ? s.company + " · Personalplanung" : s.name)}<span class="r">${new Date().getFullYear()}</span></div>
+          <div class="body">${resumeBody(target, name, `${doneCount}/${open.length} Themen`)}</div>
         </div>
-        <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Deine Fächer."}${s && s.description ? `<small>${esc(s.description)}</small>` : ""}</h1>
+        <h1 class="display">${esc(s.name).replace("bedarf", "&shy;bedarf")}.${s.description ? `<small>${esc(s.description)}</small>` : ""}</h1>
       </section>
       <div id="list"></div>
     </main>`);
     dither(v.querySelector("canvas"));
-
-    const list = v.querySelector("#list");
-    if (s) list.append(topicList(s));
-    else {
-      const grid = h(`<div class="topics" style="margin-top:24px"></div>`);
-      DATA.subjects.forEach((x) => {
-        const tops = x.topics.filter((t) => t.steps.length);
-        const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
-        grid.append(h(`<a class="win topic-win" href="#/f/${x.id}">
-          <div class="bar"><span class="d"></span>${esc(x.course || "Fach")}<span class="r">${done}/${tops.length}</span></div>
-          <div class="body"><span class="title">${esc(x.name)}</span><span class="meta">${esc(x.description || "")}</span></div></a>`));
-      });
-      list.append(grid);
-    }
+    v.querySelector("#list").append(topicList(s));
     return v;
   }
 
-  /* ── Fach (nur bei mehreren Kursen) ─────────────────────── */
+  function resumeBody(target, name, count) {
+    if (target) {
+      const i = nextStepIndex(target.s, target.t);
+      const st = target.t.steps[i];
+      return `<p class="kick">Hallo ${esc(name)}${count ? " · " + count : ""}</p>
+        <p class="say">${target.fresh ? "Starte mit:" : "Weiter mit:"} ${esc(target.t.title)}</p>
+        <p class="sub">${esc(target.s.course || target.s.name)}${st ? ` · Schritt ${i + 1} von ${target.t.steps.length}` : ""}</p>
+        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${target.fresh ? "Starten" : "Weitermachen"} ${ICON.arrow}</a></div>`;
+    }
+    return `<p class="kick">Hallo ${esc(name)}</p><p class="say">Alles erledigt.</p><p class="sub">Wiederhole die Lernkarten vor der Klausur.</p>`;
+  }
+
+  /* Startseite bei mehreren Fächern: Fach → Kurse & Materialsammlungen */
+  function viewLanding() {
+    const name = firstName();
+    const courses = DATA.subjects.filter((x) => !x.materials);
+    const target = resumeTarget(courses);
+    const fachs = [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
+      .sort((a, b) => (DATA.subjects.some((x) => x.fach === b && !x.materials) - DATA.subjects.some((x) => x.fach === a && !x.materials)) || a.localeCompare(b, "de"));
+    const v = h(`<main class="view">
+      <section class="hero">
+        <canvas aria-hidden="true"></canvas>
+        <div class="topstrip">
+          <span class="tag-box"><span class="sq"></span>Lernraum</span>
+          <a class="tag-box ink" href="#/profil">${esc(name)}</a>
+        </div>
+        <div class="win">
+          <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
+          <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
+        </div>
+        <h1 class="display">Lernraum.<small>Übungen, Lernpfade und Materialien für deine Fächer. Wähle unten dein Fach.</small></h1>
+      </section>
+      <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
+      <div id="list"></div>
+      <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
+    </main>`);
+    dither(v.querySelector("canvas"));
+    const chips = v.querySelector(".fach-chips");
+    const list = v.querySelector("#list");
+    fachs.forEach((f, k) => {
+      const chip = h(`<button class="tag-box">${esc(f)}</button>`);
+      chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
+      chips.append(chip);
+      list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
+      const grid = h(`<div class="topics"></div>`);
+      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => !!a.materials - !!b.materials).forEach((x) => grid.append(subjectWin(x)));
+      list.append(grid);
+    });
+    return v;
+  }
+
+  function subjectWin(x) {
+    if (x.materials) {
+      const groups = [...new Set(x.topics.map((t) => t.group).filter(Boolean))];
+      return h(`<a class="win topic-win mat-win" href="#/f/${x.id}">
+        <div class="bar"><span class="d"></span>Materialsammlung<span class="r">${x.topics.length} Materialien</span></div>
+        <div class="body"><span class="title">${esc(x.fach)}: Materialien</span>
+          <span class="meta">${esc(groups.slice(0, 4).join(" · "))}${groups.length > 4 ? " …" : ""}</span></div></a>`);
+    }
+    const tops = courseTopics(x).filter((t) => t.steps.length);
+    const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
+    return h(`<a class="win topic-win" href="#/f/${x.id}">
+      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}<span class="r">${done}/${tops.length} Themen</span></div>
+      <div class="body"><span class="title">${esc(x.name)}</span>
+        <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
+        <span class="meta">${esc(x.description || "")}</span></div></a>`);
+  }
+
+  /* ── Fach / Kurs (bei mehreren Kursen) ──────────────────── */
   function viewSubject(sid) {
     const s = findSubject(sid);
-    if (!s) { location.hash = "#/"; return h("<div></div>"); }
-    if (SINGLE) { location.hash = "#/"; return h("<div></div>"); }
+    if (!s || SINGLE) { location.hash = "#/"; return h("<div></div>"); }
+    if (s.materials) return viewMaterials(s);
     const v = h(`<main class="view">
-      <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span></div>
-      <h1 class="display" style="margin-top:24px">${esc(s.name)}.<small>${esc(s.description || "")}</small></h1>
+      <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a>
+        <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
+        <button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button></div>
+      <h1 class="display" style="margin-top:24px">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       <div id="list"></div>
     </main>`);
+    v.querySelector("#qrBtn").onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
     v.querySelector("#list").append(topicList(s));
+    return v;
+  }
+
+  function viewMaterials(s) {
+    const v = h(`<main class="view">
+      <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a>
+        <span class="tag-box"><span class="sq"></span>${esc(s.fach)} · Materialien</span></div>
+      <h1 class="display" style="margin-top:24px">${esc(s.fach)}.<small>${esc(fachName(s.fach) !== s.fach ? fachName(s.fach) + " · " : "")}${esc(s.description || "")}. Materialien öffnen sich in einem neuen Tab.</small></h1>
+      <div id="list"></div>
+    </main>`);
+    const list = v.querySelector("#list");
+    let group = null, box = null;
+    s.topics.forEach((t) => {
+      if (!box || t.group !== group) {
+        group = t.group;
+        list.append(h(`<p class="section-head">${esc(group || s.fach)}</p>`));
+        box = h(`<div class="list mat-list"></div>`);
+        list.append(box);
+      }
+      const row = h(`<div class="list-row mat-row">
+        <a class="mat-open" href="${matUrl(t.href)}" target="_blank" rel="noopener"><span>${esc(t.title)}</span>${ICON.ext}</a>
+        <button class="icon-btn small" aria-label="QR-Code für ${esc(t.title)}">${ICON.qr}</button></div>`);
+      row.querySelector("button").onclick = () => openQR(t.title, matUrl(t.href), `${s.fach} · ${t.group || "Material"}`);
+      box.append(row);
+    });
     return v;
   }
 
@@ -398,6 +474,16 @@
   function viewTopic(sid, tid) {
     const s = findSubject(sid), t = findTopic(s, tid);
     if (t && t.drill) return viewDrillIntro(s, t);
+    if (t && t.href) {
+      const v = h(`<main class="view no-tabbar">
+        <div class="topstrip"><a class="icon-btn" href="#/f/${s.id}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
+        <h1 class="display" style="margin-top:26px;font-size:clamp(40px,12vw,64px)">${esc(t.title)}</h1>
+        <div class="qr-box" style="margin-top:22px"></div>
+        <div class="dock"><div class="dock-inner"><a class="btn block" href="${matUrl(t.href)}" target="_blank" rel="noopener">Material öffnen ${ICON.ext}</a></div></div>
+      </main>`);
+      v.querySelector(".qr-box").innerHTML = qrSvg(matUrl(t.href));
+      return v;
+    }
     if (!t || t.soon || !t.steps.length) { location.hash = "#/"; return h("<div></div>"); }
     if (t.exam) return viewExamIntro(s, t);
     const p = progress.of(s.id, t.id);
@@ -406,7 +492,7 @@
     const started = Object.keys(p.done).length > 0;
     const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view no-tabbar">
-      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span></div>
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <p class="eyebrow" style="margin-top:14px">${t.steps.length} Schritte · ca. ${t.minutes || 10} min${t.group ? " · " + esc(t.group) : ""}</p>
       <div class="win" style="margin-top:24px">
@@ -439,7 +525,7 @@
     const next = nextStepIndex(s, t);
     const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view no-tabbar">
-      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span></div>
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <div class="stat-row" style="margin-top:22px">
         <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">Minuten</div></div>
@@ -1146,7 +1232,7 @@
     const ds = drillStats(t);
     const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view no-tabbar">
-      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span></div>
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <p class="lead" style="margin-top:14px">${esc(t.description || "")}</p>
       <div class="stat-row" style="margin-top:22px">
@@ -1254,6 +1340,101 @@
       }
     }
     newRound();
+    return v;
+  }
+
+  /* ── QR-Codes ─────────────────────────────────────────────── */
+  function appUrl(hash) {
+    const base = /^https?:$/.test(location.protocol) ? location.origin + location.pathname : DATA.publicUrl;
+    return base + hash;
+  }
+  function matUrl(href) {
+    try { return new URL(encodeURI(href), DATA.materialBase).href; } catch { return "#"; }
+  }
+  function qrSvg(text) {
+    if (typeof qrcode !== "function") return `<p class="hint">QR-Code nicht verfügbar.</p>`;
+    const q = qrcode(0, "M");
+    q.addData(text);
+    q.make();
+    return q.createSvgTag({ cellSize: 8, margin: 2, scalable: true, alt: "QR-Code" });
+  }
+  function qrButton(s, t) {
+    return `<button class="icon-btn" data-qr="${esc(s.id)}/${esc(t.id)}" aria-label="QR-Code für diese Übung">${ICON.qr}</button>`;
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-qr]");
+    if (!b) return;
+    const [sid, tid] = b.dataset.qr.split("/");
+    const s = findSubject(sid), t = findTopic(s, tid);
+    if (t) openQR(t.title, appUrl(`#/f/${s.id}/${t.id}`), `${s.course || s.name} · ${t.kicker || ""}`);
+  });
+
+  function openQR(title, url, sub) {
+    if (document.querySelector(".sheet-back")) return;
+    const offline = !/^https?:$/.test(location.protocol);
+    const back = h(`<div class="sheet-back">
+      <div class="sheet win" role="dialog" aria-modal="true" aria-label="QR-Code">
+        <div class="bar"><span class="d"></span>QR-Code<button class="r sheet-x" aria-label="Schließen">✕ schließen</button></div>
+        <div class="sheet-body qr-sheet">
+          <div class="qr-box">${qrSvg(url)}</div>
+          <p class="eyebrow" style="margin-top:14px">${esc(sub || "")}</p>
+          <p class="h2" style="margin-top:6px">${esc(title)}</p>
+          <p class="qr-url">${esc(url)}</p>
+          ${offline ? `<p class="hint">Der Code führt zur Online-Version der App.</p>` : ""}
+          <div class="qr-actions">
+            <button class="btn pink" id="beamer">Beamer-Ansicht</button>
+            <button class="btn ghost" id="copy">Link kopieren</button>
+          </div>
+        </div>
+      </div>
+    </div>`);
+    const close = () => { document.removeEventListener("keydown", onEsc); back.remove(); };
+    const onEsc = (e) => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", onEsc);
+    back.addEventListener("click", (e) => { if (e.target === back) close(); });
+    back.querySelector(".sheet-x").onclick = close;
+    back.querySelector("#copy").onclick = async () => {
+      try { await navigator.clipboard.writeText(url); toast("› Link kopiert"); }
+      catch { const r = document.createRange(); r.selectNodeContents(back.querySelector(".qr-url")); getSelection().removeAllRanges(); getSelection().addRange(r); toast("› Link markiert – jetzt kopieren"); }
+    };
+    back.querySelector("#beamer").onclick = () => {
+      const full = h(`<div class="qr-full" role="dialog" aria-label="QR-Code groß">
+        <div class="qr-full-in">
+          <div class="qr-box">${qrSvg(url)}</div>
+          <div class="qr-full-txt"><p class="eyebrow">${esc(sub || "")}</p><p class="display">${esc(title)}</p>
+            <p class="qr-url">${esc(url.replace(/^https?:\/\//, ""))}</p><p class="hint">Mit der Handykamera scannen · Tippen zum Schließen</p></div>
+        </div></div>`);
+      full.onclick = () => full.remove();
+      document.body.append(full);
+      try { full.requestFullscreen && full.requestFullscreen().catch(() => {}); } catch { /* optional */ }
+    };
+    document.body.append(back);
+    back.querySelector(".sheet-x").focus();
+    const prev = cleanup;
+    cleanup = () => { close(); document.querySelectorAll(".qr-full").forEach((x) => x.remove()); prev && prev(); };
+  }
+
+  /* Übersicht für Lehrkräfte: alle QR-Codes */
+  function viewQR() {
+    const v = h(`<main class="view">
+      <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>Für Lehrkräfte</span></div>
+      <h1 class="display" style="margin-top:24px">QR-Codes.<small>Für jede Übung und jedes Material. Tippe auf den QR-Knopf, dann auf „Beamer-Ansicht“ – die Schüler scannen mit der Handykamera und landen direkt in der Übung.</small></h1>
+      <div id="list"></div>
+    </main>`);
+    const list = v.querySelector("#list");
+    const addRow = (box, title, sub, url) => {
+      const row = h(`<div class="list-row mat-row"><span class="mat-open"><span>${esc(title)}</span></span>
+        <button class="icon-btn small" aria-label="QR-Code für ${esc(title)}">${ICON.qr}</button></div>`);
+      row.querySelector("button").onclick = () => openQR(title, url, sub);
+      box.append(row);
+    };
+    DATA.subjects.forEach((s) => {
+      list.append(h(`<p class="section-head">${esc(s.fach || "")} · ${esc(s.materials ? "Materialien" : s.course || s.name)}</p>`));
+      const box = h(`<div class="list mat-list"></div>`);
+      if (!s.materials) addRow(box, `Ganzer Kurs: ${s.name}`, s.course || s.name, appUrl(SINGLE ? "#/" : `#/f/${s.id}`));
+      s.topics.forEach((t) => addRow(box, t.title, `${s.course || s.fach} · ${t.kicker || t.group || ""}`, t.href ? matUrl(t.href) : appUrl(`#/f/${s.id}/${t.id}`)));
+      list.append(box);
+    });
     return v;
   }
 
@@ -1523,6 +1704,7 @@
       <p class="section-head">Einstellungen</p>
       <div class="list">
         <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
         <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
       </div>
       <p class="hint" style="margin-top:14px">Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.</p>
@@ -1555,7 +1737,7 @@
   const ct = cardsTopic();
   const cardsTab = $tabbar.querySelector('[data-tab="karten"]');
   if (cardsTab) {
-    if (ct) cardsTab.href = `#/f/${ct.s.id}/${ct.t.id}/0`;
+    if (ct && SINGLE) cardsTab.href = `#/f/${ct.s.id}/${ct.t.id}/0`;
     else cardsTab.hidden = true;
   }
   render();

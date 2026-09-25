@@ -3,9 +3,11 @@
 Mobile Web-App, in der Schüler ihre Fächer öffnen und Themen als Lernpfad durcharbeiten:
 erst eine Präsentation zum Wischen, dann kleine Aufgaben.
 
+Startseite: **Fächer → Kurse & Materialsammlungen → Übungen**, jede Übung mit QR-Code.
 Erster Kurs: **PBP · HS1 – Personalbedarf** (LF 8.1, Modellunternehmen Mediaworld e. K.),
 gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rückmeldungen, Pixelwolke.
-Gibt es nur ein Fach in `content.js`, zeigt die Startseite direkt dessen Themen.
+
+**Neue Übungen mit einem KI-Agenten erstellen:** siehe [`AGENT-ANLEITUNG.md`](AGENT-ANLEITUNG.md).
 
 - Läuft ohne Build-Schritt: reines HTML, CSS und JS.
 - Auf GitHub Pages erreichbar unter `…/HTML-materialien/app/`.
@@ -16,18 +18,31 @@ Gibt es nur ein Fach in `content.js`, zeigt die Startseite direkt dessen Themen.
 
 | Datei | Zweck |
 |---|---|
-| `content.js` | **Alle Inhalte** – hier arbeitest du |
-| `app.js` | Logik (Navigation, Aufgaben, Fortschritt) |
+| `kurse/*.js` | **Ein Kurs pro Datei** – hier entstehen neue Inhalte |
+| `kurse/materialien.js` | Materialsammlungen aus `materialien/` – erzeugt mit `tools/build-materialien.py` |
+| `content.js` | Basis: Einstellungen (Schule, öffentliche Adresse, Fachnamen) und Rechen-Helfer |
+| `index.html` | lädt Basis, alle Kurse, QR-Bibliothek und App – **neue Kurse hier eintragen** |
+| `app.js` | Logik (Navigation, Aufgaben, Hilfe, Klausur, Training, QR-Codes) |
 | `styles.css` | Design |
+| `vendor/qrcode.js` | QR-Code-Generator (Kazuhiko Arase, MIT-Lizenz), lokal eingebunden |
+| `build-single.py` | baut alles in eine Datei `dist/lernraum.html` |
 | `manifest.json`, `sw.js`, `icon*` | App-Installation & Offline |
+
+## QR-Codes
+
+Jede Übung, jeder Kurs und jedes Material hat einen **QR-Knopf**. Er zeigt den Code mit Link,
+„Link kopieren“ und einer **Beamer-Ansicht** (Vollbild). Alle Codes auf einen Blick: `#/qr`
+(Link „Für Lehrkräfte: QR-Codes“ unten auf der Startseite und im Profil).
+Wer per QR kommt und die App zum ersten Mal öffnet, gibt seinen Namen ein und landet dann direkt in der Übung.
 
 ## Inhalte ergänzen
 
-Alles steht in `content.js`: **Fach → Themen → Schritte**.
+Jeder Kurs ist eine Datei in `kurse/` (`LERNRAUM.subjects.push({...})`): **Kurs → Themen → Schritte**.
+Materialsammlungen entstehen automatisch aus `materialien/<Fach>/…`.
 
 ```js
 // Fach / Kurs
-{ id: "pbp", name: "Personalbedarf", course: "PBP · HS1", company: "Mediaworld e.K.",
+{ id: "pbp", fach: "PBP", name: "Personalbedarf", course: "PBP · HS1", company: "Mediaworld e.K.",
   color: "#F386A1", description: "…", topics: [ … ] }
 
 // Thema
