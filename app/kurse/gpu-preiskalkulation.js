@@ -151,7 +151,7 @@ LERNRAUM.subjects.push({
           type: "cloze",
           title: "A2 · Fachbegriffe sichern",
           prompt: "Drei Wörter passen nicht.",
-          hints: ["Der Rabatt kommt zuerst, danach das Skonto.", "Der letzte Begriff ist der Einstandspreis."],
+          hints: ["Der Rabatt kommt zuerst, danach das Skonto.", "Letzte Lücke: Alles, was für die <b>Lieferung</b> bezahlt wird – Fracht, Verpackung, Transportversicherung – heißt zusammen …"],
           text: "Der {Listeneinkaufspreis} ist der Katalogpreis ohne Abzüge. Der Lieferant gibt einen {Rabatt}, der davon abgezogen wird – so entsteht der {Zieleinkaufspreis}. Bei schneller Zahlung kommt noch das {Skonto} ab; danach heißt der Preis {Bareinkaufspreis}. Fracht und Versicherung sind {Bezugskosten}.",
           distractors: ["Gewinnaufschlag", "Mehrwertsteuer", "Listenverkaufspreis"]
         },
