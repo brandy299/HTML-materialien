@@ -76,7 +76,8 @@ window.LERNRAUM = {
   materialBase: "https://brandy299.github.io/HTML-materialien/",
   // Anzeigenamen für Fächer auf der Startseite (Kürzel → Name)
   faecher: {
-    PBP: "Personalbezogene Prozesse"
+    PBP: "Personalbezogene Prozesse",
+    GPU: "Geschäftsprozesse im Unternehmen"
   },
   subjects: []
 };
