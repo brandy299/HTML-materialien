@@ -69,6 +69,12 @@ Jede Aufgabe hat oben rechts einen **?-Knopf**. Er öffnet ein Fenster mit drei 
 
 Der Tab **Hilfe** unten sammelt alle Merkkästen, das Lexikon und eine Anleitung zu den Aufgabentypen.
 
+### Zurücksetzen
+
+Jede Aufgabe hat oben einen **↺-Knopf**: Er setzt nur diese Aufgabe zurück (Eingaben, Bewertung, aufgedeckte Tipps)
+und startet sie neu. Auf der Themenseite gibt es **„↺ Thema zurücksetzen“** (zweimal tippen), im Endlos-Training
+startet ↺ die aktuelle Runde neu. In der Übungsklausur gibt es stattdessen „Neu schreiben“.
+
 ### Schritt-Typen
 
 **Präsentation**
