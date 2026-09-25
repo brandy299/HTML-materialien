@@ -144,3 +144,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .l-foot-links { display: flex; gap: 16px; font: 500 13px/1 var(--mono); }
 .l-foot-links a:hover { color: var(--paper); }
 .l-foot-bottom { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding-block: 14px calc(env(safe-area-inset-bottom, 0px) + 24px); border-top: 1px solid #333; font: 400 11px/1.6 var(--mono); color: var(--term-mut); }
+
+/* Kuratierung */
+.l-badge { background: var(--pink); color: var(--ink); font: 700 11px/1 var(--mono); padding: 3px 6px; text-transform: uppercase; letter-spacing: .06em; }

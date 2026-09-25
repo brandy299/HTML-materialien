@@ -8,6 +8,7 @@
 LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
+  added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",

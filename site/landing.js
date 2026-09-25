@@ -33,6 +33,12 @@
   const topicsOf = (c) => c.topics.filter((t) => (t.steps && t.steps.length) || t.drill);
   let progress = {};
   try { progress = JSON.parse(localStorage.getItem("lernraum.progress") || "{}"); } catch { /* privat */ }
+  // Datums-Helfer für die Kuratierung (Felder added / updated / klausur in den Kursdateien)
+  const today = new Date(new Date().toISOString().slice(0, 10));
+  const daysSince = (d) => (d ? Math.round((today - new Date(d)) / 864e5) : Infinity);
+  const daysUntil = (d) => (d ? Math.round((new Date(d) - today) / 864e5) : -Infinity);
+  const fresh = (c) => Math.min(daysSince(c.added), daysSince(c.updated));
+  const badge = (c) => (daysSince(c.added) <= 14 ? "Neu" : daysSince(c.updated) <= 7 ? "Aktualisiert" : "");
   const doneTopic = (c, t) => { const p = progress[c.id + "/" + t.id]; return !!(p && t.steps.length && Object.keys(p.done || {}).length >= t.steps.length); };
 
   document.getElementById("school").textContent = `${DATA.school || ""} · Unterrichtsmaterial als Lern-App`;
@@ -49,15 +55,25 @@
 
   // 3. Neuigkeiten-Fenster im Hero: neuester Kurs (zuletzt eingetragen) + Klausur-Hinweis
   const news = document.getElementById("news");
-  const newest = courses[courses.length - 1];
+  // Klausur-Countdown: nächster Kurs mit Klausurtermin in den kommenden 21 Tagen
+  const soon = courses.filter((c) => daysUntil(c.klausur) >= 0 && daysUntil(c.klausur) <= 21).sort((a, b) => daysUntil(a.klausur) - daysUntil(b.klausur))[0];
+  if (soon) {
+    const n = daysUntil(soon.klausur);
+    const ex = soon.topics.find((t) => t.exam);
+    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausur · ${esc(soon.course || soon.fach)}<span class="r">${new Date(soon.klausur).toLocaleDateString("de-DE")}</span></div>
+      <div class="body"><p class="kick">${n === 0 ? "Heute ist Klausur" : n === 1 ? "Klausur ist morgen" : `Noch ${n} Tage`}</p><p class="say">${esc(soon.name)}</p>
+      <a class="btn" href="${appUrl(ex ? `#/f/${soon.id}/${ex.id}` : "#/f/" + soon.id)}">${ex ? "Probe-Klausur starten" : "Jetzt üben"} →</a></div></div>`));
+  }
+  // „Neu“: zuletzt veröffentlichter oder aktualisierter Kurs
+  const newest = [...courses].sort((a, b) => fresh(a) - fresh(b))[0];
   if (newest) {
-    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Neu · ${esc(newest.fach)}<span class="r">${esc(newest.course || "")}</span></div>
-      <div class="body"><p class="kick">Jetzt online</p><p class="say">${esc(newest.name)}</p>
+    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>${badge(newest) || "Zuletzt"} · ${esc(newest.fach)}<span class="r">${esc(newest.course || "")}</span></div>
+      <div class="body"><p class="kick">${badge(newest) === "Aktualisiert" ? "Neue Inhalte" : "Jetzt online"}</p><p class="say">${esc(newest.name)}</p>
       <p class="sub">${esc(topicsOf(newest).map((t) => t.title).slice(0, 3).join(" · "))}</p>
       <a class="btn" href="${appUrl("#/f/" + newest.id)}">Kurs öffnen →</a></div></div>`));
   }
   const exam = courses.flatMap((c) => c.topics.filter((t) => t.exam).map((t) => [c, t]))[0];
-  if (exam) {
+  if (exam && !soon) {
     news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausurtraining<span class="r">${exam[1].exam.minutes} min</span></div>
       <div class="body"><p class="kick">${esc(exam[1].title)}</p><p class="sub">Timer · Punkte · Note · Erwartungshorizont</p>
       <a class="u-link" href="${appUrl(`#/f/${exam[0].id}/${exam[1].id}`)}">Probe-Klausur starten →</a></div></div>`));
@@ -66,11 +82,12 @@
   // 4. Kurse, gruppiert nach Fach
   const box = document.getElementById("courses");
   box.innerHTML = courses.length ? "" : `<p class="hint">Noch keine Kurse online.</p>`;
-  courses.sort((a, b) => (a.fach || "").localeCompare(b.fach || "", "de")).forEach((c) => {
+  // Reihenfolge: neueste Kurse zuerst
+  [...courses].sort((a, b) => fresh(a) - fresh(b) || (a.fach || "").localeCompare(b.fach || "", "de")).forEach((c) => {
     const tops = topicsOf(c);
     const done = tops.filter((t) => doneTopic(c, t)).length;
     const el = h(`<article class="win l-course">
-      <div class="bar"><span class="d"></span>${esc(c.course || c.fach)}<span class="r">${tops.length} Themen${done ? ` · ${done} erledigt` : ""}</span></div>
+      <div class="bar"><span class="d"></span>${esc(c.course || c.fach)}${badge(c) ? ` <span class="l-badge">${badge(c)}</span>` : ""}<span class="r">${daysUntil(c.klausur) >= 0 ? `Klausur ${new Date(c.klausur).toLocaleDateString("de-DE")} · ` : ""}${tops.length} Themen${done ? ` · ${done} erledigt` : ""}</span></div>
       <div class="body">
         <p class="l-fach">${esc(c.fach)}${fachName(c.fach) !== c.fach ? " · " + esc(fachName(c.fach)) : ""}</p>
         <h3 class="l-c-title">${esc(c.name)}</h3>

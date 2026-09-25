@@ -447,6 +447,9 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 .list-row .v { font: 500 13px/1 var(--mono); color: var(--ink-2); }
 .list-row.danger { color: var(--bad); font-weight: 600; }
 
+/* Kuratierung */
+.badge-new { background: var(--pink); color: var(--ink); font: 700 10.5px/1 var(--mono); padding: 3px 5px; text-transform: uppercase; letter-spacing: .06em; }
+
 /* ── Zurücksetzen ───────────────────────────────────────── */
 .player-top .reset-btn { width: 40px; height: 40px; box-shadow: 2px 2px 0 var(--ink); }
 .player-top .reset-btn svg { width: 18px; height: 18px; }
@@ -716,6 +719,7 @@ window.LERNRAUM = {
 LERNRAUM.subjects.push({
   id: "pbp",
   fach: "PBP",
+  added: "2026-09-24",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
   name: "Personalbedarf",
   course: "PBP · HS1",
   glyph: "P",
@@ -1720,6 +1724,7 @@ LERNRAUM.subjects.push({
 LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
+  added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",
@@ -4825,12 +4830,13 @@ var qrcode = function() {
       if (fachs.length > 1) chips.append(chip);
       list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
       const grid = h(`<div class="topics"></div>`);
-      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => !!a.materials - !!b.materials).forEach((x) => grid.append(subjectWin(x)));
+      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
       list.append(grid);
     });
     return v;
   }
 
+  const isNew = (x) => x.added && (Date.now() - new Date(x.added)) / 864e5 <= 14;
   function subjectWin(x) {
     if (x.materials) {
       const groups = [...new Set(x.topics.map((t) => t.group).filter(Boolean))];
@@ -4842,7 +4848,7 @@ var qrcode = function() {
     const tops = courseTopics(x).filter((t) => t.steps.length);
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
     return h(`<a class="win topic-win" href="#/f/${x.id}">
-      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}<span class="r">${done}/${tops.length} Themen</span></div>
+      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ' <span class="badge-new">Neu</span>' : ""}<span class="r">${done}/${tops.length} Themen</span></div>
       <div class="body"><span class="title">${esc(x.name)}</span>
         <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);

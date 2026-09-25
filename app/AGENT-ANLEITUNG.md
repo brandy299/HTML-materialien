@@ -7,6 +7,10 @@ für die Lern-App „Lernraum“ erstellt und auf GitHub veröffentlicht.
 - **Live:** https://lernen.yannikbrand.eu/app/ (GitHub Pages, Branch `main`)
 - **Zielgruppe:** Schüler/innen eines Berufskollegs in NRW, Niveau eher niedrig, Nutzung fast nur am Handy
 - **Sprache:** Deutsch (Englisch-Kurse: Aufgaben auf Englisch, Erklärungen dürfen deutsch sein)
+- **Deine Rolle:** Content-Agent. Du lieferst Inhalte. Design, Startseite und App-Funktionen gehören dem
+  Creative Director (siehe `CLAUDE.md`). Fehlt dir eine Funktion (z. B. ein neuer Aufgabentyp),
+  baue sie **nicht** selbst, sondern lege ein GitHub-Issue mit dem Label `design` an und nutze bis dahin
+  vorhandene Typen.
 
 ## Zwei Wege, Inhalte hinzuzufügen
 
@@ -24,6 +28,9 @@ als JavaScript-Datenobjekt – kein HTML, kein CSS, keine App-Logik.
      course: "GPU · HS1",         // Fach · Klasse
      company: "Böckler-Office GmbH", // Modellunternehmen (optional)
      description: "Ein Satz, worum es geht.",
+     added: "2026-09-25",         // PFLICHT: Datum der Veröffentlichung (JJJJ-MM-TT) → Badge „Neu“ auf der Startseite
+     // updated: "2026-10-02",    // optional: bei inhaltlicher Überarbeitung → Badge „Aktualisiert“
+     // klausur: "2026-10-15",    // optional: Klausurtermin → Countdown auf der Startseite (21 Tage vorher)
      topics: [ /* Themen, siehe unten */ ]
    });
    ```
@@ -74,9 +81,10 @@ Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
 ## Prüfen vor dem Push
 
 ```bash
-node -e "new (require('vm').Script)(require('fs').readFileSync('app/kurse/<datei>.js','utf8'))"   # Syntax
+node app/tools/check-kurse.js  # Inhalts-Check: Pflichtfelder, Lösungsindizes, Ablenker, ganze Zahlen, Registrierung
 python3 -m http.server 8080    # dann http://localhost:8080/app/ öffnen
 ```
+Der Inhalts-Check muss **0 Fehler** melden. Hinweise (z. B. fehlender Merkkasten) solltest du beheben.
 Im Browser (Handybreite ~390 px): Startseite → Fach → Kurs → jedes Thema einmal komplett durchklicken,
 auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-Code-Umgebungen meist vorhanden.
 
@@ -84,9 +92,13 @@ auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-C
 
 1. Vorher `main` aktualisieren (`git fetch origin main`) und den eigenen Branch darauf aufbauen –
    so gibt es keine Konflikte mit Änderungen, die inzwischen gemergt wurden.
-2. Eigenen Branch anlegen, committen, pushen.
+2. Branch **`kurs/<kurs-id>`** anlegen (z. B. `kurs/gpu-abc`), committen, pushen.
+   Auf `kurs/…`-Branches dürfen nur diese Dateien geändert werden: `app/kurse/*.js` (außer `materialien.js`),
+   `app/index.html` (nur `<script src="kurse/…">`-Zeilen), `app/sw.js`, `app/content.js`, `app/dist/lernraum.html`.
+   Der GitHub-Check lehnt alles andere ab.
 3. Pull Request nach `main` erstellen: kurze Beschreibung, Liste der neuen Themen, eigene Ergänzungen, was getestet wurde.
-4. **Den Pull Request selbst mergen**, sobald alle Tests aus „Prüfen vor dem Push“ fehlerfrei waren.
+4. Warten, bis im Pull Request der Check **„Lernraum-Check“ grün** ist, dann **den Pull Request selbst mergen**.
+   Ist er rot: Log lesen, Fehler beheben, neu pushen.
    Bei Merge-Konflikten: `main` in den Branch mergen, Konflikte lösen (bei `app/dist/lernraum.html`
    einfach `python3 app/build-single.py` neu ausführen), erneut testen, dann mergen.
 5. Nach 1–2 Minuten ist der Kurs live – auf der Startseite https://lernen.yannikbrand.eu/ und in der App.
@@ -96,5 +108,5 @@ auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-C
 
 ## Nicht ändern (ohne ausdrücklichen Auftrag)
 
-`app/app.js`, `app/styles.css`, `app/vendor/`, andere Kursdateien, `app/kurse/materialien.js` (wird erzeugt),
+`CLAUDE.md`, `docs/`, `.github/`, `app/tools/`, `app/app.js`, `app/styles.css`, `app/vendor/`, andere Kursdateien, `app/kurse/materialien.js` (wird erzeugt),
 die Startseite `index.html` und `site/` (sie liest die Kurse automatisch aus `app/index.html`).

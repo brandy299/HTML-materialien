@@ -8,6 +8,7 @@ Erster Kurs: **PBP · HS1 – Personalbedarf** (LF 8.1, Modellunternehmen Mediaw
 gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rückmeldungen, Pixelwolke.
 
 **Neue Übungen mit einem KI-Agenten erstellen:** siehe [`AGENT-ANLEITUNG.md`](AGENT-ANLEITUNG.md).
+Rollen (Content-Agenten / Creative Director): [`../CLAUDE.md`](../CLAUDE.md).
 
 - Läuft ohne Build-Schritt: reines HTML, CSS und JS.
 - Erreichbar unter https://lernen.yannikbrand.eu/app/ (GitHub Pages mit eigener Domain, Datei `CNAME` im Repo-Stamm).
@@ -25,6 +26,7 @@ gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rü
 | `app.js` | Logik (Navigation, Aufgaben, Hilfe, Klausur, Training, QR-Codes) |
 | `styles.css` | Design |
 | `vendor/qrcode.js` | QR-Code-Generator (Kazuhiko Arase, MIT-Lizenz), lokal eingebunden |
+| `tools/check-kurse.js` | Inhalts-Check aller Kurse (`node app/tools/check-kurse.js`), läuft auch als GitHub-Check „Lernraum-Check“ |
 | `build-single.py` | baut alles in eine Datei `dist/lernraum.html` |
 | `manifest.json`, `sw.js`, `icon*` | App-Installation & Offline |
 
@@ -43,7 +45,11 @@ Materialsammlungen entstehen aus `materialien/<Fach>/…`, aber nur für Dateien
 ```js
 // Fach / Kurs
 { id: "pbp", fach: "PBP", name: "Personalbedarf", course: "PBP · HS1", company: "Mediaworld e.K.",
-  color: "#F386A1", description: "…", topics: [ … ] }
+  color: "#F386A1", description: "…",
+  added: "2026-09-24",      // Pflicht: Veröffentlichung → Badge „Neu“ (14 Tage), Sortierung neueste zuerst
+  updated: "2026-10-01",    // optional: Überarbeitung → Badge „Aktualisiert“ (7 Tage)
+  klausur: "2026-10-15",    // optional: Klausurtermin → Countdown auf der Startseite (ab 21 Tage vorher)
+  topics: [ … ] }
 
 // Thema
 {

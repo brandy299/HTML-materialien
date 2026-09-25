@@ -409,12 +409,13 @@
       if (fachs.length > 1) chips.append(chip);
       list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
       const grid = h(`<div class="topics"></div>`);
-      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => !!a.materials - !!b.materials).forEach((x) => grid.append(subjectWin(x)));
+      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
       list.append(grid);
     });
     return v;
   }
 
+  const isNew = (x) => x.added && (Date.now() - new Date(x.added)) / 864e5 <= 14;
   function subjectWin(x) {
     if (x.materials) {
       const groups = [...new Set(x.topics.map((t) => t.group).filter(Boolean))];
@@ -426,7 +427,7 @@
     const tops = courseTopics(x).filter((t) => t.steps.length);
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
     return h(`<a class="win topic-win" href="#/f/${x.id}">
-      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}<span class="r">${done}/${tops.length} Themen</span></div>
+      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ' <span class="badge-new">Neu</span>' : ""}<span class="r">${done}/${tops.length} Themen</span></div>
       <div class="body"><span class="title">${esc(x.name)}</span>
         <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);
