@@ -10,7 +10,7 @@ gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rü
 **Neue Übungen mit einem KI-Agenten erstellen:** siehe [`AGENT-ANLEITUNG.md`](AGENT-ANLEITUNG.md).
 
 - Läuft ohne Build-Schritt: reines HTML, CSS und JS.
-- Auf GitHub Pages erreichbar unter `…/HTML-materialien/app/`.
+- Erreichbar unter https://lernen.yannikbrand.eu/app/ (GitHub Pages mit eigener Domain, Datei `CNAME` im Repo-Stamm).
 - Lässt sich auf dem Handy als App installieren (Safari: Teilen → „Zum Home-Bildschirm“).
 - Der Fortschritt wird nur im Browser des jeweiligen Geräts gespeichert, ohne Login.
 

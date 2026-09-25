@@ -71,9 +71,9 @@ function bedarf(ist, ab, zu, soll, opts = {}) {
 window.LERNRAUM = {
   school: "Hans-Böckler-Berufskolleg",
   // Öffentliche Adresse der App – für QR-Codes, wenn die App als Einzeldatei läuft
-  publicUrl: "https://brandy299.github.io/HTML-materialien/app/",
+  publicUrl: "https://lernen.yannikbrand.eu/app/",
   // Basis für "link"-Schritte und Materialsammlungen: dort liegen die bestehenden Materialien
-  materialBase: "https://brandy299.github.io/HTML-materialien/",
+  materialBase: "https://lernen.yannikbrand.eu/",
   // Anzeigenamen für Fächer auf der Startseite (Kürzel → Name)
   faecher: {
     PBP: "Personalbezogene Prozesse"

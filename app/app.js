@@ -1742,7 +1742,7 @@
   }
   render();
 
-  if ("serviceWorker" in navigator && location.protocol === "https:" && location.hostname.endsWith("github.io")) {
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
 })();

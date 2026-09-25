@@ -4,7 +4,7 @@ Diese Datei richtet sich an einen KI-Agenten (z. B. Claude Code), der neue Kurse
 für die Lern-App „Lernraum“ erstellt und auf GitHub veröffentlicht.
 
 - **Repository:** `brandy299/HTML-materialien`
-- **Live:** https://brandy299.github.io/HTML-materialien/app/ (GitHub Pages, Branch `main`)
+- **Live:** https://lernen.yannikbrand.eu/app/ (GitHub Pages, Branch `main`)
 - **Zielgruppe:** Schüler/innen eines Berufskollegs in NRW, Niveau eher niedrig, Nutzung fast nur am Handy
 - **Sprache:** Deutsch (Englisch-Kurse: Aufgaben auf Englisch, Erklärungen dürfen deutsch sein)
 
@@ -83,7 +83,7 @@ auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-C
 1. Eigenen Branch anlegen (nicht direkt auf `main` arbeiten), committen, pushen.
 2. Pull Request nach `main` erstellen: kurze Beschreibung, Liste der neuen Themen, eigene Ergänzungen.
 3. Nur mergen, wenn die Lehrkraft das freigegeben hat. Nach dem Merge ist die Übung nach 1–2 Minuten live.
-4. Deep-Link einer Übung (für QR-Codes): `https://brandy299.github.io/HTML-materialien/app/#/f/<kurs-id>/<thema-id>` –
+4. Deep-Link einer Übung (für QR-Codes): `https://lernen.yannikbrand.eu/app/#/f/<kurs-id>/<thema-id>` –
    QR-Codes erzeugt die App selbst (QR-Knopf an jeder Übung, Übersicht unter `#/qr`).
 
 ## Nicht ändern (ohne ausdrücklichen Auftrag)
