@@ -274,6 +274,16 @@
   }
 
   function topicWin(s, t) {
+    if (t.drill) {
+      const ds = drillStats(t);
+      return h(`<a class="win topic-win drill-win" href="#/f/${s.id}/${t.id}">
+        <div class="bar"><span class="d"></span>${esc(t.kicker || "Training")}<span class="r">∞ Aufgaben</span></div>
+        <div class="body">
+          <span class="title">${esc(t.title)}</span>
+          <span class="meta">${ds.rounds ? `${ds.rounds} gelöst · ${ds.perfect} perfekt · Serie ${ds.streak}` : esc(t.description || "Immer neue Aufgaben – üben, bis es sitzt.")}</span>
+        </div>
+      </a>`);
+    }
     if (t.soon || !t.steps.length) {
       return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">bald</span></div>
         <div class="body"><span class="title">${esc(t.title)}</span></div></div>`);
@@ -387,6 +397,7 @@
   /* ── Thema (Lernpfad) ───────────────────────────────────── */
   function viewTopic(sid, tid) {
     const s = findSubject(sid), t = findTopic(s, tid);
+    if (t && t.drill) return viewDrillIntro(s, t);
     if (!t || t.soon || !t.steps.length) { location.hash = "#/"; return h("<div></div>"); }
     if (t.exam) return viewExamIntro(s, t);
     const p = progress.of(s.id, t.id);
@@ -473,6 +484,7 @@
   /* ── Player ─────────────────────────────────────────────── */
   function viewPlayer(sid, tid, idx) {
     const s = findSubject(sid), t = findTopic(s, tid), i = +idx;
+    if (t && t.drill) return viewDrill(s, t);
     const step = t && t.steps[i];
     if (!step) { location.hash = t ? `#/f/${sid}/${tid}` : "#/"; return h("<div></div>"); }
     progress.touch(s.id, t.id, i);
@@ -1055,6 +1067,195 @@
       ctx.action(`Erledigt ${ICON.check}`, () => ctx.finish(true));
     }
   };
+
+  /* ── Endlos-Training (Zufallsaufgaben) ───────────────────── */
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const rint = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const sig = (v) => (v > 0 ? "+ " + v : v < 0 ? "− " + Math.abs(v) : "0");
+  const drillKey = (t) => "drill." + t.id;
+  const drillStats = (t) => ({ rounds: 0, perfect: 0, streak: 0, best: 0, level: 1, ...store.get(drillKey(t), {}) });
+
+  const DRILL_DATA = {
+    companies: ["Autohaus Berger KG", "Bäckerei Sommer", "Fitnessstudio Vital", "Modehaus Kaya", "Getränkemarkt Olsen",
+      "Hotel Seeblick", "Buchhandlung Fuchs", "Spedition Lange GmbH", "Elektromarkt Pixel", "Gartencenter Grünwerk",
+      "Friseursalon Schnittig", "Möbelhaus Holzwerk", "Reisebüro Fernweh", "Drogerie Blau"],
+    names: ["Herr Yilmaz", "Frau Novak", "Herr Becker", "Frau Schulz", "Herr Kowalski", "Frau Hoffmann", "Herr Ahmadi",
+      "Frau Wagner", "Herr Petrović", "Frau Richter", "Herr Demir", "Frau Klein", "Herr Wolf", "Frau Şahin", "Herr Neumann", "Frau Braun"],
+    out: ["geht in Rente", "geht in Elternzeit", "kündigt wegen eines Umzugs", "kündigt für ein Studium",
+      "wechselt zu einem anderen Unternehmen", "scheidet aus Altersgründen aus"],
+    in: ["wird nach der Ausbildung übernommen", "kommt aus der Elternzeit zurück", "hat einen Arbeitsvertrag unterschrieben und fängt bald an"],
+    noise: ["war zwei Wochen krank, ist aber wieder da", "hat sich über den Dienstplan beschwert", "macht im Sommer drei Wochen Urlaub",
+      "hat eine Fortbildung besucht", "hat Geburtstag gefeiert", "wünscht sich einen neuen Bürostuhl"],
+    noiseFree: ["Ein Kunde hat den Service gelobt.", "Die Firma hat einen neuen Internetauftritt.", "Im Pausenraum steht eine neue Kaffeemaschine."]
+  };
+
+  function makeBedarfRound(level) {
+    const D = DRILL_DATA;
+    const company = pick(D.companies);
+    let ist, ab, zu, delta;
+    do {
+      ist = rint(6, 40); ab = rint(1, 3); zu = rint(0, level === 3 ? 2 : 3);
+      delta = level === 3 ? rint(-3, 3) : rint(0, 3);
+    } while (ist - ab + zu <= 0 || ist + delta - (ist - ab + zu) === 0 || (level < 3 && ist + delta - (ist - ab + zu) < 0));
+    const soll = ist + delta, zw = ist - ab + zu, nb = soll - zw;
+    const names = shuffle(D.names);
+    const lines = [];
+    for (let k = 0; k < ab; k++) lines.push(`${names.pop()} ${pick(D.out)}.`);
+    for (let k = 0; k < zu; k++) lines.push(`${names.pop()} ${pick(D.in)}.`);
+    if (level === 3) {
+      lines.push(`${names.pop()} ${pick(D.noise)}.`);
+      if (Math.random() < .5) lines.push(pick(D.noiseFree));
+    }
+    let casehtml;
+    if (level === 1) {
+      casehtml = `<b>${esc(company)}</b><br><b>Ist-Bestand:</b> ${ist}<br><b>Abgänge:</b> ${ab}<br><b>Zugänge:</b> ${zu}<br><b>Soll-Bestand:</b> ${soll}`;
+    } else {
+      const sollTxt = level === 2
+        ? `Insgesamt werden künftig <b>${soll} Beschäftigte</b> gebraucht.`
+        : delta > 0 ? `Weil das Geschäft wächst, werden <b>${delta} zusätzliche Stellen</b> geschaffen.`
+        : delta < 0 ? `Wegen sinkender Umsätze fallen <b>${-delta} Stellen</b> weg.`
+        : `Die Zahl der Stellen bleibt gleich.`;
+      casehtml = `<b>${esc(company)}</b> hat zurzeit <b>${ist} Beschäftigte</b>. ${shuffle(lines).map(esc).join(" ")} ${sollTxt}`;
+    }
+    const b = bedarf(ist, ab, zu, soll, { split: level === 3 });
+    const calcStep = {
+      type: "calc", title: company, case: casehtml, rows: b.rows,
+      hints: (level > 1 ? ["Markiere im Kopf: Wer <b>geht</b> (Abgang)? Wer <b>kommt fest dazu</b> (Zugang)? Jede Person zählt 1." + (level === 3 ? " Krankheit, Urlaub oder Beschwerden ändern nichts!" : "")] : [])
+        .concat(level === 3 ? [`Soll-Bestand = Ist + neue Stellen − wegfallende Stellen = <b>${ist} ${delta < 0 ? "−" : "+"} ${Math.abs(delta)}</b>`] : [])
+        .concat(b.hints.slice(1)),
+      result: `${company}: Personalbedarf ${sig(nb)}.`
+    };
+    const wrongNum = shuffle([...new Set([-nb, soll, zw].filter((x) => x !== nb))]).slice(0, 2);
+    const absWrong = shuffle([...new Set([zw, soll, Math.abs(nb) + 1].filter((x) => x !== Math.abs(nb)))]).slice(0, 2);
+    const sentStep = {
+      type: "sentence", title: "Antwortsatz",
+      case: `Bau den Antwortsatz für <b>${esc(company)}</b>.`,
+      text: `Der Personalbedarf beträgt {*${sig(nb)}|${wrongNum.map(sig).join("|")}}. Das Ergebnis ist {*${nb > 0 ? "positiv" : "negativ"}|${nb > 0 ? "negativ" : "positiv"}}. ${company} muss {*${Math.abs(nb)}|${absWrong.join("|")}} ${Math.abs(nb) === 1 ? "Person" : "Personen"} {*${nb > 0 ? "einstellen" : "abbauen"}|${nb > 0 ? "abbauen" : "einstellen"}}.`,
+      hints: ["Das Ergebnis steht in der letzten Zeile deines Rechenschemas.", "Positiv → es fehlen Leute → einstellen. Negativ → zu viele → abbauen."]
+    };
+    return { company, calcStep, sentStep };
+  }
+  const DRILLS = { bedarf: makeBedarfRound };
+  const LEVELS = [
+    { n: 1, name: "Zahlen", text: "Ist, Abgänge, Zugänge und Soll stehen direkt da. Ideal zum Einstieg." },
+    { n: 2, name: "Fall", text: "Eine kurze Geschichte mit Namen. Du liest Abgänge und Zugänge selbst heraus." },
+    { n: 3, name: "Profi", text: "Mit Ablenkern, Ersatz- und Neubedarf. Das Ergebnis kann auch negativ sein." }
+  ];
+
+  function viewDrillIntro(s, t) {
+    const ds = drillStats(t);
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const v = h(`<main class="view no-tabbar">
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span></div>
+      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <p class="lead" style="margin-top:14px">${esc(t.description || "")}</p>
+      <div class="stat-row" style="margin-top:22px">
+        <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
+        <div class="stat"><div class="v">${ds.perfect}</div><div class="k">perfekt</div></div>
+        <div class="stat"><div class="v">${ds.best}</div><div class="k">beste Serie</div></div>
+      </div>
+      <p class="section-head">Stufe wählen</p>
+      <div class="topics" id="levels"></div>
+    </main>`);
+    const box = v.querySelector("#levels");
+    LEVELS.forEach((L) => {
+      const a = h(`<a class="win topic-win ${ds.level === L.n ? "done" : ""}" href="#/f/${s.id}/${t.id}/0">
+        <div class="bar"><span class="d"></span>Stufe ${L.n}<span class="r">${ds.level === L.n ? "zuletzt gewählt" : ""}</span></div>
+        <div class="body"><span class="title">${L.name}</span><span class="meta">${L.text}</span></div></a>`);
+      a.addEventListener("click", () => { const d = drillStats(t); d.level = L.n; store.set(drillKey(t), d); });
+      box.append(a);
+    });
+    return v;
+  }
+
+  function viewDrill(s, t) {
+    const gen = DRILLS[t.drill];
+    let level = drillStats(t).level;
+    let round, phase, scores;
+    const v = h(`<main class="player">
+      <div class="player-top">
+        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Training beenden">${ICON.close}</a>
+        <div class="progress"><i></i><i></i><i></i></div>
+        <button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>
+      </div>
+      <header class="player-head"><p class="eyebrow" id="eb"></p><h1 class="h1" id="ttl"></h1></header>
+      <section class="player-body"></section>
+      <div class="dock"><div class="dock-inner"><button class="btn block" id="act"></button></div></div>
+    </main>`);
+    const body = v.querySelector(".player-body");
+    const btn = v.querySelector("#act");
+    const bars = v.querySelectorAll(".progress i");
+    const ctx = {
+      body, root: v, dock: v.querySelector(".dock-inner"),
+      setProgress(f) { bars[phase].style.setProperty("--f", Math.max(0, Math.min(1, f))); },
+      action(label, fn, { enabled = true, variant = "" } = {}) { btn.innerHTML = label; btn.disabled = !enabled; btn.className = "btn block " + variant; btn.onclick = fn; },
+      finish(score) { scores.push(score); buzz(15); show(phase + 1); },
+      key: "drill", hintsFor: null, hintKey: () => "0", revealed: {}, exam: false
+    };
+    const current = () => (phase === 0 ? round.calcStep : round.sentStep);
+    ctx.openHelp = (tab) => openHelp(s, t, current(), ctx, tab);
+    v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
+
+    function reset() {
+      if (cleanup) { cleanup(); cleanup = null; }
+      body.replaceChildren();
+      [...ctx.dock.children].forEach((c) => { if (c !== btn) c.remove(); });
+      v.classList.remove("has-pad");
+      ctx.revealed = {};
+      window.scrollTo(0, 0);
+    }
+    function newRound() {
+      round = gen(level);
+      scores = [];
+      bars.forEach((b) => b.style.setProperty("--f", 0));
+      show(0);
+    }
+    function show(ph) {
+      phase = ph;
+      reset();
+      const ds = drillStats(t);
+      bars.forEach((b, k) => { if (k < ph) b.style.setProperty("--f", 1); });
+      v.querySelector("#eb").textContent = `Stufe ${level} · ${LEVELS[level - 1].name} · Aufgabe ${ds.rounds + 1}`;
+      v.querySelector("#helpBtn").hidden = ph === 2;
+      if (ph === 0) { v.querySelector("#ttl").textContent = "Personalbedarf berechnen"; PLAYERS.calc(round.calcStep, ctx); }
+      else if (ph === 1) { v.querySelector("#ttl").textContent = "Antwortsatz bauen"; PLAYERS.sentence(round.sentStep, ctx); }
+      else result();
+    }
+    function result() {
+      const c = scores.reduce((a, x) => a + x.c, 0), n = scores.reduce((a, x) => a + x.t, 0);
+      const perfect = c === n;
+      const ds = drillStats(t);
+      ds.rounds++; if (perfect) { ds.perfect++; ds.streak++; } else ds.streak = 0;
+      ds.best = Math.max(ds.best, ds.streak); ds.level = level;
+      store.set(drillKey(t), ds);
+      bars[2].style.setProperty("--f", 1);
+      v.querySelector("#ttl").textContent = perfect ? "Perfekt!" : "Geschafft.";
+      const suggestUp = perfect && ds.streak > 0 && ds.streak % 3 === 0 && level < 3;
+      body.append(h(`<div>
+        <p class="finish-num" style="margin-top:8px">${c}<small>/${n}</small></p>
+        <div class="stat-row" style="margin-top:22px">
+          <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
+          <div class="stat"><div class="v">${ds.streak}</div><div class="k">Serie</div></div>
+          <div class="stat"><div class="v">${ds.best}</div><div class="k">Rekord</div></div>
+        </div>
+        ${suggestUp ? `<div class="term"><span class="ln p">$ level-check …</span><span class="ln">› <span class="ok">3 perfekte Runden in Folge.</span> Bereit für Stufe ${level + 1} (${LEVELS[level].name})?</span></div>` : ""}
+        ${!perfect ? `<div class="term"><span class="ln p">$ tipp</span><span class="ln">› Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.</span></div>` : ""}
+      </div>`));
+      if (perfect) { buzz([20, 60, 20]); if (ds.streak % 3 === 0) confetti(); }
+      if (suggestUp) {
+        const up = h(`<button class="btn pink block">Stufe ${level + 1} starten ${ICON.arrow}</button>`);
+        up.onclick = () => { level++; const d = drillStats(t); d.level = level; store.set(drillKey(t), d); newRound(); };
+        ctx.dock.prepend(up);
+        ctx.dock.classList.add("col");
+        ctx.action("Gleiche Stufe weiter", () => { ctx.dock.classList.remove("col"); newRound(); }, { variant: "ghost" });
+      } else {
+        ctx.dock.classList.remove("col");
+        ctx.action(`Neue Aufgabe ${ICON.arrow}`, newRound);
+      }
+    }
+    newRound();
+    return v;
+  }
 
   /* ── Hilfe ──────────────────────────────────────────────── */
   function glossary(subject) {

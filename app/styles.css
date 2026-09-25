@@ -506,6 +506,10 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 .sol-h { font: 700 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
 .sol-wrong { padding: 8px 10px; background: var(--bad-soft); color: var(--bad); font-size: 13.5px; }
 .sol-list { padding-left: 20px; display: grid; gap: 8px; }
+/* Endlos-Training */
+.drill-win .bar .d { background: var(--term-ok); }
+.drill-win .bar .r { color: var(--term-ok); opacity: 1; }
+
 /* Satzbausteine */
 .cloze.sentence { font-size: 17.5px; line-height: 2.4; }
 .sgap { min-width: 60px; font-family: var(--grot); font-size: 15px; font-weight: 700; }
