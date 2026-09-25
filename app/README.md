@@ -150,6 +150,18 @@ Firmen, Namen und Ereignisse stehen in `DRILL_DATA` in `app.js` und lassen sich 
 { type: "link", title: "…", text: "…", href: "../materialien/GP/…/datei.html" }
 ```
 
+## Einzeldatei für gesperrte Schulnetze
+
+Manche Schulnetze sperren `github.io`. Dann die komplette App als **eine HTML-Datei** bauen und über
+Moodle/Logineo, IServ, Teams oder per Mail verteilen:
+
+```bash
+python3 app/build-single.py   # → app/dist/lernraum.html
+```
+
+Nach jeder Inhaltsänderung neu bauen und neu hochladen. Links zu alten Materialien auf github.io
+funktionieren im gesperrten Netz weiterhin nicht.
+
 ## Lokal testen
 
 ```bash
