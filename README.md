@@ -2,7 +2,8 @@
 
 Interaktive HTML-Lernmaterialien für den Unterricht, erreichbar über GitHub Pages.
 
-**Lernplattform:** https://lernen.yannikbrand.eu/ (leitet auf `app/` weiter – siehe `app/README.md`)
+**Lernplattform:** https://lernen.yannikbrand.eu/ – Startseite (`index.html`, `site/`), die App liegt unter `app/` (siehe `app/README.md`).
+Die Startseite liest alle Kurse automatisch aus `app/index.html`.
 
 **Alte Materialübersicht:** https://lernen.yannikbrand.eu/uebersicht-alt.html
 
@@ -40,7 +41,8 @@ materialien/
     Algebra/
       ...
 deploy.sh       ← Upload-Script
-index.html      ← leitet auf die Lernplattform (app/) weiter
+index.html      ← Startseite der Lern-Website (Kurse werden automatisch aus app/ gelesen)
+site/           ← Stil und Skript der Startseite
 uebersicht-alt.html ← alte Übersichtsseite (wird von deploy.sh aktualisiert)
 ```
 
