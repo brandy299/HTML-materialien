@@ -2,17 +2,130 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Lernraum</title>
-  <meta http-equiv="refresh" content="0; url=app/">
-  <script>location.replace("app/" + location.hash);</script>
-  <style>
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FEFEFE; color: #1E1E1E;
-      font: 600 16px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif; }
-    a { color: inherit; border: 2px solid #1E1E1E; padding: 14px 20px; text-decoration: none; box-shadow: 4px 4px 0 #1E1E1E; }
-  </style>
+  <meta name="description" content="Lernraum – Übungen, Lernpfade und Klausurtraining für den Unterricht am Berufskolleg. Direkt im Browser, gemacht fürs Handy.">
+  <meta name="theme-color" content="#FEFEFE">
+  <link rel="icon" href="app/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="app/icon-180.png">
+  <script>
+    // Alte Deep-Links (…/#/f/…) direkt in die App weiterleiten
+    if (location.hash.indexOf("#/") === 0) location.replace("app/" + location.hash);
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app/styles.css">
+  <link rel="stylesheet" href="site/landing.css">
 </head>
-<body>
-  <a href="app/">Zum Lernraum →</a>
+<body class="landing">
+
+  <header class="l-nav">
+    <a class="tag-box" href="#top"><span class="sq"></span>Lernraum</a>
+    <nav class="l-links" aria-label="Seitennavigation">
+      <a href="#faecher">Fächer</a>
+      <a href="#so-gehts">So geht's</a>
+      <a href="#installieren">Installieren</a>
+      <a href="#lehrkraefte">Lehrkräfte</a>
+    </nav>
+    <a class="tag-box ink" href="app/">App öffnen →</a>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="l-hero">
+      <canvas id="cloud" aria-hidden="true"></canvas>
+      <span class="l-corner tl"></span><span class="l-corner tr"></span>
+      <div class="l-side" aria-hidden="true">lernraum · hbbk · kein-login · offline-faehig · v1</div>
+      <div class="l-news" id="news"></div>
+      <p class="l-kicker">Lernraum <span class="dots">…………</span> Lernen, wann es passt</p>
+      <h1 class="l-title">Dein Unterricht.<br>In der Hosentasche.</h1>
+      <p class="l-lead">Präsentationen zum Wischen, Übungen mit sofortiger Rückmeldung, Übungsklausuren und Lernkarten – für deine Fächer am Berufskolleg. Direkt im Browser, ohne Konto.</p>
+      <div class="l-cta">
+        <a class="btn pink" href="app/">Jetzt lernen →</a>
+        <a class="btn ghost" href="#faecher">Fächer ansehen</a>
+      </div>
+    </section>
+
+    <!-- Zahlen -->
+    <div class="l-wrap">
+      <div class="stat-row l-stats" id="stats"></div>
+    </div>
+
+    <!-- Fächer & Kurse -->
+    <section class="l-wrap l-section" id="faecher">
+      <p class="section-head">Fächer & Kurse</p>
+      <h2 class="l-h2">Wähle dein Fach.</h2>
+      <div class="l-courses" id="courses"><p class="hint">Kurse werden geladen …</p></div>
+    </section>
+
+    <!-- So geht's -->
+    <section class="l-wrap l-section" id="so-gehts">
+      <p class="section-head">So geht's</p>
+      <h2 class="l-h2">Vier Schritte. Kein Login.</h2>
+      <ol class="l-steps">
+        <li class="win"><div class="bar"><span class="d"></span>Schritt 1<span class="r">Fach</span></div>
+          <div class="body"><p class="l-step-t">Fach wählen</p><p>Oder den QR-Code aus dem Unterricht scannen – du landest direkt in der Übung.</p></div></li>
+        <li class="win"><div class="bar"><span class="d"></span>Schritt 2<span class="r">Input</span></div>
+          <div class="body"><p class="l-step-t">Folien wischen</p><p>Jedes Thema startet mit einer kurzen Präsentation. Ein Gedanke pro Folie.</p></div></li>
+        <li class="win"><div class="bar"><span class="d"></span>Schritt 3<span class="r">Üben</span></div>
+          <div class="body"><p class="l-step-t">Üben mit Feedback</p><p>Quiz, Zuordnen, Lückentext, Rechenschema, Antwortsätze – die App prüft sofort.</p></div></li>
+        <li class="win"><div class="bar"><span class="d"></span>Schritt 4<span class="r">Klausur</span></div>
+          <div class="body"><p class="l-step-t">Fit für die Klausur</p><p>Übungsklausur mit Timer und Note, Endlos-Training und Lernkarten.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- Funktionen -->
+    <section class="l-wrap l-section">
+      <p class="section-head">Funktionen</p>
+      <h2 class="l-h2">Alles, was beim Lernen hilft.</h2>
+      <div class="l-features">
+        <div class="l-feature"><p class="l-f-t">? Ich brauche Hilfe</p><p>Gestufte Tipps statt sofortiger Lösung, dazu Merkkasten und Begriffe-Lexikon.</p></div>
+        <div class="l-feature"><p class="l-f-t">⏱ Übungsklausur</p><p>Wie in echt: Timer, keine Hilfe, am Ende Punkte, Note und Erwartungshorizont.</p></div>
+        <div class="l-feature"><p class="l-f-t">∞ Endlos-Training</p><p>Immer neue Aufgaben in drei Stufen – üben, bis es sitzt.</p></div>
+        <div class="l-feature"><p class="l-f-t">▣ QR-Codes</p><p>Jede Übung hat einen Code für den Beamer. Scannen, fertig.</p></div>
+        <div class="l-feature"><p class="l-f-t">↓ Wie eine App</p><p>Auf den Home-Bildschirm legen, funktioniert auch mit schwachem Netz.</p></div>
+        <div class="l-feature"><p class="l-f-t">◯ Kein Konto</p><p>Nur dein Vorname. Der Fortschritt bleibt auf deinem Gerät – niemand sonst sieht ihn.</p></div>
+      </div>
+    </section>
+
+    <!-- Installieren -->
+    <section class="l-wrap l-section" id="installieren">
+      <p class="section-head">Als App installieren</p>
+      <h2 class="l-h2">Ein Tipp auf den Home-Bildschirm.</h2>
+      <div class="l-install">
+        <div class="win"><div class="bar"><span class="d"></span>iPhone · Safari<span class="r">iOS</span></div>
+          <div class="body"><ol class="l-ol"><li><a href="app/">lernen.yannikbrand.eu/app</a> in <b>Safari</b> öffnen</li><li>Unten auf <b>Teilen</b> tippen (Quadrat mit Pfeil)</li><li><b>„Zum Home-Bildschirm“</b> wählen</li></ol></div></div>
+        <div class="win"><div class="bar"><span class="d"></span>Android · Chrome<span class="r">Android</span></div>
+          <div class="body"><ol class="l-ol"><li><a href="app/">lernen.yannikbrand.eu/app</a> in <b>Chrome</b> öffnen</li><li>Oben rechts auf <b>⋮</b> tippen</li><li><b>„App installieren“</b> oder <b>„Zum Startbildschirm“</b> wählen</li></ol></div></div>
+      </div>
+    </section>
+
+    <!-- Lehrkräfte -->
+    <section class="l-teacher" id="lehrkraefte">
+      <div class="l-wrap">
+        <p class="section-head">Für Lehrkräfte</p>
+        <h2 class="l-h2">QR-Code an die Wand – los geht's.</h2>
+        <p class="l-teacher-p">Für jeden Kurs und jede Übung gibt es einen QR-Code mit Beamer-Ansicht. Die Schülerinnen und Schüler scannen mit der Handykamera und landen direkt in der Aufgabe – ohne Anmeldung, ohne Passwort.</p>
+        <div class="term">
+          <span class="ln p">$ lernraum --lehrkraft</span>
+          <span class="ln">› QR-Übersicht aller Übungen ……… <a href="app/#/qr">app/#/qr</a></span>
+          <span class="ln">› Deep-Link einer Übung …………… app/#/f/&lt;kurs&gt;/&lt;thema&gt;</span>
+          <span class="ln mut">› Daten: keine. Fortschritt nur lokal auf dem Gerät.</span>
+        </div>
+        <div class="l-cta"><a class="btn pink" href="app/#/qr">Zur QR-Übersicht →</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="l-foot">
+    <div class="l-wrap l-foot-in">
+      <div><p class="l-foot-brand">Lernraum</p><p class="l-foot-sub" id="school"></p></div>
+      <nav class="l-foot-links"><a href="app/">App</a><a href="#faecher">Fächer</a><a href="app/#/qr">QR-Codes</a></nav>
+    </div>
+    <div class="l-wrap l-foot-bottom"><span>Kein Login · keine Tracker · Fortschritt bleibt auf deinem Gerät</span><a href="#top">↑ nach oben</a></div>
+  </footer>
+
+  <script src="site/landing.js"></script>
 </body>
 </html>

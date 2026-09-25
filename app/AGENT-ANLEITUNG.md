@@ -78,14 +78,21 @@ python3 -m http.server 8080    # dann http://localhost:8080/app/ öffnen
 Im Browser (Handybreite ~390 px): Startseite → Fach → Kurs → jedes Thema einmal komplett durchklicken,
 auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-Code-Umgebungen meist vorhanden.
 
-## Veröffentlichen
+## Veröffentlichen (selbstständig, ohne Rückfrage)
 
-1. Eigenen Branch anlegen (nicht direkt auf `main` arbeiten), committen, pushen.
-2. Pull Request nach `main` erstellen: kurze Beschreibung, Liste der neuen Themen, eigene Ergänzungen.
-3. Nur mergen, wenn die Lehrkraft das freigegeben hat. Nach dem Merge ist die Übung nach 1–2 Minuten live.
-4. Deep-Link einer Übung (für QR-Codes): `https://lernen.yannikbrand.eu/app/#/f/<kurs-id>/<thema-id>` –
+1. Vorher `main` aktualisieren (`git fetch origin main`) und den eigenen Branch darauf aufbauen –
+   so gibt es keine Konflikte mit Änderungen, die inzwischen gemergt wurden.
+2. Eigenen Branch anlegen, committen, pushen.
+3. Pull Request nach `main` erstellen: kurze Beschreibung, Liste der neuen Themen, eigene Ergänzungen, was getestet wurde.
+4. **Den Pull Request selbst mergen**, sobald alle Tests aus „Prüfen vor dem Push“ fehlerfrei waren.
+   Bei Merge-Konflikten: `main` in den Branch mergen, Konflikte lösen (bei `app/dist/lernraum.html`
+   einfach `python3 app/build-single.py` neu ausführen), erneut testen, dann mergen.
+5. Nach 1–2 Minuten ist der Kurs live – auf der Startseite https://lernen.yannikbrand.eu/ und in der App.
+   Deep-Link einer Übung (für QR-Codes): `https://lernen.yannikbrand.eu/app/#/f/<kurs-id>/<thema-id>` –
    QR-Codes erzeugt die App selbst (QR-Knopf an jeder Übung, Übersicht unter `#/qr`).
+6. Der Lehrkraft am Ende die Deep-Links der neuen Themen nennen.
 
 ## Nicht ändern (ohne ausdrücklichen Auftrag)
 
-`app/app.js`, `app/styles.css`, `app/vendor/`, andere Kursdateien, `app/kurse/materialien.js` (wird erzeugt).
+`app/app.js`, `app/styles.css`, `app/vendor/`, andere Kursdateien, `app/kurse/materialien.js` (wird erzeugt),
+die Startseite `index.html` und `site/` (sie liest die Kurse automatisch aus `app/index.html`).

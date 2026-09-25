@@ -1,0 +1,146 @@
+/* ============================================================
+   LERNRAUM — Startseite der Lern-Website
+   Baut auf app/styles.css auf (Farben, Fenster, Buttons, Terminal).
+   ============================================================ */
+
+body.landing { overflow-x: hidden; }
+.l-wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ── Navigation ─────────────────────────────────────────── */
+.l-nav {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 10px;
+  background: rgba(254, 254, 254, .88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--panel-2);
+}
+.l-nav .tag-box.ink { margin-left: auto; }
+.l-links { display: none; gap: 6px; margin: 0 auto; }
+.l-links a { font: 500 14px/1 var(--grot); padding: 8px 12px; border: 1px solid var(--panel-2); background: var(--paper); }
+.l-links a:hover { border-color: var(--ink); }
+@media (min-width: 820px) {
+  .l-links { display: flex; }
+  .l-nav .tag-box.ink { margin-left: 0; }
+}
+
+/* ── Hero ───────────────────────────────────────────────── */
+.l-hero {
+  position: relative; overflow: hidden;
+  padding: 36px 20px 64px; text-align: center;
+}
+.l-hero > canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; z-index: 0;
+}
+.l-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(254,254,254,0) 42%, rgba(254,254,254,.75) 72%, var(--paper) 100%);
+}
+.l-hero > *:not(canvas) { position: relative; z-index: 1; }
+.l-hero > .l-corner, .l-hero > .l-side { position: absolute; }
+.l-corner { position: absolute; width: 18px; height: 18px; border: 0 solid var(--ink); opacity: .6; z-index: 1; }
+.l-corner.tl { top: 14px; left: 14px; border-top-width: 1px; border-left-width: 1px; }
+.l-corner.tr { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; }
+.l-side {
+  left: 8px; top: 38%;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font: 400 10px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-2); opacity: .55;
+  display: none;
+}
+@media (min-width: 820px) { .l-side { display: block; } }
+
+.l-news { display: grid; gap: 14px; justify-items: center; margin: 12px auto 0; max-width: 420px; }
+.l-news .win { width: 100%; text-align: center; }
+.l-news .bar { justify-content: flex-start; }
+.l-news .body { padding: 14px 16px 16px; }
+.l-news .kick { font: 500 13px/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.l-news .sub { font: 400 13px/1.5 var(--mono); color: var(--ink-2); margin-top: 4px; }
+.l-news .btn { margin-top: 12px; min-height: 42px; font-size: 13px; }
+.l-news .u-link { display: inline-block; padding: 10px 4px 2px; }
+
+.l-kicker { margin-top: 44px; font: 500 13px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.l-kicker .dots { letter-spacing: .3em; padding: 0 4px; }
+@media (max-width: 560px) { .l-kicker .dots { display: none; } .l-kicker { max-width: 16ch; margin-inline: auto; } }
+.l-title {
+  margin: 16px auto 0;
+  font: 800 clamp(52px, 13vw, 150px)/.86 var(--grot); letter-spacing: -.06em;
+  text-wrap: balance;
+}
+.l-lead { margin: 22px auto 0; max-width: 58ch; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+.l-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+.l-cta .btn { min-width: 180px; }
+
+/* ── Zahlen ─────────────────────────────────────────────── */
+.l-stats { grid-template-columns: repeat(2, 1fr); margin-top: 4px; }
+.l-stats .stat:nth-child(3) { border-left: 0; }
+.l-stats .stat:nth-child(n+3) { border-top: 1.5px solid var(--ink); }
+@media (min-width: 720px) {
+  .l-stats { grid-template-columns: repeat(4, 1fr); }
+  .l-stats .stat:nth-child(3) { border-left: 1.5px solid var(--ink); }
+  .l-stats .stat:nth-child(n+3) { border-top: 0; }
+}
+.l-stats .v { font-size: clamp(34px, 6vw, 56px); }
+
+/* ── Abschnitte ─────────────────────────────────────────── */
+.l-section { padding-block: 56px 8px; }
+.l-h2 { font: 800 clamp(34px, 6.5vw, 64px)/.92 var(--grot); letter-spacing: -.05em; margin: 4px 0 26px; text-wrap: balance; }
+
+/* Kurse */
+.l-courses { display: grid; gap: 22px; }
+@media (min-width: 820px) { .l-courses { grid-template-columns: 1fr 1fr; } }
+.l-courses > *, .l-steps > *, .l-install > * { min-width: 0; }
+.l-course .l-topics a > span:nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+.l-course .body { display: grid; gap: 8px; background: var(--paper); }
+.l-course .l-fach { font: 500 12px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.l-course .l-c-title { font: 800 34px/.95 var(--grot); letter-spacing: -.045em; }
+.l-course .l-c-desc { font-size: 15px; color: var(--ink-2); }
+.l-course .l-topics { list-style: none; border: 1.5px solid var(--ink); margin-top: 6px; }
+.l-course .l-topics li + li { border-top: 1px solid var(--panel-2); }
+.l-course .l-topics a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 46px; font-weight: 600; font-size: 14.5px; }
+.l-course .l-topics a:hover { background: var(--pink-soft); }
+.l-course .l-topics .n { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border: 1.5px solid var(--ink); font: 700 11px/1 var(--mono); }
+.l-course .l-topics .n.done { background: var(--ink); color: var(--paper); }
+.l-course .l-topics .k { margin-left: auto; font: 400 11.5px/1 var(--mono); color: var(--ink-2); white-space: nowrap; }
+.l-course .l-actions { display: flex; gap: 10px; margin-top: 8px; }
+.l-course .l-actions .btn { flex: 1; }
+
+/* Schritte */
+.l-steps { list-style: none; display: grid; gap: 18px; }
+@media (min-width: 720px) { .l-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .l-steps { grid-template-columns: repeat(4, 1fr); } }
+.l-steps .body { background: var(--paper); font-size: 15px; color: var(--ink-2); }
+.l-step-t { font: 800 22px/1 var(--grot); letter-spacing: -.035em; color: var(--ink); margin-bottom: 8px; }
+
+/* Funktionen */
+.l-features { display: grid; gap: 0; border: 2px solid var(--ink); box-shadow: var(--shadow); }
+@media (min-width: 720px) { .l-features { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .l-features { grid-template-columns: repeat(3, 1fr); } }
+.l-feature { padding: 18px; background: var(--paper); border-bottom: 1px solid var(--panel-2); font-size: 15px; color: var(--ink-2); }
+@media (min-width: 720px) { .l-feature { border-right: 1px solid var(--panel-2); } }
+.l-f-t { font: 700 13px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); margin-bottom: 8px; }
+
+/* Installieren */
+.l-install { display: grid; gap: 22px; }
+@media (min-width: 720px) { .l-install { grid-template-columns: 1fr 1fr; } }
+.l-install .body { background: var(--paper); }
+.l-ol { padding-left: 22px; display: grid; gap: 8px; font-size: 15.5px; }
+.l-ol a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Lehrkräfte */
+.l-teacher { margin-top: 64px; padding-block: 56px 64px; background: var(--ink); color: var(--paper); }
+.l-teacher .section-head { color: var(--paper); }
+.l-teacher .section-head::after { background: repeating-linear-gradient(90deg, var(--paper) 0 2px, transparent 2px 5px); }
+.l-teacher-p { max-width: 62ch; font-size: 16.5px; line-height: 1.55; color: var(--term-text); }
+.l-teacher .term { border-color: var(--pink); margin-top: 22px; max-width: 720px; }
+.l-teacher .term a { color: var(--term-ok); text-decoration: underline; }
+.l-teacher .l-cta { justify-content: flex-start; }
+
+/* Footer */
+.l-foot { background: var(--ink); color: var(--term-text); border-top: 1px solid #333; }
+.l-foot-in { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; padding-block: 30px 20px; }
+.l-foot-brand { font: 800 28px/1 var(--grot); letter-spacing: -.04em; color: var(--paper); }
+.l-foot-sub { font: 400 12px/1.6 var(--mono); color: var(--term-mut); margin-top: 6px; }
+.l-foot-links { display: flex; gap: 16px; font: 500 13px/1 var(--mono); }
+.l-foot-links a:hover { color: var(--paper); }
+.l-foot-bottom { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding-block: 14px calc(env(safe-area-inset-bottom, 0px) + 24px); border-top: 1px solid #333; font: 400 11px/1.6 var(--mono); color: var(--term-mut); }
