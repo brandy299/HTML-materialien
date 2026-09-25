@@ -2,7 +2,7 @@
 
 Interaktive HTML-Lernmaterialien für den Unterricht, erreichbar über GitHub Pages.
 
-**Übersichtsseite:** https://brandy299.github.io/HTML-materialien/
+**Übersichtsseite:** https://lernen.yannikbrand.eu/
 
 ---
 
