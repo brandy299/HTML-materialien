@@ -76,7 +76,8 @@ window.LERNRAUM = {
   materialBase: "https://lernen.yannikbrand.eu/",
   // Anzeigenamen für Fächer auf der Startseite (Kürzel → Name)
   faecher: {
-    PBP: "Personalbezogene Prozesse"
+    PBP: "Personalbezogene Prozesse",
+    GPU: "Geschäftsprozesse im Unternehmen"
   },
   subjects: []
 };
