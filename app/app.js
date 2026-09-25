@@ -28,6 +28,7 @@
     save(s, t, p) { const all = this.all(); all[s + "/" + t] = { ...p, ts: Date.now() }; store.set("progress", all); },
     complete(s, t, i, score) { const p = this.of(s, t); p.done = { ...p.done, [i]: score || true }; p.last = i; this.save(s, t, p); },
     touch(s, t, i) { const p = this.of(s, t); p.last = i; this.save(s, t, p); },
+    uncomplete(s, t, i) { const p = this.of(s, t); if (p.done) delete p.done[i]; this.save(s, t, p); },
     count(s, t) { return Object.keys(this.of(s.id, t.id).done).length; },
     ratio(s, t) { return t.steps.length ? this.count(s, t) / t.steps.length : 0; },
     score(s, t) {
@@ -66,6 +67,7 @@
     help: '<svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15M12 18.5v.5"/></svg>',
     qr: '<svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM6.5 6.5h1v1h-1zM16.5 6.5h1v1h-1zM6.5 16.5h1v1h-1z"/></svg>',
     ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
+    reset: '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>',
     del: '<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6zM12 9l5 6M17 9l-5 6"/></svg>'
   };
   const HOWTO = {
@@ -501,10 +503,19 @@
         <div class="bar"><span class="d"></span>Lernpfad<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
         <ol class="list" id="path" style="border:0;list-style:none"></ol>
       </div>
+      ${started ? `<button class="u-link reset-topic" type="button">↺ Thema zurücksetzen</button>` : ""}
       <div class="dock"><div class="dock-inner">
         <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten"} ${ICON.arrow}</a>
       </div></div>
     </main>`);
+    const rt = v.querySelector(".reset-topic");
+    if (rt) rt.onclick = () => {
+      if (!rt.dataset.armed) { rt.dataset.armed = "1"; rt.textContent = "Wirklich alles in diesem Thema löschen? Nochmal tippen."; return; }
+      progress.resetTopic(s, t);
+      const a = store.get("self", {}); Object.keys(a).filter((k) => k.startsWith(`${s.id}/${t.id}/`)).forEach((k) => delete a[k]); store.set("self", a);
+      render();
+      toast("› Thema zurückgesetzt");
+    };
     const path = v.querySelector("#path");
     t.steps.forEach((st, i) => {
       const d = p.done[i];
@@ -583,7 +594,7 @@
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Schließen">${ICON.close}</a>
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
-        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>`}
+        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="Aufgabe zurücksetzen" title="Aufgabe zurücksetzen">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>`}
       </div>
       <header class="player-head">
         <p class="eyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
@@ -633,7 +644,17 @@
       const iv = setInterval(tick, 1000);
       const prev = cleanup;
       cleanup = () => { clearInterval(iv); prev && prev(); };
-    } else v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
+    } else {
+      v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
+      // ↺ Aufgabe zurücksetzen: Eingaben, Bewertung und Tipps dieser einen Aufgabe löschen und neu starten
+      v.querySelector("#resetBtn").onclick = () => {
+        progress.uncomplete(s.id, t.id, i);
+        if (step.type === "selfcheck") { const a = store.get("self", {}); delete a[ctx.key]; store.set("self", a); }
+        buzz(10);
+        render();
+        toast("› Aufgabe zurückgesetzt");
+      };
+    }
 
     (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
     return v;
@@ -1264,6 +1285,7 @@
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Training beenden">${ICON.close}</a>
         <div class="progress"><i></i><i></i><i></i></div>
+        <button class="icon-btn reset-btn" id="resetBtn" aria-label="Runde neu starten" title="Runde neu starten">${ICON.reset}</button>
         <button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>
       </div>
       <header class="player-head"><p class="eyebrow" id="eb"></p><h1 class="h1" id="ttl"></h1></header>
@@ -1283,6 +1305,13 @@
     const current = () => (phase === 0 ? round.calcStep : round.sentStep);
     ctx.openHelp = (tab) => openHelp(s, t, current(), ctx, tab);
     v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
+    v.querySelector("#resetBtn").onclick = () => {
+      scores = [];
+      bars.forEach((b) => b.style.setProperty("--f", 0));
+      buzz(10);
+      show(0);
+      toast("› Runde neu gestartet");
+    };
 
     function reset() {
       if (cleanup) { cleanup(); cleanup = null; }
@@ -1305,6 +1334,8 @@
       bars.forEach((b, k) => { if (k < ph) b.style.setProperty("--f", 1); });
       v.querySelector("#eb").textContent = `Stufe ${level} · ${LEVELS[level - 1].name} · Aufgabe ${ds.rounds + 1}`;
       v.querySelector("#helpBtn").hidden = ph === 2;
+      v.querySelector("#resetBtn").hidden = ph === 2;
+      ctx.dock.classList.remove("col");
       if (ph === 0) { v.querySelector("#ttl").textContent = "Personalbedarf berechnen"; PLAYERS.calc(round.calcStep, ctx); }
       else if (ph === 1) { v.querySelector("#ttl").textContent = "Antwortsatz bauen"; PLAYERS.sentence(round.sentStep, ctx); }
       else result();
