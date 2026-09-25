@@ -67,6 +67,8 @@ Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
 - **Inhalte aus den gelieferten Materialien** der Lehrkraft übernehmen (Zahlen, Namen, Modellunternehmen).
   Eigene Ergänzungen sparsam und fachlich korrekt; in der Commit-/PR-Beschreibung auflisten, was ergänzt wurde.
 - Rechnungen immer nachrechnen. Jede `calc`-Zeile braucht einen korrekten `value`.
+- **Tipps (`hints`/`hint`) gegen die Lösung prüfen:** Jeder Tipp muss zur richtigen Antwort führen.
+  Bei Lückentexten: Wenn ein Tipp eine bestimmte Lücke meint, deren Lösungswort im `text` nachsehen.
 - Keine personenbezogenen Daten echter Schüler/innen.
 
 ## Prüfen vor dem Push
