@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Erzeugt app/kurse/materialien.js aus dem Ordner materialien/.
 Jeder Fachordner wird zu einer Materialsammlung auf der Startseite (mit QR-Codes).
+Aufgenommen werden NUR Materialien, die ab SEIT hochgeladen wurden (Datum des letzten Git-Commits) –
+ältere Materialien gehören nicht zur neuen Lernplattform.
 Aufruf nach neuen Uploads:  python3 app/tools/build-materialien.py"""
 import json, pathlib, re, html
 
@@ -8,6 +10,17 @@ root = pathlib.Path(__file__).resolve().parents[2]
 mat = root / "materialien"
 out = root / "app" / "kurse" / "materialien.js"
 SKIP = {"schilf"}  # Lehrerfortbildung – nicht für Schüler
+SEIT = "2026-09-18"  # Start der neuen Lernplattform: nur Materialien ab diesem Datum
+
+import subprocess, datetime
+def upload_date(f):
+    """Datum des letzten Commits der Datei; nicht committete Dateien gelten als neu."""
+    try:
+        d = subprocess.run(["git", "log", "-1", "--format=%ad", "--date=short", "--", str(f)],
+                           cwd=root, capture_output=True, text=True).stdout.strip()
+    except Exception:
+        d = ""
+    return d or datetime.date.today().isoformat()
 
 def slug(s):
     s = s.lower()
@@ -29,6 +42,8 @@ subjects = []
 for fach in sorted(p for p in mat.iterdir() if p.is_dir() and p.name not in SKIP):
     topics, seen = [], set()
     for f in sorted(fach.rglob("*.html")):
+        if upload_date(f) < SEIT:
+            continue
         rel = f.relative_to(root).as_posix()
         tid = slug(f.stem) or "material"
         while tid in seen:
@@ -50,4 +65,4 @@ for fach in sorted(p for p in mat.iterdir() if p.is_dir() and p.name not in SKIP
 js = ("/* AUTOMATISCH ERZEUGT von app/tools/build-materialien.py – nicht von Hand bearbeiten. */\n"
       "LERNRAUM.subjects.push(...") + json.dumps(subjects, ensure_ascii=False, indent=1) + ");\n"
 out.write_text(js, encoding="utf-8")
-print(f"{out}: {len(subjects)} Fächer, {sum(len(s['topics']) for s in subjects)} Materialien")
+print(f"{out}: Materialien ab {SEIT} – {len(subjects)} Fächer, {sum(len(s['topics']) for s in subjects)} Materialien")

@@ -8,7 +8,8 @@
   const DATA = window.LERNRAUM;
   const $app = document.getElementById("app");
   const $tabbar = document.getElementById("tabbar");
-  const SINGLE = DATA.subjects.length === 1 ? DATA.subjects[0] : null;
+  // Startseite = Fächer-Übersicht. Nur mit `single: true` in content.js startet die App direkt im einzigen Kurs.
+  const SINGLE = DATA.single && DATA.subjects.length === 1 ? DATA.subjects[0] : null;
 
   /* ── Speicher ───────────────────────────────────────────── */
   const store = {
@@ -390,7 +391,7 @@
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
           <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>Übungen, Lernpfade und Materialien für deine Fächer. Wähle unten dein Fach.</small></h1>
+        <h1 class="display">Lernraum.<small>Übungen und Lernpfade für deine Fächer – gemacht fürs Handy. Wähle unten dein Fach.</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       <div id="list"></div>
@@ -398,11 +399,12 @@
     </main>`);
     dither(v.querySelector("canvas"));
     const chips = v.querySelector(".fach-chips");
+    if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
     fachs.forEach((f, k) => {
       const chip = h(`<button class="tag-box">${esc(f)}</button>`);
       chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
-      chips.append(chip);
+      if (fachs.length > 1) chips.append(chip);
       list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
       const grid = h(`<div class="topics"></div>`);
       DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => !!a.materials - !!b.materials).forEach((x) => grid.append(subjectWin(x)));

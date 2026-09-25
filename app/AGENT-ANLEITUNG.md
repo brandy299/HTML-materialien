@@ -53,7 +53,7 @@ Zusätzlich möglich: `help` (Merkkasten) pro Thema, `hints` (gestufte Tipps) pr
 ### Weg B: fertige einzelne HTML-Seite
 Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
 1. Datei ablegen unter `materialien/<Fach>/<Thema>/<datei>.html`
-2. `python3 app/tools/build-materialien.py` ausführen – das Material erscheint dann automatisch
+2. `python3 app/tools/build-materialien.py` ausführen – neue Materialien (Upload ab 18.09.2026) erscheinen dann
    in der Materialsammlung des Fachs auf der Startseite, inklusive QR-Code.
 3. Die Seite muss selbst mobil tauglich sein und ein aussagekräftiges `<title>` haben.
 

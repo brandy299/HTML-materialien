@@ -169,7 +169,7 @@ def update_index_html(index_path: str, entries: list) -> None:
 def main():
     args = parse_args()
 
-    index_path = os.path.join(args.repo, "index.html")
+    index_path = os.path.join(args.repo, "uebersicht-alt.html")
     if not os.path.exists(index_path):
         print(f"FEHLER: index.html nicht gefunden: {index_path}", file=sys.stderr)
         sys.exit(1)

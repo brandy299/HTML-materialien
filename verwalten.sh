@@ -4,13 +4,13 @@
 
 set -e
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
-INDEX="$REPO_DIR/index.html"
+INDEX="$REPO_DIR/uebersicht-alt.html"
 
-# Alle Materialien aus index.html auslesen
+# Alle Materialien aus uebersicht-alt.html auslesen
 MATERIALIEN=$(python3 - <<'PYEOF'
 import re, json, sys
 
-with open("/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/index.html", encoding="utf-8") as fh:
+with open("/Users/yabrand/Desktop/Projekte/Github HTML Pipeline/uebersicht-alt.html", encoding="utf-8") as fh:
     content = fh.read()
 
 m = re.search(r'const materialien = \[(.*?)\];', content, re.DOTALL)
@@ -117,7 +117,7 @@ PYEOF
       rmdir "$(dirname "$(dirname "$REPO_DIR/$PFAD")")" 2>/dev/null || true
     fi
 
-    # index.html aktualisieren
+    # uebersicht-alt.html aktualisieren
     python3 - <<PYEOF
 import re, json
 

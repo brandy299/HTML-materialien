@@ -2,7 +2,9 @@
 
 Interaktive HTML-Lernmaterialien für den Unterricht, erreichbar über GitHub Pages.
 
-**Übersichtsseite:** https://lernen.yannikbrand.eu/
+**Lernplattform:** https://lernen.yannikbrand.eu/ (leitet auf `app/` weiter – siehe `app/README.md`)
+
+**Alte Materialübersicht:** https://lernen.yannikbrand.eu/uebersicht-alt.html
 
 ---
 
@@ -21,7 +23,7 @@ Interaktive HTML-Lernmaterialien für den Unterricht, erreichbar über GitHub Pa
 
 Das Script:
 1. Kopiert die Datei in `materialien/<Fach>/<Thema>/`
-2. Aktualisiert die Übersichtsseite automatisch
+2. Aktualisiert die alte Übersichtsseite (`uebersicht-alt.html`) automatisch
 3. Pusht alles auf GitHub
 
 ---
@@ -38,7 +40,8 @@ materialien/
     Algebra/
       ...
 deploy.sh       ← Upload-Script
-index.html      ← Übersichtsseite (wird automatisch aktualisiert)
+index.html      ← leitet auf die Lernplattform (app/) weiter
+uebersicht-alt.html ← alte Übersichtsseite (wird von deploy.sh aktualisiert)
 ```
 
 ---
