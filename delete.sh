@@ -31,12 +31,12 @@ rm "$FULL_PATH"
 rmdir "$(dirname "$FULL_PATH")" 2>/dev/null || true
 rmdir "$(dirname "$(dirname "$FULL_PATH")")" 2>/dev/null || true
 
-echo "→ Aktualisiere index.html..."
+echo "→ Aktualisiere uebersicht-alt.html..."
 
 python3 - <<PYEOF
 import re, json
 
-with open("$REPO_DIR/index.html", "r", encoding="utf-8") as fh:
+with open("$REPO_DIR/uebersicht-alt.html", "r", encoding="utf-8") as fh:
     content = fh.read()
 
 # Zeile mit diesem pfad entfernen
@@ -49,10 +49,10 @@ new_content = re.sub(
 # Trailing comma bei letztem Eintrag fixen
 new_content = re.sub(r',(\s*\n\s*\])', r'\1', new_content)
 
-with open("$REPO_DIR/index.html", "w", encoding="utf-8") as fh:
+with open("$REPO_DIR/uebersicht-alt.html", "w", encoding="utf-8") as fh:
     fh.write(new_content)
 
-print("  index.html aktualisiert.")
+print("  uebersicht-alt.html aktualisiert.")
 PYEOF
 
 echo "→ Git commit & push..."

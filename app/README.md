@@ -19,7 +19,7 @@ gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rü
 | Datei | Zweck |
 |---|---|
 | `kurse/*.js` | **Ein Kurs pro Datei** – hier entstehen neue Inhalte |
-| `kurse/materialien.js` | Materialsammlungen aus `materialien/` – erzeugt mit `tools/build-materialien.py` |
+| `kurse/materialien.js` | Materialsammlungen aus `materialien/` – nur Uploads ab dem Plattformstart (`SEIT` in `tools/build-materialien.py`), erzeugt mit `tools/build-materialien.py` |
 | `content.js` | Basis: Einstellungen (Schule, öffentliche Adresse, Fachnamen) und Rechen-Helfer |
 | `index.html` | lädt Basis, alle Kurse, QR-Bibliothek und App – **neue Kurse hier eintragen** |
 | `app.js` | Logik (Navigation, Aufgaben, Hilfe, Klausur, Training, QR-Codes) |
@@ -38,7 +38,7 @@ Wer per QR kommt und die App zum ersten Mal öffnet, gibt seinen Namen ein und l
 ## Inhalte ergänzen
 
 Jeder Kurs ist eine Datei in `kurse/` (`LERNRAUM.subjects.push({...})`): **Kurs → Themen → Schritte**.
-Materialsammlungen entstehen automatisch aus `materialien/<Fach>/…`.
+Materialsammlungen entstehen aus `materialien/<Fach>/…`, aber nur für Dateien, die ab dem Plattformstart (18.09.2026) hochgeladen wurden. Ältere Materialien bleiben über `uebersicht-alt.html` erreichbar.
 
 ```js
 // Fach / Kurs

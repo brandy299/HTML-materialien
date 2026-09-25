@@ -57,7 +57,7 @@ python3 "$REPO_DIR/update_index.py" \
 
 echo "→ Git commit & push..."
 cd "$REPO_DIR"
-git add materialien/ index.html
+git add materialien/ uebersicht-alt.html
 git commit -m "[$FACH / $THEMA] $TITEL ($DATUM)"
 git push origin main
 
