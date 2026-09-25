@@ -735,6 +735,27 @@ window.LERNRAUM = {
           ]
         },
 
+        /* ══════════════ ENDLOS-TRAINING ══════════════ */
+        {
+          id: "training-personalbedarf",
+          group: "Klausurtraining",
+          title: "Endlos-Training",
+          kicker: "Zufallsaufgaben",
+          drill: "bedarf",          // erzeugt immer neue Personalbedarf-Aufgaben
+          description: "Immer neue Personalbedarf-Aufgaben mit Antwortsatz. Wähle deine Stufe und übe, bis es sitzt.",
+          steps: [],
+          help: `<h3>Das Rechenschema</h3>
+                 <p class="formula">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p>
+                 <h3>Abgang oder Zugang?</h3>
+                 <ul><li><strong>Abgang:</strong> Rente, Elternzeit, Kündigung, Wechsel zu einer anderen Firma.</li>
+                 <li><strong>Zugang:</strong> Übernahme nach der Ausbildung, Rückkehr aus der Elternzeit, unterschriebener Vertrag.</li>
+                 <li><strong>Nicht wichtig:</strong> Krankheit, Urlaub, Beschwerden, Fortbildung.</li></ul>
+                 <h3>Stufe 3: Ersatz- und Neubedarf</h3>
+                 <p class="formula">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist</p>
+                 <h3>Ergebnis deuten</h3>
+                 <ul><li><strong>positiv (+):</strong> Es fehlen Leute → einstellen.</li><li><strong>negativ (−):</strong> Zu viele da → abbauen.</li></ul>`
+        },
+
         /* ══════════════ MINI-KLAUSUREN ══════════════ */
         {
           id: "mini-klausur-1",

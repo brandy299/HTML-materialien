@@ -135,6 +135,16 @@ am Ende Punkte, Note, Erwartungshorizont je Aufgabe und Empfehlungen zum Wiederh
 ```
 `points` = Punkte der Aufgabe (anteilig nach richtigen Teilen), `review` = Thema, das bei weniger als 75 % empfohlen wird.
 
+### Endlos-Training (Zufallsaufgaben)
+
+Ein Thema mit `drill: "bedarf"` erzeugt unbegrenzt neue Personalbedarf-Aufgaben (Rechenschema + Antwortsatz)
+in drei Stufen: 1 Zahlen · 2 Fall mit Namen · 3 Profi mit Ablenkern, Ersatz-/Neubedarf und negativen Ergebnissen.
+Firmen, Namen und Ereignisse stehen in `DRILL_DATA` in `app.js` und lassen sich dort erweitern.
+```js
+{ id: "training-personalbedarf", title: "Endlos-Training", kicker: "Zufallsaufgaben",
+  drill: "bedarf", description: "…", steps: [], help: "Merkkasten …" }
+```
+
 **Vorhandenes Material verlinken**
 ```js
 { type: "link", title: "…", text: "…", href: "../materialien/GP/…/datei.html" }
