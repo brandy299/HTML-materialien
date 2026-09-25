@@ -1,0 +1,45 @@
+# Lernraum – automatischer Inhalts-Check
+# Läuft bei jedem Pull Request und bei jedem Push auf main.
+# 1. Prüft alle Kurse (app/tools/check-kurse.js)
+# 2. Content-Branches (kurs/…) dürfen nur Kursdateien ändern – Design & Navigation gehören dem Creative Director.
+name: Lernraum-Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Kurse prüfen
+        run: node app/tools/check-kurse.js
+
+      - name: Content-Branch ändert nur erlaubte Dateien
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'kurs/')
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed.txt
+          echo "Geänderte Dateien:"; cat changed.txt
+          # erlaubt: Kursdateien, Eintrag in index.html/sw.js, Fachname in content.js, Einzeldatei
+          if grep -vE '^(app/kurse/[a-z0-9-]+\.js|app/index\.html|app/sw\.js|app/content\.js|app/dist/lernraum\.html)$' changed.txt; then
+            echo "::error::Content-Branches (kurs/…) dürfen nur Kursdateien ändern. Die oben gelisteten Dateien gehören zu Design/Navigation – bitte als Wunsch-Issue mit Label 'design' anlegen."
+            exit 1
+          fi
+          if grep -q '^app/kurse/materialien\.js$' changed.txt; then
+            echo "::error::app/kurse/materialien.js wird automatisch erzeugt und darf nicht von Hand geändert werden."
+            exit 1
+          fi
+          if git diff origin/${{ github.base_ref }}...HEAD -- app/index.html | grep -E '^[+-][^+-]' | grep -vE '^\+\s*<script src="kurse/[a-z0-9-]+\.js"></script>\s*$'; then
+            echo "::error::In app/index.html darf ein Content-Branch nur Zeilen <script src=\"kurse/…\"></script> ergänzen."
+            exit 1
+          fi
+          echo "✓ Nur erlaubte Dateien geändert."

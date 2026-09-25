@@ -7,6 +7,7 @@
 LERNRAUM.subjects.push({
   id: "pbp",
   fach: "PBP",
+  added: "2026-09-24",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
   name: "Personalbedarf",
   course: "PBP · HS1",
   glyph: "P",
