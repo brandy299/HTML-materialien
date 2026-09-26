@@ -23,7 +23,7 @@ sorgt dafür, dass alles wie aus einem Guss wirkt:
 - **Kurse:** PBP · HS1 Personalbedarf (vom Creative Director erstellt, 10 Themen inkl. Übungsklausur und
   Endlos-Training) · GPU · HS1Y Preiskalkulation (von einem Content-Agenten, 3 Themen).
 - **Funktionen:** Folien, Quiz, Zuordnen, Lückentext, Rechenschema mit Zahlenfeld, Satzbausteine, Lernkarten,
-  Kann-Liste, **Word-Simulation (`word`: Brief formatieren, geführt + frei, 26.09.2026)**, Übungsklausur (Timer,
+  Kann-Liste, **Word-Simulation in eigener Vollbild-Umgebung im Word-Look (26.09.2026)**, Übungsklausur (Timer,
   Note, Erwartungshorizont), Endlos-Training (nur Personalbedarf), Hilfe (gestufte Tipps, Merkkasten, Lexikon),
   ↺ Aufgabe/Thema zurücksetzen, QR-Codes mit Beamer-Ansicht, Einzeldatei-Build, Offline/PWA.
 - **Startseite:** Hero mit Neuigkeiten (neuester Kurs, Klausur-Countdown), Zahlen, Kurse (neueste zuerst,
@@ -61,6 +61,11 @@ Stilstudie der Lehrkraft war die Vorlage.
   die Engine. v1 kann Schriftart/-grad, Fett, Ausrichtung, Leerzeilen und Seitenränder; Startzustand Arial 10,
   Zielwerte wie das Word-Arbeitsblatt (DIN 5008). Bewusst keine echte Word-Datei: Handy-taugliche Klick-Übung,
   der echte Transfer bleibt das Formatieren am PC. Geführt (Aufgabe für Aufgabe) und frei (Live-Checkliste).
+- **Simulator-Umgebung v2 (26.09.2026):** Der `word`-Schritt öffnet als eigene Vollbild-Umgebung im Word-Look
+  (Ribbon mit Tabs, Lineal, A4-Seite, Statusleiste, blaue Auswahl) und verlässt bewusst die Typesafe-Sprache –
+  Wunsch der Lehrkraft („eher zum Word-Simulator passend“). Die Engine-Schnittstelle bleibt unverändert; pro
+  Aufgabe leuchtet die betroffene Zeile auf, die passenden Bedienelemente pulsieren. Zonen-Schaubild für
+  Kurs-Folien als Baustein `.brief-mock` ergänzt (erster Einsatz: INWI-Kurs-Update).
 
 ## Offen / Ideen
 
