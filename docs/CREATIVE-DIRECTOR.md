@@ -23,7 +23,8 @@ sorgt dafür, dass alles wie aus einem Guss wirkt:
 - **Kurse:** PBP · HS1 Personalbedarf (vom Creative Director erstellt, 10 Themen inkl. Übungsklausur und
   Endlos-Training) · GPU · HS1Y Preiskalkulation (von einem Content-Agenten, 3 Themen).
 - **Funktionen:** Folien, Quiz, Zuordnen, Lückentext, Rechenschema mit Zahlenfeld, Satzbausteine, Lernkarten,
-  Kann-Liste, **Word-Simulation in eigener Vollbild-Umgebung im Word-Look (26.09.2026)**, Übungsklausur (Timer,
+  Kann-Liste, **Word-Simulation v3 in eigener Vollbild-Word-Umgebung (Bedienen mit Enter/Griffen/Strg-Kürzeln,
+  Sprechblasen, Geisterhand, Lineale, Zoom; 26.09.2026)**, Übungsklausur (Timer,
   Note, Erwartungshorizont), Endlos-Training (nur Personalbedarf), Hilfe (gestufte Tipps, Merkkasten, Lexikon),
   ↺ Aufgabe/Thema zurücksetzen, QR-Codes mit Beamer-Ansicht, Einzeldatei-Build, Offline/PWA.
 - **Startseite:** Hero mit Neuigkeiten (neuester Kurs, Klausur-Countdown), Zahlen, Kurse (neueste zuerst,
@@ -66,6 +67,12 @@ Stilstudie der Lehrkraft war die Vorlage.
   Wunsch der Lehrkraft („eher zum Word-Simulator passend“). Die Engine-Schnittstelle bleibt unverändert; pro
   Aufgabe leuchtet die betroffene Zeile auf, die passenden Bedienelemente pulsieren. Zonen-Schaubild für
   Kurs-Folien als Baustein `.brief-mock` ergänzt (erster Einsatz: INWI-Kurs-Update).
+- **Simulator v3 – Bediengefühl + Word-Treue (26.09.2026):** Nach Lehrkraft-Feedback („Klicks statt Bedienen“,
+  „zu wenig Word-Detail“): Tastaturleiste mit **Enter/⌫/Strg+A/B/R** (am PC die echten Tasten, Enter fügt
+  Leerzeilen ein wie in Word), **Markieren per Zieh-Griffen**, Sprechblase direkt an der Zielzeile,
+  **Geisterhand** nach 12 s Untätigkeit, ¶-Schalter, angedeutete (deaktivierte) Word-Befehle, waagerechtes und
+  senkrechtes Lineal, Statusleiste mit Wörtern, Auswahl und **Zoom** (80–175 %), Fehl-Rückmeldung mit Tipp.
+  Kursdaten unverändert; Sprechblasen-Kurztexte über `task.kurz`.
 
 ## Offen / Ideen
 
@@ -74,8 +81,9 @@ Stilstudie der Lehrkraft war die Vorlage.
 - [ ] **Google Fonts lokal einbinden** (Datenschutz/IP-Übertragung an Google).
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
 - [ ] Endlos-Training nur für Personalbedarf – Generator für weitere Themen (z. B. Kalkulation) denkbar.
-- [ ] Word-Simulation v2: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und
-      „Speichern unter“ mit Dateinamen-Regel.
+- [ ] Word-Simulation: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und
+      „Speichern unter“ mit Dateinamen-Regel; Prüfungsmodus (Zeit/Punkte/Note) als mögliche Stufe 3.
+- [ ] Referenz-Screenshots von Word 2016 (Schul-PC) können Symbole und Dialoge weiter schärfen.
 - [ ] Optional: Branch-Schutz für `main` in den GitHub-Einstellungen (Lernraum-Check als Pflicht) –
       muss die Lehrkraft selbst in GitHub aktivieren.
 
