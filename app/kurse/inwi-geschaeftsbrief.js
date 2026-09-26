@@ -94,6 +94,7 @@ LERNRAUM.subjects.push({
   id: "inwi-geschaeftsbrief",
   fach: "INWI",
   added: "2026-09-26",
+  updated: "2026-09-26",
   name: "Geschäftsbrief nach DIN 5008",
   course: "INWI · HHU",
   glyph: "G",
@@ -143,26 +144,20 @@ LERNRAUM.subjects.push({
                      <li>Ein sauberer Brief wirkt <strong>professionell</strong>.</li></ul>`
             },
             {
-              kicker: "Die neun Zonen · oben",
-              title: "Absender, Empfänger, Datum, Betreff.",
-              body: `<dl class="terms">
-                       <dt>1 Briefkopf</dt><dd>Rücksendeangabe klein (8 pt)</dd>
-                       <dt>2 Anschriftfeld</dt><dd>Empfänger – Leerzeile vor der PLZ</dd>
-                       <dt>3 Informationsblock</dt><dd>Datum rechtsbündig</dd>
-                       <dt>4 Betreffzeile</dt><dd>fett, ohne „Betreff“</dd>
-                     </dl>
-                     <p class="note">Das Anschriftfeld beginnt 45 mm unter dem oberen Blattrand.</p>`
-            },
-            {
-              kicker: "Die neun Zonen · unten",
-              title: "Anrede, Text, Gruß, Unterschrift, Anlagen.",
-              body: `<dl class="terms">
-                       <dt>5 Anrede</dt><dd>mit Komma, danach eine Leerzeile</dd>
-                       <dt>6 Brieftext</dt><dd>ein Gedanke pro Absatz</dd>
-                       <dt>7 Grußformel</dt><dd>ohne Komma</dd>
-                       <dt>8 Unterschrift</dt><dd>handschriftlich + Name in Druckschrift</dd>
-                       <dt>9 Anlagen</dt><dd>z. B. „Anlagen: Bedarfsmeldung“</dd>
-                     </dl>`
+              kicker: "Der Brief von oben nach unten",
+              title: "Neun Zonen – ein Bauplan.",
+              body: `<div class="brief-mock">
+                       <p class="bm-title"><span>Geschäftsbrief nach DIN 5008</span><span>Fly Bike → AWE</span></p>
+                       <div class="bm-zone"><span class="bm-n">1</span><span class="bm-l">Briefkopf</span><span class="bm-c bm-s">Fly Bike Werke GmbH · Rostocker Str. 334 · 26121 Oldenburg</span></div>
+                       <div class="bm-zone"><span class="bm-n">2</span><span class="bm-l">Anschriftfeld</span><span class="bm-c">AWE Aluminiumwerke AG<br>Herrn Köllen<br>St. Augustiner Str. 30<br><br>53225 Bonn</span></div>
+                       <div class="bm-zone"><span class="bm-n">3</span><span class="bm-l">Datum</span><span class="bm-c bm-r">Oldenburg, 24.09.2026</span></div>
+                       <div class="bm-zone"><span class="bm-n">4</span><span class="bm-l">Betreff</span><span class="bm-c bm-b">Anfrage über Aluminiumrohre</span></div>
+                       <div class="bm-zone"><span class="bm-n">5</span><span class="bm-l">Anrede</span><span class="bm-c">Sehr geehrte Damen und Herren,</span></div>
+                       <div class="bm-zone"><span class="bm-n">6</span><span class="bm-l">Brieftext</span><span class="bm-c">Erst der Anlass (fehlende Rohre), dann die Bitte (Angebot, Preise, Termin).</span></div>
+                       <div class="bm-zone"><span class="bm-n">7</span><span class="bm-l">Gruß</span><span class="bm-c">Mit freundlichen Grüßen</span></div>
+                       <div class="bm-zone"><span class="bm-n">8</span><span class="bm-l">Unterschrift</span><span class="bm-c">Platz für die Handschrift · Oliver Thüne, Einkauf/Logistik</span></div>
+                       <div class="bm-zone"><span class="bm-n">9</span><span class="bm-l">Anlagen</span><span class="bm-c">Anlagen: Bedarfsmeldung</span></div>
+                     </div>`
             },
             {
               style: "accent",
@@ -335,7 +330,7 @@ LERNRAUM.subjects.push({
           title: "Brief formatieren – geführt",
           mode: "guided",
           file: "Brief_Rohtext.docx",
-          intro: "Der Brieftext steht schon da – aber noch roh: Arial 10, keine Leerzeilen. Formatiere ihn Schritt für Schritt. Tippe auf eine Zeile, um sie zu markieren.",
+          intro: "Gleich öffnet sich Word – als Simulation. Der Brieftext steht schon da, aber noch roh: Arial 10, keine Leerzeilen. Formatiere ihn Schritt für Schritt.",
           start: { font: "Arial", size: 10 },
           blocks: INWI_GB_BLOCKS,
           criteria: INWI_GB_KRITERIEN
@@ -345,7 +340,7 @@ LERNRAUM.subjects.push({
           title: "Brief formatieren – frei",
           mode: "free",
           file: "Brief_Rohtext.docx",
-          intro: "Jetzt ohne Anleitung: Bringe den Brief von oben nach unten in Form. Die Checkliste zeigt dir, was schon passt – geprüft wird erst am Ende.",
+          intro: "Jetzt ohne Anleitung: Bringe den Brief von oben nach unten in Form. Die Checkliste zeigt dir live, was schon passt.",
           start: { font: "Arial", size: 10 },
           blocks: INWI_GB_BLOCKS,
           criteria: INWI_GB_KRITERIEN,
