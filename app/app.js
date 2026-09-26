@@ -1192,28 +1192,35 @@
       const crit = step.criteria;
       const guided = step.mode !== "free";
       let cur = 0, sel = null, tab = "start", pop = null, popMargins = null, give = null;
+      let taskOpen = true, checkOpen = window.innerWidth >= 600;
 
-      const node = h(`<div class="word">
-        ${step.intro ? `<p class="lead" style="margin-bottom:14px">${esc(step.intro)}</p>` : ""}
-        <div class="word-ribbon">
-          <div class="wr-tabs" role="tablist">
-            <button type="button" data-tab="start" aria-selected="true">Start</button>
-            <button type="button" data-tab="layout" aria-selected="false">Layout</button>
+      const node = h(`<div class="sim">
+        <div class="sim-ribbon">
+          <div class="sim-tabs" role="tablist">
+            <button type="button" class="sim-tab" disabled>Datei</button>
+            <button type="button" class="sim-tab" data-tab="start" aria-selected="true">Start</button>
+            <button type="button" class="sim-tab" disabled>Einfügen</button>
+            <button type="button" class="sim-tab" data-tab="layout" aria-selected="false">Layout</button>
+            <button type="button" class="sim-tab" disabled>Überprüfen</button>
           </div>
-          <div class="wr-sel"><span id="wrSelText"></span><button type="button" id="wrAll">Alles markieren</button></div>
-          <div class="wr-groups" id="wrGroups"></div>
-          <div class="wr-pop" id="wrPop" hidden></div>
+          <div class="sim-groups" id="wrGroups"></div>
+          <div class="sim-pop" id="wrPop" hidden></div>
+          <div class="sim-sel"><span id="wrSelText"></span><button type="button" id="wrAll">Alles markieren (Strg+A)</button></div>
         </div>
         <div id="wrTask"></div>
         <div id="wrOut"></div>
-        <div class="word-doc win">
-          <div class="bar"><span class="d"></span>Dokument · ${esc(step.file || "Brief.docx")}<span class="r">Seite 1 / 1</span></div>
-          <div class="word-page" id="wrPage"></div>
+        <div class="sim-scroll">
+          <div class="sim-canvas">
+            <div class="sim-page-wrap">
+              <div class="sim-ruler" id="wrRuler" aria-hidden="true"></div>
+              <div class="sim-page" id="wrPage"></div>
+            </div>
+          </div>
         </div>
-        <div class="wpg-caps" id="wrCaps"></div>
       </div>`);
       const out = node.querySelector("#wrOut");
       const groups = node.querySelector("#wrGroups");
+      const page = node.querySelector("#wrPage");
 
       const short = (t) => (t.length > 26 ? t.slice(0, 25) + "…" : t);
       const fmtCm = (v) => String(v).replace(".", ",");
@@ -1234,28 +1241,41 @@
       }
       const critOK = (c) => c.checks.every(evalCheck);
       const passedCount = () => crit.filter(critOK).length;
+      const hintBlocks = () => {
+        if (!guided || cur >= crit.length) return [];
+        const set = new Set();
+        crit[cur].checks.forEach((ck) => { if (Number.isInteger(ck.block)) set.add(ck.block); });
+        return [...set];
+      };
+      function simMsg(kind, html) {
+        out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      }
 
       function paintSelLine() {
         node.querySelector("#wrSelText").textContent = !sel
           ? "Keine Auswahl – tippe eine Zeile an"
-          : sel.all ? `Alles markiert (${doc.blocks.length} Zeilen)`
+          : sel.all ? `Alles markiert · ${doc.blocks.length} Zeilen`
           : `Zeile ${sel.i + 1}: „${short(doc.blocks[sel.i].text)}“`;
         node.querySelector("#wrAll").classList.toggle("on", !!(sel && sel.all));
       }
 
       function paintPage() {
-        const page = node.querySelector("#wrPage");
-        page.style.padding = `${doc.margins.top * 7}px ${doc.margins.right * 7}px ${doc.margins.bottom * 7}px ${doc.margins.left * 7}px`;
-        page.innerHTML = `<div class="wpg-content">${doc.blocks.map((b, i) => {
+        const k = Math.max(8, (page.clientWidth || 320) / 21);
+        page.style.padding = `${doc.margins.top * k}px ${doc.margins.right * k}px ${doc.margins.bottom * k}px ${doc.margins.left * k}px`;
+        const hint = hintBlocks();
+        page.innerHTML = doc.blocks.map((b, i) => {
           const on = sel && (sel.all || sel.i === i);
-          const gaps = Array.from({ length: b.gap }, () => `<div class="wpg-gap" data-i="${i}">¶</div>`).join("");
-          return `<div class="wpg-line${on ? " sel" : ""}" data-i="${i}" style="font-family:${W_STACK[b.font] || "sans-serif"};font-size:${Math.round(b.size * 1.28)}px;font-weight:${b.bold ? 800 : 400};text-align:${b.align}"><span>${esc(b.text)}</span><span class="wpg-pil">¶</span></div>${gaps}`;
-        }).join("")}</div>`;
-        page.querySelectorAll(".wpg-line,.wpg-gap").forEach((el) => {
+          const cls = "sim-line" + (on ? " sel" : "") + (hint.includes(i) ? " hint" : "");
+          const gaps = Array.from({ length: b.gap }, () => `<div class="sim-gap" data-i="${i}">¶</div>`).join("");
+          return `<div class="${cls}" data-i="${i}" style="font-family:${W_STACK[b.font] || "'Calibri',sans-serif"};font-size:${Math.round(b.size * 1.32)}px;font-weight:${b.bold ? 700 : 400};text-align:${b.align}"><span>${esc(b.text)}</span><span class="sim-pil">¶</span></div>${gaps}`;
+        }).join("");
+        page.querySelectorAll(".sim-line,.sim-gap").forEach((el) => {
           el.onclick = () => { sel = { i: +el.dataset.i }; closePop(); refresh(); };
         });
-        node.querySelector("#wrCaps").innerHTML = ["top", "bottom", "left", "right"]
-          .map((k) => `<span class="wpg-cap">${W_CM[k]} ${fmtCm(doc.margins[k])} cm</span>`).join("");
+        node.querySelector("#wrRuler").innerHTML =
+          `<i class="m ml" style="width:${((doc.margins.left / 21) * 100).toFixed(3)}%"></i>` +
+          `<i class="m mr" style="width:${((doc.margins.right / 21) * 100).toFixed(3)}%"></i>` +
+          Array.from({ length: 10 }, (_, n) => (n + 1) * 2).map((cm) => `<span class="num" style="left:${((cm / 21) * 100).toFixed(3)}%">${cm}</span>`).join("");
       }
 
       function selVal(get) {
@@ -1266,23 +1286,23 @@
       }
 
       function paintRibbon() {
-        node.querySelectorAll(".wr-tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+        node.querySelectorAll(".sim-tab[data-tab]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
         if (tab === "start") {
           groups.innerHTML = `
-            <div class="wr-group"><span class="wr-lbl">Schriftart</span><div class="wr-btns">
-              <button type="button" class="wr-b" data-act="font"><span>${esc(String(selVal((b) => b.font)))}</span> ▾</button>
-              <button type="button" class="wr-b" data-act="size"><span>${esc(String(selVal((b) => b.size)))}</span> ▾</button>
-              <button type="button" class="wr-b wr-f${selBold() ? " on" : ""}" data-act="bold" aria-label="Fett">F</button>
+            <div class="sim-group"><span class="sim-lbl">Schriftart</span><div class="sim-btns">
+              <button type="button" class="sim-b combo" data-act="font"><span>${esc(String(selVal((b) => b.font)))}</span><i>▾</i></button>
+              <button type="button" class="sim-b combo small" data-act="size"><span>${esc(String(selVal((b) => b.size)))}</span><i>▾</i></button>
+              <button type="button" class="sim-b bold${selBold() ? " on" : ""}" data-act="bold" aria-label="Fett">F</button>
             </div></div>
-            <div class="wr-group"><span class="wr-lbl">Absatz</span><div class="wr-btns">
-              ${W_ALIGN.map(([a, t, svg]) => `<button type="button" class="wr-b wr-ic" data-act="align:${a}" aria-label="${t}">${svg}</button>`).join("")}
-              <button type="button" class="wr-b" data-act="gap+" aria-label="Leerzeile einfügen">¶ +</button>
-              <button type="button" class="wr-b" data-act="gap-" aria-label="Leerzeile löschen">¶ −</button>
+            <div class="sim-group"><span class="sim-lbl">Absatz</span><div class="sim-btns">
+              ${W_ALIGN.map(([a, t, svg]) => `<button type="button" class="sim-b" data-act="align:${a}" aria-label="${t}">${svg}</button>`).join("")}
+              <button type="button" class="sim-b" data-act="gap+" aria-label="Leerzeile einfügen">¶ +</button>
+              <button type="button" class="sim-b" data-act="gap-" aria-label="Leerzeile löschen">¶ −</button>
             </div></div>`;
         } else {
           groups.innerHTML = `
-            <div class="wr-group"><span class="wr-lbl">Seite einrichten</span><div class="wr-btns">
-              <button type="button" class="wr-b wr-wide" data-act="margins">Seitenränder …</button>
+            <div class="sim-group"><span class="sim-lbl">Seite einrichten</span><div class="sim-btns">
+              <button type="button" class="sim-b wide" data-act="margins">Seitenränder ▾</button>
             </div></div>`;
         }
       }
@@ -1293,17 +1313,17 @@
         if (!pop) { p.hidden = true; p.innerHTML = ""; return; }
         p.hidden = false;
         if (pop === "font") {
-          p.innerHTML = `<div class="wr-chips">${W_FONTS.map((f) => `<button type="button" class="wr-chip${selIdx().length && doc.blocks[selIdx()[0]].font === f ? " on" : ""}" data-f="${esc(f)}" style="font-family:${W_STACK[f]}">${esc(f)}</button>`).join("")}</div>`;
+          p.innerHTML = `<div class="sim-chips">${W_FONTS.map((f) => `<button type="button" class="sim-chip${selIdx().length && doc.blocks[selIdx()[0]].font === f ? " on" : ""}" data-f="${esc(f)}" style="font-family:${W_STACK[f]}">${esc(f)}</button>`).join("")}</div>`;
           p.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => applyFont(b.dataset.f));
         } else if (pop === "size") {
-          p.innerHTML = `<div class="wr-chips">${W_SIZES.map((s) => `<button type="button" class="wr-chip${selIdx().length && doc.blocks[selIdx()[0]].size === s ? " on" : ""}" data-s="${s}" style="font-size:${Math.round(s * 1.5)}px">${s}</button>`).join("")}</div>`;
+          p.innerHTML = `<div class="sim-chips">${W_SIZES.map((s) => `<button type="button" class="sim-chip${selIdx().length && doc.blocks[selIdx()[0]].size === s ? " on" : ""}" data-s="${s}" style="font-size:${Math.round(s * 1.5)}px">${s}</button>`).join("")}</div>`;
           p.querySelectorAll("[data-s]").forEach((b) => b.onclick = () => applySize(+b.dataset.s));
         } else {
           if (!popMargins) popMargins = { ...doc.margins };
-          p.innerHTML = `<div class="wr-marg">${["top", "bottom", "left", "right"].map((k) => `<div class="wr-mrow" data-k="${k}"><span>${W_CM[k]}</span>
-            <button type="button" data-d="-1" aria-label="kleiner">−</button><b>${fmtCm(popMargins[k])} cm</b><button type="button" data-d="1" aria-label="größer">+</button></div>`).join("")}
-            <div class="wr-mbtns"><button type="button" id="wrOk">OK</button><button type="button" id="wrCancel">Abbrechen</button></div></div>`;
-          p.querySelectorAll(".wr-mrow").forEach((row) => {
+          p.innerHTML = `<div class="sim-dlg"><div class="sim-dtitle">Seitenränder</div>${["top", "bottom", "left", "right"].map((k) => `<div class="sim-drow" data-k="${k}"><span>${W_CM[k]}</span>
+            <button type="button" class="sim-step" data-d="-1" aria-label="kleiner">−</button><b>${fmtCm(popMargins[k])} cm</b><button type="button" class="sim-step" data-d="1" aria-label="größer">+</button></div>`).join("")}
+            <div class="sim-dbtns"><button type="button" class="sim-cancel" id="wrCancel">Abbrechen</button><button type="button" class="sim-ok" id="wrOk">OK</button></div></div>`;
+          p.querySelectorAll(".sim-drow").forEach((row) => {
             const k = row.dataset.k;
             row.querySelectorAll("[data-d]").forEach((b) => b.onclick = () => {
               const v = Math.round((popMargins[k] + (+b.dataset.d) * 0.5) * 2) / 2;
@@ -1332,18 +1352,25 @@
       function paintTask() {
         const box = node.querySelector("#wrTask");
         if (!guided) {
-          box.innerHTML = `<div class="word-check win"><div class="bar"><span class="d"></span>Checkliste – das prüft die Simulation<span class="r" id="wrScore"></span></div><div class="body" id="wrCList"></div></div>`;
+          box.innerHTML = `<div class="sim-check${checkOpen ? " open" : ""}" id="wrCheckBox">
+            <button type="button" class="sim-check-head" id="wrCheckToggle"><span>Checkliste · <b id="wrScore"></b></span><span class="chev">▾</span></button>
+            <div class="sim-check-body" id="wrCList"></div></div>`;
+          const cb = box.querySelector("#wrCheckBox");
+          box.querySelector("#wrCheckToggle").onclick = () => { checkOpen = !checkOpen; cb.classList.toggle("open", checkOpen); };
         } else if (cur >= crit.length) {
-          box.innerHTML = `<div class="word-task done"><p class="wt-k">Geschafft</p><p class="wt-t">Der Brief ist fertig formatiert.</p><p class="wt-w">Tippe unten auf „Fertig“.</p></div>`;
+          box.innerHTML = `<div class="sim-task done open"><div class="sim-task-head"><span class="n">✓</span><b>Der Brief ist fertig formatiert.</b></div>
+            <div class="sim-task-body"><p>Tippe unten auf „Fertig“.</p></div></div>`;
         } else {
           const c = crit[cur], t = c.task || {};
-          box.innerHTML = `<div class="word-task">
-            <p class="wt-k">Aufgabe ${cur + 1} / ${crit.length}</p>
-            <p class="wt-t">${esc(c.label)}</p>
-            ${t.wo ? `<p class="wt-w"><b>Wo?</b> ${esc(t.wo)}</p>` : ""}
-            ${t.was ? `<p class="wt-w"><b>Was?</b> ${esc(t.was)}</p>` : ""}
-            ${t.probe ? `<p class="wt-w"><b>Probe:</b> ${esc(t.probe)}</p>` : ""}
-          </div>`;
+          box.innerHTML = `<div class="sim-task${taskOpen ? " open" : ""}" id="wrTaskBox">
+            <button type="button" class="sim-task-head" id="wrTaskToggle"><span class="n">Aufgabe ${cur + 1}/${crit.length}</span><b>${esc(c.label)}</b><span class="chev">▾</span></button>
+            <div class="sim-task-body">
+              ${t.wo ? `<p><span class="lbl">Wo?</span> ${esc(t.wo)}</p>` : ""}
+              ${t.was ? `<p><span class="lbl">Was?</span> ${esc(t.was)}</p>` : ""}
+              ${t.probe ? `<p><span class="lbl">Probe</span> ${esc(t.probe)}</p>` : ""}
+            </div></div>`;
+          const tb = box.querySelector("#wrTaskBox");
+          box.querySelector("#wrTaskToggle").onclick = () => { taskOpen = !taskOpen; tb.classList.toggle("open", taskOpen); };
         }
       }
 
@@ -1351,8 +1378,9 @@
         if (guided) return;
         const list = node.querySelector("#wrCList");
         if (!list) return;
-        list.innerHTML = crit.map((c) => `<div class="wck${critOK(c) ? " ok" : ""}"><i></i><span>${esc(c.label)}</span></div>`).join("");
-        node.querySelector("#wrScore").textContent = `${passedCount()}/${crit.length}`;
+        list.innerHTML = crit.map((c) => `<div class="row${critOK(c) ? " ok" : ""}"><i>✓</i><span>${esc(c.label)}</span></div>`).join("");
+        const sc = node.querySelector("#wrScore");
+        if (sc) sc.textContent = `${passedCount()}/${crit.length}`;
       }
 
       function paintDock() {
@@ -1366,12 +1394,43 @@
         }
       }
 
+      function paintStatus() {
+        if (!statusEl) return;
+        statusEl.textContent = `Seite 1 von 1 · ${doc.blocks.length} Zeilen · 100 %${guided && cur < crit.length ? ` · Aufgabe ${cur + 1}/${crit.length}` : ""}`;
+      }
+
+      function paintCtrlHint() {
+        groups.querySelectorAll(".hint").forEach((el) => el.classList.remove("hint"));
+        node.querySelector("#wrAll").classList.remove("hint");
+        node.querySelectorAll(".sim-tab[data-tab]").forEach((el) => el.classList.remove("hint"));
+        if (!guided || cur >= crit.length) return;
+        const checks = crit[cur].checks;
+        const pulse = (sel2) => { const el = groups.querySelector(sel2); if (el) el.classList.add("hint"); };
+        if (checks.some((ck) => ck.op === "font" || (ck.op === "size" && ck.block === undefined))) {
+          node.querySelector("#wrAll").classList.add("hint");
+          if (checks.some((ck) => ck.op === "font")) pulse('[data-act="font"]');
+          if (checks.some((ck) => ck.op === "size" && ck.block === undefined)) pulse('[data-act="size"]');
+        }
+        checks.forEach((ck) => {
+          if (ck.op === "size" && Number.isInteger(ck.block)) pulse('[data-act="size"]');
+          if (ck.op === "bold") pulse('[data-act="bold"]');
+          if (ck.op === "align") pulse(`[data-act="align:${ck.value}"]`);
+          if (ck.op === "gap") pulse(ck.value > (doc.blocks[ck.block] || {}).gap ? '[data-act="gap+"]' : '[data-act="gap-"]');
+        });
+        if (checks.some((ck) => ck.op === "margins")) {
+          if (tab !== "layout") node.querySelector('[data-tab="layout"]').classList.add("hint");
+          else pulse('[data-act="margins"]');
+        }
+      }
+
       function refresh() {
         paintRibbon();
         paintPage();
         paintChecklist();
         paintSelLine();
         paintPop();
+        paintStatus();
+        paintCtrlHint();
         if (!guided) {
           ctx.setProgress(passedCount() / crit.length);
           if (passedCount() >= crit.length) { if (give) { give.remove(); give = null; } paintDock(); }
@@ -1382,42 +1441,36 @@
         const c = crit[cur];
         if (!c) return;
         if (critOK(c)) {
-          out.replaceChildren(term([
-            ["p", `$ probe ${cur + 1}/${crit.length} …`],
-            ["", `› <span class="ok">Passt.</span> ${esc((c.task && c.task.probe) || "")}`]
-          ]));
+          simMsg("ok", `Passt. ${esc((c.task && c.task.probe) || "")}`);
           buzz(20);
           cur++;
           ctx.setProgress(cur / crit.length);
           paintTask();
+          paintPage();
+          paintCtrlHint();
+          paintStatus();
           paintDock();
-          window.scrollTo({ top: 0, behavior: reduced() ? "auto" : "smooth" });
+          const hl = page.querySelector(".sim-line.hint");
+          if (hl) hl.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
         } else {
-          out.replaceChildren(term([
-            ["p", `$ probe ${cur + 1}/${crit.length} …`],
-            ["", `› <span class="no">Noch nicht ganz.</span> ${esc(c.hint || "Schau dir die Zeile nochmal an.")}`]
-          ]));
+          simMsg("no", `Noch nicht ganz. ${esc(c.hint || "Schau dir die Zeile nochmal an.")}`);
           buzz([30, 40, 30]);
-          out.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
         }
       }
 
       function freeCheck() {
         const n = passedCount();
         const missing = crit.filter((c) => !critOK(c)).map((c) => c.label);
-        out.replaceChildren(term([
-          ["p", "$ prüfe brief …"],
-          ["", n === crit.length
-            ? `› <span class="ok">Alles richtig.</span> Der Brief ist fertig formatiert.`
-            : `› <span class="no">${n} von ${crit.length}.</span> Noch offen: ${esc(missing.join(" · "))}`]
-        ]));
+        simMsg(n === crit.length ? "ok" : "no", n === crit.length
+          ? `Alles richtig. Der Brief ist fertig formatiert.`
+          : `${n} von ${crit.length}. Noch offen: ${esc(missing.join(" · "))}`);
         buzz(n === crit.length ? 20 : [30, 40, 30]);
         ctx.setProgress(n / crit.length);
         if (give) { give.remove(); give = null; }
         if (n < crit.length) {
           give = h(`<button class="btn ghost">Abgeben · ${n}/${crit.length}</button>`);
           give.onclick = () => ctx.finish({ c: n, t: crit.length });
-          ctx.dock.prepend(give);
+          ctx.dock.append(give);
         }
         paintDock();
       }
@@ -1436,7 +1489,7 @@
         const b = e.target.closest("[data-act]");
         if (b) act(b.dataset.act);
       });
-      node.querySelectorAll(".wr-tabs button").forEach((b) => b.onclick = () => { tab = b.dataset.tab; pop = null; popMargins = null; paintRibbon(); paintPop(); });
+      node.querySelectorAll(".sim-tab[data-tab]").forEach((b) => b.onclick = () => { tab = b.dataset.tab; pop = null; popMargins = null; paintRibbon(); paintPop(); paintCtrlHint(); });
       node.querySelector("#wrAll").onclick = () => { sel = { all: true }; pop = null; paintPop(); refresh(); };
 
       const onKey = (e) => {
@@ -1444,8 +1497,20 @@
         if ((e.ctrlKey || e.metaKey) && (e.key === "a" || e.key === "A")) { e.preventDefault(); sel = { all: true }; refresh(); }
         else if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); toggleBold(); }
       };
+      const onResize = () => paintPage();
       document.addEventListener("keydown", onKey);
-      cleanup = () => document.removeEventListener("keydown", onKey);
+      window.addEventListener("resize", onResize);
+      document.body.classList.add("sim-on");
+
+      const topbar = ctx.root.querySelector(".player-top");
+      topbar.insertBefore(h(`<span class="sim-file"><b>W</b><span>${esc(step.file || "Brief.docx")} – Word</span></span>`), topbar.querySelector(".progress"));
+      const statusEl = h(`<span class="sim-status"></span>`);
+      ctx.dock.prepend(statusEl);
+      cleanup = () => {
+        document.body.classList.remove("sim-on");
+        document.removeEventListener("keydown", onKey);
+        window.removeEventListener("resize", onResize);
+      };
 
       ctx.hintsFor = () => (guided && cur < crit.length ? [crit[cur].hint].filter(Boolean) : step.hints || []);
       ctx.hintKey = () => (guided ? "a" + cur : "frei");
@@ -1457,7 +1522,10 @@
       paintPage();
       paintSelLine();
       paintChecklist();
+      paintStatus();
+      paintCtrlHint();
       paintDock();
+      if (step.intro) simMsg("info", esc(step.intro));
     },
 
     /* Bestehendes Material */

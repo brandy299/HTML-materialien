@@ -149,7 +149,9 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 ```
 In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
-**Word-Simulation** – ein Dokument (z. B. einen Brief) wie in Word formatieren; wird automatisch geprüft
+**Word-Simulation** – ein Dokument (z. B. einen Brief) wie in Word formatieren; wird automatisch geprüft.
+Der Schritt öffnet als **eigene Simulator-Umgebung** im Word-Look (Vollbild; Ribbon, Lineal, A4-Seite mit
+Statusleiste) – bewusst außerhalb des Lernraum-Designs. Die betroffene Zeile leuchtet pro Aufgabe auf.
 ```js
 { type: "word", title: "Brief formatieren – geführt", mode: "guided", file: "Brief_Rohtext.docx",
   intro: "…",                        // optional: kurzer Einleitungstext
