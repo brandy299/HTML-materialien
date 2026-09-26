@@ -150,8 +150,12 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
 **Word-Simulation** – ein Dokument (z. B. einen Brief) wie in Word formatieren; wird automatisch geprüft.
-Der Schritt öffnet als **eigene Simulator-Umgebung** im Word-Look (Vollbild; Ribbon, Lineal, A4-Seite mit
-Statusleiste) – bewusst außerhalb des Lernraum-Designs. Die betroffene Zeile leuchtet pro Aufgabe auf.
+Der Schritt öffnet als **eigene Simulator-Umgebung** im Word-Look (Vollbild; Ribbon mit Tabs, Lineale,
+A4-Seite, Statusleiste mit Zoom) – bewusst außerhalb des Lernraum-Designs.
+Bedienung wie am Rechner: Zeilen antippen, an den blauen **Griffen** die Markierung ziehen; Leerzeilen mit
+**Enter** (löschen: **⌫**); Kürzel **Strg+A/B/R** (Tastaturleiste unten, am PC die echten Tasten). Pro Aufgabe
+zeigt eine **Sprechblase** an der Zeile das Ziel, passende Schaltflächen pulsieren, nach ~12 s Untätigkeit
+zeigt eine **Geisterhand** den nächsten Klick. Kurztext der Sprechblase: `task.kurz` am Prüfpunkt.
 ```js
 { type: "word", title: "Brief formatieren – geführt", mode: "guided", file: "Brief_Rohtext.docx",
   intro: "…",                        // optional: kurzer Einleitungstext
@@ -160,7 +164,7 @@ Statusleiste) – bewusst außerhalb des Lernraum-Designs. Die betroffene Zeile 
   criteria: [
     { label: "Grundschrift: alles Calibri 11", hint: "…",
       checks: [ { op: "font", value: "Calibri" }, { op: "size", value: 11, skip: [0] } ],
-      task: { wo: "Start → Gruppe Schriftart", was: "Alles markieren, Calibri und 11 wählen.", probe: "…" } },
+      task: { wo: "Start → Gruppe Schriftart", was: "Alles markieren, Calibri und 11 wählen.", probe: "…", kurz: "Strg+A → Calibri 11" } },
     { label: "Rücksendeangabe klein: Zeile 1 auf 8 pt",
       checks: [ { op: "size", value: 8, block: 0 } ] },
     { label: "Seitenränder: 4,5 / 2 / 2,5 / 2 cm",

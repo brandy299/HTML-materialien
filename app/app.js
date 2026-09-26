@@ -80,7 +80,7 @@
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
-    word: "Tippe eine Zeile an, um sie zu markieren (oder „Alles“), und formatiere sie mit der Leiste – wie in Word. Am PC geht auch Strg+A. Mit „Probe“ prüfst du die Aufgabe."
+    word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
   const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
 
@@ -1192,7 +1192,9 @@
       const crit = step.criteria;
       const guided = step.mode !== "free";
       let cur = 0, sel = null, tab = "start", pop = null, popMargins = null, give = null;
-      let taskOpen = true, checkOpen = window.innerWidth >= 600;
+      let taskOpen = false, checkOpen = window.innerWidth >= 600;
+      let pilcrow = true, zoom = 100, drag = null, idleTimer = null, ghost = null;
+      const flashSet = new Set();
 
       const node = h(`<div class="sim">
         <div class="sim-ribbon">
@@ -1200,32 +1202,52 @@
             <button type="button" class="sim-tab" disabled>Datei</button>
             <button type="button" class="sim-tab" data-tab="start" aria-selected="true">Start</button>
             <button type="button" class="sim-tab" disabled>Einfügen</button>
+            <button type="button" class="sim-tab" disabled>Entwurf</button>
             <button type="button" class="sim-tab" data-tab="layout" aria-selected="false">Layout</button>
+            <button type="button" class="sim-tab" disabled>Verweise</button>
             <button type="button" class="sim-tab" disabled>Überprüfen</button>
           </div>
           <div class="sim-groups" id="wrGroups"></div>
           <div class="sim-pop" id="wrPop" hidden></div>
-          <div class="sim-sel"><span id="wrSelText"></span><button type="button" id="wrAll">Alles markieren (Strg+A)</button></div>
         </div>
         <div id="wrTask"></div>
         <div id="wrOut"></div>
         <div class="sim-scroll">
           <div class="sim-canvas">
-            <div class="sim-page-wrap">
+            <div class="sim-page-wrap" id="wrWrap">
               <div class="sim-ruler" id="wrRuler" aria-hidden="true"></div>
-              <div class="sim-page" id="wrPage"></div>
+              <div class="sim-page-row">
+                <div class="sim-vruler" aria-hidden="true"></div>
+                <div class="sim-page" id="wrPage"></div>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="sim-keys" role="group" aria-label="Tasten">
+          <button type="button" class="sim-key" data-key="enter" title="Leerzeile einfügen (Enter)">↵&nbsp;Enter</button>
+          <button type="button" class="sim-key" data-key="back" title="Leerzeile löschen (Backspace)">⌫</button>
+          <button type="button" class="sim-key" data-key="a" title="Alles markieren (Strg+A)">Strg+A</button>
+          <button type="button" class="sim-key" data-key="b" title="Fett (Strg+B)">Strg+B</button>
+          <button type="button" class="sim-key" data-key="r" title="Rechtsbündig (Strg+R)">Strg+R</button>
         </div>
       </div>`);
       const out = node.querySelector("#wrOut");
       const groups = node.querySelector("#wrGroups");
       const page = node.querySelector("#wrPage");
+      const wrap = node.querySelector("#wrWrap");
 
       const short = (t) => (t.length > 26 ? t.slice(0, 25) + "…" : t);
       const fmtCm = (v) => String(v).replace(".", ",");
-      const selIdx = () => (sel == null ? [] : sel.all ? doc.blocks.map((_, i) => i) : [sel.i]);
+      const selIdx = () => {
+        if (!sel) return [];
+        if (sel.all) return doc.blocks.map((_, i) => i);
+        const a = Math.min(sel.a, sel.b), b = Math.max(sel.a, sel.b);
+        return Array.from({ length: b - a + 1 }, (_, n) => a + n);
+      };
       const selBold = () => { const ix = selIdx(); return ix.length > 0 && ix.every((i) => doc.blocks[i].bold); };
+      const selAlign = () => { const ix = selIdx(); if (!ix.length) return null; const v = doc.blocks[ix[0]].align; return ix.every((i) => doc.blocks[i].align === v) ? v : null; };
+      const selLabel = () => (!sel ? "" : sel.all ? "Alles markiert" : sel.a === sel.b ? `Zeile ${sel.a + 1} markiert` : `Zeilen ${Math.min(sel.a, sel.b) + 1}–${Math.max(sel.a, sel.b) + 1} markiert`);
+      const lineEl = (i) => page.querySelector(`.sim-line[data-i="${i}"]`);
 
       function evalCheck(ck) {
         if (ck.op === "font") return doc.blocks.every((b) => b.font === ck.value);
@@ -1250,32 +1272,96 @@
       function simMsg(kind, html) {
         out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
       }
+      function hintTargets() {
+        const list = [];
+        const line = page.querySelector(".sim-line.hint");
+        if (line) list.push(line);
+        node.querySelectorAll(".hint").forEach((el) => { if (!list.includes(el)) list.push(el); });
+        return list;
+      }
+      function removeGhost() { if (ghost) { ghost.remove(); ghost = null; } }
+      function showGhost() {
+        if (!guided || cur >= crit.length || !node.isConnected) return;
+        const t = hintTargets()[0];
+        if (!t) return;
+        t.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
+        const r = t.getBoundingClientRect();
+        ghost = h(`<span class="sim-ghost" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-4.5a1.5 1.5 0 0 1 3 0V10m0-3.5a1.5 1.5 0 0 1 3 0V11m0-2.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.6a6 6 0 0 1-4.2-1.7L5 15.5a1.6 1.6 0 0 1 2.3-2.3L9 14.5"/></svg></span>`);
+        ghost.style.left = Math.round(Math.max(6, Math.min(r.left - 36, window.innerWidth - 44))) + "px";
+        ghost.style.top = Math.round(Math.min(Math.max(8, r.top + r.height / 2 - 6), window.innerHeight - 64)) + "px";
+        node.append(ghost);
+        setTimeout(removeGhost, 6000);
+      }
+      function armGhost() {
+        clearTimeout(idleTimer);
+        removeGhost();
+        if (!guided || cur >= crit.length) return;
+        idleTimer = setTimeout(showGhost, 12000);
+      }
+      const poke = () => { removeGhost(); armGhost(); };
 
-      function paintSelLine() {
-        node.querySelector("#wrSelText").textContent = !sel
-          ? "Keine Auswahl – tippe eine Zeile an"
-          : sel.all ? `Alles markiert · ${doc.blocks.length} Zeilen`
-          : `Zeile ${sel.i + 1}: „${short(doc.blocks[sel.i].text)}“`;
-        node.querySelector("#wrAll").classList.toggle("on", !!(sel && sel.all));
+      function paintSelClasses() {
+        const ix = selIdx();
+        page.querySelectorAll(".sim-line").forEach((el) => el.classList.toggle("sel", ix.includes(+el.dataset.i)));
+      }
+
+      function paintHandles() {
+        page.querySelectorAll(".sim-handle").forEach((el) => el.remove());
+        if (!sel || sel.all) return;
+        const a = Math.min(sel.a, sel.b), b = Math.max(sel.a, sel.b);
+        const top = lineEl(a), bot = lineEl(b);
+        if (!top || !bot) return;
+        const hTop = h(`<span class="sim-handle top" data-h="top" role="presentation"></span>`);
+        hTop.style.top = Math.round(top.offsetTop - 9) + "px";
+        const hBot = h(`<span class="sim-handle bottom" data-h="bottom" role="presentation"></span>`);
+        hBot.style.top = Math.round(bot.offsetTop + bot.offsetHeight - 9) + "px";
+        [hTop, hBot].forEach((el) => {
+          el.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            drag = { mode: el.dataset.h, a0: sel.a, b0: sel.b };
+            buzz(6);
+          });
+          page.append(el);
+        });
+      }
+
+      function paintBubble() {
+        page.querySelectorAll(".sim-bubble").forEach((el) => el.remove());
+        if (!guided || cur >= crit.length) return;
+        const c = crit[cur];
+        const txt = (c.task && c.task.kurz) || c.label;
+        const idx = c.checks.map((ck) => ck.block).filter(Number.isInteger);
+        if (!idx.length) return;
+        const el = lineEl(Math.min(...idx));
+        if (!el) return;
+        const b = h(`<span class="sim-bubble">${esc(txt)}</span>`);
+        page.append(b);
+        const top = el.offsetTop - b.offsetHeight - 7;
+        b.style.top = (top > 2 ? top : el.offsetTop + el.offsetHeight + 7) + "px";
+        b.classList.toggle("below", top <= 2);
       }
 
       function paintPage() {
         const k = Math.max(8, (page.clientWidth || 320) / 21);
         page.style.padding = `${doc.margins.top * k}px ${doc.margins.right * k}px ${doc.margins.bottom * k}px ${doc.margins.left * k}px`;
         const hint = hintBlocks();
-        page.innerHTML = doc.blocks.map((b, i) => {
-          const on = sel && (sel.all || sel.i === i);
-          const cls = "sim-line" + (on ? " sel" : "") + (hint.includes(i) ? " hint" : "");
-          const gaps = Array.from({ length: b.gap }, () => `<div class="sim-gap" data-i="${i}">¶</div>`).join("");
-          return `<div class="${cls}" data-i="${i}" style="font-family:${W_STACK[b.font] || "'Calibri',sans-serif"};font-size:${Math.round(b.size * 1.32)}px;font-weight:${b.bold ? 700 : 400};text-align:${b.align}"><span>${esc(b.text)}</span><span class="sim-pil">¶</span></div>${gaps}`;
-        }).join("");
+        const a = sel && !sel.all ? Math.min(sel.a, sel.b) : -1;
+        const b = sel && !sel.all ? Math.max(sel.a, sel.b) : -1;
+        page.innerHTML = `<div class="sim-lines">${doc.blocks.map((bl, i) => {
+          const on = sel && (sel.all || (i >= a && i <= b));
+          const cls = "sim-line" + (on ? " sel" : "") + (hint.includes(i) ? " hint" : "") + (flashSet.has(i) ? " did" : "");
+          const gaps = Array.from({ length: bl.gap }, () => `<div class="sim-gap" data-i="${i}">${pilcrow ? "¶" : ""}</div>`).join("");
+          return `<div class="${cls}" data-i="${i}" style="font-family:${W_STACK[bl.font] || "'Calibri',sans-serif"};font-size:${Math.round(bl.size * 1.32)}px;font-weight:${bl.bold ? 700 : 400};text-align:${bl.align}"><span>${esc(bl.text)}</span>${pilcrow ? '<span class="sim-pil">¶</span>' : ""}</div>${gaps}`;
+        }).join("")}</div>`;
         page.querySelectorAll(".sim-line,.sim-gap").forEach((el) => {
-          el.onclick = () => { sel = { i: +el.dataset.i }; closePop(); refresh(); };
+          el.onclick = () => { sel = { a: +el.dataset.i, b: +el.dataset.i }; closePop(); removeGhost(); armGhost(); refresh(); };
         });
         node.querySelector("#wrRuler").innerHTML =
           `<i class="m ml" style="width:${((doc.margins.left / 21) * 100).toFixed(3)}%"></i>` +
           `<i class="m mr" style="width:${((doc.margins.right / 21) * 100).toFixed(3)}%"></i>` +
           Array.from({ length: 10 }, (_, n) => (n + 1) * 2).map((cm) => `<span class="num" style="left:${((cm / 21) * 100).toFixed(3)}%">${cm}</span>`).join("");
+        paintHandles();
+        paintBubble();
       }
 
       function selVal(get) {
@@ -1290,19 +1376,32 @@
         if (tab === "start") {
           groups.innerHTML = `
             <div class="sim-group"><span class="sim-lbl">Schriftart</span><div class="sim-btns">
-              <button type="button" class="sim-b combo" data-act="font"><span>${esc(String(selVal((b) => b.font)))}</span><i>▾</i></button>
-              <button type="button" class="sim-b combo small" data-act="size"><span>${esc(String(selVal((b) => b.size)))}</span><i>▾</i></button>
-              <button type="button" class="sim-b bold${selBold() ? " on" : ""}" data-act="bold" aria-label="Fett">F</button>
+              <button type="button" class="sim-b combo" data-act="font" title="Schriftart"><span>${esc(String(selVal((b) => b.font)))}</span><i>▾</i></button>
+              <button type="button" class="sim-b combo small" data-act="size" title="Schriftgrad"><span>${esc(String(selVal((b) => b.size)))}</span><i>▾</i></button>
+              <button type="button" class="sim-b" data-act="size-" title="Schrift verkleinern">A−</button>
+              <button type="button" class="sim-b" data-act="size+" title="Schrift vergrößern">A+</button>
+              <button type="button" class="sim-b bold${selBold() ? " on" : ""}" data-act="bold" title="Fett (Strg+B)">F</button>
+              <button type="button" class="sim-b dead" disabled title="Kursiv (in dieser Übung nicht nötig)">K</button>
+              <button type="button" class="sim-b dead" disabled title="Unterstrichen (in dieser Übung nicht nötig)">U</button>
+              <button type="button" class="sim-b dead" disabled title="Textmarker (in dieser Übung nicht nötig)"><svg viewBox="0 0 24 24"><path d="M5 19h14M7 15l7-9 4 3-7 9H7z"/></svg></button>
+              <button type="button" class="sim-b dead" disabled title="Schriftfarbe (in dieser Übung nicht nötig)"><svg viewBox="0 0 24 24"><path d="M6 18L12 5l6 13M8.5 14h7M4 21h16"/></svg></button>
             </div></div>
             <div class="sim-group"><span class="sim-lbl">Absatz</span><div class="sim-btns">
-              ${W_ALIGN.map(([a, t, svg]) => `<button type="button" class="sim-b" data-act="align:${a}" aria-label="${t}">${svg}</button>`).join("")}
-              <button type="button" class="sim-b" data-act="gap+" aria-label="Leerzeile einfügen">¶ +</button>
-              <button type="button" class="sim-b" data-act="gap-" aria-label="Leerzeile löschen">¶ −</button>
+              ${W_ALIGN.map(([a, t, svg]) => `<button type="button" class="sim-b${selAlign() === a ? " on" : ""}" data-act="align:${a}" title="${t}">${svg}</button>`).join("")}
+              <button type="button" class="sim-b${pilcrow ? " on" : ""}" data-act="pilcrow" title="Formatierungszeichen ein-/ausblenden">¶</button>
+              <button type="button" class="sim-b dead" disabled title="Zeilenabstand (in dieser Übung nicht nötig)"><svg viewBox="0 0 24 24"><path d="M4 8h16M4 12h16M4 16h16M7 4v3M7 17v3M17 4v3M17 17v3"/></svg></button>
             </div></div>`;
         } else {
           groups.innerHTML = `
             <div class="sim-group"><span class="sim-lbl">Seite einrichten</span><div class="sim-btns">
-              <button type="button" class="sim-b wide" data-act="margins">Seitenränder ▾</button>
+              <button type="button" class="sim-b wide" data-act="margins" title="Seitenränder festlegen">Seitenränder ▾</button>
+              <button type="button" class="sim-b dead" disabled title="Ausrichtung (in dieser Übung nicht nötig)">Ausrichtung</button>
+              <button type="button" class="sim-b dead" disabled title="Größe (in dieser Übung nicht nötig)">Größe</button>
+              <button type="button" class="sim-b dead" disabled title="Spalten (in dieser Übung nicht nötig)">Spalten</button>
+            </div></div>
+            <div class="sim-group"><span class="sim-lbl">Absatz</span><div class="sim-btns">
+              <button type="button" class="sim-b dead" disabled title="Einzug (in dieser Übung nicht nötig)"><svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M10 14h10M4 18h16M4 13l4-2v4z"/></svg></button>
+              <button type="button" class="sim-b dead" disabled title="Abstand (in dieser Übung nicht nötig)"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 19h16M12 8v8M9 11l3-3 3 3M9 13l3 3 3-3"/></svg></button>
             </div></div>`;
         }
       }
@@ -1336,17 +1435,31 @@
         }
       }
 
-      function needSel() { if (!sel) { toast("› Markiere zuerst eine Zeile oder tippe auf „Alles“."); return false; } return true; }
-      function applyFont(f) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].font = f)); pop = null; buzz(8); refresh(); }
-      function applySize(s) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].size = s)); pop = null; buzz(8); refresh(); }
-      function toggleBold() { if (!needSel()) return; const on = !selBold(); selIdx().forEach((i) => (doc.blocks[i].bold = on)); buzz(6); refresh(); }
-      function applyAlign(v) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].align = v)); buzz(6); refresh(); }
-      function bumpGap(d) {
-        if (!sel || sel.all) { toast("› Markiere genau eine Zeile."); return; }
-        const b = doc.blocks[sel.i];
-        const g = Math.max(0, Math.min(4, b.gap + d));
-        if (g === b.gap) { toast(d > 0 ? "› Mehr Leerzeilen gehen hier nicht." : "› Keine Leerzeile mehr da."); return; }
-        b.gap = g; buzz(6); refresh();
+      function needSel() { if (!sel) { toast("› Markiere zuerst eine Zeile (antippen oder Griff ziehen)."); return false; } return true; }
+      function markFlash(ix) { flashSet.clear(); ix.forEach((i) => flashSet.add(i)); }
+      function applyFont(f) { if (!needSel()) return; const ix = selIdx(); ix.forEach((i) => (doc.blocks[i].font = f)); markFlash(ix); pop = null; buzz(8); refresh(); }
+      function applySize(s) { if (!needSel()) return; const ix = selIdx(); ix.forEach((i) => (doc.blocks[i].size = s)); markFlash(ix); pop = null; buzz(8); refresh(); }
+      function bumpSize(d) {
+        if (!needSel()) return;
+        const ix = selIdx();
+        ix.forEach((i) => { doc.blocks[i].size = Math.max(6, Math.min(72, doc.blocks[i].size + d)); });
+        markFlash(ix); buzz(6); refresh();
+      }
+      function toggleBold() { if (!needSel()) return; const on = !selBold(); const ix = selIdx(); ix.forEach((i) => (doc.blocks[i].bold = on)); markFlash(ix); buzz(6); refresh(); }
+      function applyAlign(v) { if (!needSel()) return; const ix = selIdx(); ix.forEach((i) => (doc.blocks[i].align = v)); markFlash(ix); buzz(6); refresh(); }
+      function keyEnter() {
+        removeGhost(); armGhost();
+        if (!sel || sel.all || sel.a !== sel.b) { toast("› Markiere genau eine Zeile – dann Enter."); return; }
+        const b = doc.blocks[sel.a];
+        if (b.gap >= 4) { toast("› Mehr Leerzeilen gehen hier nicht."); return; }
+        b.gap++; markFlash([sel.a]); buzz(6); refresh();
+      }
+      function keyBack() {
+        removeGhost(); armGhost();
+        if (!sel || sel.all || sel.a !== sel.b) { toast("› Markiere die Zeile über der Leerzeile."); return; }
+        const b = doc.blocks[sel.a];
+        if (!b.gap) { toast("› Hier ist keine Leerzeile zum Löschen."); return; }
+        b.gap--; buzz(6); refresh();
       }
 
       function paintTask() {
@@ -1396,30 +1509,46 @@
 
       function paintStatus() {
         if (!statusEl) return;
-        statusEl.textContent = `Seite 1 von 1 · ${doc.blocks.length} Zeilen · 100 %${guided && cur < crit.length ? ` · Aufgabe ${cur + 1}/${crit.length}` : ""}`;
+        const words = doc.blocks.reduce((n, b) => n + b.text.split(/\s+/).filter(Boolean).length, 0);
+        statusEl.innerHTML = `<span class="s-txt">S. 1/1${sel ? ` · <b class="s-sel">${selLabel()}</b>` : ""}<span class="s-words"> · ${words} Wörter</span><span class="s-lang"> · Deutsch (Deutschland)</span></span>
+          <span class="sim-zoom"><button type="button" data-z="-1" aria-label="Verkleinern">−</button><b>${zoom} %</b><button type="button" data-z="1" aria-label="Vergrößern">+</button></span>`;
+        statusEl.querySelectorAll("[data-z]").forEach((b) => b.onclick = () => {
+          const steps = [80, 100, 125, 150, 175];
+          let n = steps.indexOf(zoom);
+          if (n === -1) n = 1;
+          n = Math.max(0, Math.min(steps.length - 1, n + (+b.dataset.z)));
+          zoom = steps[n];
+          wrap.style.zoom = zoom / 100;
+          paintPage();
+          paintStatus();
+        });
       }
 
       function paintCtrlHint() {
         groups.querySelectorAll(".hint").forEach((el) => el.classList.remove("hint"));
-        node.querySelector("#wrAll").classList.remove("hint");
-        node.querySelectorAll(".sim-tab[data-tab]").forEach((el) => el.classList.remove("hint"));
+        node.querySelectorAll(".sim-tab.hint, .sim-key.hint").forEach((el) => el.classList.remove("hint"));
         if (!guided || cur >= crit.length) return;
         const checks = crit[cur].checks;
         const pulse = (sel2) => { const el = groups.querySelector(sel2); if (el) el.classList.add("hint"); };
-        if (checks.some((ck) => ck.op === "font" || (ck.op === "size" && ck.block === undefined))) {
-          node.querySelector("#wrAll").classList.add("hint");
-          if (checks.some((ck) => ck.op === "font")) pulse('[data-act="font"]');
-          if (checks.some((ck) => ck.op === "size" && ck.block === undefined)) pulse('[data-act="size"]');
-        }
-        checks.forEach((ck) => {
-          if (ck.op === "size" && Number.isInteger(ck.block)) pulse('[data-act="size"]');
-          if (ck.op === "bold") pulse('[data-act="bold"]');
-          if (ck.op === "align") pulse(`[data-act="align:${ck.value}"]`);
-          if (ck.op === "gap") pulse(ck.value > (doc.blocks[ck.block] || {}).gap ? '[data-act="gap+"]' : '[data-act="gap-"]');
-        });
-        if (checks.some((ck) => ck.op === "margins")) {
-          if (tab !== "layout") node.querySelector('[data-tab="layout"]').classList.add("hint");
-          else pulse('[data-act="margins"]');
+        const key = (k) => { const el = node.querySelector(`[data-key="${k}"]`); if (el) el.classList.add("hint"); };
+        const curTab = () => node.querySelector(`[data-tab="${tab}"]`);
+        const startOps = checks.some((ck) => ["font", "size", "bold", "align"].includes(ck.op));
+        const marginOps = checks.some((ck) => ck.op === "margins");
+        if (startOps && tab !== "start") { const t2 = curTab(); if (t2) t2.classList.add("hint"); }
+        if (marginOps && tab !== "layout") { const t2 = curTab(); if (t2) t2.classList.add("hint"); }
+        if (tab === "start" || tab === "layout") {
+          if (checks.some((ck) => ck.op === "font" || (ck.op === "size" && ck.block === undefined))) {
+            key("a");
+            if (checks.some((ck) => ck.op === "font")) pulse('[data-act="font"]');
+            if (checks.some((ck) => ck.op === "size" && ck.block === undefined)) pulse('[data-act="size"]');
+          }
+          checks.forEach((ck) => {
+            if (ck.op === "size" && Number.isInteger(ck.block)) pulse('[data-act="size"]');
+            if (ck.op === "bold") { pulse('[data-act="bold"]'); key("b"); }
+            if (ck.op === "align") { pulse(`[data-act="align:${ck.value}"]`); if (ck.value === "right") key("r"); }
+            if (ck.op === "gap") key("enter");
+            if (ck.op === "margins") pulse('[data-act="margins"]');
+          });
         }
       }
 
@@ -1427,10 +1556,12 @@
         paintRibbon();
         paintPage();
         paintChecklist();
-        paintSelLine();
         paintPop();
         paintStatus();
         paintCtrlHint();
+        if (flashSet.size) {
+          setTimeout(() => { flashSet.clear(); page.querySelectorAll(".sim-line.did").forEach((el) => el.classList.remove("did")); }, 800);
+        }
         if (!guided) {
           ctx.setProgress(passedCount() / crit.length);
           if (passedCount() >= crit.length) { if (give) { give.remove(); give = null; } paintDock(); }
@@ -1452,9 +1583,11 @@
           paintDock();
           const hl = page.querySelector(".sim-line.hint");
           if (hl) hl.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
+          armGhost();
         } else {
           simMsg("no", `Noch nicht ganz. ${esc(c.hint || "Schau dir die Zeile nochmal an.")}`);
           buzz([30, 40, 30]);
+          armGhost();
         }
       }
 
@@ -1480,26 +1613,58 @@
         else if (a === "size") { pop = pop === "size" ? null : "size"; paintPop(); }
         else if (a === "margins") { pop = pop === "margins" ? null : "margins"; paintPop(); }
         else if (a === "bold") toggleBold();
-        else if (a === "gap+") bumpGap(1);
-        else if (a === "gap-") bumpGap(-1);
+        else if (a === "size-") bumpSize(-1);
+        else if (a === "size+") bumpSize(1);
+        else if (a === "pilcrow") { pilcrow = !pilcrow; paintRibbon(); paintPage(); }
         else if (a.indexOf("align:") === 0) applyAlign(a.slice(6));
       }
 
       groups.addEventListener("click", (e) => {
         const b = e.target.closest("[data-act]");
-        if (b) act(b.dataset.act);
+        if (b && !b.disabled) act(b.dataset.act);
       });
       node.querySelectorAll(".sim-tab[data-tab]").forEach((b) => b.onclick = () => { tab = b.dataset.tab; pop = null; popMargins = null; paintRibbon(); paintPop(); paintCtrlHint(); });
-      node.querySelector("#wrAll").onclick = () => { sel = { all: true }; pop = null; paintPop(); refresh(); };
+      node.querySelectorAll(".sim-key").forEach((b) => b.onclick = () => {
+        removeGhost(); armGhost();
+        const k = b.dataset.key;
+        if (k === "enter") keyEnter();
+        else if (k === "back") keyBack();
+        else if (k === "a") { sel = { all: true }; closePop(); refresh(); }
+        else if (k === "b") toggleBold();
+        else if (k === "r") applyAlign("right");
+      });
 
       const onKey = (e) => {
         if (!node.isConnected) return;
-        if ((e.ctrlKey || e.metaKey) && (e.key === "a" || e.key === "A")) { e.preventDefault(); sel = { all: true }; refresh(); }
-        else if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); toggleBold(); }
+        if ((e.ctrlKey || e.metaKey) && (e.key === "a" || e.key === "A")) { e.preventDefault(); removeGhost(); armGhost(); sel = { all: true }; refresh(); }
+        else if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); removeGhost(); armGhost(); toggleBold(); }
+        else if ((e.ctrlKey || e.metaKey) && (e.key === "r" || e.key === "R")) { e.preventDefault(); removeGhost(); armGhost(); applyAlign("right"); }
+        else if ((e.ctrlKey || e.metaKey) && (e.key === "e" || e.key === "E")) { e.preventDefault(); removeGhost(); armGhost(); applyAlign("center"); }
+        else if ((e.ctrlKey || e.metaKey) && (e.key === "l" || e.key === "L")) { e.preventDefault(); removeGhost(); armGhost(); applyAlign("left"); }
+        else if (e.key === "Enter") { e.preventDefault(); keyEnter(); }
+        else if (e.key === "Backspace") { e.preventDefault(); keyBack(); }
       };
       const onResize = () => paintPage();
+      const onDown = () => poke();
+      const onDragMove = (e) => {
+        if (!drag) return;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const line = el && el.closest ? el.closest(".sim-line,.sim-gap") : null;
+        if (!line) return;
+        const i = +line.dataset.i;
+        sel = drag.mode === "bottom"
+          ? { a: drag.a0, b: Math.max(i, drag.a0) }
+          : { a: Math.min(i, drag.b0), b: drag.b0 };
+        paintSelClasses();
+        paintHandles();
+        paintStatus();
+      };
+      const onDragEnd = () => { if (drag) { drag = null; paintStatus(); } };
       document.addEventListener("keydown", onKey);
       window.addEventListener("resize", onResize);
+      window.addEventListener("pointermove", onDragMove);
+      window.addEventListener("pointerup", onDragEnd);
+      node.addEventListener("pointerdown", onDown);
       document.body.classList.add("sim-on");
 
       const topbar = ctx.root.querySelector(".player-top");
@@ -1508,8 +1673,12 @@
       ctx.dock.prepend(statusEl);
       cleanup = () => {
         document.body.classList.remove("sim-on");
+        clearTimeout(idleTimer);
+        removeGhost();
         document.removeEventListener("keydown", onKey);
         window.removeEventListener("resize", onResize);
+        window.removeEventListener("pointermove", onDragMove);
+        window.removeEventListener("pointerup", onDragEnd);
       };
 
       ctx.hintsFor = () => (guided && cur < crit.length ? [crit[cur].hint].filter(Boolean) : step.hints || []);
@@ -1520,12 +1689,12 @@
       paintTask();
       paintRibbon();
       paintPage();
-      paintSelLine();
       paintChecklist();
       paintStatus();
       paintCtrlHint();
       paintDock();
       if (step.intro) simMsg("info", esc(step.intro));
+      armGhost();
     },
 
     /* Bestehendes Material */
