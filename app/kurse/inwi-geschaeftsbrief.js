@@ -31,61 +31,61 @@ const INWI_GB_KRITERIEN = [
   {
     label: "Grundschrift: alles Calibri 11",
     checks: [{ op: "font", value: "Calibri" }, { op: "size", value: 11, skip: [0] }],
-    task: { wo: "Registerkarte Start → Gruppe Schriftart", was: "Tippe auf „Alles markieren“ und stelle Schriftart Calibri und Schriftgrad 11 ein (in Word: Strg+A).", probe: "Alle Zeilen stehen in Calibri 11." },
-    hint: "Setze zuerst die Grundschrift für den ganzen Brief: „Alles markieren“, dann Calibri und 11."
+    task: { wo: "Start → Gruppe Schriftart", was: "Drücke Strg+A (Tasten unten oder echte Tastatur) und stelle Calibri und Schriftgrad 11 ein.", probe: "Alle Zeilen stehen in Calibri 11.", kurz: "Strg+A → Calibri 11" },
+    hint: "Mit Strg+A alles markieren, dann Calibri und 11 wählen."
   },
   {
     label: "Seitenränder: oben 4,5 · unten 2 · links 2,5 · rechts 2 cm",
     checks: [{ op: "margins", value: { top: 4.5, bottom: 2, left: 2.5, right: 2 } }],
-    task: { wo: "Registerkarte Layout → Seitenränder …", was: "Stelle oben 4,5 · unten 2 · links 2,5 · rechts 2 cm ein und bestätige mit OK.", probe: "Das Anschriftfeld beginnt 45 mm unter dem oberen Blattrand." },
+    task: { wo: "Registerkarte Layout → Seitenränder …", was: "Stelle oben 4,5 · unten 2 · links 2,5 · rechts 2 cm ein und bestätige mit OK.", probe: "Das Anschriftfeld beginnt 45 mm unter dem oberen Blattrand.", kurz: "Layout → Seitenränder: 4,5 · 2 · 2,5 · 2 cm" },
     hint: "Achtung: Oben braucht der Brief viel Platz – 4,5 cm. Die anderen Werte: unten 2 · links 2,5 · rechts 2 cm."
   },
   {
     label: "Rücksendeangabe klein: Zeile 1 auf 8 pt",
     checks: [{ op: "size", value: 8, block: 0 }],
-    task: { wo: "Start → Schriftgrad", was: "Markiere die erste Zeile (Rücksendeangabe) und stelle Schriftgrad 8 ein.", probe: "Die erste Zeile ist deutlich kleiner als der Brieftext." },
+    task: { wo: "Start → Schriftgrad", was: "Markiere die erste Zeile (Rücksendeangabe) und stelle Schriftgrad 8 ein.", probe: "Die erste Zeile ist deutlich kleiner als der Brieftext.", kurz: "Zeile 1 antippen → Schriftgrad 8" },
     hint: "Tippe auf die erste Zeile – dann auf Schriftgrad – und wähle 8."
   },
   {
     label: "Anschriftfeld: Leerzeile vor der PLZ",
     checks: [{ op: "gap", block: 3, value: 1 }],
-    task: { wo: "Zeile „St. Augustiner Str. 30“ markieren, dann „¶ +“", was: "Füge nach der Straße eine Leerzeile ein (in Word: 1 × Enter).", probe: "Zwischen Straße und PLZ ist eine leere Zeile – so liest die Post maschinell." },
+    task: { wo: "Zeile antippen, dann Enter ↵", was: "Füge nach der Straße eine Leerzeile ein.", probe: "Zwischen Straße und PLZ ist eine leere Zeile – so liest die Post maschinell.", kurz: "Zeile antippen → 1 × ↵" },
     hint: "Zwischen Straße und Postleitzahl steht genau eine Leerzeile."
   },
   {
     label: "Nach der PLZ: zwei Leerzeilen",
     checks: [{ op: "gap", block: 4, value: 2 }],
-    task: { wo: "Zeile „53225 Bonn“ markieren, dann 2 × „¶ +“", was: "Füge nach der PLZ zwei Leerzeilen ein (in Word: 2 × Enter).", probe: "Vor dem Datum ist Platz – der Brief atmet." },
+    task: { wo: "Zeile antippen, dann 2 × Enter ↵", was: "Füge nach der PLZ zwei Leerzeilen ein.", probe: "Vor dem Datum ist Platz – der Brief atmet.", kurz: "Zeile antippen → 2 × ↵" },
     hint: "Nach der Empfänger-PLZ kommen zwei Leerzeilen."
   },
   {
     label: "Datum rechtsbündig",
     checks: [{ op: "align", block: 5, value: "right" }],
-    task: { wo: "Start → Absatz → „Rechtsbündig“ (in Word: Strg+R)", was: "Markiere die Datumszeile und richte sie rechtsbündig aus.", probe: "Das Datum steht am rechten Rand." },
+    task: { wo: "Start → Absatz → „Rechtsbündig“ oder Strg+R", was: "Markiere die Datumszeile und richte sie rechtsbündig aus.", probe: "Das Datum steht am rechten Rand.", kurz: "Datum antippen → Strg+R" },
     hint: "Wähle die Datumszeile und tippe auf das Symbol mit den nach rechts ausgerichteten Linien."
   },
   {
     label: "Betreff fett – ohne „Betreff“, ohne Punkt",
     checks: [{ op: "bold", block: 6 }],
-    task: { wo: "Start → F (in Word: Strg+B)", was: "Markiere „Anfrage über Aluminiumrohre“ und mache die Zeile fett.", probe: "Der Betreff ist fett, kurz und ohne Punkt am Ende." },
+    task: { wo: "Start → F oder Strg+B", was: "Markiere „Anfrage über Aluminiumrohre“ und mache die Zeile fett.", probe: "Der Betreff ist fett, kurz und ohne Punkt am Ende.", kurz: "Betreff antippen → Strg+B" },
     hint: "Die Betreffzeile wird fett gesetzt – das Wort „Betreff“ gehört nicht davor."
   },
   {
     label: "Anrede: Komma + Leerzeile danach",
     checks: [{ op: "gap", block: 7, value: 1 }],
-    task: { wo: "Zeile „Sehr geehrte Damen und Herren,“ markieren", was: "Setze eine Leerzeile unter die Anrede (in Word: 1 × Enter).", probe: "Unter der Anrede ist eine leere Zeile, der Text beginnt groß." },
+    task: { wo: "Zeile „Sehr geehrte …“ antippen", was: "Setze eine Leerzeile unter die Anrede.", probe: "Unter der Anrede ist eine leere Zeile, der Text beginnt groß.", kurz: "Anrede antippen → 1 × ↵" },
     hint: "Nach der Anrede folgt genau eine Leerzeile."
   },
   {
     label: "Leerzeile zwischen den Absätzen",
     checks: [{ op: "gap", block: 8, value: 1 }],
-    task: { wo: "Ersten Textabsatz markieren", was: "Trenne Anlass und Bitte mit einer Leerzeile.", probe: "Ein Gedanke pro Absatz – erst Anlass, dann Bitte." },
+    task: { wo: "Ersten Textabsatz antippen", was: "Trenne Anlass und Bitte mit einer Leerzeile.", probe: "Ein Gedanke pro Absatz – erst Anlass, dann Bitte.", kurz: "Ersten Absatz antippen → 1 × ↵" },
     hint: "Zwischen „…dringend Aluminiumrohre.“ und „Bitte senden Sie …“ steht eine Leerzeile."
   },
   {
     label: "Grußformel: drei Leerzeilen für die Unterschrift",
     checks: [{ op: "gap", block: 10, value: 3 }],
-    task: { wo: "Zeile „Mit freundlichen Grüßen“ markieren", was: "Füge darunter drei Leerzeilen ein (in Word: 3 × Enter).", probe: "Nach dem Ausdrucken unterschreibst du handschriftlich in die leere Zeile." },
+    task: { wo: "Zeile „Mit freundlichen Grüßen“ antippen", was: "Füge darunter drei Leerzeilen ein.", probe: "Nach dem Ausdrucken unterschreibst du handschriftlich in die leere Zeile.", kurz: "Gruß antippen → 3 × ↵" },
     hint: "Nach „Mit freundlichen Grüßen“ kommen drei Leerzeilen – Platz für die Unterschrift."
   }
 ];
@@ -289,6 +289,10 @@ LERNRAUM.subjects.push({
              <li><strong>Anrede</strong> mit Komma, danach eine Leerzeile.</li>
              <li><strong>Gruß</strong> ohne Komma, drei Zeilen Platz für die Unterschrift.</li>
              <li>Zwischen <strong>Straße und PLZ</strong> eine Leerzeile.</li></ul>
+             <h3>Bedienen wie in Word</h3>
+             <ul><li><strong>Markieren:</strong> Zeile antippen, an den blauen Griffen ziehen – oder Strg+A für alles.</li>
+             <li><strong>Leerzeilen:</strong> Enter-Taste unten (löschen: ⌫).</li>
+             <li><strong>Fett / rechtsbündig:</strong> Strg+B · Strg+R.</li></ul>
              <h3>In Word am PC</h3>
              <p>Strg+A markiert alles · Strg+B macht fett · Strg+R richtet rechtsbündig aus.</p>`,
       steps: [
@@ -307,9 +311,10 @@ LERNRAUM.subjects.push({
               kicker: "Die zwei Registerkarten",
               title: "Start und Layout.",
               body: `<div class="pair">
-                       <div><b>Start</b>Schriftart, Schriftgrad, Fett, Ausrichtung, Leerzeilen ¶</div>
+                       <div><b>Start</b>Schriftart, Schriftgrad, Fett, Ausrichtung, ¶-Zeichen</div>
                        <div><b>Layout</b>Seitenränder</div>
-                     </div>`
+                     </div>
+                     <p class="note">Tasten unten: Enter = Leerzeile · ⌫ löscht · Strg+A/B/R = markieren/fett/rechts.</p>`
             },
             {
               kicker: "Die Werte",
@@ -330,7 +335,7 @@ LERNRAUM.subjects.push({
           title: "Brief formatieren – geführt",
           mode: "guided",
           file: "Brief_Rohtext.docx",
-          intro: "Gleich öffnet sich Word – als Simulation. Der Brieftext steht schon da, aber noch roh: Arial 10, keine Leerzeilen. Formatiere ihn Schritt für Schritt.",
+          intro: "Gleich öffnet sich Word – als Simulation. Unten findest du die Tasten (Enter, Strg+A/B/R). Markiere Zeilen per Antippen – an den blauen Griffen ziehst du die Auswahl größer.",
           start: { font: "Arial", size: 10 },
           blocks: INWI_GB_BLOCKS,
           criteria: INWI_GB_KRITERIEN
@@ -344,7 +349,7 @@ LERNRAUM.subjects.push({
           start: { font: "Arial", size: 10 },
           blocks: INWI_GB_BLOCKS,
           criteria: INWI_GB_KRITERIEN,
-          hints: ["Tippe eine Zeile an und schau dann in die Leiste: Alles für die Schrift und die Absätze findest du unter Start, die Seitenränder unter Layout.", "Die Checkliste prüft automatisch – du kannst nichts kaputt machen. Mit ↺ oben startest du neu."]
+          hints: ["Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Schrift und Absätze: Start · Seitenränder: Layout · Leerzeilen: Enter (löschen: ⌫).", "Die Checkliste prüft automatisch – du kannst nichts kaputt machen. Mit ↺ oben startest du neu."]
         },
         {
           type: "quiz",
