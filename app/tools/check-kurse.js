@@ -51,7 +51,7 @@ for (const f of listed) {
 /* ── 3. Inhalte prüfen ──────────────────────────────────────── */
 const ID = /^[a-z0-9][a-z0-9-]*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "link"];
+const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "word", "link"];
 const WORDNUM = { ein: 1, eins: 1, eines: 1, einer: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
 const str = (x) => typeof x === "string" && x.trim().length > 0;
 const subjectIds = new Set();
@@ -137,6 +137,33 @@ function checkStep(where, st, topic) {
     case "selfcheck":
       if (!Array.isArray(st.items) || !st.items.length || !st.items.every(str)) err(where, "items muss eine Liste von Aussagen sein");
       break;
+    case "word": {
+      if (!Array.isArray(st.blocks) || !st.blocks.length || !st.blocks.every((b) => str(b.text))) { err(where, "blocks muss eine Liste von Zeilen { text } sein"); break; }
+      if (st.mode !== undefined && st.mode !== "guided" && st.mode !== "free") err(where, 'mode muss "guided" oder "free" sein');
+      if (!Array.isArray(st.criteria) || !st.criteria.length) { err(where, "criteria ist leer"); break; }
+      const nb = st.blocks.length;
+      st.criteria.forEach((c, k) => {
+        const w = `${where} Kriterium ${k + 1}`;
+        if (!str(c.label)) err(w, "label fehlt");
+        if (!Array.isArray(c.checks) || !c.checks.length) { err(w, "checks ist leer"); return; }
+        c.checks.forEach((ck, j) => {
+          const w2 = `${w} Check ${j + 1}`;
+          if (!["font", "size", "margins", "gap", "align", "bold"].includes(ck.op)) { err(w2, `unbekannter op "${ck.op}"`); return; }
+          if (ck.block !== undefined && (!Number.isInteger(ck.block) || ck.block < 0 || ck.block >= nb)) err(w2, `block ${ck.block} gibt es nicht (${nb} Zeilen)`);
+          if (ck.skip !== undefined && (!Array.isArray(ck.skip) || ck.skip.some((x) => !Number.isInteger(x) || x < 0 || x >= nb))) err(w2, "skip muss eine Liste gültiger Zeilen-Nummern sein");
+          if (ck.op === "font" && !str(ck.value)) err(w2, "font braucht value");
+          else if (ck.op === "size" && (!Number.isInteger(ck.value) || ck.value < 6 || ck.value > 72)) err(w2, "size braucht eine ganze Zahl (6–72)");
+          else if (ck.op === "size" && ck.block === undefined && ck.skip === undefined) err(w2, "size braucht block oder skip");
+          else if (ck.op === "gap" && (!Number.isInteger(ck.value) || ck.value < 0 || ck.value > 4)) err(w2, "gap braucht value 0–4");
+          else if (ck.op === "gap" && !Number.isInteger(ck.block)) err(w2, "gap braucht block");
+          else if (ck.op === "align" && !["left", "center", "right", "justify"].includes(ck.value)) err(w2, "align braucht left/center/right/justify");
+          else if (ck.op === "align" && !Number.isInteger(ck.block)) err(w2, "align braucht block");
+          else if (ck.op === "bold" && !Number.isInteger(ck.block)) err(w2, "bold braucht block");
+          else if (ck.op === "margins" && !(ck.value && ["top", "bottom", "left", "right"].every((m) => typeof ck.value[m] === "number"))) err(w2, "margins braucht top/bottom/left/right als Zahlen");
+        });
+      });
+      break;
+    }
     case "link":
       if (!str(st.href)) err(where, "href fehlt");
       break;
