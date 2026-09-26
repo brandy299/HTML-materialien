@@ -78,7 +78,8 @@ window.LERNRAUM = {
   // Anzeigenamen für Fächer auf der Startseite (Kürzel → Name)
   faecher: {
     PBP: "Personalbezogene Prozesse",
-    GPU: "Geschäftsprozesse im Unternehmen"
+    GPU: "Geschäftsprozesse im Unternehmen",
+    INWI: "Informationswirtschaft"
   },
   subjects: []
 };
