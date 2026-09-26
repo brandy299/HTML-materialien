@@ -581,3 +581,86 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 @media (min-width: 720px) {
   .view { padding-top: 32px; }
 }
+
+/* ── Word-Simulation ────────────────────────────────────── */
+.word-ribbon {
+  position: sticky; top: 0; z-index: 6;
+  background: var(--paper); border: 2px solid var(--ink); box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.wr-tabs { display: flex; border-bottom: 2px solid var(--ink); }
+.wr-tabs button { flex: 1; height: 44px; font: 700 14px/1 var(--grot); border-right: 1.5px solid var(--ink); }
+.wr-tabs button:last-child { border-right: 0; }
+.wr-tabs button[aria-selected="true"] { background: var(--pink); }
+.wr-sel { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1.5px solid var(--ink); background: var(--panel); }
+.wr-sel span { flex: 1; min-width: 0; font: 500 11.5px/1.3 var(--mono); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wr-sel button {
+  flex: none; min-height: 36px; padding: 0 10px; background: var(--paper); border: 1.5px solid var(--ink);
+  font: 600 11.5px/1 var(--mono); box-shadow: 2px 2px 0 var(--ink); transition: transform .1s, box-shadow .1s;
+}
+.wr-sel button.on { background: var(--pink-deep); color: var(--paper); }
+.wr-sel button:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+.wr-groups { display: flex; flex-wrap: wrap; row-gap: 8px; padding: 8px; }
+.wr-group { flex: none; padding-right: 16px; }
+.wr-group:last-child { padding-right: 0; }
+.wr-lbl { display: block; font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 5px; }
+.wr-btns { display: flex; gap: 6px; }
+.wr-b {
+  min-height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  background: var(--paper); border: 2px solid var(--ink); font: 600 12.5px/1 var(--mono);
+  box-shadow: 2px 2px 0 var(--ink); transition: transform .1s, box-shadow .1s, background .1s;
+}
+.wr-b:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+.wr-b.wr-f { font: 800 16px/1 var(--grot); }
+.wr-b.wr-f.on { background: var(--ink); color: var(--paper); }
+.wr-b.wr-ic { padding: 0; }
+.wr-b.wr-ic svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: square; }
+.wr-b.wr-wide { padding: 0 14px; }
+.wr-pop { border-top: 1.5px dashed var(--ink-3); padding: 10px 8px; background: var(--paper); }
+.wr-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.wr-chip {
+  min-height: 44px; padding: 0 12px; background: var(--paper); border: 2px solid var(--ink);
+  font: 600 13px/1 var(--mono); box-shadow: 2px 2px 0 var(--ink); transition: transform .1s, box-shadow .1s;
+}
+.wr-chip:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+.wr-chip.on { background: var(--pink); }
+.wr-marg { display: grid; gap: 6px; max-width: 340px; }
+.wr-mrow { display: flex; align-items: center; gap: 8px; }
+.wr-mrow > span { flex: 1; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+.wr-mrow b { min-width: 66px; text-align: center; font: 700 15px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.wr-mrow button { width: 42px; height: 42px; background: var(--panel); border: 2px solid var(--ink); font: 700 18px/1 var(--mono); }
+.wr-mrow button:active { background: var(--pink); }
+.wr-mbtns { display: flex; gap: 8px; margin-top: 6px; }
+.wr-mbtns button { flex: 1; min-height: 46px; border: 2px solid var(--ink); font: 700 13px/1 var(--grot); text-transform: uppercase; letter-spacing: .05em; }
+.wr-mbtns button:active { transform: translate(2px, 2px); }
+#wrOk { background: var(--ink); color: var(--paper); }
+#wrCancel { background: var(--paper); color: var(--ink); }
+
+.word-task { border: 2px solid var(--ink); border-left: 8px solid var(--pink); background: var(--paper); box-shadow: var(--shadow); padding: 12px 14px; margin-bottom: 14px; }
+.word-task.done { border-left-color: var(--good); }
+.word-task.done .wt-k { color: var(--good); }
+.wt-k { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--pink-ink); margin-bottom: 6px; }
+.wt-t { font: 800 19px/1.05 var(--grot); letter-spacing: -.03em; margin-bottom: 8px; }
+.wt-w { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.wt-w + .wt-w { margin-top: 4px; }
+.wt-w b { color: var(--ink); font-weight: 700; }
+.word-check { margin-bottom: 14px; }
+.word-check .body { padding: 10px 12px; }
+.wck { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 14px; line-height: 1.35; }
+.wck + .wck { border-top: 1px solid var(--panel-2); }
+.wck i { flex: none; width: 18px; height: 18px; border: 2px solid var(--ink); background: var(--paper); display: grid; place-items: center; font-style: normal; }
+.wck i::after { content: "○"; font: 700 12px/1 var(--mono); color: var(--ink-3); }
+.wck.ok i { background: var(--good); border-color: var(--good); }
+.wck.ok i::after { content: "✓"; color: #fff; }
+.wck.ok span { color: var(--ink-3); }
+
+.word-doc { margin-top: 4px; }
+.word-page { background: var(--panel); transition: padding .2s var(--ease); border-top: 2px solid var(--ink); }
+.wpg-content { background: #fff; border: 1.5px dashed var(--ink-3); padding: 6px 0; min-height: 340px; }
+.wpg-line { padding: 3px 8px; cursor: pointer; line-height: 1.45; color: var(--ink); display: flex; align-items: baseline; gap: 4px; }
+.wpg-line > span:first-child { flex: 1; min-width: 0; }
+.wpg-line.sel { background: var(--pink-soft); outline: 2px solid var(--pink-deep); outline-offset: -2px; }
+.wpg-pil { flex: none; font: 500 10px/1 var(--mono); color: var(--ink-3); }
+.wpg-gap { height: 18px; line-height: 18px; padding: 0 8px; font: 500 10px/18px var(--mono); color: var(--ink-3); cursor: pointer; }
+.wpg-caps { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.wpg-cap { font: 500 10.5px/1 var(--mono); padding: 5px 7px; border: 1.5px solid var(--ink); background: var(--paper); }

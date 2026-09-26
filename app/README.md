@@ -149,6 +149,36 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 ```
 In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
+**Word-Simulation** – ein Dokument (z. B. einen Brief) wie in Word formatieren; wird automatisch geprüft
+```js
+{ type: "word", title: "Brief formatieren – geführt", mode: "guided", file: "Brief_Rohtext.docx",
+  intro: "…",                        // optional: kurzer Einleitungstext
+  start: { font: "Arial", size: 10 }, // Ausgangszustand (optional; Ränder: start.margins)
+  blocks: [ { text: "Fly Bike Werke GmbH · Rostocker Str. 334 · 26121 Oldenburg" }, … ],
+  criteria: [
+    { label: "Grundschrift: alles Calibri 11", hint: "…",
+      checks: [ { op: "font", value: "Calibri" }, { op: "size", value: 11, skip: [0] } ],
+      task: { wo: "Start → Gruppe Schriftart", was: "Alles markieren, Calibri und 11 wählen.", probe: "…" } },
+    { label: "Rücksendeangabe klein: Zeile 1 auf 8 pt",
+      checks: [ { op: "size", value: 8, block: 0 } ] },
+    { label: "Seitenränder: 4,5 / 2 / 2,5 / 2 cm",
+      checks: [ { op: "margins", value: { top: 4.5, bottom: 2, left: 2.5, right: 2 } } ] },
+    { label: "Datum rechtsbündig", checks: [ { op: "align", block: 5, value: "right" } ] },
+    { label: "Betreff fett", checks: [ { op: "bold", block: 6 } ] },
+    { label: "Leerzeile vor der PLZ", checks: [ { op: "gap", block: 3, value: 1 } ] }
+  ] }
+```
+- `mode: "guided"` (Standard): jeder Prüfpunkt ist eine Aufgabe mit `task: { wo, was, probe }`; „Probe“ prüft nur die aktuelle Aufgabe, dann geht es weiter.
+- `mode: "free"`: keine Anleitung – eine Live-Checkliste prüft alle Punkte, am Ende steht das Ergebnis.
+- **Checks** je Prüfpunkt (`checks` ist eine Liste):
+  - `{ op: "font", value: "Calibri" }` – alle Zeilen
+  - `{ op: "size", value: 11, skip: [0] }` – alle außer Zeile 1; oder `{ op: "size", value: 8, block: 0 }`
+  - `{ op: "margins", value: { top: 4.5, bottom: 2, left: 2.5, right: 2 } }`
+  - `{ op: "gap", block: 3, value: 1 }` – Leerzeilen nach Zeile 3 (0–4)
+  - `{ op: "align", block: 5, value: "right" }` – `left` · `center` · `right` · `justify`
+  - `{ op: "bold", block: 6 }`
+- Bedienung wie in Word: Zeile antippen (am PC Strg+A für alles), dann in der Leiste formatieren – **Start** (Schriftart, Schriftgrad, Fett, Ausrichtung, ¶ Leerzeilen) und **Layout** (Seitenränder). Am PC zusätzlich Strg+B für fett.
+
 ### Übungsklausur
 
 Ein Thema mit `exam` wird zur Klausur: Timer, keine Rückmeldung und keine Hilfe während des Schreibens,

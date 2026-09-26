@@ -51,6 +51,7 @@ stehen in `app/README.md`. Kurzüberblick:
 | `cloze` | Lückentext mit Wortbank und 2–3 Ablenkern |
 | `calc` | Rechenschema mit Zahlenfeld (Zahlen als ganze Zahlen) |
 | `sentence` | Antwortsatz aus Bausteinen `{*richtig|falsch}` – für deuten, erklären, Stellung nehmen |
+| `word` | Word-Simulation: Dokument wie in Word formatieren – geführt (Aufgabe für Aufgabe) oder frei (Live-Checkliste); automatisch geprüft |
 | `cards` | Lernkarten Begriff/Erklärung |
 | `selfcheck` | Kann-Liste am Ende eines Themas |
 

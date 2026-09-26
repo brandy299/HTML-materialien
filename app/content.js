@@ -12,6 +12,7 @@
      calc       Rechenschema mit Zahlenfeld
      cards      Karteikarten (Vorderseite / Rückseite)
      selfcheck  Kann-Liste zur Selbsteinschätzung
+     word       Word-Simulation: Dokument formatieren (geführt oder frei)
      link       bestehendes HTML-Material öffnen
 
    Anleitung mit Beispielen: app/README.md

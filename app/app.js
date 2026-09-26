@@ -79,9 +79,10 @@
     cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
-    sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz."
+    sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
+    word: "Tippe eine Zeile an, um sie zu markieren (oder „Alles“), und formatiere sie mit der Leiste – wie in Word. Am PC geht auch Strg+A. Mit „Probe“ prüfst du die Aufgabe."
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz" };
+  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
 
   function stepMeta(st) {
     switch (st.type) {
@@ -93,6 +94,7 @@
       case "cards": return st.cards.length + " Karten";
       case "selfcheck": return st.items.length + " Aussagen";
       case "sentence": return (st.text.match(/\{/g) || []).length + " Bausteine";
+      case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return "öffnet sich neu";
     }
   }
@@ -1162,6 +1164,300 @@
 
       ctx.body.append(node);
       paint();
+    },
+
+    /* Word-Simulation: einen Brief wie in Word formatieren – geführt oder frei */
+    word(step, ctx) {
+      const W_FONTS = ["Calibri", "Arial", "Times New Roman", "Verdana"];
+      const W_SIZES = [8, 9, 10, 11, 12, 14, 16];
+      const W_STACK = {
+        "Calibri": "'Calibri','Carlito','Segoe UI',sans-serif",
+        "Arial": "Arial,'Helvetica Neue',Helvetica,sans-serif",
+        "Times New Roman": "'Times New Roman',Times,serif",
+        "Verdana": "Verdana,Geneva,sans-serif"
+      };
+      const W_ALIGN = [
+        ["left", "Linksbündig", '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg>'],
+        ["center", "Zentriert", '<svg viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg>'],
+        ["right", "Rechtsbündig", '<svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg>'],
+        ["justify", "Blocksatz", '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>']
+      ];
+      const W_CM = { top: "oben", bottom: "unten", left: "links", right: "rechts" };
+
+      const start = step.start || {};
+      const doc = {
+        margins: { top: 2.5, bottom: 2.5, left: 2.5, right: 2.5, ...(start.margins || {}) },
+        blocks: step.blocks.map((b) => ({ text: b.text, font: start.font || "Arial", size: start.size || 10, bold: false, align: "left", gap: 0 }))
+      };
+      const crit = step.criteria;
+      const guided = step.mode !== "free";
+      let cur = 0, sel = null, tab = "start", pop = null, popMargins = null, give = null;
+
+      const node = h(`<div class="word">
+        ${step.intro ? `<p class="lead" style="margin-bottom:14px">${esc(step.intro)}</p>` : ""}
+        <div class="word-ribbon">
+          <div class="wr-tabs" role="tablist">
+            <button type="button" data-tab="start" aria-selected="true">Start</button>
+            <button type="button" data-tab="layout" aria-selected="false">Layout</button>
+          </div>
+          <div class="wr-sel"><span id="wrSelText"></span><button type="button" id="wrAll">Alles markieren</button></div>
+          <div class="wr-groups" id="wrGroups"></div>
+          <div class="wr-pop" id="wrPop" hidden></div>
+        </div>
+        <div id="wrTask"></div>
+        <div id="wrOut"></div>
+        <div class="word-doc win">
+          <div class="bar"><span class="d"></span>Dokument · ${esc(step.file || "Brief.docx")}<span class="r">Seite 1 / 1</span></div>
+          <div class="word-page" id="wrPage"></div>
+        </div>
+        <div class="wpg-caps" id="wrCaps"></div>
+      </div>`);
+      const out = node.querySelector("#wrOut");
+      const groups = node.querySelector("#wrGroups");
+
+      const short = (t) => (t.length > 26 ? t.slice(0, 25) + "…" : t);
+      const fmtCm = (v) => String(v).replace(".", ",");
+      const selIdx = () => (sel == null ? [] : sel.all ? doc.blocks.map((_, i) => i) : [sel.i]);
+      const selBold = () => { const ix = selIdx(); return ix.length > 0 && ix.every((i) => doc.blocks[i].bold); };
+
+      function evalCheck(ck) {
+        if (ck.op === "font") return doc.blocks.every((b) => b.font === ck.value);
+        if (ck.op === "size") {
+          if (ck.block !== undefined) return (doc.blocks[ck.block] || {}).size === ck.value;
+          return doc.blocks.every((b, i) => (ck.skip || []).includes(i) || b.size === ck.value);
+        }
+        if (ck.op === "margins") return ["top", "bottom", "left", "right"].every((k) => doc.margins[k] === ck.value[k]);
+        if (ck.op === "gap") return (doc.blocks[ck.block] || {}).gap === ck.value;
+        if (ck.op === "align") return (doc.blocks[ck.block] || {}).align === ck.value;
+        if (ck.op === "bold") return !!((doc.blocks[ck.block] || {}).bold) === (ck.value !== false);
+        return false;
+      }
+      const critOK = (c) => c.checks.every(evalCheck);
+      const passedCount = () => crit.filter(critOK).length;
+
+      function paintSelLine() {
+        node.querySelector("#wrSelText").textContent = !sel
+          ? "Keine Auswahl – tippe eine Zeile an"
+          : sel.all ? `Alles markiert (${doc.blocks.length} Zeilen)`
+          : `Zeile ${sel.i + 1}: „${short(doc.blocks[sel.i].text)}“`;
+        node.querySelector("#wrAll").classList.toggle("on", !!(sel && sel.all));
+      }
+
+      function paintPage() {
+        const page = node.querySelector("#wrPage");
+        page.style.padding = `${doc.margins.top * 7}px ${doc.margins.right * 7}px ${doc.margins.bottom * 7}px ${doc.margins.left * 7}px`;
+        page.innerHTML = `<div class="wpg-content">${doc.blocks.map((b, i) => {
+          const on = sel && (sel.all || sel.i === i);
+          const gaps = Array.from({ length: b.gap }, () => `<div class="wpg-gap" data-i="${i}">¶</div>`).join("");
+          return `<div class="wpg-line${on ? " sel" : ""}" data-i="${i}" style="font-family:${W_STACK[b.font] || "sans-serif"};font-size:${Math.round(b.size * 1.28)}px;font-weight:${b.bold ? 800 : 400};text-align:${b.align}"><span>${esc(b.text)}</span><span class="wpg-pil">¶</span></div>${gaps}`;
+        }).join("")}</div>`;
+        page.querySelectorAll(".wpg-line,.wpg-gap").forEach((el) => {
+          el.onclick = () => { sel = { i: +el.dataset.i }; closePop(); refresh(); };
+        });
+        node.querySelector("#wrCaps").innerHTML = ["top", "bottom", "left", "right"]
+          .map((k) => `<span class="wpg-cap">${W_CM[k]} ${fmtCm(doc.margins[k])} cm</span>`).join("");
+      }
+
+      function selVal(get) {
+        const ix = selIdx();
+        if (!ix.length) return "–";
+        const v = get(doc.blocks[ix[0]]);
+        return ix.every((i) => get(doc.blocks[i]) === v) ? v : "gemischt";
+      }
+
+      function paintRibbon() {
+        node.querySelectorAll(".wr-tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+        if (tab === "start") {
+          groups.innerHTML = `
+            <div class="wr-group"><span class="wr-lbl">Schriftart</span><div class="wr-btns">
+              <button type="button" class="wr-b" data-act="font"><span>${esc(String(selVal((b) => b.font)))}</span> ▾</button>
+              <button type="button" class="wr-b" data-act="size"><span>${esc(String(selVal((b) => b.size)))}</span> ▾</button>
+              <button type="button" class="wr-b wr-f${selBold() ? " on" : ""}" data-act="bold" aria-label="Fett">F</button>
+            </div></div>
+            <div class="wr-group"><span class="wr-lbl">Absatz</span><div class="wr-btns">
+              ${W_ALIGN.map(([a, t, svg]) => `<button type="button" class="wr-b wr-ic" data-act="align:${a}" aria-label="${t}">${svg}</button>`).join("")}
+              <button type="button" class="wr-b" data-act="gap+" aria-label="Leerzeile einfügen">¶ +</button>
+              <button type="button" class="wr-b" data-act="gap-" aria-label="Leerzeile löschen">¶ −</button>
+            </div></div>`;
+        } else {
+          groups.innerHTML = `
+            <div class="wr-group"><span class="wr-lbl">Seite einrichten</span><div class="wr-btns">
+              <button type="button" class="wr-b wr-wide" data-act="margins">Seitenränder …</button>
+            </div></div>`;
+        }
+      }
+
+      function closePop() { pop = null; popMargins = null; paintPop(); }
+      function paintPop() {
+        const p = node.querySelector("#wrPop");
+        if (!pop) { p.hidden = true; p.innerHTML = ""; return; }
+        p.hidden = false;
+        if (pop === "font") {
+          p.innerHTML = `<div class="wr-chips">${W_FONTS.map((f) => `<button type="button" class="wr-chip${selIdx().length && doc.blocks[selIdx()[0]].font === f ? " on" : ""}" data-f="${esc(f)}" style="font-family:${W_STACK[f]}">${esc(f)}</button>`).join("")}</div>`;
+          p.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => applyFont(b.dataset.f));
+        } else if (pop === "size") {
+          p.innerHTML = `<div class="wr-chips">${W_SIZES.map((s) => `<button type="button" class="wr-chip${selIdx().length && doc.blocks[selIdx()[0]].size === s ? " on" : ""}" data-s="${s}" style="font-size:${Math.round(s * 1.5)}px">${s}</button>`).join("")}</div>`;
+          p.querySelectorAll("[data-s]").forEach((b) => b.onclick = () => applySize(+b.dataset.s));
+        } else {
+          if (!popMargins) popMargins = { ...doc.margins };
+          p.innerHTML = `<div class="wr-marg">${["top", "bottom", "left", "right"].map((k) => `<div class="wr-mrow" data-k="${k}"><span>${W_CM[k]}</span>
+            <button type="button" data-d="-1" aria-label="kleiner">−</button><b>${fmtCm(popMargins[k])} cm</b><button type="button" data-d="1" aria-label="größer">+</button></div>`).join("")}
+            <div class="wr-mbtns"><button type="button" id="wrOk">OK</button><button type="button" id="wrCancel">Abbrechen</button></div></div>`;
+          p.querySelectorAll(".wr-mrow").forEach((row) => {
+            const k = row.dataset.k;
+            row.querySelectorAll("[data-d]").forEach((b) => b.onclick = () => {
+              const v = Math.round((popMargins[k] + (+b.dataset.d) * 0.5) * 2) / 2;
+              popMargins[k] = Math.max(1, Math.min(6, v));
+              paintPop();
+            });
+          });
+          p.querySelector("#wrOk").onclick = () => { doc.margins = { ...popMargins }; pop = null; popMargins = null; buzz(8); refresh(); };
+          p.querySelector("#wrCancel").onclick = () => closePop();
+        }
+      }
+
+      function needSel() { if (!sel) { toast("› Markiere zuerst eine Zeile oder tippe auf „Alles“."); return false; } return true; }
+      function applyFont(f) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].font = f)); pop = null; buzz(8); refresh(); }
+      function applySize(s) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].size = s)); pop = null; buzz(8); refresh(); }
+      function toggleBold() { if (!needSel()) return; const on = !selBold(); selIdx().forEach((i) => (doc.blocks[i].bold = on)); buzz(6); refresh(); }
+      function applyAlign(v) { if (!needSel()) return; selIdx().forEach((i) => (doc.blocks[i].align = v)); buzz(6); refresh(); }
+      function bumpGap(d) {
+        if (!sel || sel.all) { toast("› Markiere genau eine Zeile."); return; }
+        const b = doc.blocks[sel.i];
+        const g = Math.max(0, Math.min(4, b.gap + d));
+        if (g === b.gap) { toast(d > 0 ? "› Mehr Leerzeilen gehen hier nicht." : "› Keine Leerzeile mehr da."); return; }
+        b.gap = g; buzz(6); refresh();
+      }
+
+      function paintTask() {
+        const box = node.querySelector("#wrTask");
+        if (!guided) {
+          box.innerHTML = `<div class="word-check win"><div class="bar"><span class="d"></span>Checkliste – das prüft die Simulation<span class="r" id="wrScore"></span></div><div class="body" id="wrCList"></div></div>`;
+        } else if (cur >= crit.length) {
+          box.innerHTML = `<div class="word-task done"><p class="wt-k">Geschafft</p><p class="wt-t">Der Brief ist fertig formatiert.</p><p class="wt-w">Tippe unten auf „Fertig“.</p></div>`;
+        } else {
+          const c = crit[cur], t = c.task || {};
+          box.innerHTML = `<div class="word-task">
+            <p class="wt-k">Aufgabe ${cur + 1} / ${crit.length}</p>
+            <p class="wt-t">${esc(c.label)}</p>
+            ${t.wo ? `<p class="wt-w"><b>Wo?</b> ${esc(t.wo)}</p>` : ""}
+            ${t.was ? `<p class="wt-w"><b>Was?</b> ${esc(t.was)}</p>` : ""}
+            ${t.probe ? `<p class="wt-w"><b>Probe:</b> ${esc(t.probe)}</p>` : ""}
+          </div>`;
+        }
+      }
+
+      function paintChecklist() {
+        if (guided) return;
+        const list = node.querySelector("#wrCList");
+        if (!list) return;
+        list.innerHTML = crit.map((c) => `<div class="wck${critOK(c) ? " ok" : ""}"><i></i><span>${esc(c.label)}</span></div>`).join("");
+        node.querySelector("#wrScore").textContent = `${passedCount()}/${crit.length}`;
+      }
+
+      function paintDock() {
+        if (guided) {
+          if (cur >= crit.length) ctx.action(`Fertig ${ICON.check}`, () => ctx.finish({ c: crit.length, t: crit.length }), { variant: "good" });
+          else ctx.action(`Probe ${ICON.check}`, probe);
+        } else if (passedCount() >= crit.length) {
+          ctx.action(`Fertig ${ICON.check}`, () => ctx.finish({ c: passedCount(), t: crit.length }), { variant: "good" });
+        } else {
+          ctx.action(`Prüfen ${ICON.check}`, freeCheck);
+        }
+      }
+
+      function refresh() {
+        paintRibbon();
+        paintPage();
+        paintChecklist();
+        paintSelLine();
+        paintPop();
+        if (!guided) {
+          ctx.setProgress(passedCount() / crit.length);
+          if (passedCount() >= crit.length) { if (give) { give.remove(); give = null; } paintDock(); }
+        }
+      }
+
+      function probe() {
+        const c = crit[cur];
+        if (!c) return;
+        if (critOK(c)) {
+          out.replaceChildren(term([
+            ["p", `$ probe ${cur + 1}/${crit.length} …`],
+            ["", `› <span class="ok">Passt.</span> ${esc((c.task && c.task.probe) || "")}`]
+          ]));
+          buzz(20);
+          cur++;
+          ctx.setProgress(cur / crit.length);
+          paintTask();
+          paintDock();
+          window.scrollTo({ top: 0, behavior: reduced() ? "auto" : "smooth" });
+        } else {
+          out.replaceChildren(term([
+            ["p", `$ probe ${cur + 1}/${crit.length} …`],
+            ["", `› <span class="no">Noch nicht ganz.</span> ${esc(c.hint || "Schau dir die Zeile nochmal an.")}`]
+          ]));
+          buzz([30, 40, 30]);
+          out.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
+        }
+      }
+
+      function freeCheck() {
+        const n = passedCount();
+        const missing = crit.filter((c) => !critOK(c)).map((c) => c.label);
+        out.replaceChildren(term([
+          ["p", "$ prüfe brief …"],
+          ["", n === crit.length
+            ? `› <span class="ok">Alles richtig.</span> Der Brief ist fertig formatiert.`
+            : `› <span class="no">${n} von ${crit.length}.</span> Noch offen: ${esc(missing.join(" · "))}`]
+        ]));
+        buzz(n === crit.length ? 20 : [30, 40, 30]);
+        ctx.setProgress(n / crit.length);
+        if (give) { give.remove(); give = null; }
+        if (n < crit.length) {
+          give = h(`<button class="btn ghost">Abgeben · ${n}/${crit.length}</button>`);
+          give.onclick = () => ctx.finish({ c: n, t: crit.length });
+          ctx.dock.prepend(give);
+        }
+        paintDock();
+      }
+
+      function act(a) {
+        if (a === "font") { pop = pop === "font" ? null : "font"; paintPop(); }
+        else if (a === "size") { pop = pop === "size" ? null : "size"; paintPop(); }
+        else if (a === "margins") { pop = pop === "margins" ? null : "margins"; paintPop(); }
+        else if (a === "bold") toggleBold();
+        else if (a === "gap+") bumpGap(1);
+        else if (a === "gap-") bumpGap(-1);
+        else if (a.indexOf("align:") === 0) applyAlign(a.slice(6));
+      }
+
+      groups.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-act]");
+        if (b) act(b.dataset.act);
+      });
+      node.querySelectorAll(".wr-tabs button").forEach((b) => b.onclick = () => { tab = b.dataset.tab; pop = null; popMargins = null; paintRibbon(); paintPop(); });
+      node.querySelector("#wrAll").onclick = () => { sel = { all: true }; pop = null; paintPop(); refresh(); };
+
+      const onKey = (e) => {
+        if (!node.isConnected) return;
+        if ((e.ctrlKey || e.metaKey) && (e.key === "a" || e.key === "A")) { e.preventDefault(); sel = { all: true }; refresh(); }
+        else if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); toggleBold(); }
+      };
+      document.addEventListener("keydown", onKey);
+      cleanup = () => document.removeEventListener("keydown", onKey);
+
+      ctx.hintsFor = () => (guided && cur < crit.length ? [crit[cur].hint].filter(Boolean) : step.hints || []);
+      ctx.hintKey = () => (guided ? "a" + cur : "frei");
+
+      ctx.body.append(node);
+      ctx.setProgress(0);
+      paintTask();
+      paintRibbon();
+      paintPage();
+      paintSelLine();
+      paintChecklist();
+      paintDock();
     },
 
     /* Bestehendes Material */

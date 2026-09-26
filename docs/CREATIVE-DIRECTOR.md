@@ -16,16 +16,16 @@ sorgt dafür, dass alles wie aus einem Guss wirkt:
 - Kuratierung: Was steht oben, was ist neu, welche Klausur steht an
 - Werkzeuge: Inhalts-Check (`app/tools/check-kurse.js`), GitHub-Check (`.github/workflows/lernraum-check.yml`)
 
-## Stand (zuletzt aktualisiert: 25.09.2026)
+## Stand (zuletzt aktualisiert: 26.09.2026)
 
 - **Live:** https://lernen.yannikbrand.eu (Startseite) · https://lernen.yannikbrand.eu/app/ (App).
   Domain bei netcup, CNAME `lernen` → `brandy299.github.io`. Im Schulnetz (Sophos-Firewall) inzwischen erreichbar.
 - **Kurse:** PBP · HS1 Personalbedarf (vom Creative Director erstellt, 10 Themen inkl. Übungsklausur und
   Endlos-Training) · GPU · HS1Y Preiskalkulation (von einem Content-Agenten, 3 Themen).
 - **Funktionen:** Folien, Quiz, Zuordnen, Lückentext, Rechenschema mit Zahlenfeld, Satzbausteine, Lernkarten,
-  Kann-Liste, Übungsklausur (Timer, Note, Erwartungshorizont), Endlos-Training (nur Personalbedarf),
-  Hilfe (gestufte Tipps, Merkkasten, Lexikon), ↺ Aufgabe/Thema zurücksetzen, QR-Codes mit Beamer-Ansicht,
-  Einzeldatei-Build, Offline/PWA.
+  Kann-Liste, **Word-Simulation (`word`: Brief formatieren, geführt + frei, 26.09.2026)**, Übungsklausur (Timer,
+  Note, Erwartungshorizont), Endlos-Training (nur Personalbedarf), Hilfe (gestufte Tipps, Merkkasten, Lexikon),
+  ↺ Aufgabe/Thema zurücksetzen, QR-Codes mit Beamer-Ansicht, Einzeldatei-Build, Offline/PWA.
 - **Startseite:** Hero mit Neuigkeiten (neuester Kurs, Klausur-Countdown), Zahlen, Kurse (neueste zuerst,
   Badge „Neu“ ≤ 14 Tage / „Aktualisiert“ ≤ 7 Tage), So geht's, Funktionen, Installieren, Lehrkräfte.
   Liest alle Kurse automatisch aus `app/index.html`.
@@ -57,6 +57,10 @@ Stilstudie der Lehrkraft war die Vorlage.
 - **Übungsklausur** ohne ↺ und ohne Hilfe. Notenschlüssel 92/81/67/50/30 % (von der Lehrkraft nicht bestätigt).
 - **Zahlenfeld** nur ganze Zahlen – deshalb hat „Der Bezugspreis“ (GPU) keine Rechenaufgabe.
 - **Weihnachtsgeschäft** als „extern“ eingeordnet (PBP) – von der Lehrkraft nicht bestätigt.
+- **Word-Simulation als eigener Schritt-Typ `word` (26.09.2026):** Kurse sind nur Daten – Interaktion gehört in
+  die Engine. v1 kann Schriftart/-grad, Fett, Ausrichtung, Leerzeilen und Seitenränder; Startzustand Arial 10,
+  Zielwerte wie das Word-Arbeitsblatt (DIN 5008). Bewusst keine echte Word-Datei: Handy-taugliche Klick-Übung,
+  der echte Transfer bleibt das Formatieren am PC. Geführt (Aufgabe für Aufgabe) und frei (Live-Checkliste).
 
 ## Offen / Ideen
 
@@ -65,6 +69,8 @@ Stilstudie der Lehrkraft war die Vorlage.
 - [ ] **Google Fonts lokal einbinden** (Datenschutz/IP-Übertragung an Google).
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
 - [ ] Endlos-Training nur für Personalbedarf – Generator für weitere Themen (z. B. Kalkulation) denkbar.
+- [ ] Word-Simulation v2: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und
+      „Speichern unter“ mit Dateinamen-Regel.
 - [ ] Optional: Branch-Schutz für `main` in den GitHub-Einstellungen (Lernraum-Check als Pflicht) –
       muss die Lehrkraft selbst in GitHub aktivieren.
 
