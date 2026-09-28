@@ -59,10 +59,11 @@
   /* then = was danach passiert; ohne Angabe wird die aktuelle Seite neu aufgebaut */
   function setLang(l, then) {
     if (l === LANG) return;
+    const prev = LANG;
     store.set("lang", l);
     applyLang(l);
     toast("› " + LANGS[l]);
-    then ? then() : render();
+    then ? then(prev) : render();
   }
   /* Bereits angezeigte Oberflächentexte in die neue Sprache umschreiben – ohne die Aufgabe neu aufzubauen.
      Erkannt werden ganze Textknoten (und aria-label/title/placeholder), die exakt einem Text aus i18n.js
@@ -120,14 +121,33 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch { /* egal */ } };
-  const findSubject = (id) => DATA.subjects.find((s) => s.id === id);
+  /* Kursinhalte in der gewählten Sprache (app/uebersetzungen/*.js); fehlt ein Text, bleibt das Deutsche */
+  const trCache = {};
+  const contentDict = (id, l = LANG) => {
+    if (l === "de") return null;
+    const k = id + "/" + l;
+    if (!(k in trCache)) {
+      const d = Object.assign({}, ...(DATA.translations || []).filter((t) => t.course === id && t.lang === l).map((t) => t.strings));
+      trCache[k] = Object.values(d).some((x) => x) ? d : null;
+    }
+    return trCache[k];
+  };
+  const locCache = {};
+  const Lsub = (s) => {
+    const d = s && contentDict(s.id);
+    if (!d) return s;
+    const k = s.id + "/" + LANG;
+    return locCache[k] || (locCache[k] = mapTexts(s, (x) => d[x] || x));
+  };
+  const allSubjects = () => DATA.subjects.map(Lsub);
+  const findSubject = (id) => Lsub(DATA.subjects.find((s) => s.id === id));
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
   const firstName = () => store.get("name", "");
   const num = (v) => (v < 0 ? "− " + Math.abs(v) : String(v));
   const signed = (v) => (v > 0 ? "+ " + v : num(v));
   const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cardsTopic = () => {
-    for (const s of DATA.subjects) for (const t of s.topics) if (t.steps.length && t.steps.every((x) => x.type === "cards")) return { s, t };
+    for (const s of allSubjects()) for (const t of s.topics) if (t.steps.length && t.steps.every((x) => x.type === "cards")) return { s, t };
     return null;
   };
 
@@ -424,12 +444,12 @@
   /* Meine Fächer: null = noch nie gewählt, [] = alle anzeigen */
   const myFaecher = () => { const m = store.get("faecher", null); return Array.isArray(m) ? m : null; };
   function addFach(f) { const m = myFaecher(); if (!m) store.set("faecher", [f]); else if (m.length && !m.includes(f)) store.set("faecher", [...m, f]); }
-  const hasCourse = (f) => DATA.subjects.some((x) => (x.fach || x.name) === f && !x.materials);
-  const allFachs = () => [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
+  const hasCourse = (f) => allSubjects().some((x) => (x.fach || x.name) === f && !x.materials);
+  const allFachs = () => [...new Set(allSubjects().map((x) => x.fach || x.name))]
     .sort((a, b) => (hasCourse(b) - hasCourse(a)) || a.localeCompare(b, "de"));
   const shownFachs = () => { const m = myFaecher(); const all = allFachs(); const f = m && m.length ? all.filter((x) => m.includes(x)) : all; return f.length ? f : all; };
   /* Klasse = letzter Teil von course („PBP · HS1“ → „HS1“) */
-  const fachClasses = (f) => [...new Set(DATA.subjects.filter((x) => (x.fach || x.name) === f && !x.materials && x.course)
+  const fachClasses = (f) => [...new Set(allSubjects().filter((x) => (x.fach || x.name) === f && !x.materials && x.course)
     .map((x) => x.course.split("·").pop().trim()))];
 
   function viewPickFach(first) {
@@ -448,7 +468,7 @@
       hint.textContent = sel.size ? "" : tr("Du hast nichts gewählt – dann siehst du alle Fächer.");
     };
     all.forEach((f) => {
-      const subs = DATA.subjects.filter((x) => (x.fach || x.name) === f);
+      const subs = allSubjects().filter((x) => (x.fach || x.name) === f);
       const nCourses = subs.filter((x) => !x.materials).length, cls = fachClasses(f);
       const b = h(`<button class="win topic-win pick-win" aria-pressed="${sel.has(f)}">
         <div class="bar"><span class="d"></span>${esc(f)}<span class="r"></span></div>
@@ -515,7 +535,7 @@
     const name = firstName();
     const fachs = shownFachs();
     const filtered = fachs.length < allFachs().length;
-    const courses = DATA.subjects.filter((x) => !x.materials && fachs.includes(x.fach || x.name));
+    const courses = allSubjects().filter((x) => !x.materials && fachs.includes(x.fach || x.name));
     const target = resumeTarget(courses);
     const v = h(`<main class="view">
       <section class="hero">
@@ -546,7 +566,7 @@
       const cls = fachClasses(f);
       list.append(h(`<header class="fach-head" id="fach-${k}"><p class="fh-kick">${esc(f)}${cls.length ? " · " + esc(cls.join(" · ")) : ""}</p><h2 class="fh-title">${esc(fachName(f))}</h2></header>`));
       const grid = h(`<div class="topics"></div>`);
-      DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
+      allSubjects().filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
       list.append(grid);
     });
     return v;
@@ -2311,7 +2331,7 @@
       row.querySelector("button").onclick = () => openQR(title, url, sub);
       box.append(row);
     };
-    DATA.subjects.forEach((s) => {
+    allSubjects().forEach((s) => {
       list.append(h(`<p class="section-head">${esc(s.fach || "")} · ${esc(s.materials ? "Materialien" : s.course || s.name)}</p>`));
       const box = h(`<div class="list mat-list"></div>`);
       if (!s.materials) addRow(box, `Ganzer Kurs: ${s.name}`, s.course || s.name, appUrl(SINGLE ? "#/" : `#/f/${s.id}`));
@@ -2325,7 +2345,7 @@
   function glossary(subject) {
     const list = [];
     const seen = new Set();
-    const subs = subject ? [subject] : DATA.subjects;
+    const subs = subject ? [subject] : allSubjects();
     subs.forEach((s) => (s.glossary || []).concat(...s.topics.flatMap((t) => t.steps.filter((x) => x.type === "cards").map((x) => x.cards)))
       .forEach((c) => { const k = c.front.toLowerCase(); if (!seen.has(k)) { seen.add(k); list.push(c); } }));
     return list.sort((a, b) => a.front.localeCompare(b.front, "de"));
@@ -2417,7 +2437,14 @@
     };
     back.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => select(b.dataset.tab));
     /* Sprachwechsel mitten in der Aufgabe: nur Hilfe + Kopfzeile neu beschriften, die Aufgabe bleibt, wie sie ist */
-    bindLang(back, () => {
+    bindLang(back, (prev) => {
+      /* Gibt es den Kurs übersetzt, muss die Aufgabe mit den neuen Texten neu aufgebaut werden */
+      if (!ctx.exam && ctx.key !== "drill" && (contentDict(s.id, prev) || contentDict(s.id))) {
+        close();
+        render();
+        toast("› " + tr("Aufgabe in der neuen Sprache neu gestartet"));
+        return;
+      }
       back.querySelector("#sheetTitle").textContent = `${tr("Hilfe")} · ${step.title}`;
       const x = back.querySelector(".sheet-x"); x.textContent = `✕ ${tr("schließen")}`; x.setAttribute("aria-label", tr("Schließen"));
       back.querySelectorAll(".tabs button").forEach((b) => { b.textContent = tr(HELP_TABS[b.dataset.tab]); });
@@ -2449,7 +2476,7 @@
   }
 
   function viewHelp() {
-    const subjects = SINGLE ? [SINGLE] : DATA.subjects;
+    const subjects = SINGLE ? [SINGLE] : allSubjects();
     const v = h(`<main class="view">
       <div class="topstrip"><span class="tag-box"><span class="sq"></span>${tr("Hilfe")}</span></div>
       <h1 class="display" style="margin-top:26px">${tr("Hilfe.")}<small>${tr("Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.")}</small></h1>
@@ -2583,7 +2610,7 @@
   function viewProfile() {
     const name = firstName();
     let topicsDone = 0, stepsDone = 0, c = 0, n = 0;
-    DATA.subjects.forEach((s) => s.topics.forEach((t) => {
+    allSubjects().forEach((s) => s.topics.forEach((t) => {
       if (!t.steps.length) return;
       stepsDone += progress.count(s, t);
       if (progress.ratio(s, t) >= 1) topicsDone++;

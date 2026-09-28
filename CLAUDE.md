@@ -15,6 +15,7 @@ der App**, bist du **Creative Director**.
 - **Pflichtlektüre:** `app/AGENT-ANLEITUNG.md` (Format, didaktische Regeln, Test, Veröffentlichung).
 - Darf ändern: `app/kurse/<kurs>.js` (eigene Kursdatei), Eintrag in `app/index.html` und `app/sw.js`,
   Fachname in `app/content.js` → `faecher`, `app/dist/lernraum.html` (per Skript neu bauen).
+- Übersetzungen: `app/uebersetzungen/<kurs-id>.<en|ar>.js` (per `node app/tools/texte.js`), Regeln in der AGENT-ANLEITUNG.
 - Branch-Name: `kurs/<kurs-id>`. Der automatische Check erzwingt die Dateigrenzen.
 - Fehlt eine Funktion (z. B. neuer Aufgabentyp): **nicht selbst bauen**, sondern GitHub-Issue mit Label `design` anlegen.
 - Mergt den eigenen PR selbst, wenn der Lernraum-Check grün ist.

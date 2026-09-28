@@ -32,7 +32,7 @@ jobs:
           git diff --name-only origin/${{ github.base_ref }}...HEAD > changed.txt
           echo "Geänderte Dateien:"; cat changed.txt
           # erlaubt: Kursdateien, Eintrag in index.html/sw.js, Fachname in content.js, Einzeldatei
-          if grep -vE '^(app/kurse/[a-z0-9-]+\.js|app/index\.html|app/sw\.js|app/content\.js|app/dist/lernraum\.html)$' changed.txt; then
+          if grep -vE '^(app/kurse/[a-z0-9-]+\.js|app/uebersetzungen/[a-z0-9-]+\.(en|ar)\.js|app/index\.html|app/sw\.js|app/content\.js|app/dist/lernraum\.html)$' changed.txt; then
             echo "::error::Content-Branches (kurs/…) dürfen nur Kursdateien ändern. Die oben gelisteten Dateien gehören zu Design/Navigation – bitte als Wunsch-Issue mit Label 'design' anlegen."
             exit 1
           fi
@@ -40,7 +40,7 @@ jobs:
             echo "::error::app/kurse/materialien.js wird automatisch erzeugt und darf nicht von Hand geändert werden."
             exit 1
           fi
-          if git diff origin/${{ github.base_ref }}...HEAD -- app/index.html | grep -E '^[+-][^+-]' | grep -vE '^\+\s*<script src="kurse/[a-z0-9-]+\.js"></script>\s*$'; then
+          if git diff origin/${{ github.base_ref }}...HEAD -- app/index.html | grep -E '^[+-][^+-]' | grep -vE '^\+\s*<script src="(kurse/[a-z0-9-]+|uebersetzungen/[a-z0-9-]+\.(en|ar))\.js"></script>\s*$'; then
             echo "::error::In app/index.html darf ein Content-Branch nur Zeilen <script src=\"kurse/…\"></script> ergänzen."
             exit 1
           fi

@@ -855,3 +855,10 @@ html.lang-ar .topstrip .tag-box { letter-spacing: 0; }
 .sheet-lang .sl-k { font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
 .sheet-lang .lang-sw { box-shadow: none; }
 .sheet-lang .lang-sw button { min-height: 32px; }
+/* Arabische Kursinhalte: Richtung pro Absatz automatisch (arabisch → rechtsbündig, deutsch/englisch → links) */
+html.lang-ar :is(.s-title, .s-kicker, .s-body p, .s-body li, .s-body dt, .s-body dd, .s-body .box, .q-text, .option > span:last-child,
+  .lead, .player-body .hint, .sort-card .txt, .bin, .cloze, .flash .txt, .kann li button > span:last-child, .case .body, .sentence-text,
+  .merk p, .merk li, .merk h3, .tip > span:last-child, .topic-win .title, .topic-win .meta, .display, .h1, .list-row .lbl, .terms dt, .terms dd,
+  .dt-card span, .df-node > span:first-child, .df-note, .howto) {
+  unicode-bidi: plaintext; text-align: start;
+}
