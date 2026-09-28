@@ -51,6 +51,13 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Wichtige Entscheidungen (mit Grund)
 
+- **Meine Fächer (28.09.2026):** Beim ersten Start wählen Schüler/innen ihre Fächer (Kacheln mit vollem Namen + Klasse).
+  Die Startseite zeigt nur diese Fächer; „Weiter mit …“ nur aus den eigenen Fächern. Wer per QR/Link in einen Kurs
+  kommt, bekommt das Fach automatisch dazu und überspringt die Auswahl. Speicher: `lernraum.faecher`
+  (`null` = nie gewählt, `[]` = alle). Grund: Lehrkraft-Feedback „PBP-Schüler könnten verwirrt werden“.
+- **Grafiken nur als Bausteine (28.09.2026):** `zeitstrahl()` und `ablauf()` in `content.js`, Stil in `styles.css`
+  (`.dia-*`). Content-Agenten zeichnen keine eigenen SVGs/Bilder (Check warnt). Neue Diagrammtypen baut der Creative Director.
+
 - **Keine Freitext-Aufgaben**, alles automatisch prüfbar – Niveau der Schüler/innen (Wunsch der Lehrkraft).
   Für deuten/erklären/Stellung nehmen: Satzbausteine (`sentence`).
 - **Kein Backend/Supabase, kein Login** – bewusst, vorerst. Fortschritt nur im localStorage.
@@ -78,6 +85,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Offen / Ideen
 
+- [ ] Weitere Diagrammtypen bei Bedarf: Verzweigung/Baum (Ersatz-/Neubedarf), Balken (Ist/Soll).
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 
 - [ ] **Kommazahlen im Zahlenfeld** (Wunsch aus GPU-Kurs, Bezugskalkulation) → Issue mit Label `design`.

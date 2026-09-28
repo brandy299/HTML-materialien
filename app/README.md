@@ -218,6 +218,31 @@ Welche Zeitformen vorkommen, bestimmt `tenses` (mindestens 2). Möglich: `simple
   tenses: ["simple-present", "present-progressive", "simple-past"], description: "…", steps: [], help: "Merkkasten …" }
 ```
 
+### Grafiken in Folien und Merkkästen
+
+Grafiken nur über die eingebauten Bausteine – sie sind im Lernraum-Design gezeichnet und funktionieren auf dem Handy.
+Einfach im `body` einer Folie oder im `help`-Text mit `${…}` einsetzen. Keine eigenen SVGs oder Bilder.
+
+**Zeitstrahl** – Zeitformen, Abläufe über die Zeit. `at`, `from`, `to` = Position 0–100 (50 = jetzt).
+```js
+body: `${zeitstrahl([
+  { at: 14, label: "yesterday", text: "He took points." },
+  { at: 50, label: "just", text: "He has just taken points.", hi: true, from: 36, to: 50 },
+  { at: 20, label: "every Saturday", text: "He plays.", also: [8, 32, 68] }   // also = Wiederholung
+], { title: "optional", axis: ["Vergangenheit", "jetzt", "Zukunft"] })}`
+```
+**Ablauf / Rechenkette** – Kalkulation, Schemata, Prozessschritte. `text` = Kasten, `op` = Rechenschritt dazwischen.
+```js
+body: `${ablauf([
+  { text: "Listeneinkaufspreis", value: "1.000,00 €" },
+  { op: "− Rabatt", value: "10 %", note: "vom Listeneinkaufspreis" },
+  { text: "Zieleinkaufspreis", value: "900,00 €", sub: true },   // sub = Zwischenergebnis (grau)
+  { op: "+ Bezugskosten", value: "30,00 €" },
+  { text: "Bezugspreis", value: "930,00 €", hi: true }            // hi = Ergebnis (pink)
+], { title: "optional" })}`
+```
+Kurze Texte (Karten max. ca. 30 Zeichen). Fehlt ein Diagrammtyp: Issue mit Label `design`.
+
 **Vorhandenes Material verlinken**
 ```js
 { type: "link", title: "…", text: "…", href: "../materialien/GP/…/datei.html" }

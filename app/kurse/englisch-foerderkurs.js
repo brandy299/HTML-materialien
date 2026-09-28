@@ -199,7 +199,11 @@ LERNRAUM.subjects.push({
               body: `<div class="pair">
                        <div><b>Simple Present</b>Gewohnheit: Harry <strong>plays</strong> Quidditch every Saturday.</div>
                        <div><b>Present Progressive</b>jetzt: Look! Harry <strong>is playing</strong> Quidditch now.</div>
-                     </div>`
+                     </div>
+                     ${zeitstrahl([
+                       { at: 20, label: "every Saturday", text: "He plays.", also: [8, 32, 68, 80, 92] },
+                       { at: 50, label: "now", text: "He is playing.", hi: true, from: 43, to: 57 }
+                     ])}`
             },
             {
               kicker: "Achtung",
@@ -470,7 +474,11 @@ LERNRAUM.subjects.push({
               body: `<div class="pair">
                        <div><b>Simple Past</b>genaue Zeit vorbei: Snape <strong>took</strong> points yesterday.</div>
                        <div><b>Present Perfect</b>Ergebnis jetzt: Snape <strong>has just taken</strong> points.</div>
-                     </div>`
+                     </div>
+                     ${zeitstrahl([
+                       { at: 14, label: "yesterday", text: "He took points." },
+                       { at: 50, label: "just", text: "He has just taken points.", hi: true, from: 36, to: 50 }
+                     ])}`
             },
             {
               kicker: "Signalwörter",
@@ -612,6 +620,10 @@ LERNRAUM.subjects.push({
                        <div><b>Past Progressive</b>Hintergrund: I <strong>was reading</strong>.</div>
                        <div><b>Simple Past</b>Unterbrechung: when the owl <strong>arrived</strong>.</div>
                      </div>
+                     ${zeitstrahl([
+                       { at: 16, label: "while / at 8 pm", text: "I was reading.", from: 6, to: 34 },
+                       { at: 26, label: "when", text: "The owl arrived.", hi: true }
+                     ])}
                      <p class="formula">while + Past Progressive · when + Simple Past</p>`
             },
             {
@@ -848,6 +860,12 @@ LERNRAUM.subjects.push({
                <li><b>will-Future</b> – he will play · spontan, Vermutung (I think …)</li>
                <li><b>going to</b> – he is going to play · Plan, Beweis (Look! …)</li>
              </ul>
+             ${zeitstrahl([
+               { at: 10, label: "yesterday", text: "He played." },
+               { at: 26, label: "at 8 last night", text: "He was playing.", from: 20, to: 32 },
+               { at: 50, label: "now", text: "He is playing.", hi: true },
+               { at: 86, label: "tomorrow", text: "He will play." }
+             ], { title: "Zeitformen auf dem Zeitstrahl" })}
              <h3>So findest du die Zeitform</h3>
              <p>1. Signalwort suchen. 2. Zeitform bestimmen. 3. Form richtig bilden.</p>`,
       steps: [

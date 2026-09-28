@@ -195,6 +195,7 @@
   const routes = [
     [/^#?\/?$/, viewHome, "home"],
     [/^#\/profil$/, viewProfile, "profil"],
+    [/^#\/faecher$/, () => viewPickFach(false), "home"],
     [/^#\/hilfe$/, viewHelp, "hilfe"],
     [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
@@ -207,6 +208,10 @@
     if (cleanup) { cleanup(); cleanup = null; }
     const hash = location.hash || "#/";
     if (!firstName()) return mount(viewWelcome(), null);
+    // Wer per Link/QR in einen Kurs kommt, bekommt dessen Fach automatisch zu „Meine Fächer“
+    const deep = hash.match(/^#\/f\/([\w-]+)/), ds = deep && findSubject(deep[1]);
+    if (ds && !ds.materials) addFach(ds.fach || ds.name);
+    if (!SINGLE && myFaecher() === null && /^#?\/?$/.test(hash) && allFachs().length > 1) return mount(viewPickFach(true), null);
     for (const [re, fn, tab] of routes) {
       const m = hash.match(re);
       if (m) return mount(fn(...m.slice(1)), tab);
@@ -336,6 +341,53 @@
   }
 
   const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
+  /* Meine Fächer: null = noch nie gewählt, [] = alle anzeigen */
+  const myFaecher = () => { const m = store.get("faecher", null); return Array.isArray(m) ? m : null; };
+  function addFach(f) { const m = myFaecher(); if (!m) store.set("faecher", [f]); else if (m.length && !m.includes(f)) store.set("faecher", [...m, f]); }
+  const hasCourse = (f) => DATA.subjects.some((x) => (x.fach || x.name) === f && !x.materials);
+  const allFachs = () => [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
+    .sort((a, b) => (hasCourse(b) - hasCourse(a)) || a.localeCompare(b, "de"));
+  const shownFachs = () => { const m = myFaecher(); const all = allFachs(); const f = m && m.length ? all.filter((x) => m.includes(x)) : all; return f.length ? f : all; };
+  /* Klasse = letzter Teil von course („PBP · HS1“ → „HS1“) */
+  const fachClasses = (f) => [...new Set(DATA.subjects.filter((x) => (x.fach || x.name) === f && !x.materials && x.course)
+    .map((x) => x.course.split("·").pop().trim()))];
+
+  function viewPickFach(first) {
+    const all = allFachs();
+    const sel = new Set(myFaecher() || []);
+    const v = h(`<main class="view ${first ? "no-tabbar" : ""}">
+      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>Meine Fächer</span>`}</div>
+      <h1 class="display" style="margin-top:24px">${first ? `Hallo ${esc(firstName())}.` : "Meine Fächer."}<small>Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.</small></h1>
+      <div class="topics fach-pick" role="group" aria-label="Fächer auswählen"></div>
+      <button class="btn block" id="save" style="margin-top:22px"></button>
+      <p class="hint" id="pickHint"></p>
+    </main>`);
+    const box = v.querySelector(".fach-pick"), save = v.querySelector("#save"), hint = v.querySelector("#pickHint");
+    const update = () => {
+      save.innerHTML = sel.size ? `Fertig · ${sel.size} ${sel.size === 1 ? "Fach" : "Fächer"} ${ICON.arrow}` : `Alle Fächer anzeigen ${ICON.arrow}`;
+      hint.textContent = sel.size ? "" : "Du hast nichts gewählt – dann siehst du alle Fächer.";
+    };
+    all.forEach((f) => {
+      const subs = DATA.subjects.filter((x) => (x.fach || x.name) === f);
+      const nCourses = subs.filter((x) => !x.materials).length, cls = fachClasses(f);
+      const b = h(`<button class="win topic-win pick-win" aria-pressed="${sel.has(f)}">
+        <div class="bar"><span class="d"></span>${esc(f)}<span class="r"></span></div>
+        <div class="body"><span class="title">${esc(fachName(f))}</span>
+          <span class="meta">${nCourses ? `${nCourses} ${nCourses === 1 ? "Kurs" : "Kurse"}` : "Materialien"}${cls.length ? " · Klasse " + esc(cls.join(", ")) : ""}</span></div>
+      </button>`);
+      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? "✓ mein Fach" : "antippen"; };
+      b.onclick = () => { sel.has(f) ? sel.delete(f) : sel.add(f); buzz(8); paint(); update(); };
+      paint();
+      box.append(b);
+    });
+    update();
+    save.onclick = () => {
+      store.set("faecher", all.filter((f) => sel.has(f)));
+      toast(sel.size ? "› Deine Fächer sind gespeichert" : "› Du siehst alle Fächer");
+      if (location.hash === "#/" || !location.hash) render(); else location.hash = "#/";
+    };
+    return v;
+  }
   const courseTopics = (x) => x.topics.filter((t) => t.steps.length || t.drill);
 
   function viewHome() {
@@ -380,10 +432,10 @@
   /* Startseite bei mehreren Fächern: Fach → Kurse & Materialsammlungen */
   function viewLanding() {
     const name = firstName();
-    const courses = DATA.subjects.filter((x) => !x.materials);
+    const fachs = shownFachs();
+    const filtered = fachs.length < allFachs().length;
+    const courses = DATA.subjects.filter((x) => !x.materials && fachs.includes(x.fach || x.name));
     const target = resumeTarget(courses);
-    const fachs = [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
-      .sort((a, b) => (DATA.subjects.some((x) => x.fach === b && !x.materials) - DATA.subjects.some((x) => x.fach === a && !x.materials)) || a.localeCompare(b, "de"));
     const v = h(`<main class="view">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
@@ -395,10 +447,11 @@
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
           <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>Übungen und Lernpfade für deine Fächer – gemacht fürs Handy. Wähle unten dein Fach.</small></h1>
+        <h1 class="display">Lernraum.<small>${filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy."}</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       <div id="list"></div>
+      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? `Andere Fächer (${allFachs().length - fachs.length}) · Fächer ändern` : "Meine Fächer auswählen"}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
     </main>`);
     dither(v.querySelector("canvas"));
@@ -409,7 +462,8 @@
       const chip = h(`<button class="tag-box">${esc(f)}</button>`);
       chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
       if (fachs.length > 1) chips.append(chip);
-      list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
+      const cls = fachClasses(f);
+      list.append(h(`<header class="fach-head" id="fach-${k}"><p class="fh-kick">${esc(f)}${cls.length ? " · " + esc(cls.join(" · ")) : ""}</p><h2 class="fh-title">${esc(fachName(f))}</h2></header>`));
       const grid = h(`<div class="topics"></div>`);
       DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
       list.append(grid);
@@ -2446,6 +2500,7 @@
       <p class="section-head">Einstellungen</p>
       <div class="list">
         <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/faecher"><span>Meine Fächer</span><span class="v">${esc((myFaecher() || []).join(" · ") || "alle")}</span></a>
         <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
         <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
       </div>

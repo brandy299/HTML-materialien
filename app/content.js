@@ -32,6 +32,58 @@ function schema(v = []) {
     `<tr class="${c || ""}"><td>${l}</td><td>${x ?? "____"}</td></tr>`).join("")}</table>`;
 }
 
+/* ── Diagramm-Bausteine für Folien und Merkkästen (Creative Director) ──
+   Werden im Lernraum-Design gezeichnet – bitte keine eigenen Grafiken bauen.
+   Beispiele: app/README.md → „Grafiken“. */
+const _e = (x) => String(x ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* Zeitstrahl: Vergangenheit → jetzt → Zukunft.
+   zeitstrahl([{ at: 20, label: "yesterday", text: "Harry played" },
+               { at: 50, label: "now", text: "Harry is playing", hi: true, from: 42, to: 58 }],
+              { title: "Zeitstrahl", now: 50, axis: ["Vergangenheit", "jetzt", "Zukunft"] })
+   at/from/to = Position 0–100. hi = pink hervorgehoben. from/to = Zeitraum als Balken.
+   also: [10, 30, 70] = weitere Punkte ohne Karte (z. B. Gewohnheit „every Saturday“). */
+function zeitstrahl(marks = [], opts = {}) {
+  const now = opts.now ?? 50;
+  const axis = opts.axis || ["Vergangenheit", "jetzt", "Zukunft"];
+  const ms = [...marks].sort((a, b) => a.at - b.at);
+  // Karten abwechselnd auf Reihen verteilen, wenn sie sich zu nahe kommen
+  // geschätzte Kartenbreite in % (Handy ≈ 320 px Breite) → Karten, die sich überlappen würden, in eine neue Reihe
+  const span = (m) => {
+    const w = Math.min(58, (Math.max(String(m.text).length * 7.4, String(m.label || "").length * 7.2) + 24) / 3.2);
+    return m.at < 22 ? [0, w] : m.at > 78 ? [100 - w, 100] : [m.at - w / 2, m.at + w / 2];
+  };
+  const rows = [];
+  ms.forEach((m) => { const [l, r] = span(m); let k = 0; while (rows[k] !== undefined && l < rows[k] + 2) k++; rows[k] = r; m._row = k; });
+  const nRows = Math.max(1, rows.length);
+  const pos = (at) => `left:${Math.max(0, Math.min(100, at))}%`;
+  const card = (m) => {
+    const bottom = 34 + (nRows - 1 - m._row) * 62 + 14;
+    const side = m.at < 22 ? "left:0" : m.at > 78 ? "right:0" : `left:${m.at}%;transform:translateX(-50%)`;
+    return `<div class="dt-stem" style="${pos(m.at)};bottom:29px;height:${bottom - 29}px"></div>
+      <div class="dt-card ${m.hi ? "hi" : ""}" style="${side};bottom:${bottom}px">${m.label ? `<b>${_e(m.label)}</b>` : ""}<span>${_e(m.text)}</span></div>`;
+  };
+  return `<figure class="dia dia-time">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}
+    <div class="dt-stage" style="--rows:${nRows}" role="img" aria-label="${_e(ms.map((m) => `${m.label || ""} ${m.text}`).join(" · "))}">
+      <div class="dt-line"></div><div class="dt-now" style="${pos(now)}"></div>
+      ${ms.filter((m) => m.from != null && m.to != null).map((m) => `<div class="dt-span" style="left:${m.from}%;width:${m.to - m.from}%"></div>`).join("")}
+      ${ms.map((m) => (m.also || []).map((x) => `<div class="dt-dot rep" style="${pos(x)}"></div>`).join("") + `<div class="dt-dot ${m.hi ? "hi" : ""}" style="${pos(m.at)}"></div>${card(m)}`).join("")}
+      <div class="dt-axis"><span style="left:0">${_e(axis[0])}</span><span style="left:${now}%;transform:translateX(-50%)">${_e(axis[1])}</span><span style="right:0">${_e(axis[2])}</span></div>
+    </div></figure>`;
+}
+
+/* Ablauf / Rechenkette von oben nach unten.
+   ablauf([{ text: "Listeneinkaufspreis", value: "1.000,00 €" },
+           { op: "− Liefererrabatt", value: "10 %", note: "vom Listenpreis" },
+           { text: "Zieleinkaufspreis", value: "900,00 €", hi: true }], { title: "Bezugskalkulation" })
+   Einträge mit text = Kasten, mit op = Pfeil mit Rechenschritt. hi = pink, sub = grau (Zwischenergebnis). */
+function ablauf(items = [], opts = {}) {
+  const val = (v) => (v != null && v !== "" ? `<span class="df-val">${_e(v)}</span>` : "");
+  return `<figure class="dia dia-flow">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}${items.map((it) => it.op != null
+    ? `<div class="df-op"><span class="df-chip">${_e(it.op)}${val(it.value)}</span>${it.note ? `<span class="df-note">${_e(it.note)}</span>` : ""}</div>`
+    : `<div class="df-node ${it.hi ? "hi" : ""} ${it.sub ? "sub" : ""}"><span>${_e(it.text)}</span>${val(it.value)}</div>`).join("")}</figure>`;
+}
+
 /* Standard-Zeilen für den Aufgabentyp "calc" (Personalbedarf) */
 function bedarfRows(ist, ab, zu, soll, opts = {}) {
   const zw = ist - ab + zu;
