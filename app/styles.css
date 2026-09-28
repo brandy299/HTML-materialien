@@ -862,3 +862,7 @@ html.lang-ar :is(.s-title, .s-kicker, .s-body p, .s-body li, .s-body dt, .s-body
   .dt-card span, .df-node > span:first-child, .df-note, .howto) {
   unicode-bidi: plaintext; text-align: start;
 }
+html.lang-ar [dir="rtl"] { unicode-bidi: isolate !important; text-align: right !important; }
+html.lang-ar .s-body li[dir="rtl"], html.lang-ar .merk li[dir="rtl"] { padding-left: 0; padding-right: 20px; }
+html.lang-ar .s-body ul.pm li[dir="rtl"] { padding-left: 0; padding-right: 30px; }
+html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::before { left: auto; right: 0; }

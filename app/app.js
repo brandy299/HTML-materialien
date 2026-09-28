@@ -140,6 +140,24 @@
     return locCache[k] || (locCache[k] = mapTexts(s, (x) => d[x] || x));
   };
   const allSubjects = () => DATA.subjects.map(Lsub);
+  /* Arabische Kursinhalte: Jeder Textblock mit arabischen Zeichen wird rechts→links gesetzt –
+     auch wenn er mit einem deutschen Namen oder Fachbegriff beginnt („Florian Peek يتقاعد …“). */
+  const RTL_BLOCKS = ".s-title, .s-kicker, .s-body p, .s-body li, .s-body dt, .s-body dd, .s-body td, .q-text, .option > span:last-child, .lead, .player-body .hint, .sort-card .txt, .bin, .cloze, .flash .txt, .kann li button > span:last-child, .case .body, .merk p, .merk li, .merk h3, .merk dd, .merk dt, .tip > span:last-child, .topic-win .title, .topic-win .meta, .display, .h1, .list-row span, .dt-card span, .df-node > span:first-child, .df-note, .howto, .term .ln, .pick";
+  const ARABIC = /[\u0600-\u06FF]/;
+  function markRtl(root) {
+    if (LANG !== "ar" || !root || !root.querySelectorAll) return;
+    const els = [...root.querySelectorAll(RTL_BLOCKS)];
+    if (root.matches && root.matches(RTL_BLOCKS)) els.push(root);
+    els.forEach((el) => { if (ARABIC.test(el.textContent)) el.setAttribute("dir", "rtl"); else if (el.getAttribute("dir") === "rtl") el.removeAttribute("dir"); });
+  }
+  new MutationObserver((ms) => {
+    if (LANG !== "ar") return;
+    const seen = new Set();
+    ms.forEach((m) => {
+      const t = m.type === "characterData" ? m.target.parentElement : m.target;
+      if (t && !seen.has(t)) { seen.add(t); markRtl(t.closest && (t.closest(RTL_BLOCKS) || t)); }
+    });
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
   const findSubject = (id) => Lsub(DATA.subjects.find((s) => s.id === id));
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
   const firstName = () => store.get("name", "");
