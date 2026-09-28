@@ -7,6 +7,11 @@
    Läuft auch automatisch bei jedem Pull Request (GitHub Actions).
    ============================================================ */
 "use strict";
+/* Endlos-Trainings in app/app.js (DRILLS) – bei neuen Generatoren hier ergänzen */
+const DRILLS = {
+  bedarf: [],
+  zeitformen: ["simple-present", "present-progressive", "simple-past", "present-perfect", "past-progressive", "will-future"]
+};
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
@@ -191,7 +196,15 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
       if (tids.has(t.id)) err(WT, "Thema-id ist doppelt");
       tids.add(t.id);
       if (!str(t.title)) err(WT, "Thema ohne title");
-      if (t.drill) return;
+      if (t.drill) {
+        if (!DRILLS[t.drill]) err(WT, `drill „${t.drill}“ gibt es nicht (vorhanden: ${Object.keys(DRILLS).join(", ")})`);
+        else if (t.tenses) {
+          const bad = [].concat(t.tenses).filter((x) => !DRILLS.zeitformen.includes(x));
+          if (bad.length) err(WT, `tenses unbekannt: ${bad.join(", ")} (möglich: ${DRILLS.zeitformen.join(", ")})`);
+          if ([].concat(t.tenses).length < 2) err(WT, "tenses braucht mindestens 2 Zeitformen");
+        }
+        return;
+      }
       if (t.soon) return;
       if (!Array.isArray(t.steps) || !t.steps.length) return err(WT, "steps ist leer");
       if (!t.help && !t.exam && !t.steps.every((x) => x.type === "cards")) warn(WT, "kein Merkkasten (help) für den ?-Knopf");

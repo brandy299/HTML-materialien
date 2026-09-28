@@ -1778,15 +1778,186 @@
     };
     return { company, calcStep, sentStep };
   }
-  const DRILLS = { bedarf: makeBedarfRound };
-  const LEVELS = [
-    { n: 1, name: "Zahlen", text: "Ist, Abgänge, Zugänge und Soll stehen direkt da. Ideal zum Einstieg." },
-    { n: 2, name: "Fall", text: "Eine kurze Geschichte mit Namen. Du liest Abgänge und Zugänge selbst heraus." },
-    { n: 3, name: "Profi", text: "Mit Ablenkern, Ersatz- und Neubedarf. Das Ergebnis kann auch negativ sein." }
+
+  /* ── Endlos-Training Zeitformen (Englisch) ────────────────────
+     Themen-Feld: drill: "zeitformen", tenses: ["simple-present", …] (Reihenfolge egal).
+     Eindeutigkeit: Jede Aufgabe hat ein Signalwort, das genau eine Zeitform verlangt. */
+  const TENSES = {
+    "simple-past": { name: "Simple Past", sig: ["yesterday", "last week", "two days ago", "last summer"],
+      build: "Regelmäßig + ed, unregelmäßig eigene Form (go → went). Frage und Verneinung: did + Grundform." },
+    "past-progressive": { name: "Past Progressive", sig: ["at eight o’clock last night", "at this time yesterday"],
+      build: "was / were + Verb-ing." },
+    "present-perfect": { name: "Present Perfect", sig: ["already"], negSig: ["yet"], qSig: ["yet"],
+      build: "have / has + 3. Form (visited, written, gone)." },
+    "simple-present": { name: "Simple Present", sig: ["every day", "every Saturday", "on Mondays", "every morning", "twice a week"],
+      build: "he / she / it → Verb + s. Frage und Verneinung: do / does + Grundform." },
+    "present-progressive": { name: "Present Progressive", sig: ["now", "right now", "at the moment"],
+      build: "am / is / are + Verb-ing." },
+    "will-future": { name: "will-Future", sig: ["tomorrow", "next week", "next summer"],
+      build: "will + Grundform. Verneinung: won’t + Grundform." }
+  };
+  const TENSE_ORDER = Object.keys(TENSES);
+  /* Paare, die im echten Englisch beide richtig sein können – nie gegeneinander abfragen */
+  const CLASH = { "simple-past": ["past-progressive"], "past-progressive": ["simple-past"],
+    "will-future": ["present-progressive"], "present-progressive": ["will-future"] };
+  const rivals = (tn, list) => list.filter((x) => x !== tn && !(CLASH[tn] || []).includes(x));
+  /* zwei falsche Optionen: zuerst aus pool, dann aus allen Zeitformen, dann Fehlerformen */
+  function twoWrong(right, pool, tn, p, V, mode, render) {
+    const fill = pool.concat(shuffle(rivals(tn, TENSE_ORDER)).map((x) => render(enForm(x, p, V, mode))), enErrors(tn, p, V, mode).map(render));
+    return [...new Set(fill.filter((x) => x !== right))].slice(0, 2);
+  }
+  const EN_SUBJ = [["I", 1], ["you", 2], ["we", 2], ["they", 2], ["Harry", 3], ["Hermione", 3], ["Ron", 3], ["Neville", 3],
+    ["Luna", 3], ["Harry and Ron", 2], ["the students", 2], ["Professor McGonagall", 3]];
+  const EN_HERO = [["Harry", "he"], ["Ron", "he"], ["Neville", "he"], ["Hermione", "she"], ["Luna", "she"], ["Ginny", "she"]];
+  const vb = (b, s, ing, past, pp, obj) => ({ b, s, ing, past, pp, obj });
+  const EN_VERBS = [
+    vb("play", "plays", "playing", "played", "played", "Quidditch"),
+    vb("read", "reads", "reading", "read", "read", "a book"),
+    vb("write", "writes", "writing", "wrote", "written", "a letter"),
+    vb("visit", "visits", "visiting", "visited", "visited", "Hagrid"),
+    vb("eat", "eats", "eating", "ate", "eaten", "breakfast in the Great Hall"),
+    vb("watch", "watches", "watching", "watched", "watched", "the match"),
+    vb("study", "studies", "studying", "studied", "studied", "for the exam"),
+    vb("fly", "flies", "flying", "flew", "flown", "on a broom"),
+    vb("clean", "cleans", "cleaning", "cleaned", "cleaned", "the classroom"),
+    vb("drink", "drinks", "drinking", "drank", "drunk", "pumpkin juice"),
+    vb("go", "goes", "going", "went", "gone", "to the library"),
+    vb("make", "makes", "making", "made", "made", "a potion"),
+    vb("feed", "feeds", "feeding", "fed", "fed", "the owls"),
+    vb("carry", "carries", "carrying", "carried", "carried", "the books"),
+    vb("buy", "buys", "buying", "bought", "bought", "sweets in Hogsmeade")
   ];
+  const EN_STATE = [
+    vb("know", "knows", "knowing", "knew", "known", "the answer"),
+    vb("like", "likes", "liking", "liked", "liked", "pumpkin juice"),
+    vb("want", "wants", "wanting", "wanted", "wanted", "a new broom"),
+    vb("need", "needs", "needing", "needed", "needed", "help"),
+    vb("understand", "understands", "understanding", "understood", "understood", "the question")
+  ];
+  const capF = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+
+  /* Verbform: aff/neg → String für die Lücke; q → [Hilfsverb, Rest] */
+  function enForm(tn, p, V, mode) {
+    const be = p === 1 ? "am" : p === 3 ? "is" : "are", beN = p === 1 ? "am not" : p === 3 ? "isn’t" : "aren’t";
+    const was = p === 2 ? "were" : "was", wasN = p === 2 ? "weren’t" : "wasn’t";
+    const have = p === 3 ? "has" : "have", haveN = p === 3 ? "hasn’t" : "haven’t";
+    const F = {
+      "simple-present": [p === 3 ? V.s : V.b, `${p === 3 ? "doesn’t" : "don’t"} ${V.b}`, [p === 3 ? "Does" : "Do", V.b]],
+      "present-progressive": [`${be} ${V.ing}`, `${beN} ${V.ing}`, [capF(be), V.ing]],
+      "simple-past": [V.past, `didn’t ${V.b}`, ["Did", V.b]],
+      "present-perfect": [`${have} ${V.pp}`, `${haveN} ${V.pp}`, [capF(have), V.pp]],
+      "past-progressive": [`${was} ${V.ing}`, `${wasN} ${V.ing}`, [capF(was), V.ing]],
+      "will-future": [`will ${V.b}`, `won’t ${V.b}`, ["Will", V.b]]
+    }[tn];
+    return F[mode === "aff" ? 0 : mode === "neg" ? 1 : 2];
+  }
+  /* typische Fehlerformen (nur Stufe 3) */
+  function enErrors(tn, p, V, mode) {
+    const be = p === 1 ? "am" : p === 3 ? "is" : "are", was = p === 2 ? "were" : "was", have = p === 3 ? "has" : "have";
+    const ed = V.b.endsWith("e") ? V.b + "d" : V.b + "ed";
+    const E = {
+      "simple-present": [[p === 3 ? V.b : V.s], [`${p === 3 ? "doesn’t" : "don’t"} ${V.s}`, `${p === 3 ? "don’t" : "doesn’t"} ${V.b}`], [[p === 3 ? "Does" : "Do", V.s], [p === 3 ? "Do" : "Does", V.b]]],
+      "present-progressive": [[`${be} ${V.b}`, V.ing], [`${be} not ${V.b}`], [[capF(be), V.b]]],
+      "simple-past": [[ed !== V.past ? ed : `was ${V.b}`], [`didn’t ${V.past}`], [["Did", V.past]]],
+      "present-perfect": [[V.past !== V.pp ? `${have} ${V.past}` : `${have} ${V.b}`], [`${have} not ${V.b}`], [[capF(have), V.b]]],
+      "past-progressive": [[`${was} ${V.b}`], [`${was} not ${V.b}`], [[capF(was), V.b]]],
+      "will-future": [[`will ${V.s}`, `will ${V.ing}`], [`won’t ${V.s}`], [["Will", V.s]]]
+    }[tn];
+    return E[mode === "aff" ? 0 : mode === "neg" ? 1 : 2];
+  }
+  const enSig = (tn, mode) => pick((mode === "neg" && TENSES[tn].negSig) || (mode === "q" && TENSES[tn].qSig) || TENSES[tn].sig);
+
+  function makeZeitformenRound(level, t) {
+    const tenses = (t.tenses || ["simple-present", "present-progressive", "simple-past"]).filter((x) => TENSES[x]);
+    const canState = tenses.includes("simple-present") && tenses.includes("present-progressive");
+    const modes = level === 1 ? ["aff", "aff", "aff", "aff"] : shuffle(["aff", "neg", "q", level === 3 ? pick(["neg", "q"]) : "aff"]);
+    const targets = shuffle(tenses.concat(tenses)).slice(0, 4);
+    while (targets.length < 4) targets.push(pick(tenses));
+    const verbs = shuffle(EN_VERBS);
+    const stateIdx = level === 3 && canState ? modes.lastIndexOf("aff") : -1;
+    const questions = targets.map((tn, k) => {
+      const mode = modes[k];
+      let V = verbs[k], tense = tn, stateTrap = false;
+      if (k === stateIdx) { V = pick(EN_STATE); tense = "simple-present"; stateTrap = true; }
+      let subj;
+      do subj = pick(EN_SUBJ); while (mode === "q" && subj[0] === "I");
+      const [S, p] = subj;
+      const sig = stateTrap ? pick(TENSES["present-progressive"].sig) : enSig(tense, mode);
+      const render = (f) => (mode === "q" ? `${f[0]} ${S} ${f[1]}` : f);
+      const right = render(enForm(tense, p, V, mode));
+      const others = rivals(tense, tenses).map((x) => render(enForm(x, p, V, mode))).filter((x) => x !== right);
+      const errs = enErrors(tense, p, V, mode).map(render);
+      let pool = level === 3 ? (others.length ? [pick(others)] : []).concat(shuffle(errs)) : shuffle(others).concat(shuffle(errs));
+      if (stateTrap) pool = [render(enForm("present-progressive", p, V, mode))].concat(shuffle(errs));
+      const wrong = twoWrong(right, pool, tense, p, V, mode, render);
+      const options = shuffle([right].concat(wrong));
+      const q = mode === "q" ? `____ ${V.obj} ${sig}?` : `${capF(S)} ____ ${V.obj} ${sig}.`;
+      const name = TENSES[tense].name;
+      return {
+        q, options, answer: options.indexOf(right),
+        hints: stateTrap
+          ? [`${V.b} ist ein Zustandsverb – es bekommt kein -ing, auch nicht bei „${sig}“.`]
+          : [`Achte auf das Signalwort „${sig}“. Welche Zeitform passt?`, `${name}: ${TENSES[tense].build}`],
+        explain: stateTrap ? `${V.b} ist ein Zustandsverb → Simple Present: ${right}.` : `${sig} → ${name}: ${right}.`
+      };
+    });
+
+    /* Mini-Story: eine Person, mehrere Zeitformen, zeitlich geordnet */
+    const [hero, pron] = pick(EN_HERO);
+    const storyT = shuffle(tenses).slice(0, Math.min(3, tenses.length)).sort((a, b) => TENSE_ORDER.indexOf(a) - TENSE_ORDER.indexOf(b));
+    const sv = shuffle(EN_VERBS);
+    const negAt = level >= 2 ? rint(0, storyT.length - 1) : -1;
+    const parts = [], expl = [];
+    storyT.forEach((tn, k) => {
+      const mode = k === negAt ? "neg" : "aff", V = sv[k];
+      const right = enForm(tn, 3, V, mode);
+      const pool = shuffle(rivals(tn, storyT).map((x) => enForm(x, 3, V, mode)).concat(level === 3 ? enErrors(tn, 3, V, mode) : []));
+      const wrong = twoWrong(right, pool, tn, 3, V, mode, (f) => f);
+      const sig = enSig(tn, mode);
+      parts.push(`${k === 0 ? hero : capF(pron)} {*${right}|${wrong.join("|")}} ${V.obj} ${sig}.`);
+      expl.push(`${sig} → ${TENSES[tn].name}`);
+    });
+    return {
+      label: hero,
+      phases: [
+        { title: "Die richtige Form", step: { type: "quiz", title: "Die richtige Form", questions } },
+        { title: "Mini-Story", step: {
+          type: "sentence", title: "Mini-Story",
+          case: `Erzähl die Geschichte von <b>${esc(hero)}</b>. Achte auf die Signalwörter.`,
+          text: parts.join(" "),
+          explain: expl.join(" · "),
+          hints: ["Jeder Satz hat ein eigenes Signalwort – es entscheidet über die Zeitform.",
+            storyT.map((tn) => `${TENSES[tn].name}: ${TENSES[tn].build}`).join(" ")]
+        } }
+      ]
+    };
+  }
+
+  const DRILLS = {
+    bedarf: {
+      make: (level) => {
+        const r = makeBedarfRound(level);
+        return { label: r.company, phases: [{ title: "Personalbedarf berechnen", step: r.calcStep }, { title: "Antwortsatz bauen", step: r.sentStep }] };
+      },
+      levels: [
+        { n: 1, name: "Zahlen", text: "Ist, Abgänge, Zugänge und Soll stehen direkt da. Ideal zum Einstieg." },
+        { n: 2, name: "Fall", text: "Eine kurze Geschichte mit Namen. Du liest Abgänge und Zugänge selbst heraus." },
+        { n: 3, name: "Profi", text: "Mit Ablenkern, Ersatz- und Neubedarf. Das Ergebnis kann auch negativ sein." }
+      ]
+    },
+    zeitformen: {
+      make: makeZeitformenRound,
+      levels: [
+        { n: 1, name: "Signalwörter", text: "Ein Satz, ein Signalwort, die richtige Zeitform. Nur Aussagesätze." },
+        { n: 2, name: "Fragen & Verneinung", text: "Jetzt auch mit don’t, didn’t, isn’t … und Fragen mit Do, Did, Is …" },
+        { n: 3, name: "Profi", text: "Mit typischen Fehlern als Falle (doesn’t plays, didn’t went) und Zustandsverben wie know." }
+      ]
+    }
+  };
 
   function viewDrillIntro(s, t) {
     const ds = drillStats(t);
+    const LEVELS = (DRILLS[t.drill] || DRILLS.bedarf).levels;
     const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span>${qrButton(s, t)}</div>
@@ -1812,8 +1983,10 @@
   }
 
   function viewDrill(s, t) {
-    const gen = DRILLS[t.drill];
-    let level = drillStats(t).level;
+    const D = DRILLS[t.drill];
+    if (!D) { location.hash = `#/f/${s.id}`; return h("<div></div>"); }
+    const LEVELS = D.levels;
+    let level = Math.min(drillStats(t).level, LEVELS.length);
     let round, phase, scores;
     const v = h(`<main class="player">
       <div class="player-top">
@@ -1836,7 +2009,7 @@
       finish(score) { scores.push(score); buzz(15); show(phase + 1); },
       key: "drill", hintsFor: null, hintKey: () => "0", revealed: {}, exam: false
     };
-    const current = () => (phase === 0 ? round.calcStep : round.sentStep);
+    const current = () => round.phases[phase].step;
     ctx.openHelp = (tab) => openHelp(s, t, current(), ctx, tab);
     v.querySelector("#helpBtn").onclick = () => ctx.openHelp();
     v.querySelector("#resetBtn").onclick = () => {
@@ -1856,7 +2029,7 @@
       window.scrollTo(0, 0);
     }
     function newRound() {
-      round = gen(level);
+      round = D.make(level, t);
       scores = [];
       bars.forEach((b) => b.style.setProperty("--f", 0));
       show(0);
@@ -1867,12 +2040,14 @@
       const ds = drillStats(t);
       bars.forEach((b, k) => { if (k < ph) b.style.setProperty("--f", 1); });
       v.querySelector("#eb").textContent = `Stufe ${level} · ${LEVELS[level - 1].name} · Aufgabe ${ds.rounds + 1}`;
-      v.querySelector("#helpBtn").hidden = ph === 2;
-      v.querySelector("#resetBtn").hidden = ph === 2;
+      const end = ph >= round.phases.length;
+      v.querySelector("#helpBtn").hidden = end;
+      v.querySelector("#resetBtn").hidden = end;
       ctx.dock.classList.remove("col");
-      if (ph === 0) { v.querySelector("#ttl").textContent = "Personalbedarf berechnen"; PLAYERS.calc(round.calcStep, ctx); }
-      else if (ph === 1) { v.querySelector("#ttl").textContent = "Antwortsatz bauen"; PLAYERS.sentence(round.sentStep, ctx); }
-      else result();
+      if (end) return result();
+      const P = round.phases[ph];
+      v.querySelector("#ttl").textContent = P.title;
+      PLAYERS[P.step.type](P.step, ctx);
     }
     function result() {
       const c = scores.reduce((a, x) => a + x.c, 0), n = scores.reduce((a, x) => a + x.t, 0);
@@ -1881,9 +2056,9 @@
       ds.rounds++; if (perfect) { ds.perfect++; ds.streak++; } else ds.streak = 0;
       ds.best = Math.max(ds.best, ds.streak); ds.level = level;
       store.set(drillKey(t), ds);
-      bars[2].style.setProperty("--f", 1);
+      bars[bars.length - 1].style.setProperty("--f", 1);
       v.querySelector("#ttl").textContent = perfect ? "Perfekt!" : "Geschafft.";
-      const suggestUp = perfect && ds.streak > 0 && ds.streak % 3 === 0 && level < 3;
+      const suggestUp = perfect && ds.streak > 0 && ds.streak % 3 === 0 && level < LEVELS.length;
       body.append(h(`<div>
         <p class="finish-num" style="margin-top:8px">${c}<small>/${n}</small></p>
         <div class="stat-row" style="margin-top:22px">

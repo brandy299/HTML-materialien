@@ -208,6 +208,16 @@ Firmen, Namen und Ereignisse stehen in `DRILL_DATA` in `app.js` und lassen sich 
   drill: "bedarf", description: "…", steps: [], help: "Merkkasten …" }
 ```
 
+**Endlos-Training Zeitformen (Englisch):** `drill: "zeitformen"` erzeugt Zufallsaufgaben (Quiz mit 4 Sätzen + Mini-Story)
+in drei Stufen: 1 Signalwörter · 2 Fragen & Verneinung · 3 Profi mit Fehlerformen und Zustandsverben.
+Welche Zeitformen vorkommen, bestimmt `tenses` (mindestens 2). Möglich: `simple-present`, `present-progressive`,
+`simple-past`, `present-perfect`, `past-progressive`, `will-future`. Paare, die im Englischen beide richtig sein können
+(simple past/past progressive, will-future/present progressive), werden nie gegeneinander abgefragt.
+```js
+{ id: "training-zeitformen", title: "Endlos-Training Zeitformen", kicker: "Zufallsaufgaben", drill: "zeitformen",
+  tenses: ["simple-present", "present-progressive", "simple-past"], description: "…", steps: [], help: "Merkkasten …" }
+```
+
 **Vorhandenes Material verlinken**
 ```js
 { type: "link", title: "…", text: "…", href: "../materialien/GP/…/datei.html" }
