@@ -99,7 +99,10 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Offen / Ideen
 
-- [ ] Arabische Oberflächentexte (`app/i18n.js`) von Muttersprachler/in prüfen lassen.
+- [ ] Arabisch von Muttersprachler/in prüfen lassen: Oberfläche (`app/i18n.js`) und Kursinhalte (`app/uebersetzungen/*.ar.js`,
+      Stand 28.09.2026: PBP 405/421, GPU 179/205, INWI 197/209, Englisch 266/485 – Rest bewusst deutsch/englisch).
+      Unsichere Begriffe u. a.: Fortschreibung, Zieleinkaufspreis, Selbstkosten, hochrechnen, Rücksendeangabe, rechts-/linksbündig.
+- [ ] Englische Übersetzung der Kursinhalte (gleiches Verfahren: `node app/tools/texte.js <kurs> en`).
 - [ ] Optional: Fachbegriffe (Lernkarten) zusätzlich auf Englisch/Arabisch als Verständnishilfe – bräuchte Übersetzungen pro Kurs.
 - [ ] Weitere Diagrammtypen bei Bedarf: Verzweigung/Baum (Ersatz-/Neubedarf), Balken (Ist/Soll).
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
