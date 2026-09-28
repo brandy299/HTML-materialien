@@ -77,6 +77,11 @@ Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
 - Rechnungen immer nachrechnen. Jede `calc`-Zeile braucht einen korrekten `value`.
 - **Tipps (`hints`/`hint`) gegen die Lösung prüfen:** Jeder Tipp muss zur richtigen Antwort führen.
   Bei Lückentexten: Wenn ein Tipp eine bestimmte Lücke meint, deren Lösungswort im `text` nachsehen.
+- **Eindeutigkeit:** Jede Lücke und jeder Satzbaustein darf nur **eine** richtige Lösung zulassen
+  (z. B. Signalwort wie „last weekend“ ergänzen). Groß-/Kleinschreibung darf die Lösung nicht verraten.
+- Nur abfragen, was vorher (Folien, Merkkasten, Tipps) eingeführt wurde.
+- `explain`, `hint`, `hints`: **reiner Text**, kein Markdown (`**fett**` erscheint wörtlich).
+- Fremdsprachen: Beispielsätze vollständig in der Zielsprache – keine Mischsätze wie „Die Schüler are sitting“.
 - Keine personenbezogenen Daten echter Schüler/innen.
 
 ## Prüfen vor dem Push
