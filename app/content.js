@@ -79,7 +79,8 @@ window.LERNRAUM = {
   faecher: {
     PBP: "Personalbezogene Prozesse",
     GPU: "Geschäftsprozesse im Unternehmen",
-    INWI: "Informationswirtschaft"
+    INWI: "Informationswirtschaft",
+    Englisch: "Englisch"
   },
   subjects: []
 };
