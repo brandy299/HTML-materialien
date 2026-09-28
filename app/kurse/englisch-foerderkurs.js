@@ -416,6 +416,28 @@ LERNRAUM.subjects.push({
       ]
     },
 
+    /* ══════════════ TRAINING · ZUFALLSAUFGABEN ══════════════
+       Generator in app.js (Creative Director). Neue Zeitformen hier in tenses ergänzen,
+       sobald es ein Thema dazu gibt: present-perfect, past-progressive, will-future. */
+    {
+      id: "training-zeitformen",
+      group: "Training",
+      title: "Endlos-Training Zeitformen",
+      kicker: "Zufallsaufgaben",
+      drill: "zeitformen",
+      tenses: ["simple-present", "present-progressive", "simple-past"],
+      description: "Immer neue Sätze: Signalwort erkennen, richtige Form wählen, Mini-Story bauen. Drei Stufen.",
+      steps: [],
+      help: `<h3>Signalwörter</h3>
+             <ul><li><b>every day, on Mondays, every Saturday</b> → Simple Present: he plays</li>
+             <li><b>now, right now, at the moment</b> → Present Progressive: he is playing</li>
+             <li><b>yesterday, last week, two days ago</b> → Simple Past: he played</li></ul>
+             <h3>Fragen und Verneinung</h3>
+             <p class="formula">do / does · am / is / are · did</p>
+             <h3>Zustandsverben</h3>
+             <p>know, like, want, need, understand → kein -ing, auch nicht bei „now“.</p>`
+    },
+
     /* ══════════════ WIEDERHOLEN · LERNKARTEN ══════════════ */
     {
       id: "lernkarten",

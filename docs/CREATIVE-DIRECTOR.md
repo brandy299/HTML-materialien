@@ -27,7 +27,7 @@ sorgt dafür, dass alles wie aus einem Guss wirkt:
 - **Funktionen:** Folien, Quiz, Zuordnen, Lückentext, Rechenschema mit Zahlenfeld, Satzbausteine, Lernkarten,
   Kann-Liste, **Word-Simulation v3 in eigener Vollbild-Word-Umgebung (Bedienen mit Enter/Griffen/Strg-Kürzeln,
   Sprechblasen, Geisterhand, Lineale, Zoom; 26.09.2026)**, Übungsklausur (Timer,
-  Note, Erwartungshorizont), Endlos-Training (nur Personalbedarf), Hilfe (gestufte Tipps, Merkkasten, Lexikon),
+  Note, Erwartungshorizont), Endlos-Training (Personalbedarf; Zeitformen Englisch seit 28.09.2026), Hilfe (gestufte Tipps, Merkkasten, Lexikon),
   ↺ Aufgabe/Thema zurücksetzen, QR-Codes mit Beamer-Ansicht, Einzeldatei-Build, Offline/PWA.
 - **Startseite:** Hero mit Neuigkeiten (neuester Kurs, Klausur-Countdown), Zahlen, Kurse (neueste zuerst,
   Badge „Neu“ ≤ 14 Tage / „Aktualisiert“ ≤ 7 Tage), So geht's, Funktionen, Installieren, Lehrkräfte.
@@ -84,7 +84,8 @@ Stilstudie der Lehrkraft war die Vorlage.
 - [ ] **Impressum** – Pflicht bei eigener Domain; Angaben muss die Lehrkraft liefern. Im Footer verlinken.
 - [ ] **Google Fonts lokal einbinden** (Datenschutz/IP-Übertragung an Google).
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
-- [ ] Endlos-Training nur für Personalbedarf – Generator für weitere Themen (z. B. Kalkulation) denkbar.
+- [ ] Endlos-Training gibt es für Personalbedarf und Zeitformen. Weitere Generatoren denkbar (z. B. Kalkulation, sobald es Kommazahlen gibt).
+- [ ] Englisch: Wenn der Content-Agent Present Perfect / Past Progressive / will-Future liefert, diese in `tenses` des Trainings aufnehmen (der Agent darf das selbst).
 - [ ] Word-Simulation: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und
       „Speichern unter“ mit Dateinamen-Regel; Prüfungsmodus (Zeit/Punkte/Note) als mögliche Stufe 3.
 - [ ] Referenz-Screenshots von Word 2016 (Schul-PC) können Symbole und Dialoge weiter schärfen.
