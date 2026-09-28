@@ -831,3 +831,23 @@ body.sim-on .dock-inner .btn svg { width: 15px; height: 15px; }
 .slide.dark .dia-flow .df-op .df-chip { background: var(--pink); color: var(--ink); }
 .slide.dark .dia-flow .df-op .df-chip .df-val { color: var(--ink); }
 .slide.dark .dia-flow .df-op .df-note { color: var(--term-mut); }
+
+/* ── Sprache ────────────────────────────────────────────── */
+.lang-sw { display: inline-flex; margin-left: auto; border: 2px solid var(--ink); background: var(--paper); box-shadow: 2px 2px 0 var(--ink); }
+.lang-sw button { min-width: 44px; min-height: 36px; padding: 0 10px; font: 700 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink); background: transparent; }
+.lang-sw button + button { border-left: 1.5px solid var(--ink); }
+.lang-sw button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lang-sw button[lang="ar"] { font: 700 14px/1 system-ui, sans-serif; letter-spacing: 0; }
+.lang-sw.big { display: flex; margin: 0; }
+.lang-sw.big button { flex: 1; min-height: 48px; font-size: 13px; }
+.lang-sw.big button[lang="ar"] { font-size: 16px; }
+/* Arabisch: keine Sperrung (zerreißt die Schrift), Systemschrift mit arabischen Zeichen */
+/* Latein bleibt in JetBrains Mono/Archivo, arabische Zeichen fallen auf eine Proportionalschrift zurück */
+html.lang-ar {
+  --mono: "JetBrains Mono", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif;
+  --grot: "Archivo", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+html.lang-ar .kick, html.lang-ar .eyebrow, html.lang-ar .section-head, html.lang-ar .bar, html.lang-ar .btn,
+html.lang-ar .hint, html.lang-ar .tip-n, html.lang-ar .q-count, html.lang-ar .swipe-hint, html.lang-ar .stat .k,
+html.lang-ar .tabbar a, html.lang-ar .howto, html.lang-ar .kann-legend, html.lang-ar .lead, html.lang-ar .tabs button { letter-spacing: 0; }
+html.lang-ar .topstrip .tag-box { letter-spacing: 0; }

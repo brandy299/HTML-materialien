@@ -55,6 +55,12 @@ Stilstudie der Lehrkraft war die Vorlage.
   Die Startseite zeigt nur diese Fächer; „Weiter mit …“ nur aus den eigenen Fächern. Wer per QR/Link in einen Kurs
   kommt, bekommt das Fach automatisch dazu und überspringt die Auswahl. Speicher: `lernraum.faecher`
   (`null` = nie gewählt, `[]` = alle). Grund: Lehrkraft-Feedback „PBP-Schüler könnten verwirrt werden“.
+- **Sprachen der Oberfläche (28.09.2026):** Deutsch, Englisch, Arabisch – umschaltbar beim ersten Start und unter „Ich“.
+  Übersetzt werden nur Knöpfe, Anleitungen („So geht's“), Rückmeldungen und Tipps-Rahmen; **Kursinhalte bleiben deutsch**
+  (Prüfungssprache). Texte in `app/i18n.js`, deutscher Text = Schlüssel. Jeder neue Oberflächentext in `app.js` muss durch
+  `tr("…")` laufen und in beiden Sprachen stehen – `node app/tools/check-i18n.js` prüft das (auch im GitHub-Check).
+  Arabisch: Layout bleibt links→rechts (Inhalte sind deutsch), keine Sperrung, Systemschrift für arabische Zeichen.
+  Die arabischen Texte sind maschinennah formuliert – **von einer muttersprachlichen Person gegenlesen lassen** (offen).
 - **Grafiken nur als Bausteine (28.09.2026):** `zeitstrahl()` und `ablauf()` in `content.js`, Stil in `styles.css`
   (`.dia-*`). Content-Agenten zeichnen keine eigenen SVGs/Bilder (Check warnt). Neue Diagrammtypen baut der Creative Director.
 
@@ -85,6 +91,8 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Offen / Ideen
 
+- [ ] Arabische Oberflächentexte (`app/i18n.js`) von Muttersprachler/in prüfen lassen.
+- [ ] Optional: Fachbegriffe (Lernkarten) zusätzlich auf Englisch/Arabisch als Verständnishilfe – bräuchte Übersetzungen pro Kurs.
 - [ ] Weitere Diagrammtypen bei Bedarf: Verzweigung/Baum (Ersatz-/Neubedarf), Balken (Ist/Soll).
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 

@@ -40,6 +40,18 @@
     reset() { store.set("progress", {}); store.set("self", {}); }
   };
 
+  /* ── Sprache (nur Bedienoberfläche – Inhalte bleiben deutsch) ── */
+  const LANGS = { de: "Deutsch", en: "English", ar: "العربية" };
+  const LANG = LANGS[store.get("lang", "de")] ? store.get("lang", "de") : "de";
+  const I18N = ((window.LERNRAUM_I18N || {})[LANG]) || {};
+  const tr = (de, v) => { let x = I18N[de] ?? de; if (v) x = x.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? ""); return x; };
+  document.documentElement.lang = LANG;
+  document.documentElement.classList.toggle("lang-ar", LANG === "ar");
+  function setLang(l) { store.set("lang", l); location.reload(); }
+  const langSwitch = () => `<div class="lang-sw" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
+    .map(([k, lbl]) => `<button type="button" data-lang="${k}" aria-pressed="${k === LANG}" lang="${k}">${lbl}</button>`).join("")}</div>`;
+  const bindLang = (v) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => { if (b.dataset.lang !== LANG) setLang(b.dataset.lang); }; });
+
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -82,20 +94,21 @@
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
+  Object.assign(HOWTO, I18N.howto || {});
+  const STEP_LABEL = Object.fromEntries(Object.entries({ slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" }).map(([k, x]) => [k, tr(x)]));
 
   function stepMeta(st) {
     switch (st.type) {
-      case "slides": return st.slides.length + " Folien";
-      case "quiz": return st.questions.length + (st.questions.length === 1 ? " Frage" : " Fragen");
-      case "sort": return st.items.length + " Karten";
-      case "cloze": return (st.text.match(/\{/g) || []).length + " Lücken";
-      case "calc": return st.rows.length + " Felder";
-      case "cards": return st.cards.length + " Karten";
-      case "selfcheck": return st.items.length + " Aussagen";
-      case "sentence": return (st.text.match(/\{/g) || []).length + " Bausteine";
+      case "slides": return tr("{n} Folien", { n: st.slides.length });
+      case "quiz": return tr(st.questions.length === 1 ? "{n} Frage" : "{n} Fragen", { n: st.questions.length });
+      case "sort": return tr("{n} Karten", { n: st.items.length });
+      case "cloze": return tr("{n} Lücken", { n: (st.text.match(/\{/g) || []).length });
+      case "calc": return tr("{n} Felder", { n: st.rows.length });
+      case "cards": return tr("{n} Karten", { n: st.cards.length });
+      case "selfcheck": return tr("{n} Aussagen", { n: st.items.length });
+      case "sentence": return tr("{n} Bausteine", { n: (st.text.match(/\{/g) || []).length });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
-      default: return "öffnet sich neu";
+      default: return tr("öffnet sich neu");
     }
   }
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
@@ -239,25 +252,26 @@
     const v = h(`<main class="view no-tabbar">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
-        <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span></div>
+        <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>${langSwitch()}</div>
         <div class="win">
           <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
           <div class="body">
-            <p class="kick">Neu hier?</p>
-            <p class="say">Lernen, wann es dir passt.</p>
-            <p class="sub">Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.</p>
+            <p class="kick">${tr("Neu hier?")}</p>
+            <p class="say">${tr("Lernen, wann es dir passt.")}</p>
+            <p class="sub">${tr("Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.")}</p>
           </div>
         </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
       <form style="margin-top:32px">
-        <label class="field" for="n"><span>Wie heißt du?</span>
-          <input class="input" id="n" name="n" autocomplete="given-name" placeholder="Vorname" maxlength="24" required></label>
-        <button class="btn block" style="margin-top:14px" type="submit">Los geht's ${ICON.arrow}</button>
-        <p class="hint">Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.</p>
+        <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
+          <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>
+        <button class="btn block" style="margin-top:14px" type="submit">${tr("Los geht's")} ${ICON.arrow}</button>
+        <p class="hint">${tr("Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.")}${LANG !== "de" ? " " + tr("Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.") : ""}</p>
       </form>
     </main>`);
     dither(v.querySelector("canvas"));
+    bindLang(v);
     v.querySelector("form").addEventListener("submit", (e) => {
       e.preventDefault();
       const n = e.target.n.value.trim();
@@ -290,15 +304,15 @@
     if (t.drill) {
       const ds = drillStats(t);
       return h(`<a class="win topic-win drill-win" href="#/f/${s.id}/${t.id}">
-        <div class="bar"><span class="d"></span>${esc(t.kicker || "Training")}<span class="r">∞ Aufgaben</span></div>
+        <div class="bar"><span class="d"></span>${esc(t.kicker || "Training")}<span class="r">${tr("∞ Aufgaben")}</span></div>
         <div class="body">
           <span class="title">${esc(t.title)}</span>
-          <span class="meta">${ds.rounds ? `${ds.rounds} gelöst · ${ds.perfect} perfekt · Serie ${ds.streak}` : esc(t.description || "Immer neue Aufgaben – üben, bis es sitzt.")}</span>
+          <span class="meta">${ds.rounds ? tr("{a} gelöst · {b} perfekt · Serie {c}", { a: ds.rounds, b: ds.perfect, c: ds.streak }) : esc(t.description || tr("Immer neue Aufgaben – üben, bis es sitzt."))}</span>
         </div>
       </a>`);
     }
     if (t.soon || !t.steps.length) {
-      return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">bald</span></div>
+      return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${tr("bald")}</span></div>
         <div class="body"><span class="title">${esc(t.title)}</span></div></div>`);
     }
     const n = progress.count(s, t), total = t.steps.length, sc = progress.score(s, t);
@@ -315,11 +329,11 @@
       </a>`);
     }
     return h(`<a class="win topic-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
-      <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? "✓ erledigt" : `ca. ${t.minutes || 10} min`}</span></div>
+      <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? tr("✓ erledigt") : tr("ca. {m} min", { m: t.minutes || 10 })}</span></div>
       <div class="body">
         <span class="title">${esc(t.title)}</span>
         ${blocks(s, t)}
-        <span class="meta">${n}/${total} Schritte${sc.n ? ` · ${Math.round((sc.c / sc.n) * 100)} % richtig` : ""}</span>
+        <span class="meta">${tr("{a}/{b} Schritte", { a: n, b: total })}${sc.n ? " · " + tr("{p} % richtig", { p: Math.round((sc.c / sc.n) * 100) }) : ""}</span>
       </div>
     </a>`);
   }
@@ -356,16 +370,16 @@
     const all = allFachs();
     const sel = new Set(myFaecher() || []);
     const v = h(`<main class="view ${first ? "no-tabbar" : ""}">
-      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>Meine Fächer</span>`}</div>
-      <h1 class="display" style="margin-top:24px">${first ? `Hallo ${esc(firstName())}.` : "Meine Fächer."}<small>Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.</small></h1>
-      <div class="topics fach-pick" role="group" aria-label="Fächer auswählen"></div>
+      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${tr("Meine Fächer")}</span>`}${langSwitch()}</div>
+      <h1 class="display" style="margin-top:24px">${first ? tr("Hallo {n}.", { n: esc(firstName()) }) : tr("Meine Fächer.")}<small>${tr("Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.")}</small></h1>
+      <div class="topics fach-pick" role="group" aria-label="${tr("Fächer auswählen")}"></div>
       <button class="btn block" id="save" style="margin-top:22px"></button>
       <p class="hint" id="pickHint"></p>
     </main>`);
     const box = v.querySelector(".fach-pick"), save = v.querySelector("#save"), hint = v.querySelector("#pickHint");
     const update = () => {
-      save.innerHTML = sel.size ? `Fertig · ${sel.size} ${sel.size === 1 ? "Fach" : "Fächer"} ${ICON.arrow}` : `Alle Fächer anzeigen ${ICON.arrow}`;
-      hint.textContent = sel.size ? "" : "Du hast nichts gewählt – dann siehst du alle Fächer.";
+      save.innerHTML = sel.size ? `${tr(sel.size === 1 ? "Fertig · {n} Fach" : "Fertig · {n} Fächer", { n: sel.size })} ${ICON.arrow}` : `${tr("Alle Fächer anzeigen")} ${ICON.arrow}`;
+      hint.textContent = sel.size ? "" : tr("Du hast nichts gewählt – dann siehst du alle Fächer.");
     };
     all.forEach((f) => {
       const subs = DATA.subjects.filter((x) => (x.fach || x.name) === f);
@@ -373,17 +387,18 @@
       const b = h(`<button class="win topic-win pick-win" aria-pressed="${sel.has(f)}">
         <div class="bar"><span class="d"></span>${esc(f)}<span class="r"></span></div>
         <div class="body"><span class="title">${esc(fachName(f))}</span>
-          <span class="meta">${nCourses ? `${nCourses} ${nCourses === 1 ? "Kurs" : "Kurse"}` : "Materialien"}${cls.length ? " · Klasse " + esc(cls.join(", ")) : ""}</span></div>
+          <span class="meta">${nCourses ? tr(nCourses === 1 ? "{n} Kurs" : "{n} Kurse", { n: nCourses }) : tr("Materialien")}${cls.length ? " · " + tr("Klasse") + " " + esc(cls.join(", ")) : ""}</span></div>
       </button>`);
-      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? "✓ mein Fach" : "antippen"; };
+      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? tr("✓ mein Fach") : tr("antippen"); };
       b.onclick = () => { sel.has(f) ? sel.delete(f) : sel.add(f); buzz(8); paint(); update(); };
       paint();
       box.append(b);
     });
     update();
+    bindLang(v);
     save.onclick = () => {
       store.set("faecher", all.filter((f) => sel.has(f)));
-      toast(sel.size ? "› Deine Fächer sind gespeichert" : "› Du siehst alle Fächer");
+      toast("› " + tr(sel.size ? "Deine Fächer sind gespeichert" : "Du siehst alle Fächer"));
       if (location.hash === "#/" || !location.hash) render(); else location.hash = "#/";
     };
     return v;
@@ -421,12 +436,12 @@
     if (target) {
       const i = nextStepIndex(target.s, target.t);
       const st = target.t.steps[i];
-      return `<p class="kick">Hallo ${esc(name)}${count ? " · " + count : ""}</p>
-        <p class="say">${target.fresh ? "Starte mit:" : "Weiter mit:"} ${esc(target.t.title)}</p>
-        <p class="sub">${esc(target.s.course || target.s.name)}${st ? ` · Schritt ${i + 1} von ${target.t.steps.length}` : ""}</p>
-        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${target.fresh ? "Starten" : "Weitermachen"} ${ICON.arrow}</a></div>`;
+      return `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}${count ? " · " + count : ""}</p>
+        <p class="say">${tr(target.fresh ? "Starte mit:" : "Weiter mit:")} ${esc(target.t.title)}</p>
+        <p class="sub">${esc(target.s.course || target.s.name)}${st ? " · " + tr("Schritt {a} von {b}", { a: i + 1, b: target.t.steps.length }) : ""}</p>
+        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${tr(target.fresh ? "Starten" : "Weitermachen")} ${ICON.arrow}</a></div>`;
     }
-    return `<p class="kick">Hallo ${esc(name)}</p><p class="say">Alles erledigt.</p><p class="sub">Wiederhole die Lernkarten vor der Klausur.</p>`;
+    return `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Alles erledigt.")}</p><p class="sub">${tr("Wiederhole die Lernkarten vor der Klausur.")}</p>`;
   }
 
   /* Startseite bei mehreren Fächern: Fach → Kurse & Materialsammlungen */
@@ -445,13 +460,13 @@
         </div>
         <div class="win">
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
-          <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
+          <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Wähle dein Fach.")}</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>${filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy."}</small></h1>
+        <h1 class="display">Lernraum.<small>${tr(filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.")}</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       <div id="list"></div>
-      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? `Andere Fächer (${allFachs().length - fachs.length}) · Fächer ändern` : "Meine Fächer auswählen"}</span><span class="v">→</span></a>
+      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
     </main>`);
     dither(v.querySelector("canvas"));
@@ -483,7 +498,7 @@
     const tops = courseTopics(x).filter((t) => t.steps.length);
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
     return h(`<a class="win topic-win" href="#/f/${x.id}">
-      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ' <span class="badge-new">Neu</span>' : ""}<span class="r">${done}/${tops.length} Themen</span></div>
+      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ` <span class="badge-new">${tr("Neu")}</span>` : ""}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
       <div class="body"><span class="title">${esc(x.name)}</span>
         <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);
@@ -555,23 +570,23 @@
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
-      <p class="eyebrow" style="margin-top:14px">${t.steps.length} Schritte · ca. ${t.minutes || 10} min${t.group ? " · " + esc(t.group) : ""}</p>
+      <p class="eyebrow" style="margin-top:14px">${tr("{n} Schritte", { n: t.steps.length })} · ${tr("ca. {m} min", { m: t.minutes || 10 })}${t.group ? " · " + esc(t.group) : ""}</p>
       <div class="win" style="margin-top:24px">
-        <div class="bar"><span class="d"></span>Lernpfad<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
+        <div class="bar"><span class="d"></span>${tr("Lernpfad")}<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
         <ol class="list" id="path" style="border:0;list-style:none"></ol>
       </div>
-      ${started ? `<button class="u-link reset-topic" type="button">↺ Thema zurücksetzen</button>` : ""}
+      ${started ? `<button class="u-link reset-topic" type="button">↺ ${tr("Thema zurücksetzen")}</button>` : ""}
       <div class="dock"><div class="dock-inner">
-        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten"} ${ICON.arrow}</a>
+        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${tr(allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten")} ${ICON.arrow}</a>
       </div></div>
     </main>`);
     const rt = v.querySelector(".reset-topic");
     if (rt) rt.onclick = () => {
-      if (!rt.dataset.armed) { rt.dataset.armed = "1"; rt.textContent = "Wirklich alles in diesem Thema löschen? Nochmal tippen."; return; }
+      if (!rt.dataset.armed) { rt.dataset.armed = "1"; rt.textContent = tr("Wirklich alles in diesem Thema löschen? Nochmal tippen."); return; }
       progress.resetTopic(s, t);
       const a = store.get("self", {}); Object.keys(a).filter((k) => k.startsWith(`${s.id}/${t.id}/`)).forEach((k) => delete a[k]); store.set("self", a);
       render();
-      toast("› Thema zurückgesetzt");
+      toast("› " + tr("Thema zurückgesetzt"));
     };
     const path = v.querySelector("#path");
     t.steps.forEach((st, i) => {
@@ -649,9 +664,9 @@
 
     const v = h(`<main class="player">
       <div class="player-top">
-        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Schließen">${ICON.close}</a>
+        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
-        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="Aufgabe zurücksetzen" title="Aufgabe zurücksetzen">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>`}
+        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="${tr("Aufgabe zurücksetzen")}" title="${tr("Aufgabe zurücksetzen")}">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="${tr("Ich brauche Hilfe")}">${ICON.help}</button>`}
       </div>
       <header class="player-head">
         <p class="eyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
@@ -723,12 +738,12 @@
     slides(step, ctx) {
       const n = step.slides.length;
       const wrap = h(`<div class="slides"><div class="slide-track"></div><div class="dots"></div>
-        <p class="swipe-hint">← zur Seite wischen →</p></div>`);
+        <p class="swipe-hint">${tr("← zur Seite wischen →")}</p></div>`);
       const track = wrap.querySelector(".slide-track");
       const dots = wrap.querySelector(".dots");
       step.slides.forEach((sl, k) => {
         track.append(h(`<article class="slide ${sl.style || ""}" aria-label="Folie ${k + 1} von ${n}">
-          <div class="bar"><span class="d"></span>Folie ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
+          <div class="bar"><span class="d"></span>${tr("Folie")} ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
           <div class="slide-in">
             <p class="s-kicker">${sl.kicker || ""}</p>
             ${sl.big ? `<p class="s-big">${sl.big}</p>` : ""}
@@ -751,8 +766,8 @@
         [...dots.children].forEach((d, j) => d.classList.toggle("on", j === k));
         ctx.setProgress((k + 1) / n);
         if (k > 0) wrap.querySelector(".swipe-hint").style.visibility = "hidden";
-        if (k >= n - 1) ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish(true));
-        else ctx.action(`Nächste Folie ${ICON.arrow}`, () => {
+        if (k >= n - 1) ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
+        else ctx.action(`${tr("Nächste Folie")} ${ICON.arrow}`, () => {
           goal = Math.min(n - 1, (goal >= 0 ? goal : cur) + 1);
           track.scrollTo({ left: goal * stepW(), behavior: "smooth" });
         }, { variant: "ghost" });
@@ -773,7 +788,7 @@
         ctx.hintKey = () => String(k);
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
-          <p class="q-count">Frage ${k + 1} von ${qs.length}</p>
+          <p class="q-count">${tr("Frage {a} von {b}", { a: k + 1, b: qs.length })}</p>
           <p class="q-text">${esc(q.q)}</p>
           <div class="options"></div>
         </div>`);
@@ -784,12 +799,12 @@
             sel = j;
             opts.querySelectorAll(".option").forEach((x, m) => x.classList.toggle("sel", m === j));
             buzz(8);
-            ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check);
+            ctx.action(tr(ctx.exam ? "Antwort speichern" : "Prüfen"), check);
           };
           opts.append(b);
         });
         ctx.body.replaceChildren(node);
-        ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check, { enabled: false });
+        ctx.action(tr(ctx.exam ? "Antwort speichern" : "Prüfen"), check, { enabled: false });
 
         function check() {
           const ok = sel === q.answer;
@@ -807,12 +822,12 @@
           if (!ok) buttons[sel].classList.add("wrong");
           node.append(term([
             ["p", "$ prüfe …"],
-            ["", ok ? `› <span class="ok">richtig.</span> ${esc(q.explain || "")}` : `› <span class="no">stimmt nicht.</span> Richtig ist ${"ABCDEF"[q.answer]}. ${esc(q.explain || "")}`]
+            ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(q.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> ${tr("Richtig ist {x}.", { x: "ABCDEF"[q.answer] })} ${esc(q.explain || "")}`]
           ]));
           buzz(ok ? 20 : [30, 40, 30]);
           ctx.setProgress((k + 1) / qs.length);
           const last = k === qs.length - 1;
-          ctx.action(last ? `Weiter ${ICON.arrow}` : `Nächste Frage ${ICON.arrow}`, () => {
+          ctx.action(`${tr(last ? "Weiter" : "Nächste Frage")} ${ICON.arrow}`, () => {
             if (last) ctx.finish({ c: correct, t: qs.length, wrong });
             else { k++; show(); }
           });
@@ -841,10 +856,10 @@
         bins.append(b);
       });
       ctx.body.append(node);
-      ctx.action("Tippe auf eine Kategorie", null, { enabled: false, variant: "ghost" });
+      ctx.action(tr("Tippe auf eine Kategorie"), null, { enabled: false, variant: "ghost" });
 
       const card = () => {
-        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Karte ${k + 1} / ${items.length}<span class="r">?</span></div>
+        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Karte")} ${k + 1} / ${items.length}<span class="r">?</span></div>
           <div class="body"><span class="txt">${esc(items[k].text)}</span></div></div>`));
         bins.classList.remove("locked");
       };
@@ -861,7 +876,7 @@
         if (ctx.exam) c.querySelector(".bar .r").textContent = "→ " + cats[j];
         else {
           c.classList.add(ok ? "right" : "wrong");
-          c.querySelector(".bar .r").textContent = ok ? "✓ richtig" : "✗ " + cats[it.cat];
+          c.querySelector(".bar .r").textContent = ok ? "✓ " + tr("richtig") : "✗ " + cats[it.cat];
         }
         buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
         k++;
@@ -869,9 +884,9 @@
         setTimeout(() => {
           if (k < items.length) return card();
           if (ctx.exam) return ctx.finish({ c: correct, t: items.length, wrong });
-          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Auswertung<span class="r">${correct}/${items.length}</span></div>
-            <div class="body"><span class="txt">${correct} von ${items.length} richtig zugeordnet.</span></div></div>`));
-          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
+          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Auswertung")}<span class="r">${correct}/${items.length}</span></div>
+            <div class="body"><span class="txt">${tr("{a} von {b} richtig zugeordnet.", { a: correct, b: items.length })}</span></div></div>`));
+          ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
         }, ctx.exam ? 350 : ok ? 650 : 1500);
       };
       card();
@@ -889,10 +904,10 @@
       let active = 0;
 
       const node = h(`<div>
-        <div class="win"><div class="bar"><span class="d"></span>Text<span class="r">${answers.length} Lücken</span></div>
+        <div class="win"><div class="bar"><span class="d"></span>${tr("Text")}<span class="r">${tr("{n} Lücken", { n: answers.length })}</span></div>
           <div class="cloze">${html}</div></div>
         <div class="bank"></div>
-        <p class="hint">${esc(step.prompt || "Tippe eine Lücke an und dann das passende Wort.")}</p>
+        <p class="hint">${esc(step.prompt || tr("Tippe eine Lücke an und dann das passende Wort."))}</p>
       </div>`);
       const gaps = [...node.querySelectorAll(".gap")];
       const bank = node.querySelector(".bank");
@@ -911,7 +926,7 @@
         bank.querySelectorAll(".word").forEach((b) => b.classList.toggle("used", filled.includes(+b.dataset.j)));
         const n = filled.filter((x) => x !== null).length;
         ctx.setProgress(n / answers.length);
-        ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === answers.length });
+        ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === answers.length });
       };
       const place = (j) => {
         if (active < 0) return;
@@ -943,9 +958,9 @@
         });
         bank.classList.add("locked");
         node.querySelector(".hint").remove();
-        node.append(term([["p", "$ prüfe …"], ["", `› ${correct === answers.length ? '<span class="ok">alles richtig.</span>' : `<span class="no">${correct} von ${answers.length} richtig.</span> Die Lösungen stehen grün im Text.`}`]]));
+        node.append(term([["p", "$ prüfe …"], ["", `› ${correct === answers.length ? `<span class="ok">${tr("alles richtig.")}</span>` : `<span class="no">${tr("{a} von {b} richtig.", { a: correct, b: answers.length })}</span> ${tr("Die Lösungen stehen grün im Text.")}`}`]]));
         buzz(correct === answers.length ? 20 : [30, 40, 30]);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }));
       }
 
       ctx.body.append(node);
@@ -1020,7 +1035,7 @@
         });
         const n = vals.filter((x) => x !== "" && x !== "-").length;
         ctx.setProgress(n / rows.length);
-        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === rows.length });
+        if (!locked) ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === rows.length });
       }
       function check() {
         if (ctx.exam) {
@@ -1048,12 +1063,12 @@
         const all = correct === rows.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe rechenschema …"],
-          ["", all ? `› <span class="ok">${correct}/${rows.length} richtig.</span>` : `› <span class="no">${correct}/${rows.length} richtig.</span> Korrekturen stehen im Schema.`],
+          ["", all ? `› <span class="ok">${correct}/${rows.length} ${tr("richtig.")}</span>` : `› <span class="no">${correct}/${rows.length} ${tr("richtig.")}</span> ${tr("Korrekturen stehen im Schema.")}`],
           ...(step.result ? [["", `› <span class="p">${esc(step.result)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
         ctx.setProgress(1);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: rows.length }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: rows.length }));
         requestAnimationFrame(() => node.querySelector("#out").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "nearest" }));
       }
 
@@ -1069,7 +1084,7 @@
       const node = h(`<div>
         <div class="flash-meta"><span id="left"></span><span id="known"></span></div>
         <div class="flash-wrap"><div class="flash" role="button" tabindex="0" aria-label="Karte umdrehen">
-          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">tippen ↻</span></div><div class="in"><span class="txt"></span><span class="tap">Tippen zum Umdrehen</span></div></div>
+          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">${tr("tippen ↻")}</span></div><div class="in"><span class="txt"></span><span class="tap">${tr("Tippen zum Umdrehen")}</span></div></div>
           <div class="face back"><div class="bar"><span class="d"></span>Erklärung<span class="r">↻</span></div><div class="in"><span class="txt"></span></div></div>
         </div></div>
       </div>`);
@@ -1084,18 +1099,18 @@
       flash.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } };
       ctx.body.append(node);
 
-      const again = h(`<button class="btn ghost">Nochmal</button>`);
+      const again = h(`<button class="btn ghost">${tr("Nochmal")}</button>`);
       const show = () => {
         again.remove();
         if (!queue.length) {
           flash.classList.remove("flipped");
-          flash.querySelector(".front .txt").textContent = "Alle Karten sitzen.";
+          flash.querySelector(".front .txt").textContent = tr("Alle Karten sitzen.");
           flash.querySelector(".front .bar").firstChild.nextSibling.textContent = "Fertig";
           flash.querySelector(".tap").textContent = "";
           node.querySelector("#left").textContent = "0 übrig";
           node.querySelector("#known").textContent = `${total}/${total} sicher`;
           ctx.setProgress(1);
-          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish(true));
+          ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
           return;
         }
         const c = step.cards[queue[0]];
@@ -1106,12 +1121,12 @@
         node.querySelector("#left").textContent = `${queue.length} übrig`;
         node.querySelector("#known").textContent = `${known}/${total} sicher`;
         ctx.setProgress(known / total);
-        ctx.action("Umdrehen", flip, { variant: "ghost" });
+        ctx.action(tr("Umdrehen"), flip, { variant: "ghost" });
       };
       const twoButtons = () => {
         again.onclick = () => { queue.push(queue.shift()); show(); };
         ctx.dock.prepend(again);
-        ctx.action(`${ICON.check} Kann ich`, () => { queue.shift(); known++; show(); }, { variant: "good" });
+        ctx.action(`${ICON.check} ${tr("Kann ich")}`, () => { queue.shift(); known++; show(); }, { variant: "good" });
       };
       show();
     },
@@ -1121,9 +1136,9 @@
       const all = store.get("self", {});
       const vals = all[ctx.key] || step.items.map(() => 0);
       const node = h(`<div>
-        <p class="lead">Wie sicher fühlst du dich? Tippe, bis es stimmt.</p>
+        <p class="lead">${tr("Wie sicher fühlst du dich? Tippe, bis es stimmt.")}</p>
         <ul class="kann" style="margin-top:16px"></ul>
-        <p class="kann-legend"><span><i></i>noch unsicher</span><span><i style="background:linear-gradient(90deg,var(--pink) 50%,var(--paper) 50%)"></i>geht so</span><span><i style="background:var(--ink)"></i>sitzt</span></p>
+        <p class="kann-legend"><span><i></i>${tr("noch unsicher")}</span><span><i style="background:linear-gradient(90deg,var(--pink) 50%,var(--paper) 50%)"></i>${tr("geht so")}</span><span><i style="background:var(--ink)"></i>${tr("sitzt")}</span></p>
       </div>`);
       const ul = node.querySelector(".kann");
       step.items.forEach((txt, k) => {
@@ -1138,7 +1153,7 @@
       });
       ctx.body.append(node);
       ctx.setProgress(vals.filter(Boolean).length / vals.length);
-      ctx.action(`Speichern ${ICON.check}`, () => {
+      ctx.action(`${tr("Speichern")} ${ICON.check}`, () => {
         const a = store.get("self", {}); a[ctx.key] = vals; store.set("self", a);
         ctx.finish(true);
       });
@@ -1153,7 +1168,7 @@
       let gi = 0;
       const html = parts.map((x) => (typeof x === "string" ? esc(x) : `<button class="gap sgap" data-i="${gi++}"></button>`)).join("");
       const node = h(`<div>
-        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>Aufgabe<span class="r">${gapsData.length} Bausteine</span></div><div class="body">${step.case}</div></div>` : ""}
+        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>${tr("Aufgabe")}<span class="r">${tr("{n} Bausteine", { n: gapsData.length })}</span></div><div class="body">${step.case}</div></div>` : ""}
         <div class="win" style="margin-top:${step.case ? 18 : 0}px"><div class="bar"><span class="d"></span>Dein Antwortsatz<span class="r" id="cnt"></span></div>
           <div class="cloze sentence">${html}</div></div>
         <p class="eyebrow" style="margin-top:18px" id="pickLbl"></p>
@@ -1174,7 +1189,7 @@
         node.querySelector("#cnt").textContent = `${n}/${gapsData.length}`;
         picks.replaceChildren();
         if (!locked && active >= 0) {
-          node.querySelector("#pickLbl").textContent = `Baustein ${active + 1} wählen`;
+          node.querySelector("#pickLbl").textContent = tr("Baustein {n} wählen", { n: active + 1 });
           gapsData[active].options.forEach((o) => {
             const b = h(`<button class="pick ${chosen[active] === o ? "sel" : ""}">${esc(o)}</button>`);
             b.onclick = () => {
@@ -1186,9 +1201,9 @@
             };
             picks.append(b);
           });
-        } else if (!locked) node.querySelector("#pickLbl").textContent = "Fertig? Tippe eine Lücke an, um sie zu ändern.";
+        } else if (!locked) node.querySelector("#pickLbl").textContent = tr("Fertig? Tippe eine Lücke an, um sie zu ändern.");
         ctx.setProgress(n / gapsData.length);
-        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === gapsData.length });
+        if (!locked) ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === gapsData.length });
       };
       gaps.forEach((g, i) => g.onclick = () => { if (!locked) { active = i; paint(); } });
 
@@ -1209,11 +1224,11 @@
         const all = correct === gapsData.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe antwortsatz …"],
-          ["", all ? `› <span class="ok">${correct}/${gapsData.length} richtig.</span> Ein vollständiger Antwortsatz!` : `› <span class="no">${correct}/${gapsData.length} richtig.</span> Die richtigen Bausteine stehen grün im Satz.`],
+          ["", all ? `› <span class="ok">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Ein vollständiger Antwortsatz!")}` : `› <span class="no">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Die richtigen Bausteine stehen grün im Satz.")}`],
           ...(step.explain ? [["", `› <span class="p">${esc(step.explain)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: gapsData.length, wrong }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: gapsData.length, wrong }));
       }
 
       ctx.body.append(node);
@@ -2018,17 +2033,17 @@
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <p class="lead" style="margin-top:14px">${esc(t.description || "")}</p>
       <div class="stat-row" style="margin-top:22px">
-        <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
-        <div class="stat"><div class="v">${ds.perfect}</div><div class="k">perfekt</div></div>
-        <div class="stat"><div class="v">${ds.best}</div><div class="k">beste Serie</div></div>
+        <div class="stat"><div class="v">${ds.rounds}</div><div class="k">${tr("gelöst")}</div></div>
+        <div class="stat"><div class="v">${ds.perfect}</div><div class="k">${tr("perfekt")}</div></div>
+        <div class="stat"><div class="v">${ds.best}</div><div class="k">${tr("beste Serie")}</div></div>
       </div>
-      <p class="section-head">Stufe wählen</p>
+      <p class="section-head">${tr("Stufe wählen")}</p>
       <div class="topics" id="levels"></div>
     </main>`);
     const box = v.querySelector("#levels");
     LEVELS.forEach((L) => {
       const a = h(`<a class="win topic-win ${ds.level === L.n ? "done" : ""}" href="#/f/${s.id}/${t.id}/0">
-        <div class="bar"><span class="d"></span>Stufe ${L.n}<span class="r">${ds.level === L.n ? "zuletzt gewählt" : ""}</span></div>
+        <div class="bar"><span class="d"></span>${tr("Stufe")} ${L.n}<span class="r">${ds.level === L.n ? tr("zuletzt gewählt") : ""}</span></div>
         <div class="body"><span class="title">${L.name}</span><span class="meta">${L.text}</span></div></a>`);
       a.addEventListener("click", () => { const d = drillStats(t); d.level = L.n; store.set(drillKey(t), d); });
       box.append(a);
@@ -2071,7 +2086,7 @@
       bars.forEach((b) => b.style.setProperty("--f", 0));
       buzz(10);
       show(0);
-      toast("› Runde neu gestartet");
+      toast("› " + tr("Runde neu gestartet"));
     };
 
     function reset() {
@@ -2093,7 +2108,7 @@
       reset();
       const ds = drillStats(t);
       bars.forEach((b, k) => { if (k < ph) b.style.setProperty("--f", 1); });
-      v.querySelector("#eb").textContent = `Stufe ${level} · ${LEVELS[level - 1].name} · Aufgabe ${ds.rounds + 1}`;
+      v.querySelector("#eb").textContent = `${tr("Stufe")} ${level} · ${LEVELS[level - 1].name} · ${tr("Aufgabe")} ${ds.rounds + 1}`;
       const end = ph >= round.phases.length;
       v.querySelector("#helpBtn").hidden = end;
       v.querySelector("#resetBtn").hidden = end;
@@ -2111,28 +2126,28 @@
       ds.best = Math.max(ds.best, ds.streak); ds.level = level;
       store.set(drillKey(t), ds);
       bars[bars.length - 1].style.setProperty("--f", 1);
-      v.querySelector("#ttl").textContent = perfect ? "Perfekt!" : "Geschafft.";
+      v.querySelector("#ttl").textContent = tr(perfect ? "Perfekt!" : "Geschafft.");
       const suggestUp = perfect && ds.streak > 0 && ds.streak % 3 === 0 && level < LEVELS.length;
       body.append(h(`<div>
         <p class="finish-num" style="margin-top:8px">${c}<small>/${n}</small></p>
         <div class="stat-row" style="margin-top:22px">
-          <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
-          <div class="stat"><div class="v">${ds.streak}</div><div class="k">Serie</div></div>
-          <div class="stat"><div class="v">${ds.best}</div><div class="k">Rekord</div></div>
+          <div class="stat"><div class="v">${ds.rounds}</div><div class="k">${tr("gelöst")}</div></div>
+          <div class="stat"><div class="v">${ds.streak}</div><div class="k">${tr("Serie")}</div></div>
+          <div class="stat"><div class="v">${ds.best}</div><div class="k">${tr("Rekord")}</div></div>
         </div>
         ${suggestUp ? `<div class="term"><span class="ln p">$ level-check …</span><span class="ln">› <span class="ok">3 perfekte Runden in Folge.</span> Bereit für Stufe ${level + 1} (${LEVELS[level].name})?</span></div>` : ""}
-        ${!perfect ? `<div class="term"><span class="ln p">$ tipp</span><span class="ln">› Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.</span></div>` : ""}
+        ${!perfect ? `<div class="term"><span class="ln p">$ tipp</span><span class="ln">› ${tr("Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.")}</span></div>` : ""}
       </div>`));
       if (perfect) { buzz([20, 60, 20]); if (ds.streak % 3 === 0) confetti(); }
       if (suggestUp) {
-        const up = h(`<button class="btn pink block">Stufe ${level + 1} starten ${ICON.arrow}</button>`);
+        const up = h(`<button class="btn pink block">${tr("Stufe {n} starten", { n: level + 1 })} ${ICON.arrow}</button>`);
         up.onclick = () => { level++; const d = drillStats(t); d.level = level; store.set(drillKey(t), d); newRound(); };
         ctx.dock.prepend(up);
         ctx.dock.classList.add("col");
-        ctx.action("Gleiche Stufe weiter", () => { ctx.dock.classList.remove("col"); newRound(); }, { variant: "ghost" });
+        ctx.action(tr("Gleiche Stufe weiter"), () => { ctx.dock.classList.remove("col"); newRound(); }, { variant: "ghost" });
       } else {
         ctx.dock.classList.remove("col");
-        ctx.action(`Neue Aufgabe ${ICON.arrow}`, newRound);
+        ctx.action(`${tr("Neue Aufgabe")} ${ICON.arrow}`, newRound);
       }
     }
     newRound();
@@ -2274,12 +2289,12 @@
     if (document.querySelector(".sheet-back")) return;
     const back = h(`<div class="sheet-back">
       <div class="sheet win" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-        <div class="bar"><span class="d"></span><span id="sheetTitle">Hilfe · ${esc(step.title)}</span>
-          <button class="r sheet-x" aria-label="Hilfe schließen">✕ schließen</button></div>
+        <div class="bar"><span class="d"></span><span id="sheetTitle">${tr("Hilfe")} · ${esc(step.title)}</span>
+          <button class="r sheet-x" aria-label="${tr("Schließen")}">✕ ${tr("schließen")}</button></div>
         <div class="tabs" role="tablist">
-          <button role="tab" data-tab="tipps">Tipps</button>
-          <button role="tab" data-tab="merk">Merkkasten</button>
-          <button role="tab" data-tab="begriffe">Begriffe</button>
+          <button role="tab" data-tab="tipps">${tr("Tipps")}</button>
+          <button role="tab" data-tab="merk">${tr("Merkkasten")}</button>
+          <button role="tab" data-tab="begriffe">${tr("Begriffe")}</button>
         </div>
         <div class="sheet-body"></div>
       </div>
@@ -2292,22 +2307,22 @@
       const key = ctx.hintKey();
       const shown = ctx.revealed[key] || 0;
       const wrap = h(`<div>
-        <p class="howto"><b>So geht's:</b> ${esc(HOWTO[step.type] || "")}</p>
+        <p class="howto"><b>${tr("So geht's:")}</b> ${esc(HOWTO[step.type] || "")}</p>
         <div class="tip-list"></div>
       </div>`);
       const listEl = wrap.querySelector(".tip-list");
       if (!hints.length) {
-        listEl.append(h(`<p class="hint">Für diese Aufgabe gibt es keine extra Tipps. Schau in den <b>Merkkasten</b> oder in die <b>Begriffe</b>.</p>`));
+        listEl.append(h(`<p class="hint">${tr("Für diese Aufgabe gibt es keine extra Tipps. Schau in den Merkkasten oder in die Begriffe.")}</p>`));
       } else {
-        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">Tipp ${n + 1}</span><span>${x}</span></div>`)));
+        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">${tr("Tipp")} ${n + 1}</span><span>${x}</span></div>`)));
         if (shown < hints.length) {
           const last = shown === hints.length - 1 && hints.length > 1;
           const solution = /^Lösungsweg/.test(hints[shown]);
-          const b = h(`<button class="btn ${shown ? "ghost" : "pink"} block" style="margin-top:12px">${solution ? "Lösungsweg zeigen" : last ? "Letzten Tipp zeigen" : shown ? "Noch ein Tipp" : "Ersten Tipp zeigen"} <span style="font:500 12px/1 var(--mono);opacity:.7">${shown + 1}/${hints.length}</span></button>`);
+          const b = h(`<button class="btn ${shown ? "ghost" : "pink"} block" style="margin-top:12px">${tr(solution ? "Lösungsweg zeigen" : last ? "Letzten Tipp zeigen" : shown ? "Noch ein Tipp" : "Ersten Tipp zeigen")} <span style="font:500 12px/1 var(--mono);opacity:.7">${shown + 1}/${hints.length}</span></button>`);
           b.onclick = () => { ctx.revealed[key] = shown + 1; buzz(6); renderTipps(); };
           listEl.append(b);
         } else {
-          listEl.append(h(`<p class="hint">Das waren alle Tipps. Versuch es jetzt nochmal selbst!</p>`));
+          listEl.append(h(`<p class="hint">${tr("Das waren alle Tipps. Versuch es jetzt nochmal selbst!")}</p>`));
         }
       }
       bodyEl.replaceChildren(wrap);
@@ -2315,7 +2330,7 @@
     const renderMerk = () => {
       bodyEl.replaceChildren(t.help
         ? h(`<div class="merk">${t.help}</div>`)
-        : h(`<p class="hint">Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.</p>`));
+        : h(`<p class="hint">${tr("Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.")}</p>`));
     };
     const renderBegriffe = () => bodyEl.replaceChildren(glossaryBox(s));
 
@@ -2349,14 +2364,14 @@
   function viewHelp() {
     const subjects = SINGLE ? [SINGLE] : DATA.subjects;
     const v = h(`<main class="view">
-      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Hilfe</span></div>
-      <h1 class="display" style="margin-top:26px">Hilfe.<small>Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.</small></h1>
-      <p class="section-head">Merkkästen</p>
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>${tr("Hilfe")}</span></div>
+      <h1 class="display" style="margin-top:26px">${tr("Hilfe.")}<small>${tr("Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.")}</small></h1>
+      <p class="section-head">${tr("Merkkästen")}</p>
       <div id="merk" class="topics"></div>
-      <p class="section-head">Begriffe</p>
+      <p class="section-head">${tr("Begriffe")}</p>
       <div id="gloss"></div>
-      <p class="section-head">So funktioniert die App</p>
-      <div class="win"><div class="bar"><span class="d"></span>Aufgabentypen<span class="r">${Object.keys(HOWTO).length}</span></div>
+      <p class="section-head">${tr("So funktioniert die App")}</p>
+      <div class="win"><div class="bar"><span class="d"></span>${tr("Aufgabentypen")}<span class="r">${Object.keys(HOWTO).length}</span></div>
         <dl class="terms" style="border:0">${Object.keys(HOWTO).map((k) => `<dt>${STEP_LABEL[k]}</dt><dd>${esc(HOWTO[k])}</dd>`).join("")}</dl></div>
     </main>`);
     const merk = v.querySelector("#merk");
@@ -2379,7 +2394,7 @@
     const p = progress.of(s.id, t.id);
     const sc = progress.score(s, t);
     const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : 100;
-    const msg = pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.";
+    const msg = tr(pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.");
     const idx = s.topics.indexOf(t);
     const nextTopic = s.topics.slice(idx + 1).concat(s.topics.slice(0, idx)).find((x) => x.steps.length && progress.ratio(s, x) < 1);
     const log = t.steps.map((st, k) => {
@@ -2391,15 +2406,15 @@
     const v = h(`<main class="view no-tabbar finish">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
-        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · erledigt</span></div>
+        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · ${tr("erledigt")}</span></div>
         <p class="finish-num">${pct}<small>%</small></p>
         <p class="h2" style="margin-top:16px">${msg}</p>
-        <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? `${sc.c} von ${sc.n} Punkten` : "abgeschlossen"}</p>
+        <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? tr("{a} von {b} Punkten", { a: sc.c, b: sc.n }) : tr("abgeschlossen")}</p>
       </section>
       <div id="log"></div>
       <div class="dock"><div class="dock-inner col">
-        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">Weiter: ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
-        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
+        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">${tr("Weiter:")} ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
+        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">${tr("Zur Übersicht")}</a>
       </div></div>
     </main>`);
     v.querySelector("#log").append(term([["p", "$ auswertung " + esc(t.id)], ...log]));
@@ -2489,22 +2504,25 @@
     }));
 
     const v = h(`<main class="view">
-      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Profil</span></div>
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>${tr("Profil")}</span></div>
       <h1 class="display" style="margin-top:26px">${esc(name)}.</h1>
-      <p class="section-head">Fortschritt</p>
+      <p class="section-head">${tr("Fortschritt")}</p>
       <div class="stat-row">
-        <div class="stat"><div class="v">${topicsDone}</div><div class="k">Themen fertig</div></div>
-        <div class="stat"><div class="v">${stepsDone}</div><div class="k">Schritte</div></div>
-        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">Treffer</div></div>
+        <div class="stat"><div class="v">${topicsDone}</div><div class="k">${tr("Themen fertig")}</div></div>
+        <div class="stat"><div class="v">${stepsDone}</div><div class="k">${tr("Schritte")}</div></div>
+        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">${tr("Treffer")}</div></div>
       </div>
-      <p class="section-head">Einstellungen</p>
+      <p class="section-head">${tr("Sprache")}</p>
+      ${langSwitch().replace("lang-sw", "lang-sw big")}
+      <p class="hint" style="margin-top:10px">${tr("Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.")}</p>
+      <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
-        <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
-        <a class="list-row" href="#/faecher"><span>Meine Fächer</span><span class="v">${esc((myFaecher() || []).join(" · ") || "alle")}</span></a>
+        <button class="list-row" id="rename"><span>${tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/faecher"><span>${tr("Meine Fächer")}</span><span class="v">${esc((myFaecher() || []).join(" · ") || tr("alle"))}</span></a>
         <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
-        <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
+        <button class="list-row danger" id="reset"><span>${tr("Fortschritt zurücksetzen")}</span></button>
       </div>
-      <p class="hint" style="margin-top:14px">Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.</p>
+      <p class="hint" style="margin-top:14px">${tr("Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.")}</p>
     </main>`);
 
     const rename = v.querySelector("#rename");
@@ -2515,22 +2533,24 @@
       row.onsubmit = (e) => {
         e.preventDefault();
         const nn = row.querySelector("input").value.trim();
-        if (nn) { store.set("name", nn.slice(0, 24)); toast("› Name gespeichert"); render(); }
+        if (nn) { store.set("name", nn.slice(0, 24)); toast("› " + tr("Name gespeichert")); render(); }
       };
       rename.replaceWith(row);
       row.querySelector("input").focus();
     };
+    bindLang(v);
     const reset = v.querySelector("#reset");
     reset.onclick = () => {
-      if (reset.dataset.armed) { progress.reset(); toast("› Fortschritt gelöscht"); render(); return; }
+      if (reset.dataset.armed) { progress.reset(); toast("› " + tr("Fortschritt gelöscht")); render(); return; }
       reset.dataset.armed = "1";
-      reset.firstElementChild.textContent = "Nochmal tippen zum Löschen";
-      setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = "Fortschritt zurücksetzen"; } }, 4000);
+      reset.firstElementChild.textContent = tr("Nochmal tippen zum Löschen");
+      setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = tr("Fortschritt zurücksetzen"); } }, 4000);
     };
     return v;
   }
 
   /* ── Start ──────────────────────────────────────────────── */
+  $tabbar.querySelectorAll("a > span").forEach((sp) => { sp.textContent = tr(sp.textContent.trim()); });
   const ct = cardsTopic();
   const cardsTab = $tabbar.querySelector('[data-tab="karten"]');
   if (cardsTab) {
