@@ -14,7 +14,7 @@ LERNRAUM.subjects.push({
   course: "Förderkurs Englisch · FE",
   glyph: "E",
   color: "#7c3aed",
-  description: "Englisch-Grundlagen für den Beruf: simple present, present progressive und simple past. Erklärungen auf Deutsch, Übungen auf Englisch – Schritt für Schritt auf B1.",
+  description: "Grammatik-Grundlagen mit Beispielen aus Harry Potter: simple present, present progressive und simple past. Erklärungen auf Deutsch, Übungen auf Englisch – Schritt für Schritt auf B1.",
   topics: [
 
     /* ══════════════ ZEITFORM 1 · SIMPLE PRESENT ══════════════ */
@@ -83,7 +83,7 @@ LERNRAUM.subjects.push({
               q: "Which sentence is correct?",
               options: ["Harry live at Hogwarts.", "Harry lives at Hogwarts.", "Harry living at Hogwarts."],
               answer: 1,
-              explain: "he / she / it → Verb + s. Also: Harry live**s**."
+              explain: "he / she / it → Verb + s. Also: Harry lives."
             },
             {
               q: "Choose the right form: Ron ____ spiders.",
@@ -112,7 +112,7 @@ LERNRAUM.subjects.push({
           title: "A2 · + s oder Grundform?",
           prompt: "Welche Form passt?",
           hints: ["Nur he / she / it bekommt ein -s.", "Bei I / you / we / they bleibt das Verb in der Grundform."],
-          categories: ["er/sie/es: + s", "I/you/we/they: Grundform"],
+          categories: ["he/she/it: + s", "I/you/we/they: Grundform"],
           items: [
             { text: "he plays", cat: 0 },
             { text: "she studies", cat: 0 },
@@ -265,7 +265,7 @@ LERNRAUM.subjects.push({
           title: "A3 · Regel sichern",
           prompt: "Drei Wörter passen nicht.",
           hints: ["Bei I → am, bei he/she/it → is, bei you/we/they → are.", "Zustandsverben wie know bleiben im Simple Present."],
-          text: "Schau! Harry {is} flying on his broom. Die Schüler {are} sitting in the Great Hall. I {am} reading a book. Bei Zustandsverben wie know bleibt es aber im Simple Present: I {know} the answer.",
+          text: "Look! Harry {is} flying on his broom. The students {are} sitting in the Great Hall. I {am} reading a book. Bei Zustandsverben wie know bleibt es aber im Simple Present: I {know} the answer.",
           distractors: ["knows", "was", "be"]
         },
         {
@@ -299,7 +299,7 @@ LERNRAUM.subjects.push({
              <h3>Fragen und Verneinung</h3>
              <p>did / didn’t + Grundform: Did you …? · He didn’t go.</p>
              <h3>Wichtigste unregelmäßige Verben</h3>
-             <p>go → went · see → saw · take → took · have → had · be → was/were</p>
+             <p>go → went · see → saw · take → took · find → found · have → had · be → was/were</p>
              <h3>Häufiger Fehler</h3>
              <p>„Harry didn’t went …“ → Harry didn’t <strong>go</strong> …</p>`,
       steps: [
@@ -393,15 +393,15 @@ LERNRAUM.subjects.push({
           type: "cloze",
           title: "A3 · Regel sichern",
           prompt: "Drei Wörter passen nicht.",
-          hints: ["in 1991 und last summer → Simple Past.", "Fragen im Past: Did + Grundform."],
-          text: "Harry {received} his letter in 1991. Ron and Harry {went} to the World Cup last summer. Hermione {found} the answer in a book. Fragen bildest du mit {Did} + Grundform.",
+          hints: ["in 1991 und last summer → Simple Past.", "find ist unregelmäßig: find → found.", "Fragen im Past: did + Grundform."],
+          text: "Harry {received} his letter in 1991. Ron and Harry {went} to the World Cup last summer. Hermione {found} the answer in a book. Fragen bildest du mit {did} + Grundform.",
           distractors: ["goes", "find", "does"]
         },
         {
           type: "sentence",
           title: "A4 · Sätze bauen",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "Harry {*received|receive|receives} his letter in 1991. They {*went|go|goed} to Hogsmeade. Snape {*took|take|taken} points from Gryffindor.",
+          text: "Harry {*received|receive|receives} his letter in 1991. They {*went|go|goed} to Hogsmeade last weekend. Snape {*took|take|taken} points from Gryffindor.",
           explain: "regelmäßig: received · unregelmäßig: went, took."
         },
         {
@@ -444,6 +444,7 @@ LERNRAUM.subjects.push({
             { front: "know", back: "know → knew" },
             { front: "fly", back: "fly → flew" },
             { front: "write", back: "write → wrote" },
+            { front: "find", back: "find → found" },
             { front: "Signalwörter Simple Present", back: "always, usually, every day, on Mondays" },
             { front: "Signalwörter Present Progressive", back: "now, right now, at the moment, Look!" },
             { front: "Signalwörter Simple Past", back: "yesterday, last week, in 1991, two days ago" }

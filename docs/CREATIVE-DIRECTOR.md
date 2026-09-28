@@ -16,12 +16,14 @@ sorgt dafür, dass alles wie aus einem Guss wirkt:
 - Kuratierung: Was steht oben, was ist neu, welche Klausur steht an
 - Werkzeuge: Inhalts-Check (`app/tools/check-kurse.js`), GitHub-Check (`.github/workflows/lernraum-check.yml`)
 
-## Stand (zuletzt aktualisiert: 26.09.2026)
+## Stand (zuletzt aktualisiert: 28.09.2026)
 
 - **Live:** https://lernen.yannikbrand.eu (Startseite) · https://lernen.yannikbrand.eu/app/ (App).
   Domain bei netcup, CNAME `lernen` → `brandy299.github.io`. Im Schulnetz (Sophos-Firewall) inzwischen erreichbar.
 - **Kurse:** PBP · HS1 Personalbedarf (vom Creative Director erstellt, 10 Themen inkl. Übungsklausur und
-  Endlos-Training) · GPU · HS1Y Preiskalkulation (von einem Content-Agenten, 3 Themen).
+  Endlos-Training) · GPU · HS1Y Preiskalkulation (3 Themen) · INWI · HHU Geschäftsbrief nach DIN 5008
+  (mit Word-Simulation) · Englisch · Förderkurs Englisch (Zeitformen, Harry-Potter-Beispiele, 4 Themen;
+  Review in Issue #24 am 28.09.2026, Fehler korrigiert). Alle außer PBP von Content-Agenten.
 - **Funktionen:** Folien, Quiz, Zuordnen, Lückentext, Rechenschema mit Zahlenfeld, Satzbausteine, Lernkarten,
   Kann-Liste, **Word-Simulation v3 in eigener Vollbild-Word-Umgebung (Bedienen mit Enter/Griffen/Strg-Kürzeln,
   Sprechblasen, Geisterhand, Lineale, Zoom; 26.09.2026)**, Übungsklausur (Timer,
@@ -75,6 +77,8 @@ Stilstudie der Lehrkraft war die Vorlage.
   Kursdaten unverändert; Sprechblasen-Kurztexte über `task.kurz`.
 
 ## Offen / Ideen
+
+- [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 
 - [ ] **Kommazahlen im Zahlenfeld** (Wunsch aus GPU-Kurs, Bezugskalkulation) → Issue mit Label `design`.
 - [ ] **Impressum** – Pflicht bei eigener Domain; Angaben muss die Lehrkraft liefern. Im Footer verlinken.
