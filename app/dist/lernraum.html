@@ -796,6 +796,58 @@ body.sim-on .dock-inner .btn svg { width: 15px; height: 15px; }
 .bm-c.bm-r { text-align: right; }
 .bm-c.bm-b { font-weight: 700; }
 
+/* ── Meine Fächer ───────────────────────────────────────── */
+.fach-pick { margin-top: 22px; }
+.fach-pick .pick-win { text-align: left; width: 100%; cursor: pointer; font: inherit; color: inherit; padding: 0; }
+.fach-pick .pick-win .r { transition: color .15s; }
+.fach-pick .pick-win[aria-pressed="false"] .r { color: var(--term-mut); }
+.fach-head { margin: 34px 0 12px; padding-top: 14px; border-top: 2px solid var(--ink); scroll-margin-top: 16px; }
+.fach-head .fh-kick { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--pink-ink); }
+.fach-head .fh-title { font: 800 30px/1 var(--grot); letter-spacing: -.04em; margin-top: 4px; text-wrap: balance; }
+.more-fach { margin-top: 30px; border: 2px solid var(--ink); }
+
+/* ── Diagramm-Bausteine (zeitstrahl(), ablauf() in content.js) ─ */
+.dia { margin-top: 14px; color: var(--ink); }
+.dia-cap { font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+.dia-time { position: relative; padding: 0 2px; }
+.dia-time .dt-stage { position: relative; height: calc(var(--rows, 1) * 62px + 34px); }
+.dia-time .dt-line { position: absolute; left: 0; right: 10px; bottom: 22px; height: 2px; background: var(--ink); }
+.dia-time .dt-line::after { content: ""; position: absolute; right: -10px; top: -5px; border: 6px solid transparent; border-left: 10px solid var(--ink); border-right: 0; }
+.dia-time .dt-now { position: absolute; bottom: 14px; width: 2px; height: 18px; background: var(--ink); transform: translateX(-1px); }
+.dia-time .dt-span { position: absolute; bottom: 18px; height: 10px; background: var(--pink); border: 2px solid var(--ink); }
+.dia-time .dt-dot { position: absolute; bottom: 17px; width: 12px; height: 12px; background: var(--paper); border: 2px solid var(--ink); transform: translateX(-6px); }
+.dia-time .dt-dot.hi { background: var(--pink); }
+.dia-time .dt-dot.rep { width: 8px; height: 8px; bottom: 19px; transform: translateX(-4px); background: var(--ink); border-width: 0; }
+.slide.dark .dia-time .dt-dot.rep { background: var(--paper); }
+.dia-time .dt-stem { position: absolute; width: 0; border-left: 1.5px dashed var(--ink-3); transform: translateX(-.75px); }
+.dia-time .dt-card { position: absolute; max-width: 58%; padding: 5px 8px; background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.dia-time .dt-card.hi { background: var(--pink-soft); }
+.dia-time .dt-card b { display: block; font: 700 10.5px/1.25 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--pink-ink); }
+.dia-time .dt-card span { display: block; font: 700 13.5px/1.2 var(--grot); letter-spacing: -.01em; white-space: nowrap; }
+.dia-time .dt-axis { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; font: 500 10.5px/14px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.dia-time .dt-axis span { position: absolute; top: 0; white-space: nowrap; }
+.dia-flow { display: grid; justify-items: stretch; }
+.dia-flow .df-node { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 9px 12px; background: var(--paper); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font: 700 14.5px/1.25 var(--grot); letter-spacing: -.01em; }
+.dia-flow .df-node.hi { background: var(--pink); }
+.dia-flow .df-node.sub { background: var(--panel); }
+.dia-flow .df-val { font: 700 14px/1 var(--mono); white-space: nowrap; }
+.dia-flow .df-op { position: relative; display: flex; align-items: center; gap: 10px; min-height: 34px; padding-left: 22px; }
+.dia-flow .df-op::before { content: ""; position: absolute; left: 22px; top: 0; bottom: 6px; border-left: 2px solid var(--ink); }
+.dia-flow .df-op::after { content: ""; position: absolute; left: 17px; bottom: 0; border: 6px solid transparent; border-top: 7px solid var(--ink); border-bottom: 0; }
+.dia-flow .df-op .df-chip { flex: none; white-space: nowrap; margin-left: 16px; display: inline-flex; gap: 8px; align-items: baseline; padding: 3px 8px; background: var(--ink); color: var(--paper); font: 700 12.5px/1.3 var(--mono); }
+.dia-flow .df-op .df-chip .df-val { font-size: 12.5px; color: var(--pink); }
+.dia-flow .df-op .df-note { min-width: 0; font: 400 12px/1.3 var(--mono); color: var(--ink-2); }
+.slide.dark .dia, .slide.dark .dia-cap { color: var(--paper); }
+.slide.dark .dia-time .dt-line, .slide.dark .dia-time .dt-now { background: var(--paper); }
+.slide.dark .dia-time .dt-line::after { border-left-color: var(--paper); }
+.slide.dark .dia-time .dt-card, .slide.dark .dia-flow .df-node { color: var(--ink); box-shadow: 2px 2px 0 var(--pink); }
+.slide.dark .dia-time .dt-axis { color: var(--term-mut); }
+.slide.dark .dia-flow .df-op::before { border-color: var(--paper); }
+.slide.dark .dia-flow .df-op::after { border-top-color: var(--paper); }
+.slide.dark .dia-flow .df-op .df-chip { background: var(--pink); color: var(--ink); }
+.slide.dark .dia-flow .df-op .df-chip .df-val { color: var(--ink); }
+.slide.dark .dia-flow .df-op .df-note { color: var(--term-mut); }
+
 </style>
 </head>
 <body>
@@ -854,6 +906,58 @@ function schema(v = []) {
   ];
   return `<table class="scheme">${rows.map(([l, x, c]) =>
     `<tr class="${c || ""}"><td>${l}</td><td>${x ?? "____"}</td></tr>`).join("")}</table>`;
+}
+
+/* ── Diagramm-Bausteine für Folien und Merkkästen (Creative Director) ──
+   Werden im Lernraum-Design gezeichnet – bitte keine eigenen Grafiken bauen.
+   Beispiele: app/README.md → „Grafiken“. */
+const _e = (x) => String(x ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* Zeitstrahl: Vergangenheit → jetzt → Zukunft.
+   zeitstrahl([{ at: 20, label: "yesterday", text: "Harry played" },
+               { at: 50, label: "now", text: "Harry is playing", hi: true, from: 42, to: 58 }],
+              { title: "Zeitstrahl", now: 50, axis: ["Vergangenheit", "jetzt", "Zukunft"] })
+   at/from/to = Position 0–100. hi = pink hervorgehoben. from/to = Zeitraum als Balken.
+   also: [10, 30, 70] = weitere Punkte ohne Karte (z. B. Gewohnheit „every Saturday“). */
+function zeitstrahl(marks = [], opts = {}) {
+  const now = opts.now ?? 50;
+  const axis = opts.axis || ["Vergangenheit", "jetzt", "Zukunft"];
+  const ms = [...marks].sort((a, b) => a.at - b.at);
+  // Karten abwechselnd auf Reihen verteilen, wenn sie sich zu nahe kommen
+  // geschätzte Kartenbreite in % (Handy ≈ 320 px Breite) → Karten, die sich überlappen würden, in eine neue Reihe
+  const span = (m) => {
+    const w = Math.min(58, (Math.max(String(m.text).length * 7.4, String(m.label || "").length * 7.2) + 24) / 3.2);
+    return m.at < 22 ? [0, w] : m.at > 78 ? [100 - w, 100] : [m.at - w / 2, m.at + w / 2];
+  };
+  const rows = [];
+  ms.forEach((m) => { const [l, r] = span(m); let k = 0; while (rows[k] !== undefined && l < rows[k] + 2) k++; rows[k] = r; m._row = k; });
+  const nRows = Math.max(1, rows.length);
+  const pos = (at) => `left:${Math.max(0, Math.min(100, at))}%`;
+  const card = (m) => {
+    const bottom = 34 + (nRows - 1 - m._row) * 62 + 14;
+    const side = m.at < 22 ? "left:0" : m.at > 78 ? "right:0" : `left:${m.at}%;transform:translateX(-50%)`;
+    return `<div class="dt-stem" style="${pos(m.at)};bottom:29px;height:${bottom - 29}px"></div>
+      <div class="dt-card ${m.hi ? "hi" : ""}" style="${side};bottom:${bottom}px">${m.label ? `<b>${_e(m.label)}</b>` : ""}<span>${_e(m.text)}</span></div>`;
+  };
+  return `<figure class="dia dia-time">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}
+    <div class="dt-stage" style="--rows:${nRows}" role="img" aria-label="${_e(ms.map((m) => `${m.label || ""} ${m.text}`).join(" · "))}">
+      <div class="dt-line"></div><div class="dt-now" style="${pos(now)}"></div>
+      ${ms.filter((m) => m.from != null && m.to != null).map((m) => `<div class="dt-span" style="left:${m.from}%;width:${m.to - m.from}%"></div>`).join("")}
+      ${ms.map((m) => (m.also || []).map((x) => `<div class="dt-dot rep" style="${pos(x)}"></div>`).join("") + `<div class="dt-dot ${m.hi ? "hi" : ""}" style="${pos(m.at)}"></div>${card(m)}`).join("")}
+      <div class="dt-axis"><span style="left:0">${_e(axis[0])}</span><span style="left:${now}%;transform:translateX(-50%)">${_e(axis[1])}</span><span style="right:0">${_e(axis[2])}</span></div>
+    </div></figure>`;
+}
+
+/* Ablauf / Rechenkette von oben nach unten.
+   ablauf([{ text: "Listeneinkaufspreis", value: "1.000,00 €" },
+           { op: "− Liefererrabatt", value: "10 %", note: "vom Listenpreis" },
+           { text: "Zieleinkaufspreis", value: "900,00 €", hi: true }], { title: "Bezugskalkulation" })
+   Einträge mit text = Kasten, mit op = Pfeil mit Rechenschritt. hi = pink, sub = grau (Zwischenergebnis). */
+function ablauf(items = [], opts = {}) {
+  const val = (v) => (v != null && v !== "" ? `<span class="df-val">${_e(v)}</span>` : "");
+  return `<figure class="dia dia-flow">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}${items.map((it) => it.op != null
+    ? `<div class="df-op"><span class="df-chip">${_e(it.op)}${val(it.value)}</span>${it.note ? `<span class="df-note">${_e(it.note)}</span>` : ""}</div>`
+    : `<div class="df-node ${it.hi ? "hi" : ""} ${it.sub ? "sub" : ""}"><span>${_e(it.text)}</span>${val(it.value)}</div>`).join("")}</figure>`;
 }
 
 /* Standard-Zeilen für den Aufgabentyp "calc" (Personalbedarf) */
@@ -1980,12 +2084,16 @@ LERNRAUM.subjects.push({
             {
               kicker: "Grundwissen · 2 von 2",
               title: "Drei Stufen bis zum Bezugspreis.",
-              body: `<dl class="terms">
-                       <dt>Zieleinkaufspreis</dt><dd>Listeneinkaufspreis − Rabatt.</dd>
-                       <dt>Bareinkaufspreis</dt><dd>Zieleinkaufspreis − Skonto.</dd>
-                       <dt>Bezugskosten</dt><dd>Fracht, Verpackung, Transportversicherung.</dd>
-                       <dt>Bezugspreis</dt><dd>Bareinkaufspreis + Bezugskosten. Das ist der Einstandspreis.</dd>
-                     </dl>`
+              body: `${ablauf([
+                       { text: "Listeneinkaufspreis" },
+                       { op: "− Rabatt", note: "vom Listeneinkaufspreis" },
+                       { text: "Zieleinkaufspreis", sub: true },
+                       { op: "− Skonto", note: "vom Zieleinkaufspreis" },
+                       { text: "Bareinkaufspreis", sub: true },
+                       { op: "+ Bezugskosten", note: "Fracht, Verpackung, Versicherung" },
+                       { text: "Bezugspreis", hi: true }
+                     ])}
+                     <p class="note">Der Bezugspreis heißt auch Einstandspreis.</p>`
             },
             {
               style: "accent",
@@ -3049,7 +3157,11 @@ LERNRAUM.subjects.push({
               body: `<div class="pair">
                        <div><b>Simple Present</b>Gewohnheit: Harry <strong>plays</strong> Quidditch every Saturday.</div>
                        <div><b>Present Progressive</b>jetzt: Look! Harry <strong>is playing</strong> Quidditch now.</div>
-                     </div>`
+                     </div>
+                     ${zeitstrahl([
+                       { at: 20, label: "every Saturday", text: "He plays.", also: [8, 32, 68, 80, 92] },
+                       { at: 50, label: "now", text: "He is playing.", hi: true, from: 43, to: 57 }
+                     ])}`
             },
             {
               kicker: "Achtung",
@@ -3320,7 +3432,11 @@ LERNRAUM.subjects.push({
               body: `<div class="pair">
                        <div><b>Simple Past</b>genaue Zeit vorbei: Snape <strong>took</strong> points yesterday.</div>
                        <div><b>Present Perfect</b>Ergebnis jetzt: Snape <strong>has just taken</strong> points.</div>
-                     </div>`
+                     </div>
+                     ${zeitstrahl([
+                       { at: 14, label: "yesterday", text: "He took points." },
+                       { at: 50, label: "just", text: "He has just taken points.", hi: true, from: 36, to: 50 }
+                     ])}`
             },
             {
               kicker: "Signalwörter",
@@ -3462,6 +3578,10 @@ LERNRAUM.subjects.push({
                        <div><b>Past Progressive</b>Hintergrund: I <strong>was reading</strong>.</div>
                        <div><b>Simple Past</b>Unterbrechung: when the owl <strong>arrived</strong>.</div>
                      </div>
+                     ${zeitstrahl([
+                       { at: 16, label: "while / at 8 pm", text: "I was reading.", from: 6, to: 34 },
+                       { at: 26, label: "when", text: "The owl arrived.", hi: true }
+                     ])}
                      <p class="formula">while + Past Progressive · when + Simple Past</p>`
             },
             {
@@ -3698,6 +3818,12 @@ LERNRAUM.subjects.push({
                <li><b>will-Future</b> – he will play · spontan, Vermutung (I think …)</li>
                <li><b>going to</b> – he is going to play · Plan, Beweis (Look! …)</li>
              </ul>
+             ${zeitstrahl([
+               { at: 10, label: "yesterday", text: "He played." },
+               { at: 26, label: "at 8 last night", text: "He was playing.", from: 20, to: 32 },
+               { at: 50, label: "now", text: "He is playing.", hi: true },
+               { at: 86, label: "tomorrow", text: "He will play." }
+             ], { title: "Zeitformen auf dem Zeitstrahl" })}
              <h3>So findest du die Zeitform</h3>
              <p>1. Signalwort suchen. 2. Zeitform bestimmen. 3. Form richtig bilden.</p>`,
       steps: [
@@ -6369,6 +6495,7 @@ var qrcode = function() {
   const routes = [
     [/^#?\/?$/, viewHome, "home"],
     [/^#\/profil$/, viewProfile, "profil"],
+    [/^#\/faecher$/, () => viewPickFach(false), "home"],
     [/^#\/hilfe$/, viewHelp, "hilfe"],
     [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
@@ -6381,6 +6508,10 @@ var qrcode = function() {
     if (cleanup) { cleanup(); cleanup = null; }
     const hash = location.hash || "#/";
     if (!firstName()) return mount(viewWelcome(), null);
+    // Wer per Link/QR in einen Kurs kommt, bekommt dessen Fach automatisch zu „Meine Fächer“
+    const deep = hash.match(/^#\/f\/([\w-]+)/), ds = deep && findSubject(deep[1]);
+    if (ds && !ds.materials) addFach(ds.fach || ds.name);
+    if (!SINGLE && myFaecher() === null && /^#?\/?$/.test(hash) && allFachs().length > 1) return mount(viewPickFach(true), null);
     for (const [re, fn, tab] of routes) {
       const m = hash.match(re);
       if (m) return mount(fn(...m.slice(1)), tab);
@@ -6510,6 +6641,53 @@ var qrcode = function() {
   }
 
   const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
+  /* Meine Fächer: null = noch nie gewählt, [] = alle anzeigen */
+  const myFaecher = () => { const m = store.get("faecher", null); return Array.isArray(m) ? m : null; };
+  function addFach(f) { const m = myFaecher(); if (!m) store.set("faecher", [f]); else if (m.length && !m.includes(f)) store.set("faecher", [...m, f]); }
+  const hasCourse = (f) => DATA.subjects.some((x) => (x.fach || x.name) === f && !x.materials);
+  const allFachs = () => [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
+    .sort((a, b) => (hasCourse(b) - hasCourse(a)) || a.localeCompare(b, "de"));
+  const shownFachs = () => { const m = myFaecher(); const all = allFachs(); const f = m && m.length ? all.filter((x) => m.includes(x)) : all; return f.length ? f : all; };
+  /* Klasse = letzter Teil von course („PBP · HS1“ → „HS1“) */
+  const fachClasses = (f) => [...new Set(DATA.subjects.filter((x) => (x.fach || x.name) === f && !x.materials && x.course)
+    .map((x) => x.course.split("·").pop().trim()))];
+
+  function viewPickFach(first) {
+    const all = allFachs();
+    const sel = new Set(myFaecher() || []);
+    const v = h(`<main class="view ${first ? "no-tabbar" : ""}">
+      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>Meine Fächer</span>`}</div>
+      <h1 class="display" style="margin-top:24px">${first ? `Hallo ${esc(firstName())}.` : "Meine Fächer."}<small>Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.</small></h1>
+      <div class="topics fach-pick" role="group" aria-label="Fächer auswählen"></div>
+      <button class="btn block" id="save" style="margin-top:22px"></button>
+      <p class="hint" id="pickHint"></p>
+    </main>`);
+    const box = v.querySelector(".fach-pick"), save = v.querySelector("#save"), hint = v.querySelector("#pickHint");
+    const update = () => {
+      save.innerHTML = sel.size ? `Fertig · ${sel.size} ${sel.size === 1 ? "Fach" : "Fächer"} ${ICON.arrow}` : `Alle Fächer anzeigen ${ICON.arrow}`;
+      hint.textContent = sel.size ? "" : "Du hast nichts gewählt – dann siehst du alle Fächer.";
+    };
+    all.forEach((f) => {
+      const subs = DATA.subjects.filter((x) => (x.fach || x.name) === f);
+      const nCourses = subs.filter((x) => !x.materials).length, cls = fachClasses(f);
+      const b = h(`<button class="win topic-win pick-win" aria-pressed="${sel.has(f)}">
+        <div class="bar"><span class="d"></span>${esc(f)}<span class="r"></span></div>
+        <div class="body"><span class="title">${esc(fachName(f))}</span>
+          <span class="meta">${nCourses ? `${nCourses} ${nCourses === 1 ? "Kurs" : "Kurse"}` : "Materialien"}${cls.length ? " · Klasse " + esc(cls.join(", ")) : ""}</span></div>
+      </button>`);
+      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? "✓ mein Fach" : "antippen"; };
+      b.onclick = () => { sel.has(f) ? sel.delete(f) : sel.add(f); buzz(8); paint(); update(); };
+      paint();
+      box.append(b);
+    });
+    update();
+    save.onclick = () => {
+      store.set("faecher", all.filter((f) => sel.has(f)));
+      toast(sel.size ? "› Deine Fächer sind gespeichert" : "› Du siehst alle Fächer");
+      if (location.hash === "#/" || !location.hash) render(); else location.hash = "#/";
+    };
+    return v;
+  }
   const courseTopics = (x) => x.topics.filter((t) => t.steps.length || t.drill);
 
   function viewHome() {
@@ -6554,10 +6732,10 @@ var qrcode = function() {
   /* Startseite bei mehreren Fächern: Fach → Kurse & Materialsammlungen */
   function viewLanding() {
     const name = firstName();
-    const courses = DATA.subjects.filter((x) => !x.materials);
+    const fachs = shownFachs();
+    const filtered = fachs.length < allFachs().length;
+    const courses = DATA.subjects.filter((x) => !x.materials && fachs.includes(x.fach || x.name));
     const target = resumeTarget(courses);
-    const fachs = [...new Set(DATA.subjects.map((x) => x.fach || x.name))]
-      .sort((a, b) => (DATA.subjects.some((x) => x.fach === b && !x.materials) - DATA.subjects.some((x) => x.fach === a && !x.materials)) || a.localeCompare(b, "de"));
     const v = h(`<main class="view">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
@@ -6569,10 +6747,11 @@ var qrcode = function() {
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
           <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>Übungen und Lernpfade für deine Fächer – gemacht fürs Handy. Wähle unten dein Fach.</small></h1>
+        <h1 class="display">Lernraum.<small>${filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy."}</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       <div id="list"></div>
+      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? `Andere Fächer (${allFachs().length - fachs.length}) · Fächer ändern` : "Meine Fächer auswählen"}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
     </main>`);
     dither(v.querySelector("canvas"));
@@ -6583,7 +6762,8 @@ var qrcode = function() {
       const chip = h(`<button class="tag-box">${esc(f)}</button>`);
       chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
       if (fachs.length > 1) chips.append(chip);
-      list.append(h(`<p class="section-head fach-head" id="fach-${k}">${esc(f)}${fachName(f) !== f ? " · " + esc(fachName(f)) : ""}</p>`));
+      const cls = fachClasses(f);
+      list.append(h(`<header class="fach-head" id="fach-${k}"><p class="fh-kick">${esc(f)}${cls.length ? " · " + esc(cls.join(" · ")) : ""}</p><h2 class="fh-title">${esc(fachName(f))}</h2></header>`));
       const grid = h(`<div class="topics"></div>`);
       DATA.subjects.filter((x) => (x.fach || x.name) === f).sort((a, b) => (!!a.materials - !!b.materials) || String(b.updated || b.added || "").localeCompare(String(a.updated || a.added || ""))).forEach((x) => grid.append(subjectWin(x)));
       list.append(grid);
@@ -8620,6 +8800,7 @@ var qrcode = function() {
       <p class="section-head">Einstellungen</p>
       <div class="list">
         <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/faecher"><span>Meine Fächer</span><span class="v">${esc((myFaecher() || []).join(" · ") || "alle")}</span></a>
         <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
         <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
       </div>

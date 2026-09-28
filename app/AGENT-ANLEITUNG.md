@@ -55,6 +55,7 @@ stehen in `app/README.md`. Kurzüberblick:
 | `cards` | Lernkarten Begriff/Erklärung |
 | `selfcheck` | Kann-Liste am Ende eines Themas |
 
+Grafiken: nur die Bausteine `zeitstrahl()` und `ablauf()` (siehe `app/README.md` → „Grafiken“), keine eigenen SVGs/Bilder.
 Zusätzlich möglich: `help` (Merkkasten) pro Thema, `hints` (gestufte Tipps) pro Schritt,
 Übungsklausur (`exam`), Endlos-Training (`drill`) – siehe README.
 

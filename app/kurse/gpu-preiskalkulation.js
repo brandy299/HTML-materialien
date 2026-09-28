@@ -63,12 +63,16 @@ LERNRAUM.subjects.push({
             {
               kicker: "Grundwissen · 2 von 2",
               title: "Drei Stufen bis zum Bezugspreis.",
-              body: `<dl class="terms">
-                       <dt>Zieleinkaufspreis</dt><dd>Listeneinkaufspreis − Rabatt.</dd>
-                       <dt>Bareinkaufspreis</dt><dd>Zieleinkaufspreis − Skonto.</dd>
-                       <dt>Bezugskosten</dt><dd>Fracht, Verpackung, Transportversicherung.</dd>
-                       <dt>Bezugspreis</dt><dd>Bareinkaufspreis + Bezugskosten. Das ist der Einstandspreis.</dd>
-                     </dl>`
+              body: `${ablauf([
+                       { text: "Listeneinkaufspreis" },
+                       { op: "− Rabatt", note: "vom Listeneinkaufspreis" },
+                       { text: "Zieleinkaufspreis", sub: true },
+                       { op: "− Skonto", note: "vom Zieleinkaufspreis" },
+                       { text: "Bareinkaufspreis", sub: true },
+                       { op: "+ Bezugskosten", note: "Fracht, Verpackung, Versicherung" },
+                       { text: "Bezugspreis", hi: true }
+                     ])}
+                     <p class="note">Der Bezugspreis heißt auch Einstandspreis.</p>`
             },
             {
               style: "accent",
