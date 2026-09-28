@@ -82,6 +82,8 @@ window.LERNRAUM_I18N = {
     "Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.": "Everything is saved on this device only. Your teacher cannot see your progress.",
     "Name gespeichert": "Name saved", "Fortschritt gelöscht": "Progress deleted", "Nochmal tippen zum Löschen": "Tap again to delete",
 
+    "Fall": "Case", "Angaben": "Details", "Rechenschema": "Calculation scheme", "Wert": "Value", "Zahlenfeld": "Keypad", "Löschen": "Delete", "Vorzeichen": "Sign", "Nächstes Feld": "Next field", "nächstes Feld": "next field", "Karte umdrehen": "Flip card", "Begriff": "Term", "Erklärung": "Explanation", "Dein Antwortsatz": "Your answer sentence", "extern": "external",
+
     howto: {
       slides: "Swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
       quiz: "Tap an answer, then “Check”. Exactly one answer is correct.",
@@ -102,7 +104,7 @@ window.LERNRAUM_I18N = {
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
     "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
     "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word",
-    "{n} Folien": "{n} شرائح", "{n} Frage": "سؤال واحد", "{n} Fragen": "{n} أسئلة", "{n} Karten": "{n} بطاقات",
+    "{n} Folien": "{n} شرائح", "{n} Frage": "{n} سؤال", "{n} Fragen": "{n} أسئلة", "{n} Karten": "{n} بطاقات",
     "{n} Lücken": "{n} فراغات", "{n} Felder": "{n} حقول", "{n} Aussagen": "{n} عبارات", "{n} Bausteine": "{n} أجزاء",
     "öffnet sich neu": "يُفتح في نافذة جديدة",
 
@@ -115,9 +117,9 @@ window.LERNRAUM_I18N = {
 
     "Meine Fächer": "موادي", "Meine Fächer.": "موادي.", "Hallo {n}.": "مرحبًا {n}.",
     "Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.": "ما هي موادك؟ اضغط على كل المواد التي تخصّك. بعد ذلك سترى موادك فقط – ويمكنك تغيير ذلك في أي وقت من «أنا».",
-    "Fächer auswählen": "اختر المواد", "Fertig · {n} Fach": "تم · مادة واحدة", "Fertig · {n} Fächer": "تم · {n} مواد",
+    "Fächer auswählen": "اختر المواد", "Fertig · {n} Fach": "تم · {n} مادة", "Fertig · {n} Fächer": "تم · {n} مواد",
     "Alle Fächer anzeigen": "عرض كل المواد", "Du hast nichts gewählt – dann siehst du alle Fächer.": "لم تختر شيئًا – سترى كل المواد.",
-    "{n} Kurs": "دورة واحدة", "{n} Kurse": "{n} دورات", "Materialien": "مواد", "Klasse": "الصف",
+    "{n} Kurs": "{n} دورة", "{n} Kurse": "{n} دورات", "Materialien": "مواد", "Klasse": "الصف",
     "✓ mein Fach": "✓ مادتي", "antippen": "اضغط", "Deine Fächer sind gespeichert": "تم حفظ موادك", "Du siehst alle Fächer": "ترى كل المواد",
 
     "Hallo {n}": "مرحبًا {n}", "Starte mit:": "ابدأ بـ:", "Weiter mit:": "تابع:", "Schritt {a} von {b}": "الخطوة {a} من {b}",
@@ -170,6 +172,8 @@ window.LERNRAUM_I18N = {
     "Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "اللغة تُستخدم للأزرار والتعليمات والملاحظات. تبقى التمارين باللغة الألمانية – كما في امتحانك.",
     "Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.": "كل شيء محفوظ على هذا الجهاز فقط. المعلّم لا يرى تقدّمك.",
     "Name gespeichert": "تم حفظ الاسم", "Fortschritt gelöscht": "تم حذف التقدّم", "Nochmal tippen zum Löschen": "اضغط مرة أخرى للحذف",
+
+    "Fall": "الحالة", "Angaben": "المعطيات", "Rechenschema": "مخطط الحساب", "Wert": "القيمة", "Zahlenfeld": "لوحة الأرقام", "Löschen": "حذف", "Vorzeichen": "الإشارة", "Nächstes Feld": "الحقل التالي", "nächstes Feld": "الحقل التالي", "Karte umdrehen": "اقلب البطاقة", "Begriff": "المصطلح", "Erklärung": "الشرح", "Dein Antwortsatz": "جملة إجابتك", "extern": "خارجي",
 
     howto: {
       slides: "اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",

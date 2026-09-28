@@ -37,7 +37,7 @@ let errors = 0;
 for (const [lang, dict] of Object.entries(I)) {
   const miss = [...keys].filter((k) => !(k in dict));
   const extra = Object.keys(dict).filter((k) => k !== "howto" && !keys.has(k));
-  const badPh = [...keys].filter((k) => k in dict && ph(k) !== ph(dict[k]) && !/^\{n\} (Frage|Kurs|Fach)$|· \{n\} Fach$/.test(k));
+  const badPh = [...keys].filter((k) => k in dict && ph(k) !== ph(dict[k]));
   const missHow = HOWTO.filter((k) => !(dict.howto && dict.howto[k]));
   miss.forEach((k) => console.log(`✗ [${lang}] fehlt: ${k}`));
   missHow.forEach((k) => console.log(`✗ [${lang}] Anleitung fehlt: howto.${k}`));

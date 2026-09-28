@@ -64,6 +64,52 @@
     toast("› " + LANGS[l]);
     then ? then() : render();
   }
+  /* Bereits angezeigte Oberflächentexte in die neue Sprache umschreiben – ohne die Aufgabe neu aufzubauen.
+     Erkannt werden ganze Textknoten (und aria-label/title/placeholder), die exakt einem Text aus i18n.js
+     in irgendeiner Sprache entsprechen; Zahlen in {Platzhaltern} werden übernommen. Kursinhalte bleiben unberührt. */
+  let trIndex = null;
+  function buildTrIndex() {
+    const all = window.LERNRAUM_I18N || {};
+    const keys = new Set(Object.values(all).flatMap((d) => Object.keys(d).filter((k) => k !== "howto")));
+    const rx = (tpl) => {
+      const names = [];
+      const src = tpl.replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\\?\{(\w+)\\?\}/g, (_, n) => { names.push(n); return "(.+?)"; });
+      return { re: new RegExp("^" + src + "$"), names };
+    };
+    trIndex = [];
+    keys.forEach((k) => {
+      const forms = new Set([k, ...Object.values(all).map((d) => d[k]).filter(Boolean)]);
+      forms.forEach((f) => trIndex.push({ key: k, ...rx(f), plain: !/\{\w+\}/.test(f), f }));
+    });
+    trIndex.sort((a, b) => (b.plain - a.plain) || b.f.length - a.f.length);
+  }
+  function retranslateText(txt) {
+    const t = txt.trim();
+    if (!t || /^[\d\s/·.:%+−-]*$/.test(t)) return null;
+    for (const e of trIndex) {
+      const m = t.match(e.re);
+      if (!m) continue;
+      const v = {}; e.names.forEach((n, i) => { v[n] = m[i + 1]; });
+      const out = tr(e.key, v);
+      return out === t ? null : txt.replace(t, out);
+    }
+    return null;
+  }
+  const SKIP = ".s-body, .s-title, .s-kicker, .s-big, .q-text, .options, .cloze, .bank, .merk, .case .body, .sort-card .txt, .flash .txt, .kann li, .picks, .lead, .h1, .display";
+  function retranslate(root) {
+    if (!root) return;
+    if (!trIndex) buildTrIndex();
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) => (n.parentElement && n.parentElement.closest(SKIP) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT)
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach((n) => { const x = retranslateText(n.nodeValue); if (x !== null) n.nodeValue = x; });
+    root.querySelectorAll("[aria-label], [title], [placeholder]").forEach((el) => ["aria-label", "title", "placeholder"].forEach((a) => {
+      if (!el.hasAttribute(a)) return;
+      const x = retranslateText(el.getAttribute(a)); if (x !== null) el.setAttribute(a, x);
+    }));
+  }
   const langSwitch = (extra = "") => `<div class="lang-sw ${extra}" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
     .map(([k, lbl]) => `<button type="button" data-lang="${k}" aria-pressed="${k === LANG}" lang="${k}">${lbl}</button>`).join("")}</div>`;
   const bindLang = (v, then) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => setLang(b.dataset.lang, then); });
@@ -768,7 +814,7 @@
       const dots = wrap.querySelector(".dots");
       step.slides.forEach((sl, k) => {
         track.append(h(`<article class="slide ${sl.style || ""}" aria-label="Folie ${k + 1} von ${n}">
-          <div class="bar"><span class="d"></span>${tr("Folie")} ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
+          <div class="bar"><span class="d"></span><span>${tr("Folie")}</span> ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
           <div class="slide-in">
             <p class="s-kicker">${sl.kicker || ""}</p>
             ${sl.big ? `<p class="s-big">${sl.big}</p>` : ""}
@@ -847,7 +893,7 @@
           if (!ok) buttons[sel].classList.add("wrong");
           node.append(term([
             ["p", "$ prüfe …"],
-            ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(q.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> ${tr("Richtig ist {x}.", { x: "ABCDEF"[q.answer] })} ${esc(q.explain || "")}`]
+            ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(q.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> <span>${tr("Richtig ist {x}.", { x: "ABCDEF"[q.answer] })}</span> ${esc(q.explain || "")}`]
           ]));
           buzz(ok ? 20 : [30, 40, 30]);
           ctx.setProgress((k + 1) / qs.length);
@@ -884,7 +930,7 @@
       ctx.action(tr("Tippe auf eine Kategorie"), null, { enabled: false, variant: "ghost" });
 
       const card = () => {
-        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Karte")} ${k + 1} / ${items.length}<span class="r">?</span></div>
+        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span><span>${tr("Karte")}</span> ${k + 1} / ${items.length}<span class="r">?</span></div>
           <div class="body"><span class="txt">${esc(items[k].text)}</span></div></div>`));
         bins.classList.remove("locked");
       };
@@ -901,7 +947,8 @@
         if (ctx.exam) c.querySelector(".bar .r").textContent = "→ " + cats[j];
         else {
           c.classList.add(ok ? "right" : "wrong");
-          c.querySelector(".bar .r").textContent = ok ? "✓ " + tr("richtig") : "✗ " + cats[it.cat];
+          const r = c.querySelector(".bar .r");
+          if (ok) { r.textContent = "✓ "; r.append(h(`<span>${tr("richtig")}</span>`)); } else r.textContent = "✗ " + cats[it.cat];
         }
         buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
         k++;
@@ -999,9 +1046,9 @@
       let active = 0, locked = false;
 
       const node = h(`<div>
-        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>Fall<span class="r">Angaben</span></div><div class="body">${step.case}</div></div>` : ""}
+        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>${tr("Fall")}<span class="r">${tr("Angaben")}</span></div><div class="body">${step.case}</div></div>` : ""}
         <div class="calc">
-          <div class="bar"><span class="d"></span>Rechenschema<span class="r">${rows.length} Felder</span></div>
+          <div class="bar"><span class="d"></span>${tr("Rechenschema")}<span class="r">${tr("{n} Felder", { n: rows.length })}</span></div>
           <div id="rows"></div>
         </div>
         <div id="out"></div>
@@ -1009,17 +1056,17 @@
       const rowsBox = node.querySelector("#rows");
       const rowEls = rows.map((r, k) => {
         const el = h(`<button class="crow ${r.sum ? "sum" : ""} ${r.sep ? "sep" : ""}" type="button">
-          <span class="lbl">${esc(r.label)}</span><span class="cell" aria-label="Wert"></span></button>`);
+          <span class="lbl">${esc(r.label)}</span><span class="cell" aria-label="${tr("Wert")}"></span></button>`);
         el.onclick = () => { if (!locked) { active = k; paint(); } };
         rowsBox.append(el);
         return el;
       });
 
-      const pad = h(`<div class="pad" role="group" aria-label="Zahlenfeld">
-        ${["7", "8", "9"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="del" aria-label="Löschen">${ICON.del}</button>
-        ${["4", "5", "6"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="neg" aria-label="Vorzeichen">±</button>
-        ${["1", "2", "3"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="next" aria-label="Nächstes Feld">↓</button>
-        <button data-k="0" style="grid-column:span 2">0</button>${ctx.exam ? `<button class="fn" data-k="next" style="grid-column:span 2">nächstes Feld ↓</button>` : `<button class="fn" data-k="hint" style="grid-column:span 2">Hilfe</button>`}
+      const pad = h(`<div class="pad" role="group" aria-label="${tr("Zahlenfeld")}">
+        ${["7", "8", "9"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="del" aria-label="${tr("Löschen")}">${ICON.del}</button>
+        ${["4", "5", "6"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="neg" aria-label="${tr("Vorzeichen")}">±</button>
+        ${["1", "2", "3"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="next" aria-label="${tr("Nächstes Feld")}">↓</button>
+        <button data-k="0" style="grid-column:span 2">0</button>${ctx.exam ? `<button class="fn" data-k="next" style="grid-column:span 2">${tr("nächstes Feld")} ↓</button>` : `<button class="fn" data-k="hint" style="grid-column:span 2">${tr("Hilfe")}</button>`}
       </div>`);
       ctx.dock.prepend(pad);
       ctx.root.classList.add("has-pad");
@@ -1088,7 +1135,7 @@
         const all = correct === rows.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe rechenschema …"],
-          ["", all ? `› <span class="ok">${correct}/${rows.length} ${tr("richtig.")}</span>` : `› <span class="no">${correct}/${rows.length} ${tr("richtig.")}</span> ${tr("Korrekturen stehen im Schema.")}`],
+          ["", all ? `› <span class="ok">${correct}/${rows.length} <span>${tr("richtig.")}</span></span>` : `› <span class="no">${correct}/${rows.length} <span>${tr("richtig.")}</span></span> ${tr("Korrekturen stehen im Schema.")}`],
           ...(step.result ? [["", `› <span class="p">${esc(step.result)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
@@ -1108,9 +1155,9 @@
       let known = 0;
       const node = h(`<div>
         <div class="flash-meta"><span id="left"></span><span id="known"></span></div>
-        <div class="flash-wrap"><div class="flash" role="button" tabindex="0" aria-label="Karte umdrehen">
-          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">${tr("tippen ↻")}</span></div><div class="in"><span class="txt"></span><span class="tap">${tr("Tippen zum Umdrehen")}</span></div></div>
-          <div class="face back"><div class="bar"><span class="d"></span>Erklärung<span class="r">↻</span></div><div class="in"><span class="txt"></span></div></div>
+        <div class="flash-wrap"><div class="flash" role="button" tabindex="0" aria-label="${tr("Karte umdrehen")}">
+          <div class="face front"><div class="bar"><span class="d"></span>${tr("Begriff")}<span class="r">${tr("tippen ↻")}</span></div><div class="in"><span class="txt"></span><span class="tap">${tr("Tippen zum Umdrehen")}</span></div></div>
+          <div class="face back"><div class="bar"><span class="d"></span>${tr("Erklärung")}<span class="r">↻</span></div><div class="in"><span class="txt"></span></div></div>
         </div></div>
       </div>`);
       const flash = node.querySelector(".flash");
@@ -1194,7 +1241,7 @@
       const html = parts.map((x) => (typeof x === "string" ? esc(x) : `<button class="gap sgap" data-i="${gi++}"></button>`)).join("");
       const node = h(`<div>
         ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>${tr("Aufgabe")}<span class="r">${tr("{n} Bausteine", { n: gapsData.length })}</span></div><div class="body">${step.case}</div></div>` : ""}
-        <div class="win" style="margin-top:${step.case ? 18 : 0}px"><div class="bar"><span class="d"></span>Dein Antwortsatz<span class="r" id="cnt"></span></div>
+        <div class="win" style="margin-top:${step.case ? 18 : 0}px"><div class="bar"><span class="d"></span>${tr("Dein Antwortsatz")}<span class="r" id="cnt"></span></div>
           <div class="cloze sentence">${html}</div></div>
         <p class="eyebrow" style="margin-top:18px" id="pickLbl"></p>
         <div class="picks"></div>
@@ -1249,7 +1296,7 @@
         const all = correct === gapsData.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe antwortsatz …"],
-          ["", all ? `› <span class="ok">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Ein vollständiger Antwortsatz!")}` : `› <span class="no">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Die richtigen Bausteine stehen grün im Satz.")}`],
+          ["", all ? `› <span class="ok">${correct}/${gapsData.length} <span>${tr("richtig.")}</span></span> ${tr("Ein vollständiger Antwortsatz!")}` : `› <span class="no">${correct}/${gapsData.length} <span>${tr("richtig.")}</span></span> ${tr("Die richtigen Bausteine stehen grün im Satz.")}`],
           ...(step.explain ? [["", `› <span class="p">${esc(step.explain)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
@@ -1796,7 +1843,7 @@
       let href = "#";
       try { href = new URL(encodeURI(step.href), DATA.materialBase || location.href).href; } catch { /* ungültig */ }
       ctx.body.append(h(`<div class="win material">
-        <div class="bar"><span class="d"></span>Material<span class="r">extern</span></div>
+        <div class="bar"><span class="d"></span>${tr("Material")}<span class="r">${tr("extern")}</span></div>
         <div class="body"><p class="h2">${esc(step.title)}</p><p>${esc(step.text || "")}</p>
         <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">Material öffnen ${ICON.link}</a></div>
       </div>`));
@@ -2341,7 +2388,7 @@
       if (!hints.length) {
         listEl.append(h(`<p class="hint">${tr("Für diese Aufgabe gibt es keine extra Tipps. Schau in den Merkkasten oder in die Begriffe.")}</p>`));
       } else {
-        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">${tr("Tipp")} ${n + 1}</span><span>${x}</span></div>`)));
+        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n"><span>${tr("Tipp")}</span> ${n + 1}</span><span>${x}</span></div>`)));
         if (shown < hints.length) {
           const last = shown === hints.length - 1 && hints.length > 1;
           const solution = /^Lösungsweg/.test(hints[shown]);
@@ -2377,6 +2424,7 @@
       back.querySelector(".sl-k").textContent = tr("Sprache");
       back.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === LANG)));
       if (ctx.relabel) ctx.relabel();
+      retranslate($app);
       select(current);
     });
 
