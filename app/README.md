@@ -250,7 +250,7 @@ Kurze Texte (Karten max. ca. 30 Zeichen). Fehlt ein Diagrammtyp: Issue mit Label
 
 ## Sprachen der Oberfläche
 
-Schüler/innen können die Bedienung auf **Deutsch, Englisch oder Arabisch** stellen (beim ersten Start oben rechts oder unter „Ich“).
+Schüler/innen können die Bedienung auf **Deutsch, Englisch oder Arabisch** stellen (beim ersten Start oben rechts, unter „Ich“ oder mitten in einer Aufgabe im Hilfe-Fenster „?“ – Eingaben bleiben dabei erhalten).
 Übersetzt werden Knöpfe, Anleitungen und Rückmeldungen – die Kursinhalte bleiben deutsch. Texte: `i18n.js`.
 Neue Oberflächentexte in `app.js` immer mit `tr("Deutscher Text")` schreiben und in `i18n.js` ergänzen;
 `node app/tools/check-i18n.js` zeigt fehlende Übersetzungen.

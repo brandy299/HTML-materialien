@@ -42,15 +42,32 @@
 
   /* ── Sprache (nur Bedienoberfläche – Inhalte bleiben deutsch) ── */
   const LANGS = { de: "Deutsch", en: "English", ar: "العربية" };
-  const LANG = LANGS[store.get("lang", "de")] ? store.get("lang", "de") : "de";
-  const I18N = ((window.LERNRAUM_I18N || {})[LANG]) || {};
+  let LANG = "de", I18N = {}, labelsReady = false;
   const tr = (de, v) => { let x = I18N[de] ?? de; if (v) x = x.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? ""); return x; };
-  document.documentElement.lang = LANG;
-  document.documentElement.classList.toggle("lang-ar", LANG === "ar");
-  function setLang(l) { store.set("lang", l); location.reload(); }
-  const langSwitch = () => `<div class="lang-sw" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
+  /* Sprache wechseln ohne Neuladen: Texte, die danach gebaut werden, kommen in der neuen Sprache */
+  function applyLang(l) {
+    LANG = LANGS[l] ? l : "de";
+    I18N = ((window.LERNRAUM_I18N || {})[LANG]) || {};
+    document.documentElement.lang = LANG;
+    document.documentElement.classList.toggle("lang-ar", LANG === "ar");
+    if (labelsReady) {
+      Object.assign(HOWTO, HOWTO_DE, I18N.howto || {});
+      Object.keys(STEP_LABEL_DE).forEach((k) => { STEP_LABEL[k] = tr(STEP_LABEL_DE[k]); });
+      $tabbar.querySelectorAll("a > span").forEach((sp) => { sp.dataset.de = sp.dataset.de || sp.textContent.trim(); sp.textContent = tr(sp.dataset.de); });
+    }
+  }
+  /* then = was danach passiert; ohne Angabe wird die aktuelle Seite neu aufgebaut */
+  function setLang(l, then) {
+    if (l === LANG) return;
+    store.set("lang", l);
+    applyLang(l);
+    toast("› " + LANGS[l]);
+    then ? then() : render();
+  }
+  const langSwitch = (extra = "") => `<div class="lang-sw ${extra}" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
     .map(([k, lbl]) => `<button type="button" data-lang="${k}" aria-pressed="${k === LANG}" lang="${k}">${lbl}</button>`).join("")}</div>`;
-  const bindLang = (v) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => { if (b.dataset.lang !== LANG) setLang(b.dataset.lang); }; });
+  const bindLang = (v, then) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => setLang(b.dataset.lang, then); });
+  applyLang(store.get("lang", "de"));
 
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -94,8 +111,11 @@
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
-  Object.assign(HOWTO, I18N.howto || {});
-  const STEP_LABEL = Object.fromEntries(Object.entries({ slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" }).map(([k, x]) => [k, tr(x)]));
+  const HOWTO_DE = { ...HOWTO };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
+  const STEP_LABEL = {};
+  labelsReady = true;
+  applyLang(LANG);
 
   function stepMeta(st) {
     switch (st.type) {
@@ -669,7 +689,7 @@
         ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="${tr("Aufgabe zurücksetzen")}" title="${tr("Aufgabe zurücksetzen")}">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="${tr("Ich brauche Hilfe")}">${ICON.help}</button>`}
       </div>
       <header class="player-head">
-        <p class="eyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
+        <p class="eyebrow" id="stepEyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
         <h1 class="h1">${esc(step.title)}</h1>
       </header>
       <section class="player-body"></section>
@@ -702,6 +722,11 @@
       hintKey: () => "0",  // z. B. Frage-Index im Quiz
       revealed: {},
       exam
+    };
+    ctx.relabel = () => {
+      v.querySelector("#stepEyebrow").textContent = `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${t.title}`;
+      v.querySelector("#resetBtn")?.setAttribute("aria-label", tr("Aufgabe zurücksetzen"));
+      v.querySelector("#helpBtn")?.setAttribute("aria-label", tr("Ich brauche Hilfe"));
     };
     ctx.openHelp = (tab) => (exam ? toast("› In der Klausur gibt es keine Hilfe") : openHelp(s, t, step, ctx, tab));
     if (exam) {
@@ -2285,6 +2310,7 @@
     return [...new Set(list)];
   }
 
+  const HELP_TABS = { tipps: "Tipps", merk: "Merkkasten", begriffe: "Begriffe" };
   function openHelp(s, t, step, ctx, tab = "tipps") {
     if (document.querySelector(".sheet-back")) return;
     const back = h(`<div class="sheet-back">
@@ -2296,6 +2322,7 @@
           <button role="tab" data-tab="merk">${tr("Merkkasten")}</button>
           <button role="tab" data-tab="begriffe">${tr("Begriffe")}</button>
         </div>
+        <div class="sheet-lang"><span class="sl-k">${tr("Sprache")}</span>${langSwitch()}</div>
         <div class="sheet-body"></div>
       </div>
     </div>`);
@@ -2334,12 +2361,24 @@
     };
     const renderBegriffe = () => bodyEl.replaceChildren(glossaryBox(s));
 
+    let current = tab;
     const select = (name) => {
+      current = name;
       back.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
       ({ tipps: renderTipps, merk: renderMerk, begriffe: renderBegriffe })[name]();
       bodyEl.scrollTop = 0;
     };
     back.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => select(b.dataset.tab));
+    /* Sprachwechsel mitten in der Aufgabe: nur Hilfe + Kopfzeile neu beschriften, die Aufgabe bleibt, wie sie ist */
+    bindLang(back, () => {
+      back.querySelector("#sheetTitle").textContent = `${tr("Hilfe")} · ${step.title}`;
+      const x = back.querySelector(".sheet-x"); x.textContent = `✕ ${tr("schließen")}`; x.setAttribute("aria-label", tr("Schließen"));
+      back.querySelectorAll(".tabs button").forEach((b) => { b.textContent = tr(HELP_TABS[b.dataset.tab]); });
+      back.querySelector(".sl-k").textContent = tr("Sprache");
+      back.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === LANG)));
+      if (ctx.relabel) ctx.relabel();
+      select(current);
+    });
 
     const close = () => {
       if (cleanup === myCleanup) cleanup = prevCleanup;
@@ -2513,7 +2552,7 @@
         <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">${tr("Treffer")}</div></div>
       </div>
       <p class="section-head">${tr("Sprache")}</p>
-      ${langSwitch().replace("lang-sw", "lang-sw big")}
+      ${langSwitch("big")}
       <p class="hint" style="margin-top:10px">${tr("Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.")}</p>
       <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
@@ -2550,7 +2589,6 @@
   }
 
   /* ── Start ──────────────────────────────────────────────── */
-  $tabbar.querySelectorAll("a > span").forEach((sp) => { sp.textContent = tr(sp.textContent.trim()); });
   const ct = cardsTopic();
   const cardsTab = $tabbar.querySelector('[data-tab="karten"]');
   if (cardsTab) {
