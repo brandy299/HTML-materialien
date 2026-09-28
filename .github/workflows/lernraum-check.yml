@@ -23,6 +23,8 @@ jobs:
 
       - name: Kurse prüfen
         run: node app/tools/check-kurse.js
+      - name: Übersetzungen prüfen
+        run: node app/tools/check-i18n.js
 
       - name: Content-Branch ändert nur erlaubte Dateien
         if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'kurs/')

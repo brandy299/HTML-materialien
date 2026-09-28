@@ -848,6 +848,26 @@ body.sim-on .dock-inner .btn svg { width: 15px; height: 15px; }
 .slide.dark .dia-flow .df-op .df-chip .df-val { color: var(--ink); }
 .slide.dark .dia-flow .df-op .df-note { color: var(--term-mut); }
 
+/* ── Sprache ────────────────────────────────────────────── */
+.lang-sw { display: inline-flex; margin-left: auto; border: 2px solid var(--ink); background: var(--paper); box-shadow: 2px 2px 0 var(--ink); }
+.lang-sw button { min-width: 44px; min-height: 36px; padding: 0 10px; font: 700 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink); background: transparent; }
+.lang-sw button + button { border-left: 1.5px solid var(--ink); }
+.lang-sw button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lang-sw button[lang="ar"] { font: 700 14px/1 system-ui, sans-serif; letter-spacing: 0; }
+.lang-sw.big { display: flex; margin: 0; }
+.lang-sw.big button { flex: 1; min-height: 48px; font-size: 13px; }
+.lang-sw.big button[lang="ar"] { font-size: 16px; }
+/* Arabisch: keine Sperrung (zerreißt die Schrift), Systemschrift mit arabischen Zeichen */
+/* Latein bleibt in JetBrains Mono/Archivo, arabische Zeichen fallen auf eine Proportionalschrift zurück */
+html.lang-ar {
+  --mono: "JetBrains Mono", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif;
+  --grot: "Archivo", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+html.lang-ar .kick, html.lang-ar .eyebrow, html.lang-ar .section-head, html.lang-ar .bar, html.lang-ar .btn,
+html.lang-ar .hint, html.lang-ar .tip-n, html.lang-ar .q-count, html.lang-ar .swipe-hint, html.lang-ar .stat .k,
+html.lang-ar .tabbar a, html.lang-ar .howto, html.lang-ar .kann-legend, html.lang-ar .lead, html.lang-ar .tabs button { letter-spacing: 0; }
+html.lang-ar .topstrip .tag-box { letter-spacing: 0; }
+
 </style>
 </head>
 <body>
@@ -6299,6 +6319,196 @@ var qrcode = function() {
 </script>
   <script>
 /* ============================================================
+   LERNRAUM — Sprachen der Bedienoberfläche (Creative Director)
+   Deutsch ist die Ausgangssprache: Der deutsche Text ist der Schlüssel.
+   Übersetzt werden nur Knöpfe, Anleitungen und Rückmeldungen –
+   die Inhalte der Kurse bleiben deutsch (Prüfungssprache).
+   Platzhalter in {geschweiften Klammern} unverändert lassen.
+   Prüfen: node app/tools/check-i18n.js
+   ============================================================ */
+window.LERNRAUM_I18N = {
+
+  /* ─────────────────────────── English ─────────────────────────── */
+  en: {
+    "Start": "Home", "Karten": "Cards", "Hilfe": "Help", "Ich": "Me",
+    "Präsentation": "Slides", "Quiz": "Quiz", "Zuordnen": "Sort", "Lückentext": "Fill the gaps", "Rechnen": "Calculate",
+    "Lernkarten": "Flashcards", "Kann-Liste": "Checklist", "Material": "Material", "Antwortsatz": "Answer sentence", "Word üben": "Word practice",
+    "{n} Folien": "{n} slides", "{n} Frage": "{n} question", "{n} Fragen": "{n} questions", "{n} Karten": "{n} cards",
+    "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
+    "öffnet sich neu": "opens in a new tab",
+
+    "Neu hier?": "New here?",
+    "Lernen, wann es dir passt.": "Learn whenever it suits you.",
+    "Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.": "Slides, exercises and flashcards from your lessons. On your phone.",
+    "Wie heißt du?": "What’s your name?", "Vorname": "First name", "Los geht's": "Let’s go",
+    "Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.": "Your progress stays on this device. No account, no password.",
+    "Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "The exercises stay in German – just like in your exam.",
+
+    "Meine Fächer": "My subjects", "Meine Fächer.": "My subjects.", "Hallo {n}.": "Hi {n}.",
+    "Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.": "Which subjects do you have? Tap all that are yours. You will then only see your subjects – you can change this any time under “Me”.",
+    "Fächer auswählen": "Choose subjects", "Fertig · {n} Fach": "Done · {n} subject", "Fertig · {n} Fächer": "Done · {n} subjects",
+    "Alle Fächer anzeigen": "Show all subjects", "Du hast nichts gewählt – dann siehst du alle Fächer.": "Nothing selected – you will see all subjects.",
+    "{n} Kurs": "{n} course", "{n} Kurse": "{n} courses", "Materialien": "Materials", "Klasse": "Class",
+    "✓ mein Fach": "✓ my subject", "antippen": "tap", "Deine Fächer sind gespeichert": "Your subjects are saved", "Du siehst alle Fächer": "You see all subjects",
+
+    "Hallo {n}": "Hi {n}", "Starte mit:": "Start with:", "Weiter mit:": "Continue with:", "Schritt {a} von {b}": "Step {a} of {b}",
+    "Starten": "Start", "Weitermachen": "Continue", "Alles erledigt.": "All done.", "Wiederhole die Lernkarten vor der Klausur.": "Review the flashcards before your exam.",
+    "Wähle dein Fach.": "Choose your subject.",
+    "Deine Fächer, deine Kurse – gemacht fürs Handy.": "Your subjects, your courses – made for your phone.",
+    "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.": "Exercises and learning paths for your subjects – made for your phone.",
+    "Andere Fächer ({n}) · Fächer ändern": "Other subjects ({n}) · change subjects", "Meine Fächer auswählen": "Choose my subjects",
+    "Neu": "New", "{a}/{b} Themen": "{a}/{b} topics",
+
+    "∞ Aufgaben": "∞ tasks", "{a} gelöst · {b} perfekt · Serie {c}": "{a} solved · {b} perfect · streak {c}",
+    "Immer neue Aufgaben – üben, bis es sitzt.": "Always new tasks – practise until you’ve got it.",
+    "bald": "soon", "✓ erledigt": "✓ done", "ca. {m} min": "approx. {m} min", "{a}/{b} Schritte": "{a}/{b} steps", "{p} % richtig": "{p} % correct",
+    "{n} Schritte": "{n} steps", "Lernpfad": "Learning path", "Thema zurücksetzen": "Reset topic", "Nochmal durchgehen": "Go through again",
+    "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "Really delete everything in this topic? Tap again.", "Thema zurückgesetzt": "Topic reset",
+
+    "Schließen": "Close", "schließen": "close", "Aufgabe zurücksetzen": "Reset task", "Ich brauche Hilfe": "I need help",
+    "← zur Seite wischen →": "← swipe sideways →", "Folie": "Slide", "Weiter": "Next", "Weiter:": "Next:", "Nächste Folie": "Next slide",
+    "Frage {a} von {b}": "Question {a} of {b}", "Antwort speichern": "Save answer", "Prüfen": "Check", "Nächste Frage": "Next question",
+    "richtig.": "correct.", "richtig": "correct", "stimmt nicht.": "not quite.", "Richtig ist {x}.": "The answer is {x}.",
+    "Tippe auf eine Kategorie": "Tap a category", "Karte": "Card", "Auswertung": "Result", "{a} von {b} richtig zugeordnet.": "{a} of {b} sorted correctly.",
+    "Text": "Text", "Tippe eine Lücke an und dann das passende Wort.": "Tap a gap, then the matching word.", "Abgeben": "Hand in",
+    "alles richtig.": "all correct.", "{a} von {b} richtig.": "{a} of {b} correct.", "Die Lösungen stehen grün im Text.": "The answers are shown in green in the text.",
+    "Korrekturen stehen im Schema.": "Corrections are shown in the scheme.",
+    "tippen ↻": "tap ↻", "Tippen zum Umdrehen": "Tap to flip", "Nochmal": "Again", "Alle Karten sitzen.": "You know all the cards.", "Umdrehen": "Flip", "Kann ich": "I know it",
+    "Wie sicher fühlst du dich? Tippe, bis es stimmt.": "How sure do you feel? Tap until it fits.", "noch unsicher": "not sure yet", "geht so": "so-so", "sitzt": "got it", "Speichern": "Save",
+    "Aufgabe": "Task", "Baustein {n} wählen": "Choose block {n}", "Fertig? Tippe eine Lücke an, um sie zu ändern.": "Done? Tap a gap to change it.",
+    "Ein vollständiger Antwortsatz!": "A complete answer sentence!", "Die richtigen Bausteine stehen grün im Satz.": "The correct blocks are shown in green.",
+
+    "gelöst": "solved", "perfekt": "perfect", "beste Serie": "best streak", "Stufe wählen": "Choose a level", "Stufe": "Level", "zuletzt gewählt": "last chosen",
+    "Runde neu gestartet": "Round restarted", "Perfekt!": "Perfect!", "Geschafft.": "Done.", "Serie": "Streak", "Rekord": "Record",
+    "Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.": "Look at the green corrections again – or open the summary with the ? button.",
+    "Stufe {n} starten": "Start level {n}", "Gleiche Stufe weiter": "Stay on this level", "Neue Aufgabe": "New task",
+
+    "Tipps": "Tips", "Merkkasten": "Summary", "Begriffe": "Terms", "So geht's:": "How it works:", "Tipp": "Tip",
+    "Für diese Aufgabe gibt es keine extra Tipps. Schau in den Merkkasten oder in die Begriffe.": "There are no extra tips for this task. Look at the summary or the terms.",
+    "Lösungsweg zeigen": "Show the solution", "Letzten Tipp zeigen": "Show last tip", "Noch ein Tipp": "Another tip", "Ersten Tipp zeigen": "Show first tip",
+    "Das waren alle Tipps. Versuch es jetzt nochmal selbst!": "Those were all the tips. Now try again yourself!",
+    "Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.": "There is no summary for this topic yet. Go back to the slides.",
+    "Hilfe.": "Help.", "Merkkästen": "Summaries",
+    "Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.": "Summaries, key terms and how the app works. In every task you can also open help with the ? button at the top right.",
+    "So funktioniert die App": "How the app works", "Aufgabentypen": "Task types",
+
+    "Stark. Das sitzt.": "Great. You’ve got it.", "Richtig gut.": "Really good.", "Solide – schau dir die Fehler nochmal an.": "Solid – have another look at your mistakes.",
+    "Dranbleiben. Einmal wiederholen hilft.": "Keep going. One more round will help.",
+    "erledigt": "done", "{a} von {b} Punkten": "{a} of {b} points", "abgeschlossen": "completed", "Zur Übersicht": "Back to overview",
+
+    "Profil": "Profile", "Fortschritt": "Progress", "Themen fertig": "topics done", "Schritte": "steps", "Treffer": "correct",
+    "Sprache": "Language", "Einstellungen": "Settings", "Name ändern": "Change name", "alle": "all", "Fortschritt zurücksetzen": "Reset progress",
+    "Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "The language is used for buttons, instructions and feedback. The exercises stay in German – just like in your exam.",
+    "Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.": "Everything is saved on this device only. Your teacher cannot see your progress.",
+    "Name gespeichert": "Name saved", "Fortschritt gelöscht": "Progress deleted", "Nochmal tippen zum Löschen": "Tap again to delete",
+
+    howto: {
+      slides: "Swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
+      quiz: "Tap an answer, then “Check”. Exactly one answer is correct.",
+      sort: "Read the card and tap the category it belongs to.",
+      cloze: "First tap a gap, then the matching word below. Some words don’t fit anywhere.",
+      calc: "Tap a field and enter the number with the keypad. ± makes a number negative, ↓ jumps to the next field.",
+      cards: "Think of the answer, then tap to flip. Be honest: “Again” puts the card at the back.",
+      selfcheck: "Tap each statement until it fits you: empty = not sure yet, half = so-so, full = got it.",
+      link: "The material opens in a new tab. Come back afterwards and tap “Done”.",
+      sentence: "Tap a gap and choose the matching block below. Step by step you build a complete answer sentence.",
+      word: "Tap a line – drag the blue handles to extend the selection. Format with the toolbar, add empty lines with Enter (delete: ⌫), shortcuts: Ctrl+A/B/R. “Check” tests your task."
+    }
+  },
+
+  /* ─────────────────────────── العربية ───────────────────────────
+     Bitte von einer muttersprachlichen Person gegenlesen lassen. */
+  ar: {
+    "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
+    "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
+    "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word",
+    "{n} Folien": "{n} شرائح", "{n} Frage": "سؤال واحد", "{n} Fragen": "{n} أسئلة", "{n} Karten": "{n} بطاقات",
+    "{n} Lücken": "{n} فراغات", "{n} Felder": "{n} حقول", "{n} Aussagen": "{n} عبارات", "{n} Bausteine": "{n} أجزاء",
+    "öffnet sich neu": "يُفتح في نافذة جديدة",
+
+    "Neu hier?": "جديد هنا؟",
+    "Lernen, wann es dir passt.": "تعلّم في الوقت الذي يناسبك.",
+    "Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.": "عروض وتمارين وبطاقات تعليمية من الدروس. على هاتفك.",
+    "Wie heißt du?": "ما اسمك؟", "Vorname": "الاسم الأول", "Los geht's": "هيا نبدأ",
+    "Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.": "يبقى تقدّمك على هذا الجهاز. لا يوجد حساب ولا كلمة مرور.",
+    "Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "تبقى التمارين باللغة الألمانية – كما في امتحانك.",
+
+    "Meine Fächer": "موادي", "Meine Fächer.": "موادي.", "Hallo {n}.": "مرحبًا {n}.",
+    "Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.": "ما هي موادك؟ اضغط على كل المواد التي تخصّك. بعد ذلك سترى موادك فقط – ويمكنك تغيير ذلك في أي وقت من «أنا».",
+    "Fächer auswählen": "اختر المواد", "Fertig · {n} Fach": "تم · مادة واحدة", "Fertig · {n} Fächer": "تم · {n} مواد",
+    "Alle Fächer anzeigen": "عرض كل المواد", "Du hast nichts gewählt – dann siehst du alle Fächer.": "لم تختر شيئًا – سترى كل المواد.",
+    "{n} Kurs": "دورة واحدة", "{n} Kurse": "{n} دورات", "Materialien": "مواد", "Klasse": "الصف",
+    "✓ mein Fach": "✓ مادتي", "antippen": "اضغط", "Deine Fächer sind gespeichert": "تم حفظ موادك", "Du siehst alle Fächer": "ترى كل المواد",
+
+    "Hallo {n}": "مرحبًا {n}", "Starte mit:": "ابدأ بـ:", "Weiter mit:": "تابع:", "Schritt {a} von {b}": "الخطوة {a} من {b}",
+    "Starten": "ابدأ", "Weitermachen": "تابع", "Alles erledigt.": "أنجزت كل شيء.", "Wiederhole die Lernkarten vor der Klausur.": "راجع البطاقات التعليمية قبل الامتحان.",
+    "Wähle dein Fach.": "اختر مادتك.",
+    "Deine Fächer, deine Kurse – gemacht fürs Handy.": "موادك ودوراتك – مصمّمة للهاتف.",
+    "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.": "تمارين ومسارات تعلّم لموادك – مصمّمة للهاتف.",
+    "Andere Fächer ({n}) · Fächer ändern": "مواد أخرى ({n}) · تغيير المواد", "Meine Fächer auswählen": "اختر موادي",
+    "Neu": "جديد", "{a}/{b} Themen": "{a}/{b} مواضيع",
+
+    "∞ Aufgaben": "∞ مهام", "{a} gelöst · {b} perfekt · Serie {c}": "{a} محلولة · {b} ممتازة · سلسلة {c}",
+    "Immer neue Aufgaben – üben, bis es sitzt.": "مهام جديدة دائمًا – تدرّب حتى تتقن.",
+    "bald": "قريبًا", "✓ erledigt": "✓ تم", "ca. {m} min": "حوالي {m} دقيقة", "{a}/{b} Schritte": "{a}/{b} خطوات", "{p} % richtig": "{p}٪ صحيح",
+    "{n} Schritte": "{n} خطوات", "Lernpfad": "مسار التعلّم", "Thema zurücksetzen": "إعادة تعيين الموضوع", "Nochmal durchgehen": "راجع من جديد",
+    "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "هل تريد حقًا حذف كل شيء في هذا الموضوع؟ اضغط مرة أخرى.", "Thema zurückgesetzt": "تمت إعادة تعيين الموضوع",
+
+    "Schließen": "إغلاق", "schließen": "إغلاق", "Aufgabe zurücksetzen": "إعادة المهمة", "Ich brauche Hilfe": "أحتاج مساعدة",
+    "← zur Seite wischen →": "← اسحب إلى الجانب →", "Folie": "شريحة", "Weiter": "التالي", "Weiter:": "التالي:", "Nächste Folie": "الشريحة التالية",
+    "Frage {a} von {b}": "السؤال {a} من {b}", "Antwort speichern": "احفظ الإجابة", "Prüfen": "تحقّق", "Nächste Frage": "السؤال التالي",
+    "richtig.": "صحيح.", "richtig": "صحيح", "stimmt nicht.": "غير صحيح.", "Richtig ist {x}.": "الإجابة الصحيحة: {x}.",
+    "Tippe auf eine Kategorie": "اضغط على فئة", "Karte": "بطاقة", "Auswertung": "النتيجة", "{a} von {b} richtig zugeordnet.": "صنّفت {a} من {b} بشكل صحيح.",
+    "Text": "النص", "Tippe eine Lücke an und dann das passende Wort.": "اضغط على فراغ ثم على الكلمة المناسبة.", "Abgeben": "تسليم",
+    "alles richtig.": "كل شيء صحيح.", "{a} von {b} richtig.": "{a} من {b} صحيحة.", "Die Lösungen stehen grün im Text.": "الحلول مكتوبة باللون الأخضر في النص.",
+    "Korrekturen stehen im Schema.": "التصحيحات موجودة في المخطط.",
+    "tippen ↻": "اضغط ↻", "Tippen zum Umdrehen": "اضغط لقلب البطاقة", "Nochmal": "مرة أخرى", "Alle Karten sitzen.": "أتقنت كل البطاقات.", "Umdrehen": "اقلب", "Kann ich": "أعرفها",
+    "Wie sicher fühlst du dich? Tippe, bis es stimmt.": "ما مدى ثقتك؟ اضغط حتى يناسبك.", "noch unsicher": "لست متأكدًا بعد", "geht so": "إلى حدٍّ ما", "sitzt": "أتقنتها", "Speichern": "حفظ",
+    "Aufgabe": "المهمة", "Baustein {n} wählen": "اختر الجزء {n}", "Fertig? Tippe eine Lücke an, um sie zu ändern.": "انتهيت؟ اضغط على فراغ لتغييره.",
+    "Ein vollständiger Antwortsatz!": "جملة إجابة كاملة!", "Die richtigen Bausteine stehen grün im Satz.": "الأجزاء الصحيحة مكتوبة باللون الأخضر.",
+
+    "gelöst": "محلولة", "perfekt": "ممتازة", "beste Serie": "أفضل سلسلة", "Stufe wählen": "اختر المستوى", "Stufe": "المستوى", "zuletzt gewählt": "آخر اختيار",
+    "Runde neu gestartet": "بدأت الجولة من جديد", "Perfekt!": "ممتاز!", "Geschafft.": "أحسنت.", "Serie": "سلسلة", "Rekord": "رقم قياسي",
+    "Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.": "انظر إلى التصحيحات الخضراء مرة أخرى – أو افتح الملخّص عبر زر ؟.",
+    "Stufe {n} starten": "ابدأ المستوى {n}", "Gleiche Stufe weiter": "تابع في نفس المستوى", "Neue Aufgabe": "مهمة جديدة",
+
+    "Tipps": "نصائح", "Merkkasten": "ملخّص", "Begriffe": "مصطلحات", "So geht's:": "طريقة العمل:", "Tipp": "نصيحة",
+    "Für diese Aufgabe gibt es keine extra Tipps. Schau in den Merkkasten oder in die Begriffe.": "لا توجد نصائح إضافية لهذه المهمة. انظر في الملخّص أو في المصطلحات.",
+    "Lösungsweg zeigen": "أظهر طريقة الحل", "Letzten Tipp zeigen": "أظهر آخر نصيحة", "Noch ein Tipp": "نصيحة أخرى", "Ersten Tipp zeigen": "أظهر النصيحة الأولى",
+    "Das waren alle Tipps. Versuch es jetzt nochmal selbst!": "هذه كانت كل النصائح. حاول الآن بنفسك مرة أخرى!",
+    "Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.": "لا يوجد ملخّص لهذا الموضوع بعد. ارجع إلى العرض.",
+    "Hilfe.": "مساعدة.", "Merkkästen": "الملخّصات",
+    "Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.": "ملخّصات ومصطلحات وطريقة عمل التطبيق. في كل مهمة تجد المساعدة أيضًا عبر زر ؟ في الأعلى.",
+    "So funktioniert die App": "كيف يعمل التطبيق", "Aufgabentypen": "أنواع المهام",
+
+    "Stark. Das sitzt.": "رائع. لقد أتقنتها.", "Richtig gut.": "جيد جدًا.", "Solide – schau dir die Fehler nochmal an.": "جيد – انظر إلى أخطائك مرة أخرى.",
+    "Dranbleiben. Einmal wiederholen hilft.": "استمر. التكرار مرة واحدة يساعد.",
+    "erledigt": "تم", "{a} von {b} Punkten": "{a} من {b} نقاط", "abgeschlossen": "مكتمل", "Zur Übersicht": "العودة إلى النظرة العامة",
+
+    "Profil": "الملف الشخصي", "Fortschritt": "التقدّم", "Themen fertig": "مواضيع منجزة", "Schritte": "خطوات", "Treffer": "صحيح",
+    "Sprache": "اللغة", "Einstellungen": "الإعدادات", "Name ändern": "تغيير الاسم", "alle": "الكل", "Fortschritt zurücksetzen": "حذف التقدّم",
+    "Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "اللغة تُستخدم للأزرار والتعليمات والملاحظات. تبقى التمارين باللغة الألمانية – كما في امتحانك.",
+    "Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.": "كل شيء محفوظ على هذا الجهاز فقط. المعلّم لا يرى تقدّمك.",
+    "Name gespeichert": "تم حفظ الاسم", "Fortschritt gelöscht": "تم حذف التقدّم", "Nochmal tippen zum Löschen": "اضغط مرة أخرى للحذف",
+
+    howto: {
+      slides: "اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",
+      quiz: "اضغط على إجابة ثم على «تحقّق». إجابة واحدة فقط صحيحة.",
+      sort: "اقرأ البطاقة واضغط على الفئة التي تنتمي إليها.",
+      cloze: "اضغط أولًا على فراغ ثم على الكلمة المناسبة في الأسفل. بعض الكلمات لا تناسب أي فراغ.",
+      calc: "اضغط على حقل وأدخل الرقم بلوحة الأرقام. زر ± يجعل الرقم سالبًا، وزر ↓ ينقلك إلى الحقل التالي.",
+      cards: "فكّر في الإجابة ثم اضغط لقلب البطاقة. كن صادقًا: «مرة أخرى» تضع البطاقة في الخلف.",
+      selfcheck: "اضغط على كل عبارة حتى تناسبك: فارغ = لست متأكدًا بعد، نصف = إلى حدٍّ ما، ممتلئ = أتقنتها.",
+      link: "تُفتح المادة في نافذة جديدة. ارجع بعد ذلك واضغط على «تم».",
+      sentence: "اضغط على فراغ واختر الجزء المناسب في الأسفل. هكذا تبني خطوة بخطوة جملة إجابة كاملة.",
+      word: "اضغط على سطر – اسحب المقابض الزرقاء لتوسيع التحديد. نسّق باستخدام الشريط، وأضف أسطرًا فارغة بـ Enter (الحذف: ⌫)، والاختصارات: Ctrl+A/B/R. زر «تحقّق» يفحص مهمتك."
+    }
+  }
+};
+
+</script>
+  <script>
+/* ============================================================
    LERNRAUM — App
    Hash-Router, Fortschritt im localStorage, Aufgaben-Player.
    ============================================================ */
@@ -6339,6 +6549,18 @@ var qrcode = function() {
     resetTopic(s, t) { const all = this.all(); delete all[s.id + "/" + t.id]; store.set("progress", all); },
     reset() { store.set("progress", {}); store.set("self", {}); }
   };
+
+  /* ── Sprache (nur Bedienoberfläche – Inhalte bleiben deutsch) ── */
+  const LANGS = { de: "Deutsch", en: "English", ar: "العربية" };
+  const LANG = LANGS[store.get("lang", "de")] ? store.get("lang", "de") : "de";
+  const I18N = ((window.LERNRAUM_I18N || {})[LANG]) || {};
+  const tr = (de, v) => { let x = I18N[de] ?? de; if (v) x = x.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? ""); return x; };
+  document.documentElement.lang = LANG;
+  document.documentElement.classList.toggle("lang-ar", LANG === "ar");
+  function setLang(l) { store.set("lang", l); location.reload(); }
+  const langSwitch = () => `<div class="lang-sw" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
+    .map(([k, lbl]) => `<button type="button" data-lang="${k}" aria-pressed="${k === LANG}" lang="${k}">${lbl}</button>`).join("")}</div>`;
+  const bindLang = (v) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => { if (b.dataset.lang !== LANG) setLang(b.dataset.lang); }; });
 
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -6382,20 +6604,21 @@ var qrcode = function() {
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
-  const STEP_LABEL = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
+  Object.assign(HOWTO, I18N.howto || {});
+  const STEP_LABEL = Object.fromEntries(Object.entries({ slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" }).map(([k, x]) => [k, tr(x)]));
 
   function stepMeta(st) {
     switch (st.type) {
-      case "slides": return st.slides.length + " Folien";
-      case "quiz": return st.questions.length + (st.questions.length === 1 ? " Frage" : " Fragen");
-      case "sort": return st.items.length + " Karten";
-      case "cloze": return (st.text.match(/\{/g) || []).length + " Lücken";
-      case "calc": return st.rows.length + " Felder";
-      case "cards": return st.cards.length + " Karten";
-      case "selfcheck": return st.items.length + " Aussagen";
-      case "sentence": return (st.text.match(/\{/g) || []).length + " Bausteine";
+      case "slides": return tr("{n} Folien", { n: st.slides.length });
+      case "quiz": return tr(st.questions.length === 1 ? "{n} Frage" : "{n} Fragen", { n: st.questions.length });
+      case "sort": return tr("{n} Karten", { n: st.items.length });
+      case "cloze": return tr("{n} Lücken", { n: (st.text.match(/\{/g) || []).length });
+      case "calc": return tr("{n} Felder", { n: st.rows.length });
+      case "cards": return tr("{n} Karten", { n: st.cards.length });
+      case "selfcheck": return tr("{n} Aussagen", { n: st.items.length });
+      case "sentence": return tr("{n} Bausteine", { n: (st.text.match(/\{/g) || []).length });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
-      default: return "öffnet sich neu";
+      default: return tr("öffnet sich neu");
     }
   }
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
@@ -6539,25 +6762,26 @@ var qrcode = function() {
     const v = h(`<main class="view no-tabbar">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
-        <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span></div>
+        <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>${langSwitch()}</div>
         <div class="win">
           <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
           <div class="body">
-            <p class="kick">Neu hier?</p>
-            <p class="say">Lernen, wann es dir passt.</p>
-            <p class="sub">Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.</p>
+            <p class="kick">${tr("Neu hier?")}</p>
+            <p class="say">${tr("Lernen, wann es dir passt.")}</p>
+            <p class="sub">${tr("Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.")}</p>
           </div>
         </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
       <form style="margin-top:32px">
-        <label class="field" for="n"><span>Wie heißt du?</span>
-          <input class="input" id="n" name="n" autocomplete="given-name" placeholder="Vorname" maxlength="24" required></label>
-        <button class="btn block" style="margin-top:14px" type="submit">Los geht's ${ICON.arrow}</button>
-        <p class="hint">Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.</p>
+        <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
+          <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>
+        <button class="btn block" style="margin-top:14px" type="submit">${tr("Los geht's")} ${ICON.arrow}</button>
+        <p class="hint">${tr("Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.")}${LANG !== "de" ? " " + tr("Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.") : ""}</p>
       </form>
     </main>`);
     dither(v.querySelector("canvas"));
+    bindLang(v);
     v.querySelector("form").addEventListener("submit", (e) => {
       e.preventDefault();
       const n = e.target.n.value.trim();
@@ -6590,15 +6814,15 @@ var qrcode = function() {
     if (t.drill) {
       const ds = drillStats(t);
       return h(`<a class="win topic-win drill-win" href="#/f/${s.id}/${t.id}">
-        <div class="bar"><span class="d"></span>${esc(t.kicker || "Training")}<span class="r">∞ Aufgaben</span></div>
+        <div class="bar"><span class="d"></span>${esc(t.kicker || "Training")}<span class="r">${tr("∞ Aufgaben")}</span></div>
         <div class="body">
           <span class="title">${esc(t.title)}</span>
-          <span class="meta">${ds.rounds ? `${ds.rounds} gelöst · ${ds.perfect} perfekt · Serie ${ds.streak}` : esc(t.description || "Immer neue Aufgaben – üben, bis es sitzt.")}</span>
+          <span class="meta">${ds.rounds ? tr("{a} gelöst · {b} perfekt · Serie {c}", { a: ds.rounds, b: ds.perfect, c: ds.streak }) : esc(t.description || tr("Immer neue Aufgaben – üben, bis es sitzt."))}</span>
         </div>
       </a>`);
     }
     if (t.soon || !t.steps.length) {
-      return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">bald</span></div>
+      return h(`<div class="win topic-win locked"><div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${tr("bald")}</span></div>
         <div class="body"><span class="title">${esc(t.title)}</span></div></div>`);
     }
     const n = progress.count(s, t), total = t.steps.length, sc = progress.score(s, t);
@@ -6615,11 +6839,11 @@ var qrcode = function() {
       </a>`);
     }
     return h(`<a class="win topic-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
-      <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? "✓ erledigt" : `ca. ${t.minutes || 10} min`}</span></div>
+      <div class="bar"><span class="d"></span>${esc(t.kicker || "")}<span class="r">${done ? tr("✓ erledigt") : tr("ca. {m} min", { m: t.minutes || 10 })}</span></div>
       <div class="body">
         <span class="title">${esc(t.title)}</span>
         ${blocks(s, t)}
-        <span class="meta">${n}/${total} Schritte${sc.n ? ` · ${Math.round((sc.c / sc.n) * 100)} % richtig` : ""}</span>
+        <span class="meta">${tr("{a}/{b} Schritte", { a: n, b: total })}${sc.n ? " · " + tr("{p} % richtig", { p: Math.round((sc.c / sc.n) * 100) }) : ""}</span>
       </div>
     </a>`);
   }
@@ -6656,16 +6880,16 @@ var qrcode = function() {
     const all = allFachs();
     const sel = new Set(myFaecher() || []);
     const v = h(`<main class="view ${first ? "no-tabbar" : ""}">
-      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>Meine Fächer</span>`}</div>
-      <h1 class="display" style="margin-top:24px">${first ? `Hallo ${esc(firstName())}.` : "Meine Fächer."}<small>Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.</small></h1>
-      <div class="topics fach-pick" role="group" aria-label="Fächer auswählen"></div>
+      <div class="topstrip">${first ? `<span class="tag-box"><span class="sq"></span>Lernraum</span>` : `<a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${tr("Meine Fächer")}</span>`}${langSwitch()}</div>
+      <h1 class="display" style="margin-top:24px">${first ? tr("Hallo {n}.", { n: esc(firstName()) }) : tr("Meine Fächer.")}<small>${tr("Welche Fächer hast du? Tippe alle an, die zu dir gehören. Du siehst dann nur noch deine Fächer – ändern kannst du das jederzeit unter „Ich“.")}</small></h1>
+      <div class="topics fach-pick" role="group" aria-label="${tr("Fächer auswählen")}"></div>
       <button class="btn block" id="save" style="margin-top:22px"></button>
       <p class="hint" id="pickHint"></p>
     </main>`);
     const box = v.querySelector(".fach-pick"), save = v.querySelector("#save"), hint = v.querySelector("#pickHint");
     const update = () => {
-      save.innerHTML = sel.size ? `Fertig · ${sel.size} ${sel.size === 1 ? "Fach" : "Fächer"} ${ICON.arrow}` : `Alle Fächer anzeigen ${ICON.arrow}`;
-      hint.textContent = sel.size ? "" : "Du hast nichts gewählt – dann siehst du alle Fächer.";
+      save.innerHTML = sel.size ? `${tr(sel.size === 1 ? "Fertig · {n} Fach" : "Fertig · {n} Fächer", { n: sel.size })} ${ICON.arrow}` : `${tr("Alle Fächer anzeigen")} ${ICON.arrow}`;
+      hint.textContent = sel.size ? "" : tr("Du hast nichts gewählt – dann siehst du alle Fächer.");
     };
     all.forEach((f) => {
       const subs = DATA.subjects.filter((x) => (x.fach || x.name) === f);
@@ -6673,17 +6897,18 @@ var qrcode = function() {
       const b = h(`<button class="win topic-win pick-win" aria-pressed="${sel.has(f)}">
         <div class="bar"><span class="d"></span>${esc(f)}<span class="r"></span></div>
         <div class="body"><span class="title">${esc(fachName(f))}</span>
-          <span class="meta">${nCourses ? `${nCourses} ${nCourses === 1 ? "Kurs" : "Kurse"}` : "Materialien"}${cls.length ? " · Klasse " + esc(cls.join(", ")) : ""}</span></div>
+          <span class="meta">${nCourses ? tr(nCourses === 1 ? "{n} Kurs" : "{n} Kurse", { n: nCourses }) : tr("Materialien")}${cls.length ? " · " + tr("Klasse") + " " + esc(cls.join(", ")) : ""}</span></div>
       </button>`);
-      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? "✓ mein Fach" : "antippen"; };
+      const paint = () => { const on = sel.has(f); b.setAttribute("aria-pressed", on); b.classList.toggle("done", on); b.querySelector(".r").textContent = on ? tr("✓ mein Fach") : tr("antippen"); };
       b.onclick = () => { sel.has(f) ? sel.delete(f) : sel.add(f); buzz(8); paint(); update(); };
       paint();
       box.append(b);
     });
     update();
+    bindLang(v);
     save.onclick = () => {
       store.set("faecher", all.filter((f) => sel.has(f)));
-      toast(sel.size ? "› Deine Fächer sind gespeichert" : "› Du siehst alle Fächer");
+      toast("› " + tr(sel.size ? "Deine Fächer sind gespeichert" : "Du siehst alle Fächer"));
       if (location.hash === "#/" || !location.hash) render(); else location.hash = "#/";
     };
     return v;
@@ -6721,12 +6946,12 @@ var qrcode = function() {
     if (target) {
       const i = nextStepIndex(target.s, target.t);
       const st = target.t.steps[i];
-      return `<p class="kick">Hallo ${esc(name)}${count ? " · " + count : ""}</p>
-        <p class="say">${target.fresh ? "Starte mit:" : "Weiter mit:"} ${esc(target.t.title)}</p>
-        <p class="sub">${esc(target.s.course || target.s.name)}${st ? ` · Schritt ${i + 1} von ${target.t.steps.length}` : ""}</p>
-        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${target.fresh ? "Starten" : "Weitermachen"} ${ICON.arrow}</a></div>`;
+      return `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}${count ? " · " + count : ""}</p>
+        <p class="say">${tr(target.fresh ? "Starte mit:" : "Weiter mit:")} ${esc(target.t.title)}</p>
+        <p class="sub">${esc(target.s.course || target.s.name)}${st ? " · " + tr("Schritt {a} von {b}", { a: i + 1, b: target.t.steps.length }) : ""}</p>
+        <div class="actions"><a class="btn" href="#/f/${target.s.id}/${target.t.id}/${i}">${tr(target.fresh ? "Starten" : "Weitermachen")} ${ICON.arrow}</a></div>`;
     }
-    return `<p class="kick">Hallo ${esc(name)}</p><p class="say">Alles erledigt.</p><p class="sub">Wiederhole die Lernkarten vor der Klausur.</p>`;
+    return `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Alles erledigt.")}</p><p class="sub">${tr("Wiederhole die Lernkarten vor der Klausur.")}</p>`;
   }
 
   /* Startseite bei mehreren Fächern: Fach → Kurse & Materialsammlungen */
@@ -6745,13 +6970,13 @@ var qrcode = function() {
         </div>
         <div class="win">
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
-          <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">Hallo ${esc(name)}</p><p class="say">Wähle dein Fach.</p>`}</div>
+          <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Wähle dein Fach.")}</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>${filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy."}</small></h1>
+        <h1 class="display">Lernraum.<small>${tr(filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.")}</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       <div id="list"></div>
-      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? `Andere Fächer (${allFachs().length - fachs.length}) · Fächer ändern` : "Meine Fächer auswählen"}</span><span class="v">→</span></a>
+      <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
     </main>`);
     dither(v.querySelector("canvas"));
@@ -6783,7 +7008,7 @@ var qrcode = function() {
     const tops = courseTopics(x).filter((t) => t.steps.length);
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
     return h(`<a class="win topic-win" href="#/f/${x.id}">
-      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ' <span class="badge-new">Neu</span>' : ""}<span class="r">${done}/${tops.length} Themen</span></div>
+      <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ` <span class="badge-new">${tr("Neu")}</span>` : ""}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
       <div class="body"><span class="title">${esc(x.name)}</span>
         <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);
@@ -6855,23 +7080,23 @@ var qrcode = function() {
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
-      <p class="eyebrow" style="margin-top:14px">${t.steps.length} Schritte · ca. ${t.minutes || 10} min${t.group ? " · " + esc(t.group) : ""}</p>
+      <p class="eyebrow" style="margin-top:14px">${tr("{n} Schritte", { n: t.steps.length })} · ${tr("ca. {m} min", { m: t.minutes || 10 })}${t.group ? " · " + esc(t.group) : ""}</p>
       <div class="win" style="margin-top:24px">
-        <div class="bar"><span class="d"></span>Lernpfad<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
+        <div class="bar"><span class="d"></span>${tr("Lernpfad")}<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
         <ol class="list" id="path" style="border:0;list-style:none"></ol>
       </div>
-      ${started ? `<button class="u-link reset-topic" type="button">↺ Thema zurücksetzen</button>` : ""}
+      ${started ? `<button class="u-link reset-topic" type="button">↺ ${tr("Thema zurücksetzen")}</button>` : ""}
       <div class="dock"><div class="dock-inner">
-        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten"} ${ICON.arrow}</a>
+        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${tr(allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten")} ${ICON.arrow}</a>
       </div></div>
     </main>`);
     const rt = v.querySelector(".reset-topic");
     if (rt) rt.onclick = () => {
-      if (!rt.dataset.armed) { rt.dataset.armed = "1"; rt.textContent = "Wirklich alles in diesem Thema löschen? Nochmal tippen."; return; }
+      if (!rt.dataset.armed) { rt.dataset.armed = "1"; rt.textContent = tr("Wirklich alles in diesem Thema löschen? Nochmal tippen."); return; }
       progress.resetTopic(s, t);
       const a = store.get("self", {}); Object.keys(a).filter((k) => k.startsWith(`${s.id}/${t.id}/`)).forEach((k) => delete a[k]); store.set("self", a);
       render();
-      toast("› Thema zurückgesetzt");
+      toast("› " + tr("Thema zurückgesetzt"));
     };
     const path = v.querySelector("#path");
     t.steps.forEach((st, i) => {
@@ -6949,9 +7174,9 @@ var qrcode = function() {
 
     const v = h(`<main class="player">
       <div class="player-top">
-        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="Schließen">${ICON.close}</a>
+        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
-        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="Aufgabe zurücksetzen" title="Aufgabe zurücksetzen">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="Ich brauche Hilfe">${ICON.help}</button>`}
+        ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="${tr("Aufgabe zurücksetzen")}" title="${tr("Aufgabe zurücksetzen")}">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="${tr("Ich brauche Hilfe")}">${ICON.help}</button>`}
       </div>
       <header class="player-head">
         <p class="eyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
@@ -7023,12 +7248,12 @@ var qrcode = function() {
     slides(step, ctx) {
       const n = step.slides.length;
       const wrap = h(`<div class="slides"><div class="slide-track"></div><div class="dots"></div>
-        <p class="swipe-hint">← zur Seite wischen →</p></div>`);
+        <p class="swipe-hint">${tr("← zur Seite wischen →")}</p></div>`);
       const track = wrap.querySelector(".slide-track");
       const dots = wrap.querySelector(".dots");
       step.slides.forEach((sl, k) => {
         track.append(h(`<article class="slide ${sl.style || ""}" aria-label="Folie ${k + 1} von ${n}">
-          <div class="bar"><span class="d"></span>Folie ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
+          <div class="bar"><span class="d"></span>${tr("Folie")} ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
           <div class="slide-in">
             <p class="s-kicker">${sl.kicker || ""}</p>
             ${sl.big ? `<p class="s-big">${sl.big}</p>` : ""}
@@ -7051,8 +7276,8 @@ var qrcode = function() {
         [...dots.children].forEach((d, j) => d.classList.toggle("on", j === k));
         ctx.setProgress((k + 1) / n);
         if (k > 0) wrap.querySelector(".swipe-hint").style.visibility = "hidden";
-        if (k >= n - 1) ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish(true));
-        else ctx.action(`Nächste Folie ${ICON.arrow}`, () => {
+        if (k >= n - 1) ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
+        else ctx.action(`${tr("Nächste Folie")} ${ICON.arrow}`, () => {
           goal = Math.min(n - 1, (goal >= 0 ? goal : cur) + 1);
           track.scrollTo({ left: goal * stepW(), behavior: "smooth" });
         }, { variant: "ghost" });
@@ -7073,7 +7298,7 @@ var qrcode = function() {
         ctx.hintKey = () => String(k);
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
-          <p class="q-count">Frage ${k + 1} von ${qs.length}</p>
+          <p class="q-count">${tr("Frage {a} von {b}", { a: k + 1, b: qs.length })}</p>
           <p class="q-text">${esc(q.q)}</p>
           <div class="options"></div>
         </div>`);
@@ -7084,12 +7309,12 @@ var qrcode = function() {
             sel = j;
             opts.querySelectorAll(".option").forEach((x, m) => x.classList.toggle("sel", m === j));
             buzz(8);
-            ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check);
+            ctx.action(tr(ctx.exam ? "Antwort speichern" : "Prüfen"), check);
           };
           opts.append(b);
         });
         ctx.body.replaceChildren(node);
-        ctx.action(ctx.exam ? "Antwort speichern" : "Prüfen", check, { enabled: false });
+        ctx.action(tr(ctx.exam ? "Antwort speichern" : "Prüfen"), check, { enabled: false });
 
         function check() {
           const ok = sel === q.answer;
@@ -7107,12 +7332,12 @@ var qrcode = function() {
           if (!ok) buttons[sel].classList.add("wrong");
           node.append(term([
             ["p", "$ prüfe …"],
-            ["", ok ? `› <span class="ok">richtig.</span> ${esc(q.explain || "")}` : `› <span class="no">stimmt nicht.</span> Richtig ist ${"ABCDEF"[q.answer]}. ${esc(q.explain || "")}`]
+            ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(q.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> ${tr("Richtig ist {x}.", { x: "ABCDEF"[q.answer] })} ${esc(q.explain || "")}`]
           ]));
           buzz(ok ? 20 : [30, 40, 30]);
           ctx.setProgress((k + 1) / qs.length);
           const last = k === qs.length - 1;
-          ctx.action(last ? `Weiter ${ICON.arrow}` : `Nächste Frage ${ICON.arrow}`, () => {
+          ctx.action(`${tr(last ? "Weiter" : "Nächste Frage")} ${ICON.arrow}`, () => {
             if (last) ctx.finish({ c: correct, t: qs.length, wrong });
             else { k++; show(); }
           });
@@ -7141,10 +7366,10 @@ var qrcode = function() {
         bins.append(b);
       });
       ctx.body.append(node);
-      ctx.action("Tippe auf eine Kategorie", null, { enabled: false, variant: "ghost" });
+      ctx.action(tr("Tippe auf eine Kategorie"), null, { enabled: false, variant: "ghost" });
 
       const card = () => {
-        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Karte ${k + 1} / ${items.length}<span class="r">?</span></div>
+        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Karte")} ${k + 1} / ${items.length}<span class="r">?</span></div>
           <div class="body"><span class="txt">${esc(items[k].text)}</span></div></div>`));
         bins.classList.remove("locked");
       };
@@ -7161,7 +7386,7 @@ var qrcode = function() {
         if (ctx.exam) c.querySelector(".bar .r").textContent = "→ " + cats[j];
         else {
           c.classList.add(ok ? "right" : "wrong");
-          c.querySelector(".bar .r").textContent = ok ? "✓ richtig" : "✗ " + cats[it.cat];
+          c.querySelector(".bar .r").textContent = ok ? "✓ " + tr("richtig") : "✗ " + cats[it.cat];
         }
         buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
         k++;
@@ -7169,9 +7394,9 @@ var qrcode = function() {
         setTimeout(() => {
           if (k < items.length) return card();
           if (ctx.exam) return ctx.finish({ c: correct, t: items.length, wrong });
-          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>Auswertung<span class="r">${correct}/${items.length}</span></div>
-            <div class="body"><span class="txt">${correct} von ${items.length} richtig zugeordnet.</span></div></div>`));
-          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
+          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Auswertung")}<span class="r">${correct}/${items.length}</span></div>
+            <div class="body"><span class="txt">${tr("{a} von {b} richtig zugeordnet.", { a: correct, b: items.length })}</span></div></div>`));
+          ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
         }, ctx.exam ? 350 : ok ? 650 : 1500);
       };
       card();
@@ -7189,10 +7414,10 @@ var qrcode = function() {
       let active = 0;
 
       const node = h(`<div>
-        <div class="win"><div class="bar"><span class="d"></span>Text<span class="r">${answers.length} Lücken</span></div>
+        <div class="win"><div class="bar"><span class="d"></span>${tr("Text")}<span class="r">${tr("{n} Lücken", { n: answers.length })}</span></div>
           <div class="cloze">${html}</div></div>
         <div class="bank"></div>
-        <p class="hint">${esc(step.prompt || "Tippe eine Lücke an und dann das passende Wort.")}</p>
+        <p class="hint">${esc(step.prompt || tr("Tippe eine Lücke an und dann das passende Wort."))}</p>
       </div>`);
       const gaps = [...node.querySelectorAll(".gap")];
       const bank = node.querySelector(".bank");
@@ -7211,7 +7436,7 @@ var qrcode = function() {
         bank.querySelectorAll(".word").forEach((b) => b.classList.toggle("used", filled.includes(+b.dataset.j)));
         const n = filled.filter((x) => x !== null).length;
         ctx.setProgress(n / answers.length);
-        ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === answers.length });
+        ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === answers.length });
       };
       const place = (j) => {
         if (active < 0) return;
@@ -7243,9 +7468,9 @@ var qrcode = function() {
         });
         bank.classList.add("locked");
         node.querySelector(".hint").remove();
-        node.append(term([["p", "$ prüfe …"], ["", `› ${correct === answers.length ? '<span class="ok">alles richtig.</span>' : `<span class="no">${correct} von ${answers.length} richtig.</span> Die Lösungen stehen grün im Text.`}`]]));
+        node.append(term([["p", "$ prüfe …"], ["", `› ${correct === answers.length ? `<span class="ok">${tr("alles richtig.")}</span>` : `<span class="no">${tr("{a} von {b} richtig.", { a: correct, b: answers.length })}</span> ${tr("Die Lösungen stehen grün im Text.")}`}`]]));
         buzz(correct === answers.length ? 20 : [30, 40, 30]);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: answers.length }));
       }
 
       ctx.body.append(node);
@@ -7320,7 +7545,7 @@ var qrcode = function() {
         });
         const n = vals.filter((x) => x !== "" && x !== "-").length;
         ctx.setProgress(n / rows.length);
-        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === rows.length });
+        if (!locked) ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === rows.length });
       }
       function check() {
         if (ctx.exam) {
@@ -7348,12 +7573,12 @@ var qrcode = function() {
         const all = correct === rows.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe rechenschema …"],
-          ["", all ? `› <span class="ok">${correct}/${rows.length} richtig.</span>` : `› <span class="no">${correct}/${rows.length} richtig.</span> Korrekturen stehen im Schema.`],
+          ["", all ? `› <span class="ok">${correct}/${rows.length} ${tr("richtig.")}</span>` : `› <span class="no">${correct}/${rows.length} ${tr("richtig.")}</span> ${tr("Korrekturen stehen im Schema.")}`],
           ...(step.result ? [["", `› <span class="p">${esc(step.result)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
         ctx.setProgress(1);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: rows.length }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: rows.length }));
         requestAnimationFrame(() => node.querySelector("#out").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "nearest" }));
       }
 
@@ -7369,7 +7594,7 @@ var qrcode = function() {
       const node = h(`<div>
         <div class="flash-meta"><span id="left"></span><span id="known"></span></div>
         <div class="flash-wrap"><div class="flash" role="button" tabindex="0" aria-label="Karte umdrehen">
-          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">tippen ↻</span></div><div class="in"><span class="txt"></span><span class="tap">Tippen zum Umdrehen</span></div></div>
+          <div class="face front"><div class="bar"><span class="d"></span>Begriff<span class="r">${tr("tippen ↻")}</span></div><div class="in"><span class="txt"></span><span class="tap">${tr("Tippen zum Umdrehen")}</span></div></div>
           <div class="face back"><div class="bar"><span class="d"></span>Erklärung<span class="r">↻</span></div><div class="in"><span class="txt"></span></div></div>
         </div></div>
       </div>`);
@@ -7384,18 +7609,18 @@ var qrcode = function() {
       flash.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } };
       ctx.body.append(node);
 
-      const again = h(`<button class="btn ghost">Nochmal</button>`);
+      const again = h(`<button class="btn ghost">${tr("Nochmal")}</button>`);
       const show = () => {
         again.remove();
         if (!queue.length) {
           flash.classList.remove("flipped");
-          flash.querySelector(".front .txt").textContent = "Alle Karten sitzen.";
+          flash.querySelector(".front .txt").textContent = tr("Alle Karten sitzen.");
           flash.querySelector(".front .bar").firstChild.nextSibling.textContent = "Fertig";
           flash.querySelector(".tap").textContent = "";
           node.querySelector("#left").textContent = "0 übrig";
           node.querySelector("#known").textContent = `${total}/${total} sicher`;
           ctx.setProgress(1);
-          ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish(true));
+          ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
           return;
         }
         const c = step.cards[queue[0]];
@@ -7406,12 +7631,12 @@ var qrcode = function() {
         node.querySelector("#left").textContent = `${queue.length} übrig`;
         node.querySelector("#known").textContent = `${known}/${total} sicher`;
         ctx.setProgress(known / total);
-        ctx.action("Umdrehen", flip, { variant: "ghost" });
+        ctx.action(tr("Umdrehen"), flip, { variant: "ghost" });
       };
       const twoButtons = () => {
         again.onclick = () => { queue.push(queue.shift()); show(); };
         ctx.dock.prepend(again);
-        ctx.action(`${ICON.check} Kann ich`, () => { queue.shift(); known++; show(); }, { variant: "good" });
+        ctx.action(`${ICON.check} ${tr("Kann ich")}`, () => { queue.shift(); known++; show(); }, { variant: "good" });
       };
       show();
     },
@@ -7421,9 +7646,9 @@ var qrcode = function() {
       const all = store.get("self", {});
       const vals = all[ctx.key] || step.items.map(() => 0);
       const node = h(`<div>
-        <p class="lead">Wie sicher fühlst du dich? Tippe, bis es stimmt.</p>
+        <p class="lead">${tr("Wie sicher fühlst du dich? Tippe, bis es stimmt.")}</p>
         <ul class="kann" style="margin-top:16px"></ul>
-        <p class="kann-legend"><span><i></i>noch unsicher</span><span><i style="background:linear-gradient(90deg,var(--pink) 50%,var(--paper) 50%)"></i>geht so</span><span><i style="background:var(--ink)"></i>sitzt</span></p>
+        <p class="kann-legend"><span><i></i>${tr("noch unsicher")}</span><span><i style="background:linear-gradient(90deg,var(--pink) 50%,var(--paper) 50%)"></i>${tr("geht so")}</span><span><i style="background:var(--ink)"></i>${tr("sitzt")}</span></p>
       </div>`);
       const ul = node.querySelector(".kann");
       step.items.forEach((txt, k) => {
@@ -7438,7 +7663,7 @@ var qrcode = function() {
       });
       ctx.body.append(node);
       ctx.setProgress(vals.filter(Boolean).length / vals.length);
-      ctx.action(`Speichern ${ICON.check}`, () => {
+      ctx.action(`${tr("Speichern")} ${ICON.check}`, () => {
         const a = store.get("self", {}); a[ctx.key] = vals; store.set("self", a);
         ctx.finish(true);
       });
@@ -7453,7 +7678,7 @@ var qrcode = function() {
       let gi = 0;
       const html = parts.map((x) => (typeof x === "string" ? esc(x) : `<button class="gap sgap" data-i="${gi++}"></button>`)).join("");
       const node = h(`<div>
-        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>Aufgabe<span class="r">${gapsData.length} Bausteine</span></div><div class="body">${step.case}</div></div>` : ""}
+        ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>${tr("Aufgabe")}<span class="r">${tr("{n} Bausteine", { n: gapsData.length })}</span></div><div class="body">${step.case}</div></div>` : ""}
         <div class="win" style="margin-top:${step.case ? 18 : 0}px"><div class="bar"><span class="d"></span>Dein Antwortsatz<span class="r" id="cnt"></span></div>
           <div class="cloze sentence">${html}</div></div>
         <p class="eyebrow" style="margin-top:18px" id="pickLbl"></p>
@@ -7474,7 +7699,7 @@ var qrcode = function() {
         node.querySelector("#cnt").textContent = `${n}/${gapsData.length}`;
         picks.replaceChildren();
         if (!locked && active >= 0) {
-          node.querySelector("#pickLbl").textContent = `Baustein ${active + 1} wählen`;
+          node.querySelector("#pickLbl").textContent = tr("Baustein {n} wählen", { n: active + 1 });
           gapsData[active].options.forEach((o) => {
             const b = h(`<button class="pick ${chosen[active] === o ? "sel" : ""}">${esc(o)}</button>`);
             b.onclick = () => {
@@ -7486,9 +7711,9 @@ var qrcode = function() {
             };
             picks.append(b);
           });
-        } else if (!locked) node.querySelector("#pickLbl").textContent = "Fertig? Tippe eine Lücke an, um sie zu ändern.";
+        } else if (!locked) node.querySelector("#pickLbl").textContent = tr("Fertig? Tippe eine Lücke an, um sie zu ändern.");
         ctx.setProgress(n / gapsData.length);
-        if (!locked) ctx.action(ctx.exam ? "Abgeben" : "Prüfen", check, { enabled: n === gapsData.length });
+        if (!locked) ctx.action(tr(ctx.exam ? "Abgeben" : "Prüfen"), check, { enabled: n === gapsData.length });
       };
       gaps.forEach((g, i) => g.onclick = () => { if (!locked) { active = i; paint(); } });
 
@@ -7509,11 +7734,11 @@ var qrcode = function() {
         const all = correct === gapsData.length;
         node.querySelector("#out").replaceChildren(term([
           ["p", "$ prüfe antwortsatz …"],
-          ["", all ? `› <span class="ok">${correct}/${gapsData.length} richtig.</span> Ein vollständiger Antwortsatz!` : `› <span class="no">${correct}/${gapsData.length} richtig.</span> Die richtigen Bausteine stehen grün im Satz.`],
+          ["", all ? `› <span class="ok">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Ein vollständiger Antwortsatz!")}` : `› <span class="no">${correct}/${gapsData.length} ${tr("richtig.")}</span> ${tr("Die richtigen Bausteine stehen grün im Satz.")}`],
           ...(step.explain ? [["", `› <span class="p">${esc(step.explain)}</span>`]] : [])
         ]));
         buzz(all ? 20 : [30, 40, 30]);
-        ctx.action(`Weiter ${ICON.arrow}`, () => ctx.finish({ c: correct, t: gapsData.length, wrong }));
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: gapsData.length, wrong }));
       }
 
       ctx.body.append(node);
@@ -8318,17 +8543,17 @@ var qrcode = function() {
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <p class="lead" style="margin-top:14px">${esc(t.description || "")}</p>
       <div class="stat-row" style="margin-top:22px">
-        <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
-        <div class="stat"><div class="v">${ds.perfect}</div><div class="k">perfekt</div></div>
-        <div class="stat"><div class="v">${ds.best}</div><div class="k">beste Serie</div></div>
+        <div class="stat"><div class="v">${ds.rounds}</div><div class="k">${tr("gelöst")}</div></div>
+        <div class="stat"><div class="v">${ds.perfect}</div><div class="k">${tr("perfekt")}</div></div>
+        <div class="stat"><div class="v">${ds.best}</div><div class="k">${tr("beste Serie")}</div></div>
       </div>
-      <p class="section-head">Stufe wählen</p>
+      <p class="section-head">${tr("Stufe wählen")}</p>
       <div class="topics" id="levels"></div>
     </main>`);
     const box = v.querySelector("#levels");
     LEVELS.forEach((L) => {
       const a = h(`<a class="win topic-win ${ds.level === L.n ? "done" : ""}" href="#/f/${s.id}/${t.id}/0">
-        <div class="bar"><span class="d"></span>Stufe ${L.n}<span class="r">${ds.level === L.n ? "zuletzt gewählt" : ""}</span></div>
+        <div class="bar"><span class="d"></span>${tr("Stufe")} ${L.n}<span class="r">${ds.level === L.n ? tr("zuletzt gewählt") : ""}</span></div>
         <div class="body"><span class="title">${L.name}</span><span class="meta">${L.text}</span></div></a>`);
       a.addEventListener("click", () => { const d = drillStats(t); d.level = L.n; store.set(drillKey(t), d); });
       box.append(a);
@@ -8371,7 +8596,7 @@ var qrcode = function() {
       bars.forEach((b) => b.style.setProperty("--f", 0));
       buzz(10);
       show(0);
-      toast("› Runde neu gestartet");
+      toast("› " + tr("Runde neu gestartet"));
     };
 
     function reset() {
@@ -8393,7 +8618,7 @@ var qrcode = function() {
       reset();
       const ds = drillStats(t);
       bars.forEach((b, k) => { if (k < ph) b.style.setProperty("--f", 1); });
-      v.querySelector("#eb").textContent = `Stufe ${level} · ${LEVELS[level - 1].name} · Aufgabe ${ds.rounds + 1}`;
+      v.querySelector("#eb").textContent = `${tr("Stufe")} ${level} · ${LEVELS[level - 1].name} · ${tr("Aufgabe")} ${ds.rounds + 1}`;
       const end = ph >= round.phases.length;
       v.querySelector("#helpBtn").hidden = end;
       v.querySelector("#resetBtn").hidden = end;
@@ -8411,28 +8636,28 @@ var qrcode = function() {
       ds.best = Math.max(ds.best, ds.streak); ds.level = level;
       store.set(drillKey(t), ds);
       bars[bars.length - 1].style.setProperty("--f", 1);
-      v.querySelector("#ttl").textContent = perfect ? "Perfekt!" : "Geschafft.";
+      v.querySelector("#ttl").textContent = tr(perfect ? "Perfekt!" : "Geschafft.");
       const suggestUp = perfect && ds.streak > 0 && ds.streak % 3 === 0 && level < LEVELS.length;
       body.append(h(`<div>
         <p class="finish-num" style="margin-top:8px">${c}<small>/${n}</small></p>
         <div class="stat-row" style="margin-top:22px">
-          <div class="stat"><div class="v">${ds.rounds}</div><div class="k">gelöst</div></div>
-          <div class="stat"><div class="v">${ds.streak}</div><div class="k">Serie</div></div>
-          <div class="stat"><div class="v">${ds.best}</div><div class="k">Rekord</div></div>
+          <div class="stat"><div class="v">${ds.rounds}</div><div class="k">${tr("gelöst")}</div></div>
+          <div class="stat"><div class="v">${ds.streak}</div><div class="k">${tr("Serie")}</div></div>
+          <div class="stat"><div class="v">${ds.best}</div><div class="k">${tr("Rekord")}</div></div>
         </div>
         ${suggestUp ? `<div class="term"><span class="ln p">$ level-check …</span><span class="ln">› <span class="ok">3 perfekte Runden in Folge.</span> Bereit für Stufe ${level + 1} (${LEVELS[level].name})?</span></div>` : ""}
-        ${!perfect ? `<div class="term"><span class="ln p">$ tipp</span><span class="ln">› Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.</span></div>` : ""}
+        ${!perfect ? `<div class="term"><span class="ln p">$ tipp</span><span class="ln">› ${tr("Schau dir die grünen Korrekturen nochmal an – oder öffne den Merkkasten über den ?-Knopf.")}</span></div>` : ""}
       </div>`));
       if (perfect) { buzz([20, 60, 20]); if (ds.streak % 3 === 0) confetti(); }
       if (suggestUp) {
-        const up = h(`<button class="btn pink block">Stufe ${level + 1} starten ${ICON.arrow}</button>`);
+        const up = h(`<button class="btn pink block">${tr("Stufe {n} starten", { n: level + 1 })} ${ICON.arrow}</button>`);
         up.onclick = () => { level++; const d = drillStats(t); d.level = level; store.set(drillKey(t), d); newRound(); };
         ctx.dock.prepend(up);
         ctx.dock.classList.add("col");
-        ctx.action("Gleiche Stufe weiter", () => { ctx.dock.classList.remove("col"); newRound(); }, { variant: "ghost" });
+        ctx.action(tr("Gleiche Stufe weiter"), () => { ctx.dock.classList.remove("col"); newRound(); }, { variant: "ghost" });
       } else {
         ctx.dock.classList.remove("col");
-        ctx.action(`Neue Aufgabe ${ICON.arrow}`, newRound);
+        ctx.action(`${tr("Neue Aufgabe")} ${ICON.arrow}`, newRound);
       }
     }
     newRound();
@@ -8574,12 +8799,12 @@ var qrcode = function() {
     if (document.querySelector(".sheet-back")) return;
     const back = h(`<div class="sheet-back">
       <div class="sheet win" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-        <div class="bar"><span class="d"></span><span id="sheetTitle">Hilfe · ${esc(step.title)}</span>
-          <button class="r sheet-x" aria-label="Hilfe schließen">✕ schließen</button></div>
+        <div class="bar"><span class="d"></span><span id="sheetTitle">${tr("Hilfe")} · ${esc(step.title)}</span>
+          <button class="r sheet-x" aria-label="${tr("Schließen")}">✕ ${tr("schließen")}</button></div>
         <div class="tabs" role="tablist">
-          <button role="tab" data-tab="tipps">Tipps</button>
-          <button role="tab" data-tab="merk">Merkkasten</button>
-          <button role="tab" data-tab="begriffe">Begriffe</button>
+          <button role="tab" data-tab="tipps">${tr("Tipps")}</button>
+          <button role="tab" data-tab="merk">${tr("Merkkasten")}</button>
+          <button role="tab" data-tab="begriffe">${tr("Begriffe")}</button>
         </div>
         <div class="sheet-body"></div>
       </div>
@@ -8592,22 +8817,22 @@ var qrcode = function() {
       const key = ctx.hintKey();
       const shown = ctx.revealed[key] || 0;
       const wrap = h(`<div>
-        <p class="howto"><b>So geht's:</b> ${esc(HOWTO[step.type] || "")}</p>
+        <p class="howto"><b>${tr("So geht's:")}</b> ${esc(HOWTO[step.type] || "")}</p>
         <div class="tip-list"></div>
       </div>`);
       const listEl = wrap.querySelector(".tip-list");
       if (!hints.length) {
-        listEl.append(h(`<p class="hint">Für diese Aufgabe gibt es keine extra Tipps. Schau in den <b>Merkkasten</b> oder in die <b>Begriffe</b>.</p>`));
+        listEl.append(h(`<p class="hint">${tr("Für diese Aufgabe gibt es keine extra Tipps. Schau in den Merkkasten oder in die Begriffe.")}</p>`));
       } else {
-        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">Tipp ${n + 1}</span><span>${x}</span></div>`)));
+        hints.slice(0, shown).forEach((x, n) => listEl.append(h(`<div class="tip"><span class="tip-n">${tr("Tipp")} ${n + 1}</span><span>${x}</span></div>`)));
         if (shown < hints.length) {
           const last = shown === hints.length - 1 && hints.length > 1;
           const solution = /^Lösungsweg/.test(hints[shown]);
-          const b = h(`<button class="btn ${shown ? "ghost" : "pink"} block" style="margin-top:12px">${solution ? "Lösungsweg zeigen" : last ? "Letzten Tipp zeigen" : shown ? "Noch ein Tipp" : "Ersten Tipp zeigen"} <span style="font:500 12px/1 var(--mono);opacity:.7">${shown + 1}/${hints.length}</span></button>`);
+          const b = h(`<button class="btn ${shown ? "ghost" : "pink"} block" style="margin-top:12px">${tr(solution ? "Lösungsweg zeigen" : last ? "Letzten Tipp zeigen" : shown ? "Noch ein Tipp" : "Ersten Tipp zeigen")} <span style="font:500 12px/1 var(--mono);opacity:.7">${shown + 1}/${hints.length}</span></button>`);
           b.onclick = () => { ctx.revealed[key] = shown + 1; buzz(6); renderTipps(); };
           listEl.append(b);
         } else {
-          listEl.append(h(`<p class="hint">Das waren alle Tipps. Versuch es jetzt nochmal selbst!</p>`));
+          listEl.append(h(`<p class="hint">${tr("Das waren alle Tipps. Versuch es jetzt nochmal selbst!")}</p>`));
         }
       }
       bodyEl.replaceChildren(wrap);
@@ -8615,7 +8840,7 @@ var qrcode = function() {
     const renderMerk = () => {
       bodyEl.replaceChildren(t.help
         ? h(`<div class="merk">${t.help}</div>`)
-        : h(`<p class="hint">Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.</p>`));
+        : h(`<p class="hint">${tr("Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.")}</p>`));
     };
     const renderBegriffe = () => bodyEl.replaceChildren(glossaryBox(s));
 
@@ -8649,14 +8874,14 @@ var qrcode = function() {
   function viewHelp() {
     const subjects = SINGLE ? [SINGLE] : DATA.subjects;
     const v = h(`<main class="view">
-      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Hilfe</span></div>
-      <h1 class="display" style="margin-top:26px">Hilfe.<small>Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.</small></h1>
-      <p class="section-head">Merkkästen</p>
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>${tr("Hilfe")}</span></div>
+      <h1 class="display" style="margin-top:26px">${tr("Hilfe.")}<small>${tr("Merkkästen, Fachbegriffe und wie die App funktioniert. In jeder Aufgabe erreichst du die Hilfe auch über den ?-Knopf oben rechts.")}</small></h1>
+      <p class="section-head">${tr("Merkkästen")}</p>
       <div id="merk" class="topics"></div>
-      <p class="section-head">Begriffe</p>
+      <p class="section-head">${tr("Begriffe")}</p>
       <div id="gloss"></div>
-      <p class="section-head">So funktioniert die App</p>
-      <div class="win"><div class="bar"><span class="d"></span>Aufgabentypen<span class="r">${Object.keys(HOWTO).length}</span></div>
+      <p class="section-head">${tr("So funktioniert die App")}</p>
+      <div class="win"><div class="bar"><span class="d"></span>${tr("Aufgabentypen")}<span class="r">${Object.keys(HOWTO).length}</span></div>
         <dl class="terms" style="border:0">${Object.keys(HOWTO).map((k) => `<dt>${STEP_LABEL[k]}</dt><dd>${esc(HOWTO[k])}</dd>`).join("")}</dl></div>
     </main>`);
     const merk = v.querySelector("#merk");
@@ -8679,7 +8904,7 @@ var qrcode = function() {
     const p = progress.of(s.id, t.id);
     const sc = progress.score(s, t);
     const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : 100;
-    const msg = pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.";
+    const msg = tr(pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.");
     const idx = s.topics.indexOf(t);
     const nextTopic = s.topics.slice(idx + 1).concat(s.topics.slice(0, idx)).find((x) => x.steps.length && progress.ratio(s, x) < 1);
     const log = t.steps.map((st, k) => {
@@ -8691,15 +8916,15 @@ var qrcode = function() {
     const v = h(`<main class="view no-tabbar finish">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
-        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · erledigt</span></div>
+        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · ${tr("erledigt")}</span></div>
         <p class="finish-num">${pct}<small>%</small></p>
         <p class="h2" style="margin-top:16px">${msg}</p>
-        <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? `${sc.c} von ${sc.n} Punkten` : "abgeschlossen"}</p>
+        <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? tr("{a} von {b} Punkten", { a: sc.c, b: sc.n }) : tr("abgeschlossen")}</p>
       </section>
       <div id="log"></div>
       <div class="dock"><div class="dock-inner col">
-        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">Weiter: ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
-        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
+        ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">${tr("Weiter:")} ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
+        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">${tr("Zur Übersicht")}</a>
       </div></div>
     </main>`);
     v.querySelector("#log").append(term([["p", "$ auswertung " + esc(t.id)], ...log]));
@@ -8789,22 +9014,25 @@ var qrcode = function() {
     }));
 
     const v = h(`<main class="view">
-      <div class="topstrip"><span class="tag-box"><span class="sq"></span>Profil</span></div>
+      <div class="topstrip"><span class="tag-box"><span class="sq"></span>${tr("Profil")}</span></div>
       <h1 class="display" style="margin-top:26px">${esc(name)}.</h1>
-      <p class="section-head">Fortschritt</p>
+      <p class="section-head">${tr("Fortschritt")}</p>
       <div class="stat-row">
-        <div class="stat"><div class="v">${topicsDone}</div><div class="k">Themen fertig</div></div>
-        <div class="stat"><div class="v">${stepsDone}</div><div class="k">Schritte</div></div>
-        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">Treffer</div></div>
+        <div class="stat"><div class="v">${topicsDone}</div><div class="k">${tr("Themen fertig")}</div></div>
+        <div class="stat"><div class="v">${stepsDone}</div><div class="k">${tr("Schritte")}</div></div>
+        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">${tr("Treffer")}</div></div>
       </div>
-      <p class="section-head">Einstellungen</p>
+      <p class="section-head">${tr("Sprache")}</p>
+      ${langSwitch().replace("lang-sw", "lang-sw big")}
+      <p class="hint" style="margin-top:10px">${tr("Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.")}</p>
+      <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
-        <button class="list-row" id="rename"><span>Name ändern</span><span class="v">${esc(name)}</span></button>
-        <a class="list-row" href="#/faecher"><span>Meine Fächer</span><span class="v">${esc((myFaecher() || []).join(" · ") || "alle")}</span></a>
+        <button class="list-row" id="rename"><span>${tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/faecher"><span>${tr("Meine Fächer")}</span><span class="v">${esc((myFaecher() || []).join(" · ") || tr("alle"))}</span></a>
         <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
-        <button class="list-row danger" id="reset"><span>Fortschritt zurücksetzen</span></button>
+        <button class="list-row danger" id="reset"><span>${tr("Fortschritt zurücksetzen")}</span></button>
       </div>
-      <p class="hint" style="margin-top:14px">Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.</p>
+      <p class="hint" style="margin-top:14px">${tr("Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.")}</p>
     </main>`);
 
     const rename = v.querySelector("#rename");
@@ -8815,22 +9043,24 @@ var qrcode = function() {
       row.onsubmit = (e) => {
         e.preventDefault();
         const nn = row.querySelector("input").value.trim();
-        if (nn) { store.set("name", nn.slice(0, 24)); toast("› Name gespeichert"); render(); }
+        if (nn) { store.set("name", nn.slice(0, 24)); toast("› " + tr("Name gespeichert")); render(); }
       };
       rename.replaceWith(row);
       row.querySelector("input").focus();
     };
+    bindLang(v);
     const reset = v.querySelector("#reset");
     reset.onclick = () => {
-      if (reset.dataset.armed) { progress.reset(); toast("› Fortschritt gelöscht"); render(); return; }
+      if (reset.dataset.armed) { progress.reset(); toast("› " + tr("Fortschritt gelöscht")); render(); return; }
       reset.dataset.armed = "1";
-      reset.firstElementChild.textContent = "Nochmal tippen zum Löschen";
-      setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = "Fortschritt zurücksetzen"; } }, 4000);
+      reset.firstElementChild.textContent = tr("Nochmal tippen zum Löschen");
+      setTimeout(() => { if (reset.isConnected) { delete reset.dataset.armed; reset.firstElementChild.textContent = tr("Fortschritt zurücksetzen"); } }, 4000);
     };
     return v;
   }
 
   /* ── Start ──────────────────────────────────────────────── */
+  $tabbar.querySelectorAll("a > span").forEach((sp) => { sp.textContent = tr(sp.textContent.trim()); });
   const ct = cardsTopic();
   const cardsTab = $tabbar.querySelector('[data-tab="karten"]');
   if (cardsTab) {
