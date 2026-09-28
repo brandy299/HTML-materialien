@@ -55,7 +55,9 @@ Stilstudie der Lehrkraft war die Vorlage.
   Die Startseite zeigt nur diese Fächer; „Weiter mit …“ nur aus den eigenen Fächern. Wer per QR/Link in einen Kurs
   kommt, bekommt das Fach automatisch dazu und überspringt die Auswahl. Speicher: `lernraum.faecher`
   (`null` = nie gewählt, `[]` = alle). Grund: Lehrkraft-Feedback „PBP-Schüler könnten verwirrt werden“.
-- **Sprachen der Oberfläche (28.09.2026):** Deutsch, Englisch, Arabisch – umschaltbar beim ersten Start und unter „Ich“.
+- **Sprachen der Oberfläche (28.09.2026):** Deutsch, Englisch, Arabisch – umschaltbar beim ersten Start, unter „Ich“ und
+  **mitten in einer Aufgabe im Hilfe-Fenster (?)**. Der Wechsel lädt nicht neu: Eingaben bleiben erhalten, neue Texte kommen
+  in der neuen Sprache (`applyLang()`/`setLang()` in app.js). In der Übungsklausur gibt es keinen Wechsel (keine Hilfe).
   Übersetzt werden nur Knöpfe, Anleitungen („So geht's“), Rückmeldungen und Tipps-Rahmen; **Kursinhalte bleiben deutsch**
   (Prüfungssprache). Texte in `app/i18n.js`, deutscher Text = Schlüssel. Jeder neue Oberflächentext in `app.js` muss durch
   `tr("…")` laufen und in beiden Sprachen stehen – `node app/tools/check-i18n.js` prüft das (auch im GitHub-Check).
