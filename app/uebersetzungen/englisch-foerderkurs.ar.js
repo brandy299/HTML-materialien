@@ -5,70 +5,70 @@
 LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings: {
 
     "Grammatik-Grundlagen mit Beispielen aus Harry Potter: simple present, present progressive, simple past, present perfect, past progressive sowie will und going to. Erklärungen auf Deutsch, Übungen auf Englisch – Schritt für Schritt auf B1.":
-      "",
+      "أساسيات القواعد مع أمثلة من هاري بوتر: simple present و present progressive و simple past و present perfect و past progressive وكذلك will و going to. الشرح باللغة العربية، والتمارين باللغة الإنجليزية – خطوة بخطوة حتى مستوى B1.",
 
     "Simple Present":
       "",
 
     "Grammar Basics · Zeitform 1":
-      "",
+      "Grammar Basics · زمن الفعل 1",
 
     "Zeitformen":
-      "",
+      "أزمنة الفعل",
 
     "<h3>Simple Present</h3>\n             <p class=\"formula\">I / you / we / they + Verb<br>he / she / it + Verb + s</p>\n             <h3>Wann?</h3>\n             <ul><li>Gewohnheiten und Routinen: every day, always</li>\n             <li>Fakten: Hogwarts has four houses.</li></ul>\n             <h3>Fragen und Verneinung</h3>\n             <p>do / does + Grundform: Do you …? · Does Harry …? · don’t / doesn’t</p>\n             <h3>Häufige Fehler</h3>\n             <ul><li>„Harry live …“ → Harry <strong>lives</strong> …</li>\n             <li>„Does Harry lives …?“ → Does Harry <strong>live</strong> …?</li></ul>":
-      "",
+      "<h3>Simple Present</h3>\n<p class=\"formula\">I / you / we / they + Verb<br>he / she / it + Verb + s</p>\n<h3>متى؟</h3>\n<ul><li>العادات والأعمال المتكررة: every day, always</li>\n<li>الحقائق: Hogwarts has four houses.</li></ul>\n<h3>السؤال والنفي</h3>\n<p>do / does + الصيغة الأساسية للفعل (base form): Do you …? · Does Harry …? · don’t / doesn’t</p>\n<h3>أخطاء شائعة</h3>\n<ul><li>„Harry live …“ → Harry <strong>lives</strong> …</li>\n<li>„Does Harry lives …?“ → Does Harry <strong>live</strong> …?</li></ul>",
 
     "Worum geht's?":
-      "",
+      "عمَّ يدور الموضوع؟",
 
     "Förderkurs Englisch · Zeitform 1":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 1",
 
     "Jeden Tag. Immer wieder. Das ist das Simple Present.":
-      "",
+      "كل يوم. مرة بعد مرة. هذا هو Simple Present.",
 
     "<p>“Hermione <strong>reads</strong> before breakfast.”</p>\n                     <p>“Hogwarts <strong>has</strong> four houses.”</p>\n                     <p>Etwas passiert <strong>regelmäßig</strong> oder ist einfach ein <strong>Fakt</strong>.</p>":
-      "",
+      "<p>“Hermione <strong>reads</strong> before breakfast.”</p>\n<p>“Hogwarts <strong>has</strong> four houses.”</p>\n<p>شيء يحدث <strong>بانتظام</strong> أو هو ببساطة <strong>حقيقة</strong>.</p>",
 
     "Lernziel":
-      "",
+      "هدف التعلّم",
 
     "Ich kann über <mark>Gewohnheiten</mark> und <mark>Fakten</mark> sprechen.":
-      "",
+      "أستطيع أن أتحدث عن <mark>العادات</mark> و<mark>الحقائق</mark>.",
 
     "<p class=\"box\"><strong>Simple Present</strong> = was immer oder regelmäßig passiert.</p>":
-      "",
+      "<p class=\"box\"><strong>Simple Present</strong> = ما يحدث دائمًا أو بانتظام.</p>",
 
     "So ist es gebaut":
-      "",
+      "هكذا يتكوّن",
 
     "Nur he / she / it bekommt ein -s.":
-      "",
+      "فقط he / she / it يأخذ -s.",
 
     "<dl class=\"terms\">\n                       <dt>I / you / we / they</dt><dd>Verb in der Grundform: I <strong>play</strong>, they <strong>read</strong>.</dd>\n                       <dt>he / she / it</dt><dd>Verb + s: he <strong>plays</strong>, she <strong>reads</strong>, it <strong>goes</strong>.</dd>\n                     </dl>":
-      "",
+      "<dl class=\"terms\">\n<dt>I / you / we / they</dt><dd>الفعل في صيغته الأساسية (base form): I <strong>play</strong>, they <strong>read</strong>.</dd>\n<dt>he / she / it</dt><dd>Verb + s: he <strong>plays</strong>, she <strong>reads</strong>, it <strong>goes</strong>.</dd>\n</dl>",
 
     "Fragen und Verneinung":
-      "",
+      "السؤال والنفي",
 
     "do / does + Grundform.":
-      "",
+      "do / does + الصيغة الأساسية للفعل.",
 
     "<p class=\"formula\">Do you like …? · Does Harry live …?</p>\n                     <p class=\"formula\">I don’t like … · Ron doesn’t like …</p>\n                     <p class=\"note\">Nach do / does steht immer die Grundform – ohne -s!</p>":
-      "",
+      "<p class=\"formula\">Do you like …? · Does Harry live …?</p>\n<p class=\"formula\">I don’t like … · Ron doesn’t like …</p>\n<p class=\"note\">بعد do / does تأتي دائمًا الصيغة الأساسية للفعل – بدون -s!</p>",
 
     "Merke":
-      "",
+      "تذكّر",
 
     "he / she / it → + s":
       "",
 
     "<p>Fragen: Do …? / Does …? · Verneinung: don’t / doesn’t.</p>":
-      "",
+      "<p>السؤال: Do …? / Does …? · النفي: don’t / doesn’t.</p>",
 
     "A1 · Verstehen":
-      "",
+      "A1 · الفهم",
 
     "Which sentence is correct?":
       "",
@@ -83,7 +83,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "he / she / it → Verb + s. Also: Harry lives.":
-      "",
+      "he / she / it → Verb + s. إذن: Harry lives.",
 
     "Choose the right form: Ron ____ spiders.":
       "",
@@ -98,10 +98,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Nach doesn’t steht die Grundform: doesn’t like.":
-      "",
+      "بعد doesn’t تأتي الصيغة الأساسية للفعل: doesn’t like.",
 
     "he / she / it → + s, und die Verneinung mit doesn’t.":
-      "",
+      "he / she / it → + s، والنفي يكون بـ doesn’t.",
 
     "Make a question: ____ Hermione study every day?":
       "",
@@ -116,7 +116,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Bei he / she / it bildest du Fragen mit Does + Grundform.":
-      "",
+      "مع he / she / it تكوّن السؤال بـ Does + الصيغة الأساسية للفعل.",
 
     "They ____ football on Saturdays.":
       "",
@@ -131,25 +131,25 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Bei I / you / we / they steht die Grundform: they play.":
-      "",
+      "مع I / you / we / they يأتي الفعل في صيغته الأساسية: they play.",
 
     "They ist wie I / you / we – keine -s.":
-      "",
+      "They مثل I / you / we – بدون -s.",
 
     "A2 · + s oder Grundform?":
-      "",
+      "A2 · + s أم الصيغة الأساسية؟",
 
     "Welche Form passt?":
-      "",
+      "أي صيغة مناسبة؟",
 
     "Bei I / you / we / they bleibt das Verb in der Grundform.":
-      "",
+      "مع I / you / we / they يبقى الفعل في صيغته الأساسية.",
 
     "he/she/it: + s":
       "",
 
     "I/you/we/they: Grundform":
-      "",
+      "I/you/we/they: الصيغة الأساسية",
 
     "he plays":
       "",
@@ -170,19 +170,19 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "A3 · Regel sichern":
-      "",
+      "A3 · تثبيت القاعدة",
 
     "Drei Wörter passen nicht.":
-      "",
+      "ثلاث كلمات لا تناسب.",
 
     "Bei he / she / it bekommt das Verb ein {s}. Beispiel: “Harry {lives} at Hogwarts.” Fragen bildest du mit {does} + Grundform, die Verneinung mit {doesn’t}. Bei I / you / we / they nimmst du {do}.":
-      "",
+      "مع he / she / it يأخذ الفعل {s}. مثال: “Harry {lives} at Hogwarts.” تكوّن السؤال بـ {does} + الصيغة الأساسية للفعل، والنفي بـ {doesn’t}. ومع I / you / we / they تستخدم {do}.",
 
     "Vor dem Verb steht das Hilfsverb: do oder does.":
-      "",
+      "قبل الفعل يأتي الفعل المساعد: do أو does.",
 
     "Bei he / she / it kommt ans Verb ein -s.":
-      "",
+      "مع he / she / it يُضاف -s إلى الفعل.",
 
     "is":
       "",
@@ -194,10 +194,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "A4 · Sätze bauen":
-      "",
+      "A4 · بناء الجمل",
 
     "Wähle in jedem Kasten den richtigen Baustein.":
-      "",
+      "اختر في كل مربع الجزء الصحيح.",
 
     "he / she / it → Verb + s: lives, plays, studies.":
       "",
@@ -206,40 +206,40 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Kann-Liste":
-      "",
+      "ما أستطيع فعله",
 
     "Ich kann über Gewohnheiten und Fakten im Simple Present sprechen.":
-      "",
+      "أستطيع أن أتحدث عن العادات والحقائق باستخدام Simple Present.",
 
     "Ich weiß, dass he / she / it ein -s bekommt.":
-      "",
+      "أعرف أن he / she / it يأخذ -s.",
 
     "Ich kann Fragen mit do / does bilden.":
-      "",
+      "أستطيع تكوين أسئلة بـ do / does.",
 
     "Present Progressive":
       "",
 
     "Grammar Basics · Zeitform 2":
-      "",
+      "Grammar Basics · زمن الفعل 2",
 
     "<h3>Present Progressive</h3>\n             <p class=\"formula\">am / is / are + Verb-ing</p>\n             <h3>Wann?</h3>\n             <ul><li>jetzt gerade: Look! Harry is flying.</li>\n             <li>vorübergehend: this week</li></ul>\n             <h3>Simple Present oder Progressive?</h3>\n             <p>Gewohnheit → Simple Present. Jetzt gerade → Progressive.</p>\n             <h3>Zustandsverben</h3>\n             <p>know, like, want … bleiben im Simple Present (kein -ing).</p>":
-      "",
+      "<h3>Present Progressive</h3>\n<p class=\"formula\">am / is / are + Verb-ing</p>\n<h3>متى؟</h3>\n<ul><li>الآن في هذه اللحظة: Look! Harry is flying.</li>\n<li>لفترة مؤقتة: this week</li></ul>\n<h3>Simple Present أم Progressive؟</h3>\n<p>عادة → Simple Present. الآن في هذه اللحظة → Progressive.</p>\n<h3>أفعال الحالة (state verbs)</h3>\n<p>know, like, want … تبقى في Simple Present (بدون -ing).</p>",
 
     "Förderkurs Englisch · Zeitform 2":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 2",
 
     "Schau! Genau jetzt passiert etwas.":
-      "",
+      "انظر! شيء يحدث الآن بالضبط.",
 
     "<p>“Look! Harry <strong>is flying</strong> on his broom right now.”</p>\n                     <p>Nicht jeden Tag – sondern <strong>gerade jetzt</strong>.</p>":
-      "",
+      "<p>“Look! Harry <strong>is flying</strong> on his broom right now.”</p>\n<p>ليس كل يوم – بل <strong>الآن في هذه اللحظة</strong>.</p>",
 
     "Ich kann sagen, was <mark>gerade jetzt</mark> passiert.":
-      "",
+      "أستطيع أن أقول ما يحدث <mark>الآن في هذه اللحظة</mark>.",
 
     "<p class=\"box\">Present Progressive = es passiert im Moment des Sprechens.</p>":
-      "",
+      "<p class=\"box\">Present Progressive = الشيء يحدث في لحظة الكلام.</p>",
 
     "am / is / are + Verb-ing.":
       "",
@@ -248,28 +248,28 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Der Unterschied":
-      "",
+      "الفرق",
 
     "Gewohnheit oder jetzt?":
-      "",
+      "عادة أم الآن؟",
 
     "<div class=\"pair\">\n                       <div><b>Simple Present</b>Gewohnheit: Harry <strong>plays</strong> Quidditch every Saturday.</div>\n                       <div><b>Present Progressive</b>jetzt: Look! Harry <strong>is playing</strong> Quidditch now.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"every Saturday He plays. · now He is playing.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:43%;width:14%\"></div>\n      <div class=\"dt-dot rep\" style=\"left:8%\"></div><div class=\"dt-dot rep\" style=\"left:32%\"></div><div class=\"dt-dot rep\" style=\"left:68%\"></div><div class=\"dt-dot rep\" style=\"left:80%\"></div><div class=\"dt-dot rep\" style=\"left:92%\"></div><div class=\"dt-dot \" style=\"left:20%\"></div><div class=\"dt-stem\" style=\"left:20%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>every Saturday</b><span>He plays.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>now</b><span>He is playing.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">Vergangenheit</span><span style=\"left:50%;transform:translateX(-50%)\">jetzt</span><span style=\"right:0\">Zukunft</span></div>\n    </div></figure>":
-      "",
+      "<div class=\"pair\">\n                       <div><b>Simple Present</b>عادة: Harry <strong>plays</strong> Quidditch every Saturday.</div>\n                       <div><b>Present Progressive</b>الآن: Look! Harry <strong>is playing</strong> Quidditch now.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"every Saturday He plays. · now He is playing.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:43%;width:14%\"></div>\n      <div class=\"dt-dot rep\" style=\"left:8%\"></div><div class=\"dt-dot rep\" style=\"left:32%\"></div><div class=\"dt-dot rep\" style=\"left:68%\"></div><div class=\"dt-dot rep\" style=\"left:80%\"></div><div class=\"dt-dot rep\" style=\"left:92%\"></div><div class=\"dt-dot \" style=\"left:20%\"></div><div class=\"dt-stem\" style=\"left:20%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>every Saturday</b><span>He plays.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>now</b><span>He is playing.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">الماضي</span><span style=\"left:50%;transform:translateX(-50%)\">الآن</span><span style=\"right:0\">المستقبل</span></div>\n    </div></figure>",
 
     "Achtung":
-      "",
+      "انتبه",
 
     "Zustandsverben bleiben im Simple Present.":
-      "",
+      "أفعال الحالة (state verbs) تبقى في Simple Present.",
 
     "<p>know, like, love, want, need, understand, see</p>\n                     <p class=\"note\">Nicht „I am knowing“ – sondern „I <strong>know</strong>“.</p>":
-      "",
+      "<p>know, like, love, want, need, understand, see</p>\n<p class=\"note\">ليس „I am knowing“ – بل „I <strong>know</strong>“.</p>",
 
     "am / is / are + Verb-ing = jetzt gerade":
-      "",
+      "am / is / are + Verb-ing = الآن في هذه اللحظة",
 
     "<p>Signalwörter: now, right now, at the moment, Look!, Listen!</p>":
-      "",
+      "<p>الكلمات الدالة (signal words): now, right now, at the moment, Look!, Listen!</p>",
 
     "Which sentence is happening right now?":
       "",
@@ -284,7 +284,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "„now“ und „is playing“ zeigen: es passiert gerade jetzt.":
-      "",
+      "„now“ و „is playing“ تُظهران: الشيء يحدث الآن.",
 
     "Ron ____ to the teacher at the moment.":
       "",
@@ -299,10 +299,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "at the moment → is + -ing; Verneinung: isn’t listening.":
-      "",
+      "at the moment → is + -ing؛ النفي: isn’t listening.",
 
     "at the moment → Progressive; Verneinung: isn’t.":
-      "",
+      "at the moment → Progressive؛ النفي: isn’t.",
 
     "I ____ a book right now.":
       "",
@@ -317,7 +317,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "right now → Progressive. Bei I: am + -ing = am reading.":
-      "",
+      "right now → Progressive. مع I: am + -ing = am reading.",
 
     "Which verb is a state verb (no -ing)?":
       "",
@@ -332,16 +332,16 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "know ist ein Zustandsverb – also „I know“, nicht „I am knowing“.":
-      "",
+      "know فعل حالة (state verb) – إذن „I know“، وليس „I am knowing“.",
 
     "Zustandsverben beschreiben keinen Vorgang.":
-      "",
+      "أفعال الحالة لا تصف حدثًا أو عملية.",
 
     "A2 · jetzt oder Gewohnheit?":
-      "",
+      "A2 · الآن أم عادة؟",
 
     "Zu welcher Zeitform gehört der Satz?":
-      "",
+      "إلى أي زمن تنتمي الجملة؟",
 
     "Look!, now, at the moment → Progressive.":
       "",
@@ -350,10 +350,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "jetzt (Present Progressive)":
-      "",
+      "الآن (Present Progressive)",
 
     "Gewohnheit (Simple Present)":
-      "",
+      "عادة (Simple Present)",
 
     "Look! Harry is flying on his broom.":
       "",
@@ -374,13 +374,13 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Look! Harry {is} flying on his broom. The students {are} sitting in the Great Hall. I {am} reading a book. Bei Zustandsverben wie know bleibt es aber im Simple Present: I {know} the answer.":
-      "",
+      "Look! Harry {is} flying on his broom. The students {are} sitting in the Great Hall. I {am} reading a book. لكن مع أفعال الحالة مثل know يبقى الزمن Simple Present: I {know} the answer.",
 
     "Bei I → am, bei he/she/it → is, bei you/we/they → are.":
-      "",
+      "مع I → am، ومع he/she/it → is، ومع you/we/they → are.",
 
     "Zustandsverben wie know bleiben im Simple Present.":
-      "",
+      "أفعال الحالة مثل know تبقى في Simple Present.",
 
     "knows":
       "",
@@ -398,55 +398,55 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Ich kann sagen, was gerade jetzt passiert.":
-      "",
+      "أستطيع أن أقول ما يحدث الآن في هذه اللحظة.",
 
     "Ich kann am / is / are + -ing richtig bilden.":
-      "",
+      "أستطيع تكوين am / is / are + -ing بشكل صحيح.",
 
     "Ich kenne Zustandsverben, die kein -ing bekommen.":
-      "",
+      "أعرف أفعال الحالة التي لا تأخذ -ing.",
 
     "Simple Past":
       "",
 
     "Grammar Basics · Zeitform 3":
-      "",
+      "Grammar Basics · زمن الفعل 3",
 
     "<h3>Simple Past</h3>\n             <p class=\"formula\">regelmäßig: Verb + ed<br>unregelmäßig: eigene Form (go → went)</p>\n             <h3>Fragen und Verneinung</h3>\n             <p>did / didn’t + Grundform: Did you …? · He didn’t go.</p>\n             <h3>Wichtigste unregelmäßige Verben</h3>\n             <p>go → went · see → saw · take → took · find → found · have → had · be → was/were</p>\n             <h3>Häufiger Fehler</h3>\n             <p>„Harry didn’t went …“ → Harry didn’t <strong>go</strong> …</p>":
-      "",
+      "<h3>Simple Past</h3>\n<p class=\"formula\">منتظم (regular): Verb + ed<br>غير منتظم (irregular): صيغة خاصة (go → went)</p>\n<h3>السؤال والنفي</h3>\n<p>did / didn’t + الصيغة الأساسية للفعل: Did you …? · He didn’t go.</p>\n<h3>أهم الأفعال غير المنتظمة</h3>\n<p>go → went · see → saw · take → took · find → found · have → had · be → was/were</p>\n<h3>خطأ شائع</h3>\n<p>„Harry didn’t went …“ → Harry didn’t <strong>go</strong> …</p>",
 
     "Förderkurs Englisch · Zeitform 3":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 3",
 
     "Gestern. Letztes Jahr. In 1991.":
-      "",
+      "أمس. السنة الماضية. في عام 1991.",
 
     "<p>“Harry <strong>received</strong> his letter in 1991.”</p>\n                     <p>“They <strong>went</strong> to Hogsmeade last weekend.”</p>\n                     <p>Etwas ist in der Vergangenheit passiert und <strong>abgeschlossen</strong>.</p>":
-      "",
+      "<p>“Harry <strong>received</strong> his letter in 1991.”</p>\n<p>“They <strong>went</strong> to Hogsmeade last weekend.”</p>\n<p>شيء حدث في الماضي و<strong>انتهى</strong>.</p>",
 
     "Ich kann über die <mark>Vergangenheit</mark> erzählen.":
-      "",
+      "أستطيع أن أحكي عن <mark>الماضي</mark>.",
 
     "<p class=\"box\"><strong>Simple Past</strong> = abgeschlossene Handlung in der Vergangenheit.</p>":
-      "",
+      "<p class=\"box\"><strong>Simple Past</strong> = فعل انتهى في الماضي.</p>",
 
     "regelmäßig + ed · unregelmäßig eigene Form.":
-      "",
+      "منتظم + ed · غير منتظم له صيغة خاصة.",
 
     "<dl class=\"terms\">\n                       <dt>regelmäßig</dt><dd>Verb + ed: work → <strong>worked</strong>, visit → <strong>visited</strong>.</dd>\n                       <dt>unregelmäßig</dt><dd>eigene Form lernen: go → <strong>went</strong>, see → <strong>saw</strong>, take → <strong>took</strong>.</dd>\n                     </dl>":
-      "",
+      "<dl class=\"terms\">\n<dt>منتظم (regular)</dt><dd>Verb + ed: work → <strong>worked</strong>, visit → <strong>visited</strong>.</dd>\n<dt>غير منتظم (irregular)</dt><dd>احفظ الصيغة الخاصة: go → <strong>went</strong>, see → <strong>saw</strong>, take → <strong>took</strong>.</dd>\n</dl>",
 
     "did / didn’t + Grundform.":
-      "",
+      "did / didn’t + الصيغة الأساسية للفعل.",
 
     "<p class=\"formula\">Did you meet Hagrid?</p>\n                     <p class=\"formula\">Harry didn’t go to Hogwarts.</p>\n                     <p class=\"note\">Nach did / didn’t steht die Grundform – nie die 2. Form!</p>":
-      "",
+      "<p class=\"formula\">Did you meet Hagrid?</p>\n<p class=\"formula\">Harry didn’t go to Hogwarts.</p>\n<p class=\"note\">بعد did / didn’t تأتي الصيغة الأساسية للفعل – وليس أبدًا التصريف الثاني!</p>",
 
     "regelmäßig → + ed   ·   did / didn’t + Grundform":
-      "",
+      "منتظم → + ed   ·   did / didn’t + الصيغة الأساسية",
 
     "<p>Signalwörter: yesterday, last week, in 1991, two days ago, then.</p>":
-      "",
+      "<p>الكلمات الدالة: yesterday, last week, in 1991, two days ago, then.</p>",
 
     "Choose the past form: Harry ____ his letter in 1991.":
       "",
@@ -461,7 +461,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "in 1991 → Simple Past; regelmäßig: receive + ed = received.":
-      "",
+      "in 1991 → Simple Past؛ فعل منتظم: receive + ed = received.",
 
     "Harry didn’t went to Hogwarts.":
       "",
@@ -473,7 +473,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Nach didn’t steht die Grundform: didn’t go.":
-      "",
+      "بعد didn’t تأتي الصيغة الأساسية للفعل: didn’t go.",
 
     "The past form of “go” is …":
       "",
@@ -488,7 +488,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "go ist unregelmäßig: go → went.":
-      "",
+      "go فعل غير منتظم: go → went.",
 
     "They ____ to Hogsmeade last weekend.":
       "",
@@ -506,22 +506,22 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "A2 · regelmäßig oder unregelmäßig?":
-      "",
+      "A2 · منتظم أم غير منتظم؟",
 
     "Wie bildet man die Vergangenheit?":
-      "",
+      "كيف نكوّن الماضي؟",
 
     "regelmäßig → + ed.":
-      "",
+      "منتظم → + ed.",
 
     "unregelmäßig → eigene Form, keine Regel.":
-      "",
+      "غير منتظم → صيغة خاصة، بدون قاعدة.",
 
     "regelmäßig (+ ed)":
-      "",
+      "منتظم (+ ed)",
 
     "unregelmäßig":
-      "",
+      "غير منتظم",
 
     "played":
       "",
@@ -539,16 +539,16 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Harry {received} his letter in 1991. Ron and Harry {went} to the World Cup last summer. Hermione {found} the answer in a book. Fragen bildest du mit {did} + Grundform.":
-      "",
+      "Harry {received} his letter in 1991. Ron and Harry {went} to the World Cup last summer. Hermione {found} the answer in a book. تكوّن السؤال بـ {did} + الصيغة الأساسية للفعل.",
 
     "in 1991 und last summer → Simple Past.":
-      "",
+      "in 1991 و last summer → Simple Past.",
 
     "find ist unregelmäßig: find → found.":
-      "",
+      "find فعل غير منتظم: find → found.",
 
     "Fragen im Past: did + Grundform.":
-      "",
+      "السؤال في الماضي: did + الصيغة الأساسية للفعل.",
 
     "find":
       "",
@@ -557,70 +557,70 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "regelmäßig: received · unregelmäßig: went, took.":
-      "",
+      "منتظم: received · غير منتظم: went, took.",
 
     "Harry {*received|receive|receives} his letter in 1991. They {*went|go|goed} to Hogsmeade last weekend. Snape {*took|take|taken} points from Gryffindor.":
       "",
 
     "Ich kann über die Vergangenheit erzählen.":
-      "",
+      "أستطيع أن أحكي عن الماضي.",
 
     "Ich kann regelmäßige und unregelmäßige Formen bilden.":
-      "",
+      "أستطيع تكوين الصيغ المنتظمة وغير المنتظمة.",
 
     "Ich kann Fragen und Verneinungen mit did bilden.":
-      "",
+      "أستطيع تكوين الأسئلة والنفي بـ did.",
 
     "Present Perfect":
       "",
 
     "Grammar Basics · Zeitform 4":
-      "",
+      "Grammar Basics · زمن الفعل 4",
 
     "<h3>Present Perfect</h3>\n             <p class=\"formula\">have / has + 3. Form (past participle)</p>\n             <h3>Wann?</h3>\n             <ul><li>Das Ergebnis ist jetzt wichtig: I have lost my wand.</li>\n             <li>Erfahrung bis jetzt: Have you ever seen a dragon?</li>\n             <li>Gerade passiert: Harry has just arrived.</li></ul>\n             <h3>Signalwörter</h3>\n             <p>already, just, yet, ever, never, so far</p>\n             <h3>Simple Past oder Present Perfect?</h3>\n             <p>Genaue Zeit vorbei (yesterday, in 1991, last week) → Simple Past. Keine genaue Zeit und Bezug zu jetzt → Present Perfect.</p>\n             <h3>Häufige Fehler</h3>\n             <ul><li>„He has went …“ → He has <strong>gone</strong> …</li>\n             <li>„Yesterday I have seen …“ → Yesterday I <strong>saw</strong> …</li></ul>":
-      "",
+      "<h3>Present Perfect</h3>\n<p class=\"formula\">have / has + التصريف الثالث (past participle)</p>\n<h3>متى؟</h3>\n<ul><li>النتيجة مهمة الآن: I have lost my wand.</li>\n<li>تجربة حتى الآن: Have you ever seen a dragon?</li>\n<li>حدث للتو: Harry has just arrived.</li></ul>\n<h3>الكلمات الدالة</h3>\n<p>already, just, yet, ever, never, so far</p>\n<h3>Simple Past أم Present Perfect؟</h3>\n<p>وقت محدد انتهى (yesterday, in 1991, last week) → Simple Past. لا يوجد وقت محدد، وهناك علاقة بالحاضر → Present Perfect.</p>\n<h3>أخطاء شائعة</h3>\n<ul><li>„He has went …“ → He has <strong>gone</strong> …</li>\n<li>„Yesterday I have seen …“ → Yesterday I <strong>saw</strong> …</li></ul>",
 
     "Förderkurs Englisch · Zeitform 4":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 4",
 
     "Passiert – und jetzt ist es wichtig.":
-      "",
+      "حدث – والآن هو مهم.",
 
     "<p>“Harry <strong>has lost</strong> his wand.”</p>\n                     <p>“Hermione <strong>has</strong> already <strong>finished</strong> her homework.”</p>\n                     <p>Die Handlung ist vorbei, doch das <strong>Ergebnis zählt jetzt</strong>.</p>":
-      "",
+      "<p>“Harry <strong>has lost</strong> his wand.”</p>\n<p>“Hermione <strong>has</strong> already <strong>finished</strong> her homework.”</p>\n<p>الفعل انتهى، لكن <strong>النتيجة مهمة الآن</strong>.</p>",
 
     "Ich kann über Erlebnisse und Ergebnisse sprechen.":
-      "",
+      "أستطيع أن أتحدث عن التجارب والنتائج.",
 
     "<p class=\"box\"><strong>Present Perfect</strong> = Vergangenheit mit Bezug zur Gegenwart.</p>":
-      "",
+      "<p class=\"box\"><strong>Present Perfect</strong> = ماضٍ له علاقة بالحاضر.</p>",
 
     "have / has + 3. Form.":
-      "",
+      "have / has + التصريف الثالث.",
 
     "<dl class=\"terms\">\n                       <dt>I / you / we / they</dt><dd>have + 3. Form: I <strong>have visited</strong>, they <strong>have gone</strong>.</dd>\n                       <dt>he / she / it</dt><dd>has + 3. Form: he <strong>has visited</strong>, she <strong>has written</strong>.</dd>\n                     </dl>":
-      "",
+      "<dl class=\"terms\">\n<dt>I / you / we / they</dt><dd>have + التصريف الثالث: I <strong>have visited</strong>, they <strong>have gone</strong>.</dd>\n<dt>he / she / it</dt><dd>has + التصريف الثالث: he <strong>has visited</strong>, she <strong>has written</strong>.</dd>\n</dl>",
 
     "Simple Past oder Present Perfect?":
-      "",
+      "Simple Past أم Present Perfect؟",
 
     "<div class=\"pair\">\n                       <div><b>Simple Past</b>genaue Zeit vorbei: Snape <strong>took</strong> points yesterday.</div>\n                       <div><b>Present Perfect</b>Ergebnis jetzt: Snape <strong>has just taken</strong> points.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"yesterday He took points. · just He has just taken points.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:36%;width:14%\"></div>\n      <div class=\"dt-dot \" style=\"left:14%\"></div><div class=\"dt-stem\" style=\"left:14%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>yesterday</b><span>He took points.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>just</b><span>He has just taken points.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">Vergangenheit</span><span style=\"left:50%;transform:translateX(-50%)\">jetzt</span><span style=\"right:0\">Zukunft</span></div>\n    </div></figure>":
-      "",
+      "<div class=\"pair\">\n                       <div><b>Simple Past</b>وقت محدد انتهى: Snape <strong>took</strong> points yesterday.</div>\n                       <div><b>Present Perfect</b>النتيجة الآن: Snape <strong>has just taken</strong> points.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"yesterday He took points. · just He has just taken points.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:36%;width:14%\"></div>\n      <div class=\"dt-dot \" style=\"left:14%\"></div><div class=\"dt-stem\" style=\"left:14%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>yesterday</b><span>He took points.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>just</b><span>He has just taken points.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">الماضي</span><span style=\"left:50%;transform:translateX(-50%)\">الآن</span><span style=\"right:0\">المستقبل</span></div>\n    </div></figure>",
 
     "Signalwörter":
-      "",
+      "الكلمات الدالة",
 
     "already, just, yet, ever, never.":
       "",
 
     "<p>already / just stehen nach have / has: I have <strong>just</strong> finished.</p>\n                     <p class=\"note\">yet steht am Satzende: He has not finished <strong>yet</strong>.</p>":
-      "",
+      "<p>already / just تأتيان بعد have / has: I have <strong>just</strong> finished.</p>\n<p class=\"note\">yet تأتي في آخر الجملة: He has not finished <strong>yet</strong>.</p>",
 
     "have / has + 3. Form":
-      "",
+      "have / has + التصريف الثالث",
 
     "<p>Signalwörter: already, just, yet, ever, never. Genaue Zeit (yesterday) → Simple Past.</p>":
-      "",
+      "<p>الكلمات الدالة: already, just, yet, ever, never. وقت محدد (yesterday) → Simple Past.</p>",
 
     "Which sentence is in the Present Perfect?":
       "",
@@ -635,7 +635,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "has + 3. Form, und just zeigt: gerade passiert, Ergebnis jetzt.":
-      "",
+      "has + التصريف الثالث، و just تُظهر: حدث للتو، والنتيجة الآن.",
 
     "Harry ____ his wand. He can't find it.":
       "",
@@ -650,10 +650,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Ergebnis jetzt wichtig → Present Perfect: has lost.":
-      "",
+      "النتيجة مهمة الآن → Present Perfect: has lost.",
 
     "Das Ergebnis zählt jetzt: Er hat ihn gerade nicht.":
-      "",
+      "النتيجة مهمة الآن: العصا ليست معه الآن.",
 
     "Choose the right form: Ron has ____ his broom.":
       "",
@@ -668,7 +668,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Nach have / has steht die 3. Form: break → broken.":
-      "",
+      "بعد have / has يأتي التصريف الثالث: break → broken.",
 
     "Which word is a signal for the Present Perfect?":
       "",
@@ -683,13 +683,13 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "already ist ein Signalwort für das Present Perfect.":
-      "",
+      "already كلمة دالة على Present Perfect.",
 
     "Eine genaue Zeit in der Vergangenheit gehört zum Simple Past.":
-      "",
+      "الوقت المحدد في الماضي ينتمي إلى Simple Past.",
 
     "A2 · Present Perfect oder Simple Past?":
-      "",
+      "A2 · Present Perfect أم Simple Past؟",
 
     "already, just, never → Present Perfect.":
       "",
@@ -719,49 +719,49 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "have / has + 3. Form: go → gone, see → seen.":
-      "",
+      "have / has + التصريف الثالث: go → gone, see → seen.",
 
     "yesterday → Simple Past, nicht Present Perfect.":
-      "",
+      "yesterday → Simple Past، وليس Present Perfect.",
 
     "just und already → Present Perfect (has / have + 3. Form). yesterday → Simple Past: took.":
-      "",
+      "just و already → Present Perfect (has / have + التصريف الثالث). yesterday → Simple Past: took.",
 
     "Harry {*has|have|is} just lost his wand. Hermione and Ron {*have|has|are} already finished their homework. He has never {*seen|saw|sees} a dragon. But yesterday Snape {*took|has took|has taken} points from Gryffindor.":
       "",
 
     "Ich kann das Present Perfect mit have / has + 3. Form bilden.":
-      "",
+      "أستطيع تكوين Present Perfect بـ have / has + التصريف الثالث.",
 
     "Ich kenne die Signalwörter already, just, yet, ever, never.":
-      "",
+      "أعرف الكلمات الدالة already, just, yet, ever, never.",
 
     "Ich kann Present Perfect und Simple Past unterscheiden.":
-      "",
+      "أستطيع التمييز بين Present Perfect و Simple Past.",
 
     "Past Progressive":
       "",
 
     "Grammar Basics · Zeitform 5":
-      "",
+      "Grammar Basics · زمن الفعل 5",
 
     "<h3>Past Progressive</h3>\n             <p class=\"formula\">was / were + Verb-ing</p>\n             <h3>Wann?</h3>\n             <ul><li>Eine Handlung war gerade im Gange: At eight o’clock last night I was reading.</li>\n             <li>Hintergrund, während etwas anderes passierte: I was reading when the owl arrived.</li></ul>\n             <h3>Signalwörter</h3>\n             <p>while, at eight o’clock last night, at this time yesterday</p>\n             <h3>Simple Past oder Past Progressive?</h3>\n             <p>Die laufende Handlung (Hintergrund) → Past Progressive. Die kurze Unterbrechung → Simple Past.</p>\n             <h3>Häufige Fehler</h3>\n             <ul><li>„I was read …“ → I was <strong>reading</strong> …</li>\n             <li>„We was …“ → We <strong>were</strong> …</li></ul>":
-      "",
+      "<h3>Past Progressive</h3>\n<p class=\"formula\">was / were + Verb-ing</p>\n<h3>متى؟</h3>\n<ul><li>فعل كان مستمرًا في لحظة معينة: At eight o’clock last night I was reading.</li>\n<li>خلفية، بينما حدث شيء آخر: I was reading when the owl arrived.</li></ul>\n<h3>الكلمات الدالة</h3>\n<p>while, at eight o’clock last night, at this time yesterday</p>\n<h3>Simple Past أم Past Progressive؟</h3>\n<p>الفعل المستمر (الخلفية) → Past Progressive. المقاطعة القصيرة → Simple Past.</p>\n<h3>أخطاء شائعة</h3>\n<ul><li>„I was read …“ → I was <strong>reading</strong> …</li>\n<li>„We was …“ → We <strong>were</strong> …</li></ul>",
 
     "Förderkurs Englisch · Zeitform 5":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 5",
 
     "Es lief gerade – zu einem Zeitpunkt in der Vergangenheit.":
-      "",
+      "كان يحدث – في لحظة معينة في الماضي.",
 
     "<p>“At eight o’clock last night Hermione <strong>was reading</strong> in the library.”</p>\n                     <p>“The students <strong>were sitting</strong> in the Great Hall.”</p>\n                     <p>Die Handlung war <strong>gerade im Gange</strong>.</p>":
-      "",
+      "<p>“At eight o’clock last night Hermione <strong>was reading</strong> in the library.”</p>\n<p>“The students <strong>were sitting</strong> in the Great Hall.”</p>\n<p>الفعل كان <strong>مستمرًا في تلك اللحظة</strong>.</p>",
 
     "Ich kann sagen, was gerade lief, als etwas anderes passierte.":
-      "",
+      "أستطيع أن أقول ما كان يحدث عندما حدث شيء آخر.",
 
     "<p class=\"box\"><strong>Past Progressive</strong> = eine Handlung war im Gange (Hintergrund).</p>":
-      "",
+      "<p class=\"box\"><strong>Past Progressive</strong> = فعل كان مستمرًا (الخلفية).</p>",
 
     "was / were + Verb-ing.":
       "",
@@ -770,16 +770,16 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Hintergrund oder Unterbrechung?":
-      "",
+      "خلفية أم مقاطعة؟",
 
     "<div class=\"pair\">\n                       <div><b>Past Progressive</b>Hintergrund: I <strong>was reading</strong>.</div>\n                       <div><b>Simple Past</b>Unterbrechung: when the owl <strong>arrived</strong>.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"while / at 8 pm I was reading. · when The owl arrived.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:6%;width:28%\"></div>\n      <div class=\"dt-dot \" style=\"left:16%\"></div><div class=\"dt-stem\" style=\"left:16%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>while / at 8 pm</b><span>I was reading.</span></div><div class=\"dt-dot hi\" style=\"left:26%\"></div><div class=\"dt-stem\" style=\"left:26%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:26%;transform:translateX(-50%);bottom:48px\"><b>when</b><span>The owl arrived.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">Vergangenheit</span><span style=\"left:50%;transform:translateX(-50%)\">jetzt</span><span style=\"right:0\">Zukunft</span></div>\n    </div></figure>\n                     <p class=\"formula\">while + Past Progressive · when + Simple Past</p>":
-      "",
+      "<div class=\"pair\">\n                       <div><b>Past Progressive</b>الخلفية: I <strong>was reading</strong>.</div>\n                       <div><b>Simple Past</b>المقاطعة: when the owl <strong>arrived</strong>.</div>\n                     </div>\n                     <figure class=\"dia dia-time\">\n    <div class=\"dt-stage\" style=\"--rows:2\" role=\"img\" aria-label=\"while / at 8 pm I was reading. · when The owl arrived.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:6%;width:28%\"></div>\n      <div class=\"dt-dot \" style=\"left:16%\"></div><div class=\"dt-stem\" style=\"left:16%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:110px\"><b>while / at 8 pm</b><span>I was reading.</span></div><div class=\"dt-dot hi\" style=\"left:26%\"></div><div class=\"dt-stem\" style=\"left:26%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:26%;transform:translateX(-50%);bottom:48px\"><b>when</b><span>The owl arrived.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">الماضي</span><span style=\"left:50%;transform:translateX(-50%)\">الآن</span><span style=\"right:0\">المستقبل</span></div>\n    </div></figure>\n                     <p class=\"formula\">while + Past Progressive · when + Simple Past</p>",
 
     "was / were + Verb-ing = war gerade im Gange":
-      "",
+      "was / were + Verb-ing = كان مستمرًا في تلك اللحظة",
 
     "<p>Signalwörter: while, at eight o’clock last night, at this time yesterday.</p>":
-      "",
+      "<p>الكلمات الدالة: while, at eight o’clock last night, at this time yesterday.</p>",
 
     "Which sentence is in the Past Progressive?":
       "",
@@ -788,7 +788,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "was + -ing zeigt: die Handlung war gerade im Gange.":
-      "",
+      "was + -ing يُظهر: الفعل كان مستمرًا في تلك اللحظة.",
 
     "At this time yesterday I ____ for the exam.":
       "",
@@ -833,22 +833,22 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Vor einem ganzen Satz steht while. During braucht ein Nomen (during the lesson).":
-      "",
+      "قبل جملة كاملة تأتي while. أما During فتحتاج إلى اسم (during the lesson).",
 
     "Vor einem ganzen Satz (I was reading) steht das Wort, das den Hintergrund einleitet.":
-      "",
+      "قبل جملة كاملة (I was reading) تأتي الكلمة التي تبدأ الخلفية.",
 
     "A2 · welche Form ist das?":
-      "",
+      "A2 · ما هذه الصيغة؟",
 
     "Welche Form ist das?":
-      "",
+      "ما هذه الصيغة؟",
 
     "was / were + -ing → Past Progressive (Hintergrund).":
-      "",
+      "was / were + -ing → Past Progressive (الخلفية).",
 
     "Eine kurze Handlung ohne -ing → Simple Past.":
-      "",
+      "فعل قصير بدون -ing → Simple Past.",
 
     "was reading":
       "",
@@ -869,70 +869,70 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Die kurze Unterbrechung steht im Simple Past.":
-      "",
+      "المقاطعة القصيرة تأتي في Simple Past.",
 
     "arrive":
       "",
 
     "was / were + -ing für die laufende Handlung. Die kurze Unterbrechung steht mit when + Simple Past.":
-      "",
+      "was / were + -ing للفعل المستمر. المقاطعة القصيرة تأتي مع when + Simple Past.",
 
     "At eight o’clock last night Harry {*was|were|is} flying on his broom. The students {*were|was|are} sitting in the Great Hall. Hermione was reading {*when|while|during} the owl arrived.":
       "",
 
     "Ich kann was / were + -ing bilden.":
-      "",
+      "أستطيع تكوين was / were + -ing.",
 
     "Ich kann while und when richtig benutzen.":
-      "",
+      "أستطيع استخدام while و when بشكل صحيح.",
 
     "Future: will und going to":
-      "",
+      "Future: will و going to",
 
     "Grammar Basics · Zeitform 6":
-      "",
+      "Grammar Basics · زمن الفعل 6",
 
     "<h3>Future: will und going to</h3>\n             <p class=\"formula\">will + Grundform · am / is / are going to + Grundform</p>\n             <h3>will</h3>\n             <ul><li>spontane Entscheidung: The phone is ringing. I will answer it.</li>\n             <li>Vorhersage / Vermutung: I think it will rain.</li>\n             <li>Angebot / Versprechen: I will help you.</li></ul>\n             <h3>going to</h3>\n             <ul><li>Plan / Absicht (schon entschieden): We are going to visit Hagrid.</li>\n             <li>Vorhersage mit Beweis: Look at the clouds! It is going to rain.</li></ul>\n             <h3>Signalwörter</h3>\n             <p>will: I think, probably, spontan · going to: Look!, already decided, plan</p>\n             <h3>Häufige Fehler</h3>\n             <ul><li>„I will to go …“ → I will <strong>go</strong> …</li>\n             <li>„He will goes …“ → He will <strong>go</strong> …</li></ul>":
-      "",
+      "<h3>Future: will و going to</h3>\n<p class=\"formula\">will + الصيغة الأساسية · am / is / are going to + الصيغة الأساسية</p>\n<h3>will</h3>\n<ul><li>قرار عفوي: The phone is ringing. I will answer it.</li>\n<li>توقّع / ظن: I think it will rain.</li>\n<li>عرض / وعد: I will help you.</li></ul>\n<h3>going to</h3>\n<ul><li>خطة / نية (القرار اتُّخذ مسبقًا): We are going to visit Hagrid.</li>\n<li>توقّع مع دليل: Look at the clouds! It is going to rain.</li></ul>\n<h3>الكلمات الدالة</h3>\n<p>will: I think, probably، عفوي · going to: Look!, already decided, plan</p>\n<h3>أخطاء شائعة</h3>\n<ul><li>„I will to go …“ → I will <strong>go</strong> …</li>\n<li>„He will goes …“ → He will <strong>go</strong> …</li></ul>",
 
     "Förderkurs Englisch · Zeitform 6":
-      "",
+      "دورة دعم في الإنجليزية · زمن الفعل 6",
 
     "Spontan oder geplant?":
-      "",
+      "عفوي أم مخطط له؟",
 
     "<p>“The phone is ringing. I <strong>will</strong> answer it!”</p>\n                     <p>“We <strong>are going to</strong> visit Diagon Alley. We have already booked the tickets.”</p>\n                     <p>Beides ist Zukunft – aber die Entscheidung ist anders.</p>":
-      "",
+      "<p>“The phone is ringing. I <strong>will</strong> answer it!”</p>\n<p>“We <strong>are going to</strong> visit Diagon Alley. We have already booked the tickets.”</p>\n<p>الاثنان للمستقبل – لكن القرار مختلف.</p>",
 
     "Ich kann über die Zukunft sprechen: spontan mit will, geplant mit going to.":
-      "",
+      "أستطيع أن أتحدث عن المستقبل: بشكل عفوي بـ will، ومخطط له بـ going to.",
 
     "<p class=\"box\"><strong>will</strong> = spontan / Vermutung. <strong>going to</strong> = Plan / Beweis.</p>":
-      "",
+      "<p class=\"box\"><strong>will</strong> = عفوي / ظن. <strong>going to</strong> = خطة / دليل.</p>",
 
     "will":
       "",
 
     "will + Grundform.":
-      "",
+      "will + الصيغة الأساسية للفعل.",
 
     "<p>Spontane Entscheidung: I <strong>will answer</strong> the phone.</p>\n                     <p>Vermutung: I think Harry <strong>will win</strong>.</p>\n                     <p class=\"note\">Verneinung: won’t + Grundform – und nie „will to“.</p>":
-      "",
+      "<p>قرار عفوي: I <strong>will answer</strong> the phone.</p>\n<p>ظن: I think Harry <strong>will win</strong>.</p>\n<p class=\"note\">النفي: won’t + الصيغة الأساسية – وليس أبدًا „will to“.</p>",
 
     "going to":
       "",
 
     "am / is / are going to + Grundform.":
-      "",
+      "am / is / are going to + الصيغة الأساسية للفعل.",
 
     "<p>Plan, der schon feststeht: We <strong>are going to visit</strong> Hagrid.</p>\n                     <p>Vorhersage mit Beweis: Look! It <strong>is going to rain</strong>.</p>":
-      "",
+      "<p>خطة ثابتة مسبقًا: We <strong>are going to visit</strong> Hagrid.</p>\n<p>توقّع مع دليل: Look! It <strong>is going to rain</strong>.</p>",
 
     "will = spontan · going to = Plan/Beweis":
-      "",
+      "will = عفوي · going to = خطة/دليل",
 
     "<p>Signale: I think, probably → will · Look!, already decided → going to.</p>":
-      "",
+      "<p>العلامات: I think, probably → will · Look!, already decided → going to.</p>",
 
     "The phone is ringing. I ____ answer it.":
       "",
@@ -941,10 +941,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Spontane Entscheidung im Moment → will + Grundform.":
-      "",
+      "قرار عفوي في اللحظة → will + الصيغة الأساسية.",
 
     "Es passiert gerade – die Entscheidung fällt im Moment.":
-      "",
+      "الشيء يحدث الآن – والقرار يُتخذ في هذه اللحظة.",
 
     "We have already got the tickets. We ____ the match tomorrow.":
       "",
@@ -959,10 +959,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Der Plan ist schon entschieden (Tickets gekauft) → are going to watch.":
-      "",
+      "الخطة تقررت مسبقًا (التذاكر اشتُريت) → are going to watch.",
 
     "Der Plan steht schon fest.":
-      "",
+      "الخطة ثابتة مسبقًا.",
 
     "Look at those black clouds! It ____ rain.":
       "",
@@ -971,10 +971,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Beweis vor Augen (Look!) → is going to rain.":
-      "",
+      "الدليل أمام عينيك (Look!) → is going to rain.",
 
     "Du siehst den Beweis direkt vor dir.":
-      "",
+      "أنت ترى الدليل أمامك مباشرة.",
 
     "He will goes to Hogwarts.":
       "",
@@ -986,25 +986,25 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Nach will steht die Grundform ohne to: will go.":
-      "",
+      "بعد will تأتي الصيغة الأساسية بدون to: will go.",
 
     "A2 · spontan oder Plan?":
-      "",
+      "A2 · عفوي أم خطة؟",
 
     "Welche Zeitform passt?":
-      "",
+      "أي زمن مناسب؟",
 
     "Spontan, Vermutung, Angebot → will.":
-      "",
+      "عفوي، ظن، عرض → will.",
 
     "Plan oder Beweis vor Augen → going to.":
-      "",
+      "خطة أو دليل أمام العينين → going to.",
 
     "will + Grundform":
-      "",
+      "will + الصيغة الأساسية",
 
     "going to + Grundform":
-      "",
+      "going to + الصيغة الأساسية",
 
     "The phone is ringing. I will answer it.":
       "",
@@ -1028,37 +1028,37 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Spontan → will, geplant → going to.":
-      "",
+      "عفوي → will، مخطط له → going to.",
 
     "Verneinung von will: won’t + Grundform.":
-      "",
+      "نفي will: won’t + الصيغة الأساسية.",
 
     "Spontan (Telefon klingelt) → will. Plan (Tickets gekauft) → going to. Beweis (Look!) → going to.":
-      "",
+      "عفوي (الهاتف يرن) → will. خطة (التذاكر اشتُريت) → going to. دليل (Look!) → going to.",
 
     "The phone is ringing. I {*will|am going to|go} answer it. We have already bought the tickets, so we {*are going to|will|go} watch the match. Look at the clouds! It {*is going to|will|goes} rain.":
       "",
 
     "Ich kann spontane Entscheidungen mit will ausdrücken.":
-      "",
+      "أستطيع التعبير عن القرارات العفوية بـ will.",
 
     "Ich kann Pläne mit going to ausdrücken.":
-      "",
+      "أستطيع التعبير عن الخطط بـ going to.",
 
     "Ich kann will und going to mit ihren Signalen unterscheiden.":
-      "",
+      "أستطيع التمييز بين will و going to من خلال علاماتهما.",
 
     "Zeitformen im Mix":
-      "",
+      "أزمنة الفعل مختلطة",
 
     "Grammar Basics · Alle sieben Zeitformen":
-      "",
+      "Grammar Basics · كل أزمنة الفعل السبعة",
 
     "<h3>Alle sieben Zeitformen</h3>\n             <ul>\n               <li><b>Simple Present</b> – he plays · every day, always</li>\n               <li><b>Present Progressive</b> – he is playing · now, at the moment</li>\n               <li><b>Simple Past</b> – he played / went · yesterday, last week</li>\n               <li><b>Present Perfect</b> – he has played / gone · already, just, yet, never</li>\n               <li><b>Past Progressive</b> – he was playing · while, at eight o’clock last night</li>\n               <li><b>will-Future</b> – he will play · spontan, Vermutung (I think …)</li>\n               <li><b>going to</b> – he is going to play · Plan, Beweis (Look! …)</li>\n             </ul>\n             <figure class=\"dia dia-time\"><figcaption class=\"dia-cap\">Zeitformen auf dem Zeitstrahl</figcaption>\n    <div class=\"dt-stage\" style=\"--rows:3\" role=\"img\" aria-label=\"yesterday He played. · at 8 last night He was playing. · now He is playing. · tomorrow He will play.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:20%;width:12%\"></div>\n      <div class=\"dt-dot \" style=\"left:10%\"></div><div class=\"dt-stem\" style=\"left:10%;bottom:29px;height:143px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:172px\"><b>yesterday</b><span>He played.</span></div><div class=\"dt-dot \" style=\"left:26%\"></div><div class=\"dt-stem\" style=\"left:26%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:26%;transform:translateX(-50%);bottom:110px\"><b>at 8 last night</b><span>He was playing.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>now</b><span>He is playing.</span></div><div class=\"dt-dot \" style=\"left:86%\"></div><div class=\"dt-stem\" style=\"left:86%;bottom:29px;height:143px\"></div>\n      <div class=\"dt-card \" style=\"right:0;bottom:172px\"><b>tomorrow</b><span>He will play.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">Vergangenheit</span><span style=\"left:50%;transform:translateX(-50%)\">jetzt</span><span style=\"right:0\">Zukunft</span></div>\n    </div></figure>\n             <h3>So findest du die Zeitform</h3>\n             <p>1. Signalwort suchen. 2. Zeitform bestimmen. 3. Form richtig bilden.</p>":
-      "",
+      "<h3>كل أزمنة الفعل السبعة</h3>\n             <ul>\n               <li><b>Simple Present</b> – he plays · every day, always</li>\n               <li><b>Present Progressive</b> – he is playing · now, at the moment</li>\n               <li><b>Simple Past</b> – he played / went · yesterday, last week</li>\n               <li><b>Present Perfect</b> – he has played / gone · already, just, yet, never</li>\n               <li><b>Past Progressive</b> – he was playing · while, at eight o’clock last night</li>\n               <li><b>will-Future</b> – he will play · عفوي، ظن (I think …)</li>\n               <li><b>going to</b> – he is going to play · خطة، دليل (Look! …)</li>\n             </ul>\n             <figure class=\"dia dia-time\"><figcaption class=\"dia-cap\">أزمنة الفعل على خط الزمن</figcaption>\n    <div class=\"dt-stage\" style=\"--rows:3\" role=\"img\" aria-label=\"yesterday He played. · at 8 last night He was playing. · now He is playing. · tomorrow He will play.\">\n      <div class=\"dt-line\"></div><div class=\"dt-now\" style=\"left:50%\"></div>\n      <div class=\"dt-span\" style=\"left:20%;width:12%\"></div>\n      <div class=\"dt-dot \" style=\"left:10%\"></div><div class=\"dt-stem\" style=\"left:10%;bottom:29px;height:143px\"></div>\n      <div class=\"dt-card \" style=\"left:0;bottom:172px\"><b>yesterday</b><span>He played.</span></div><div class=\"dt-dot \" style=\"left:26%\"></div><div class=\"dt-stem\" style=\"left:26%;bottom:29px;height:81px\"></div>\n      <div class=\"dt-card \" style=\"left:26%;transform:translateX(-50%);bottom:110px\"><b>at 8 last night</b><span>He was playing.</span></div><div class=\"dt-dot hi\" style=\"left:50%\"></div><div class=\"dt-stem\" style=\"left:50%;bottom:29px;height:19px\"></div>\n      <div class=\"dt-card hi\" style=\"left:50%;transform:translateX(-50%);bottom:48px\"><b>now</b><span>He is playing.</span></div><div class=\"dt-dot \" style=\"left:86%\"></div><div class=\"dt-stem\" style=\"left:86%;bottom:29px;height:143px\"></div>\n      <div class=\"dt-card \" style=\"right:0;bottom:172px\"><b>tomorrow</b><span>He will play.</span></div>\n      <div class=\"dt-axis\"><span style=\"left:0\">الماضي</span><span style=\"left:50%;transform:translateX(-50%)\">الآن</span><span style=\"right:0\">المستقبل</span></div>\n    </div></figure>\n             <h3>هكذا تجد زمن الفعل</h3>\n             <p>1. ابحث عن الكلمة الدالة. 2. حدّد زمن الفعل. 3. كوّن الصيغة بشكل صحيح.</p>",
 
     "A1 · Signalwort erkennen":
-      "",
+      "A1 · التعرّف على الكلمة الدالة",
 
     "Hermione ____ her homework every evening.":
       "",
@@ -1070,7 +1070,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "every evening → immer wieder.":
-      "",
+      "every evening → مرة بعد مرة.",
 
     "Look! Harry ____ on his broom.":
       "",
@@ -1088,7 +1088,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Look! → genau jetzt.":
-      "",
+      "Look! → الآن بالضبط.",
 
     "have gone":
       "",
@@ -1097,7 +1097,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "last weekend → abgeschlossen.":
-      "",
+      "last weekend → انتهى.",
 
     "Snape ____ just taken points from Gryffindor.":
       "",
@@ -1109,10 +1109,10 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "he / she / it → has + 3. Form: has taken.":
-      "",
+      "he / she / it → has + التصريف الثالث: has taken.",
 
     "just → gerade passiert, Ergebnis jetzt.":
-      "",
+      "just → حدث للتو، والنتيجة الآن.",
 
     "At eight o’clock last night the students ____ in the Great Hall.":
       "",
@@ -1124,40 +1124,40 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "at eight o’clock last night → war gerade im Gange.":
-      "",
+      "at eight o’clock last night → كان مستمرًا في تلك اللحظة.",
 
     "The fire is going out. I ____ get more wood.":
       "",
 
     "Spontane Entscheidung → will: will get.":
-      "",
+      "قرار عفوي → will: will get.",
 
     "Die Entscheidung fällt genau jetzt.":
-      "",
+      "القرار يُتخذ الآن بالضبط.",
 
     "A2 · in welche Zeit gehört der Satz?":
-      "",
+      "A2 · إلى أي زمن تنتمي الجملة؟",
 
     "Ordne jeden Satz dem Zeitbereich zu.":
-      "",
+      "صنّف كل جملة حسب الزمن.",
 
     "Signalwort zuerst suchen.":
-      "",
+      "ابحث أولًا عن الكلمة الدالة.",
 
     "Ergebnis jetzt (already, just, ever) → Present Perfect.":
-      "",
+      "النتيجة الآن (already, just, ever) → Present Perfect.",
 
     "Gegenwart":
-      "",
+      "الحاضر",
 
     "Vergangenheit":
-      "",
+      "الماضي",
 
     "Ergebnis jetzt":
-      "",
+      "النتيجة الآن",
 
     "Zukunft":
-      "",
+      "المستقبل",
 
     "They went to Hogsmeade last week.":
       "",
@@ -1178,43 +1178,43 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "A3 · Mini-Story":
-      "",
+      "A3 · قصة قصيرة",
 
     "Wähle in jedem Kasten die richtige Form.":
-      "",
+      "اختر في كل مربع الصيغة الصحيحة.",
 
     "Jedes Signalwort verrät die Zeitform: every Saturday, right now, last week, since then, at eight o’clock last night, next week, already decided.":
-      "",
+      "كل كلمة دالة تكشف زمن الفعل: every Saturday, right now, last week, since then, at eight o’clock last night, next week, already decided.",
 
     "Every Saturday Harry {*plays|play|played} Quidditch. Right now he {*is flying|flies|flew} over the pitch. Last week he {*fell|has fallen|falls} from his broom. Since then he {*has practised|practised|practises} every day. At eight o’clock last night he {*was training|trained|trains} alone. Next week he {*will play|plays|played} in the big match. And he {*is going to|will|plays} become captain – he has already decided.":
       "",
 
     "Endlos-Training Zeitformen":
-      "",
+      "تدريب مفتوح على أزمنة الفعل",
 
     "Zufallsaufgaben":
-      "",
+      "تمارين عشوائية",
 
     "Training":
-      "",
+      "تدريب",
 
     "<h3>Signalwörter</h3>\n             <ul><li><b>every day, on Mondays, every Saturday</b> → Simple Present: he plays</li>\n             <li><b>now, right now, at the moment</b> → Present Progressive: he is playing</li>\n             <li><b>yesterday, last week, two days ago</b> → Simple Past: he played</li>\n             <li><b>already, just, yet, ever, never</b> → Present Perfect: he has played</li>\n             <li><b>while, at eight o’clock last night, at this time yesterday</b> → Past Progressive: he was playing</li>\n             <li><b>tomorrow, next week, next summer</b> → will-Future: he will play</li>\n             <li><b>Look! …, bereits geplant</b> → going to: he is going to play</li></ul>\n             <h3>Fragen und Verneinung</h3>\n             <p class=\"formula\">do / does · am / is / are · did · have / has · was / were · will / won’t</p>\n             <h3>Zustandsverben</h3>\n             <p>know, like, want, need, understand → kein -ing, auch nicht bei „now“.</p>":
-      "",
+      "<h3>الكلمات الدالة</h3>\n             <ul><li><b>every day, on Mondays, every Saturday</b> → Simple Present: he plays</li>\n             <li><b>now, right now, at the moment</b> → Present Progressive: he is playing</li>\n             <li><b>yesterday, last week, two days ago</b> → Simple Past: he played</li>\n             <li><b>already, just, yet, ever, never</b> → Present Perfect: he has played</li>\n             <li><b>while, at eight o’clock last night, at this time yesterday</b> → Past Progressive: he was playing</li>\n             <li><b>tomorrow, next week, next summer</b> → will-Future: he will play</li>\n             <li><b>Look! …, مخطط له مسبقًا</b> → going to: he is going to play</li></ul>\n             <h3>السؤال والنفي</h3>\n             <p class=\"formula\">do / does · am / is / are · did · have / has · was / were · will / won’t</p>\n             <h3>أفعال الحالة (state verbs)</h3>\n             <p>know, like, want, need, understand → بدون -ing، حتى مع „now“.</p>",
 
     "Immer neue Sätze: Signalwort erkennen, richtige Form wählen, Mini-Story bauen. Drei Stufen.":
-      "",
+      "جمل جديدة دائمًا: تعرّف على الكلمة الدالة، اختر الصيغة الصحيحة، ابنِ قصة قصيرة. ثلاثة مستويات.",
 
     "Alle Lernkarten":
-      "",
+      "كل البطاقات التعليمية",
 
     "Wiederholen · Lernkarten":
-      "",
+      "المراجعة · البطاقات التعليمية",
 
     "Wiederholen":
-      "",
+      "المراجعة",
 
     "Lernkarten: Regeln & unregelmäßige Verben":
-      "",
+      "البطاقات التعليمية: القواعد والأفعال غير المنتظمة",
 
     "Simple Present – he / she / it":
       "",
@@ -1223,46 +1223,46 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Simple Present – Frage":
-      "",
+      "Simple Present – السؤال",
 
     "Do / Does + Grundform: Does Harry live at Hogwarts?":
-      "",
+      "Do / Does + الصيغة الأساسية: Does Harry live at Hogwarts?",
 
     "Present Progressive – Bildung":
-      "",
+      "Present Progressive – التكوين",
 
     "am / is / are + Verb-ing: I am reading, he is flying.":
       "",
 
     "Present Progressive – wann?":
-      "",
+      "Present Progressive – متى؟",
 
     "jetzt gerade, vorübergehend: now, at the moment, Look!":
-      "",
+      "الآن في هذه اللحظة، لفترة مؤقتة: now, at the moment, Look!",
 
     "Zustandsverben":
-      "",
+      "أفعال الحالة (state verbs)",
 
     "know, like, want … bleiben im Simple Present. Nicht „I am knowing“.":
-      "",
+      "know, like, want … تبقى في Simple Present. وليس „I am knowing“.",
 
     "Simple Past – regelmäßig":
-      "",
+      "Simple Past – الأفعال المنتظمة",
 
     "Verb + ed: work → worked, study → studied.":
       "",
 
     "Simple Past – Frage":
-      "",
+      "Simple Past – السؤال",
 
     "Did + Grundform: Did you meet Hagrid?":
-      "",
+      "Did + الصيغة الأساسية: Did you meet Hagrid?",
 
     "Simple Past – Verneinung":
-      "",
+      "Simple Past – النفي",
 
     "didn’t + Grundform: Harry didn’t go.":
-      "",
+      "didn’t + الصيغة الأساسية: Harry didn’t go.",
 
     "go → went":
       "",
@@ -1301,162 +1301,162 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "",
 
     "Signalwörter Simple Present":
-      "",
+      "الكلمات الدالة على Simple Present",
 
     "always, usually, every day, on Mondays":
       "",
 
     "Signalwörter Present Progressive":
-      "",
+      "الكلمات الدالة على Present Progressive",
 
     "now, right now, at the moment, Look!":
       "",
 
     "Signalwörter Simple Past":
-      "",
+      "الكلمات الدالة على Simple Past",
 
     "yesterday, last week, in 1991, two days ago":
       "",
 
     "Present Perfect – Bildung":
-      "",
+      "Present Perfect – التكوين",
 
     "have / has + 3. Form: I have visited, he has written.":
-      "",
+      "have / has + التصريف الثالث: I have visited, he has written.",
 
     "Present Perfect – wann?":
-      "",
+      "Present Perfect – متى؟",
 
     "Ergebnis jetzt wichtig oder Erfahrung: already, just, yet, ever, never.":
-      "",
+      "النتيجة مهمة الآن أو تجربة: already, just, yet, ever, never.",
 
     "Genaue Zeit vorbei (yesterday) → Simple Past. Keine Zeit / Bezug jetzt → Present Perfect.":
-      "",
+      "وقت محدد انتهى (yesterday) → Simple Past. لا وقت محدد / علاقة بالحاضر → Present Perfect.",
 
     "Past Progressive – Bildung":
-      "",
+      "Past Progressive – التكوين",
 
     "was / were + Verb-ing: I was reading, they were sitting.":
       "",
 
     "Past Progressive – wann?":
-      "",
+      "Past Progressive – متى؟",
 
     "Handlung war gerade im Gange: while, at eight o’clock last night.":
-      "",
+      "الفعل كان مستمرًا في تلك اللحظة: while, at eight o’clock last night.",
 
     "while oder when?":
-      "",
+      "while أم when؟",
 
     "while + Past Progressive (Hintergrund), when + Simple Past (Unterbrechung).":
-      "",
+      "while + Past Progressive (الخلفية)، when + Simple Past (المقاطعة).",
 
     "will-Future – Bildung":
-      "",
+      "will-Future – التكوين",
 
     "will + Grundform: I will help you. Verneinung: won’t + Grundform.":
-      "",
+      "will + الصيغة الأساسية: I will help you. النفي: won’t + الصيغة الأساسية.",
 
     "will – wann?":
-      "",
+      "will – متى؟",
 
     "spontane Entscheidung, Vermutung, Angebot: I think it will rain.":
-      "",
+      "قرار عفوي، ظن، عرض: I think it will rain.",
 
     "going to – Bildung":
-      "",
+      "going to – التكوين",
 
     "am / is / are going to + Grundform: I am going to visit Hagrid.":
-      "",
+      "am / is / are going to + الصيغة الأساسية: I am going to visit Hagrid.",
 
     "going to – wann?":
-      "",
+      "going to – متى؟",
 
     "Plan (schon entschieden) oder Beweis (Look!): It is going to rain.":
-      "",
+      "خطة (تقررت مسبقًا) أو دليل (Look!): It is going to rain.",
 
     "go – 3. Form":
-      "",
+      "go – التصريف الثالث",
 
     "go → gone":
       "",
 
     "see – 3. Form":
-      "",
+      "see – التصريف الثالث",
 
     "see → seen":
       "",
 
     "take – 3. Form":
-      "",
+      "take – التصريف الثالث",
 
     "take → taken":
       "",
 
     "write – 3. Form":
-      "",
+      "write – التصريف الثالث",
 
     "write → written":
       "",
 
     "eat – 3. Form":
-      "",
+      "eat – التصريف الثالث",
 
     "eat → eaten":
       "",
 
     "drink – 3. Form":
-      "",
+      "drink – التصريف الثالث",
 
     "drink → drunk":
       "",
 
     "fly – 3. Form":
-      "",
+      "fly – التصريف الثالث",
 
     "fly → flown":
       "",
 
     "make – 3. Form":
-      "",
+      "make – التصريف الثالث",
 
     "make → made":
       "",
 
     "buy – 3. Form":
-      "",
+      "buy – التصريف الثالث",
 
     "buy → bought":
       "",
 
     "be – 3. Form":
-      "",
+      "be – التصريف الثالث",
 
     "be → been":
       "",
 
     "Signalwörter Present Perfect":
-      "",
+      "الكلمات الدالة على Present Perfect",
 
     "already, just, yet, ever, never, so far":
       "",
 
     "Signalwörter Past Progressive":
-      "",
+      "الكلمات الدالة على Past Progressive",
 
     "while, at eight o’clock last night, at this time yesterday":
       "",
 
     "Signalwörter will-Future":
-      "",
+      "الكلمات الدالة على will-Future",
 
     "spontan / Vermutung (I think …) · tomorrow, next week":
-      "",
+      "عفوي / ظن (I think …) · tomorrow, next week",
 
     "Signalwörter going to":
-      "",
+      "الكلمات الدالة على going to",
 
     "Plan (already decided) · Beweis (Look! …)":
-      ""
+      "خطة (already decided) · دليل (Look! …)"
 
 } });
