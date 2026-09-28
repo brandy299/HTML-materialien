@@ -64,6 +64,11 @@ Stilstudie der Lehrkraft war die Vorlage.
   `tr("…")` laufen und in beiden Sprachen stehen – `node app/tools/check-i18n.js` prüft das (auch im GitHub-Check).
   Arabisch: Layout bleibt links→rechts (Inhalte sind deutsch), keine Sperrung, Systemschrift für arabische Zeichen.
   Die arabischen Texte sind maschinennah formuliert – **von einer muttersprachlichen Person gegenlesen lassen** (offen).
+- **Übersetzte Kursinhalte (28.09.2026):** Pro Kurs und Sprache `app/uebersetzungen/<kurs-id>.<en|ar>.js`, Schlüssel = deutscher
+  Text. Welche Felder übersetzbar sind, legt `mapTexts()` in `content.js` fest (App und Werkzeuge nutzen dieselbe Funktion).
+  Nicht übersetzt: Übungsklausur, Word-Simulation, Endlos-Training, Links. Fachbegriffe und Lösungswörter bleiben deutsch
+  (Prüfungssprache), Übersetzung in Klammern. Werkzeug: `node app/tools/texte.js <kurs> <sprache>` bzw. `--stand`.
+  Sprachwechsel mitten in einer übersetzten Aufgabe startet die Aufgabe neu (Inhalt ändert sich), sonst bleibt sie stehen.
 - **Grafiken nur als Bausteine (28.09.2026):** `zeitstrahl()` und `ablauf()` in `content.js`, Stil in `styles.css`
   (`.dia-*`). Content-Agenten zeichnen keine eigenen SVGs/Bilder (Check warnt). Neue Diagrammtypen baut der Creative Director.
 

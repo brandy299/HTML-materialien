@@ -113,6 +113,33 @@ auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-C
    QR-Codes erzeugt die App selbst (QR-Knopf an jeder Übung, Übersicht unter `#/qr`).
 6. Der Lehrkraft am Ende die Deep-Links der neuen Themen nennen.
 
+## Übersetzungen der Kursinhalte (Englisch, Arabisch)
+
+Schüler/innen können die App auf Englisch oder Arabisch stellen. Damit auch die **Inhalte** übersetzt erscheinen,
+gibt es pro Kurs und Sprache eine Datei `app/uebersetzungen/<kurs-id>.<en|ar>.js`.
+
+1. Datei erzeugen oder aktualisieren: `node app/tools/texte.js <kurs-id> <en|ar>`
+   → enthält **alle** übersetzbaren Texte des Kurses, links Deutsch (nicht ändern!), rechts `""` zum Ausfüllen.
+   Die Datei wird automatisch in `app/index.html` und `app/sw.js` eingetragen. Stand aller Kurse: `node app/tools/texte.js --stand`.
+2. Rechts die Übersetzung eintragen. `""` lassen = die App zeigt das Deutsche (auch das ist erlaubt).
+3. `node app/tools/check-kurse.js` → 0 Fehler. Geprüft wird u. a., dass Lücken/Bausteine erhalten bleiben.
+4. Wenn sich der Kurs ändert: Schritt 1 erneut ausführen – vorhandene Übersetzungen bleiben, neue Texte kommen dazu.
+
+**Regeln (wichtig – die Prüfung ist auf Deutsch):**
+- **Fachbegriffe bleiben deutsch**, beim ersten Vorkommen pro Text mit Übersetzung in Klammern:
+  „Personalbedarf (الاحتياج من الموظفين)“. So lernen die Schüler/innen den deutschen Begriff, verstehen ihn aber.
+- **Lösungswörter bleiben unverändert:** Wörter in `{Lücken}`, Bausteine `{*richtig|falsch}`, Ablenker (`distractors`),
+  Antwortoptionen, die Fachbegriffe sind, und Kategorien, die Fachbegriffe sind. Nur den Text drumherum übersetzen.
+  Anzahl und Reihenfolge der `{…}` müssen gleich bleiben, der richtige Baustein behält sein `*`.
+- **HTML übernehmen:** Tags wie `<strong>`, `<mark>`, `<p class="…">`, `<figure …>` unverändert lassen, nur den sichtbaren Text übersetzen.
+  Diagramme (Zeitstrahl/Ablauf) erscheinen als fertiges HTML – nur die Texte in den Karten/Kästen übersetzen,
+  `style="…"` und Zahlen nicht anfassen.
+- **Englischkurs:** Englische Aufgaben, Beispielsätze und Antworten bleiben englisch (`""` lassen). Übersetzt werden nur die
+  deutschen Erklärungen, Tipps und Anleitungen.
+- Namen, Firmen (Mediaworld e. K.), Zahlen, Beträge, Paragrafen bleiben, wie sie sind.
+- Einfache Sprache, kurze Sätze (Niveau wie im Deutschen). Arabisch: Hocharabisch (MSA), keine Dialekte.
+- Übungsklausuren, Word-Simulation und Endlos-Trainings werden nicht übersetzt (tauchen in der Datei nicht auf).
+
 ## Nicht ändern (ohne ausdrücklichen Auftrag)
 
 `CLAUDE.md`, `docs/`, `.github/`, `app/tools/`, `app/app.js`, `app/styles.css`, `app/vendor/`, andere Kursdateien, `app/kurse/materialien.js` (wird erzeugt),

@@ -220,10 +220,57 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
   }
 }
 
-/* ── 4. Ausgabe ─────────────────────────────────────────────── */
+/* ── 4. Übersetzungen (app/uebersetzungen/<kurs-id>.<sprache>.js) ── */
+const trListed = [...indexHtml.matchAll(/<script src="(uebersetzungen\/[^"]+)"><\/script>/g)].map((m) => m[1]);
+const trDir = path.join(APP, "uebersetzungen");
+const trDisk = fs.existsSync(trDir) ? fs.readdirSync(trDir).filter((f) => f.endsWith(".js")).map((f) => "uebersetzungen/" + f) : [];
+for (const f of trDisk) {
+  if (!trListed.includes(f)) err(f, "Übersetzung ist nicht in app/index.html eingetragen (node app/tools/texte.js <kurs> <sprache> trägt sie ein)");
+  if (!swJs.includes(`"${f}"`)) err(f, "Übersetzung fehlt in app/sw.js (Liste SHELL)");
+  if (!/^uebersetzungen\/[a-z0-9-]+\.(en|ar)\.js$/.test(f)) err(f, "Dateiname muss <kurs-id>.<en|ar>.js sein");
+}
+if (trListed.length && indexHtml.indexOf(trListed[trListed.length - 1]) > indexHtml.indexOf("vendor/qrcode.js")) err("app/index.html", "Übersetzungen müssen vor vendor/qrcode.js stehen");
+const tagsOf = (x) => (String(x).match(/<\/?[a-z][a-z0-9]*/gi) || []).map((t) => t.toLowerCase()).sort().join(",");
+const gapsOf = (x) => [...String(x).matchAll(/\{([^}]*)\}/g)].map((m) => m[1]);
+const trStats = [];
+for (const f of trListed) {
+  const before = ctx.LERNRAUM.translations.length;
+  if (!run(f)) continue;
+  ctx.LERNRAUM.translations.slice(before).forEach((T) => {
+    const W = `${f}`;
+    const s = ctx.LERNRAUM.subjects.find((x) => x.id === T.course);
+    if (!s) return err(W, `Kurs „${T.course}“ gibt es nicht`);
+    if (!["en", "ar"].includes(T.lang)) return err(W, `Sprache „${T.lang}“ nicht vorgesehen (en, ar)`);
+    if (!T.strings || typeof T.strings !== "object") return err(W, "strings fehlt");
+    const texts = new Set(); ctx.mapTexts(s, (x) => { texts.add(x); return x; });
+    let done = 0;
+    for (const [de, x] of Object.entries(T.strings)) {
+      if (typeof x !== "string") { err(W, `Übersetzung muss Text sein: ${de.slice(0, 60)}`); continue; }
+      if (!x.trim()) continue;
+      if (!texts.has(de)) { warn(W, `veraltet (steht so nicht mehr im Kurs): ${de.slice(0, 60)}`); continue; }
+      done++;
+      const w = `${W} „${de.replace(/\s+/g, " ").slice(0, 50)}…“`;
+      const g1 = gapsOf(de), g2 = gapsOf(x);
+      if (g1.length !== g2.length) err(w, `Lücken/Bausteine {…}: Deutsch ${g1.length}, Übersetzung ${g2.length} – muss gleich sein`);
+      else g2.forEach((g, i) => {
+        if (g1[i].includes("*") || g1[i].includes("|")) {
+          const opts = g.split("|");
+          if (opts.filter((o) => o.startsWith("*")).length !== 1) err(w, `Baustein ${i + 1}: genau eine Option braucht * (richtig)`);
+          if (opts.length < 2) err(w, `Baustein ${i + 1}: mindestens 2 Optionen`);
+        }
+      });
+      if (tagsOf(de) !== tagsOf(x)) warn(w, "HTML-Tags weichen vom Deutschen ab (<strong>, <mark>, <p> … bitte übernehmen)");
+      if (/\$\{/.test(x)) err(w, "enthält ${…} – Diagramme/Schemata werden automatisch übernommen, bitte das fertige HTML aus dem Deutschen kopieren");
+    }
+    trStats.push(`${T.course} ${T.lang}: ${done}/${texts.size} Texte übersetzt`);
+  });
+}
+
+/* ── 5. Ausgabe ─────────────────────────────────────────────── */
 const total = Object.values(subjectsByFile).flat().filter((s) => !s.materials).length;
 warns.forEach((w) => console.log(w));
 errors.forEach((e) => console.log(e));
+trStats.forEach((x) => console.log("· " + x));
 console.log(`\n${total} Kurse geprüft · ${errors.length} Fehler · ${warns.length} Hinweise`);
 if (errors.length) { console.log("→ Bitte Fehler beheben, dann erneut prüfen."); process.exit(1); }
 console.log("→ Alles in Ordnung.");

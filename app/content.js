@@ -121,6 +121,39 @@ function bedarf(ist, ab, zu, soll, opts = {}) {
   return { rows: bedarfRows(ist, ab, zu, soll, opts), hints };
 }
 
+/* ── Übersetzbare Texte eines Kurses (für app.js und app/tools/texte.js) ──
+   mapTexts(subject, fn) liefert eine Kopie, in der jeder übersetzbare Text x durch fn(x) ersetzt ist.
+   Nicht übersetzt werden: ids, Zahlen, Lösungsindizes, Word-Simulation (Prüfkriterien vergleichen Text),
+   Übungsklausuren (wie die echte Prüfung: Deutsch) und Links. */
+function mapTexts(subject, fn) {
+  const T = (x) => (typeof x === "string" && x.trim() ? fn(x) : x);
+  const TL = (a) => (Array.isArray(a) ? a.map(T) : a);
+  const common = (o) => { ["title", "kicker", "case", "prompt", "explain", "result", "hint", "text"].forEach((k) => { if (k in o) o[k] = T(o[k]); }); if (o.hints) o.hints = TL(o.hints); };
+  const step = (st0) => {
+    const st = { ...st0 };
+    if (st.type === "word" || st.type === "link") { st.title = T(st.title); return st; }
+    common(st);
+    if (st.distractors) st.distractors = TL(st.distractors);
+    if (st.slides) st.slides = st.slides.map((x) => ({ ...x, kicker: T(x.kicker), title: T(x.title), body: T(x.body), big: T(x.big) }));
+    if (st.questions) st.questions = st.questions.map((q) => ({ ...q, q: T(q.q), options: TL(q.options), explain: T(q.explain), hint: T(q.hint), hints: TL(q.hints) }));
+    if (st.categories) st.categories = TL(st.categories);
+    if (st.items) st.items = st.items.map((it) => (typeof it === "string" ? T(it) : { ...it, text: T(it.text) }));
+    if (st.rows) st.rows = st.rows.map((r) => ({ ...r, label: T(r.label) }));
+    if (st.cards) st.cards = st.cards.map((c) => ({ ...c, front: T(c.front), back: T(c.back) }));
+    return st;
+  };
+  return {
+    ...subject,
+    description: T(subject.description),
+    topics: subject.topics.map((t0) => {
+      if (t0.exam || subject.materials) return t0;
+      const t = { ...t0, title: T(t0.title), kicker: T(t0.kicker), group: T(t0.group), help: T(t0.help), description: T(t0.description) };
+      t.steps = (t0.steps || []).map(step);
+      return t;
+    })
+  };
+}
+
 window.LERNRAUM = {
   school: "Hans-Böckler-Berufskolleg",
   // Öffentliche Adresse der App – für QR-Codes, wenn die App als Einzeldatei läuft
@@ -134,5 +167,7 @@ window.LERNRAUM = {
     INWI: "Informationswirtschaft",
     Englisch: "Englisch"
   },
-  subjects: []
+  subjects: [],
+  // Übersetzungen der Kursinhalte: app/uebersetzungen/<kurs-id>.<sprache>.js (siehe app/AGENT-ANLEITUNG.md)
+  translations: []
 };
