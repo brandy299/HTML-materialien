@@ -769,25 +769,25 @@
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Probeklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <div class="stat-row" style="margin-top:22px">
-        <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">Min. empfohlen</div></div>
-        <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">Punkte</div></div>
-        <div class="stat"><div class="v">${tasks.length}</div><div class="k">Aufgaben</div></div>
+        <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">${tr("Min. empfohlen")}</div></div>
+        <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
+        <div class="stat"><div class="v">${tasks.length}</div><div class="k">${tr("Aufgaben")}</div></div>
       </div>
       <div class="win" style="margin-top:22px">
-        <div class="bar"><span class="d"></span>So läuft es ab<span class="r">bitte lesen</span></div>
+        <div class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></div>
         <div class="body merk" style="background:var(--paper)">
           <ul>
-            <li>Vor <strong>jeder Aufgabe</strong> erklären dir 2–3 Folien, worum es geht und wie du vorgehst.</li>
-            <li>Nach jeder Aufgabe siehst du sofort, was richtig war. Der <strong>?-Knopf</strong> hilft mit Tipps, Merkkasten und der Erklärung.</li>
-            <li>Es gibt <strong>keinen Timer</strong>. Plane etwa ${t.exam.minutes} Minuten ein.</li>
-            <li>Am Ende bekommst du <strong>Punkte, Note und Erwartungshorizont</strong> – wie in der echten Klausur.</li>
-            ${t.exam.tools ? `<li>Hilfsmittel: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
+            <li>${tr("Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.")}</li>
+            <li>${tr("Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.")}</li>
+            <li>${tr("Es gibt keinen Timer. Plane etwa {m} Minuten ein.", { m: t.exam.minutes })}</li>
+            <li>${tr("Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.")}</li>
+            ${t.exam.tools ? `<li>${tr("Hilfsmittel")}: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
           </ul>
         </div>
       </div>
-      ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Ausgangssituation<span class="r">für alle Aufgaben</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
+      ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Ausgangssituation")}<span class="r">${tr("für alle Aufgaben")}</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
       <div class="win" style="margin-top:22px">
-        <div class="bar"><span class="d"></span>Aufgaben<span class="r">${examPoints(t)} P</span></div>
+        <div class="bar"><span class="d"></span>${tr("Aufgaben")}<span class="r">${examPoints(t)} P</span></div>
         <ol class="list" style="border:0;list-style:none">${tasks.map(([st, k], q) => `<li class="list-row" style="min-height:48px;gap:12px;justify-content:flex-start">
           <span style="flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink);font:700 13px/1 var(--mono);${p.done[k] ? "background:var(--ink);color:var(--paper)" : ""}">${p.done[k] ? "✓" : String(q + 1).padStart(2, "0")}</span>
           <span style="flex:1;font-weight:600;line-height:1.25">${esc(st.title)}</span><span class="v">${fmtP(st.points)} P</span></li>`).join("")}</ol>
@@ -796,15 +796,15 @@
     </main>`);
     const dock = v.querySelector(".dock-inner");
     if (done) {
-      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/fertig">Ergebnis ansehen ${ICON.arrow}</a>`));
-      const again = h(`<button class="btn ghost block">Neu schreiben</button>`);
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/fertig">${tr("Ergebnis ansehen")} ${ICON.arrow}</a>`));
+      const again = h(`<button class="btn ghost block">${tr("Neu schreiben")}</button>`);
       again.onclick = () => {
-        if (!again.dataset.armed) { again.dataset.armed = "1"; again.textContent = "Ergebnis löschen und neu starten?"; return; }
+        if (!again.dataset.armed) { again.dataset.armed = "1"; again.textContent = tr("Ergebnis löschen und neu starten?"); return; }
         progress.resetTopic(s, t); location.hash = `#/f/${s.id}/${t.id}/0`;
       };
       dock.append(again);
     } else {
-      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${started ? "Weiter" : "Probeklausur starten"} ${ICON.arrow}</a>`));
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${tr(started ? "Weiter" : "Probeklausur starten")} ${ICON.arrow}</a>`));
     }
     return v;
   }
@@ -913,7 +913,7 @@
         window.scrollTo(0, 0);
         runTask();
       };
-      PLAYERS.slides({ type: "slides", slides: step.guide, lastLabel: "Zur Aufgabe" }, gctx);
+      PLAYERS.slides({ type: "slides", slides: step.guide, lastLabel: true }, gctx);
     } else runTask();
     return v;
   }
@@ -954,7 +954,7 @@
         [...dots.children].forEach((d, j) => d.classList.toggle("on", j === k));
         ctx.setProgress((k + 1) / n);
         if (k > 0) wrap.querySelector(".swipe-hint").style.visibility = "hidden";
-        if (k >= n - 1) ctx.action(`${tr(step.lastLabel || "Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
+        if (k >= n - 1) ctx.action(`${step.lastLabel ? tr("Zur Aufgabe") : tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
         else ctx.action(`${tr("Nächste Folie")} ${ICON.arrow}`, () => {
           goal = Math.min(n - 1, (goal >= 0 ? goal : cur) + 1);
           track.scrollTo({ left: goal * stepW(), behavior: "smooth" });

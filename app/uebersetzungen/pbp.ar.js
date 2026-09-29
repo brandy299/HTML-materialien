@@ -1201,6 +1201,561 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Negativ heißt: Es sind mehr Leute da als gebraucht.":
       "Negativ (سالب) يعني: يوجد موظفون أكثر مما نحتاج.",
 
+    "Probeklausur Personalbedarf – mit Erklärungen":
+      "",
+
+    "Probeklausur · mit Erklärungen":
+      "",
+
+    "<h3>Der Rechenweg</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <h3>Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → Personal beschaffen.</li>\n             <li><strong>negativ (−):</strong> Zu viele da → Personal abbauen.</li></ul>\n             <h3>Filtern</h3>\n             <p>Zählt: Abgang, fester Zugang, neue Stelle (Soll). Zählt nicht: kurze Krankheit, Urlaub, Streit, Feiern.</p>\n             <h3>Weitere Formeln</h3>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
+      "",
+
+    "<p><strong>Sporthaus Lindner e. K.</strong> hat <strong>28 Beschäftigte</strong> in Verkauf, Lager, Fahrradwerkstatt und Büro. Inhaberin ist Frau Lindner.</p>\n                    <p>Im nächsten Jahr startet ein <strong>Online-Shop</strong> und die <strong>Werkstatt wird erweitert</strong>. Frau Lindner braucht dafür einen Personalplan. Alle Aufgaben gehören zu diesem Betrieb.</p>":
+      "",
+
+    "A1 · Fachbegriffe":
+      "",
+
+    "Los geht's":
+      "",
+
+    "Erst verstehen, dann lösen.":
+      "",
+
+    "<p>Vor jeder Aufgabe erklären dir ein paar Folien, <strong>worum es geht</strong> und <strong>wie du vorgehst</strong>.</p>\n                     <ul><li>Erst die Folien lesen.</li><li>Dann die Aufgabe lösen. Du siehst sofort, was richtig war.</li><li>Am Ende gibt es Punkte und eine Note.</li></ul>\n                     <p class=\"note\">Bleibst du hängen? Der ?-Knopf zeigt Tipps und diese Erklärung noch einmal.</p>":
+      "",
+
+    "Aufgabe 1 · Fachbegriffe":
+      "",
+
+    "Fünf Wörter, ein Rechenweg.":
+      "",
+
+    "<p>Diese Wörter hängen an einer Rechnung. Der Neubedarf kommt in Aufgabe 5 dazu.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Personalbestand</span><span class=\"df-val\">jetzt da</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge + Zugänge</span><span class=\"df-note\">Fortschreibung</span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll − fortgeschriebener Ist</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">fehlt</span></div></figure>\n                     <p class=\"note\">Der Soll-Bestand heißt auch Bruttopersonalbedarf.</p>":
+      "",
+
+    "Aufgabe 1 · So erkennst du den Begriff":
+      "",
+
+    "Achte auf das Signalwort.":
+      "",
+
+    "<dl class=\"terms\">\n                       <dt>Ist-Personalbestand</dt><dd>„heute“, „aktuell“: wer jetzt da ist.</dd>\n                       <dt>Brutto&shy;personal&shy;bedarf</dt><dd>„Soll“, „nötig“: die Zahl laut Plan.</dd>\n                       <dt>Fortschreibung</dt><dd>Ist − Abgänge + Zugänge.</dd>\n                       <dt>Netto&shy;personal&shy;bedarf</dt><dd>„fehlt noch“, „muss besorgt werden“.</dd>\n                       <dt>Neubedarf</dt><dd>„Wachstum“, „mehr Aufträge“.</dd>\n                     </dl>":
+      "",
+
+    "Brutto ist der ganze Kuchen. Netto ist das fehlende Stück.":
+      "",
+
+    "<p>Brutto: wie viele insgesamt gebraucht werden. Netto: wie viele noch fehlen.</p>":
+      "",
+
+    "Alle Beschäftigten, die zurzeit im Sporthaus arbeiten.":
+      "",
+
+    "„Zurzeit“ heißt: jetzt. Das ist der Ist-Personalbestand.":
+      "",
+
+    "Das Signalwort ist „zurzeit“.":
+      "",
+
+    "Wie viele Beschäftigte das Sporthaus laut Plan insgesamt braucht.":
+      "",
+
+    "Der Soll-Bestand ist der Bruttopersonalbedarf: alle Stellen, die der Plan vorsieht.":
+      "",
+
+    "„Insgesamt“ und „laut Plan“ passen zum Soll-Bestand.":
+      "",
+
+    "Der Ist-Bestand, nachdem man die Abgänge abgezogen und die Zugänge dazugezählt hat.":
+      "",
+
+    "Ist − Abgänge + Zugänge nennt man Fortschreibung.":
+      "",
+
+    "Es ist der erste Schritt der Rechnung, noch ohne den Soll-Bestand.":
+      "",
+
+    "So viele Beschäftigte muss das Sporthaus noch beschaffen (Soll − fortgeschriebener Ist).":
+      "",
+
+    "Soll − fortgeschriebener Ist ist der Nettopersonalbedarf: das fehlende Stück.":
+      "",
+
+    "Was „noch fehlt“, ist die Lücke zwischen Soll und fortgeschriebenem Ist.":
+      "",
+
+    "Der Teil des Bedarfs, der durch neue Stellen für den Online-Shop entsteht.":
+      "",
+
+    "Neue Stellen durch Wachstum sind der Neubedarf. Der Ersatzbedarf ersetzt dagegen Ausscheidende.":
+      "",
+
+    "Neue Stellen entstehen durch Wachstum.":
+      "",
+
+    "Ordne jede Veränderung im Sporthaus zu.":
+      "",
+
+    "Hat der Betrieb das entschieden? Ja → initiiert. Nein → autonom.":
+      "",
+
+    "Aufgabe 2 · Autonom oder initiiert?":
+      "",
+
+    "Wer hat entschieden?":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>autonom</b>Es passiert von selbst. Der Betrieb kann es nicht steuern, zum Beispiel Mutterschutz oder der Umzug einer Beschäftigten.</div>\n                       <div><b>initiiert</b>Der Betrieb hat es entschieden, zum Beispiel neue Leute suchen, jemandem kündigen oder die Stunden verändern.</div>\n                     </div>\n                     <p class=\"box\">Eine Frage genügt: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert. Nein → autonom.</p>":
+      "",
+
+    "Aufgabe 2 · Grenzfälle":
+      "",
+
+    "Wer kündigt, entscheidet.":
+      "",
+
+    "<dl class=\"terms\">\n                       <dt>Sie kündigt selbst</dt><dd>autonom: die Beschäftigte entscheidet.</dd>\n                       <dt>Der Betrieb kündigt</dt><dd>initiiert: der Betrieb entscheidet.</dd>\n                       <dt>Vertrag läuft aus</dt><dd>Verlängert der Betrieb nicht, ist das initiiert: er hat entschieden.</dd>\n                       <dt>Mutterschutz</dt><dd>autonom: das Gesetz regelt es, nicht der Betrieb.</dd>\n                     </dl>":
+      "",
+
+    "Autonom passiert. Initiiert wird gemacht.":
+      "",
+
+    "<p>Autonomes kann der Betrieb nicht steuern. Initiiertes plant er selbst.</p>":
+      "",
+
+    "Eine Verkäuferin geht in Rente.":
+      "",
+
+    "Frau Lindner stellt einen Werkstattmeister ein.":
+      "",
+
+    "Ein Lagerist wechselt zu einem anderen Arbeitgeber.":
+      "",
+
+    "Ein Verkäufer wird in die Werkstatt versetzt.":
+      "",
+
+    "Eine Kollegin geht in Elternzeit.":
+      "",
+
+    "Ein Azubi wird nach der Prüfung übernommen.":
+      "",
+
+    "Ordne jeden Einflussfaktor zu.":
+      "",
+
+    "Kann das Sporthaus es selbst beschließen? Ja → intern. Nein → extern.":
+      "",
+
+    "Aufgabe 3 · Extern oder intern?":
+      "",
+
+    "Kann der Betrieb das selbst beschließen?":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>intern</b>Kommt aus dem Betrieb: neue Filiale, neue Maschinen, andere Öffnungszeiten.</div>\n                       <div><b>extern</b>Kommt von außen: Gesetze, Arbeitsmarkt, Wetter, Preise der Lieferanten.</div>\n                     </div>\n                     <p class=\"box\">Ja, der Betrieb beschließt es selbst → <strong>intern</strong>. Nein → <strong>extern</strong>.</p>":
+      "",
+
+    "Aufgabe 3 · Warum ist das wichtig?":
+      "",
+
+    "Extern beobachten. Intern steuern.":
+      "",
+
+    "<ul><li>Extern kann der Betrieb nicht ändern. Er muss darauf <strong>reagieren</strong>, zum Beispiel mit mehr Personal vor Weihnachten.</li>\n                     <li>Intern kann der Betrieb <strong>selbst gestalten</strong>, zum Beispiel eine neue Filiale eröffnen.</li>\n                     <li>Beides verändert den Personalbedarf.</li></ul>\n                     <p class=\"note\">Falle: Ein Gesetz betrifft den Betrieb, aber der Betrieb hat es nicht beschlossen. Also extern.</p>":
+      "",
+
+    "Frau Lindner startet einen Online-Shop.":
+      "",
+
+    "Die Konjunktur schwächt sich ab.":
+      "",
+
+    "Die Werkstatt bekommt zwei zusätzliche Arbeitsplätze.":
+      "",
+
+    "Im Frühjahr kaufen mehr Menschen Fahrräder.":
+      "",
+
+    "Das Sporthaus führt ein neues Kassensystem ein.":
+      "",
+
+    "A4 · Was zählt für den Bedarf?":
+      "",
+
+    "Ändert die Information den Personalbestand?":
+      "",
+
+    "Ändert sich dadurch, wer im Betrieb arbeitet – oder wie viele Stellen es gibt?":
+      "",
+
+    "Krankheit, Urlaub und Betriebsklima ändern den Bestand nicht.":
+      "",
+
+    "Aufgabe 4 · Informationen filtern":
+      "",
+
+    "Erst filtern, dann rechnen.":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>zählt</b>Abgang · fester Zugang · neue Stelle (Soll)</div>\n                       <div><b>zählt nicht</b>kurze Krankheit · Urlaub · Streit · Feiern</div>\n                     </div>\n                     <p>Der Personalbestand ändert sich nur, wenn jemand <strong>geht</strong>, <strong>fest dazukommt</strong> oder eine <strong>Stelle neu entsteht</strong>.</p>":
+      "",
+
+    "Aufgabe 4 · So filterst du einen Text":
+      "",
+
+    "Markiere beim Lesen.":
+      "",
+
+    "<ul class=\"pm\"><li class=\"m\">Abgang (−): Rente, Elternzeit, Kündigung</li><li class=\"p\">Zugang (+): Übernahme, Rückkehr, unterschriebener Vertrag</li></ul>\n                     <p class=\"box\">Dazu kommt der <strong>Soll-Bestand</strong>: die Zahl, die der Betrieb künftig braucht. Alles andere streichst du durch.</p>\n                     <p class=\"note\">„Frau Kern geht in Rente (−). Ben wird fest eingestellt (+). Zwei sind krank (streichen).“</p>":
+      "",
+
+    "zählt für den Bedarf":
+      "",
+
+    "zählt nicht":
+      "",
+
+    "Herr Vogel geht in Rente.":
+      "",
+
+    "Drei Beschäftigte hatten letzte Woche eine Grippe.":
+      "",
+
+    "Eine Auszubildende wird fest übernommen.":
+      "",
+
+    "Der Betriebsausflug hat allen gut gefallen.":
+      "",
+
+    "Für den Online-Shop wird eine zusätzliche Stelle geschaffen.":
+      "",
+
+    "Zwei Mitarbeiter machen im Sommer drei Wochen Urlaub.":
+      "",
+
+    "A5 · Nettopersonalbedarf":
+      "",
+
+    "Das Sporthaus Lindner e. K. hat <b>28 Beschäftigte</b>. Im nächsten Jahr geht Herr Vogel in Rente, Frau Aydin geht in Elternzeit und Herr Meier kündigt, weil er umzieht. Die Auszubildende Lea wird nach der Prüfung fest übernommen, und Herr Sommer kommt aus der Elternzeit zurück. Im Winter waren vier Beschäftigte mit Grippe krank. Für den Online-Shop und die erweiterte Werkstatt werden zwei zusätzliche Stellen geschaffen – insgesamt werden <b>30 Beschäftigte</b> gebraucht.<br><br>Berechne den Nettopersonalbedarf und zerlege ihn in Ersatz- und Neubedarf.":
+      "",
+
+    "Nettopersonalbedarf + 3 = Ersatzbedarf 1 + Neubedarf 2.":
+      "",
+
+    "Zwischensumme: Vom Ist-Bestand ziehst du die Abgänge ab und zählst die Zugänge dazu.<br><b>28 − 3 + 2 = ?</b>":
+      "",
+
+    "Personalbedarf: <b>Soll minus Zwischensumme</b> – nicht andersherum! Achte auf das Vorzeichen.<br><b>30 − 27 = ?</b>":
+      "",
+
+    "Ersatzbedarf = Abgänge − Zugänge = <b>3 − 2</b>.<br>Neubedarf = Soll − ursprünglicher Ist = <b>30 − 28</b>.":
+      "",
+
+    "Lösungsweg: 28 − 3 + 2 = <b>27</b> → 30 − 27 = <b>+ 3</b> → Ersatz 1 + Neu 2 = + 3<br>Positiv: Es muss eingestellt werden.":
+      "",
+
+    "Aufgabe 5 · Nettopersonalbedarf":
+      "",
+
+    "Der Rechenweg in sechs Kästen.":
+      "",
+
+    "<p>Beispiel: Ein Zoofachgeschäft hat 10 Beschäftigte. 2 gehen, 1 kommt fest dazu. Der Soll-Bestand ist 11.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Bestand</span><span class=\"df-val\">10</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge<span class=\"df-val\">2</span></span></div><div class=\"df-op\"><span class=\"df-chip\">+ Zugänge<span class=\"df-val\">1</span></span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll 11 − 9</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">+ 2</span></div></figure>":
+      "",
+
+    "Aufgabe 5 · Ersatz und Neu":
+      "",
+
+    "Zerlege das Ergebnis.":
+      "",
+
+    "<table class=\"scheme\">\n                       <tr><td>Ersatzbedarf: Abgänge − Zugänge = 2 − 1</td><td>1</td></tr>\n                       <tr><td>Neubedarf: Soll − ursprünglicher Ist = 11 − 10</td><td>1</td></tr>\n                       <tr class=\"sum\"><td>Ersatz + Neu = Netto</td><td>2</td></tr>\n                     </table>\n                     <p class=\"note\">Beim Neubedarf nimmst du den Ist-Bestand von VOR der Fortschreibung.</p>":
+      "",
+
+    "Aufgabe 5 · Fallen":
+      "",
+
+    "Drei typische Fehler.":
+      "",
+
+    "<ul class=\"pm\">\n                       <li class=\"m\">Krankheit als Abgang zählen. Sie ändert den Bestand nicht.</li>\n                       <li class=\"m\">Soll und fortgeschriebenen Ist vertauschen. Dann stimmt das Vorzeichen nicht.</li>\n                       <li class=\"m\">Den Neubedarf mit dem fortgeschriebenen Ist rechnen.</li>\n                       <li class=\"p\">Probe: Ersatz + Neu muss das Nettoergebnis ergeben.</li>\n                     </ul>\n                     <p class=\"note\">Schreibe jede Rechenzeile auf. Auch der Weg bringt Punkte.</p>":
+      "",
+
+    "A6 · Ergebnis deuten":
+      "",
+
+    "Deute dein Ergebnis aus A5 für das Sporthaus Lindner. Baue dazu den Antwortsatz.":
+      "",
+
+    "Deuten heißt: Vorzeichen → Bedeutung → Zahl → Folge.":
+      "",
+
+    "Der Nettopersonalbedarf ist {*positiv|negativ}. Dem Sporthaus Lindner {*fehlen|bleiben} {*drei|zwei|sieben} Beschäftigte, deshalb muss der Betrieb Personal {*einstellen|abbauen}.":
+      "",
+
+    "Schau auf das Vorzeichen deines Ergebnisses aus A5.":
+      "",
+
+    "Die Zahl steht im Nettopersonalbedarf – nicht im Ersatz- oder Neubedarf.":
+      "",
+
+    "Aufgabe 6 · Ergebnis deuten":
+      "",
+
+    "Ohne Deutung fehlen Punkte.":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>positiv (+)</b>Es fehlen Leute. Der Betrieb muss Personal beschaffen.</div>\n                       <div><b>negativ (−)</b>Es sind zu viele da. Der Betrieb muss Personal abbauen.</div>\n                     </div>\n                     <p class=\"note\">Ergebnis null: Der Bestand passt genau.</p>":
+      "",
+
+    "Aufgabe 6 · So baust du den Satz":
+      "",
+
+    "Vorzeichen, Bedeutung, Zahl, Folge.":
+      "",
+
+    "<ul><li><strong>1.</strong> Vorzeichen nennen: positiv oder negativ.</li>\n                     <li><strong>2.</strong> Bedeutung: Es fehlen Leute oder es bleiben welche übrig.</li>\n                     <li><strong>3.</strong> Zahl: Nimm die Zahl aus dem <em>Nettopersonalbedarf</em>.</li>\n                     <li><strong>4.</strong> Folge: einstellen oder abbauen.</li></ul>\n                     <p class=\"box\">„Der Nettopersonalbedarf ist negativ (− 2). Dem Zoofachgeschäft bleiben 2 Beschäftigte übrig, deshalb muss es Personal abbauen.“</p>":
+      "",
+
+    "A7 · Bedarf decken":
+      "",
+
+    "Wie schnell wirkt die Maßnahme?":
+      "",
+
+    "Was hilft schon in wenigen Tagen oder Wochen?":
+      "",
+
+    "Ausbildung und Weiterbildung dauern Monate bis Jahre.":
+      "",
+
+    "Aufgabe 7 · Bedarf decken":
+      "",
+
+    "Fünf Wege, eine Lücke zu füllen.":
+      "",
+
+    "<dl class=\"terms\">\n                       <dt>Überstunden</dt><dd>schnell, kein neues Personal – aber Überlastung.</dd>\n                       <dt>Zeitarbeit</dt><dd>schnell und flexibel – aber teurer, die Kräfte bleiben nur kurz im Betrieb.</dd>\n                       <dt>Aushilfen</dt><dd>flexibel für Stoßzeiten – aber wenig Erfahrung.</dd>\n                       <dt>Einstellen</dt><dd>dauerhaft, hohe Bindung – aber die Suche dauert.</dd>\n                       <dt>Ausbilden</dt><dd>sichert Fachkräfte – aber drei Jahre Wartezeit.</dd>\n                     </dl>":
+      "",
+
+    "Aufgabe 7 · Welche Frist?":
+      "",
+
+    "Wie schnell brauchst du Hilfe?":
+      "",
+
+    "<p class=\"box\"><strong>Schnell nötig</strong> → kurzfristig helfen: Überstunden, Zeitarbeit, Aushilfen.</p>\n                     <p class=\"box\"><strong>Dauerhaft nötig</strong> → langfristig lösen: ausbilden, weiterbilden, einstellen.</p>\n                     <p class=\"note\">Schnelle Lösungen helfen sofort, kosten aber oft mehr oder belasten die Beschäftigten.</p>":
+      "",
+
+    "kurzfristig":
+      "",
+
+    "langfristig":
+      "",
+
+    "Überstunden anordnen":
+      "",
+
+    "Eigene Fachkräfte ausbilden":
+      "",
+
+    "Zeitarbeitskräfte anfordern":
+      "",
+
+    "Beschäftigte zur Fachkraft weiterbilden":
+      "",
+
+    "Aushilfen für das Wochenende suchen":
+      "",
+
+    "Eine Mitarbeiterin zur Meisterin weiterbilden":
+      "",
+
+    "A8 · Kennzahlenmethode":
+      "",
+
+    "Das Sporthaus erwartet im nächsten Jahr <b>3 600 000 €</b> Umsatz. Je Vollzeitstelle werden <b>120 000 €</b> Umsatz angesetzt. Berechne die Zahl der Vollzeitstellen.":
+      "",
+
+    "Das Sporthaus braucht nach der Kennzahlenmethode 30 Vollzeitstellen. Das passt zum Plan aus A5.":
+      "",
+
+    "Teile den Umsatz durch den Umsatz je Vollzeitstelle.":
+      "",
+
+    "Streiche bei beiden Zahlen vier Nullen: 360 ÷ 12.":
+      "",
+
+    "Aufgabe 8 · Kennzahlenmethode":
+      "",
+
+    "Umsatz ÷ Umsatz je Vollzeitstelle.":
+      "",
+
+    "<p>Beispiel Möbelhaus: 2 400 000 € Umsatz, 150 000 € je Vollzeitstelle.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Umsatz</span><span class=\"df-val\">2 400 000 €</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Umsatz je Stelle<span class=\"df-val\">150 000 €</span></span></div><div class=\"df-node hi \"><span>Vollzeitstellen</span><span class=\"df-val\">16</span></div></figure>\n                     <p class=\"note\">Rechentrick: gleich viele Nullen streichen. 240 ÷ 15 = 16.</p>":
+      "",
+
+    "Aufgabe 8 · Was die Zahl bedeutet":
+      "",
+
+    "Vollzeitstellen sind keine Köpfe.":
+      "",
+
+    "<p>Zwei Teilzeitkräfte mit je einer halben Stelle sind zusammen <strong>eine</strong> Vollzeitstelle.</p>\n                     <div class=\"pair\">\n                       <div><b>Stärke</b>Schnell gerechnet, gut für einen ersten Überblick.</div>\n                       <div><b>Schwäche</b>Sie zeigt nicht, in welchem Bereich Personal fehlt.</div>\n                     </div>":
+      "",
+
+    "Vollzeitstellen: 3 600 000 € ÷ 120 000 €":
+      "",
+
+    "A9 · Methode beurteilen":
+      "",
+
+    "Aufgabe 9 · Methode beurteilen":
+      "",
+
+    "Zwei Methoden im Vergleich.":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>Stellenplan</b>Jede Stelle wird einzeln durchgezählt. Genau, aber aufwendig.</div>\n                       <div><b>Kennzahlen</b>Umsatz ÷ Umsatz je Stelle. Schnell, aber nur grob.</div>\n                     </div>\n                     <p class=\"box\">Beurteilen heißt: Vorteil nennen, Nachteil nennen, Fazit ziehen.</p>":
+      "",
+
+    "Aufgabe 9 · Die Entscheidungsregel":
+      "",
+
+    "Klein und genau – oder groß und schnell?":
+      "",
+
+    "<ul class=\"pm\">\n                       <li class=\"p\">Stellenplan: kleine Betriebe mit wenigen Beschäftigten, neue Aufgaben, genaue Planung.</li>\n                       <li class=\"p\">Kennzahlen: große Betriebe, erster Überblick, verlässlicher Umsatz.</li>\n                       <li class=\"m\">Kennzahlen sind ungenau, wenn Erfahrungswerte (Zahlen aus früheren Jahren) fehlen, zum Beispiel für ein ganz neues Produkt.</li>\n                     </ul>\n                     <p class=\"note\">Lies jede Antwort zu Ende. Oft ist nur ein Teil einer Aussage falsch.</p>":
+      "",
+
+    "Für den neuen Online-Shop weiß das Sporthaus noch nicht, wie viel Umsatz eine Vollzeitstelle dort bringt. Was stimmt?":
+      "",
+
+    "Die Kennzahlenmethode ist ungenau, weil dieser Wert fehlt.":
+      "",
+
+    "Die Kennzahlenmethode ist sehr genau, weil der Umsatz eines Betriebs immer bekannt ist.":
+      "",
+
+    "Die Stellenplanmethode geht nicht, weil man neue Stellen nicht planen kann.":
+      "",
+
+    "Beide Methoden sind bei neuen Aufgaben immer gleich genau.":
+      "",
+
+    "Ohne Erfahrungswert für den Umsatz je Vollzeitstelle wird die Kennzahlenmethode ungenau.":
+      "",
+
+    "Was braucht die Kennzahlenmethode als Grundlage?":
+      "",
+
+    "Warum passt die Stellenplanmethode gut zum Sporthaus mit 28 Beschäftigten?":
+      "",
+
+    "Der Betrieb ist klein genug, um jede Stelle und Aufgabe einzeln zu prüfen.":
+      "",
+
+    "Sie betrachtet nur den Umsatz und ist deshalb besonders schnell.":
+      "",
+
+    "Große Betriebe dürfen sie nicht nutzen.":
+      "",
+
+    "Sie braucht keine Zahlen.":
+      "",
+
+    "Bei 28 Beschäftigten lässt sich jede Stelle einzeln prüfen. Das macht die Planung genau.":
+      "",
+
+    "Die Stellenplanmethode zählt jede Stelle einzeln durch.":
+      "",
+
+    "A10 · Ausbildungsbedarf":
+      "",
+
+    "Das Sporthaus braucht in <b>drei Jahren sechs Fachkräfte</b> aus eigener Ausbildung. Die Ausbildung dauert drei Jahre.":
+      "",
+
+    "2 Plätze pro Jahr. Sind alle drei Ausbildungsjahre besetzt, sind 6 Azubis gleichzeitig im Betrieb.":
+      "",
+
+    "Teile die Fachkräfte durch die Ausbildungsjahre.":
+      "",
+
+    "Azubis gleichzeitig = Plätze pro Jahr × Ausbildungsjahre.":
+      "",
+
+    "Aufgabe 10 · Ausbildungsbedarf":
+      "",
+
+    "Fachkräfte ÷ Ausbildungsjahre.":
+      "",
+
+    "<p>Beispiel Bäckerei: 9 Fachkräfte in 3 Jahren, die Ausbildung dauert 3 Jahre.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Fachkräfte gebraucht</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node hi \"><span>Plätze pro Jahr</span><span class=\"df-val\">3</span></div><div class=\"df-op\"><span class=\"df-chip\">× Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node  sub\"><span>Azubis gleichzeitig</span><span class=\"df-val\">9</span></div></figure>":
+      "",
+
+    "Aufgabe 10 · Kosten und Nutzen":
+      "",
+
+    "Azubis lösen keinen akuten Bedarf.":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>Kosten</b>Ausbildungsvergütung, Berufsschulzeiten, Zeit der Ausbilder/innen</div>\n                       <div><b>Nutzen</b>Azubis kennen die Abläufe. Übernahme sichert Fachkräfte.</div>\n                     </div>\n                     <p class=\"note\">Erst nach der Ausbildung sind Azubis Fachkräfte. Deshalb planst du Ausbildung mehrere Jahre im Voraus.</p>":
+      "",
+
+    "Ausbildungsplätze pro Jahr: 6 ÷ 3":
+      "",
+
+    "Azubis gleichzeitig im Betrieb, wenn alle drei Ausbildungsjahre besetzt sind":
+      "",
+
+    "A11 · Stellung nehmen":
+      "",
+
+    "Frau Lindner überlegt: „Die zwei neuen Stellen für Online-Shop und Werkstatt besetze ich dauerhaft mit Zeitarbeitskräften.“ <b>Nimm Stellung</b>, indem du die Stellungnahme aus Bausteinen baust.":
+      "",
+
+    "Stellung nehmen: Vorteil → Nachteil → Begründung mit dem Fall → eigene Empfehlung.":
+      "",
+
+    "Zeitarbeit hat den Vorteil, dass die Kräfte {*schnell verfügbar sind|dauerhaft günstiger sind}. Ein Nachteil ist, dass Zeitarbeit {*teurer ist und die Bindung an den Betrieb gering bleibt|die Stelle nie besetzt}. Da die zwei Stellen {*dauerhaft|nur ein paar Tage} gebraucht werden, empfehle ich {*eigene Neueinstellungen|noch mehr Zeitarbeit}.":
+      "",
+
+    "Vorteil, Nachteil, Begründung mit dem Fall, Empfehlung.":
+      "",
+
+    "Die Stellen werden dauerhaft gebraucht. Was passt dazu?":
+      "",
+
+    "Aufgabe 11 · Stellung nehmen":
+      "",
+
+    "Meinung mit Begründung.":
+      "",
+
+    "<p>Du sagst, was du von einem Vorschlag hältst, und begründest es mit dem Fall.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Vorteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">aber</span></div><div class=\"df-node  \"><span>Nachteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">weil (Bezug zum Fall)</span></div><div class=\"df-node hi \"><span>Empfehlung geben</span></div></figure>":
+      "",
+
+    "Aufgabe 11 · Musterbeispiel":
+      "",
+
+    "So klingt eine gute Stellungnahme.":
+      "",
+
+    "<p class=\"box\">„Eine Kollegin fehlt nur zwei Wochen. Aushilfen haben den Vorteil, dass sie flexibel und schnell einsetzbar sind. Ein Nachteil ist, dass sie wenig Erfahrung haben. Da die Lücke nur kurz ist, empfehle ich Aushilfen.“</p>\n                     <p class=\"note\">In A11 gilt das gleiche Muster, nur mit Zeitarbeit.</p>":
+      "",
+
+    "Aufgabe 11 · Fallen":
+      "",
+
+    "Achte auf den Fall.":
+      "",
+
+    "<ul class=\"pm\">\n                       <li class=\"m\">Nur Vorteile oder nur Nachteile nennen.</li>\n                       <li class=\"m\">Eine Empfehlung ohne Bezug zum Fall.</li>\n                       <li class=\"p\">Die Empfehlung muss zur Dauer im Fall passen: kurz oder dauerhaft.</li>\n                     </ul>":
+      "",
+
     "Alle Lernkarten":
       "كل بطاقات التعلم",
 

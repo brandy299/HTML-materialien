@@ -878,11 +878,11 @@ LERNRAUM.subjects.push({
             {
               kicker: "Aufgabe 1 · Fachbegriffe",
               title: "Fünf Wörter, ein Rechenweg.",
-              body: `<p>Alle Begriffe hängen an einer Rechnung. Wer sie kennt, findet jedes Wort.</p>
+              body: `<p>Diese Wörter hängen an einer Rechnung. Der Neubedarf kommt in Aufgabe 5 dazu.</p>
                      ${ablauf([
                        { text: "Ist-Personalbestand", value: "jetzt da" },
                        { op: "− Abgänge + Zugänge", note: "Fortschreibung" },
-                       { text: "fortgeschriebener Ist", value: "bleibt", sub: true },
+                       { text: "fortgeschriebener Ist", sub: true },
                        { op: "Soll − fortgeschriebener Ist" },
                        { text: "Nettopersonalbedarf", value: "fehlt", hi: true }
                      ])}
@@ -892,11 +892,11 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 1 · So erkennst du den Begriff",
               title: "Achte auf das Signalwort.",
               body: `<dl class="terms">
-                       <dt>Ist-Personalbestand</dt><dd>„zurzeit“, „jetzt“: wer heute da ist.</dd>
-                       <dt>Brutto&shy;personal&shy;bedarf</dt><dd>„insgesamt“, „laut Plan“: der Soll-Bestand.</dd>
+                       <dt>Ist-Personalbestand</dt><dd>„heute“, „aktuell“: wer jetzt da ist.</dd>
+                       <dt>Brutto&shy;personal&shy;bedarf</dt><dd>„Soll“, „nötig“: die Zahl laut Plan.</dd>
                        <dt>Fortschreibung</dt><dd>Ist − Abgänge + Zugänge.</dd>
-                       <dt>Netto&shy;personal&shy;bedarf</dt><dd>„fehlt“, „muss beschafft werden“.</dd>
-                       <dt>Neubedarf</dt><dd>„zusätzliche Stellen“, Wachstum.</dd>
+                       <dt>Netto&shy;personal&shy;bedarf</dt><dd>„fehlt noch“, „muss besorgt werden“.</dd>
+                       <dt>Neubedarf</dt><dd>„Wachstum“, „mehr Aufträge“.</dd>
                      </dl>`
             },
             {
@@ -956,8 +956,8 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 2 · Autonom oder initiiert?",
               title: "Wer hat entschieden?",
               body: `<div class="pair">
-                       <div><b>autonom</b>Es passiert von selbst. Der Betrieb kann es nicht steuern: Rente, Elternzeit, Kündigung durch die Beschäftigten.</div>
-                       <div><b>initiiert</b>Der Betrieb hat es entschieden: einstellen, versetzen, übernehmen, kündigen.</div>
+                       <div><b>autonom</b>Es passiert von selbst. Der Betrieb kann es nicht steuern, zum Beispiel Mutterschutz oder der Umzug einer Beschäftigten.</div>
+                       <div><b>initiiert</b>Der Betrieb hat es entschieden, zum Beispiel neue Leute suchen, jemandem kündigen oder die Stunden verändern.</div>
                      </div>
                      <p class="box">Eine Frage genügt: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert. Nein → autonom.</p>`
             },
@@ -965,24 +965,24 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 2 · Grenzfälle",
               title: "Wer kündigt, entscheidet.",
               body: `<dl class="terms">
-                       <dt>Sie kündigt</dt><dd>autonom: die Beschäftigte entscheidet.</dd>
+                       <dt>Sie kündigt selbst</dt><dd>autonom: die Beschäftigte entscheidet.</dd>
                        <dt>Der Betrieb kündigt</dt><dd>initiiert: der Betrieb entscheidet.</dd>
-                       <dt>Wechsel</dt><dd>autonom: die Beschäftigte geht zu einem anderen Arbeitgeber.</dd>
-                       <dt>Übernahme</dt><dd>initiiert: der Betrieb sagt „Ja, bleib bei uns“.</dd>
+                       <dt>Vertrag läuft aus</dt><dd>Verlängert der Betrieb nicht, ist das initiiert: er hat entschieden.</dd>
+                       <dt>Mutterschutz</dt><dd>autonom: das Gesetz regelt es, nicht der Betrieb.</dd>
                      </dl>`
             },
             {
               style: "accent",
               kicker: "Merke",
               title: "Autonom passiert. Initiiert wird gemacht.",
-              body: `<p>Rente und Elternzeit passieren. Einstellen und versetzen macht der Betrieb.</p>`
+              body: `<p>Autonomes kann der Betrieb nicht steuern. Initiiertes plant er selbst.</p>`
             }
           ],
           prompt: "Ordne jede Veränderung im Sporthaus zu.",
           hints: ["Hat der Betrieb das entschieden? Ja → initiiert. Nein → autonom."],
           categories: ["autonom", "initiiert"],
           items: [
-            { text: "Eine Verkäuferin geht in den Ruhestand.", cat: 0 },
+            { text: "Eine Verkäuferin geht in Rente.", cat: 0 },
             { text: "Frau Lindner stellt einen Werkstattmeister ein.", cat: 1 },
             { text: "Ein Lagerist wechselt zu einem anderen Arbeitgeber.", cat: 0 },
             { text: "Ein Verkäufer wird in die Werkstatt versetzt.", cat: 1 },
@@ -1002,16 +1002,16 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 3 · Extern oder intern?",
               title: "Kann der Betrieb das selbst beschließen?",
               body: `<div class="pair">
-                       <div><b>intern</b>Kommt aus dem Betrieb: Online-Shop, neue Filiale, neue Technik, andere Öffnungszeiten.</div>
-                       <div><b>extern</b>Kommt von außen: Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison.</div>
+                       <div><b>intern</b>Kommt aus dem Betrieb: neue Filiale, neue Maschinen, andere Öffnungszeiten.</div>
+                       <div><b>extern</b>Kommt von außen: Gesetze, Arbeitsmarkt, Wetter, Preise der Lieferanten.</div>
                      </div>
                      <p class="box">Ja, der Betrieb beschließt es selbst → <strong>intern</strong>. Nein → <strong>extern</strong>.</p>`
             },
             {
               kicker: "Aufgabe 3 · Warum ist das wichtig?",
               title: "Extern beobachten. Intern steuern.",
-              body: `<ul><li>Extern kann der Betrieb nicht ändern. Er muss darauf <strong>reagieren</strong>, zum Beispiel mit mehr Personal im Frühjahr.</li>
-                     <li>Intern kann der Betrieb <strong>selbst gestalten</strong>, zum Beispiel einen Online-Shop starten.</li>
+              body: `<ul><li>Extern kann der Betrieb nicht ändern. Er muss darauf <strong>reagieren</strong>, zum Beispiel mit mehr Personal vor Weihnachten.</li>
+                     <li>Intern kann der Betrieb <strong>selbst gestalten</strong>, zum Beispiel eine neue Filiale eröffnen.</li>
                      <li>Beides verändert den Personalbedarf.</li></ul>
                      <p class="note">Falle: Ein Gesetz betrifft den Betrieb, aber der Betrieb hat es nicht beschlossen. Also extern.</p>`
             }
@@ -1040,7 +1040,7 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 4 · Informationen filtern",
               title: "Erst filtern, dann rechnen.",
               body: `<div class="pair">
-                       <div><b>zählt</b>Abgang · fester Zugang · neue oder wegfallende Stelle (Soll)</div>
+                       <div><b>zählt</b>Abgang · fester Zugang · neue Stelle (Soll)</div>
                        <div><b>zählt nicht</b>kurze Krankheit · Urlaub · Streit · Feiern</div>
                      </div>
                      <p>Der Personalbestand ändert sich nur, wenn jemand <strong>geht</strong>, <strong>fest dazukommt</strong> oder eine <strong>Stelle neu entsteht</strong>.</p>`
@@ -1050,7 +1050,7 @@ LERNRAUM.subjects.push({
               title: "Markiere beim Lesen.",
               body: `<ul class="pm"><li class="m">Abgang (−): Rente, Elternzeit, Kündigung</li><li class="p">Zugang (+): Übernahme, Rückkehr, unterschriebener Vertrag</li></ul>
                      <p class="box">Dazu kommt der <strong>Soll-Bestand</strong>: die Zahl, die der Betrieb künftig braucht. Alles andere streichst du durch.</p>
-                     <p class="note">„Herr Vogel geht in Rente (−). Lea wird übernommen (+). Drei sind krank (streichen).“</p>`
+                     <p class="note">„Frau Kern geht in Rente (−). Ben wird fest eingestellt (+). Zwei sind krank (streichen).“</p>`
             }
           ],
           prompt: "Ändert die Information den Personalbestand?",
@@ -1136,7 +1136,7 @@ LERNRAUM.subjects.push({
                      <li><strong>2.</strong> Bedeutung: Es fehlen Leute oder es bleiben welche übrig.</li>
                      <li><strong>3.</strong> Zahl: Nimm die Zahl aus dem <em>Nettopersonalbedarf</em>.</li>
                      <li><strong>4.</strong> Folge: einstellen oder abbauen.</li></ul>
-                     <p class="box">„Der Nettopersonalbedarf ist positiv (+ 2). Dem Zoofachgeschäft fehlen 2 Beschäftigte, deshalb muss es Personal einstellen.“</p>`
+                     <p class="box">„Der Nettopersonalbedarf ist negativ (− 2). Dem Zoofachgeschäft bleiben 2 Beschäftigte übrig, deshalb muss es Personal abbauen.“</p>`
             }
           ],
           case: `Deute dein Ergebnis aus A5 für das Sporthaus Lindner. Baue dazu den Antwortsatz.`,
@@ -1157,17 +1157,17 @@ LERNRAUM.subjects.push({
               title: "Fünf Wege, eine Lücke zu füllen.",
               body: `<dl class="terms">
                        <dt>Überstunden</dt><dd>schnell, kein neues Personal – aber Überlastung.</dd>
-                       <dt>Zeitarbeit</dt><dd>schnell und flexibel – aber teurer, wenig Bindung.</dd>
-                       <dt>Aushilfen</dt><dd>flexibel für Spitzen – aber wenig Erfahrung.</dd>
+                       <dt>Zeitarbeit</dt><dd>schnell und flexibel – aber teurer, die Kräfte bleiben nur kurz im Betrieb.</dd>
+                       <dt>Aushilfen</dt><dd>flexibel für Stoßzeiten – aber wenig Erfahrung.</dd>
                        <dt>Einstellen</dt><dd>dauerhaft, hohe Bindung – aber die Suche dauert.</dd>
                        <dt>Ausbilden</dt><dd>sichert Fachkräfte – aber drei Jahre Wartezeit.</dd>
                      </dl>`
             },
             {
               kicker: "Aufgabe 7 · Welche Frist?",
-              title: "Wie lange fehlt die Stelle?",
-              body: `<p class="box"><strong>Kurz</strong> fehlt jemand → kurzfristig helfen: Überstunden, Zeitarbeit, Aushilfen.</p>
-                     <p class="box"><strong>Dauerhaft</strong> fehlt jemand → langfristig lösen: ausbilden, weiterbilden, einstellen.</p>
+              title: "Wie schnell brauchst du Hilfe?",
+              body: `<p class="box"><strong>Schnell nötig</strong> → kurzfristig helfen: Überstunden, Zeitarbeit, Aushilfen.</p>
+                     <p class="box"><strong>Dauerhaft nötig</strong> → langfristig lösen: ausbilden, weiterbilden, einstellen.</p>
                      <p class="note">Schnelle Lösungen helfen sofort, kosten aber oft mehr oder belasten die Beschäftigten.</p>`
             }
           ],
@@ -1180,7 +1180,7 @@ LERNRAUM.subjects.push({
             { text: "Zeitarbeitskräfte anfordern", cat: 0 },
             { text: "Beschäftigte zur Fachkraft weiterbilden", cat: 1 },
             { text: "Aushilfen für das Wochenende suchen", cat: 0 },
-            { text: "Eine Mitarbeiterin bei der Meisterschule unterstützen", cat: 1 }
+            { text: "Eine Mitarbeiterin zur Meisterin weiterbilden", cat: 1 }
           ]
         },
 
@@ -1212,10 +1212,10 @@ LERNRAUM.subjects.push({
                      </div>`
             }
           ],
-          case: `Das Sporthaus erwartet im nächsten Jahr <b>3 360 000 €</b> Umsatz. Je Vollzeitstelle werden <b>120 000 €</b> Umsatz angesetzt. Berechne die Zahl der Vollzeitstellen.`,
-          hints: ["Teile den Umsatz durch den Umsatz je Vollzeitstelle.", "Streiche bei beiden Zahlen vier Nullen: 336 ÷ 12."],
-          rows: [{ label: "Vollzeitstellen: 3 360 000 € ÷ 120 000 €", value: 28 }],
-          result: "Das Sporthaus braucht nach der Kennzahlenmethode 28 Vollzeitstellen."
+          case: `Das Sporthaus erwartet im nächsten Jahr <b>3 600 000 €</b> Umsatz. Je Vollzeitstelle werden <b>120 000 €</b> Umsatz angesetzt. Berechne die Zahl der Vollzeitstellen.`,
+          hints: ["Teile den Umsatz durch den Umsatz je Vollzeitstelle.", "Streiche bei beiden Zahlen vier Nullen: 360 ÷ 12."],
+          rows: [{ label: "Vollzeitstellen: 3 600 000 € ÷ 120 000 €", value: 30 }],
+          result: "Das Sporthaus braucht nach der Kennzahlenmethode 30 Vollzeitstellen. Das passt zum Plan aus A5."
         },
 
         /* ── A9 · Methode beurteilen ── */
@@ -1238,19 +1238,19 @@ LERNRAUM.subjects.push({
               kicker: "Aufgabe 9 · Die Entscheidungsregel",
               title: "Klein und genau – oder groß und schnell?",
               body: `<ul class="pm">
-                       <li class="p">Stellenplan: kleine Betriebe, neue Aufgaben, genaue Planung. Passt zum Sporthaus mit 28 Beschäftigten.</li>
+                       <li class="p">Stellenplan: kleine Betriebe mit wenigen Beschäftigten, neue Aufgaben, genaue Planung.</li>
                        <li class="p">Kennzahlen: große Betriebe, erster Überblick, verlässlicher Umsatz.</li>
-                       <li class="m">Kennzahlen sind ungenau, wenn Erfahrungswerte fehlen, zum Beispiel für einen ganz neuen Online-Shop.</li>
+                       <li class="m">Kennzahlen sind ungenau, wenn Erfahrungswerte (Zahlen aus früheren Jahren) fehlen, zum Beispiel für ein ganz neues Produkt.</li>
                      </ul>
                      <p class="note">Lies jede Antwort zu Ende. Oft ist nur ein Teil einer Aussage falsch.</p>`
             }
           ],
           questions: [
             {
-              q: "Das Sporthaus plant den neuen Online-Shop. Es gibt noch keine Erfahrungswerte zum Umsatz. Was stimmt?",
+              q: "Für den neuen Online-Shop weiß das Sporthaus noch nicht, wie viel Umsatz eine Vollzeitstelle dort bringt. Was stimmt?",
               options: [
-                "Die Kennzahlenmethode ist ungenau, weil ein Wert für den Umsatz je Vollzeitstelle im Online-Shop fehlt.",
-                "Die Kennzahlenmethode ist sehr genau, weil der Umsatz immer bekannt ist.",
+                "Die Kennzahlenmethode ist ungenau, weil dieser Wert fehlt.",
+                "Die Kennzahlenmethode ist sehr genau, weil der Umsatz eines Betriebs immer bekannt ist.",
                 "Die Stellenplanmethode geht nicht, weil man neue Stellen nicht planen kann.",
                 "Beide Methoden sind bei neuen Aufgaben immer gleich genau."
               ],
@@ -1283,13 +1283,13 @@ LERNRAUM.subjects.push({
             {
               kicker: "Aufgabe 10 · Ausbildungsbedarf",
               title: "Fachkräfte ÷ Ausbildungsjahre.",
-              body: `<p>Beispiel Optiker: 8 Fachkräfte in 4 Jahren, die Ausbildung dauert 4 Jahre.</p>
+              body: `<p>Beispiel Bäckerei: 9 Fachkräfte in 3 Jahren, die Ausbildung dauert 3 Jahre.</p>
                      ${ablauf([
-                       { text: "Fachkräfte gebraucht", value: "8" },
-                       { op: "÷ Ausbildungsjahre", value: "4" },
-                       { text: "Plätze pro Jahr", value: "2", hi: true },
-                       { op: "× Ausbildungsjahre", value: "4" },
-                       { text: "Azubis gleichzeitig", value: "8", sub: true }
+                       { text: "Fachkräfte gebraucht", value: "9" },
+                       { op: "÷ Ausbildungsjahre", value: "3" },
+                       { text: "Plätze pro Jahr", value: "3", hi: true },
+                       { op: "× Ausbildungsjahre", value: "3" },
+                       { text: "Azubis gleichzeitig", value: "9", sub: true }
                      ])}`
             },
             {
@@ -1306,9 +1306,9 @@ LERNRAUM.subjects.push({
           hints: ["Teile die Fachkräfte durch die Ausbildungsjahre.", "Azubis gleichzeitig = Plätze pro Jahr × Ausbildungsjahre."],
           rows: [
             { label: "Ausbildungsplätze pro Jahr: 6 ÷ 3", value: 2 },
-            { label: "Azubis gleichzeitig im Betrieb, wenn drei Jahrgänge laufen", value: 6 }
+            { label: "Azubis gleichzeitig im Betrieb, wenn alle drei Ausbildungsjahre besetzt sind", value: 6 }
           ],
-          result: "2 Plätze pro Jahr. Bei drei Ausbildungsjahren sind dann 6 Azubis gleichzeitig im Betrieb."
+          result: "2 Plätze pro Jahr. Sind alle drei Ausbildungsjahre besetzt, sind 6 Azubis gleichzeitig im Betrieb."
         },
 
         /* ── A11 · Stellung nehmen ── */
@@ -1333,16 +1333,16 @@ LERNRAUM.subjects.push({
             {
               kicker: "Aufgabe 11 · Musterbeispiel",
               title: "So klingt eine gute Stellungnahme.",
-              body: `<p class="box">„Aushilfen haben den Vorteil, dass sie flexibel und schnell einsetzbar sind. Ein Nachteil ist, dass sie wenig Erfahrung haben. Da die Stelle dauerhaft fehlt, empfehle ich eine feste Einstellung.“</p>
+              body: `<p class="box">„Eine Kollegin fehlt nur zwei Wochen. Aushilfen haben den Vorteil, dass sie flexibel und schnell einsetzbar sind. Ein Nachteil ist, dass sie wenig Erfahrung haben. Da die Lücke nur kurz ist, empfehle ich Aushilfen.“</p>
                      <p class="note">In A11 gilt das gleiche Muster, nur mit Zeitarbeit.</p>`
             },
             {
               kicker: "Aufgabe 11 · Fallen",
-              title: "Achte auf die Dauer.",
+              title: "Achte auf den Fall.",
               body: `<ul class="pm">
                        <li class="m">Nur Vorteile oder nur Nachteile nennen.</li>
                        <li class="m">Eine Empfehlung ohne Bezug zum Fall.</li>
-                       <li class="p">Fehlt eine Stelle dauerhaft, braucht sie auch eine dauerhafte Lösung.</li>
+                       <li class="p">Die Empfehlung muss zur Dauer im Fall passen: kurz oder dauerhaft.</li>
                      </ul>`
             }
           ],
