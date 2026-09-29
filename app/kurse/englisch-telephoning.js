@@ -172,8 +172,18 @@ LERNRAUM.subjects.push({
               style: "dark",
               kicker: "Redemittel · Gesprächsphasen",
               title: "Ein Gespräch hat Bausteine.",
-              body: `<p>Begrüßen → durchstellen → Nachricht → helfen → danken → verabschieden.</p>
-                     <p>Für jede Phase gibt es fertige <strong>Redemittel</strong>. Du musst sie nicht erfinden – nur richtig einsetzen.</p>`
+              body: `<p>Für jede Phase gibt es fertige <strong>Redemittel</strong>. Du musst sie nicht erfinden – nur richtig einsetzen.</p>
+                     ${ablauf([
+                       { text: "1 · Begrüßen", value: "Good morning" },
+                       { op: "→", note: "This is … of …" },
+                       { text: "2 · Durchstellen", value: "Please hold the line" },
+                       { op: "→", note: "Can I take a message?" },
+                       { text: "3 · Nachricht", value: "Leave a message?" },
+                       { op: "→", note: "How can I be of assistance?" },
+                       { text: "4 · Danken", value: "Thank you for your help" },
+                       { op: "→", note: "I wish you a nice day." },
+                       { text: "5 · Verabschieden", value: "Have a nice day.", hi: true }
+                     ], { title: "So läuft ein Anruf" })}`
             },
             {
               kicker: "Anrufen / abnehmen",
@@ -429,6 +439,15 @@ LERNRAUM.subjects.push({
               title: "Sam Carter schlägt einen Termin vor.",
               body: `<p>Sam Carter aus dem Büro von Mr Wilkinson ruft an. Die Konferenz läuft von <strong>Montag, den 3. Juli</strong> bis <strong>Freitag, den 7. Juli</strong>. Mr Wilkinson könnte Dr Kiesbauer am <strong>Donnerstag, den 6. Juli</strong> treffen – entweder um <strong>half nine</strong> morgens oder um <strong>half three</strong> nachmittags.</p>
                      <p>Jenny antwortet: “Half three will be convenient.”</p>`
+            },
+            {
+              kicker: "Die Woche im Überblick",
+              title: "Konferenz und Termin auf einen Blick.",
+              body: `${zeitstrahl([
+                       { at: 10, label: "Mo 3 July", text: "Convention starts" },
+                       { at: 55, label: "Thu 6 July · half three", text: "Meeting: 3:30 p.m.", hi: true },
+                       { at: 90, label: "Fr 7 July", text: "Convention ends" }
+                     ], { title: "Birmingham, 3.–7. Juli", now: 55, axis: ["3 July", "6 July", "7 July"] })}`
             },
             {
               kicker: "Der Stolperstein",
