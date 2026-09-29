@@ -77,7 +77,7 @@ function checkStep(where, st, topic) {
       if (!Array.isArray(st.slides) || !st.slides.length) err(where, "slides ist leer");
       else st.slides.forEach((sl, k) => {
         if (!str(sl.title)) err(`${where} Folie ${k + 1}`, "Folie ohne title");
-        if (/<(svg|img|canvas)\b/i.test(sl.body || "")) warn(`${where} Folie ${k + 1}`, "eigene Grafik – bitte die Bausteine zeitstrahl() / ablauf() nutzen oder ein Issue mit Label design anlegen");
+        if (/<(svg|img|canvas)\b/i.test(String(sl.body || "").replace(/<figure class="dia[\s\S]*?<\/figure>/g, ""))) warn(`${where} Folie ${k + 1}`, "eigene Grafik – bitte die Bausteine zeitstrahl() / ablauf() / sechseck() nutzen oder ein Issue mit Label design anlegen");
       });
       break;
     case "quiz":
