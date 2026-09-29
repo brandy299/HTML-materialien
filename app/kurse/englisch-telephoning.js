@@ -89,7 +89,7 @@ LERNRAUM.subjects.push({
               explain: "Höflich wäre: “Could I speak to Mr Wilkinson, please?”"
             },
             {
-              q: "Sam asks for her name, number and reason. What should Jenny be?",
+              q: "Sam wants to help Jenny. How should Jenny talk to Sam?",
               options: ["rude", "polite and clear", "silent"],
               answer: 1,
               explain: "Freundlich UND klar: Name, Nummer und Grund nennen."
@@ -128,7 +128,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A3 · Jenny höflich machen",
           case: "Bilde aus Jennys Anruf ein höfliches Gespräch.",
-          text: "Good morning. {*This is|Here is|I am being} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|I need} to Mr Wilkinson, please? … Thank you. Could you {*ask him to call me back|tell him to call me|order him to ring} at three in the afternoon, British time, please?",
+          text: "Good morning. {*This is|Here is|I am being} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|I need} to Mr Wilkinson, please? … Thank you. Could you {*ask him to call me back|say him to call me|order him to ring} at three in the afternoon, British time, please?",
           explain: "Höflich: “This is …”, “Could I speak to …?” und “Could you ask him to call me back …?”"
         },
         {
@@ -211,7 +211,7 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · welche Phase?",
           prompt: "Ordne jede Formulierung der passenden Gesprächsphase zu.",
-          hints: ["Achte auf das Ziel der Aussage (begrüßen, Nachricht, abschließen).", "“Can I take a message?” gehört zum Aufnehmen einer Nachricht."],
+          hints: ["Achte auf das Ziel der Aussage (begrüßen, Nachricht, abschließen).", "“Can I take a message?” gehört zum Aufnehmen einer Nachricht.", "Wer anruft, fragt “who I am speaking with”. Wer abnimmt, fragt “who is calling”."],
           categories: ["Making a call", "Answering the phone", "Taking a message", "Finishing the call"],
           items: [
             { text: "Good morning, this is Peter Clark of Supercars Ltd. in Manchester.", cat: 0 },
@@ -228,16 +228,16 @@ LERNRAUM.subjects.push({
           type: "cloze",
           title: "A2 · Redemittel sichern",
           prompt: "Vier Wörter passen nicht.",
-          hints: ["Es geht ums Sprechen, Warten, Bedauern und eine Nachricht.", "“to be … of a company” und “hold … for a moment” sind feste Wendungen."],
+          hints: ["Es geht ums Sprechen, Warten, Bedauern und eine Nachricht.", "“I’d like to … to …”, “hold … for a moment”, “I’m … he is …”, “take a …” und “It was … talking to you” sind feste Wendungen."],
           text: "I’d like to {speak} to Mr Wilkinson, please. Please hold {on} for a moment. I’m {afraid} he is in a meeting. Can I take a {message}? Thank you for your help. It was {nice} talking to you.",
-          distractors: ["see", "off", "happy", "call"]
+          distractors: ["see", "off", "fear", "messages"]
         },
         {
           type: "quiz",
           title: "A3 · die richtige Formulierung",
           questions: [
             {
-              q: "Somebody picks up: “Good morning, Supercars Ltd. How can I help you?” You want Mr Wilkinson. What do you say?",
+              q: "Somebody picks up: “Good morning, Wilkinson and Friends Ltd. How can I help you?” You want Mr Wilkinson. What do you say?",
               options: ["I’d like to speak to Mr Wilkinson, please.", "I want Wilkinson.", "Who is this?"],
               answer: 0,
               explain: "Höflich: “I’d like to speak to …, please.”"
@@ -267,7 +267,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A4 · Sätze bauen",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "{*May I|Must I|Do I} ask who I am speaking with, please? … I’m sorry, I {*didn’t catch|did not hear|do not catch} that because of the bad connection. … Thank you very much for your help. You’ve been {*most helpful|very laughable|too late}.",
+          text: "{*May I|Must I|Do I} ask who I am speaking with, please? … I’m sorry, I {*didn’t catch|didn’t caught|do not catch} that because of the bad connection. … Thank you very much for your help. You’ve been {*most helpful|very laughable|too late}.",
           explain: "“May I ask …?”, “I didn’t catch that.” und “You’ve been most helpful.” sind feste höfliche Wendungen."
         },
         {
@@ -290,7 +290,7 @@ LERNRAUM.subjects.push({
       kicker: "Am Telefon · Buchstabieren",
       minutes: 18,
       help: `<h3>Telefonier-Alphabet</h3>
-             <p class="formula">A Alpha · B Bravo · C Charlie · D Delta · E Echo · F Foxtrot · G Golf · H Hotel · I India · J Juliette · K Kilo · L Lima · M Mike</p>
+             <p class="formula">A Alpha · B Bravo · C Charlie · D Delta · E Echo · F Foxtrot · G Golf · H Hotel · I India · J Juliett · K Kilo · L Lima · M Mike</p>
              <p class="formula">N November · O Oscar · P Papa · Q Quebec · R Romeo · S Sierra · T Tango · U Uniform · V Victor · W Whisky · X X-ray · Y Yankee · Z Zulu</p>
              <p class="note">Beispiel „car“: „si – äi – ar“ oder mit Code: „C for Charlie, A for Alpha, R for Romeo“.</p>
              <h3>Telefonnummern</h3>
@@ -315,7 +315,7 @@ LERNRAUM.subjects.push({
               body: `<ul>
                        <li><strong>A</strong> – Alpha · <strong>B</strong> – Bravo · <strong>C</strong> – Charlie · <strong>D</strong> – Delta</li>
                        <li><strong>E</strong> – Echo · <strong>F</strong> – Foxtrot · <strong>G</strong> – Golf · <strong>H</strong> – Hotel</li>
-                       <li><strong>I</strong> – India · <strong>J</strong> – Juliette · <strong>K</strong> – Kilo · <strong>L</strong> – Lima · <strong>M</strong> – Mike</li>
+                       <li><strong>I</strong> – India · <strong>J</strong> – Juliett · <strong>K</strong> – Kilo · <strong>L</strong> – Lima · <strong>M</strong> – Mike</li>
                      </ul>`
             },
             {
@@ -378,7 +378,7 @@ LERNRAUM.subjects.push({
           title: "A2 · E-Mail diktieren",
           prompt: "Drei Wörter passen nicht.",
           hints: ["Zeichen wie @ und . haben englische Namen.", "Der Bindestrich heißt hyphen."],
-          text: "To spell an email address, say the words and single {letters}. For “t.miller@peterson.com”, you say: ti – {dot} – miller – {at} – peterson dot com. A dash is also called {hyphen}.",
+          text: "To spell an email address, say the words and single {letters}. For “t.miller@peterson.com”, you say: T – {dot} – miller – {at} – peterson dot com. A dash is also called a {hyphen}.",
           distractors: ["numbers", "comma", "colon"]
         },
         {
@@ -427,7 +427,7 @@ LERNRAUM.subjects.push({
               style: "dark",
               kicker: "Am Telefon · Termine",
               title: "Sam Carter schlägt einen Termin vor.",
-              body: `<p>Mr Wilkinson’s secretary ruft an. Die Konferenz läuft von <strong>Montag, den 3. Juli</strong> bis <strong>Freitag, den 7. Juli</strong>. Mr Wilkinson könnte Dr Kiesbauer am <strong>Donnerstag, den 6. Juli</strong> treffen – entweder um <strong>half nine</strong> morgens oder um <strong>half three</strong> nachmittags.</p>
+              body: `<p>Sam Carter aus dem Büro von Mr Wilkinson ruft an. Die Konferenz läuft von <strong>Montag, den 3. Juli</strong> bis <strong>Freitag, den 7. Juli</strong>. Mr Wilkinson könnte Dr Kiesbauer am <strong>Donnerstag, den 6. Juli</strong> treffen – entweder um <strong>half nine</strong> morgens oder um <strong>half three</strong> nachmittags.</p>
                      <p>Jenny antwortet: “Half three will be convenient.”</p>`
             },
             {
@@ -511,13 +511,13 @@ LERNRAUM.subjects.push({
           prompt: "Drei Wörter passen nicht.",
           hints: ["Es geht ums Vorschlagen, Treffen, Nachschauen und Passen.", "“to … an appointment”, “to … Dr Kiesbauer”, “appointment …”, “will be …”."],
           text: "Mr Wilkinson would like to {suggest} an appointment to see Dr Kiesbauer. When would Mr Wilkinson like to {meet} Dr Kiesbauer? One moment, please. I’ll just take a quick look at our appointment {book}. Half three will be {convenient}.",
-          distractors: ["cancel", "pay", "cheap"]
+          distractors: ["spend", "pay", "cheap"]
         },
         {
           type: "sentence",
           title: "A4 · Termin verschieben",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "I’m calling about Dr Kiesbauer’s appointment with Mr Wilkinson. I’m afraid he has to {*change|stop|break} it. Could we {*make it|take it|do it} at 11:30? {*Would that|Will that|Can that} be possible for Mr Wilkinson?",
+          text: "I’m calling about Dr Kiesbauer’s appointment with Mr Wilkinson. I’m afraid he has to {*change|stop|break} it. Could we {*make it|take it|give it} 11:30? {*Would that|Does that|Can that} be possible for Mr Wilkinson?",
           explain: "Höflich verschieben: “I’m afraid …”, “Could we make it …?”, “Would that be possible?”"
         },
         {
@@ -570,7 +570,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A1 · Der Wilkinson-Anruf",
           case: "Fülle das höfliche Gespräch.",
-          text: "Good morning. {*This is|Here is|I am} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|Give me} to Mr Wilkinson, please? … I’m afraid he is not available. Would you like to leave a message? … Yes, please. Could you {*ask him to call me back|tell him to call me|order him to ring} by 15:00 British time?",
+          text: "Good morning. {*This is|Here is|Here speaks} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|Give me} to Mr Wilkinson, please? … I’m afraid he is not available. Would you like to leave a message? … Yes, please. Could you {*ask him to call me back|say him to call me|order him to ring} by 15:00 British time?",
           explain: "Höflich: “This is …”, “Could I speak to …?” und “Could you ask him to call me back …?”"
         },
         {
@@ -592,7 +592,7 @@ LERNRAUM.subjects.push({
             {
               q: "Thomas: “When will the conference be held?”",
               hint: "Dr Kiesbauer nennt den 4. Juli, 16 Uhr.",
-              options: ["It will be held on the fourth of July at four pm.", "It will be held on the fourth of June at four pm.", "It will be held on the third of July at four pm."],
+              options: ["It will be held on the fourth of July at 4 p.m.", "It will be held on the fourth of June at 4 p.m.", "It will be held on the third of July at 4 p.m."],
               answer: 0,
               explain: "Der Termin ist am vierten Juli (the fourth of July) um vier Uhr."
             },
@@ -603,7 +603,7 @@ LERNRAUM.subjects.push({
               explain: "Kurze Antworten wie “Yes.” wirken unfreundlich – besser danken."
             },
             {
-              q: "Thomas: “Is there anything else I can do for you?” What do you say?",
+              q: "Thomas: “Is there anything else I can do for you?” What is the most polite answer?",
               options: ["No, that’s it. Thanks again for your help. I appreciate it.", "No.", "No, that’s it."],
               answer: 0,
               explain: "Dank und Wertschätzung gehören zum höflichen Abschluss."
@@ -622,7 +622,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A4 · freundlich beenden",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "It was {*nice|funny|heavy} talking to you. Thank you for your {*help|money|call}. I {*wish|want|must} you a nice day. Goodbye.",
+          text: "It was {*nice|nicely|heavy} talking to you. Thank you for your {*help|money|phone}. I {*wish|want|must} you a nice day. Goodbye.",
           explain: "Höflicher Schluss: “It was nice talking to you.” · “Thank you for your help.” · “I wish you a nice day.”"
         },
         {
@@ -648,7 +648,7 @@ LERNRAUM.subjects.push({
              <ul>
                <li><b>to book</b> – buchen · <b>reservation</b> – Reservierung/Buchung</li>
                <li><b>single room</b> – Einzelzimmer · <b>double room</b> – Doppelzimmer</li>
-               <li><b>en suite bathroom</b> – mit anschließendem (eigenen) Badezimmer</li>
+               <li><b>en suite bathroom</b> – mit anschließendem (eigenem) Badezimmer</li>
                <li><b>rate</b> – (Zimmer-)Preis · <b>booking fee</b> – Buchungsgebühr · <b>to charge</b> – berechnen</li>
                <li><b>confirmation</b> – Bestätigung · <b>cancellation</b> – Stornierung</li>
                <li><b>date of arrival</b> – Ankunftstag · <b>date of departure</b> – Abreisetag</li>
@@ -714,7 +714,7 @@ LERNRAUM.subjects.push({
             },
             {
               q: "What does “en suite bathroom” mean?",
-              options: ["mit anschließendem (eigenen) Badezimmer", "ein Gemeinschaftsbad auf dem Flur", "eine Dusche ohne WC"],
+              options: ["mit anschließendem (eigenem) Badezimmer", "ein Gemeinschaftsbad auf dem Flur", "eine Dusche ohne WC"],
               answer: 0,
               explain: "en suite = das eigene Bad gehört zum Zimmer."
             },
@@ -817,7 +817,7 @@ LERNRAUM.subjects.push({
             { front: "Ich fürchte, das wird leider nicht möglich sein.", back: "I’m afraid that won’t be possible." },
             { front: "Könnten wir 11:30 Uhr daraus machen?", back: "Could we make it 11:30?" },
             { front: "Einzelzimmer", back: "single room" },
-            { front: "…mit anschließendem (eigenen) Badezimmer", back: "en suite bathroom" },
+            { front: "…mit anschließendem (eigenem) Badezimmer", back: "en suite bathroom" },
             { front: "Reservierung / Buchung", back: "reservation / booking" },
             { front: "Buchungsbestätigung", back: "booking confirmation" },
             { front: "Stornierung", back: "cancellation" },
@@ -826,7 +826,7 @@ LERNRAUM.subjects.push({
             { front: "Wellness-Bereich", back: "spa" },
             { front: "Halbpension / Vollpension", back: "half-board / full-board" },
             { front: "„five – five“ kurz gesagt", back: "double five" },
-            { front: "Wann benutzt man das Telefonier-Alphabet?", back: "Wenn die Verbindung schlecht ist und man Namen buchstabieren muss." },
+            { front: "Wann benutzt man das Telefonier-Alphabet?", back: "When the line is bad and you have to spell names." },
             { front: "Zeichen: @ . - _ / :", back: "at · dot · dash/hyphen · underscore · slash · colon" }
           ]
         }
@@ -862,7 +862,7 @@ LERNRAUM.subjects.push({
               q: "How do you end a business call politely?",
               options: ["It was nice talking to you. Goodbye.", "Bye.", "That’s it. (hang up)"],
               answer: 0,
-              explain: "Freundlicher Abschluss mit Dank und Wunsch."
+              explain: "Freundlicher Abschluss: “It was nice talking to you.” und ein höfliches “Goodbye”."
             }
           ]
         },
@@ -893,8 +893,9 @@ LERNRAUM.subjects.push({
           title: "A4 · Termin am Telefon",
           points: 8,
           review: "termine",
-          text: "Mr Wilkinson could meet Dr Kiesbauer on {Thursday} the sixth of July at {half} three in the afternoon. “Half three” means 3:{30}.",
-          distractors: ["Monday"]
+          prompt: "Zwei Wörter passen nicht.",
+          text: "Mr Wilkinson could meet Dr Kiesbauer on {Thursday}, the sixth of July, at half three in the afternoon. In 24-hour time that is {15:30}.",
+          distractors: ["Monday", "14:30"]
         },
         {
           type: "quiz",

@@ -1878,15 +1878,27 @@
 
     /* Bestehendes Material */
     link(step, ctx) {
+      /* Verweis auf einen anderen Kurs der App (href enthält #/f/…): im selben Tab öffnen, auch in der Einzeldatei */
+      const inner = String(step.href || "").match(/#\/f\/[\w-]+(?:\/[\w-]+)?/);
+      if (inner) {
+        const target = findSubject(inner[0].split("/")[2]);
+        ctx.body.append(h(`<div class="win material">
+          <div class="bar"><span class="d"></span>${tr("Kurs")}<span class="r">${esc(target ? target.course || target.fach || "" : "")}</span></div>
+          <div class="body"><p class="h2">${esc(target ? target.name : step.title)}</p><p>${esc(step.text || (target && target.description) || "")}</p></div>
+        </div>`));
+        ctx.setProgress(1);
+        ctx.action(`${tr("Zum Kurs")} ${ICON.arrow}`, () => { progress.complete(ctx.key.split("/")[0], ctx.key.split("/")[1], +ctx.key.split("/")[2], true); location.hash = inner[0]; });
+        return;
+      }
       let href = "#";
       try { href = new URL(encodeURI(step.href), DATA.materialBase || location.href).href; } catch { /* ungültig */ }
       ctx.body.append(h(`<div class="win material">
         <div class="bar"><span class="d"></span>${tr("Material")}<span class="r">${tr("extern")}</span></div>
         <div class="body"><p class="h2">${esc(step.title)}</p><p>${esc(step.text || "")}</p>
-        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">Material öffnen ${ICON.link}</a></div>
+        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">${tr("Material öffnen")} ${ICON.link}</a></div>
       </div>`));
       ctx.setProgress(1);
-      ctx.action(`Erledigt ${ICON.check}`, () => ctx.finish(true));
+      ctx.action(`${tr("Erledigt")} ${ICON.check}`, () => ctx.finish(true));
     }
   };
 

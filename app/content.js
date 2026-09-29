@@ -84,6 +84,45 @@ function ablauf(items = [], opts = {}) {
     : `<div class="df-node ${it.hi ? "hi" : ""} ${it.sub ? "sub" : ""}"><span>${_e(it.text)}</span>${val(it.value)}</div>`).join("")}</figure>`;
 }
 
+/* Sechseck: sechs Ziele an den Ecken, optional Verbindungslinien (Harmonie / Konflikt / neutral).
+   sechseck(["Stabiles Preisniveau", { text: "Hoher Beschäftigungsstand", hi: true }, …],   // genau 6, im Uhrzeigersinn ab oben
+            { title: "Magisches Sechseck", center: "Wirtschafts-\npolitik",
+              lines: [{ from: 0, to: 1, kind: "konflikt" }, { from: 1, to: 3, kind: "harmonie" }] })
+   Einträge: Text oder { text, sub, hi }. sub = kleine Zeile (z. B. „≈ 2 % Inflation“). kind: harmonie | konflikt | neutral. */
+/* Weiche Trennstellen in langen deutschen Komposita (Wortfugen) – damit schmale Karten sauber umbrechen */
+const _FUGEN = ["stand", "gewicht", "wachstum", "verteilung", "wirtschaft", "liches", "politik", "niveau", "vermögen", "einkommen",
+  "beschäftigung", "umwelt", "schutz", "quote", "ziel", "konflikt", "harmonie", "bilanz", "rate", "preis", "kosten", "gleich"];
+const _shy = (txt) => String(txt).replace(/[A-Za-zÄÖÜäöüß]{12,}/g, (w) => {
+  let out = "", last = 0;
+  for (let i = 3; i < w.length - 3; i++) {
+    if (i - last >= 3 && _FUGEN.some((f) => w.toLowerCase().startsWith(f, i))) { out += w.slice(last, i) + "\u00AD"; last = i; }
+  }
+  return out + w.slice(last);
+});
+function sechseck(items = [], opts = {}) {
+  const N = 6, H = 108;
+  const pts = Array.from({ length: N }, (_, i) => {
+    const a = (-90 + 60 * i) * Math.PI / 180;
+    return { x: 50 + 34 * Math.cos(a), y: H / 2 + 41 * Math.sin(a) };
+  });
+  const it = (i) => (typeof items[i] === "object" && items[i] ? items[i] : { text: items[i] ?? "" });
+  const KIND = { harmonie: "Harmonie", konflikt: "Konflikt", neutral: "neutral" };
+  const lines = (opts.lines || []).filter((l) => pts[l.from] && pts[l.to]);
+  const used = [...new Set(lines.map((l) => l.kind || "harmonie"))];
+  const svg = `<svg class="dh-svg" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">
+      ${opts.outline === false ? "" : `<polygon class="dh-out" points="${pts.map((p) => `${p.x},${p.y}`).join(" ")}"/>`}
+      ${lines.map((l) => `<line class="dh-l ${l.kind || "harmonie"}" x1="${pts[l.from].x}" y1="${pts[l.from].y}" x2="${pts[l.to].x}" y2="${pts[l.to].y}"/>`).join("")}
+    </svg>`;
+  const cards = pts.map((p, i) => { const x = it(i); return `<div class="dh-card ${x.hi ? "hi" : ""}" style="left:${p.x}%;top:${p.y / H * 100}%">
+      <span>${_shy(_e(x.text))}</span>${x.sub ? `<b>${_e(x.sub)}</b>` : ""}</div>`; }).join("");
+  const label = [...Array(N)].map((_, i) => it(i).text).join(", ") +
+    (lines.length ? ". " + lines.map((l) => `${it(l.from).text} – ${it(l.to).text}: ${KIND[l.kind || "harmonie"]}`).join("; ") : "");
+  return `<figure class="dia dia-hex" lang="de">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}
+    <div class="dh-stage" role="img" aria-label="${_e(label)}">${svg}
+      ${opts.center ? `<div class="dh-center">${_e(opts.center).replace(/\n/g, "<br>")}</div>` : ""}${cards}</div>
+    ${used.length ? `<div class="dh-legend">${used.map((k) => `<span><i class="${k}"></i>${KIND[k]}</span>`).join("")}</div>` : ""}</figure>`;
+}
+
 /* Standard-Zeilen für den Aufgabentyp "calc" (Personalbedarf) */
 function bedarfRows(ist, ab, zu, soll, opts = {}) {
   const zw = ist - ab + zu;

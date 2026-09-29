@@ -104,7 +104,11 @@ Stilstudie der Lehrkraft war die Vorlage.
       Unsichere Begriffe u. a.: Fortschreibung, Zieleinkaufspreis, Selbstkosten, hochrechnen, Rücksendeangabe, rechts-/linksbündig.
 - [ ] Englische Übersetzung der Kursinhalte (gleiches Verfahren: `node app/tools/texte.js <kurs> en`).
 - [ ] Optional: Fachbegriffe (Lernkarten) zusätzlich auf Englisch/Arabisch als Verständnishilfe – bräuchte Übersetzungen pro Kurs.
-- [ ] Weitere Diagrammtypen bei Bedarf: Verzweigung/Baum (Ersatz-/Neubedarf), Balken (Ist/Soll).
+- [ ] Weitere Diagrammtypen bei Bedarf: Verzweigung/Baum (Ersatz-/Neubedarf), Balken (Ist/Soll). `sechseck()` gibt es seit 29.09.2026.
+- [ ] three.js-Studie (29.09.2026, Artifact „Lernraum in 3D“): A 3D-Pixelwolke Startseite, B Sechseck zum Drehen, C Abschluss-Belohnung.
+      Empfehlung: gezielt (Startseite, erklärende Inhalte, Abschluss), nicht in Aufgaben; three.js lokal in app/vendor, 2D-Rückfall.
+      Entscheidung der Lehrkraft steht aus.
+- [ ] Übersetzungen ar für englisch-telephoning und vw-magisches-sechseck fehlen noch.
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 
 - [ ] **Kommazahlen im Zahlenfeld** (Wunsch aus GPU-Kurs, Bezugskalkulation) → Issue mit Label `design`.
