@@ -86,6 +86,8 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "Task restarted in the new language",
 
+    "Kurs": "Course", "Zum Kurs": "Go to course", "Material öffnen": "Open material", "Erledigt": "Done",
+
     howto: {
       slides: "Swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
       quiz: "Tap an answer, then “Check”. Exactly one answer is correct.",
@@ -178,6 +180,8 @@ window.LERNRAUM_I18N = {
     "Fall": "الحالة", "Angaben": "المعطيات", "Rechenschema": "مخطط الحساب", "Wert": "القيمة", "Zahlenfeld": "لوحة الأرقام", "Löschen": "حذف", "Vorzeichen": "الإشارة", "Nächstes Feld": "الحقل التالي", "nächstes Feld": "الحقل التالي", "Karte umdrehen": "اقلب البطاقة", "Begriff": "المصطلح", "Erklärung": "الشرح", "Dein Antwortsatz": "جملة إجابتك", "extern": "خارجي",
 
     "Aufgabe in der neuen Sprache neu gestartet": "بدأت المهمة من جديد باللغة الجديدة",
+
+    "Kurs": "الدورة", "Zum Kurs": "إلى الدورة", "Material öffnen": "افتح المادة", "Erledigt": "تم",
 
     howto: {
       slides: "اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",

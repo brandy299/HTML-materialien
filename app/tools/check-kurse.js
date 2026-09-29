@@ -77,7 +77,7 @@ function checkStep(where, st, topic) {
       if (!Array.isArray(st.slides) || !st.slides.length) err(where, "slides ist leer");
       else st.slides.forEach((sl, k) => {
         if (!str(sl.title)) err(`${where} Folie ${k + 1}`, "Folie ohne title");
-        if (/<(svg|img|canvas)\b/i.test(sl.body || "")) warn(`${where} Folie ${k + 1}`, "eigene Grafik – bitte die Bausteine zeitstrahl() / ablauf() nutzen oder ein Issue mit Label design anlegen");
+        if (/<(svg|img|canvas)\b/i.test(String(sl.body || "").replace(/<figure class="dia[\s\S]*?<\/figure>/g, ""))) warn(`${where} Folie ${k + 1}`, "eigene Grafik – bitte die Bausteine zeitstrahl() / ablauf() / sechseck() nutzen oder ein Issue mit Label design anlegen");
       });
       break;
     case "quiz":
@@ -221,6 +221,8 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
 }
 
 /* ── 4. Übersetzungen (app/uebersetzungen/<kurs-id>.<sprache>.js) ── */
+/* Pflicht-Übersetzungen (Entscheidung der Lehrkraft 29.09.2026): nur PBP auf Arabisch */
+const PFLICHT = { pbp: ["ar"] };
 const trListed = [...indexHtml.matchAll(/<script src="(uebersetzungen\/[^"]+)"><\/script>/g)].map((m) => m[1]);
 const trDir = path.join(APP, "uebersetzungen");
 const trDisk = fs.existsSync(trDir) ? fs.readdirSync(trDir).filter((f) => f.endsWith(".js")).map((f) => "uebersetzungen/" + f) : [];
@@ -233,6 +235,9 @@ if (trListed.length && indexHtml.indexOf(trListed[trListed.length - 1]) > indexH
 const tagsOf = (x) => (String(x).match(/<\/?[a-z][a-z0-9]*/gi) || []).map((t) => t.toLowerCase()).sort().join(",");
 const gapsOf = (x) => [...String(x).matchAll(/\{([^}]*)\}/g)].map((m) => m[1]);
 const trStats = [];
+for (const [id, langs] of Object.entries(PFLICHT)) langs.forEach((l) => {
+  if (!trListed.includes(`uebersetzungen/${id}.${l}.js`)) warn("app/uebersetzungen", `Pflicht-Übersetzung ${id}.${l}.js fehlt`);
+});
 for (const f of trListed) {
   const before = ctx.LERNRAUM.translations.length;
   if (!run(f)) continue;
@@ -263,6 +268,10 @@ for (const f of trListed) {
       if (/\$\{/.test(x)) err(w, "enthält ${…} – Diagramme/Schemata werden automatisch übernommen, bitte das fertige HTML aus dem Deutschen kopieren");
     }
     trStats.push(`${T.course} ${T.lang}: ${done}/${texts.size} Texte übersetzt`);
+    if ((PFLICHT[T.course] || []).includes(T.lang)) {
+      const neu = [...texts].filter((x) => !(x in T.strings));
+      if (neu.length) warn(W, `${neu.length} neue Kurstexte fehlen in der Pflicht-Übersetzung – node app/tools/texte.js ${T.course} ${T.lang} ausführen und übersetzen`);
+    }
   });
 }
 

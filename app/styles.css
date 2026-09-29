@@ -866,3 +866,25 @@ html.lang-ar [dir="rtl"] { unicode-bidi: isolate !important; text-align: right !
 html.lang-ar .s-body li[dir="rtl"], html.lang-ar .merk li[dir="rtl"] { padding-left: 0; padding-right: 20px; }
 html.lang-ar .s-body ul.pm li[dir="rtl"] { padding-left: 0; padding-right: 30px; }
 html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::before { left: auto; right: 0; }
+
+/* ── Sechseck (sechseck() in content.js) ── */
+.dia-hex .dh-stage { position: relative; width: 100%; aspect-ratio: 100 / 108; }
+.dia-hex .dh-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dia-hex .dh-out { fill: var(--panel); stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.dia-hex .dh-l { stroke-width: 3; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.dia-hex .dh-l.harmonie { stroke: var(--good); }
+.dia-hex .dh-l.konflikt { stroke: var(--bad); stroke-dasharray: 7 5; }
+.dia-hex .dh-l.neutral { stroke: var(--ink-3); stroke-dasharray: 2 5; }
+.dia-hex .dh-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; font: 700 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.dia-hex .dh-card { position: absolute; transform: translate(-50%, -50%); width: max-content; max-width: 40%; padding: 5px 7px; text-align: center; background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.dia-hex .dh-card.hi { background: var(--pink); }
+.dia-hex .dh-card span { display: block; font: 700 12px/1.15 var(--grot); letter-spacing: -.015em; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+.dia-hex .dh-card b { display: block; margin-top: 2px; font: 500 10px/1.2 var(--mono); color: var(--ink-2); }
+.dia-hex .dh-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font: 500 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+.dia-hex .dh-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dia-hex .dh-legend i { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--good); }
+.dia-hex .dh-legend i.konflikt { border-top: 3px dashed var(--bad); }
+.dia-hex .dh-legend i.neutral { border-top: 3px dotted var(--ink-3); }
+.slide.dark .dia-hex .dh-out { fill: transparent; stroke: var(--paper); }
+.slide.dark .dia-hex .dh-center, .slide.dark .dia-hex .dh-legend { color: var(--term-mut); }
+.slide.dark .dia-hex .dh-card { color: var(--ink); box-shadow: 2px 2px 0 var(--pink); }

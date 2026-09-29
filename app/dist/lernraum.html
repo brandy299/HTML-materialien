@@ -883,6 +883,28 @@ html.lang-ar .s-body li[dir="rtl"], html.lang-ar .merk li[dir="rtl"] { padding-l
 html.lang-ar .s-body ul.pm li[dir="rtl"] { padding-left: 0; padding-right: 30px; }
 html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::before { left: auto; right: 0; }
 
+/* ── Sechseck (sechseck() in content.js) ── */
+.dia-hex .dh-stage { position: relative; width: 100%; aspect-ratio: 100 / 108; }
+.dia-hex .dh-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dia-hex .dh-out { fill: var(--panel); stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.dia-hex .dh-l { stroke-width: 3; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.dia-hex .dh-l.harmonie { stroke: var(--good); }
+.dia-hex .dh-l.konflikt { stroke: var(--bad); stroke-dasharray: 7 5; }
+.dia-hex .dh-l.neutral { stroke: var(--ink-3); stroke-dasharray: 2 5; }
+.dia-hex .dh-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; font: 700 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.dia-hex .dh-card { position: absolute; transform: translate(-50%, -50%); width: max-content; max-width: 40%; padding: 5px 7px; text-align: center; background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.dia-hex .dh-card.hi { background: var(--pink); }
+.dia-hex .dh-card span { display: block; font: 700 12px/1.15 var(--grot); letter-spacing: -.015em; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+.dia-hex .dh-card b { display: block; margin-top: 2px; font: 500 10px/1.2 var(--mono); color: var(--ink-2); }
+.dia-hex .dh-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font: 500 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+.dia-hex .dh-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dia-hex .dh-legend i { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--good); }
+.dia-hex .dh-legend i.konflikt { border-top: 3px dashed var(--bad); }
+.dia-hex .dh-legend i.neutral { border-top: 3px dotted var(--ink-3); }
+.slide.dark .dia-hex .dh-out { fill: transparent; stroke: var(--paper); }
+.slide.dark .dia-hex .dh-center, .slide.dark .dia-hex .dh-legend { color: var(--term-mut); }
+.slide.dark .dia-hex .dh-card { color: var(--ink); box-shadow: 2px 2px 0 var(--pink); }
+
 </style>
 </head>
 <body>
@@ -993,6 +1015,45 @@ function ablauf(items = [], opts = {}) {
   return `<figure class="dia dia-flow">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}${items.map((it) => it.op != null
     ? `<div class="df-op"><span class="df-chip">${_e(it.op)}${val(it.value)}</span>${it.note ? `<span class="df-note">${_e(it.note)}</span>` : ""}</div>`
     : `<div class="df-node ${it.hi ? "hi" : ""} ${it.sub ? "sub" : ""}"><span>${_e(it.text)}</span>${val(it.value)}</div>`).join("")}</figure>`;
+}
+
+/* Sechseck: sechs Ziele an den Ecken, optional Verbindungslinien (Harmonie / Konflikt / neutral).
+   sechseck(["Stabiles Preisniveau", { text: "Hoher Beschäftigungsstand", hi: true }, …],   // genau 6, im Uhrzeigersinn ab oben
+            { title: "Magisches Sechseck", center: "Wirtschafts-\npolitik",
+              lines: [{ from: 0, to: 1, kind: "konflikt" }, { from: 1, to: 3, kind: "harmonie" }] })
+   Einträge: Text oder { text, sub, hi }. sub = kleine Zeile (z. B. „≈ 2 % Inflation“). kind: harmonie | konflikt | neutral. */
+/* Weiche Trennstellen in langen deutschen Komposita (Wortfugen) – damit schmale Karten sauber umbrechen */
+const _FUGEN = ["stand", "gewicht", "wachstum", "verteilung", "wirtschaft", "liches", "politik", "niveau", "vermögen", "einkommen",
+  "beschäftigung", "umwelt", "schutz", "quote", "ziel", "konflikt", "harmonie", "bilanz", "rate", "preis", "kosten", "gleich"];
+const _shy = (txt) => String(txt).replace(/[A-Za-zÄÖÜäöüß]{12,}/g, (w) => {
+  let out = "", last = 0;
+  for (let i = 3; i < w.length - 3; i++) {
+    if (i - last >= 3 && _FUGEN.some((f) => w.toLowerCase().startsWith(f, i))) { out += w.slice(last, i) + "\u00AD"; last = i; }
+  }
+  return out + w.slice(last);
+});
+function sechseck(items = [], opts = {}) {
+  const N = 6, H = 108;
+  const pts = Array.from({ length: N }, (_, i) => {
+    const a = (-90 + 60 * i) * Math.PI / 180;
+    return { x: 50 + 34 * Math.cos(a), y: H / 2 + 41 * Math.sin(a) };
+  });
+  const it = (i) => (typeof items[i] === "object" && items[i] ? items[i] : { text: items[i] ?? "" });
+  const KIND = { harmonie: "Harmonie", konflikt: "Konflikt", neutral: "neutral" };
+  const lines = (opts.lines || []).filter((l) => pts[l.from] && pts[l.to]);
+  const used = [...new Set(lines.map((l) => l.kind || "harmonie"))];
+  const svg = `<svg class="dh-svg" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">
+      ${opts.outline === false ? "" : `<polygon class="dh-out" points="${pts.map((p) => `${p.x},${p.y}`).join(" ")}"/>`}
+      ${lines.map((l) => `<line class="dh-l ${l.kind || "harmonie"}" x1="${pts[l.from].x}" y1="${pts[l.from].y}" x2="${pts[l.to].x}" y2="${pts[l.to].y}"/>`).join("")}
+    </svg>`;
+  const cards = pts.map((p, i) => { const x = it(i); return `<div class="dh-card ${x.hi ? "hi" : ""}" style="left:${p.x}%;top:${p.y / H * 100}%">
+      <span>${_shy(_e(x.text))}</span>${x.sub ? `<b>${_e(x.sub)}</b>` : ""}</div>`; }).join("");
+  const label = [...Array(N)].map((_, i) => it(i).text).join(", ") +
+    (lines.length ? ". " + lines.map((l) => `${it(l.from).text} – ${it(l.to).text}: ${KIND[l.kind || "harmonie"]}`).join("; ") : "");
+  return `<figure class="dia dia-hex" lang="de">${opts.title ? `<figcaption class="dia-cap">${_e(opts.title)}</figcaption>` : ""}
+    <div class="dh-stage" role="img" aria-label="${_e(label)}">${svg}
+      ${opts.center ? `<div class="dh-center">${_e(opts.center).replace(/\n/g, "<br>")}</div>` : ""}${cards}</div>
+    ${used.length ? `<div class="dh-legend">${used.map((k) => `<span><i class="${k}"></i>${KIND[k]}</span>`).join("")}</div>` : ""}</figure>`;
 }
 
 /* Standard-Zeilen für den Aufgabentyp "calc" (Personalbedarf) */
@@ -4193,7 +4254,7 @@ LERNRAUM.subjects.push({
               explain: "Höflich wäre: “Could I speak to Mr Wilkinson, please?”"
             },
             {
-              q: "Sam asks for her name, number and reason. What should Jenny be?",
+              q: "Sam wants to help Jenny. How should Jenny talk to Sam?",
               options: ["rude", "polite and clear", "silent"],
               answer: 1,
               explain: "Freundlich UND klar: Name, Nummer und Grund nennen."
@@ -4232,7 +4293,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A3 · Jenny höflich machen",
           case: "Bilde aus Jennys Anruf ein höfliches Gespräch.",
-          text: "Good morning. {*This is|Here is|I am being} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|I need} to Mr Wilkinson, please? … Thank you. Could you {*ask him to call me back|tell him to call me|order him to ring} at three in the afternoon, British time, please?",
+          text: "Good morning. {*This is|Here is|I am being} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|I need} to Mr Wilkinson, please? … Thank you. Could you {*ask him to call me back|say him to call me|order him to ring} at three in the afternoon, British time, please?",
           explain: "Höflich: “This is …”, “Could I speak to …?” und “Could you ask him to call me back …?”"
         },
         {
@@ -4325,7 +4386,7 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · welche Phase?",
           prompt: "Ordne jede Formulierung der passenden Gesprächsphase zu.",
-          hints: ["Achte auf das Ziel der Aussage (begrüßen, Nachricht, abschließen).", "“Can I take a message?” gehört zum Aufnehmen einer Nachricht."],
+          hints: ["Achte auf das Ziel der Aussage (begrüßen, Nachricht, abschließen).", "“Can I take a message?” gehört zum Aufnehmen einer Nachricht.", "Wer anruft, fragt “who I am speaking with”. Wer abnimmt, fragt “who is calling”."],
           categories: ["Making a call", "Answering the phone", "Taking a message", "Finishing the call"],
           items: [
             { text: "Good morning, this is Peter Clark of Supercars Ltd. in Manchester.", cat: 0 },
@@ -4342,16 +4403,16 @@ LERNRAUM.subjects.push({
           type: "cloze",
           title: "A2 · Redemittel sichern",
           prompt: "Vier Wörter passen nicht.",
-          hints: ["Es geht ums Sprechen, Warten, Bedauern und eine Nachricht.", "“to be … of a company” und “hold … for a moment” sind feste Wendungen."],
+          hints: ["Es geht ums Sprechen, Warten, Bedauern und eine Nachricht.", "“I’d like to … to …”, “hold … for a moment”, “I’m … he is …”, “take a …” und “It was … talking to you” sind feste Wendungen."],
           text: "I’d like to {speak} to Mr Wilkinson, please. Please hold {on} for a moment. I’m {afraid} he is in a meeting. Can I take a {message}? Thank you for your help. It was {nice} talking to you.",
-          distractors: ["see", "off", "happy", "call"]
+          distractors: ["see", "off", "fear", "messages"]
         },
         {
           type: "quiz",
           title: "A3 · die richtige Formulierung",
           questions: [
             {
-              q: "Somebody picks up: “Good morning, Supercars Ltd. How can I help you?” You want Mr Wilkinson. What do you say?",
+              q: "Somebody picks up: “Good morning, Wilkinson and Friends Ltd. How can I help you?” You want Mr Wilkinson. What do you say?",
               options: ["I’d like to speak to Mr Wilkinson, please.", "I want Wilkinson.", "Who is this?"],
               answer: 0,
               explain: "Höflich: “I’d like to speak to …, please.”"
@@ -4381,7 +4442,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A4 · Sätze bauen",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "{*May I|Must I|Do I} ask who I am speaking with, please? … I’m sorry, I {*didn’t catch|did not hear|do not catch} that because of the bad connection. … Thank you very much for your help. You’ve been {*most helpful|very laughable|too late}.",
+          text: "{*May I|Must I|Do I} ask who I am speaking with, please? … I’m sorry, I {*didn’t catch|didn’t caught|do not catch} that because of the bad connection. … Thank you very much for your help. You’ve been {*most helpful|very laughable|too late}.",
           explain: "“May I ask …?”, “I didn’t catch that.” und “You’ve been most helpful.” sind feste höfliche Wendungen."
         },
         {
@@ -4404,7 +4465,7 @@ LERNRAUM.subjects.push({
       kicker: "Am Telefon · Buchstabieren",
       minutes: 18,
       help: `<h3>Telefonier-Alphabet</h3>
-             <p class="formula">A Alpha · B Bravo · C Charlie · D Delta · E Echo · F Foxtrot · G Golf · H Hotel · I India · J Juliette · K Kilo · L Lima · M Mike</p>
+             <p class="formula">A Alpha · B Bravo · C Charlie · D Delta · E Echo · F Foxtrot · G Golf · H Hotel · I India · J Juliett · K Kilo · L Lima · M Mike</p>
              <p class="formula">N November · O Oscar · P Papa · Q Quebec · R Romeo · S Sierra · T Tango · U Uniform · V Victor · W Whisky · X X-ray · Y Yankee · Z Zulu</p>
              <p class="note">Beispiel „car“: „si – äi – ar“ oder mit Code: „C for Charlie, A for Alpha, R for Romeo“.</p>
              <h3>Telefonnummern</h3>
@@ -4429,7 +4490,7 @@ LERNRAUM.subjects.push({
               body: `<ul>
                        <li><strong>A</strong> – Alpha · <strong>B</strong> – Bravo · <strong>C</strong> – Charlie · <strong>D</strong> – Delta</li>
                        <li><strong>E</strong> – Echo · <strong>F</strong> – Foxtrot · <strong>G</strong> – Golf · <strong>H</strong> – Hotel</li>
-                       <li><strong>I</strong> – India · <strong>J</strong> – Juliette · <strong>K</strong> – Kilo · <strong>L</strong> – Lima · <strong>M</strong> – Mike</li>
+                       <li><strong>I</strong> – India · <strong>J</strong> – Juliett · <strong>K</strong> – Kilo · <strong>L</strong> – Lima · <strong>M</strong> – Mike</li>
                      </ul>`
             },
             {
@@ -4492,7 +4553,7 @@ LERNRAUM.subjects.push({
           title: "A2 · E-Mail diktieren",
           prompt: "Drei Wörter passen nicht.",
           hints: ["Zeichen wie @ und . haben englische Namen.", "Der Bindestrich heißt hyphen."],
-          text: "To spell an email address, say the words and single {letters}. For “t.miller@peterson.com”, you say: ti – {dot} – miller – {at} – peterson dot com. A dash is also called {hyphen}.",
+          text: "To spell an email address, say the words and single {letters}. For “t.miller@peterson.com”, you say: T – {dot} – miller – {at} – peterson dot com. A dash is also called a {hyphen}.",
           distractors: ["numbers", "comma", "colon"]
         },
         {
@@ -4541,7 +4602,7 @@ LERNRAUM.subjects.push({
               style: "dark",
               kicker: "Am Telefon · Termine",
               title: "Sam Carter schlägt einen Termin vor.",
-              body: `<p>Mr Wilkinson’s secretary ruft an. Die Konferenz läuft von <strong>Montag, den 3. Juli</strong> bis <strong>Freitag, den 7. Juli</strong>. Mr Wilkinson könnte Dr Kiesbauer am <strong>Donnerstag, den 6. Juli</strong> treffen – entweder um <strong>half nine</strong> morgens oder um <strong>half three</strong> nachmittags.</p>
+              body: `<p>Sam Carter aus dem Büro von Mr Wilkinson ruft an. Die Konferenz läuft von <strong>Montag, den 3. Juli</strong> bis <strong>Freitag, den 7. Juli</strong>. Mr Wilkinson könnte Dr Kiesbauer am <strong>Donnerstag, den 6. Juli</strong> treffen – entweder um <strong>half nine</strong> morgens oder um <strong>half three</strong> nachmittags.</p>
                      <p>Jenny antwortet: “Half three will be convenient.”</p>`
             },
             {
@@ -4634,13 +4695,13 @@ LERNRAUM.subjects.push({
           prompt: "Drei Wörter passen nicht.",
           hints: ["Es geht ums Vorschlagen, Treffen, Nachschauen und Passen.", "“to … an appointment”, “to … Dr Kiesbauer”, “appointment …”, “will be …”."],
           text: "Mr Wilkinson would like to {suggest} an appointment to see Dr Kiesbauer. When would Mr Wilkinson like to {meet} Dr Kiesbauer? One moment, please. I’ll just take a quick look at our appointment {book}. Half three will be {convenient}.",
-          distractors: ["cancel", "pay", "cheap"]
+          distractors: ["spend", "pay", "cheap"]
         },
         {
           type: "sentence",
           title: "A4 · Termin verschieben",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "I’m calling about Dr Kiesbauer’s appointment with Mr Wilkinson. I’m afraid he has to {*change|stop|break} it. Could we {*make it|take it|do it} at 11:30? {*Would that|Will that|Can that} be possible for Mr Wilkinson?",
+          text: "I’m calling about Dr Kiesbauer’s appointment with Mr Wilkinson. I’m afraid he has to {*change|stop|break} it. Could we {*make it|take it|give it} 11:30? {*Would that|Does that|Can that} be possible for Mr Wilkinson?",
           explain: "Höflich verschieben: “I’m afraid …”, “Could we make it …?”, “Would that be possible?”"
         },
         {
@@ -4693,7 +4754,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A1 · Der Wilkinson-Anruf",
           case: "Fülle das höfliche Gespräch.",
-          text: "Good morning. {*This is|Here is|I am} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|Give me} to Mr Wilkinson, please? … I’m afraid he is not available. Would you like to leave a message? … Yes, please. Could you {*ask him to call me back|tell him to call me|order him to ring} by 15:00 British time?",
+          text: "Good morning. {*This is|Here is|Here speaks} Jenny Meier from Dr Kiesbauer’s surgery in Düsseldorf. {*Could I speak|I want|Give me} to Mr Wilkinson, please? … I’m afraid he is not available. Would you like to leave a message? … Yes, please. Could you {*ask him to call me back|say him to call me|order him to ring} by 15:00 British time?",
           explain: "Höflich: “This is …”, “Could I speak to …?” und “Could you ask him to call me back …?”"
         },
         {
@@ -4715,7 +4776,7 @@ LERNRAUM.subjects.push({
             {
               q: "Thomas: “When will the conference be held?”",
               hint: "Dr Kiesbauer nennt den 4. Juli, 16 Uhr.",
-              options: ["It will be held on the fourth of July at four pm.", "It will be held on the fourth of June at four pm.", "It will be held on the third of July at four pm."],
+              options: ["It will be held on the fourth of July at 4 p.m.", "It will be held on the fourth of June at 4 p.m.", "It will be held on the third of July at 4 p.m."],
               answer: 0,
               explain: "Der Termin ist am vierten Juli (the fourth of July) um vier Uhr."
             },
@@ -4726,7 +4787,7 @@ LERNRAUM.subjects.push({
               explain: "Kurze Antworten wie “Yes.” wirken unfreundlich – besser danken."
             },
             {
-              q: "Thomas: “Is there anything else I can do for you?” What do you say?",
+              q: "Thomas: “Is there anything else I can do for you?” What is the most polite answer?",
               options: ["No, that’s it. Thanks again for your help. I appreciate it.", "No.", "No, that’s it."],
               answer: 0,
               explain: "Dank und Wertschätzung gehören zum höflichen Abschluss."
@@ -4745,7 +4806,7 @@ LERNRAUM.subjects.push({
           type: "sentence",
           title: "A4 · freundlich beenden",
           case: "Wähle in jedem Kasten den richtigen Baustein.",
-          text: "It was {*nice|funny|heavy} talking to you. Thank you for your {*help|money|call}. I {*wish|want|must} you a nice day. Goodbye.",
+          text: "It was {*nice|nicely|heavy} talking to you. Thank you for your {*help|money|phone}. I {*wish|want|must} you a nice day. Goodbye.",
           explain: "Höflicher Schluss: “It was nice talking to you.” · “Thank you for your help.” · “I wish you a nice day.”"
         },
         {
@@ -4771,7 +4832,7 @@ LERNRAUM.subjects.push({
              <ul>
                <li><b>to book</b> – buchen · <b>reservation</b> – Reservierung/Buchung</li>
                <li><b>single room</b> – Einzelzimmer · <b>double room</b> – Doppelzimmer</li>
-               <li><b>en suite bathroom</b> – mit anschließendem (eigenen) Badezimmer</li>
+               <li><b>en suite bathroom</b> – mit anschließendem (eigenem) Badezimmer</li>
                <li><b>rate</b> – (Zimmer-)Preis · <b>booking fee</b> – Buchungsgebühr · <b>to charge</b> – berechnen</li>
                <li><b>confirmation</b> – Bestätigung · <b>cancellation</b> – Stornierung</li>
                <li><b>date of arrival</b> – Ankunftstag · <b>date of departure</b> – Abreisetag</li>
@@ -4837,7 +4898,7 @@ LERNRAUM.subjects.push({
             },
             {
               q: "What does “en suite bathroom” mean?",
-              options: ["mit anschließendem (eigenen) Badezimmer", "ein Gemeinschaftsbad auf dem Flur", "eine Dusche ohne WC"],
+              options: ["mit anschließendem (eigenem) Badezimmer", "ein Gemeinschaftsbad auf dem Flur", "eine Dusche ohne WC"],
               answer: 0,
               explain: "en suite = das eigene Bad gehört zum Zimmer."
             },
@@ -4940,7 +5001,7 @@ LERNRAUM.subjects.push({
             { front: "Ich fürchte, das wird leider nicht möglich sein.", back: "I’m afraid that won’t be possible." },
             { front: "Könnten wir 11:30 Uhr daraus machen?", back: "Could we make it 11:30?" },
             { front: "Einzelzimmer", back: "single room" },
-            { front: "…mit anschließendem (eigenen) Badezimmer", back: "en suite bathroom" },
+            { front: "…mit anschließendem (eigenem) Badezimmer", back: "en suite bathroom" },
             { front: "Reservierung / Buchung", back: "reservation / booking" },
             { front: "Buchungsbestätigung", back: "booking confirmation" },
             { front: "Stornierung", back: "cancellation" },
@@ -4949,7 +5010,7 @@ LERNRAUM.subjects.push({
             { front: "Wellness-Bereich", back: "spa" },
             { front: "Halbpension / Vollpension", back: "half-board / full-board" },
             { front: "„five – five“ kurz gesagt", back: "double five" },
-            { front: "Wann benutzt man das Telefonier-Alphabet?", back: "Wenn die Verbindung schlecht ist und man Namen buchstabieren muss." },
+            { front: "Wann benutzt man das Telefonier-Alphabet?", back: "When the line is bad and you have to spell names." },
             { front: "Zeichen: @ . - _ / :", back: "at · dot · dash/hyphen · underscore · slash · colon" }
           ]
         }
@@ -4985,7 +5046,7 @@ LERNRAUM.subjects.push({
               q: "How do you end a business call politely?",
               options: ["It was nice talking to you. Goodbye.", "Bye.", "That’s it. (hang up)"],
               answer: 0,
-              explain: "Freundlicher Abschluss mit Dank und Wunsch."
+              explain: "Freundlicher Abschluss: “It was nice talking to you.” und ein höfliches “Goodbye”."
             }
           ]
         },
@@ -5016,8 +5077,9 @@ LERNRAUM.subjects.push({
           title: "A4 · Termin am Telefon",
           points: 8,
           review: "termine",
-          text: "Mr Wilkinson could meet Dr Kiesbauer on {Thursday} the sixth of July at {half} three in the afternoon. “Half three” means 3:{30}.",
-          distractors: ["Monday"]
+          prompt: "Zwei Wörter passen nicht.",
+          text: "Mr Wilkinson could meet Dr Kiesbauer on {Thursday}, the sixth of July, at half three in the afternoon. In 24-hour time that is {15:30}.",
+          distractors: ["Monday", "14:30"]
         },
         {
           type: "quiz",
@@ -5069,6 +5131,16 @@ LERNRAUM.subjects.push({
    Aufbau und alle Aufgabentypen: app/README.md
    ============================================================ */
 
+/* Die sechs Ziele – Ecken des Sechsecks im Uhrzeigersinn ab oben (Reihenfolge wie im Material).
+   Ecken 0–3 = Stabilitätsgesetz 1967 (magisches Viereck). */
+const VW_ZIELE = ["Vollbeschäftigung", "Preisstabilität", "Außenwirtschaftliches Gleichgewicht",
+  "Wirtschaftswachstum", "Umwelt- und Klimaschutz", "Gerechte Verteilung"];
+// Ecken für sechseck(): subs = kleine Zeile je Ecke, hi = hervorgehobene Ecken
+const vwEcken = (subs = [], hi = []) => VW_ZIELE.map((text, i) => ({ text, sub: subs[i], hi: hi.includes(i) }));
+const vwLinie = (kind, from, to) => ({ from, to, kind });
+const VW_HARMONIEN = [vwLinie("harmonie", 4, 0), vwLinie("harmonie", 4, 5), vwLinie("harmonie", 5, 3),
+  vwLinie("harmonie", 1, 5), vwLinie("harmonie", 3, 0)];
+
 LERNRAUM.subjects.push({
   id: "vw-magisches-sechseck",
   fach: "VW",
@@ -5090,9 +5162,11 @@ LERNRAUM.subjects.push({
              <p>Alle Maßnahmen des <strong>Staates</strong>, die das Wirtschaftsleben regeln – Gesetze, Steuern, Förderungen.</p>
              <h3>Das magische Sechseck</h3>
              <p>Die <strong>sechs Ziele</strong> der Wirtschaftspolitik zusammen:</p>
-             <ul><li>Vollbeschäftigung</li><li>Preisstabilität</li><li>Wirtschaftswachstum</li>
-             <li>Außenwirtschaftliches Gleichgewicht</li><li>Gerechte Einkommens- und Vermögensverteilung</li>
-             <li>Umwelt- und Klimaschutz</li></ul>
+             ${sechseck(vwEcken(["StabG 1967", "StabG 1967", "StabG 1967", "StabG 1967"]), { title: "Das magische Sechseck", center: "Wirtschafts-\npolitik" })}
+             <ul><li>Vollbeschäftigung</li><li>Preisstabilität</li><li>Außenwirtschaftliches Gleichgewicht</li>
+             <li>Wirtschaftswachstum</li><li>Umwelt- und Klimaschutz</li>
+             <li>Gerechte Verteilung (von Einkommen und Vermögen)</li></ul>
+             <p>Die ersten vier Ziele stehen im <strong>Stabilitätsgesetz</strong> von 1967.</p>
              <h3>Warum „magisch“?</h3>
              <p>Nie sind alle sechs Ziele <strong>gleichzeitig</strong> optimal erreicht. Die Politik muss immer wieder <strong>abwägen</strong>.</p>`,
       steps: [
@@ -5126,14 +5200,16 @@ LERNRAUM.subjects.push({
             {
               kicker: "Die sechs Ziele",
               title: "Was soll Wirtschaft leisten?",
-              body: `<ul>
+              body: `${sechseck(vwEcken(["StabG 1967", "StabG 1967", "StabG 1967", "StabG 1967"]), { center: "Wirtschafts-\npolitik" })}
+                     <ul>
                        <li><strong>1. Vollbeschäftigung</strong> – wer arbeiten kann und will, findet eine Stelle.</li>
                        <li><strong>2. Preisstabilität</strong> – die Preise steigen nur langsam.</li>
-                       <li><strong>3. Wirtschaftswachstum</strong> – die Wirtschaft wächst stetig und angemessen.</li>
-                       <li><strong>4. Außenwirtschaftliches Gleichgewicht</strong> – Export und Import halten sich die Waage.</li>
-                       <li><strong>5. Gerechte Verteilung</strong> – Einkommen und Vermögen sind fair verteilt.</li>
-                       <li><strong>6. Umwelt- und Klimaschutz</strong> – Natur und Klima werden geschützt.</li>
-                     </ul>`
+                       <li><strong>3. Außenwirtschaftliches Gleichgewicht</strong> – Export und Import halten sich die Waage.</li>
+                       <li><strong>4. Wirtschaftswachstum</strong> – die Wirtschaft wächst stetig und angemessen.</li>
+                       <li><strong>5. Umwelt- und Klimaschutz</strong> – Natur und Klima werden geschützt.</li>
+                       <li><strong>6. Gerechte Verteilung</strong> – Einkommen und Vermögen sind fair verteilt.</li>
+                     </ul>
+                     <p class="note">Ziele 1–4 stehen schon im Stabilitätsgesetz von 1967 (StabG).</p>`
             },
             {
               style: "accent",
@@ -5146,12 +5222,12 @@ LERNRAUM.subjects.push({
         {
           type: "link",
           title: "Extra: Das Sechseck am Beamer",
-          text: "Interaktive Präsentation zum magischen Sechseck – die sechs Ziele erscheinen nacheinander am Hexagon, mit Hexagon- und Konfliktfolien zum Wiederholen.",
+          text: "Interaktives 3D-Modell: Stelle die sechs Ziele mit Reglern ein und beobachte Harmonien und Konflikte in drei Oberhausen-Szenarien.",
           href: "materialien/VW/Magisches Sechseck/magisches-sechseck.html"
         },
         {
           type: "sort",
-          title: "A2 · Situation oder Ziel?",
+          title: "A1 · Situation oder Ziel?",
           prompt: "Ordne jede Situation dem Ziel zu, das am besten passt.",
           hints: ["Frag dich: Worum geht es in der Situation – Arbeit, Preise, Handel oder Natur?", "Bei der Tante geht es um Verkauf ins Ausland UND Einkauf dort – also um das Gleichgewicht, nicht um einen einzelnen Export."],
           categories: ["Vollbeschäftigung", "Preisstabilität", "Außenwirtschaftl. Gleichgewicht", "Umwelt- und Klimaschutz"],
@@ -5161,20 +5237,20 @@ LERNRAUM.subjects.push({
             { text: "Die Tante verkauft Maschinen ins Ausland und kauft dort ein.", cat: 2 },
             { text: "Der alte Stadtpark soll bebaut werden.", cat: 3 },
             { text: "Eine Firma sucht dringend neue Auszubildende.", cat: 0 },
-            { text: "Die Inflation steigt stark.", cat: 1 },
+            { text: "Die Preise steigen stark.", cat: 1 },
             { text: "Radwege statt neuer Straßen.", cat: 3 }
           ]
         },
         {
           type: "cloze",
-          title: "A3 · Was heißt das Sechseck?",
+          title: "A2 · Was heißt das Sechseck?",
           prompt: "Drei Wörter passen nicht.",
           text: "Die Wirtschaftspolitik in Deutschland soll sechs Ziele erreichen. Dieses Zielbündel heißt {magisches Sechseck}. Ein Ziel ist die {Preisstabilität}: Die Preise sollen nur langsam steigen. Ein anderes Ziel ist die {Vollbeschäftigung}: Wer arbeiten will, soll eine Stelle finden. Weil sich die Ziele widersprechen können, muss die Politik immer wieder {abwägen}. Auch der Schutz der {Umwelt} und ein stetiges {Wachstum} gehören zu den sechs Zielen.",
-          distractors: ["Wettbewerb", "Rabatt", "Inventur"]
+          distractors: ["Wettbewerb", "sparen", "Inventur"]
         },
         {
           type: "sentence",
-          title: "A5 · Begründen",
+          title: "A3 · Begründen",
           case: "Warum heißt das Zielbündel <b>magisch</b>? Baue den Antwortsatz aus den Bausteinen.",
           text: "Das Zielbündel heißt {*magisches Sechseck|Stabilitätsgesetz}. Es heißt magisch, weil man nie alle sechs Ziele {*gleichzeitig optimal|einzeln nacheinander} erreichen kann. Die Politik muss deshalb immer wieder {*abwägen|kürzen}.",
           hints: ["„Magisch“ hat nichts mit Zauberei zu tun – es ist ein Bild dafür, dass etwas (fast) nicht geht.", "Wenn alle sechs Ziele zusammen nicht passen, muss man sich zwischen ihnen entscheiden."],
@@ -5202,14 +5278,19 @@ LERNRAUM.subjects.push({
       help: `<h3>Ziele brauchen Kennzahlen</h3>
              <p><strong>Kennzahl</strong> = eine Zahl, die den Zustand eines Ziels beschreibt. Nur so kann man prüfen, ob ein Ziel erreicht ist.</p>
              <h3>Ziel → Kennzahl</h3>
+             ${sechseck(vwEcken(["Arbeitslosenquote ↓", "Inflation ≈ 2 %", "Außenbeitrag ≈ 0", "BIP + ≈ 2 %", "CO₂-Ausstoß ↓", "Gini-Wert ↓"]), { title: "Sechs Ziele und ihre Kennzahlen" })}
              <ul><li>Vollbeschäftigung → Arbeitslosenquote (möglichst <strong>niedrig</strong>)</li>
              <li>Preisstabilität → Inflationsrate (EZB-Ziel: ≈ <strong>2 %</strong>)</li>
-             <li>Wachstum → Veränderung des BIP (Faustregel: ≈ <strong>2 %</strong>)</li>
-             <li>Außenwirtschaft → Außenhandelssaldo (≈ <strong>0</strong>, ausgeglichen)</li>
-             <li>Gerechte Verteilung → Einkommensverteilung (Gini-Wert)</li>
-             <li>Umwelt- und Klimaschutz → CO₂-Ausstoß (möglichst niedrig)</li></ul>
+             <li>Außenwirtschaftliches Gleichgewicht → Außenhandelssaldo (Außenbeitrag: Export − Import; ≈ <strong>0</strong>, ausgeglichen)</li>
+             <li>Wirtschaftswachstum → Veränderung des BIP (Faustregel: ≈ <strong>2 %</strong>)</li>
+             <li>Umwelt- und Klimaschutz → CO₂-Ausstoß (möglichst niedrig)</li>
+             <li>Gerechte Verteilung → Gini-Wert (möglichst niedrig)</li></ul>
+             <h3>Kennzahlen erklärt</h3>
+             <p><strong>Inflationsrate</strong> = Preisanstieg eines Warenkorbs (Verbraucherpreisindex) in einem Jahr.</p>
+             <p><strong>Gini-Wert:</strong> 0 = alle haben gleich viel, 1 = einer hat alles. Je kleiner, desto gerechter.</p>
              <h3>Wichtig</h3>
-             <p>Das <strong>Stabilitätsgesetz</strong> (§ 1 StabG) nennt die ersten vier Ziele, aber <strong>keine festen Zahlen</strong>. Die 2 % sind das EZB-Ziel (Preise) bzw. eine Faustregel (Wachstum).</p>`,
+             <p>Das <strong>Stabilitätsgesetz</strong>: Gesetz von 1967. § 1 nennt vier Ziele (= <strong>magisches Viereck</strong>): hoher Beschäftigungsstand, stabiles Preisniveau, außenwirtschaftliches Gleichgewicht, stetiges und angemessenes Wachstum. Das Sechseck ergänzt gerechte Verteilung und Umweltschutz.</p>
+             <p>Feste Zahlen nennt das Gesetz <strong>nicht</strong>. Die 2 % sind das EZB-Ziel (Preise) bzw. eine Faustregel (Wachstum).</p>`,
       steps: [
         {
           type: "slides",
@@ -5229,20 +5310,31 @@ LERNRAUM.subjects.push({
               body: `<dl class="terms">
                        <dt>Kennzahl</dt><dd>Eine Zahl, die den Zustand eines Ziels beschreibt.</dd>
                        <dt>Zweck</dt><dd>Nur mit Kennzahlen kann man prüfen, ob ein Ziel erreicht wurde.</dd>
-                       <dt>Stabilitätsgesetz</dt><dd>§ 1 StabG nennt die ersten vier Ziele – aber keine festen Zahlen.</dd>
+                       <dt>Stabilitätsgesetz</dt><dd>Gesetz von 1967. § 1 nennt vier Ziele (= magisches Viereck): hoher Beschäftigungsstand, stabiles Preisniveau, außenwirtschaftliches Gleichgewicht, stetiges und angemessenes Wachstum. Das Sechseck ergänzt gerechte Verteilung und Umweltschutz.</dd>
                      </dl>`
             },
             {
               kicker: "Überblick",
               title: "Ziel → Kennzahl → „gut“ ist …",
-              body: ablauf([
-                { text: "Vollbeschäftigung", value: "Arbeitslosenquote" },
-                { text: "Preisstabilität", value: "Inflationsrate ≈ 2 %" },
-                { text: "Wirtschaftswachstum", value: "Veränderung des BIP ≈ 2 %" },
-                { text: "Außenwirtschaft", value: "Außenhandelssaldo ≈ 0" },
-                { text: "Gerechte Verteilung", value: "Gini-Wert" },
-                { text: "Umwelt- und Klimaschutz", value: "CO₂-Ausstoß", hi: true }
-              ], { title: "Sechs Ziele und ihre Kennzahlen" })
+              body: `${sechseck(vwEcken(["Arbeitslosenquote ↓", "Inflation ≈ 2 %", "Außenbeitrag ≈ 0", "BIP + ≈ 2 %", "CO₂-Ausstoß ↓", "Gini-Wert ↓"]), { title: "Sechs Ziele und ihre Kennzahlen" })}
+                     <p class="note">↓ = möglichst niedrig · ≈ = ungefähr</p>`
+            },
+            {
+              kicker: "Kennzahlen erklärt",
+              title: "Preise und Wirtschaftsleistung",
+              body: `<dl class="terms">
+                       <dt>Inflationsrate</dt><dd>Preisanstieg eines Warenkorbs (Verbraucherpreisindex) in einem Jahr.</dd>
+                       <dt>Warenkorb</dt><dd>Viele Dinge, die Haushalte oft kaufen – z. B. Brot, Strom, Miete.</dd>
+                       <dt>BIP</dt><dd>Bruttoinlandsprodukt: Wert aller Waren und Dienstleistungen, die in einem Jahr im Land hergestellt werden.</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Kennzahlen erklärt",
+              title: "Handel und Verteilung",
+              body: `<dl class="terms">
+                       <dt>Außenhandelssaldo</dt><dd>Auch Außenbeitrag: Export − Import. Gut ist ein Wert nahe 0 (ausgeglichen).</dd>
+                       <dt>Gini-Wert</dt><dd>0 = alle haben gleich viel, 1 = einer hat alles. Je kleiner, desto gerechter.</dd>
+                     </dl>`
             },
             {
               style: "accent",
@@ -5281,12 +5373,12 @@ LERNRAUM.subjects.push({
             { label: "b) Schokoriegel: (1,10 − 1,00) : 1,00 · 100", value: 10 },
             { label: "c) BIP: (408 − 400) : 400 · 100", value: 2 }
           ],
-          hints: ["Ziehe zuerst das Alte vom Neuen ab – das ist die Veränderung in Euro.", "Teile die Veränderung durch den alten Wert und mal 100.", "Lösungsweg a) (102 − 100) : 100 · 100 = 2 %. b) = 10 %. c) = 2 %."],
+          hints: ["Ziehe zuerst das Alte vom Neuen ab – das ist die Veränderung (neu − alt).", "Teile die Veränderung durch den alten Wert und mal 100.", "Lösungsweg a) (102 − 100) : 100 · 100 = 2 %. b) = 10 %. c) = 2 %."],
           result: "a) 2 % (passt zur Preisstabilität) · b) 10 % (Ziel klar verfehlt) · c) 2 % (angemessenes Wachstum)."
         },
         {
           type: "sentence",
-          title: "A5 · Erklären",
+          title: "A4 · Erklären",
           case: "Warum sind 2 % Inflation besser als 0 %? Baue den Antwortsatz.",
           text: "Ein bisschen Inflation ist besser als null Prozent, weil sich die Preise dann {*langsam anpassen|einfrieren} können und Firmen nicht in Schwierigkeiten geraten. Sinkende Preise heißen {*Deflation|Inflation} – sie können die Wirtschaft {*bremsen|ankurbeln}.",
           hint: "Überlege, was passiert, wenn alle Preise fallen: Firmen verdienen weniger und stellen weniger ein.",
@@ -5298,7 +5390,7 @@ LERNRAUM.subjects.push({
           items: [
             "Ich kann sagen, welche Kennzahl zu welchem Ziel gehört.",
             "Ich kann einfache Veränderungen in Prozent berechnen.",
-            "Ich kann eine Schlagzeile dem richtigen Ziel zuordnen."
+            "Ich kann eine Inflationsrate beurteilen (≈ 2 % ist gut)."
           ]
         }
       ]
@@ -5314,10 +5406,12 @@ LERNRAUM.subjects.push({
       help: `<h3>Zielharmonie</h3>
              <p>Zwei Ziele <strong>helfen sich</strong>: Eine Maßnahme bringt beide Ziele voran.</p>
              <h3>Beispiele</h3>
+             ${sechseck(vwEcken(), { title: "Harmonien: Diese Ziele helfen sich", lines: VW_HARMONIEN })}
              <ul><li>Solarpark → Umwelt/Klima + Vollbeschäftigung (Jobs)</li>
              <li>Günstiger Nahverkehr → Umwelt/Klima + gerechte Verteilung</li>
              <li>Kindergeld erhöhen → gerechte Verteilung + Wirtschaftswachstum</li>
-             <li>Stabile Preise → Preisstabilität + gerechte Verteilung (Inflation trifft Menschen mit wenig Geld stärker)</li></ul>
+             <li>Stabile Preise → Preisstabilität + gerechte Verteilung (Inflation trifft Menschen mit wenig Geld stärker)</li>
+             <li>Wirtschaftswachstum → Vollbeschäftigung: Firmen verkaufen mehr und brauchen mehr Arbeitskräfte.</li></ul>
              <h3>Denk-Werkzeug</h3>
              <p>1) Welche Ziele werden besser? 2) Welche schlechter? 3) Wer profitiert – und wer nicht?</p>`,
       steps: [
@@ -5340,7 +5434,9 @@ LERNRAUM.subjects.push({
                        <dt>Zielharmonie</dt><dd>Eine Maßnahme bringt zwei Ziele gleichzeitig voran.</dd>
                        <dt>Beispiel</dt><dd>Solarpark: Umwelt- und Klimaschutz + Vollbeschäftigung (Jobs).</dd>
                        <dt>Denk-Werkzeug</dt><dd>Welche Ziele werden besser? Welche schlechter? Wer profitiert – wer nicht?</dd>
-                     </dl>`
+                     </dl>
+                     ${sechseck(vwEcken(), { title: "Harmonien: Diese Ziele helfen sich", lines: VW_HARMONIEN })}
+                     <p class="note">Beispiele zu allen Linien: Merkkasten über den ?-Knopf.</p>`
             },
             {
               style: "accent",
@@ -5354,26 +5450,26 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · Harmonie oder nicht?",
           prompt: "Hilft die Maßnahme mindestens zwei Zielen gleichzeitig?",
-          hints: ["Eine Harmonie braucht eine Maßnahme, die zwei Ziele gleichzeitig besser macht.", "Wenn nur ein Ziel betroffen ist, ist es keine Harmonie."],
-          categories: ["Zielharmonie", "kein Zwei-Ziele-Fall"],
+          hints: ["Eine Harmonie braucht eine Maßnahme, die zwei Ziele gleichzeitig besser macht.", "Zähle, wie viele Ziele besser werden. Wird nur ein Ziel besser, ist es keine Harmonie."],
+          categories: ["Zielharmonie", "nur ein Ziel wird besser"],
           items: [
             { text: "Solarpark bauen: Klima schützen und Jobs schaffen.", cat: 0 },
-            { text: "Neue Ampeln in der Innenstadt streichen.", cat: 1 },
-            { text: "Kostenloses Mittagessen in Kitas: Kinder lernen besser, Eltern können arbeiten.", cat: 0 },
+            { text: "Filteranlage im Kraftwerk: weniger Abgase, die Zahl der Jobs bleibt gleich.", cat: 1 },
+            { text: "Kostenloses Kita-Essen: Eltern können arbeiten (Beschäftigung), Familien mit wenig Geld werden entlastet (Verteilung).", cat: 0 },
             { text: "Radwege ausbauen: weniger Abgase und neue Jobs.", cat: 0 },
-            { text: "Höhere Werbeausgaben für ein einzelnes Produkt.", cat: 1 }
+            { text: "Mehr Personal für die Arbeitsagentur: Arbeitslose finden schneller eine Stelle.", cat: 1 }
           ]
         },
         {
           type: "cloze",
-          title: "A3 · Harmonie beschreiben",
+          title: "A2 · Harmonie beschreiben",
           prompt: "Drei Wörter passen nicht.",
-          text: "Manchmal hilft eine Maßnahme zwei Zielen gleichzeitig. So ein Fall heißt {Zielharmonie}. Ein Beispiel ist der Bau von {Solaranlagen}: Dabei wird das Klima geschützt und es entstehen neue {Arbeitsplätze}. Auch günstiger Nahverkehr ist eine Harmonie: Er hilft dem Ziel {Umweltschutz} und dem Ziel {gerechte Verteilung}.",
+          text: "Manchmal hilft eine Maßnahme zwei Zielen gleichzeitig. So ein Fall heißt {Zielharmonie}. Ein Beispiel ist der Bau von {Solaranlagen}: Dabei wird das Klima geschützt und es entstehen neue {Arbeitsplätze}. Auch günstiger Nahverkehr ist eine Harmonie: Weniger Autos fahren – das hilft dem Ziel {Umweltschutz}. Auch Menschen mit wenig Geld können Bus fahren – das hilft dem Ziel {Gerechte Verteilung}.",
           distractors: ["Zielkonflikt", "Skonto", "Werbung"]
         },
         {
           type: "sentence",
-          title: "A2 · Zwei Ziele benennen",
+          title: "A3 · Zwei Ziele benennen",
           case: "Ergänze die Harmonie mit den passenden Zielen.",
           text: "Kindergeld zu erhöhen verbessert die {*gerechte Verteilung|Preisstabilität} und das {*Wirtschaftswachstum|außenwirtschaftliche Gleichgewicht}, weil Familien mehr Geld {*ausgeben|sparen}.",
           hint: "Familien mit mehr Geld geben mehr aus – das hilft dem Wachstum und der gerechten Verteilung.",
@@ -5401,10 +5497,13 @@ LERNRAUM.subjects.push({
       help: `<h3>Zielkonflikt</h3>
              <p>Ziel A wird besser, dafür wird Ziel B <strong>schlechter</strong>.</p>
              <h3>Typische Konflikte</h3>
+             ${sechseck(vwEcken(), { title: "Konflikte: Diese Ziele streiten sich", lines: [vwLinie("konflikt", 0, 1), vwLinie("konflikt", 3, 4), vwLinie("konflikt", 3, 1), vwLinie("konflikt", 0, 2), vwLinie("harmonie", 3, 0)] })}
              <ul><li>Mehr Jobs ↔ stabile Preise: Wer mehr verdient, gibt mehr aus → Firmen erhöhen die Preise.</li>
              <li>Mehr Wachstum ↔ Umweltschutz: Mehr produzieren heißt mehr Energie, Verkehr und CO₂.</li>
+             <li>Mehr Wachstum ↔ stabile Preise: Wächst die Wirtschaft sehr stark, wird mehr gekauft → die Preise steigen.</li>
              <li>Mehr Jobs ↔ außenwirtschaftliches Gleichgewicht: Mehr Konsum heißt mehr Importe.</li>
              <li>Niedrige Zinsen ↔ Preisstabilität: Billige Kredite → mehr Investitionen, aber auch steigende Preise.</li></ul>
+             <p>Zum Vergleich (Harmonie): Wirtschaftswachstum hilft der Vollbeschäftigung – Firmen brauchen mehr Arbeitskräfte.</p>
              <h3>Deshalb „magisch“</h3>
              <p>Nie sind alle sechs Ziele gleichzeitig optimal – die Politik muss abwägen.</p>`,
       steps: [
@@ -5416,8 +5515,8 @@ LERNRAUM.subjects.push({
               style: "dark",
               kicker: "Fallakte Oberhausen · 4/6",
               title: "Steuersenkung im Stadtrat",
-              body: `<p>Oberhausen will neue Arbeitsplätze. Damit sich Firmen ansiedeln, senkt die Stadt Steuern und Abgaben.</p>
-                     <p>Ergebnis: Es entstehen <strong>Jobs</strong> – aber die <strong>Preise</strong> in der Stadt steigen.</p>
+              body: `<p>Die Bundesregierung senkt die Steuern. Firmen investieren mehr – auch in Oberhausen siedeln sich neue Firmen an.</p>
+                     <p>Ergebnis: Es entstehen <strong>Jobs</strong>. Die Menschen haben mehr Geld und kaufen mehr – deshalb steigen die <strong>Preise</strong>.</p>
                      <p class="note">Zwei Ziele streiten sich: mehr Beschäftigung ↔ stabile Preise.</p>`
             },
             {
@@ -5425,7 +5524,7 @@ LERNRAUM.subjects.push({
               title: "Konflikt heißt: ein Ziel auf Kosten des anderen.",
               body: `<dl class="terms">
                        <dt>Zielkonflikt</dt><dd>Ziel A wird besser, dafür wird Ziel B schlechter.</dd>
-                       <dt>Beispiel</dt><dd>Mehr Löhne → mehr Beschäftigung, aber die Preise steigen.</dd>
+                       <dt>Beispiel</dt><dd>Mehr Beschäftigung → mehr Einkommen → mehr Nachfrage → die Preise steigen.</dd>
                        <dt>Folge</dt><dd>Die Politik muss abwägen – nie geht alles gleichzeitig.</dd>
                      </dl>`
             },
@@ -5433,7 +5532,9 @@ LERNRAUM.subjects.push({
               style: "accent",
               kicker: "Merke",
               title: "Jobs ↔ Preise. Wachstum ↔ Umwelt.",
-              body: `<p>Wer mehr verdient, gibt mehr aus → die Preise steigen. Mehr Produktion kostet Energie und verbraucht Natur.</p>`
+              body: `<p>Wer mehr verdient, gibt mehr aus → die Preise steigen. Mehr Produktion kostet Energie und verbraucht Natur. Starkes Wachstum → mehr Nachfrage → die Preise steigen.</p>
+                     ${sechseck(vwEcken(), { lines: [vwLinie("konflikt", 0, 1), vwLinie("konflikt", 3, 4), vwLinie("konflikt", 3, 1), vwLinie("harmonie", 3, 0)] })}
+                     <p class="note">Zum Vergleich: Wachstum und Vollbeschäftigung helfen sich (Harmonie).</p>`
             }
           ]
         },
@@ -5446,25 +5547,25 @@ LERNRAUM.subjects.push({
           items: [
             { text: "Solarpark bauen: neue Jobs und mehr Klimaschutz.", cat: 1 },
             { text: "Die Zinsen sinken: Firmen investieren mehr, aber die Preise steigen.", cat: 0 },
-            { text: "Höhere Löhne: Die Beschäftigten haben mehr Geld, die Preise steigen.", cat: 0 },
+            { text: "Höhere Löhne: gerechtere Verteilung, aber die Preise steigen.", cat: 0 },
             { text: "Ein Pfandsystem schafft Arbeitsplätze und spart Müll.", cat: 1 },
             { text: "Neue Autobahn: mehr Jobs, aber mehr Abgase und Flächenverbrauch.", cat: 0 }
           ]
         },
         {
           type: "cloze",
-          title: "A3 · Mini-Fall",
+          title: "A2 · Mini-Fall",
           prompt: "Zwei Wörter passen nicht.",
-          text: "Senkt die Regierung die Steuern, investieren die Firmen mehr. Es entstehen mehr {Arbeitsplätze}, und die Beschäftigung steigt. Gleichzeitig fragen die Menschen mehr nach, deshalb steigen die {Preise}. Es entsteht ein Zielkonflikt zwischen {Vollbeschäftigung} und {Preisstabilität}.",
+          text: "Senkt die Regierung die Steuern, investieren die Firmen mehr. Es entstehen mehr {Arbeitsplätze}, und die Beschäftigung steigt. Gleichzeitig fragen die Menschen mehr nach, deshalb steigen die {Preise}. Es entsteht ein Zielkonflikt: Das Ziel {Vollbeschäftigung} wird besser, das Ziel {Preisstabilität} wird schlechter.",
           distractors: ["Außenhandel", "Umweltschutz"]
         },
         {
           type: "sentence",
-          title: "A4 · Begründen",
-          case: "Warum heißt das Sechseck „magisch“? Baue den Antwortsatz.",
-          text: "Das Sechseck heißt magisch, weil man nie alle sechs Ziele {*gleichzeitig optimal|einzeln nacheinander} erreichen kann. Ein Ziel wird besser, dafür wird ein anderes {*schlechter|besser}. Die Politik muss deshalb immer wieder {*abwägen|kürzen}.",
-          hint: "Blick auf die Konflikte: Jobs ↔ Preise, Wachstum ↔ Umwelt. Beide gehen nicht immer zusammen.",
-          explain: "Magisch heißt: Nie sind alle sechs Ziele gleichzeitig optimal erreichbar. Deshalb muss die Politik abwägen."
+          title: "A3 · Begründen",
+          case: "Eine neue Autobahn wird gebaut. Welches Ziel wird besser, welches schlechter? Baue den Antwortsatz.",
+          text: "Eine neue Autobahn verbessert die {*Vollbeschäftigung|Preisstabilität}, schadet aber dem {*Umwelt- und Klimaschutz|Wirtschaftswachstum}. Das nennt man {*Zielkonflikt|Zielharmonie}.",
+          hint: "Beim Bau und am Rand der Autobahn entstehen Jobs. Mehr Verkehr bringt aber mehr Abgase und Flächenverbrauch.",
+          explain: "Die Autobahn schafft Jobs (Vollbeschäftigung), aber mehr Verkehr und Abgase schaden dem Umwelt- und Klimaschutz. Ein Ziel wird besser, ein anderes schlechter – das ist ein Zielkonflikt."
         },
         {
           type: "selfcheck",
@@ -5472,7 +5573,7 @@ LERNRAUM.subjects.push({
           items: [
             "Ich kann erklären, was ein Zielkonflikt ist.",
             "Ich kann einen Konflikt in einem Beispiel erkennen.",
-            "Ich kann begründen, warum das Sechseck „magisch“ heißt."
+            "Ich kann bei einer Maßnahme sagen, welches Ziel besser und welches schlechter wird."
           ]
         }
       ]
@@ -5503,7 +5604,8 @@ LERNRAUM.subjects.push({
               title: "Der Fall",
               body: `<p>Auf einer großen <strong>Brachfläche an der Autobahn</strong> plant Oberhausen ein Logistikzentrum. Ein Online-Kaufhaus will dort Pakete umschlagen.</p>
                      <p><strong>Dafür:</strong> 400 neue Arbeitsplätze · mehr Gewerbesteuer für die Stadt (Geld für Schulen und Schwimmbäder).</p>
-                     <p><strong>Dagegen:</strong> Die Fläche war als Naherholungspark geplant · mehr Lkw-Verkehr, Lärm und Abgase · der Boden wird versiegelt.</p>`
+                     <p><strong>Dagegen:</strong> Die Fläche war als Naherholungspark geplant · mehr Lkw-Verkehr, Lärm und Abgase · der Boden wird versiegelt.</p>
+                     ${sechseck(vwEcken([], [0, 3, 4]), { title: "Diese Ziele sind betroffen", lines: [vwLinie("harmonie", 0, 3), vwLinie("konflikt", 3, 4), vwLinie("konflikt", 0, 4)] })}`
             },
             {
               kicker: "So geht ihr vor",
@@ -5530,13 +5632,13 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · Welche Ziele sind betroffen?",
           prompt: "Sortiere: besonders betroffen oder nicht im Mittelpunkt?",
-          hints: ["Frag dich bei jedem Ziel: Spielt es in diesem Fall wirklich eine Rolle?", "Ein einzelnes Logistikzentrum verändert nicht den Export/Import der ganzen Volkswirtschaft."],
+          hints: ["Frag dich bei jedem Ziel: Spielt es in diesem Fall wirklich eine Rolle?", "Ein einzelnes Logistikzentrum verändert nicht den Export/Import und nicht die Preise in ganz Deutschland."],
           categories: ["besonders betroffen", "nicht im Mittelpunkt"],
           items: [
             { text: "Vollbeschäftigung (400 neue Jobs)", cat: 0 },
             { text: "Umwelt- und Klimaschutz", cat: 0 },
-            { text: "Gerechte Verteilung (Steuern für alle)", cat: 0 },
-            { text: "Preisstabilität", cat: 1 },
+            { text: "Wirtschaftswachstum (Investition, mehr Gewerbesteuer)", cat: 0 },
+            { text: "Preisstabilität in ganz Deutschland", cat: 1 },
             { text: "Außenwirtschaftliches Gleichgewicht", cat: 1 }
           ]
         },
@@ -5559,7 +5661,7 @@ LERNRAUM.subjects.push({
           type: "cards",
           title: "Die Rollen der Sitzung",
           cards: [
-            { front: "Stadtkämmerin", back: "Interesse: die Kasse der Stadt. Ziele: gerechte Verteilung (Steuern für alle), Vollbeschäftigung. Kompromiss: nur mit Ausgleichsflächen und gesicherter Erschließung." },
+            { front: "Stadtkämmerin", back: "Interesse: die Kasse der Stadt. Ziele: Wirtschaftswachstum (Gewerbesteuer), Vollbeschäftigung. Kompromiss: nur mit Ausgleichsflächen und gesicherter Erschließung." },
             { front: "IHK-Vertreter", back: "Interesse: starker Wirtschaftsstandort. Ziele: Vollbeschäftigung, Wirtschaftswachstum. Kompromiss: Solar aufs Dach und feste Lkw-Zeiten." },
             { front: "Anwohnerinitiative „Naherholung“", back: "Interesse: Ruhe, Grün, lebenswertes Viertel. Ziel: Umwelt- und Klimaschutz. Kompromiss: Lärmschutzwall, Grünstreifen, Nachtfahrverbot." },
             { front: "Umweltverband", back: "Interesse: Klima, Boden, Artenvielfalt. Ziel: Umwelt- und Klimaschutz. Kompromiss: Dach-Solar, Ausgleichsflächen, Jobticket." },
@@ -5595,14 +5697,16 @@ LERNRAUM.subjects.push({
       kicker: "LS 3.10 · Stunde 6",
       minutes: 22,
       help: `<h3>Das Wichtigste auf einen Blick</h3>
-             <p>Sechs Ziele: Vollbeschäftigung · Preisstabilität · Wirtschaftswachstum · außenwirtschaftliches Gleichgewicht · gerechte Verteilung · Umwelt- und Klimaschutz.</p>
+             <p>Sechs Ziele: Vollbeschäftigung · Preisstabilität · außenwirtschaftliches Gleichgewicht · Wirtschaftswachstum · Umwelt- und Klimaschutz · gerechte Verteilung.</p>
              <p>Gemessen mit Kennzahlen. Zwischen den Zielen gibt es <strong>Harmonien</strong> und <strong>Konflikte</strong> – deshalb ist das Sechseck „magisch“.</p>
+             ${sechseck(vwEcken(), { title: "Alle Harmonien und Konflikte", lines: [...VW_HARMONIEN, vwLinie("konflikt", 0, 1), vwLinie("konflikt", 3, 4), vwLinie("konflikt", 3, 1), vwLinie("konflikt", 0, 2)] })}
+             <p>Achtung: Ob zwei Ziele sich helfen oder streiten, hängt von der <strong>Maßnahme</strong> ab. Jobs und Umwelt: Solarpark = Harmonie, neue Autobahn = Konflikt.</p>
              <h3>Zum Nachschlagen</h3>
              <p>Öffne das Thema <strong>Alle Lernkarten</strong>.</p>`,
       steps: [
         {
           type: "quiz",
-          title: "A2 · Quiz zum Sechseck",
+          title: "A1 · Quiz zum Sechseck",
           questions: [
             {
               q: "Wie viele Ziele hat das magische Sechseck?",
@@ -5656,9 +5760,9 @@ LERNRAUM.subjects.push({
         },
         {
           type: "cloze",
-          title: "A3 · Zusammenfassung",
+          title: "A2 · Zusammenfassung",
           prompt: "Drei Wörter passen nicht.",
-          text: "Die Wirtschaftspolitik verfolgt in Deutschland {sechs} Ziele. Dieses Zielbündel heißt {magisches Sechseck}. Es heißt so, weil man nie alle Ziele {gleichzeitig} erreichen kann. Zwischen den Zielen gibt es {Zielkonflikte} und Harmonien. Prüfen kann man die Ziele mit {Kennzahlen}, zum Beispiel mit der Inflationsrate. Sie sollte bei etwa {zwei} Prozent liegen.",
+          text: "Die Wirtschaftspolitik verfolgt in Deutschland {sechs} Ziele. Dieses Zielbündel heißt {magisches Sechseck}. Es heißt so, weil man nie alle Ziele {gleichzeitig} optimal erreichen kann. Zwischen den Zielen gibt es {Zielkonflikte} und Harmonien. Prüfen kann man die Ziele mit {Kennzahlen}, zum Beispiel mit der Inflationsrate. Sie sollte bei etwa {zwei} Prozent liegen.",
           distractors: ["acht", "Skonto", "Rabatt"]
         },
         {
@@ -5690,13 +5794,14 @@ LERNRAUM.subjects.push({
             { front: "Vollbeschäftigung", back: "Möglichst alle, die arbeiten können und wollen, haben eine Stelle. Kennzahl: Arbeitslosenquote." },
             { front: "Preisstabilität", back: "Die Preise steigen nur langsam. EZB-Ziel: ≈ 2 % pro Jahr. Kennzahl: Inflationsrate." },
             { front: "Wirtschaftswachstum", back: "Die Wirtschaftsleistung (BIP) wächst stetig und angemessen. Kennzahl: Veränderung des BIP." },
-            { front: "Außenwirtschaftliches Gleichgewicht", back: "Exporte und Importe halten sich etwa die Waage. Kennzahl: Außenhandelssaldo." },
-            { front: "Gerechte Verteilung", back: "Einkommen und Vermögen sind fair verteilt. Kennzahl: Einkommensverteilung (z. B. Gini-Wert)." },
+            { front: "Außenwirtschaftliches Gleichgewicht", back: "Exporte und Importe halten sich etwa die Waage. Kennzahl: Außenhandelssaldo (Außenbeitrag: Export − Import), gut ≈ 0." },
+            { front: "Gerechte Verteilung", back: "Einkommen und Vermögen sind fair verteilt. Kennzahl: Gini-Wert – 0 = alle haben gleich viel, 1 = einer hat alles. Je kleiner, desto gerechter." },
             { front: "Umwelt- und Klimaschutz", back: "Natur und Klima werden geschützt. Kennzahl: CO₂-Ausstoß." },
+            { front: "Inflationsrate", back: "Preisanstieg eines Warenkorbs (Verbraucherpreisindex) in einem Jahr. Gut: ≈ 2 %." },
             { front: "Kennzahl", back: "Eine Zahl, mit der man prüft, ob ein Ziel erreicht ist – z. B. die Inflationsrate für die Preisstabilität." },
             { front: "Zielharmonie", back: "Eine Maßnahme verbessert zwei Ziele gleichzeitig – z. B. Solarpark: Klimaschutz + Arbeitsplätze." },
             { front: "Zielkonflikt", back: "Ein Ziel wird besser, dafür wird ein anderes schlechter – z. B. mehr Jobs, aber steigende Preise." },
-            { front: "Stabilitätsgesetz", back: "Gesetz von 1967. § 1 nennt die ersten vier Ziele: Vollbeschäftigung, Preisstabilität, Wachstum, außenwirtschaftliches Gleichgewicht." },
+            { front: "Stabilitätsgesetz", back: "Gesetz von 1967. § 1 nennt vier Ziele (= magisches Viereck): hoher Beschäftigungsstand, stabiles Preisniveau, außenwirtschaftliches Gleichgewicht, stetiges und angemessenes Wachstum. Das Sechseck ergänzt gerechte Verteilung und Umweltschutz." },
             { front: "Deflation", back: "Sinkende Preise. Gefährlich: Firmen verdienen weniger und stellen weniger ein." },
             { front: "Denk-Werkzeug", back: "1) Welche Ziele werden besser? 2) Welche schlechter? 3) Wer profitiert – und wer nicht?" },
             { front: "Abwägen / Urteil", back: "Pro und Contra prüfen, Folgen bedenken und sich dann begründet entscheiden." }
@@ -5756,7 +5861,7 @@ LERNRAUM.subjects.push({
           review: "kennzahlen",
           prompt: "Zwei Wörter passen nicht.",
           text: "Die {Preisstabilität} prüft man mit der Inflationsrate. Sie sollte bei etwa {zwei} Prozent liegen. Die Vollbeschäftigung prüft man mit der {Arbeitslosenquote}. Das {Wirtschaftswachstum} zeigt die Veränderung des BIP. Ein ausgeglichener {Außenhandelssaldo} zeigt das außenwirtschaftliche Gleichgewicht. Den Umweltschutz misst man am {CO₂-Ausstoß}.",
-          distractors: ["Rabatt", "Skonto"]
+          distractors: ["null", "Gini-Wert"]
         },
         {
           type: "calc",
@@ -5778,10 +5883,10 @@ LERNRAUM.subjects.push({
           prompt: "Streiten sich die Ziele – oder helfen sie sich?",
           categories: ["Zielkonflikt", "Zielharmonie"],
           items: [
-            { text: "Kostenloser Nahverkehr: Umweltschutz und Teilhabe.", cat: 1 },
+            { text: "Kostenloser Nahverkehr: Umweltschutz und gerechte Verteilung.", cat: 1 },
             { text: "Niedrigere Zinsen: mehr Investitionen, aber steigende Preise.", cat: 0 },
             { text: "Kindergeld erhöhen: gerechte Verteilung und Wachstum.", cat: 1 },
-            { text: "Mehr Konsum: mehr Jobs, aber mehr Importe.", cat: 0 }
+            { text: "Mehr Produktion: mehr Wachstum, aber mehr CO₂.", cat: 0 }
           ]
         },
         {
@@ -12212,6 +12317,8 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "Task restarted in the new language",
 
+    "Kurs": "Course", "Zum Kurs": "Go to course", "Material öffnen": "Open material", "Erledigt": "Done",
+
     howto: {
       slides: "Swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
       quiz: "Tap an answer, then “Check”. Exactly one answer is correct.",
@@ -12304,6 +12411,8 @@ window.LERNRAUM_I18N = {
     "Fall": "الحالة", "Angaben": "المعطيات", "Rechenschema": "مخطط الحساب", "Wert": "القيمة", "Zahlenfeld": "لوحة الأرقام", "Löschen": "حذف", "Vorzeichen": "الإشارة", "Nächstes Feld": "الحقل التالي", "nächstes Feld": "الحقل التالي", "Karte umdrehen": "اقلب البطاقة", "Begriff": "المصطلح", "Erklärung": "الشرح", "Dein Antwortsatz": "جملة إجابتك", "extern": "خارجي",
 
     "Aufgabe in der neuen Sprache neu gestartet": "بدأت المهمة من جديد باللغة الجديدة",
+
+    "Kurs": "الدورة", "Zum Kurs": "إلى الدورة", "Material öffnen": "افتح المادة", "Erledigt": "تم",
 
     howto: {
       slides: "اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",
@@ -14202,15 +14311,27 @@ window.LERNRAUM_I18N = {
 
     /* Bestehendes Material */
     link(step, ctx) {
+      /* Verweis auf einen anderen Kurs der App (href enthält #/f/…): im selben Tab öffnen, auch in der Einzeldatei */
+      const inner = String(step.href || "").match(/#\/f\/[\w-]+(?:\/[\w-]+)?/);
+      if (inner) {
+        const target = findSubject(inner[0].split("/")[2]);
+        ctx.body.append(h(`<div class="win material">
+          <div class="bar"><span class="d"></span>${tr("Kurs")}<span class="r">${esc(target ? target.course || target.fach || "" : "")}</span></div>
+          <div class="body"><p class="h2">${esc(target ? target.name : step.title)}</p><p>${esc(step.text || (target && target.description) || "")}</p></div>
+        </div>`));
+        ctx.setProgress(1);
+        ctx.action(`${tr("Zum Kurs")} ${ICON.arrow}`, () => { progress.complete(ctx.key.split("/")[0], ctx.key.split("/")[1], +ctx.key.split("/")[2], true); location.hash = inner[0]; });
+        return;
+      }
       let href = "#";
       try { href = new URL(encodeURI(step.href), DATA.materialBase || location.href).href; } catch { /* ungültig */ }
       ctx.body.append(h(`<div class="win material">
         <div class="bar"><span class="d"></span>${tr("Material")}<span class="r">${tr("extern")}</span></div>
         <div class="body"><p class="h2">${esc(step.title)}</p><p>${esc(step.text || "")}</p>
-        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">Material öffnen ${ICON.link}</a></div>
+        <a class="btn ghost block" href="${href}" target="_blank" rel="noopener">${tr("Material öffnen")} ${ICON.link}</a></div>
       </div>`));
       ctx.setProgress(1);
-      ctx.action(`Erledigt ${ICON.check}`, () => ctx.finish(true));
+      ctx.action(`${tr("Erledigt")} ${ICON.check}`, () => ctx.finish(true));
     }
   };
 

@@ -241,6 +241,15 @@ body: `${ablauf([
   { text: "Bezugspreis", value: "930,00 €", hi: true }            // hi = Ergebnis (pink)
 ], { title: "optional" })}`
 ```
+**Sechseck** – sechs Ziele (z. B. Magisches Sechseck) mit Harmonie-/Konfliktlinien. Genau 6 Einträge, im Uhrzeigersinn ab oben.
+```js
+body: `${sechseck(["Vollbeschäftigung", { text: "Preisstabilität", sub: "Inflation ≈ 2 %", hi: true }, "…", "…", "…", "…"], {
+  center: "Wirtschafts-\npolitik", lines: [{ from: 0, to: 1, kind: "konflikt" }, { from: 3, to: 0, kind: "harmonie" }] })}`
+```
+`kind`: `harmonie` (grün), `konflikt` (rot gestrichelt), `neutral` (grau gepunktet). Lange Wörter werden an Wortfugen getrennt.
+
+**Verweis auf einen anderen Kurs** – Schritt `link` mit `href: "#/f/<kurs-id>"` (oder `…/<thema-id>`) öffnet den Kurs direkt in der App.
+
 Kurze Texte (Karten max. ca. 30 Zeichen). Fehlt ein Diagrammtyp: Issue mit Label `design`.
 
 **Vorhandenes Material verlinken**
