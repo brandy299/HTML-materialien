@@ -70,6 +70,12 @@ function checkStep(where, st, topic) {
   if (!TYPES.includes(st.type)) return err(where, `unbekannter Typ "${st.type}" (erlaubt: ${TYPES.join(", ")})`);
   if (!str(st.title)) err(where, "Schritt ohne title");
   checkHints(where, st);
+  if (st.guide !== undefined) {
+    if (!Array.isArray(st.guide) || !st.guide.length) err(where, "guide muss eine Liste von Folien sein");
+    else st.guide.forEach((g, k) => { if (!str(g.title) || !str(g.body)) err(`${where} guide ${k + 1}`, "Erklär-Folie braucht title und body"); });
+    if (topic.exam && !topic.exam.guided) warn(where, "guide wird in der echten Übungsklausur (ohne exam.guided) nicht angezeigt");
+    if (st.guide && st.guide.length > 4) warn(where, "guide hat mehr als 4 Folien – lieber kürzer");
+  }
   if (topic.exam && typeof st.points !== "number") err(where, "In einer Übungsklausur braucht jede Aufgabe points");
 
   switch (st.type) {
@@ -214,6 +220,9 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
       t.steps.forEach((st, k) => checkStep(`${WT} Schritt ${k + 1}`, st, t));
       if (t.exam) {
         if (!Number.isInteger(t.exam.minutes)) err(WT, "exam.minutes fehlt");
+        if (t.exam.guided !== undefined && typeof t.exam.guided !== "boolean") err(WT, "exam.guided muss true/false sein");
+        if (t.exam.situation !== undefined && !str(t.exam.situation)) err(WT, "exam.situation muss ein Text sein");
+        if (t.exam.guided && !t.steps.some((x) => x.guide)) warn(WT, "exam.guided ohne einen einzigen guide – dann besser eine normale Übungsklausur");
         t.steps.forEach((st, k) => { if (st.review && !s.topics.some((x) => x.id === st.review)) err(`${WT} Schritt ${k + 1}`, `review „${st.review}“ verweist auf kein Thema`); });
       }
     });

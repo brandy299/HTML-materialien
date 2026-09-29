@@ -888,3 +888,4 @@ html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::be
 .slide.dark .dia-hex .dh-out { fill: transparent; stroke: var(--paper); }
 .slide.dark .dia-hex .dh-center, .slide.dark .dia-hex .dh-legend { color: var(--term-mut); }
 .slide.dark .dia-hex .dh-card { color: var(--ink); box-shadow: 2px 2px 0 var(--pink); }
+.topstrip .tag-box { min-width: 0; max-width: 100%; }

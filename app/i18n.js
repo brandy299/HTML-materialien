@@ -86,6 +86,7 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "Task restarted in the new language",
 
+    "Zur Aufgabe": "To the task", "Punkte": "points",
     "Kurs": "Course", "Zum Kurs": "Go to course", "Material öffnen": "Open material", "Erledigt": "Done",
 
     howto: {
@@ -181,6 +182,7 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "بدأت المهمة من جديد باللغة الجديدة",
 
+    "Zur Aufgabe": "إلى المهمة", "Punkte": "نقاط",
     "Kurs": "الدورة", "Zum Kurs": "إلى الدورة", "Material öffnen": "افتح المادة", "Erledigt": "تم",
 
     howto: {

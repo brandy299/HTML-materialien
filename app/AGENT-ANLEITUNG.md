@@ -85,6 +85,13 @@ Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
 - Fremdsprachen: Beispielsätze vollständig in der Zielsprache – keine Mischsätze wie „Die Schüler are sitting“.
 - Keine personenbezogenen Daten echter Schüler/innen.
 
+## Geführte Probeklausur mit Erklärungen
+
+Für Klausurtraining mit Anleitung: Thema mit `exam: { guided: true, … }` und an jedem Schritt `points` + `guide` (2–3 Erklär-Folien).
+Aufbau, Beispiel und Regeln: `app/README.md` → „Probeklausur mit Erklärungen“. Vorbild: `probeklausur-2` in `app/kurse/pbp-personalbedarf.js`.
+Regeln für gute Erklärungen: erst das Prinzip mit **eigenem Beispiel (andere Zahlen als in der Aufgabe)**, dann „So gehst du vor“, dann „Typische Fallen“.
+Die Erklärung verrät nie die Lösung der Aufgabe.
+
 ## Prüfen vor dem Push
 
 ```bash
