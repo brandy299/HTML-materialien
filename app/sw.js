@@ -1,6 +1,6 @@
 /* Lernraum – Offline-Cache. Netzwerk zuerst, damit neue Inhalte sofort ankommen. */
-const CACHE = "lernraum-v13";
-const SHELL = ["./", "index.html", "styles.css", "app.js", "content.js", "vendor/qrcode.js", "i18n.js", "kurse/pbp-personalbedarf.js", "kurse/gpu-preiskalkulation.js", "kurse/inwi-geschaeftsbrief.js", "kurse/englisch-foerderkurs.js", "kurse/vw-magisches-sechseck.js", "kurse/materialien.js", "uebersetzungen/pbp.ar.js", "uebersetzungen/gpu-preiskalkulation.ar.js", "uebersetzungen/inwi-geschaeftsbrief.ar.js", "uebersetzungen/englisch-foerderkurs.ar.js", "manifest.json", "icon.svg"];
+const CACHE = "lernraum-v14";
+const SHELL = ["./", "index.html", "styles.css", "app.js", "content.js", "vendor/qrcode.js", "i18n.js", "kurse/pbp-personalbedarf.js", "kurse/gpu-preiskalkulation.js", "kurse/inwi-geschaeftsbrief.js", "kurse/englisch-foerderkurs.js", "kurse/englisch-telephoning.js", "kurse/vw-magisches-sechseck.js", "kurse/materialien.js", "uebersetzungen/pbp.ar.js", "uebersetzungen/gpu-preiskalkulation.ar.js", "uebersetzungen/inwi-geschaeftsbrief.ar.js", "uebersetzungen/englisch-foerderkurs.ar.js", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
