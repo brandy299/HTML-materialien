@@ -423,12 +423,13 @@
     const done = n >= total;
     if (t.exam) {
       const pts = t.steps.reduce((a, st, k) => a + stepPoints(st, progress.of(s.id, t.id).done[k]), 0);
+      const gd = !!t.exam.guided, nTasks = t.steps.filter((x) => x.points).length;
       return h(`<a class="win topic-win exam-win ${done ? "done" : ""}" href="#/f/${s.id}/${t.id}">
-        <div class="bar"><span class="d"></span>${esc(t.kicker || "Übungsklausur")}<span class="r">${t.exam.minutes} min · ${examPoints(t)} P</span></div>
+        <div class="bar"><span class="d"></span>${esc(t.kicker || "Übungsklausur")}<span class="r">${gd ? "" : t.exam.minutes + " min · "}${examPoints(t)} P</span></div>
         <div class="body">
           <span class="title">${esc(t.title)}</span>
           ${blocks(s, t)}
-          <span class="meta">${done ? `Ergebnis: ${fmtP(pts)} von ${examPoints(t)} Punkten · Note ${grade(pts / examPoints(t) * 100, t)[1]}` : n ? `${n}/${total} Aufgaben · läuft` : "Wie in der echten Klausur: Timer, keine Hilfe, Note am Ende"}</span>
+          <span class="meta">${done ? `Ergebnis: ${fmtP(pts)} von ${examPoints(t)} Punkten · Note ${grade(pts / examPoints(t) * 100, t)[1]}` : n ? `${n}/${total} Aufgaben · läuft` : gd ? `${nTasks} Aufgaben, vor jeder eine Erklärung · Rückmeldung sofort · Note am Ende` : "Wie in der echten Klausur: Timer, keine Hilfe, Note am Ende"}</span>
         </div>
       </a>`);
     }
@@ -707,6 +708,7 @@
   }
 
   function viewExamIntro(s, t) {
+    if (t.exam.guided) return viewGuidedIntro(s, t);
     const p = progress.of(s.id, t.id);
     const n = progress.count(s, t), done = n >= t.steps.length;
     const running = !!p.examStart && !done;
@@ -756,6 +758,57 @@
     return v;
   }
 
+  /* Probeklausur mit Erklärungen (exam.guided): wie die Klausur bewertet, aber mit Erklärung vor jeder Aufgabe */
+  function viewGuidedIntro(s, t) {
+    const p = progress.of(s.id, t.id);
+    const tasks = t.steps.map((st, k) => [st, k]).filter(([st]) => st.points);
+    const n = progress.count(s, t), done = n >= t.steps.length, started = n > 0;
+    const next = nextStepIndex(s, t);
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const v = h(`<main class="view no-tabbar">
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Probeklausur")}</span>${qrButton(s, t)}</div>
+      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <div class="stat-row" style="margin-top:22px">
+        <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">${tr("Min. empfohlen")}</div></div>
+        <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
+        <div class="stat"><div class="v">${tasks.length}</div><div class="k">${tr("Aufgaben")}</div></div>
+      </div>
+      <div class="win" style="margin-top:22px">
+        <div class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></div>
+        <div class="body merk" style="background:var(--paper)">
+          <ul>
+            <li>${tr("Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.")}</li>
+            <li>${tr("Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.")}</li>
+            <li>${tr("Es gibt keinen Timer. Plane etwa {m} Minuten ein.", { m: t.exam.minutes })}</li>
+            <li>${tr("Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.")}</li>
+            ${t.exam.tools ? `<li>${tr("Hilfsmittel")}: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
+          </ul>
+        </div>
+      </div>
+      ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Ausgangssituation")}<span class="r">${tr("für alle Aufgaben")}</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
+      <div class="win" style="margin-top:22px">
+        <div class="bar"><span class="d"></span>${tr("Aufgaben")}<span class="r">${examPoints(t)} P</span></div>
+        <ol class="list" style="border:0;list-style:none">${tasks.map(([st, k], q) => `<li class="list-row" style="min-height:48px;gap:12px;justify-content:flex-start">
+          <span style="flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink);font:700 13px/1 var(--mono);${p.done[k] ? "background:var(--ink);color:var(--paper)" : ""}">${p.done[k] ? "✓" : String(q + 1).padStart(2, "0")}</span>
+          <span style="flex:1;font-weight:600;line-height:1.25">${esc(st.title)}</span><span class="v">${fmtP(st.points)} P</span></li>`).join("")}</ol>
+      </div>
+      <div class="dock"><div class="dock-inner col"></div></div>
+    </main>`);
+    const dock = v.querySelector(".dock-inner");
+    if (done) {
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/fertig">${tr("Ergebnis ansehen")} ${ICON.arrow}</a>`));
+      const again = h(`<button class="btn ghost block">${tr("Neu schreiben")}</button>`);
+      again.onclick = () => {
+        if (!again.dataset.armed) { again.dataset.armed = "1"; again.textContent = tr("Ergebnis löschen und neu starten?"); return; }
+        progress.resetTopic(s, t); location.hash = `#/f/${s.id}/${t.id}/0`;
+      };
+      dock.append(again);
+    } else {
+      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${tr(started ? "Weiter" : "Probeklausur starten")} ${ICON.arrow}</a>`));
+    }
+    return v;
+  }
+
   /* ── Player ─────────────────────────────────────────────── */
   function viewPlayer(sid, tid, idx) {
     const s = findSubject(sid), t = findTopic(s, tid), i = +idx;
@@ -763,7 +816,12 @@
     const step = t && t.steps[i];
     if (!step) { location.hash = t ? `#/f/${sid}/${tid}` : "#/"; return h("<div></div>"); }
     progress.touch(s.id, t.id, i);
-    const exam = !!t.exam;
+    const guided = !!(t.exam && t.exam.guided);   // Probeklausur mit Erklärungen: Punkte + Note, aber Rückmeldung und Hilfe erlaubt, kein Timer
+    const exam = !!t.exam && !guided;
+    const taskNo = guided ? t.steps.slice(0, i + 1).filter((x) => x.points).length : 0;
+    const eyebrowText = () => (exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte`
+      : guided ? `${tr("Aufgabe")} ${taskNo}/${t.steps.filter((x) => x.points).length} · ${fmtP(step.points || 0)} ${tr("Punkte")}`
+      : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`);
     if (exam && !progress.of(s.id, t.id).examStart) { const p = progress.of(s.id, t.id); p.examStart = Date.now(); progress.save(s.id, t.id, p); }
 
     const v = h(`<main class="player">
@@ -773,7 +831,7 @@
         ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="${tr("Aufgabe zurücksetzen")}" title="${tr("Aufgabe zurücksetzen")}">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="${tr("Ich brauche Hilfe")}">${ICON.help}</button>`}
       </div>
       <header class="player-head">
-        <p class="eyebrow" id="stepEyebrow">${exam ? `Aufgabe ${i + 1}/${t.steps.length} · ${fmtP(step.points || 0)} Punkte` : `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${esc(t.title)}`}</p>
+        <p class="eyebrow" id="stepEyebrow">${eyebrowText()}</p>
         <h1 class="h1">${esc(step.title)}</h1>
       </header>
       <section class="player-body"></section>
@@ -808,7 +866,7 @@
       exam
     };
     ctx.relabel = () => {
-      v.querySelector("#stepEyebrow").textContent = `${STEP_LABEL[step.type]} · ${i + 1}/${t.steps.length} · ${t.title}`;
+      v.querySelector("#stepEyebrow").textContent = (guiding ? tr("Erklärung") + " · " : "") + eyebrowText().replace(/&amp;/g, "&");
       v.querySelector("#resetBtn")?.setAttribute("aria-label", tr("Aufgabe zurücksetzen"));
       v.querySelector("#helpBtn")?.setAttribute("aria-label", tr("Ich brauche Hilfe"));
     };
@@ -837,7 +895,26 @@
       };
     }
 
-    (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
+    const runTask = () => (PLAYERS[step.type] || PLAYERS.link)(step, ctx);
+    let guiding = false;
+    if (step.guide && !exam) {
+      /* Erklärung vor der Aufgabe: wischbare Folien, danach startet die Aufgabe im selben Fenster */
+      guiding = true;
+      const eb = v.querySelector("#stepEyebrow");
+      eb.textContent = tr("Erklärung") + " · " + eb.textContent;
+      const gctx = Object.create(ctx);
+      gctx.finish = () => {
+        guiding = false;
+        buzz(10);
+        eb.textContent = eyebrowText().replace(/&amp;/g, "&");
+        ctx.body.replaceChildren();
+        [...ctx.dock.children].forEach((c) => { if (c !== btn) c.remove(); });
+        ctx.setProgress(0);
+        window.scrollTo(0, 0);
+        runTask();
+      };
+      PLAYERS.slides({ type: "slides", slides: step.guide, lastLabel: true }, gctx);
+    } else runTask();
     return v;
   }
 
@@ -864,10 +941,12 @@
       });
       ctx.body.append(wrap);
 
-      let cur = -1, goal = -1;
+      let cur = -1, goal = -1, seen = false;
       const stepW = () => track.firstElementChild.offsetWidth + 12;
       const update = () => {
-        if (!track.isConnected || !track.clientWidth) return requestAnimationFrame(update);
+        if (!track.isConnected) { if (seen) return; return requestAnimationFrame(update); }
+        if (!track.clientWidth) return requestAnimationFrame(update);
+        seen = true;
         const k = Math.min(n - 1, Math.round(track.scrollLeft / stepW()));
         if (k === goal) goal = -1;
         if (k === cur) return;
@@ -875,7 +954,7 @@
         [...dots.children].forEach((d, j) => d.classList.toggle("on", j === k));
         ctx.setProgress((k + 1) / n);
         if (k > 0) wrap.querySelector(".swipe-hint").style.visibility = "hidden";
-        if (k >= n - 1) ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
+        if (k >= n - 1) ctx.action(`${step.lastLabel ? tr("Zur Aufgabe") : tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
         else ctx.action(`${tr("Nächste Folie")} ${ICON.arrow}`, () => {
           goal = Math.min(n - 1, (goal >= 0 ? goal : cur) + 1);
           track.scrollTo({ left: goal * stepW(), behavior: "smooth" });
@@ -2407,7 +2486,7 @@
     return [...new Set(list)];
   }
 
-  const HELP_TABS = { tipps: "Tipps", merk: "Merkkasten", begriffe: "Begriffe" };
+  const HELP_TABS = { tipps: "Tipps", merk: "Merkkasten", begriffe: "Begriffe", guide: "Erklärung" };
   function openHelp(s, t, step, ctx, tab = "tipps") {
     if (document.querySelector(".sheet-back")) return;
     const back = h(`<div class="sheet-back">
@@ -2418,6 +2497,7 @@
           <button role="tab" data-tab="tipps">${tr("Tipps")}</button>
           <button role="tab" data-tab="merk">${tr("Merkkasten")}</button>
           <button role="tab" data-tab="begriffe">${tr("Begriffe")}</button>
+          ${step.guide ? `<button role="tab" data-tab="guide">${tr("Erklärung")}</button>` : ""}
         </div>
         <div class="sheet-lang"><span class="sl-k">${tr("Sprache")}</span>${langSwitch()}</div>
         <div class="sheet-body"></div>
@@ -2457,12 +2537,14 @@
         : h(`<p class="hint">${tr("Für dieses Thema gibt es noch keinen Merkkasten. Blättere zurück zur Präsentation.")}</p>`));
     };
     const renderBegriffe = () => bodyEl.replaceChildren(glossaryBox(s));
+    const renderGuide = () => bodyEl.replaceChildren(h(`<div class="guide-read">${(step.guide || []).map((sl) => `<article class="slide ${sl.style || ""}">
+      <div class="slide-in"><p class="s-kicker">${sl.kicker || ""}</p><h2 class="s-title">${sl.title || ""}</h2><div class="s-body">${sl.body || ""}</div></div></article>`).join("")}</div>`));
 
     let current = tab;
     const select = (name) => {
       current = name;
       back.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
-      ({ tipps: renderTipps, merk: renderMerk, begriffe: renderBegriffe })[name]();
+      ({ tipps: renderTipps, merk: renderMerk, begriffe: renderBegriffe, guide: renderGuide })[name]();
       bodyEl.scrollTop = 0;
     };
     back.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => select(b.dataset.tab));
@@ -2574,8 +2656,9 @@
     const got = t.steps.reduce((a, st, k) => a + stepPoints(st, p.done[k]), 0);
     const pct = total ? got / total * 100 : 0;
     const [, note, word] = grade(pct, t);
+    const gd = !!t.exam.guided;
     const used = p.examStart ? ((p.examEnd || Date.now()) - p.examStart) / 1000 : 0;
-    const over = used > t.exam.minutes * 60;
+    const over = !gd && used > t.exam.minutes * 60;
     const review = [];
     t.steps.forEach((st, k) => {
       if (st.review && stepPoints(st, p.done[k]) < (st.points || 0) * .75) {
@@ -2586,10 +2669,10 @@
     const v = h(`<main class="view no-tabbar finish">
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
-        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.title)} · Ergebnis</span></div>
+        <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || t.title)} · Ergebnis</span></div>
         <p class="finish-num">${fmtP(got)}<small>/${total} P</small></p>
         <p class="h2" style="margin-top:16px">Note ${note} · ${word}</p>
-        <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} % · Zeit ${clock(used).replace("+", "")} min${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
+        <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} %${gd ? "" : ` · Zeit ${clock(used).replace("+", "")} min`}${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
       </section>
       <p class="section-head">Punkte je Aufgabe</p>
       <div class="win"><div class="bar"><span class="d"></span>Auswertung<span class="r">${fmtP(got)}/${total}</span></div>
@@ -2601,12 +2684,15 @@
       </div></div>
     </main>`);
     const tasks = v.querySelector("#tasks");
+    let taskNo = 0;
     t.steps.forEach((st, k) => {
+      if (!st.points) return;
+      taskNo++;
       const d = p.done[k];
       const pts = stepPoints(st, d);
       const full = pts >= (st.points || 0);
       tasks.append(h(`<details class="task-row">
-        <summary><span class="tn">${String(k + 1).padStart(2, "0")}</span><span class="tt">${esc(st.title)}</span>
+        <summary><span class="tn">${String(taskNo).padStart(2, "0")}</span><span class="tt">${esc(st.title)}</span>
           <span class="tp ${full ? "ok" : pts ? "part" : "no"}">${fmtP(pts)}/${fmtP(st.points || 0)}</span></summary>
         <div class="sol">${mistakesHTML(st, d)}<p class="sol-h">Erwartungshorizont</p>${solutionHTML(st)}</div>
       </details>`));

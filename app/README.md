@@ -198,6 +198,29 @@ am Ende Punkte, Note, Erwartungshorizont je Aufgabe und Empfehlungen zum Wiederh
 ```
 `points` = Punkte der Aufgabe (anteilig nach richtigen Teilen), `review` = Thema, das bei weniger als 75 % empfohlen wird.
 
+### Probeklausur mit Erklärungen (`exam.guided`) und `guide`
+
+Eine **geführte Probeklausur** wird wie die Übungsklausur bewertet (Punkte, Note, Erwartungshorizont), hat aber **keinen Timer**,
+zeigt nach jeder Aufgabe die Rückmeldung, erlaubt Hilfe – und zeigt **vor jeder Aufgabe Erklär-Folien** (`guide`).
+Die Folien sind wischbar; danach startet die Aufgabe im selben Fenster. Über den ?-Knopf (Reiter „Erklärung“) kann man sie später noch einmal lesen.
+Jedes Thema hat wie jede Klausur einen eigenen Link/QR-Code: `…/app/#/f/<kurs-id>/<thema-id>`.
+```js
+{ id: "probeklausur-2", title: "Probeklausur … – mit Erklärungen", kicker: "Probeklausur · mit Erklärungen", minutes: 60,
+  exam: { guided: true, minutes: 60, tools: "Taschenrechner",
+          situation: `<p>Ausgangssituation für alle Aufgaben (HTML, optional)</p>`,
+          grading: [[92, "1", "sehr gut"], …] },
+  help: `Merkkasten …`,
+  steps: [ {
+    type: "quiz", title: "A1 · …", points: 5, review: "fachbegriffe",   // points Pflicht, review = Wiederholungs-Thema
+    guide: [                                                            // 2–3 Folien (max. 4), wie bei slides
+      { kicker: "Aufgabe 1 · …", title: "…", body: `<p>…</p>${ablauf([…])}` },
+      { style: "accent", kicker: "Merke", title: "…", body: `<p>…</p>` } ],
+    questions: [ … ] } ] }
+```
+`guide` funktioniert an jedem Schritt-Typ (quiz, sort, cloze, calc, sentence …). Aufbau einer guten Erklärung:
+**1. Worum geht's (mit Beispiel und anderen Zahlen als in der Aufgabe) · 2. So gehst du vor · 3. Typische Fallen.**
+Die Erklärung darf das Wissen erklären, aber nicht die Lösung der Aufgabe verraten.
+
 ### Endlos-Training (Zufallsaufgaben)
 
 Ein Thema mit `drill: "bedarf"` erzeugt unbegrenzt neue Personalbedarf-Aufgaben (Rechenschema + Antwortsatz)

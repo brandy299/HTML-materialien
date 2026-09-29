@@ -173,7 +173,9 @@ function mapTexts(subject, fn) {
     if (st.type === "word" || st.type === "link") { st.title = T(st.title); return st; }
     common(st);
     if (st.distractors) st.distractors = TL(st.distractors);
-    if (st.slides) st.slides = st.slides.map((x) => ({ ...x, kicker: T(x.kicker), title: T(x.title), body: T(x.body), big: T(x.big) }));
+    const sl = (x) => ({ ...x, kicker: T(x.kicker), title: T(x.title), body: T(x.body), big: T(x.big) });
+    if (st.slides) st.slides = st.slides.map(sl);
+    if (st.guide) st.guide = st.guide.map(sl);
     if (st.questions) st.questions = st.questions.map((q) => ({ ...q, q: T(q.q), options: TL(q.options), explain: T(q.explain), hint: T(q.hint), hints: TL(q.hints) }));
     if (st.categories) st.categories = TL(st.categories);
     if (st.items) st.items = st.items.map((it) => (typeof it === "string" ? T(it) : { ...it, text: T(it.text) }));
@@ -185,8 +187,9 @@ function mapTexts(subject, fn) {
     ...subject,
     description: T(subject.description),
     topics: subject.topics.map((t0) => {
-      if (t0.exam || subject.materials) return t0;
+      if ((t0.exam && !t0.exam.guided) || subject.materials) return t0;
       const t = { ...t0, title: T(t0.title), kicker: T(t0.kicker), group: T(t0.group), help: T(t0.help), description: T(t0.description) };
+      if (t0.exam) t.exam = { ...t0.exam, situation: T(t0.exam.situation) };
       t.steps = (t0.steps || []).map(step);
       return t;
     })

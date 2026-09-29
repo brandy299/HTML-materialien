@@ -59,7 +59,7 @@
   const soon = courses.filter((c) => daysUntil(c.klausur) >= 0 && daysUntil(c.klausur) <= 21).sort((a, b) => daysUntil(a.klausur) - daysUntil(b.klausur))[0];
   if (soon) {
     const n = daysUntil(soon.klausur);
-    const ex = soon.topics.find((t) => t.exam);
+    const ex = soon.topics.find((t) => t.exam && !t.exam.guided) || soon.topics.find((t) => t.exam);
     news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausur · ${esc(soon.course || soon.fach)}<span class="r">${new Date(soon.klausur).toLocaleDateString("de-DE")}</span></div>
       <div class="body"><p class="kick">${n === 0 ? "Heute ist Klausur" : n === 1 ? "Klausur ist morgen" : `Noch ${n} Tage`}</p><p class="say">${esc(soon.name)}</p>
       <a class="btn" href="${appUrl(ex ? `#/f/${soon.id}/${ex.id}` : "#/f/" + soon.id)}">${ex ? "Probe-Klausur starten" : "Jetzt üben"} →</a></div></div>`));
@@ -72,11 +72,14 @@
       <p class="sub">${esc(topicsOf(newest).map((t) => t.title).slice(0, 3).join(" · "))}</p>
       <a class="btn" href="${appUrl("#/f/" + newest.id)}">Kurs öffnen →</a></div></div>`));
   }
-  const exam = courses.flatMap((c) => c.topics.filter((t) => t.exam).map((t) => [c, t]))[0];
+  const allExams = courses.flatMap((c) => c.topics.filter((t) => t.exam).map((t) => [c, t]));
+  const exam = allExams.find(([, t]) => !t.exam.guided) || allExams[0];
+  const guidedExam = allExams.find(([c, t]) => t.exam.guided && exam && c.id === exam[0].id);
   if (exam && !soon) {
-    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausurtraining<span class="r">${exam[1].exam.minutes} min</span></div>
-      <div class="body"><p class="kick">${esc(exam[1].title)}</p><p class="sub">Timer · Punkte · Note · Erwartungshorizont</p>
-      <a class="u-link" href="${appUrl(`#/f/${exam[0].id}/${exam[1].id}`)}">Probe-Klausur starten →</a></div></div>`));
+    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausurtraining<span class="r">${exam[1].exam.guided ? "" : exam[1].exam.minutes + " min"}</span></div>
+      <div class="body"><p class="kick">${esc(exam[1].title)}</p><p class="sub">${exam[1].exam.guided ? "Erklärung vor jeder Aufgabe · Punkte · Note" : "Timer · Punkte · Note · Erwartungshorizont"}</p>
+      <a class="u-link" href="${appUrl(`#/f/${exam[0].id}/${exam[1].id}`)}">Probe-Klausur starten →</a>
+      ${guidedExam && guidedExam[1] !== exam[1] ? `<br><a class="u-link" href="${appUrl(`#/f/${guidedExam[0].id}/${guidedExam[1].id}`)}">Erst mit Erklärungen üben →</a>` : ""}</div></div>`));
   }
 
   // 4. Kurse, gruppiert nach Fach

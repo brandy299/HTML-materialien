@@ -1201,6 +1201,561 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Negativ heißt: Es sind mehr Leute da als gebraucht.":
       "Negativ (سالب) يعني: يوجد موظفون أكثر مما نحتاج.",
 
+    "Probeklausur Personalbedarf – mit Erklärungen":
+      "Probeklausur Personalbedarf (اختبار تجريبي: الاحتياج من الموظفين) – مع شروحات",
+
+    "Probeklausur · mit Erklärungen":
+      "Probeklausur (اختبار تجريبي) · مع شروحات",
+
+    "<h3>Der Rechenweg</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <h3>Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → Personal beschaffen.</li>\n             <li><strong>negativ (−):</strong> Zu viele da → Personal abbauen.</li></ul>\n             <h3>Filtern</h3>\n             <p>Zählt: Abgang, fester Zugang, neue Stelle (Soll). Zählt nicht: kurze Krankheit, Urlaub, Streit, Feiern.</p>\n             <h3>Weitere Formeln</h3>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
+      "<h3>طريقة الحساب</h3><p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p><h3>Ersatzbedarf und Neubedarf</h3><p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p><h3>تفسير النتيجة</h3><ul><li><strong>positiv (+):</strong> ينقص موظفون ← نبحث عن موظفين جدد.</li><li><strong>negativ (−):</strong> عدد الموظفين أكثر من اللازم ← نقلّل الموظفين.</li></ul><h3>التصفية</h3><p>يُحتسب: Abgang، Zugang ثابت، وظيفة جديدة (Soll). لا يُحتسب: مرض قصير، إجازة، خلاف، احتفالات.</p><h3>صيغ أخرى</h3><p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>",
+
+    "<p><strong>Sporthaus Lindner e. K.</strong> hat <strong>28 Beschäftigte</strong> in Verkauf, Lager, Fahrradwerkstatt und Büro. Inhaberin ist Frau Lindner.</p>\n                    <p>Im nächsten Jahr startet ein <strong>Online-Shop</strong> und die <strong>Werkstatt wird erweitert</strong>. Frau Lindner braucht dafür einen Personalplan. Alle Aufgaben gehören zu diesem Betrieb.</p>":
+      "<p><strong>Sporthaus Lindner e. K.</strong> فيه <strong>28 موظفًا</strong> في البيع والمستودع وورشة الدراجات والمكتب. صاحبة المحل هي Frau Lindner.</p><p>في السنة القادمة يبدأ <strong>متجر إلكتروني</strong> (Online-Shop) و<strong>تُوسَّع الورشة</strong>. لذلك تحتاج Frau Lindner إلى خطة موظفين. كل المهام تخص هذا المحل.</p>",
+
+    "A1 · Fachbegriffe":
+      "A1 · Fachbegriffe (المصطلحات المتخصصة)",
+
+    "Los geht's":
+      "هيا نبدأ",
+
+    "Erst verstehen, dann lösen.":
+      "أولًا افهم، ثم حُلّ.",
+
+    "<p>Vor jeder Aufgabe erklären dir ein paar Folien, <strong>worum es geht</strong> und <strong>wie du vorgehst</strong>.</p>\n                     <ul><li>Erst die Folien lesen.</li><li>Dann die Aufgabe lösen. Du siehst sofort, was richtig war.</li><li>Am Ende gibt es Punkte und eine Note.</li></ul>\n                     <p class=\"note\">Bleibst du hängen? Der ?-Knopf zeigt Tipps und diese Erklärung noch einmal.</p>":
+      "<p>قبل كل مهمة تشرح لك بعض الشرائح <strong>ما الموضوع</strong> و<strong>كيف تعمل</strong>.</p><ul><li>اقرأ الشرائح أولًا.</li><li>ثم حُلّ المهمة. سترى فورًا ما كان صحيحًا.</li><li>في النهاية تحصل على نقاط وعلامة.</li></ul><p class=\"note\">هل علقت؟ زر ؟ يعرض نصائح ويعرض هذا الشرح مرة أخرى.</p>",
+
+    "Aufgabe 1 · Fachbegriffe":
+      "Aufgabe 1 · Fachbegriffe (المصطلحات المتخصصة)",
+
+    "Fünf Wörter, ein Rechenweg.":
+      "خمس كلمات، طريقة حساب واحدة.",
+
+    "<p>Diese Wörter hängen an einer Rechnung. Der Neubedarf kommt in Aufgabe 5 dazu.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Personalbestand</span><span class=\"df-val\">jetzt da</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge + Zugänge</span><span class=\"df-note\">Fortschreibung</span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll − fortgeschriebener Ist</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">fehlt</span></div></figure>\n                     <p class=\"note\">Der Soll-Bestand heißt auch Bruttopersonalbedarf.</p>":
+      "<p>هذه الكلمات مرتبطة بعملية حسابية. الـ Neubedarf (الاحتياج الجديد) يأتي في المهمة 5.</p><figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Personalbestand</span><span class=\"df-val\">jetzt da</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge + Zugänge</span><span class=\"df-note\">Fortschreibung</span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll − fortgeschriebener Ist</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">fehlt</span></div></figure><p class=\"note\">Soll-Bestand (العدد المطلوب) يُسمّى أيضًا Bruttopersonalbedarf (إجمالي الاحتياج من الموظفين).</p>",
+
+    "Aufgabe 1 · So erkennst du den Begriff":
+      "Aufgabe 1 · كيف تعرف المصطلح",
+
+    "Achte auf das Signalwort.":
+      "انتبه إلى الكلمة الدالة.",
+
+    "<dl class=\"terms\">\n                       <dt>Ist-Personalbestand</dt><dd>„heute“, „aktuell“: wer jetzt da ist.</dd>\n                       <dt>Brutto&shy;personal&shy;bedarf</dt><dd>„Soll“, „nötig“: die Zahl laut Plan.</dd>\n                       <dt>Fortschreibung</dt><dd>Ist − Abgänge + Zugänge.</dd>\n                       <dt>Netto&shy;personal&shy;bedarf</dt><dd>„fehlt noch“, „muss besorgt werden“.</dd>\n                       <dt>Neubedarf</dt><dd>„Wachstum“, „mehr Aufträge“.</dd>\n                     </dl>":
+      "<dl class=\"terms\"><dt>Ist-Personalbestand</dt><dd>„heute“، „aktuell“ (اليوم، الآن): من هو موجود الآن.</dd><dt>Brutto&shy;personal&shy;bedarf</dt><dd>„Soll“، „nötig“ (المطلوب، اللازم): العدد حسب الخطة.</dd><dt>Fortschreibung</dt><dd>Ist − Abgänge + Zugänge.</dd><dt>Netto&shy;personal&shy;bedarf</dt><dd>„fehlt noch“، „muss besorgt werden“ (ما زال ناقصًا، يجب تأمينه).</dd><dt>Neubedarf</dt><dd>„Wachstum“، „mehr Aufträge“ (نمو، طلبات أكثر).</dd></dl>",
+
+    "Brutto ist der ganze Kuchen. Netto ist das fehlende Stück.":
+      "Brutto هو الكعكة كلها. Netto هو القطعة الناقصة.",
+
+    "<p>Brutto: wie viele insgesamt gebraucht werden. Netto: wie viele noch fehlen.</p>":
+      "<p>Brutto: كم شخصًا نحتاج في المجموع. Netto: كم شخصًا ما زال ناقصًا.</p>",
+
+    "Alle Beschäftigten, die zurzeit im Sporthaus arbeiten.":
+      "كل الموظفين الذين يعملون حاليًا في Sporthaus.",
+
+    "„Zurzeit“ heißt: jetzt. Das ist der Ist-Personalbestand.":
+      "„Zurzeit“ تعني: الآن. هذا هو Ist-Personalbestand (العدد الحالي للموظفين).",
+
+    "Das Signalwort ist „zurzeit“.":
+      "الكلمة الدالة هي „zurzeit“ (حاليًا).",
+
+    "Wie viele Beschäftigte das Sporthaus laut Plan insgesamt braucht.":
+      "كم موظفًا يحتاج Sporthaus في المجموع حسب الخطة.",
+
+    "Der Soll-Bestand ist der Bruttopersonalbedarf: alle Stellen, die der Plan vorsieht.":
+      "Soll-Bestand هو Bruttopersonalbedarf (إجمالي الاحتياج من الموظفين): كل الوظائف التي تنص عليها الخطة.",
+
+    "„Insgesamt“ und „laut Plan“ passen zum Soll-Bestand.":
+      "„Insgesamt“ (في المجموع) و„laut Plan“ (حسب الخطة) تناسبان Soll-Bestand.",
+
+    "Der Ist-Bestand, nachdem man die Abgänge abgezogen und die Zugänge dazugezählt hat.":
+      "Ist-Bestand بعد طرح الـ Abgänge (المغادرين) وإضافة الـ Zugänge (المنضمّين).",
+
+    "Ist − Abgänge + Zugänge nennt man Fortschreibung.":
+      "Ist − Abgänge + Zugänge اسمها Fortschreibung (تحديث العدد).",
+
+    "Es ist der erste Schritt der Rechnung, noch ohne den Soll-Bestand.":
+      "هذه هي الخطوة الأولى في الحساب، بدون Soll-Bestand بعد.",
+
+    "So viele Beschäftigte muss das Sporthaus noch beschaffen (Soll − fortgeschriebener Ist).":
+      "كم موظفًا ما زال على Sporthaus أن يؤمّنهم (Soll − fortgeschriebener Ist).",
+
+    "Soll − fortgeschriebener Ist ist der Nettopersonalbedarf: das fehlende Stück.":
+      "Soll − fortgeschriebener Ist هو Nettopersonalbedarf (صافي الاحتياج من الموظفين): القطعة الناقصة.",
+
+    "Was „noch fehlt“, ist die Lücke zwischen Soll und fortgeschriebenem Ist.":
+      "„Noch fehlt“ (ما زال ناقصًا) هو الفجوة بين Soll و fortgeschriebener Ist.",
+
+    "Der Teil des Bedarfs, der durch neue Stellen für den Online-Shop entsteht.":
+      "جزء الاحتياج الذي ينشأ من الوظائف الجديدة للمتجر الإلكتروني.",
+
+    "Neue Stellen durch Wachstum sind der Neubedarf. Der Ersatzbedarf ersetzt dagegen Ausscheidende.":
+      "الوظائف الجديدة بسبب النمو هي Neubedarf (الاحتياج الجديد). أما Ersatzbedarf (احتياج الاستبدال) فيعوّض من يغادرون.",
+
+    "Neue Stellen entstehen durch Wachstum.":
+      "الوظائف الجديدة تنشأ بسبب النمو.",
+
+    "Ordne jede Veränderung im Sporthaus zu.":
+      "صنّف كل تغيير في Sporthaus.",
+
+    "Hat der Betrieb das entschieden? Ja → initiiert. Nein → autonom.":
+      "هل قررت الشركة ذلك؟ نعم ← initiiert. لا ← autonom.",
+
+    "Aufgabe 2 · Autonom oder initiiert?":
+      "Aufgabe 2 · Autonom oder initiiert? (تلقائي أم بمبادرة؟)",
+
+    "Wer hat entschieden?":
+      "من قرّر؟",
+
+    "<div class=\"pair\">\n                       <div><b>autonom</b>Es passiert von selbst. Der Betrieb kann es nicht steuern, zum Beispiel Mutterschutz oder der Umzug einer Beschäftigten.</div>\n                       <div><b>initiiert</b>Der Betrieb hat es entschieden, zum Beispiel neue Leute suchen, jemandem kündigen oder die Stunden verändern.</div>\n                     </div>\n                     <p class=\"box\">Eine Frage genügt: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert. Nein → autonom.</p>":
+      "<div class=\"pair\"><div><b>autonom</b>(تلقائي) يحدث من تلقاء نفسه. الشركة لا تستطيع التحكم به، مثلًا Mutterschutz (حماية الأمومة) أو انتقال موظفة إلى مكان آخر.</div><div><b>initiiert</b>(بمبادرة من الشركة) الشركة قرّرت ذلك، مثلًا البحث عن موظفين جدد أو إنهاء عقد شخص أو تغيير ساعات العمل.</div></div><p class=\"box\">يكفي سؤال واحد: <strong>هل قررت الشركة ذلك؟</strong> نعم ← initiiert. لا ← autonom.</p>",
+
+    "Aufgabe 2 · Grenzfälle":
+      "Aufgabe 2 · حالات صعبة",
+
+    "Wer kündigt, entscheidet.":
+      "من يُنهي العقد هو من يقرّر.",
+
+    "<dl class=\"terms\">\n                       <dt>Sie kündigt selbst</dt><dd>autonom: die Beschäftigte entscheidet.</dd>\n                       <dt>Der Betrieb kündigt</dt><dd>initiiert: der Betrieb entscheidet.</dd>\n                       <dt>Vertrag läuft aus</dt><dd>Verlängert der Betrieb nicht, ist das initiiert: er hat entschieden.</dd>\n                       <dt>Mutterschutz</dt><dd>autonom: das Gesetz regelt es, nicht der Betrieb.</dd>\n                     </dl>":
+      "<dl class=\"terms\"><dt>Sie kündigt selbst</dt><dd>autonom: الموظفة هي التي تقرّر.</dd><dt>Der Betrieb kündigt</dt><dd>initiiert: الشركة هي التي تقرّر.</dd><dt>Vertrag läuft aus</dt><dd>إذا لم تمدّد الشركة العقد فهذا initiiert: هي التي قرّرت.</dd><dt>Mutterschutz</dt><dd>autonom: القانون ينظّمه وليست الشركة.</dd></dl>",
+
+    "Autonom passiert. Initiiert wird gemacht.":
+      "Autonom يحدث. Initiiert يُفعَل.",
+
+    "<p>Autonomes kann der Betrieb nicht steuern. Initiiertes plant er selbst.</p>":
+      "<p>الأمور autonom لا تستطيع الشركة التحكم بها. أما الأمور initiiert فتخطط لها بنفسها.</p>",
+
+    "Eine Verkäuferin geht in Rente.":
+      "Eine Verkäuferin geht in Rente. (بائعة تتقاعد)",
+
+    "Frau Lindner stellt einen Werkstattmeister ein.":
+      "Frau Lindner stellt einen Werkstattmeister ein. (Frau Lindner تعيّن معلّم ورشة)",
+
+    "Ein Lagerist wechselt zu einem anderen Arbeitgeber.":
+      "Ein Lagerist wechselt zu einem anderen Arbeitgeber. (أمين مستودع ينتقل إلى صاحب عمل آخر)",
+
+    "Ein Verkäufer wird in die Werkstatt versetzt.":
+      "Ein Verkäufer wird in die Werkstatt versetzt. (بائع يُنقل إلى الورشة)",
+
+    "Eine Kollegin geht in Elternzeit.":
+      "Eine Kollegin geht in Elternzeit. (زميلة تذهب في إجازة الوالدين)",
+
+    "Ein Azubi wird nach der Prüfung übernommen.":
+      "Ein Azubi wird nach der Prüfung übernommen. (متدرّب يُعيَّن بعد الامتحان)",
+
+    "Ordne jeden Einflussfaktor zu.":
+      "صنّف كل عامل مؤثّر.",
+
+    "Kann das Sporthaus es selbst beschließen? Ja → intern. Nein → extern.":
+      "هل يستطيع Sporthaus أن يقرّر ذلك بنفسه؟ نعم ← intern. لا ← extern.",
+
+    "Aufgabe 3 · Extern oder intern?":
+      "Aufgabe 3 · Extern oder intern? (خارجي أم داخلي؟)",
+
+    "Kann der Betrieb das selbst beschließen?":
+      "هل تستطيع الشركة أن تقرّر ذلك بنفسها؟",
+
+    "<div class=\"pair\">\n                       <div><b>intern</b>Kommt aus dem Betrieb: neue Filiale, neue Maschinen, andere Öffnungszeiten.</div>\n                       <div><b>extern</b>Kommt von außen: Gesetze, Arbeitsmarkt, Wetter, Preise der Lieferanten.</div>\n                     </div>\n                     <p class=\"box\">Ja, der Betrieb beschließt es selbst → <strong>intern</strong>. Nein → <strong>extern</strong>.</p>":
+      "<div class=\"pair\"><div><b>intern</b>(داخلي) يأتي من داخل الشركة: فرع جديد، آلات جديدة، أوقات دوام مختلفة.</div><div><b>extern</b>(خارجي) يأتي من الخارج: قوانين، سوق العمل، الطقس، أسعار الموردين.</div></div><p class=\"box\">نعم، الشركة تقرّر بنفسها ← <strong>intern</strong>. لا ← <strong>extern</strong>.</p>",
+
+    "Aufgabe 3 · Warum ist das wichtig?":
+      "Aufgabe 3 · لماذا هذا مهم؟",
+
+    "Extern beobachten. Intern steuern.":
+      "Extern نراقبه. Intern نتحكم به.",
+
+    "<ul><li>Extern kann der Betrieb nicht ändern. Er muss darauf <strong>reagieren</strong>, zum Beispiel mit mehr Personal vor Weihnachten.</li>\n                     <li>Intern kann der Betrieb <strong>selbst gestalten</strong>, zum Beispiel eine neue Filiale eröffnen.</li>\n                     <li>Beides verändert den Personalbedarf.</li></ul>\n                     <p class=\"note\">Falle: Ein Gesetz betrifft den Betrieb, aber der Betrieb hat es nicht beschlossen. Also extern.</p>":
+      "<ul><li>Extern لا تستطيع الشركة تغييره. عليها أن <strong>تتفاعل</strong> معه، مثلًا بموظفين أكثر قبل عيد الميلاد.</li><li>Intern تستطيع الشركة أن <strong>تصنعه بنفسها</strong>، مثلًا افتتاح فرع جديد.</li><li>كلاهما يغيّر الاحتياج من الموظفين (Personalbedarf).</li></ul><p class=\"note\">فخ: القانون يخص الشركة، لكن الشركة لم تقرّره. إذن extern.</p>",
+
+    "Frau Lindner startet einen Online-Shop.":
+      "Frau Lindner startet einen Online-Shop. (Frau Lindner تبدأ متجرًا إلكترونيًا)",
+
+    "Die Konjunktur schwächt sich ab.":
+      "Die Konjunktur schwächt sich ab. (الاقتصاد يضعف)",
+
+    "Die Werkstatt bekommt zwei zusätzliche Arbeitsplätze.":
+      "Die Werkstatt bekommt zwei zusätzliche Arbeitsplätze. (الورشة تحصل على مكانَي عمل إضافيين)",
+
+    "Im Frühjahr kaufen mehr Menschen Fahrräder.":
+      "Im Frühjahr kaufen mehr Menschen Fahrräder. (في الربيع يشتري ناس أكثر دراجات)",
+
+    "Das Sporthaus führt ein neues Kassensystem ein.":
+      "Das Sporthaus führt ein neues Kassensystem ein. (Sporthaus يُدخل نظام صندوق جديدًا)",
+
+    "A4 · Was zählt für den Bedarf?":
+      "A4 · Was zählt für den Bedarf? (ما الذي يُحتسب في الاحتياج؟)",
+
+    "Ändert die Information den Personalbestand?":
+      "هل تغيّر المعلومة عدد الموظفين (Personalbestand)؟",
+
+    "Ändert sich dadurch, wer im Betrieb arbeitet – oder wie viele Stellen es gibt?":
+      "هل يتغيّر بسببها من يعمل في الشركة، أو عدد الوظائف؟",
+
+    "Krankheit, Urlaub und Betriebsklima ändern den Bestand nicht.":
+      "المرض والإجازة وأجواء العمل لا تغيّر العدد.",
+
+    "Aufgabe 4 · Informationen filtern":
+      "Aufgabe 4 · تصفية المعلومات",
+
+    "Erst filtern, dann rechnen.":
+      "أولًا صفِّ، ثم احسب.",
+
+    "<div class=\"pair\">\n                       <div><b>zählt</b>Abgang · fester Zugang · neue Stelle (Soll)</div>\n                       <div><b>zählt nicht</b>kurze Krankheit · Urlaub · Streit · Feiern</div>\n                     </div>\n                     <p>Der Personalbestand ändert sich nur, wenn jemand <strong>geht</strong>, <strong>fest dazukommt</strong> oder eine <strong>Stelle neu entsteht</strong>.</p>":
+      "<div class=\"pair\"><div><b>zählt</b>(يُحتسب) Abgang · Zugang ثابت · وظيفة جديدة (Soll)</div><div><b>zählt nicht</b>(لا يُحتسب) مرض قصير · إجازة · خلاف · احتفالات</div></div><p>عدد الموظفين (Personalbestand) يتغيّر فقط إذا <strong>غادر</strong> شخص، أو <strong>انضم بشكل ثابت</strong>، أو <strong>نشأت وظيفة جديدة</strong>.</p>",
+
+    "Aufgabe 4 · So filterst du einen Text":
+      "Aufgabe 4 · كيف تصفّي نصًا",
+
+    "Markiere beim Lesen.":
+      "ضع علامات أثناء القراءة.",
+
+    "<ul class=\"pm\"><li class=\"m\">Abgang (−): Rente, Elternzeit, Kündigung</li><li class=\"p\">Zugang (+): Übernahme, Rückkehr, unterschriebener Vertrag</li></ul>\n                     <p class=\"box\">Dazu kommt der <strong>Soll-Bestand</strong>: die Zahl, die der Betrieb künftig braucht. Alles andere streichst du durch.</p>\n                     <p class=\"note\">„Frau Kern geht in Rente (−). Ben wird fest eingestellt (+). Zwei sind krank (streichen).“</p>":
+      "<ul class=\"pm\"><li class=\"m\">Abgang (−): Rente, Elternzeit, Kündigung (تقاعد، إجازة والدين، استقالة)</li><li class=\"p\">Zugang (+): Übernahme, Rückkehr, unterschriebener Vertrag (تعيين، عودة، عقد موقَّع)</li></ul><p class=\"box\">ويُضاف إلى ذلك <strong>Soll-Bestand</strong>: العدد الذي تحتاجه الشركة مستقبلًا. كل ما عدا ذلك تشطبه.</p><p class=\"note\">„Frau Kern geht in Rente (−). Ben wird fest eingestellt (+). Zwei sind krank (streichen).“ (تتقاعد، يُعيَّن بشكل ثابت، اثنان مريضان: نشطب)</p>",
+
+    "zählt für den Bedarf":
+      "zählt für den Bedarf (يُحتسب في الاحتياج)",
+
+    "zählt nicht":
+      "zählt nicht (لا يُحتسب)",
+
+    "Herr Vogel geht in Rente.":
+      "Herr Vogel geht in Rente. (Herr Vogel يتقاعد)",
+
+    "Drei Beschäftigte hatten letzte Woche eine Grippe.":
+      "Drei Beschäftigte hatten letzte Woche eine Grippe. (ثلاثة موظفين أصيبوا بالإنفلونزا الأسبوع الماضي)",
+
+    "Eine Auszubildende wird fest übernommen.":
+      "Eine Auszubildende wird fest übernommen. (متدرّبة تُعيَّن بشكل ثابت)",
+
+    "Der Betriebsausflug hat allen gut gefallen.":
+      "Der Betriebsausflug hat allen gut gefallen. (أعجبت رحلة الشركة الجميع)",
+
+    "Für den Online-Shop wird eine zusätzliche Stelle geschaffen.":
+      "Für den Online-Shop wird eine zusätzliche Stelle geschaffen. (تُنشأ وظيفة إضافية للمتجر الإلكتروني)",
+
+    "Zwei Mitarbeiter machen im Sommer drei Wochen Urlaub.":
+      "Zwei Mitarbeiter machen im Sommer drei Wochen Urlaub. (موظفان يأخذان إجازة ثلاثة أسابيع في الصيف)",
+
+    "A5 · Nettopersonalbedarf":
+      "A5 · Nettopersonalbedarf (صافي الاحتياج من الموظفين)",
+
+    "Das Sporthaus Lindner e. K. hat <b>28 Beschäftigte</b>. Im nächsten Jahr geht Herr Vogel in Rente, Frau Aydin geht in Elternzeit und Herr Meier kündigt, weil er umzieht. Die Auszubildende Lea wird nach der Prüfung fest übernommen, und Herr Sommer kommt aus der Elternzeit zurück. Im Winter waren vier Beschäftigte mit Grippe krank. Für den Online-Shop und die erweiterte Werkstatt werden zwei zusätzliche Stellen geschaffen – insgesamt werden <b>30 Beschäftigte</b> gebraucht.<br><br>Berechne den Nettopersonalbedarf und zerlege ihn in Ersatz- und Neubedarf.":
+      "Sporthaus Lindner e. K. فيه <b>28 موظفًا</b>. في السنة القادمة يتقاعد Herr Vogel، وتذهب Frau Aydin في إجازة الوالدين (Elternzeit)، ويستقيل Herr Meier لأنه سينتقل إلى مكان آخر. المتدرّبة Lea تُعيَّن بشكل ثابت بعد الامتحان، ويعود Herr Sommer من إجازة الوالدين. في الشتاء مرض أربعة موظفين بالإنفلونزا. للمتجر الإلكتروني والورشة الموسّعة تُنشأ وظيفتان إضافيتان – ويلزم في المجموع <b>30 موظفًا</b>.<br><br>احسب Nettopersonalbedarf وقسّمه إلى Ersatzbedarf وNeubedarf.",
+
+    "Nettopersonalbedarf + 3 = Ersatzbedarf 1 + Neubedarf 2.":
+      "Nettopersonalbedarf + 3 = Ersatzbedarf 1 + Neubedarf 2.",
+
+    "Zwischensumme: Vom Ist-Bestand ziehst du die Abgänge ab und zählst die Zugänge dazu.<br><b>28 − 3 + 2 = ?</b>":
+      "Zwischensumme (المجموع الوسيط): من Ist-Bestand تطرح Abgänge وتضيف Zugänge.<br><b>28 − 3 + 2 = ?</b>",
+
+    "Personalbedarf: <b>Soll minus Zwischensumme</b> – nicht andersherum! Achte auf das Vorzeichen.<br><b>30 − 27 = ?</b>":
+      "Personalbedarf: <b>Soll ناقص Zwischensumme</b> – وليس العكس! انتبه إلى الإشارة (+/−).<br><b>30 − 27 = ?</b>",
+
+    "Ersatzbedarf = Abgänge − Zugänge = <b>3 − 2</b>.<br>Neubedarf = Soll − ursprünglicher Ist = <b>30 − 28</b>.":
+      "Ersatzbedarf = Abgänge − Zugänge = <b>3 − 2</b>.<br>Neubedarf = Soll − ursprünglicher Ist (العدد الحالي الأصلي) = <b>30 − 28</b>.",
+
+    "Lösungsweg: 28 − 3 + 2 = <b>27</b> → 30 − 27 = <b>+ 3</b> → Ersatz 1 + Neu 2 = + 3<br>Positiv: Es muss eingestellt werden.":
+      "طريقة الحل: 28 − 3 + 2 = <b>27</b> → 30 − 27 = <b>+ 3</b> → Ersatz 1 + Neu 2 = + 3<br>النتيجة موجبة (positiv): يجب التوظيف.",
+
+    "Aufgabe 5 · Nettopersonalbedarf":
+      "Aufgabe 5 · Nettopersonalbedarf (صافي الاحتياج من الموظفين)",
+
+    "Der Rechenweg in sechs Kästen.":
+      "طريقة الحساب في ستة مربعات.",
+
+    "<p>Beispiel: Ein Zoofachgeschäft hat 10 Beschäftigte. 2 gehen, 1 kommt fest dazu. Der Soll-Bestand ist 11.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Bestand</span><span class=\"df-val\">10</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge<span class=\"df-val\">2</span></span></div><div class=\"df-op\"><span class=\"df-chip\">+ Zugänge<span class=\"df-val\">1</span></span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll 11 − 9</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">+ 2</span></div></figure>":
+      "<p>مثال: محل حيوانات أليفة (Zoofachgeschäft) فيه 10 موظفين. يغادر 2 وينضم 1 بشكل ثابت. الـ Soll-Bestand هو 11.</p><figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Ist-Bestand</span><span class=\"df-val\">10</span></div><div class=\"df-op\"><span class=\"df-chip\">− Abgänge<span class=\"df-val\">2</span></span></div><div class=\"df-op\"><span class=\"df-chip\">+ Zugänge<span class=\"df-val\">1</span></span></div><div class=\"df-node  sub\"><span>fortgeschriebener Ist</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">Soll 11 − 9</span></div><div class=\"df-node hi \"><span>Nettopersonalbedarf</span><span class=\"df-val\">+ 2</span></div></figure>",
+
+    "Aufgabe 5 · Ersatz und Neu":
+      "Aufgabe 5 · Ersatz und Neu (الاستبدال والجديد)",
+
+    "Zerlege das Ergebnis.":
+      "قسّم النتيجة.",
+
+    "<table class=\"scheme\">\n                       <tr><td>Ersatzbedarf: Abgänge − Zugänge = 2 − 1</td><td>1</td></tr>\n                       <tr><td>Neubedarf: Soll − ursprünglicher Ist = 11 − 10</td><td>1</td></tr>\n                       <tr class=\"sum\"><td>Ersatz + Neu = Netto</td><td>2</td></tr>\n                     </table>\n                     <p class=\"note\">Beim Neubedarf nimmst du den Ist-Bestand von VOR der Fortschreibung.</p>":
+      "<table class=\"scheme\"><tr><td>Ersatzbedarf: Abgänge − Zugänge = 2 − 1</td><td>1</td></tr><tr><td>Neubedarf: Soll − ursprünglicher Ist = 11 − 10</td><td>1</td></tr><tr class=\"sum\"><td>Ersatz + Neu = Netto</td><td>2</td></tr></table><p class=\"note\">في Neubedarf تأخذ Ist-Bestand من قبل Fortschreibung (تحديث العدد).</p>",
+
+    "Aufgabe 5 · Fallen":
+      "Aufgabe 5 · أخطاء شائعة (فخاخ)",
+
+    "Drei typische Fehler.":
+      "ثلاثة أخطاء نموذجية.",
+
+    "<ul class=\"pm\">\n                       <li class=\"m\">Krankheit als Abgang zählen. Sie ändert den Bestand nicht.</li>\n                       <li class=\"m\">Soll und fortgeschriebenen Ist vertauschen. Dann stimmt das Vorzeichen nicht.</li>\n                       <li class=\"m\">Den Neubedarf mit dem fortgeschriebenen Ist rechnen.</li>\n                       <li class=\"p\">Probe: Ersatz + Neu muss das Nettoergebnis ergeben.</li>\n                     </ul>\n                     <p class=\"note\">Schreibe jede Rechenzeile auf. Auch der Weg bringt Punkte.</p>":
+      "<ul class=\"pm\"><li class=\"m\">احتساب المرض كـ Abgang. المرض لا يغيّر العدد.</li><li class=\"m\">تبديل Soll مع fortgeschriebener Ist. عندها تكون الإشارة (+/−) خاطئة.</li><li class=\"m\">حساب Neubedarf باستخدام fortgeschriebener Ist.</li><li class=\"p\">اختبار: Ersatz + Neu يجب أن يعطي نتيجة Netto.</li></ul><p class=\"note\">اكتب كل سطر حسابي. الطريقة أيضًا تعطيك نقاطًا.</p>",
+
+    "A6 · Ergebnis deuten":
+      "A6 · Ergebnis deuten (تفسير النتيجة)",
+
+    "Deute dein Ergebnis aus A5 für das Sporthaus Lindner. Baue dazu den Antwortsatz.":
+      "فسّر نتيجتك من A5 لـ Sporthaus Lindner. ابنِ لذلك جملة الإجابة.",
+
+    "Deuten heißt: Vorzeichen → Bedeutung → Zahl → Folge.":
+      "التفسير يعني: الإشارة ← المعنى ← العدد ← النتيجة.",
+
+    "Der Nettopersonalbedarf ist {*positiv|negativ}. Dem Sporthaus Lindner {*fehlen|bleiben} {*drei|zwei|sieben} Beschäftigte, deshalb muss der Betrieb Personal {*einstellen|abbauen}.":
+      "Nettopersonalbedarf (صافي الاحتياج من الموظفين) {*positiv|negativ}. في Sporthaus Lindner {*fehlen|bleiben} {*drei|zwei|sieben} موظفين، لذلك يجب على الشركة أن Personal {*einstellen|abbauen}.",
+
+    "Schau auf das Vorzeichen deines Ergebnisses aus A5.":
+      "انظر إلى إشارة (+/−) نتيجتك من A5.",
+
+    "Die Zahl steht im Nettopersonalbedarf – nicht im Ersatz- oder Neubedarf.":
+      "العدد موجود في Nettopersonalbedarf – وليس في Ersatzbedarf أو Neubedarf.",
+
+    "Aufgabe 6 · Ergebnis deuten":
+      "Aufgabe 6 · Ergebnis deuten (تفسير النتيجة)",
+
+    "Ohne Deutung fehlen Punkte.":
+      "بدون تفسير تفقد نقاطًا.",
+
+    "<div class=\"pair\">\n                       <div><b>positiv (+)</b>Es fehlen Leute. Der Betrieb muss Personal beschaffen.</div>\n                       <div><b>negativ (−)</b>Es sind zu viele da. Der Betrieb muss Personal abbauen.</div>\n                     </div>\n                     <p class=\"note\">Ergebnis null: Der Bestand passt genau.</p>":
+      "<div class=\"pair\"><div><b>positiv (+)</b>ينقص موظفون. على الشركة أن تؤمّن موظفين.</div><div><b>negativ (−)</b>عدد الموظفين أكثر من اللازم. على الشركة أن تقلّل الموظفين.</div></div><p class=\"note\">النتيجة صفر: العدد مناسب تمامًا.</p>",
+
+    "Aufgabe 6 · So baust du den Satz":
+      "Aufgabe 6 · كيف تبني الجملة",
+
+    "Vorzeichen, Bedeutung, Zahl, Folge.":
+      "الإشارة، المعنى، العدد، النتيجة.",
+
+    "<ul><li><strong>1.</strong> Vorzeichen nennen: positiv oder negativ.</li>\n                     <li><strong>2.</strong> Bedeutung: Es fehlen Leute oder es bleiben welche übrig.</li>\n                     <li><strong>3.</strong> Zahl: Nimm die Zahl aus dem <em>Nettopersonalbedarf</em>.</li>\n                     <li><strong>4.</strong> Folge: einstellen oder abbauen.</li></ul>\n                     <p class=\"box\">„Der Nettopersonalbedarf ist negativ (− 2). Dem Zoofachgeschäft bleiben 2 Beschäftigte übrig, deshalb muss es Personal abbauen.“</p>":
+      "<ul><li><strong>1.</strong> اذكر الإشارة: positiv أو negativ.</li><li><strong>2.</strong> المعنى: ينقص موظفون أو يزيد موظفون.</li><li><strong>3.</strong> العدد: خذ العدد من <em>Nettopersonalbedarf</em>.</li><li><strong>4.</strong> النتيجة: توظيف (einstellen) أو تقليل (abbauen).</li></ul><p class=\"box\">„Der Nettopersonalbedarf ist negativ (− 2). Dem Zoofachgeschäft bleiben 2 Beschäftigte übrig, deshalb muss es Personal abbauen.“</p>",
+
+    "A7 · Bedarf decken":
+      "A7 · Bedarf decken (تغطية الاحتياج)",
+
+    "Wie schnell wirkt die Maßnahme?":
+      "ما مدى سرعة تأثير الإجراء؟",
+
+    "Was hilft schon in wenigen Tagen oder Wochen?":
+      "ما الذي يساعد خلال أيام أو أسابيع قليلة؟",
+
+    "Ausbildung und Weiterbildung dauern Monate bis Jahre.":
+      "التدريب المهني والتأهيل يستغرقان أشهرًا إلى سنوات.",
+
+    "Aufgabe 7 · Bedarf decken":
+      "Aufgabe 7 · Bedarf decken (تغطية الاحتياج)",
+
+    "Fünf Wege, eine Lücke zu füllen.":
+      "خمس طرق لسدّ فجوة.",
+
+    "<dl class=\"terms\">\n                       <dt>Überstunden</dt><dd>schnell, kein neues Personal – aber Überlastung.</dd>\n                       <dt>Zeitarbeit</dt><dd>schnell und flexibel – aber teurer, die Kräfte bleiben nur kurz im Betrieb.</dd>\n                       <dt>Aushilfen</dt><dd>flexibel für Stoßzeiten – aber wenig Erfahrung.</dd>\n                       <dt>Einstellen</dt><dd>dauerhaft, hohe Bindung – aber die Suche dauert.</dd>\n                       <dt>Ausbilden</dt><dd>sichert Fachkräfte – aber drei Jahre Wartezeit.</dd>\n                     </dl>":
+      "<dl class=\"terms\"><dt>Überstunden</dt><dd>سريعة، بدون موظفين جدد – لكن فيها إرهاق.</dd><dt>Zeitarbeit</dt><dd>سريعة ومرنة – لكنها أغلى، والعاملون يبقون في الشركة وقتًا قصيرًا فقط.</dd><dt>Aushilfen</dt><dd>مرنة لأوقات الذروة – لكن خبرتهم قليلة.</dd><dt>Einstellen</dt><dd>دائم، ارتباط قوي – لكن البحث يستغرق وقتًا.</dd><dt>Ausbilden</dt><dd>يؤمّن الكوادر المتخصصة – لكن الانتظار ثلاث سنوات.</dd></dl>",
+
+    "Aufgabe 7 · Welche Frist?":
+      "Aufgabe 7 · أي مدة؟",
+
+    "Wie schnell brauchst du Hilfe?":
+      "ما مدى سرعة حاجتك إلى المساعدة؟",
+
+    "<p class=\"box\"><strong>Schnell nötig</strong> → kurzfristig helfen: Überstunden, Zeitarbeit, Aushilfen.</p>\n                     <p class=\"box\"><strong>Dauerhaft nötig</strong> → langfristig lösen: ausbilden, weiterbilden, einstellen.</p>\n                     <p class=\"note\">Schnelle Lösungen helfen sofort, kosten aber oft mehr oder belasten die Beschäftigten.</p>":
+      "<p class=\"box\"><strong>Schnell nötig</strong> (مطلوب بسرعة) ← المساعدة على المدى القصير (kurzfristig): Überstunden, Zeitarbeit, Aushilfen.</p><p class=\"box\"><strong>Dauerhaft nötig</strong> (مطلوب بشكل دائم) ← الحل على المدى الطويل (langfristig): ausbilden, weiterbilden, einstellen.</p><p class=\"note\">الحلول السريعة تساعد فورًا، لكنها غالبًا أغلى أو ترهق الموظفين.</p>",
+
+    "kurzfristig":
+      "kurzfristig (على المدى القصير)",
+
+    "langfristig":
+      "langfristig (على المدى الطويل)",
+
+    "Überstunden anordnen":
+      "Überstunden anordnen (أمر بساعات عمل إضافية)",
+
+    "Eigene Fachkräfte ausbilden":
+      "Eigene Fachkräfte ausbilden (تدريب كوادر متخصصة من الشركة نفسها)",
+
+    "Zeitarbeitskräfte anfordern":
+      "Zeitarbeitskräfte anfordern (طلب عاملين مؤقتين)",
+
+    "Beschäftigte zur Fachkraft weiterbilden":
+      "Beschäftigte zur Fachkraft weiterbilden (تأهيل موظفين ليصبحوا كوادر متخصصة)",
+
+    "Aushilfen für das Wochenende suchen":
+      "Aushilfen für das Wochenende suchen (البحث عن عاملين مساعدين لعطلة نهاية الأسبوع)",
+
+    "Eine Mitarbeiterin zur Meisterin weiterbilden":
+      "Eine Mitarbeiterin zur Meisterin weiterbilden (تأهيل موظفة لتصبح معلّمة)",
+
+    "A8 · Kennzahlenmethode":
+      "A8 · Kennzahlenmethode (طريقة المؤشرات)",
+
+    "Das Sporthaus erwartet im nächsten Jahr <b>3 600 000 €</b> Umsatz. Je Vollzeitstelle werden <b>120 000 €</b> Umsatz angesetzt. Berechne die Zahl der Vollzeitstellen.":
+      "يتوقع Sporthaus في السنة القادمة مبيعات (Umsatz) بقيمة <b>3 600 000 €</b>. لكل Vollzeitstelle (وظيفة بدوام كامل) تُحتسب مبيعات <b>120 000 €</b>. احسب عدد الـ Vollzeitstellen.",
+
+    "Das Sporthaus braucht nach der Kennzahlenmethode 30 Vollzeitstellen. Das passt zum Plan aus A5.":
+      "بحسب Kennzahlenmethode يحتاج Sporthaus إلى 30 Vollzeitstellen. هذا يناسب الخطة من A5.",
+
+    "Teile den Umsatz durch den Umsatz je Vollzeitstelle.":
+      "اقسم Umsatz على Umsatz je Vollzeitstelle.",
+
+    "Streiche bei beiden Zahlen vier Nullen: 360 ÷ 12.":
+      "اشطب أربعة أصفار من كلا العددين: 360 ÷ 12.",
+
+    "Aufgabe 8 · Kennzahlenmethode":
+      "Aufgabe 8 · Kennzahlenmethode (طريقة المؤشرات)",
+
+    "Umsatz ÷ Umsatz je Vollzeitstelle.":
+      "Umsatz ÷ Umsatz je Vollzeitstelle.",
+
+    "<p>Beispiel Möbelhaus: 2 400 000 € Umsatz, 150 000 € je Vollzeitstelle.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Umsatz</span><span class=\"df-val\">2 400 000 €</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Umsatz je Stelle<span class=\"df-val\">150 000 €</span></span></div><div class=\"df-node hi \"><span>Vollzeitstellen</span><span class=\"df-val\">16</span></div></figure>\n                     <p class=\"note\">Rechentrick: gleich viele Nullen streichen. 240 ÷ 15 = 16.</p>":
+      "<p>مثال متجر أثاث: مبيعات 2 400 000 €، و150 000 € لكل Vollzeitstelle.</p><figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Umsatz</span><span class=\"df-val\">2 400 000 €</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Umsatz je Stelle<span class=\"df-val\">150 000 €</span></span></div><div class=\"df-node hi \"><span>Vollzeitstellen</span><span class=\"df-val\">16</span></div></figure><p class=\"note\">حيلة حسابية: اشطب عددًا متساويًا من الأصفار. 240 ÷ 15 = 16.</p>",
+
+    "Aufgabe 8 · Was die Zahl bedeutet":
+      "Aufgabe 8 · ماذا يعني العدد",
+
+    "Vollzeitstellen sind keine Köpfe.":
+      "Vollzeitstellen ليست أشخاصًا.",
+
+    "<p>Zwei Teilzeitkräfte mit je einer halben Stelle sind zusammen <strong>eine</strong> Vollzeitstelle.</p>\n                     <div class=\"pair\">\n                       <div><b>Stärke</b>Schnell gerechnet, gut für einen ersten Überblick.</div>\n                       <div><b>Schwäche</b>Sie zeigt nicht, in welchem Bereich Personal fehlt.</div>\n                     </div>":
+      "<p>عاملان بدوام جزئي، لكل منهما نصف وظيفة، يساويان معًا <strong>Vollzeitstelle</strong> واحدة.</p><div class=\"pair\"><div><b>Stärke</b>(نقطة القوة) حساب سريع، جيد لأخذ نظرة أولى.</div><div><b>Schwäche</b>(نقطة الضعف) لا تُظهر في أي قسم ينقص الموظفون.</div></div>",
+
+    "Vollzeitstellen: 3 600 000 € ÷ 120 000 €":
+      "Vollzeitstellen: 3 600 000 € ÷ 120 000 €",
+
+    "A9 · Methode beurteilen":
+      "A9 · Methode beurteilen (تقييم الطريقة)",
+
+    "Aufgabe 9 · Methode beurteilen":
+      "Aufgabe 9 · Methode beurteilen (تقييم الطريقة)",
+
+    "Zwei Methoden im Vergleich.":
+      "مقارنة بين طريقتين.",
+
+    "<div class=\"pair\">\n                       <div><b>Stellenplan</b>Jede Stelle wird einzeln durchgezählt. Genau, aber aufwendig.</div>\n                       <div><b>Kennzahlen</b>Umsatz ÷ Umsatz je Stelle. Schnell, aber nur grob.</div>\n                     </div>\n                     <p class=\"box\">Beurteilen heißt: Vorteil nennen, Nachteil nennen, Fazit ziehen.</p>":
+      "<div class=\"pair\"><div><b>Stellenplan</b>تُعَدّ كل وظيفة على حدة. دقيقة، لكنها تحتاج جهدًا كبيرًا.</div><div><b>Kennzahlen</b>Umsatz ÷ Umsatz je Stelle. سريعة، لكن تقريبية فقط.</div></div><p class=\"box\">التقييم (beurteilen) يعني: اذكر ميزة، واذكر عيبًا، ثم استخلص خلاصة (Fazit).</p>",
+
+    "Aufgabe 9 · Die Entscheidungsregel":
+      "Aufgabe 9 · قاعدة القرار",
+
+    "Klein und genau – oder groß und schnell?":
+      "صغير ودقيق – أم كبير وسريع؟",
+
+    "<ul class=\"pm\">\n                       <li class=\"p\">Stellenplan: kleine Betriebe mit wenigen Beschäftigten, neue Aufgaben, genaue Planung.</li>\n                       <li class=\"p\">Kennzahlen: große Betriebe, erster Überblick, verlässlicher Umsatz.</li>\n                       <li class=\"m\">Kennzahlen sind ungenau, wenn Erfahrungswerte (Zahlen aus früheren Jahren) fehlen, zum Beispiel für ein ganz neues Produkt.</li>\n                     </ul>\n                     <p class=\"note\">Lies jede Antwort zu Ende. Oft ist nur ein Teil einer Aussage falsch.</p>":
+      "<ul class=\"pm\"><li class=\"p\">Stellenplan: شركات صغيرة بموظفين قليلين، مهام جديدة، تخطيط دقيق.</li><li class=\"p\">Kennzahlen: شركات كبيرة، نظرة أولى، مبيعات موثوقة.</li><li class=\"m\">Kennzahlen غير دقيقة إذا غابت Erfahrungswerte (أرقام من سنوات سابقة)، مثلًا لمنتج جديد تمامًا.</li></ul><p class=\"note\">اقرأ كل إجابة حتى النهاية. غالبًا يكون جزء واحد فقط من العبارة خاطئًا.</p>",
+
+    "Für den neuen Online-Shop weiß das Sporthaus noch nicht, wie viel Umsatz eine Vollzeitstelle dort bringt. Was stimmt?":
+      "لا يعرف Sporthaus بعد للمتجر الإلكتروني الجديد كم مبيعات تحقّقها Vollzeitstelle واحدة هناك. ما الصحيح؟",
+
+    "Die Kennzahlenmethode ist ungenau, weil dieser Wert fehlt.":
+      "Kennzahlenmethode غير دقيقة لأن هذه القيمة ناقصة.",
+
+    "Die Kennzahlenmethode ist sehr genau, weil der Umsatz eines Betriebs immer bekannt ist.":
+      "Kennzahlenmethode دقيقة جدًا لأن مبيعات الشركة معروفة دائمًا.",
+
+    "Die Stellenplanmethode geht nicht, weil man neue Stellen nicht planen kann.":
+      "Stellenplanmethode غير ممكنة لأنه لا يمكن تخطيط وظائف جديدة.",
+
+    "Beide Methoden sind bei neuen Aufgaben immer gleich genau.":
+      "الطريقتان دقيقتان بالقدر نفسه دائمًا في المهام الجديدة.",
+
+    "Ohne Erfahrungswert für den Umsatz je Vollzeitstelle wird die Kennzahlenmethode ungenau.":
+      "بدون Erfahrungswert (قيمة من الخبرة) لمبيعات كل Vollzeitstelle تصبح Kennzahlenmethode غير دقيقة.",
+
+    "Was braucht die Kennzahlenmethode als Grundlage?":
+      "ماذا تحتاج Kennzahlenmethode كأساس؟",
+
+    "Warum passt die Stellenplanmethode gut zum Sporthaus mit 28 Beschäftigten?":
+      "لماذا تناسب Stellenplanmethode محل Sporthaus بـ 28 موظفًا؟",
+
+    "Der Betrieb ist klein genug, um jede Stelle und Aufgabe einzeln zu prüfen.":
+      "الشركة صغيرة بما يكفي لفحص كل وظيفة ومهمة على حدة.",
+
+    "Sie betrachtet nur den Umsatz und ist deshalb besonders schnell.":
+      "لأنها تنظر إلى Umsatz فقط، ولذلك هي سريعة جدًا.",
+
+    "Große Betriebe dürfen sie nicht nutzen.":
+      "لا يجوز للشركات الكبيرة استخدامها.",
+
+    "Sie braucht keine Zahlen.":
+      "لا تحتاج إلى أي أرقام.",
+
+    "Bei 28 Beschäftigten lässt sich jede Stelle einzeln prüfen. Das macht die Planung genau.":
+      "مع 28 موظفًا يمكن فحص كل وظيفة على حدة. وهذا يجعل التخطيط دقيقًا.",
+
+    "Die Stellenplanmethode zählt jede Stelle einzeln durch.":
+      "Stellenplanmethode تعدّ كل وظيفة على حدة.",
+
+    "A10 · Ausbildungsbedarf":
+      "A10 · Ausbildungsbedarf (الاحتياج من التدريب المهني)",
+
+    "Das Sporthaus braucht in <b>drei Jahren sechs Fachkräfte</b> aus eigener Ausbildung. Die Ausbildung dauert drei Jahre.":
+      "يحتاج Sporthaus بعد <b>ثلاث سنوات إلى ستة كوادر متخصصة</b> من تدريبه الخاص. مدة التدريب المهني (Ausbildung) ثلاث سنوات.",
+
+    "2 Plätze pro Jahr. Sind alle drei Ausbildungsjahre besetzt, sind 6 Azubis gleichzeitig im Betrieb.":
+      "مكانان في السنة. إذا كانت سنوات التدريب الثلاث كلها مشغولة، فهناك 6 متدرّبين في الشركة في الوقت نفسه.",
+
+    "Teile die Fachkräfte durch die Ausbildungsjahre.":
+      "اقسم عدد الكوادر المتخصصة على سنوات التدريب.",
+
+    "Azubis gleichzeitig = Plätze pro Jahr × Ausbildungsjahre.":
+      "Azubis gleichzeitig = Plätze pro Jahr × Ausbildungsjahre (المتدرّبون في الوقت نفسه = الأماكن في السنة × سنوات التدريب).",
+
+    "Aufgabe 10 · Ausbildungsbedarf":
+      "Aufgabe 10 · Ausbildungsbedarf (الاحتياج من التدريب المهني)",
+
+    "Fachkräfte ÷ Ausbildungsjahre.":
+      "Fachkräfte ÷ Ausbildungsjahre.",
+
+    "<p>Beispiel Bäckerei: 9 Fachkräfte in 3 Jahren, die Ausbildung dauert 3 Jahre.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Fachkräfte gebraucht</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node hi \"><span>Plätze pro Jahr</span><span class=\"df-val\">3</span></div><div class=\"df-op\"><span class=\"df-chip\">× Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node  sub\"><span>Azubis gleichzeitig</span><span class=\"df-val\">9</span></div></figure>":
+      "<p>مثال مخبز: 9 كوادر متخصصة خلال 3 سنوات، ومدة التدريب 3 سنوات.</p><figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Fachkräfte gebraucht</span><span class=\"df-val\">9</span></div><div class=\"df-op\"><span class=\"df-chip\">÷ Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node hi \"><span>Plätze pro Jahr</span><span class=\"df-val\">3</span></div><div class=\"df-op\"><span class=\"df-chip\">× Ausbildungsjahre<span class=\"df-val\">3</span></span></div><div class=\"df-node  sub\"><span>Azubis gleichzeitig</span><span class=\"df-val\">9</span></div></figure>",
+
+    "Aufgabe 10 · Kosten und Nutzen":
+      "Aufgabe 10 · Kosten und Nutzen (التكاليف والفائدة)",
+
+    "Azubis lösen keinen akuten Bedarf.":
+      "المتدرّبون لا يحلّون احتياجًا عاجلًا.",
+
+    "<div class=\"pair\">\n                       <div><b>Kosten</b>Ausbildungsvergütung, Berufsschulzeiten, Zeit der Ausbilder/innen</div>\n                       <div><b>Nutzen</b>Azubis kennen die Abläufe. Übernahme sichert Fachkräfte.</div>\n                     </div>\n                     <p class=\"note\">Erst nach der Ausbildung sind Azubis Fachkräfte. Deshalb planst du Ausbildung mehrere Jahre im Voraus.</p>":
+      "<div class=\"pair\"><div><b>Kosten</b>(التكاليف) أجر التدريب، أوقات المدرسة المهنية، وقت المدرّبين</div><div><b>Nutzen</b>(الفائدة) المتدرّبون يعرفون سير العمل. التعيين بعد التدريب يؤمّن الكوادر المتخصصة.</div></div><p class=\"note\">فقط بعد التدريب يصبح المتدرّبون كوادر متخصصة. لذلك تخطّط للتدريب قبل عدة سنوات.</p>",
+
+    "Ausbildungsplätze pro Jahr: 6 ÷ 3":
+      "Ausbildungsplätze pro Jahr (أماكن التدريب في السنة): 6 ÷ 3",
+
+    "Azubis gleichzeitig im Betrieb, wenn alle drei Ausbildungsjahre besetzt sind":
+      "Azubis gleichzeitig im Betrieb (المتدرّبون في الشركة في الوقت نفسه)، إذا كانت سنوات التدريب الثلاث كلها مشغولة",
+
+    "A11 · Stellung nehmen":
+      "A11 · Stellung nehmen (إبداء الرأي)",
+
+    "Frau Lindner überlegt: „Die zwei neuen Stellen für Online-Shop und Werkstatt besetze ich dauerhaft mit Zeitarbeitskräften.“ <b>Nimm Stellung</b>, indem du die Stellungnahme aus Bausteinen baust.":
+      "تفكّر Frau Lindner: „Die zwei neuen Stellen für Online-Shop und Werkstatt besetze ich dauerhaft mit Zeitarbeitskräften.“ (سأشغل الوظيفتين الجديدتين بشكل دائم بعاملين مؤقتين). <b>أبدِ رأيك</b> (Stellung nehmen) بأن تبني الموقف من قطع (Bausteine).",
+
+    "Stellung nehmen: Vorteil → Nachteil → Begründung mit dem Fall → eigene Empfehlung.":
+      "إبداء الرأي: ميزة ← عيب ← تعليل بالحالة ← توصيتك.",
+
+    "Zeitarbeit hat den Vorteil, dass die Kräfte {*schnell verfügbar sind|dauerhaft günstiger sind}. Ein Nachteil ist, dass Zeitarbeit {*teurer ist und die Bindung an den Betrieb gering bleibt|die Stelle nie besetzt}. Da die zwei Stellen {*dauerhaft|nur ein paar Tage} gebraucht werden, empfehle ich {*eigene Neueinstellungen|noch mehr Zeitarbeit}.":
+      "ميزة Zeitarbeit (العمل المؤقت): العاملون {*schnell verfügbar sind|dauerhaft günstiger sind}. عيبها: Zeitarbeit {*teurer ist und die Bindung an den Betrieb gering bleibt|die Stelle nie besetzt}. بما أن الوظيفتين تُطلبان {*dauerhaft|nur ein paar Tage}، أوصي بـ {*eigene Neueinstellungen|noch mehr Zeitarbeit}.",
+
+    "Vorteil, Nachteil, Begründung mit dem Fall, Empfehlung.":
+      "ميزة، عيب، تعليل بالحالة، توصية.",
+
+    "Die Stellen werden dauerhaft gebraucht. Was passt dazu?":
+      "الوظيفتان مطلوبتان بشكل دائم. ما الذي يناسب ذلك؟",
+
+    "Aufgabe 11 · Stellung nehmen":
+      "Aufgabe 11 · Stellung nehmen (إبداء الرأي)",
+
+    "Meinung mit Begründung.":
+      "رأي مع تعليل.",
+
+    "<p>Du sagst, was du von einem Vorschlag hältst, und begründest es mit dem Fall.</p>\n                     <figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Vorteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">aber</span></div><div class=\"df-node  \"><span>Nachteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">weil (Bezug zum Fall)</span></div><div class=\"df-node hi \"><span>Empfehlung geben</span></div></figure>":
+      "<p>تقول ما رأيك في اقتراح، وتعلّل ذلك بالحالة.</p><figure class=\"dia dia-flow\"><div class=\"df-node  \"><span>Vorteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">aber</span></div><div class=\"df-node  \"><span>Nachteil nennen</span></div><div class=\"df-op\"><span class=\"df-chip\">weil (Bezug zum Fall)</span></div><div class=\"df-node hi \"><span>Empfehlung geben</span></div></figure>",
+
+    "Aufgabe 11 · Musterbeispiel":
+      "Aufgabe 11 · مثال نموذجي",
+
+    "So klingt eine gute Stellungnahme.":
+      "هكذا يبدو إبداء رأي جيد.",
+
+    "<p class=\"box\">„Eine Kollegin fehlt nur zwei Wochen. Aushilfen haben den Vorteil, dass sie flexibel und schnell einsetzbar sind. Ein Nachteil ist, dass sie wenig Erfahrung haben. Da die Lücke nur kurz ist, empfehle ich Aushilfen.“</p>\n                     <p class=\"note\">In A11 gilt das gleiche Muster, nur mit Zeitarbeit.</p>":
+      "<p class=\"box\">„Eine Kollegin fehlt nur zwei Wochen. Aushilfen haben den Vorteil, dass sie flexibel und schnell einsetzbar sind. Ein Nachteil ist, dass sie wenig Erfahrung haben. Da die Lücke nur kurz ist, empfehle ich Aushilfen.“</p><p class=\"note\">في A11 ينطبق النمط نفسه، لكن مع Zeitarbeit.</p>",
+
+    "Aufgabe 11 · Fallen":
+      "Aufgabe 11 · أخطاء شائعة (فخاخ)",
+
+    "Achte auf den Fall.":
+      "انتبه إلى الحالة.",
+
+    "<ul class=\"pm\">\n                       <li class=\"m\">Nur Vorteile oder nur Nachteile nennen.</li>\n                       <li class=\"m\">Eine Empfehlung ohne Bezug zum Fall.</li>\n                       <li class=\"p\">Die Empfehlung muss zur Dauer im Fall passen: kurz oder dauerhaft.</li>\n                     </ul>":
+      "<ul class=\"pm\"><li class=\"m\">ذكر المزايا فقط أو العيوب فقط.</li><li class=\"m\">توصية بدون ربط بالحالة.</li><li class=\"p\">يجب أن تناسب التوصية مدّة الحالة: قصيرة أو دائمة.</li></ul>",
+
     "Alle Lernkarten":
       "كل بطاقات التعلم",
 

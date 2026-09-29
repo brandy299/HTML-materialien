@@ -55,6 +55,10 @@ Stilstudie der Lehrkraft war die Vorlage.
   Die Startseite zeigt nur diese Fächer; „Weiter mit …“ nur aus den eigenen Fächern. Wer per QR/Link in einen Kurs
   kommt, bekommt das Fach automatisch dazu und überspringt die Auswahl. Speicher: `lernraum.faecher`
   (`null` = nie gewählt, `[]` = alle). Grund: Lehrkraft-Feedback „PBP-Schüler könnten verwirrt werden“.
+- **Geführte Probeklausur (29.09.2026):** `exam.guided: true` + `guide`-Folien pro Aufgabe. Bewertung wie Klausur, aber ohne Timer,
+  mit Rückmeldung/Hilfe (Reiter „Erklärung“ im ?-Fenster). Erstes Beispiel: PBP `probeklausur-2` (Sporthaus Lindner, 11 Aufgaben,
+  40 P), Link `…/app/#/f/pbp/probeklausur-2`. Steht vor der zeitlich begrenzten Übungsklausur 1 (erst üben, dann Klausur).
+  Wunsch der Lehrkraft: „gute, aufschlussreiche Erklärungen vor den Aufgaben“, „separat verlinkbar“.
 - **Sprachen der Oberfläche (28.09.2026):** Deutsch, Englisch, Arabisch – umschaltbar beim ersten Start, unter „Ich“ und
   **mitten in einer Aufgabe im Hilfe-Fenster (?)**. Der Wechsel lädt nicht neu: Eingaben bleiben erhalten, `retranslate()` schreibt alle sichtbaren
   Oberflächentexte der Aufgabe um (Textknoten, die exakt einem i18n-Text entsprechen; Kursinhalte werden übersprungen).
@@ -100,7 +104,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 ## Offen / Ideen
 
 - [ ] Arabisch von Muttersprachler/in prüfen lassen: Oberfläche (`app/i18n.js`) und Kursinhalte (`app/uebersetzungen/*.ar.js`,
-      Stand 28.09.2026: PBP 405/421, GPU 179/205, INWI 197/209, Englisch 266/485 – Rest bewusst deutsch/englisch).
+      Stand 29.09.2026: PBP 590/606 (inkl. Probeklausur 2); früher 28.09.: PBP 405/421, GPU 179/205, INWI 197/209, Englisch 266/485 – Rest bewusst deutsch/englisch).
       Unsichere Begriffe u. a.: Fortschreibung, Zieleinkaufspreis, Selbstkosten, hochrechnen, Rücksendeangabe, rechts-/linksbündig.
 - [ ] Englische Übersetzung der Kursinhalte (gleiches Verfahren: `node app/tools/texte.js <kurs> en`).
 - [ ] Optional: Fachbegriffe (Lernkarten) zusätzlich auf Englisch/Arabisch als Verständnishilfe – bräuchte Übersetzungen pro Kurs.
