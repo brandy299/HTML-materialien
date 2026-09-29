@@ -1029,6 +1029,44 @@ LERNRAUM.subjects.push({
           ]
         }
       ]
+    },
+
+    /* ══════════════ WEITER · TELEPHONING ══════════════ */
+    {
+      id: "weiter-telephoning",
+      group: "Weiter",
+      title: "Weiter geht's: Telephoning",
+      kicker: "Ausblick",
+      minutes: 3,
+      help: `<h3>Weiterlernen</h3>
+             <p>Die Zeitformen sitzen? Dann geht es an echte Gespräche: höflich telefonieren, Namen und Nummern buchstabieren, Termine machen und ein Hotel buchen.</p>
+             <p class="formula">Nächster Kurs: <b>Telephoning</b> (Fach Englisch).</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Dranbleiben",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Ausblick",
+              title: "Grammatik sitzt? Dann kommt der Alltag.",
+              body: `<p>Mit den Zeitformen kannst du Sätze bilden. Im echten Büro telefoniert man aber auch auf Englisch – höflich, klar und sicher.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Nächster Kurs",
+              title: "Telephoning",
+              body: `<p>Redemittel, Buchstabieren, Termine machen und ein Hotel buchen – mit Dr Kiesbauer und Wilkinson and Friends Ltd.</p>`
+            }
+          ]
+        },
+        {
+          type: "link",
+          title: "Zum Kurs „Telephoning“",
+          text: "Öffne den Kurs Telephoning und arbeite die Themen der Reihe nach durch. Danach: die Lernkarten wiederholen und die Übungsklausur schreiben.",
+          href: "app/#/f/englisch-telephoning"
+        }
+      ]
     }
   ]
 });
