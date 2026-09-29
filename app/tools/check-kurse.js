@@ -140,8 +140,14 @@ function checkStep(where, st, topic) {
         const w = `${where} Zeile ${k + 1}`;
         if (!str(r.label)) err(w, "Zeile ohne label");
         if (typeof r.value !== "number" || !Number.isFinite(r.value)) err(w, "value muss eine Zahl sein");
-        else if (!Number.isInteger(r.value)) err(w, `value ${r.value}: Das Zahlenfeld kann nur ganze Zahlen (keine Kommazahlen)`);
+        else {
+          const maxD = Math.max(2, st.decimals || 0), f = 10 ** maxD;
+          if (Math.abs(Math.round(r.value * f) / f - r.value) > 1e-9) err(w, `value ${r.value}: höchstens ${maxD} Nachkommastellen (Cent-Beträge vorher runden)`);
+          if (r.dec !== undefined && !(Number.isInteger(r.dec) && r.dec >= 0 && r.dec <= 3)) err(w, "dec muss 0–3 sein");
+        }
       });
+      if (st.decimals !== undefined && !(Number.isInteger(st.decimals) && st.decimals >= 0 && st.decimals <= 3)) err(where, "decimals muss 0–3 sein");
+      if (st.rows.some((r) => !Number.isInteger(r.value)) && st.decimals === undefined && st.rows.some((r) => r.dec === undefined)) warn(where, "Kommazahlen ohne decimals: 2 – Euro-Beträge werden dann ohne feste Nachkommastellen angezeigt (12,5 statt 12,50)");
       if (!st.hints && !st.hint && !topic.exam) warn(where, "Rechenaufgabe ohne Tipps (hints)");
       break;
     case "cards":
