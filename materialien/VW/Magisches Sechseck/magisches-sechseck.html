@@ -1,0 +1,1965 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>Das magische Sechseck · VW · HBBK Oberhausen</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #0f172a;
+      --surface: rgb(15 23 42 / 78%);
+      --surface-soft: rgb(30 41 59 / 74%);
+      --ink: #e2e8f0;
+      --muted: #a8b7cb;
+      --line: rgb(148 163 184 / 24%);
+      --line-strong: rgb(148 163 184 / 40%);
+      --accent: #a78bfa;
+      --accent-dark: #c4b5fd;
+      --accent-soft: rgb(167 139 250 / 14%);
+      --target: #06b6d4;
+      --target-light: #67e8f9;
+      --good: #34d399;
+      --radius: 16px;
+      --focus: 0 0 0 3px rgb(6 182 212 / 30%);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+    }
+
+    button,
+    input { font: inherit; }
+
+    button { color: inherit; }
+
+    .app-shell {
+      width: min(100%, 1760px);
+      min-height: 100vh;
+      margin-inline: auto;
+      padding: clamp(16px, 2vw, 30px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 1.6vh, 22px);
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex: 0 0 auto;
+    }
+
+    .title-copy { min-width: 0; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex: 0 0 auto;
+    }
+
+    .coupling-toggle {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 58px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgb(30 41 59 / 68%);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .coupling-copy { display: grid; gap: 2px; }
+    .coupling-copy strong { color: var(--ink); font-size: 0.82rem; line-height: 1.2; }
+    .coupling-copy small { color: var(--muted); font-size: 0.82rem; }
+
+    .coupling-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .coupling-track {
+      width: 46px;
+      height: 26px;
+      flex: 0 0 auto;
+      padding: 3px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgb(15 23 42 / 90%);
+      transition: background-color 180ms ease, border-color 180ms ease;
+    }
+
+    .coupling-knob {
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #94a3b8;
+      box-shadow: 0 2px 8px rgb(2 6 23 / 45%);
+      transition: transform 180ms ease, background-color 180ms ease;
+    }
+
+    .coupling-input:checked + .coupling-track {
+      border-color: rgb(6 182 212 / 70%);
+      background: rgb(6 182 212 / 35%);
+    }
+
+    .coupling-input:checked + .coupling-track .coupling-knob {
+      transform: translateX(19px);
+      background: var(--target-light);
+    }
+
+    .coupling-input:focus-visible + .coupling-track { box-shadow: var(--focus); }
+
+    .coupling-state {
+      min-width: 24px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+    }
+
+    .coupling-input:checked ~ .coupling-state { color: var(--target-light); }
+
+    .eyebrow,
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--target);
+    }
+
+    h1,
+    h2,
+    p { margin: 0; }
+
+    h1 {
+      margin-top: 7px;
+      font-size: clamp(1.8rem, 2.35vw, 2.7rem);
+      font-weight: 750;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .header-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    main.dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(360px, 0.88fr);
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      grid-template-areas: "visual controls" "visual relations" "case case";
+      align-items: stretch;
+      gap: clamp(14px, 1.5vw, 22px);
+      flex: 1 0 auto;
+      min-height: 760px;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgb(30 41 59 / 64%);
+      -webkit-backdrop-filter: blur(14px) saturate(1.15);
+      backdrop-filter: blur(14px) saturate(1.15);
+      box-shadow: 0 18px 48px rgb(2 6 23 / 22%);
+    }
+
+    .viewer-panel {
+      grid-area: visual;
+      min-height: 760px;
+      padding: clamp(14px, 1.5vw, 22px);
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .panel-head,
+    .control-head,
+    .viewer-footer,
+    .legend,
+    .range-top,
+    .range-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-head { min-height: 44px; align-items: flex-start; flex-wrap: wrap; }
+
+    .panel-head h2,
+    .control-head h2 {
+      margin-top: 4px;
+      font-size: 1.28rem;
+      font-weight: 720;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .section-kicker { font-size: 0.82rem; }
+
+    .scale-chip {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border: 1px solid rgb(6 182 212 / 34%);
+      border-radius: 999px;
+      background: rgb(6 182 212 / 12%);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .panel-head-actions {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .camera-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgb(15 23 42 / 60%);
+    }
+
+    .camera-preset {
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+    }
+
+    .camera-short { display: none; }
+
+    .camera-preset:hover { color: var(--target-light); }
+    .camera-preset[aria-pressed="true"] {
+      border-color: rgb(6 182 212 / 30%);
+      background: rgb(6 182 212 / 13%);
+      color: var(--target-light);
+    }
+
+    .camera-preset:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    #scene-shell {
+      position: relative;
+      min-height: 430px;
+      flex: 1 1 auto;
+      overflow: hidden;
+      border: 1px solid rgb(103 232 249 / 17%);
+      border-radius: 12px;
+      background:
+        radial-gradient(ellipse at 50% 44%, rgb(6 182 212 / 18%), transparent 58%),
+        radial-gradient(ellipse at 50% 100%, rgb(79 70 229 / 13%), transparent 56%),
+        #0f172a;
+      isolation: isolate;
+    }
+
+    #three-root,
+    #label-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #three-root canvas { display: block; width: 100%; height: 100%; }
+
+    #label-layer {
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .axis-label {
+      width: max-content;
+      max-width: clamp(132px, 16.5vw, 248px);
+      padding: 6px 9px 7px;
+      border: 1px solid rgb(148 163 184 / 30%);
+      border-radius: 8px;
+      background: rgb(15 23 42 / 76%);
+      -webkit-backdrop-filter: blur(10px) saturate(1.12);
+      backdrop-filter: blur(10px) saturate(1.12);
+      color: #f1f5f9;
+      font-size: clamp(0.82rem, 1.06vw, 1.08rem);
+      font-weight: 650;
+      line-height: 1.22;
+      text-align: center;
+      white-space: pre-line;
+      overflow-wrap: break-word;
+      box-shadow: 0 7px 22px rgb(2 6 23 / 28%);
+    }
+
+    .axis-label-number {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+    }
+
+    .plot-badge {
+      position: absolute;
+      z-index: 3;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      max-width: calc(100% - 24px);
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgb(15 23 42 / 82%);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .legend-key {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .legend-mark {
+      width: 21px;
+      height: 0;
+      border-top: 2px solid var(--accent);
+    }
+
+    .legend-mark.is-target { border-top: 2px dashed var(--target); }
+
+    .button {
+      min-height: 44px;
+      padding: 9px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: rgb(30 41 59 / 78%);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 720;
+      line-height: 1.15;
+      transition: background-color 120ms ease, border-color 120ms ease;
+    }
+
+    .button:hover { border-color: var(--target); background: rgb(6 182 212 / 12%); }
+    .button:focus-visible,
+    input[type="range"]:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    #load-status {
+      position: absolute;
+      z-index: 5;
+      inset: 50% auto auto 50%;
+      width: min(80%, 390px);
+      padding: 14px 16px;
+      transform: translate(-50%, -50%);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: rgb(15 23 42 / 92%);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      color: var(--ink);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    #load-status[hidden] { display: none; }
+
+    #load-status.is-error {
+      border-color: #fb7185;
+      color: #fecdd3;
+    }
+
+    .viewer-footer {
+      min-height: 25px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .legend { justify-content: flex-start; flex-wrap: wrap; gap: 8px 16px; }
+    .legend .legend-key { color: var(--muted); font-size: 0.82rem; }
+    .viewer-hint { text-align: right; }
+
+    .control-panel {
+      grid-area: controls;
+      padding: clamp(16px, 1.55vw, 23px);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .control-head { align-items: flex-start; }
+
+    .reset-button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding-inline: 11px;
+      color: var(--accent-dark);
+    }
+
+    .control-intro {
+      margin-top: -5px;
+      color: var(--muted);
+      font-size: 0.91rem;
+      line-height: 1.45;
+    }
+
+    .demo-controls {
+      display: grid;
+      gap: 9px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .demo-controls-head,
+    .demo-controls-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .demo-controls-head { align-items: stretch; flex-direction: column; }
+
+    .demo-label {
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
+
+    .demo-select {
+      width: 100%;
+      max-width: none;
+      min-height: 44px;
+      padding: 8px 34px 8px 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: rgb(15 23 42 / 86%);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .demo-select:focus-visible { outline: none; box-shadow: var(--focus); border-color: var(--target); }
+
+    .demo-status {
+      flex: 1 1 auto;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .demo-replay { flex: 0 0 auto; }
+    .demo-replay:disabled { cursor: not-allowed; opacity: 0.55; }
+
+    .range-list {
+      display: grid;
+      gap: 11px;
+    }
+
+    .range-row {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgb(148 163 184 / 16%);
+    }
+
+    .range-row:last-child { padding-bottom: 0; border-bottom: 0; }
+
+    .range-top {
+      justify-content: flex-start;
+      gap: 8px;
+      min-height: 24px;
+      margin-bottom: 2px;
+    }
+
+    .goal-number {
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .goal-label {
+      font-size: clamp(0.92rem, 1.08vw, 1.08rem);
+      font-weight: 660;
+      line-height: 1.3;
+    }
+
+    .range-bottom { gap: 12px; }
+
+    input[type="range"] {
+      width: 100%;
+      min-width: 0;
+      height: 36px;
+      margin: 0;
+      padding: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      --range-color: var(--target);
+      --range-progress: 100%;
+      cursor: pointer;
+      touch-action: pan-y;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--range-color) 0%, var(--range-color) var(--range-progress), rgb(148 163 184 / 24%) var(--range-progress), rgb(148 163 184 / 24%) 100%);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 18px;
+      height: 18px;
+      margin-top: -6px;
+      border: 2px solid #e2e8f0;
+      border-radius: 50%;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--range-color);
+      box-shadow: 0 0 12px rgb(6 182 212 / 35%);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgb(148 163 184 / 24%);
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 6px;
+      border-radius: 999px;
+      background: var(--range-color);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 50%;
+      background: var(--range-color);
+      box-shadow: 0 0 12px rgb(6 182 212 / 35%);
+    }
+
+    .range-output {
+      width: 51px;
+      flex: 0 0 auto;
+      color: var(--target-light);
+      font-size: 0.96rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .scale-note {
+      margin-top: auto;
+      padding: 12px 13px;
+      border: 1px solid rgb(167 139 250 / 26%);
+      border-radius: 10px;
+      background: rgb(30 41 59 / 64%);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    .scale-note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ddd6fe;
+      font-size: 0.82rem;
+    }
+
+    .scale-note p {
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .app-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .app-footer strong { color: var(--ink); font-weight: 700; }
+
+    .relationship-panel {
+      grid-area: relations;
+      min-width: 0;
+      padding: clamp(15px, 1.45vw, 21px);
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .relationship-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .relationship-head h2 {
+      margin-top: 4px;
+      font-size: 1.18rem;
+      font-weight: 720;
+      letter-spacing: -0.025em;
+    }
+
+    .model-badge {
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border: 1px solid rgb(167 139 250 / 28%);
+      border-radius: 999px;
+      background: rgb(167 139 250 / 10%);
+      color: #ddd6fe;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .relationship-list { display: grid; gap: 7px; }
+
+    .relationship-row {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      min-height: 43px;
+      padding: 7px 9px;
+      border: 1px solid rgb(148 163 184 / 14%);
+      border-radius: 9px;
+      background: rgb(15 23 42 / 42%);
+    }
+
+    .relationship-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: #64748b;
+    }
+
+    .relationship-row.is-harmony .relationship-swatch {
+      background: #34d399;
+      box-shadow: 0 0 12px rgb(52 211 153 / 65%);
+    }
+
+    .relationship-row.is-conflict .relationship-swatch {
+      background: #fb7185;
+      box-shadow: 0 0 12px rgb(251 113 133 / 72%);
+    }
+
+    .relationship-copy { display: grid; gap: 2px; min-width: 0; }
+    .relationship-copy strong { color: var(--ink); font-size: 0.82rem; }
+    .relationship-copy small { color: var(--muted); font-size: 0.82rem; line-height: 1.25; }
+    .relationship-state { color: var(--muted); font-size: 0.82rem; font-weight: 800; white-space: nowrap; }
+    .relationship-row.is-harmony .relationship-state { color: #6ee7b7; }
+    .relationship-row.is-conflict .relationship-state { color: #fda4af; }
+
+    .relationship-note {
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .case-panel {
+      grid-area: case;
+      min-width: 0;
+      padding: clamp(15px, 1.45vw, 21px);
+      display: grid;
+      align-content: start;
+      gap: 13px;
+    }
+
+    .case-panel[hidden] { display: none; }
+
+    .case-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .case-head h2 {
+      margin-top: 4px;
+      font-size: 1.18rem;
+      font-weight: 720;
+      letter-spacing: -0.025em;
+    }
+
+    .case-badge {
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border: 1px solid rgb(6 182 212 / 30%);
+      border-radius: 999px;
+      background: rgb(6 182 212 / 10%);
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .case-situation {
+      display: grid;
+      gap: 5px;
+      padding: 12px 14px;
+      border: 1px solid rgb(6 182 212 / 24%);
+      border-radius: 10px;
+      background: rgb(6 182 212 / 8%);
+    }
+
+    .case-step-label {
+      color: var(--target-light);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .case-situation p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .case-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .case-step {
+      display: grid;
+      gap: 4px;
+      padding: 11px 13px;
+      border: 1px solid rgb(148 163 184 / 16%);
+      border-radius: 9px;
+      background: rgb(15 23 42 / 42%);
+    }
+
+    .case-step[hidden] { display: none; }
+
+    .case-step p {
+      color: #cbd5e1;
+      font-size: 0.93rem;
+      line-height: 1.5;
+    }
+
+    .case-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .case-method {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    @media (min-width: 1450px) and (min-height: 860px) {
+      .viewer-panel { min-height: 780px; }
+      #scene-shell { min-height: 590px; }
+      .range-list { gap: 14px; }
+    }
+
+    @media (max-width: 1050px) {
+      main.dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas: "visual" "controls" "relations" "case";
+        min-height: 0;
+      }
+      .viewer-panel { min-height: 560px; }
+      .control-panel { gap: 14px; }
+      .range-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
+      .scale-note { margin-top: 0; }
+      .panel-head-actions { width: 100%; justify-items: start; display: flex; align-items: center; flex-wrap: wrap; }
+      .camera-presets { max-width: 100%; flex-wrap: wrap; }
+      .relationship-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .axis-label {
+        width: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        height: 36px;
+        padding: 4px;
+        border-radius: 50%;
+        font-size: 0.82rem;
+      }
+      .axis-label > span:not(.axis-label-number) { display: none; }
+      .axis-label-number { margin: 0; font-size: 0.82rem; }
+    }
+
+    @media (max-width: 620px) {
+      .app-shell { padding: 14px; }
+      .app-header { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .header-actions { width: 100%; align-items: stretch; flex-direction: column; }
+      .header-tag { align-self: flex-start; }
+      .eyebrow { font-size: 0.82rem; letter-spacing: 0.08em; }
+      .header-tag { min-height: 40px; padding: 7px 9px; font-size: 0.82rem; }
+      .coupling-toggle { justify-content: space-between; min-height: 56px; }
+      h1 { font-size: 1.8rem; }
+      .subtitle { max-width: 34ch; font-size: 0.92rem; }
+      .viewer-panel { min-height: 485px; padding: 12px; }
+      .panel-head h2,
+      .control-head h2 { font-size: 1.14rem; }
+      .panel-head-actions { width: 100%; align-items: stretch; flex-direction: column; }
+      .camera-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+      .camera-preset { min-width: 0; padding: 7px 4px; font-size: 0.82rem; }
+      .camera-full { display: none; }
+      .camera-short { display: inline; }
+      #scene-shell { min-height: 365px; }
+      .plot-badge { display: none; }
+      .viewer-footer { align-items: flex-start; flex-direction: column; }
+      .viewer-hint { text-align: left; }
+      .control-panel { padding: 14px; }
+      .control-head { flex-wrap: wrap; }
+      .demo-controls-head,
+      .demo-controls-foot { align-items: stretch; flex-direction: column; }
+      .demo-select,
+      .demo-replay { width: 100%; max-width: none; }
+      .range-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+      .range-row { padding-bottom: 8px; }
+      .goal-label { font-size: 0.95rem; }
+      .relationship-list { grid-template-columns: minmax(0, 1fr); }
+      .relationship-row { grid-template-columns: 20px minmax(0, 1fr) auto; }
+      .case-actions { align-items: stretch; flex-direction: column; }
+      .case-next { width: 100%; }
+      .app-footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="title-copy">
+        <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> VW · Wirtschaftspolitik · HBBK Oberhausen</div>
+        <h1>Das magische Sechseck</h1>
+        <p class="subtitle">Sechs wirtschaftspolitische Ziele im 3D-Vergleich.</p>
+      </div>
+      <div class="header-actions">
+        <div class="header-tag">Interaktives 3D-Dashboard</div>
+        <label class="coupling-toggle" for="coupling-enabled">
+          <span class="coupling-copy">
+            <strong>Realistische Zielkonflikte</strong>
+            <small>Koppelung · didaktisches Modell</small>
+          </span>
+          <input class="coupling-input" id="coupling-enabled" type="checkbox" role="switch" checked aria-describedby="coupling-summary">
+          <span class="coupling-track" aria-hidden="true"><span class="coupling-knob"></span></span>
+          <span class="coupling-state" id="coupling-state">AN</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel viewer-panel" aria-labelledby="reference-title">
+        <div class="panel-head">
+          <div>
+            <span class="section-kicker">Referenzmodell</span>
+            <h2 id="reference-title">Der Soll-Zustand</h2>
+          </div>
+          <div class="panel-head-actions">
+            <div class="scale-chip">Soll-Achsen · 0–100</div>
+            <div class="camera-presets" role="group" aria-label="Kameraansicht auswählen">
+              <button class="camera-preset" id="view-perspective" type="button" data-camera="perspective" aria-pressed="true">3D-Perspektive</button>
+              <button class="camera-preset" id="view-top" type="button" data-camera="top" aria-label="Draufsicht (Klassisches Radar)" title="Draufsicht (Klassisches Radar)" aria-pressed="false"><span class="camera-full">Draufsicht (Klassisches Radar)</span><span class="camera-short">Draufsicht</span></button>
+              <button class="camera-preset" id="view-side" type="button" data-camera="side" aria-pressed="false">Seitenprofil</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="scene-shell" aria-label="Drehbares 3D-Modell mit sechs gleichmäßig verteilten wirtschaftspolitischen Zielen">
+          <div id="three-root" aria-hidden="true"></div>
+          <div id="label-layer" aria-hidden="true"></div>
+          <div class="plot-badge" aria-hidden="true">
+            <span class="legend-key"><i class="legend-mark is-target"></i>Soll · 100</span>
+            <span class="legend-key"><i class="legend-mark"></i>Ist-Profil</span>
+          </div>
+          <div id="load-status" role="status" aria-live="polite">Three.js wird geladen …</div>
+        </div>
+
+        <div class="viewer-footer">
+          <div class="legend" aria-label="Legende">
+            <span class="legend-key"><i class="legend-mark is-target"></i>Soll-Raster in 20er-Schritten</span>
+            <span class="legend-key"><i class="legend-mark"></i>Einstellbares Ist-Profil</span>
+          </div>
+          <p class="viewer-hint">Ziehen oder wischen: drehen · Mausrad oder Pinch: zoomen</p>
+        </div>
+      </section>
+
+      <aside class="panel control-panel" aria-labelledby="profile-title">
+        <div class="control-head">
+          <div>
+            <span class="section-kicker">Vergleich</span>
+            <h2 id="profile-title">Ist-Profil anpassen</h2>
+          </div>
+          <button class="button reset-button" id="reset-values" type="button">Alle auf Soll</button>
+        </div>
+
+        <p class="control-intro">Ziehe einen Regler. Das Polygon im Modell folgt sofort.</p>
+
+        <section class="demo-controls" aria-labelledby="demo-label">
+          <div class="demo-controls-head">
+            <label class="demo-label" id="demo-label" for="demo-mode">Demo-Modus</label>
+            <select class="demo-select" id="demo-mode" aria-describedby="demo-status">
+              <option value="manual">Manuell</option>
+              <option value="overheating">Konjunkturüberhitzung (Boom &amp; Inflation)</option>
+              <option value="green-transition">Grüne Transformation</option>
+              <option value="stagflation">Stagflation / Preisschock</option>
+            </select>
+          </div>
+          <div class="demo-controls-foot">
+            <p class="demo-status" id="demo-status" role="status" aria-live="polite">Wähle eines der drei Szenarien; alle Zielwerte sind illustrative Profile.</p>
+            <button class="button demo-replay" id="demo-replay" type="button" disabled>Wiederholen</button>
+          </div>
+        </section>
+
+        <div class="range-list" id="range-list">
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">01</span><label class="goal-label" for="goal-0">Vollbeschäftigung</label></div>
+            <div class="range-bottom"><input id="goal-0" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-0" for="goal-0">100%</output></div>
+          </div>
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">02</span><label class="goal-label" for="goal-1">Preisstabilität</label></div>
+            <div class="range-bottom"><input id="goal-1" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-1" for="goal-1">100%</output></div>
+          </div>
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">03</span><label class="goal-label" for="goal-2">Außenwirtschaftliches Gleichgewicht</label></div>
+            <div class="range-bottom"><input id="goal-2" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-2" for="goal-2">100%</output></div>
+          </div>
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">04</span><label class="goal-label" for="goal-3">Wirtschaftswachstum</label></div>
+            <div class="range-bottom"><input id="goal-3" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-3" for="goal-3">100%</output></div>
+          </div>
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">05</span><label class="goal-label" for="goal-4">Umweltschutz</label></div>
+            <div class="range-bottom"><input id="goal-4" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-4" for="goal-4">100%</output></div>
+          </div>
+          <div class="range-row">
+            <div class="range-top"><span class="goal-number">06</span><label class="goal-label" for="goal-5">Gerechte Einkommensverteilung</label></div>
+            <div class="range-bottom"><input id="goal-5" type="range" min="0" max="100" step="1" value="100" aria-describedby="scale-description"><output class="range-output" id="value-5" for="goal-5">100%</output></div>
+          </div>
+        </div>
+
+        <div class="scale-note" id="scale-description" role="note">
+          <strong>Zur Skala</strong>
+          <p>Die sechs Ziele haben unterschiedliche Messgrößen. Die Reglerwerte sind ein frei einstellbares Vergleichsmodell, keine amtliche Messskala.</p>
+        </div>
+      </aside>
+
+      <section class="panel relationship-panel" aria-labelledby="relationships-title">
+        <div class="relationship-head">
+          <div>
+            <span class="section-kicker">Beziehungsnetz</span>
+            <h2 id="relationships-title">Zielharmonie &amp; Konflikt</h2>
+          </div>
+          <span class="model-badge">Illustrativ · Modellannahme</span>
+        </div>
+        <div class="relationship-list" id="relationship-list" aria-live="polite">
+          <div class="relationship-row" id="relation-growth-jobs" data-state="neutral">
+            <span class="relationship-swatch" aria-hidden="true"></span>
+            <span class="relationship-copy"><strong>Wachstum ↔ Beschäftigung</strong><small id="relation-growth-jobs-copy">Beziehung aus dem Ist-Profil.</small></span>
+            <span class="relationship-state" id="relation-growth-jobs-state">—</span>
+          </div>
+          <div class="relationship-row" id="relation-growth-prices" data-state="neutral">
+            <span class="relationship-swatch" aria-hidden="true"></span>
+            <span class="relationship-copy"><strong>Wachstum ↔ Preisstabilität</strong><small id="relation-growth-prices-copy">Kein akuter Konflikt.</small></span>
+            <span class="relationship-state" id="relation-growth-prices-state">—</span>
+          </div>
+          <div class="relationship-row" id="relation-growth-environment" data-state="neutral">
+            <span class="relationship-swatch" aria-hidden="true"></span>
+            <span class="relationship-copy"><strong>Wachstum ↔ Umweltschutz</strong><small id="relation-growth-environment-copy">Kein akuter Konflikt.</small></span>
+            <span class="relationship-state" id="relation-growth-environment-state">—</span>
+          </div>
+        </div>
+        <p class="relationship-note" id="coupling-summary">Kopplung AN: Δ Wachstum +10 → Beschäftigung +4, Preisstabilität −5, Umweltschutz −3. Vereinfachtes Modell.</p>
+      </section>
+
+      <section class="panel case-panel" id="case-panel" aria-labelledby="case-title" hidden>
+        <div class="case-head">
+          <div>
+            <span class="section-kicker">Fallkarte · Lernfall Oberhausen</span>
+            <h2 id="case-title">—</h2>
+          </div>
+          <span class="case-badge">Didaktisch konstruiert</span>
+        </div>
+        <div class="case-situation">
+          <span class="case-step-label">Situation</span>
+          <p id="case-situation"></p>
+        </div>
+        <ol class="case-steps">
+          <li class="case-step" id="case-step-prognosis" hidden>
+            <span class="case-step-label">1 · Prognose</span>
+            <p id="case-prognosis"></p>
+          </li>
+          <li class="case-step" id="case-step-task" hidden>
+            <span class="case-step-label">2 · Erkundungsauftrag</span>
+            <p id="case-task"></p>
+          </li>
+          <li class="case-step" id="case-step-securing" hidden>
+            <span class="case-step-label">3 · Sicherung</span>
+            <p id="case-securing"></p>
+          </li>
+        </ol>
+        <div class="case-actions">
+          <button class="button case-next" id="case-next" type="button" aria-controls="case-step-prognosis case-step-task case-step-securing">Prognose aufdecken</button>
+          <span class="case-method" id="case-method">Methode: —</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span><strong>Magisches Sechseck</strong> · Soll und Ist im Vergleich</span>
+      <span>Startzustand: alle sechs Regler auf 100&nbsp;%</span>
+    </footer>
+  </div>
+
+  <script type="module">
+    window.HBBK = { version: "1.0", art: "lernseite" };
+    const status = document.getElementById("load-status");
+
+    async function startVisualization() {
+      try {
+        const THREE = await import("three");
+        const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+        const { CSS2DRenderer, CSS2DObject } = await import("three/addons/renderers/CSS2DRenderer.js");
+        if (!window.gsap || typeof window.gsap.timeline !== "function") {
+          throw new Error("GSAP konnte nicht geladen werden.");
+        }
+        initialize(THREE, OrbitControls, CSS2DRenderer, CSS2DObject);
+      } catch (error) {
+        status.classList.add("is-error");
+        status.textContent = "3D-Modell oder Demo-Animation konnten nicht geladen werden. Prüfe die Internetverbindung und lade die Datei erneut.";
+        console.error("Three.js oder GSAP konnte nicht geladen werden:", error);
+      }
+    }
+
+    function initialize(THREE, OrbitControls, CSS2DRenderer, CSS2DObject) {
+      const shell = document.getElementById("scene-shell");
+      const sceneRoot = document.getElementById("three-root");
+      const labelRoot = document.getElementById("label-layer");
+      const axisLabelObjects = [];
+      const controlsInputs = Array.from(document.querySelectorAll("#range-list input[type='range']"));
+      const outputs = controlsInputs.map((input, index) => document.getElementById("value-" + index));
+      const goals = [
+        "Vollbeschäftigung",
+        "Preisstabilität",
+        "Außenwirtschaftliches Gleichgewicht",
+        "Wirtschaftswachstum",
+        "Umweltschutz",
+        "Gerechte\nEinkommensverteilung"
+      ];
+      const radius = 3.55;
+      const scene = new THREE.Scene();
+      scene.background = null;
+      scene.add(new THREE.AmbientLight("#cbd5e1", 1.25));
+
+      const spotLight = new THREE.SpotLight("#cffafe", 8, 36, Math.PI / 3, 0.82, 1.35);
+      spotLight.position.set(1.8, 10, 4.5);
+      spotLight.target.position.set(0, 0, 0);
+      spotLight.castShadow = true;
+      spotLight.shadow.mapSize.set(1024, 1024);
+      spotLight.shadow.camera.near = 0.5;
+      spotLight.shadow.camera.far = 32;
+      spotLight.shadow.bias = -0.00025;
+      spotLight.shadow.normalBias = 0.025;
+      spotLight.shadow.radius = 4;
+      scene.add(spotLight, spotLight.target);
+
+      const shadowReceiver = new THREE.Mesh(
+        new THREE.PlaneGeometry(13, 13),
+        new THREE.ShadowMaterial({ color: "#020617", opacity: 0.34 })
+      );
+      shadowReceiver.rotation.x = -Math.PI / 2;
+      shadowReceiver.position.y = -0.14;
+      shadowReceiver.receiveShadow = true;
+      shadowReceiver.renderOrder = -1;
+      scene.add(shadowReceiver);
+
+      const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+      const cameraTarget = new THREE.Vector3(0, 1.05, 0);
+      const cameraPresetOffsets = {
+        perspective: new THREE.Vector3(11.5, 16.5, 12.5),
+        top: new THREE.Vector3(0, 22, 0.02),
+        side: new THREE.Vector3(0, 5.5, 17.5)
+      };
+      let selectedCameraPreset = "perspective";
+      let compactView = null;
+      camera.position.copy(cameraTarget).add(cameraPresetOffsets.perspective);
+      camera.lookAt(cameraTarget);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor("#0f172a", 0);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.domElement.setAttribute("aria-label", "3D-Darstellung des Soll-Sechsecks und des einstellbaren Ist-Profils");
+      renderer.domElement.setAttribute("role", "img");
+      sceneRoot.appendChild(renderer.domElement);
+
+      const labelRenderer = new CSS2DRenderer();
+      labelRenderer.domElement.style.position = "absolute";
+      labelRenderer.domElement.style.inset = "0";
+      labelRenderer.domElement.style.pointerEvents = "none";
+      labelRenderer.domElement.setAttribute("aria-hidden", "true");
+      labelRoot.appendChild(labelRenderer.domElement);
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const orbit = new OrbitControls(camera, renderer.domElement);
+      orbit.target.copy(cameraTarget);
+      orbit.enableDamping = !reducedMotion;
+      orbit.dampingFactor = 0.075;
+      orbit.enableRotate = true;
+      orbit.enableZoom = true;
+      orbit.enablePan = false;
+      orbit.minDistance = 4.2;
+      orbit.maxDistance = 42;
+      orbit.minPolarAngle = 0;
+      orbit.maxPolarAngle = Math.PI;
+      orbit.saveState();
+
+      const axisKeys = ["employment", "priceStability", "tradeBalance", "growth", "environment", "distribution"];
+      const HEIGHT_SCALE = 1.8;
+      const LOW_COLOR = new THREE.Color("#fb7185");
+      const WARM_COLOR = new THREE.Color("#f97316");
+      const MID_COLOR = new THREE.Color("#10b981");
+      const HIGH_COLOR = new THREE.Color("#06b6d4");
+      const WORLD_UP = new THREE.Vector3(0, 1, 0);
+      const WORLD_NORMAL = new THREE.Vector3(0, 0, 1);
+      const transformHelper = new THREE.Object3D();
+
+      function clamp(value, min = 0, max = 100) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function colorForValue(value) {
+        const v = clamp(value);
+        if (v < 40) return LOW_COLOR.clone().lerp(WARM_COLOR, v / 40);
+        if (v < 80) return WARM_COLOR.clone().lerp(MID_COLOR, (v - 40) / 40);
+        return MID_COLOR.clone().lerp(HIGH_COLOR, (v - 80) / 20);
+      }
+
+      function pointAt(axis, value, extraHeight = 0) {
+        const normalized = clamp(value) / 100;
+        const angle = axis * Math.PI / 3;
+        const distance = radius * normalized;
+        return new THREE.Vector3(
+          Math.cos(angle) * distance,
+          normalized * HEIGHT_SCALE + extraHeight,
+          Math.sin(angle) * distance
+        );
+      }
+
+      function placeSegment(mesh, start, end) {
+        const direction = end.clone().sub(start);
+        const length = direction.length();
+        if (length < 0.0001) {
+          mesh.visible = false;
+          return false;
+        }
+        mesh.visible = true;
+        mesh.position.copy(start).add(end).multiplyScalar(0.5);
+        mesh.quaternion.setFromUnitVectors(WORLD_UP, direction.normalize());
+        mesh.scale.set(1, length, 1);
+        return true;
+      }
+
+      function setInstanceSegment(mesh, index, start, end, thickness = 1) {
+        const direction = end.clone().sub(start);
+        const length = direction.length();
+        transformHelper.position.copy(start).add(end).multiplyScalar(0.5);
+        if (length < 0.0001) {
+          transformHelper.scale.set(0, 0, 0);
+          transformHelper.updateMatrix();
+          mesh.setMatrixAt(index, transformHelper.matrix);
+          return;
+        }
+        transformHelper.quaternion.setFromUnitVectors(WORLD_UP, direction.normalize());
+        transformHelper.scale.set(thickness, length, thickness);
+        transformHelper.updateMatrix();
+        mesh.setMatrixAt(index, transformHelper.matrix);
+      }
+
+      function buildPolarGrid() {
+        const floorY = -0.145;
+        const rings = 13;
+        const segments = 72;
+        for (let ring = 1; ring <= rings; ring += 1) {
+          const radiusAtRing = ring * 0.44;
+          const points = [];
+          for (let segment = 0; segment < segments; segment += 1) {
+            const angle = segment / segments * Math.PI * 2;
+            points.push(new THREE.Vector3(Math.cos(angle) * radiusAtRing, floorY, Math.sin(angle) * radiusAtRing));
+          }
+          const fade = Math.pow(1 - ring / (rings + 1), 1.35);
+          const material = new THREE.LineBasicMaterial({
+            color: "#0e7490",
+            transparent: true,
+            opacity: 0.48 * fade,
+            depthWrite: false
+          });
+          scene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(points), material));
+        }
+
+        const spokeCount = 24;
+        for (let spoke = 0; spoke < spokeCount; spoke += 1) {
+          const angle = spoke / spokeCount * Math.PI * 2;
+          const endRadius = rings * 0.44;
+          const spokeLine = new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints([
+              new THREE.Vector3(0, floorY, 0),
+              new THREE.Vector3(Math.cos(angle) * endRadius, floorY, Math.sin(angle) * endRadius)
+            ]),
+            new THREE.LineBasicMaterial({ color: "#0e7490", transparent: true, opacity: 0.13, depthWrite: false })
+          );
+          scene.add(spokeLine);
+        }
+      }
+
+      buildPolarGrid();
+
+      const axisRods = new THREE.InstancedMesh(
+        new THREE.CylinderGeometry(0.012, 0.02, 1, 8),
+        new THREE.MeshStandardMaterial({ color: "#0891b2", emissive: "#0e7490", emissiveIntensity: 0.22, roughness: 0.34, metalness: 0.18 }),
+        goals.length
+      );
+      const markerValues = [20, 40, 60, 80, 100];
+      const axisMarkers = new THREE.InstancedMesh(
+        new THREE.TorusGeometry(0.055, 0.008, 6, 16),
+        new THREE.MeshBasicMaterial({ color: "#06b6d4", transparent: true, opacity: 0.86, blending: THREE.AdditiveBlending, depthWrite: false }),
+        goals.length * markerValues.length
+      );
+
+      const targetVertices = goals.map((_, axis) => pointAt(axis, 100));
+      const targetWire = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints(targetVertices),
+        new THREE.LineDashedMaterial({ color: "#67e8f9", dashSize: 0.2, gapSize: 0.12, transparent: true, opacity: 0.82 })
+      );
+      targetWire.computeLineDistances();
+      scene.add(targetWire);
+
+      goals.forEach((goal, axis) => {
+        const end = pointAt(axis, 100);
+        setInstanceSegment(axisRods, axis, new THREE.Vector3(0, 0, 0), end);
+        const direction = end.clone().normalize();
+        markerValues.forEach((value, markerIndex) => {
+          const instanceIndex = axis * markerValues.length + markerIndex;
+          const point = pointAt(axis, value);
+          transformHelper.position.copy(point);
+          transformHelper.quaternion.setFromUnitVectors(WORLD_NORMAL, direction);
+          transformHelper.scale.set(1, 1, 1);
+          transformHelper.updateMatrix();
+          axisMarkers.setMatrixAt(instanceIndex, transformHelper.matrix);
+          axisMarkers.setColorAt(instanceIndex, new THREE.Color("#0e7490").lerp(HIGH_COLOR, value / 100));
+        });
+
+        const label = document.createElement("div");
+        label.className = "axis-label";
+        const number = document.createElement("span");
+        number.className = "axis-label-number";
+        number.textContent = String(axis + 1).padStart(2, "0");
+        const name = document.createElement("span");
+        name.textContent = goal;
+        label.append(number, name);
+        const labelObject = new CSS2DObject(label);
+        labelObject.position.copy(pointAt(axis, 100, 0.16).add(direction.clone().multiplyScalar(0.55)));
+        scene.add(labelObject);
+        axisLabelObjects.push(labelObject);
+      });
+      axisRods.instanceMatrix.needsUpdate = true;
+      axisMarkers.instanceMatrix.needsUpdate = true;
+      if (axisMarkers.instanceColor) axisMarkers.instanceColor.needsUpdate = true;
+      scene.add(axisRods, axisMarkers);
+
+      const corePulse = new THREE.Mesh(
+        new THREE.SphereGeometry(0.12, 18, 14),
+        new THREE.MeshBasicMaterial({ color: "#67e8f9", transparent: true, opacity: 0.68, blending: THREE.AdditiveBlending, depthWrite: false })
+      );
+      const coreLight = new THREE.PointLight("#22d3ee", 1.2, 4.5, 2);
+      corePulse.position.set(0, 0.8, 0);
+      coreLight.position.set(0, 1.1, 0);
+      scene.add(corePulse, coreLight);
+
+      if (!reducedMotion) {
+        window.gsap.to(corePulse.scale, { x: 1.7, y: 1.7, z: 1.7, duration: 1.7, ease: "sine.inOut", repeat: -1, yoyo: true });
+        window.gsap.to(corePulse.material, { opacity: 0.22, duration: 1.7, ease: "sine.inOut", repeat: -1, yoyo: true });
+        window.gsap.to(coreLight, { intensity: 0.55, duration: 1.7, ease: "sine.inOut", repeat: -1, yoyo: true });
+      }
+
+      const fillPositions = new Float32Array((goals.length + 1) * 3);
+      const fillColors = new Float32Array((goals.length + 1) * 3);
+      const fillGeometry = new THREE.BufferGeometry();
+      fillGeometry.setAttribute("position", new THREE.BufferAttribute(fillPositions, 3));
+      fillGeometry.setAttribute("color", new THREE.BufferAttribute(fillColors, 3));
+      const fillIndices = [];
+      for (let axis = 0; axis < goals.length; axis += 1) {
+        fillIndices.push(0, axis + 1, ((axis + 1) % goals.length) + 1);
+      }
+      fillGeometry.setIndex(fillIndices);
+
+      const profileFill = new THREE.Mesh(
+        fillGeometry,
+        new THREE.MeshPhysicalMaterial({
+          color: "#ffffff",
+          vertexColors: true,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.54,
+          roughness: 0.2,
+          metalness: 0.2,
+          clearcoat: 0.78,
+          clearcoatRoughness: 0.15,
+          emissive: "#062d3b",
+          emissiveIntensity: 0.16,
+          depthWrite: false
+        })
+      );
+      profileFill.renderOrder = 2;
+      profileFill.castShadow = true;
+      profileFill.receiveShadow = true;
+      scene.add(profileFill);
+
+      const profileEdges = new THREE.InstancedMesh(
+        new THREE.CylinderGeometry(0.018, 0.018, 1, 8),
+        new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.94, blending: THREE.AdditiveBlending, depthWrite: false }),
+        goals.length
+      );
+      profileEdges.renderOrder = 4;
+      scene.add(profileEdges);
+
+      const profileEdgeGlow = new THREE.InstancedMesh(
+        new THREE.CylinderGeometry(0.064, 0.064, 1, 8),
+        new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false }),
+        goals.length
+      );
+      profileEdgeGlow.renderOrder = 3;
+      scene.add(profileEdgeGlow);
+
+      const dotGeometry = new THREE.SphereGeometry(0.075, 14, 10);
+      const profileDots = goals.map(() => {
+        const dot = new THREE.Mesh(
+          dotGeometry,
+          new THREE.MeshStandardMaterial({ color: "#06b6d4", emissive: "#0e7490", emissiveIntensity: 0.24, roughness: 0.34, metalness: 0.16 })
+        );
+        dot.castShadow = true;
+        dot.receiveShadow = true;
+        scene.add(dot);
+        return dot;
+      });
+
+      const demoMode = document.getElementById("demo-mode");
+      const demoReplay = document.getElementById("demo-replay");
+      const demoStatus = document.getElementById("demo-status");
+      const couplingToggle = document.getElementById("coupling-enabled");
+      const couplingState = document.getElementById("coupling-state");
+      const couplingSummary = document.getElementById("coupling-summary");
+      const cameraButtons = Array.from(document.querySelectorAll(".camera-preset"));
+      const casePanel = document.getElementById("case-panel");
+      const caseTitle = document.getElementById("case-title");
+      const caseSituation = document.getElementById("case-situation");
+      const casePrognosis = document.getElementById("case-prognosis");
+      const caseTask = document.getElementById("case-task");
+      const caseSecuring = document.getElementById("case-securing");
+      const caseMethod = document.getElementById("case-method");
+      const caseNext = document.getElementById("case-next");
+      const caseSteps = Array.from(document.querySelectorAll(".case-step"));
+      const caseStepActions = ["Prognose aufdecken", "Auftrag aufdecken", "Sicherung aufdecken"];
+      const scenarioProfiles = {
+        overheating: {
+          title: "Konjunkturüberhitzung (Boom & Inflation)",
+          status: "Boom: Wachstum und Beschäftigung hoch; Preisstabilität und Umweltschutz unter Druck.",
+          values: [92, 28, 55, 94, 40, 55]
+        },
+        "green-transition": {
+          title: "Grüne Transformation",
+          status: "Das Umweltziel steigt; kurzfristiges Wachstum bleibt im Beispiel zurück.",
+          values: [70, 68, 60, 52, 92, 72]
+        },
+        stagflation: {
+          title: "Stagflation / Preisschock",
+          status: "Schwaches Wachstum trifft auf niedrige Preisstabilität.",
+          values: [32, 22, 40, 28, 62, 45]
+        }
+      };
+      const caseProfiles = {
+        overheating: {
+          title: "Logistikzentrum bringt Boom",
+          situation: "Der Stadtrat hat das Logistikzentrum genehmigt: viele neue Arbeitsplätze, sprudelnde Gewerbesteuer – aber Mieten und Preise in Oberhausen steigen, und der Verkehr nimmt zu.",
+          prognosis: "Was erwartest du im Modell, wenn Beschäftigung und Wachstum steigen? Schätze zuerst, bevor die Animation startet.",
+          task: "Wähle das Szenario und beobachte die roten Linien: Welche zwei Zielpaare geraten unter Druck? Benenne sie mit Fachbegriffen.",
+          securing: "Wer profitiert vom Boom, wer trägt die Kosten? Nimm kurz Stellung und begründe.",
+          method: "Think-Pair-Share"
+        },
+        "green-transition": {
+          title: "Solarpark gegen kurzfristige Gewerbesteuer",
+          situation: "Oberhausen fördert den Solarpark: langfristig sauberer und attraktiver – kurzfristig fallen jedoch Gewerbeflächen und Steuereinnahmen weg, und manche Betriebe zögern mit Investitionen.",
+          prognosis: "Was passiert mit Wachstum und Umweltschutz? Vermute, welche Linie rot wird.",
+          task: "Wähle das Szenario und erkläre mit dem Modell, warum Umweltschutz und kurzfristiges Wachstum auseinanderlaufen.",
+          securing: "Ist der kurzfristige Verzicht ein Zielkonflikt oder eine Investition? Begründe mit zwei Argumenten.",
+          method: "Denk-Werkzeug (3 Fragen)"
+        },
+        stagflation: {
+          title: "Energiepreisschock trifft Betriebe und Haushalte",
+          situation: "Die Energiepreise steigen stark: Betriebe drosseln die Produktion, Haushalte sparen – doch die Preise bleiben hoch. In Oberhausen sorgen sich Beschäftigte um ihre Jobs.",
+          prognosis: "Was erwartest du bei Wachstum, Beschäftigung und Preisstabilität? Schätze alle drei, bevor du startest.",
+          task: "Wähle das Szenario, erkläre die SCHOCK-Linie und vergleiche: Was ändert sich, wenn die Kopplung ausgeschaltet ist?",
+          securing: "Warum ist Stagflation wirtschaftspolitisch besonders schwierig? Formuliere einen Satz für die Ratssitzung.",
+          method: "Vier-Ecken"
+        }
+      };
+      const profileState = Object.fromEntries(axisKeys.map((key, index) => [key, Number(controlsInputs[index].value)]));
+      let activeScenarioTween = null;
+      let couplingTween = null;
+      let cameraTween = null;
+
+      function stateFromValues(values) {
+        return Object.fromEntries(axisKeys.map((key, index) => [key, values[index]]));
+      }
+
+      function valuesFromState(state) {
+        return axisKeys.map((key) => state[key]);
+      }
+
+      function readProfile() {
+        return valuesFromState(profileState);
+      }
+
+      function createRelationshipLink() {
+        const core = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.018, 0.018, 1, 8),
+          new THREE.MeshBasicMaterial({ color: "#fb7185", transparent: true, opacity: 0.92, blending: THREE.AdditiveBlending, depthWrite: false })
+        );
+        const halo = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.07, 0.07, 1, 8),
+          new THREE.MeshBasicMaterial({ color: "#fb7185", transparent: true, opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false })
+        );
+        core.visible = false;
+        halo.visible = false;
+        scene.add(halo, core);
+        return { core, halo, pulse: null, state: "neutral" };
+      }
+
+      const relationshipLinks = {
+        growthJobs: createRelationshipLink(),
+        growthPrices: createRelationshipLink(),
+        growthEnvironment: createRelationshipLink()
+      };
+
+      function setRelationshipRow(id, state, detail, badge) {
+        const row = document.getElementById(id);
+        row.dataset.state = state;
+        row.classList.toggle("is-harmony", state === "harmony");
+        row.classList.toggle("is-conflict", state === "conflict");
+        const description = row.querySelector("small");
+        const stateLabel = row.querySelector(".relationship-state");
+        if (description.textContent !== detail) description.textContent = detail;
+        if (stateLabel.textContent !== badge) stateLabel.textContent = badge;
+      }
+
+      function setRelationshipLine(link, state, start, end) {
+        const coreValid = placeSegment(link.core, start, end);
+        const haloValid = placeSegment(link.halo, start, end);
+        if (state === "neutral" || !coreValid || !haloValid) {
+          if (link.pulse) { link.pulse.kill(); link.pulse = null; }
+          link.state = "neutral";
+          link.core.visible = false;
+          link.halo.visible = false;
+          return;
+        }
+
+        if (link.state !== state && link.pulse) { link.pulse.kill(); link.pulse = null; }
+        link.state = state;
+        const color = state === "harmony" ? "#34d399" : "#fb7185";
+        link.core.material.color.set(color);
+        link.halo.material.color.set(color);
+        link.core.material.opacity = 0.94;
+        link.core.visible = true;
+        link.halo.visible = true;
+
+        if (state === "conflict" && !reducedMotion) {
+          if (!link.pulse) {
+            link.halo.material.opacity = 0.1;
+            link.pulse = window.gsap.to(link.halo.material, {
+              opacity: 0.42,
+              duration: 0.62,
+              ease: "sine.inOut",
+              repeat: -1,
+              yoyo: true
+            });
+          }
+        } else {
+          if (link.pulse) { link.pulse.kill(); link.pulse = null; }
+          link.halo.material.opacity = state === "harmony" ? 0.2 : 0.18;
+        }
+      }
+
+      function updateRelationships(values, vertices) {
+        const employment = values[0];
+        const priceStability = values[1];
+        const growth = values[3];
+        const environment = values[4];
+        const harmony = growth >= 65 && employment >= 65;
+        const stagflationStress = growth <= 35 && priceStability <= 30;
+        const priceConflict = (growth >= 70 && priceStability <= 45) || stagflationStress;
+        const environmentConflict = Math.abs(growth - environment) >= 25;
+
+        const jobsState = harmony ? "harmony" : "neutral";
+        setRelationshipRow("relation-growth-jobs", jobsState,
+          harmony ? "Beide Ziele erreichen im Modell hohe Werte." : "Beide Ziele liegen nicht gleichzeitig im hohen Bereich.",
+          harmony ? "HARMONIE" : "NEUTRAL");
+        setRelationshipLine(relationshipLinks.growthJobs, jobsState, vertices[3], vertices[0]);
+
+        const priceState = priceConflict ? "conflict" : "neutral";
+        const priceDetail = stagflationStress
+          ? "Preisschock und schwaches Wachstum belasten beide Ziele."
+          : priceConflict
+            ? "Boom-Wachstum trifft auf niedrige Preisstabilität."
+            : "Kein akuter Konflikt nach den Modellschwellen.";
+        setRelationshipRow("relation-growth-prices", priceState, priceDetail,
+          stagflationStress ? "SCHOCK" : priceConflict ? "KONFLIKT" : "NEUTRAL");
+        setRelationshipLine(relationshipLinks.growthPrices, priceState, vertices[3], vertices[1]);
+
+        const environmentState = environmentConflict ? "conflict" : "neutral";
+        const environmentDetail = environmentConflict
+          ? environment > growth
+            ? "Das Umweltziel liegt deutlich über dem Wachstumswert."
+            : "Hohes Wachstum liegt deutlich über dem Umweltziel."
+          : "Wachstum und Umweltschutz liegen nahe beieinander.";
+        setRelationshipRow("relation-growth-environment", environmentState, environmentDetail,
+          environmentConflict ? "KONFLIKT" : "NEUTRAL");
+        setRelationshipLine(relationshipLinks.growthEnvironment, environmentState, vertices[3], vertices[4]);
+      }
+
+      function drawProfile(values) {
+        const bounded = values.map((value) => clamp(Number(value) || 0));
+        const vertices = bounded.map((value, axis) => pointAt(axis, value));
+        const average = bounded.reduce((sum, value) => sum + value, 0) / goals.length;
+        const averageRatio = average / 100;
+        const apexY = averageRatio * (HEIGHT_SCALE + 0.45);
+        const apexColor = colorForValue(average);
+
+        fillPositions[0] = 0;
+        fillPositions[1] = apexY;
+        fillPositions[2] = 0;
+        fillColors[0] = apexColor.r;
+        fillColors[1] = apexColor.g;
+        fillColors[2] = apexColor.b;
+        bounded.forEach((value, axis) => {
+          const point = vertices[axis];
+          const offset = (axis + 1) * 3;
+          fillPositions[offset] = point.x;
+          fillPositions[offset + 1] = point.y;
+          fillPositions[offset + 2] = point.z;
+          const color = colorForValue(value);
+          fillColors[offset] = color.r;
+          fillColors[offset + 1] = color.g;
+          fillColors[offset + 2] = color.b;
+
+          const cssColor = "#" + color.getHexString();
+          const displayed = Math.round(value);
+          const input = controlsInputs[axis];
+          input.value = String(displayed);
+          input.setAttribute("aria-valuetext", displayed + " Prozent");
+          input.style.setProperty("--range-color", cssColor);
+          input.style.setProperty("--range-progress", value + "%");
+          const row = input.closest(".range-row");
+          row.style.setProperty("--range-color", cssColor);
+          row.querySelector(".goal-label").style.color = cssColor;
+          outputs[axis].style.color = cssColor;
+          outputs[axis].textContent = displayed + "%";
+          profileDots[axis].position.copy(point);
+          profileDots[axis].visible = value > 0;
+          profileDots[axis].material.color.copy(color);
+          profileDots[axis].material.emissive.copy(color).multiplyScalar(0.24);
+
+          const nextAxis = (axis + 1) % goals.length;
+          const edgeColor = color.clone().lerp(colorForValue(bounded[nextAxis]), 0.5);
+          setInstanceSegment(profileEdges, axis, point, vertices[nextAxis]);
+          setInstanceSegment(profileEdgeGlow, axis, point, vertices[nextAxis]);
+          profileEdges.setColorAt(axis, edgeColor);
+          profileEdgeGlow.setColorAt(axis, edgeColor);
+        });
+
+        fillGeometry.getAttribute("position").needsUpdate = true;
+        fillGeometry.getAttribute("color").needsUpdate = true;
+        fillGeometry.computeVertexNormals();
+        fillGeometry.computeBoundingSphere();
+        profileEdges.instanceMatrix.needsUpdate = true;
+        profileEdgeGlow.instanceMatrix.needsUpdate = true;
+        if (profileEdges.instanceColor) profileEdges.instanceColor.needsUpdate = true;
+        if (profileEdgeGlow.instanceColor) profileEdgeGlow.instanceColor.needsUpdate = true;
+        corePulse.position.set(0, apexY + 0.14, 0);
+        coreLight.position.set(0, apexY + 0.38, 0);
+        updateRelationships(bounded, vertices);
+      }
+
+      function refreshCouplingLabel() {
+        const enabled = couplingToggle.checked;
+        couplingState.textContent = enabled ? "AN" : "AUS";
+        couplingSummary.textContent = enabled
+          ? "Kopplung AN: Δ Wachstum +10 → Beschäftigung +4, Preisstabilität −5, Umweltschutz −3. Vereinfachtes Modell."
+          : "Kopplung AUS: Jede Reglerbewegung verändert nur das gewählte Ziel.";
+      }
+
+      function updateCaseNextButton() {
+        const nextIndex = caseSteps.findIndex((step) => step.hidden);
+        if (nextIndex === -1) {
+          caseNext.disabled = true;
+          caseNext.textContent = "Alle Schritte aufgedeckt";
+        } else {
+          caseNext.disabled = false;
+          caseNext.textContent = caseStepActions[nextIndex];
+        }
+      }
+
+      function resetCaseSteps() {
+        caseSteps.forEach((step) => { step.hidden = true; });
+        updateCaseNextButton();
+      }
+
+      function revealNextCaseStep() {
+        const next = caseSteps.find((step) => step.hidden);
+        if (!next) return;
+        next.hidden = false;
+        if (!reducedMotion) {
+          window.gsap.fromTo(next, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" });
+        }
+        updateCaseNextButton();
+      }
+
+      function showCase(key) {
+        const profile = caseProfiles[key];
+        if (!profile) return;
+        caseTitle.textContent = profile.title;
+        caseSituation.textContent = profile.situation;
+        casePrognosis.textContent = profile.prognosis;
+        caseTask.textContent = profile.task;
+        caseSecuring.textContent = profile.securing;
+        caseMethod.textContent = "Methode: " + profile.method;
+        resetCaseSteps();
+        const wasHidden = casePanel.hidden;
+        casePanel.hidden = false;
+        if (!reducedMotion && wasHidden) {
+          window.gsap.fromTo(casePanel, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out" });
+        }
+      }
+
+      function hideCase() {
+        if (casePanel.hidden) return;
+        if (reducedMotion) {
+          casePanel.hidden = true;
+          return;
+        }
+        window.gsap.to(casePanel, {
+          autoAlpha: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power1.in",
+          onComplete: () => {
+            casePanel.hidden = true;
+            window.gsap.set(casePanel, { clearProps: "opacity,visibility,transform" });
+          }
+        });
+      }
+
+      function cancelToManual() {
+        if (activeScenarioTween) { activeScenarioTween.kill(); activeScenarioTween = null; }
+        if (couplingTween) { couplingTween.kill(); couplingTween = null; }
+        demoMode.value = "manual";
+        demoReplay.disabled = true;
+        demoStatus.textContent = "Manuelle Steuerung aktiv. Die Regler übernehmen das Ist-Profil.";
+        hideCase();
+      }
+
+      function startScenarioDemo(key) {
+        const scenario = scenarioProfiles[key];
+        if (!scenario) return;
+        if (activeScenarioTween) activeScenarioTween.kill();
+        if (couplingTween) { couplingTween.kill(); couplingTween = null; }
+        demoMode.value = key;
+        demoReplay.disabled = false;
+        showCase(key);
+        const baseline = stateFromValues([60, 60, 60, 60, 60, 60]);
+        const target = stateFromValues(scenario.values);
+
+        if (reducedMotion) {
+          Object.assign(profileState, target);
+          drawProfile(valuesFromState(profileState));
+          activeScenarioTween = null;
+          demoStatus.textContent = scenario.title + ": " + scenario.status + " Illustratives Beispielprofil.";
+          return;
+        }
+
+        demoStatus.textContent = scenario.title + ": Ausgangsprofil wird vorbereitet …";
+        activeScenarioTween = window.gsap.timeline({
+          onComplete: () => {
+            activeScenarioTween = null;
+            Object.assign(profileState, target);
+            drawProfile(valuesFromState(profileState));
+            demoStatus.textContent = scenario.title + ": " + scenario.status + " Illustratives Beispielprofil.";
+          }
+        });
+        activeScenarioTween.to(profileState, {
+          ...baseline,
+          duration: 0.38,
+          ease: "power1.inOut",
+          onUpdate: () => drawProfile(valuesFromState(profileState))
+        });
+        activeScenarioTween.to(profileState, {
+          ...target,
+          duration: 1.55,
+          ease: "power2.inOut",
+          onStart: () => { demoStatus.textContent = scenario.title + ": " + scenario.status; },
+          onUpdate: () => drawProfile(valuesFromState(profileState))
+        });
+      }
+
+      function applyManualSlider(index) {
+        if (activeScenarioTween || demoMode.value !== "manual") cancelToManual();
+        if (couplingTween) { couplingTween.kill(); couplingTween = null; }
+        const key = axisKeys[index];
+        const nextValue = Number(controlsInputs[index].value);
+
+        if (key === "growth" && couplingToggle.checked) {
+          const delta = nextValue - profileState.growth;
+          profileState.growth = nextValue;
+          const targets = {
+            employment: clamp(profileState.employment + delta * 0.4),
+            priceStability: clamp(profileState.priceStability - delta * 0.5),
+            environment: clamp(profileState.environment - delta * 0.3)
+          };
+          if (reducedMotion) {
+            Object.assign(profileState, targets);
+            drawProfile(valuesFromState(profileState));
+          } else {
+            couplingTween = window.gsap.to(profileState, {
+              ...targets,
+              duration: 0.72,
+              delay: 0.06,
+              ease: "elastic.out(1, 0.68)",
+              onUpdate: () => drawProfile(valuesFromState(profileState)),
+              onComplete: () => { couplingTween = null; }
+            });
+          }
+        } else {
+          profileState[key] = nextValue;
+          drawProfile(valuesFromState(profileState));
+        }
+      }
+
+      function cameraPositionFor(preset, compact = compactView) {
+        const offset = cameraPresetOffsets[preset].clone();
+        if (compact) offset.multiplyScalar(0.82);
+        return cameraTarget.clone().add(offset);
+      }
+
+      function setCameraPreset(preset) {
+        if (!cameraPresetOffsets[preset]) return;
+        selectedCameraPreset = preset;
+        cameraButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.camera === preset)));
+        if (cameraTween) { cameraTween.kill(); cameraTween = null; }
+        const targetPosition = cameraPositionFor(preset);
+        if (reducedMotion) {
+          camera.position.copy(targetPosition);
+          camera.lookAt(cameraTarget);
+          orbit.update();
+          orbit.saveState();
+          return;
+        }
+        cameraTween = window.gsap.to(camera.position, {
+          x: targetPosition.x,
+          y: targetPosition.y,
+          z: targetPosition.z,
+          duration: 0.88,
+          ease: "power2.inOut",
+          onUpdate: () => { camera.lookAt(cameraTarget); orbit.update(); },
+          onComplete: () => { cameraTween = null; orbit.saveState(); }
+        });
+      }
+
+      controlsInputs.forEach((input, index) => input.addEventListener("input", () => applyManualSlider(index)));
+      couplingToggle.addEventListener("change", () => {
+        if (!couplingToggle.checked && couplingTween) { couplingTween.kill(); couplingTween = null; }
+        refreshCouplingLabel();
+      });
+      demoMode.addEventListener("change", () => {
+        if (demoMode.value === "manual") cancelToManual();
+        else startScenarioDemo(demoMode.value);
+      });
+      demoReplay.addEventListener("click", () => startScenarioDemo(demoMode.value));
+      cameraButtons.forEach((button) => button.addEventListener("click", () => setCameraPreset(button.dataset.camera)));
+      caseNext.addEventListener("click", revealNextCaseStep);
+
+      document.getElementById("reset-values").addEventListener("click", () => {
+        cancelToManual();
+        axisKeys.forEach((key) => { profileState[key] = 100; });
+        drawProfile(valuesFromState(profileState));
+        demoStatus.textContent = "Soll-Zustand wiederhergestellt: alle Ziele stehen bei 100 %.";
+      });
+
+      function resize() {
+        const width = Math.max(1, shell.clientWidth);
+        const height = Math.max(1, shell.clientHeight);
+        const compact = width <= 620;
+        if (compact !== compactView) {
+          if (cameraTween) { cameraTween.kill(); cameraTween = null; }
+          const offset = cameraPresetOffsets[selectedCameraPreset].clone();
+          if (compact) offset.multiplyScalar(0.82);
+          camera.position.copy(cameraTarget).add(offset);
+          camera.lookAt(cameraTarget);
+          orbit.target.copy(cameraTarget);
+          orbit.update();
+          orbit.saveState();
+          compactView = compact;
+        }
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height, false);
+        labelRenderer.setSize(width, height);
+      }
+
+      if (typeof ResizeObserver !== "undefined") {
+        const observer = new ResizeObserver(resize);
+        observer.observe(shell);
+      } else {
+        window.addEventListener("resize", resize);
+      }
+
+      resize();
+      refreshCouplingLabel();
+      drawProfile(readProfile());
+      status.hidden = true;
+
+      function updateLabelAnchors() {
+        scene.updateMatrixWorld(true);
+        camera.updateMatrixWorld();
+        axisLabelObjects.forEach((labelObject) => {
+          const projected = labelObject.position.clone().project(camera);
+          const screenX = (projected.x + 1) / 2;
+          const screenY = (1 - projected.y) / 2;
+          const anchorX = screenX < 0.3 ? 0 : screenX > 0.7 ? 1 : 0.5;
+          const anchorY = screenY < 0.18 ? 0 : screenY > 0.82 ? 1 : 0.5;
+          labelObject.center.set(anchorX, anchorY);
+        });
+      }
+
+      function render() {
+        if (orbit.enableDamping) orbit.update();
+        renderer.render(scene, camera);
+        updateLabelAnchors();
+        labelRenderer.render(scene, camera);
+        window.requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    startVisualization();
+  </script>
+</body>
+</html>
