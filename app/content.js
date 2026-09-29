@@ -165,7 +165,8 @@ window.LERNRAUM = {
     PBP: "Personalbezogene Prozesse",
     GPU: "Geschäftsprozesse im Unternehmen",
     INWI: "Informationswirtschaft",
-    Englisch: "Englisch"
+    Englisch: "Englisch",
+    VW: "Volkswirtschaftslehre"
   },
   subjects: [],
   // Übersetzungen der Kursinhalte: app/uebersetzungen/<kurs-id>.<sprache>.js (siehe app/AGENT-ANLEITUNG.md)
