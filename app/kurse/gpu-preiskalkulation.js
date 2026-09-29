@@ -9,6 +9,7 @@ LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
   added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
+  updated: "2026-09-29",
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",
@@ -159,6 +160,28 @@ LERNRAUM.subjects.push({
           hints: ["Der Rabatt kommt zuerst, danach das Skonto.", "Letzte Lücke: Alles, was für die <b>Lieferung</b> bezahlt wird – Fracht, Verpackung, Transportversicherung – heißt zusammen …"],
           text: "Der {Listeneinkaufspreis} ist der Katalogpreis ohne Abzüge. Der Lieferant gibt einen {Rabatt}, der davon abgezogen wird – so entsteht der {Zieleinkaufspreis}. Bei schneller Zahlung kommt noch das {Skonto} ab; danach heißt der Preis {Bareinkaufspreis}. Fracht und Versicherung sind {Bezugskosten}.",
           distractors: ["Gewinnaufschlag", "Mehrwertsteuer", "Listenverkaufspreis"]
+        },
+        {
+          type: "calc",
+          title: "A4 · Bezugskalkulation",
+          decimals: 2,
+          case: `Der Großhändler bietet den VISION 55 QLED für <b>799,00 €</b> an (Listeneinkaufspreis, ein Gerät). Er gibt <b>10 % Lieferantenrabatt</b> und <b>2 % Lieferantenskonto</b>. Für Fracht, Verpackung und Transportversicherung fallen <b>45,28 €</b> Bezugskosten an.<br><br>Berechne den Bezugspreis. Runde das Skonto auf ganze Cent.`,
+          rows: [
+            { label: "Listeneinkaufspreis", value: 799 },
+            { label: "− Lieferantenrabatt (10 %)", value: 79.9 },
+            { label: "= Zieleinkaufspreis", value: 719.1, sum: true },
+            { label: "− Lieferantenskonto (2 %)", value: 14.38 },
+            { label: "= Bareinkaufspreis", value: 704.72, sum: true },
+            { label: "+ Bezugskosten", value: 45.28 },
+            { label: "= Bezugspreis", value: 750, sum: true }
+          ],
+          hints: [
+            "Der Rabatt ist 10 % vom Listeneinkaufspreis. 10 % rechnest du mit ÷ 10: 799,00 ÷ 10.",
+            "Zieleinkaufspreis = Listeneinkaufspreis − Rabatt. Das Skonto rechnest du von diesem Preis, nicht von 799,00 €.",
+            "Skonto: 2 % von 719,10 € = 719,10 × 0,02 = 14,382 €. Auf ganze Cent gerundet: 14,38 €.",
+            "Lösungsweg: 799,00 − 79,90 = 719,10 → 719,10 − 14,38 = 704,72 → 704,72 + 45,28 = 750,00."
+          ],
+          result: "Der Bezugspreis beträgt 750,00 €."
         },
         {
           type: "sentence",

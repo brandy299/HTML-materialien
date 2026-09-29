@@ -86,7 +86,7 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "Task restarted in the new language",
 
-    "Zur Aufgabe": "To the task", "Punkte": "points",
+    "Komma": "Decimal comma", "Zur Aufgabe": "To the task", "Punkte": "points",
     "Kurs": "Course", "Zum Kurs": "Go to course", "Material öffnen": "Open material", "Erledigt": "Done",
 
     "Min. empfohlen": "min. recommended", "Aufgaben": "Tasks", "So läuft es ab": "How it works", "bitte lesen": "please read", "Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.": "Before every task, 2–3 slides explain what it is about and how to approach it.", "Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.": "After every task you immediately see what was right. The ? button helps with tips, summary and the explanation.", "Es gibt keinen Timer. Plane etwa {m} Minuten ein.": "There is no timer. Plan about {m} minutes.", "Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.": "At the end you get points, a grade and the model answers – like in the real exam.", "Hilfsmittel": "Allowed aids", "Ausgangssituation": "Starting situation", "für alle Aufgaben": "for all tasks", "Ergebnis ansehen": "View result", "Neu schreiben": "Write again", "Ergebnis löschen und neu starten?": "Delete result and start again?", "Probeklausur starten": "Start the practice exam",
@@ -184,7 +184,7 @@ window.LERNRAUM_I18N = {
 
     "Aufgabe in der neuen Sprache neu gestartet": "بدأت المهمة من جديد باللغة الجديدة",
 
-    "Zur Aufgabe": "إلى المهمة", "Punkte": "نقاط",
+    "Komma": "الفاصلة", "Zur Aufgabe": "إلى المهمة", "Punkte": "نقاط",
     "Kurs": "الدورة", "Zum Kurs": "إلى الدورة", "Material öffnen": "افتح المادة", "Erledigt": "تم",
 
     "Min. empfohlen": "دقيقة موصى بها", "Aufgaben": "المهام", "So läuft es ab": "كيف تسير الأمور", "bitte lesen": "يرجى القراءة", "Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.": "قبل كل مهمة، تشرح لك 2–3 شرائح ما الموضوع وكيف تحلّه.", "Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.": "بعد كل مهمة ترى فورًا ما هو الصحيح. زر ؟ يساعدك بالنصائح والملخّص والشرح.", "Es gibt keinen Timer. Plane etwa {m} Minuten ein.": "لا يوجد مؤقّت. خصّص حوالي {m} دقيقة.", "Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.": "في النهاية تحصل على النقاط والدرجة والإجابات النموذجية – كما في الامتحان الحقيقي.", "Hilfsmittel": "الوسائل المسموحة", "Ausgangssituation": "الوضع الأولي", "für alle Aufgaben": "لكل المهام", "Ergebnis ansehen": "عرض النتيجة", "Neu schreiben": "اكتب من جديد", "Ergebnis löschen und neu starten?": "حذف النتيجة والبدء من جديد؟", "Probeklausur starten": "ابدأ الامتحان التجريبي",

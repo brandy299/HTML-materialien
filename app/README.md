@@ -128,6 +128,13 @@ sowie `<div class="pair"><div><b>Titel</b>Text</div>…</div>` für Gegenüberst
   ],
   hint: "Tipp für den Hilfe-Knopf", result: "Antwortsatz nach dem Prüfen" }
 ```
+**Kommazahlen (Euro-Beträge):** Mit `decimals: 2` am Schritt (oder Kommazahlen als `value`) erscheint im Zahlenfeld eine **Komma-Taste**.
+Erlaubt sind bis zu 2 Nachkommastellen (`decimals: 3` für 3). Eingaben werden **tolerant verglichen**: `799` = `799,00`, `79,9` = `79,90`.
+Angezeigt werden die Lösungen mit festen Nachkommastellen (`decimals`, oder pro Zeile `dec`). Beträge vorher selbst auf Cent runden (Rundung im Fall-Text sagen!).
+```js
+{ type: "calc", title: "Bezugskalkulation", decimals: 2, case: "… Runde das Skonto auf ganze Cent.",
+  rows: [ { label: "Listeneinkaufspreis", value: 799 }, { label: "− Rabatt (10 %)", value: 79.9 }, { label: "= Zieleinkaufspreis", value: 719.1, sum: true } ] }
+```
 Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaenge, soll)`
 (mit `{ split: true }` zusätzlich Ersatz- und Neubedarf, mit `{ klausur: true }` Klausur-Begriffe).
 

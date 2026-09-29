@@ -161,8 +161,10 @@
   const findSubject = (id) => Lsub(DATA.subjects.find((s) => s.id === id));
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
   const firstName = () => store.get("name", "");
-  const num = (v) => (v < 0 ? "− " + Math.abs(v) : String(v));
-  const signed = (v) => (v > 0 ? "+ " + v : num(v));
+  /* Zahlen: Dezimalkomma, optional feste Nachkommastellen d (z. B. 2 für Euro-Beträge) */
+  const fmtNum = (v, d) => (d != null ? Math.abs(v).toFixed(d) : String(Math.abs(v))).replace(".", ",");
+  const num = (v, d) => (v < 0 ? "− " : "") + fmtNum(v, d);
+  const signed = (v, d) => (v > 0 ? "+ " + fmtNum(v, d) : num(v, d));
   const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cardsTopic = () => {
     for (const s of allSubjects()) for (const t of s.topics) if (t.steps.length && t.steps.every((x) => x.type === "cards")) return { s, t };
@@ -277,7 +279,7 @@
       case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${esc(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
       case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
-      case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value) : num(r.value)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
+      case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value, r.dec ?? st.decimals) : num(r.value, r.dec ?? st.decimals)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
       case "sentence": return `<p>${sentenceParts(st.text).map((x) => (typeof x === "string" ? esc(x) : `<mark>${esc(x.right)}</mark>`)).join("")}</p>`;
       default: return "";
     }
@@ -1161,6 +1163,10 @@
       const rows = step.rows;
       const vals = rows.map(() => "");
       let active = 0, locked = false;
+      const dec = (r) => r.dec ?? step.decimals;                                   // feste Nachkommastellen in der Anzeige
+      const decimal = step.decimals > 0 || rows.some((r) => !Number.isInteger(r.value));  // Komma-Taste nötig?
+      const maxDec = Math.max(2, step.decimals || 0);
+      const same = (x, r) => Math.abs(x - r.value) < 0.005 || (r.either && Math.abs(Math.abs(x) - Math.abs(r.value)) < 0.005);
 
       const node = h(`<div>
         ${step.case ? `<div class="win case"><div class="bar"><span class="d"></span>${tr("Fall")}<span class="r">${tr("Angaben")}</span></div><div class="body">${step.case}</div></div>` : ""}
@@ -1183,7 +1189,7 @@
         ${["7", "8", "9"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="del" aria-label="${tr("Löschen")}">${ICON.del}</button>
         ${["4", "5", "6"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="neg" aria-label="${tr("Vorzeichen")}">±</button>
         ${["1", "2", "3"].map((d) => `<button data-k="${d}">${d}</button>`).join("")}<button class="fn" data-k="next" aria-label="${tr("Nächstes Feld")}">↓</button>
-        <button data-k="0" style="grid-column:span 2">0</button>${ctx.exam ? `<button class="fn" data-k="next" style="grid-column:span 2">${tr("nächstes Feld")} ↓</button>` : `<button class="fn" data-k="hint" style="grid-column:span 2">${tr("Hilfe")}</button>`}
+        <button data-k="0" ${decimal ? "" : 'style="grid-column:span 2"'}>0</button>${decimal ? `<button class="fn" data-k="comma" aria-label="${tr("Komma")}">,</button>` : ""}${ctx.exam ? `<button class="fn" data-k="next" style="grid-column:span 2">${tr("nächstes Feld")} ↓</button>` : `<button class="fn" data-k="hint" style="grid-column:span 2">${tr("Hilfe")}</button>`}
       </div>`);
       ctx.dock.prepend(pad);
       ctx.root.classList.add("has-pad");
@@ -1191,7 +1197,12 @@
       const press = (k) => {
         if (locked) return;
         let v = vals[active];
-        if (/^\d$/.test(k)) { if (v.replace("-", "").length < 7) v = (v === "0" ? "" : v) + k; }
+        if (/^\d$/.test(k)) {
+          const dot = v.indexOf(".");
+          const okLen = v.replace("-", "").replace(".", "").length < 8 && (dot === -1 || v.length - dot - 1 < maxDec);
+          if (okLen) v = (v === "0" ? "" : v === "-0" ? "-" : v) + k;
+        }
+        else if (k === "comma") { if (decimal && !v.includes(".")) v = (v === "" ? "0" : v === "-" ? "-0" : v) + "."; }
         else if (k === "del") v = v.slice(0, -1);
         else if (k === "neg") v = v.startsWith("-") ? v.slice(1) : "-" + v;
         else if (k === "next") { active = (active + 1) % rows.length; return paint(); }
@@ -1205,6 +1216,7 @@
       const onKey = (e) => {
         if (document.querySelector(".sheet-back")) return;
         if (/^\d$/.test(e.key)) press(e.key);
+        else if (e.key === "," || e.key === ".") press("comma");
         else if (e.key === "Backspace") press("del");
         else if (e.key === "-") press("neg");
         else if (e.key === "Tab" || e.key === "ArrowDown") { e.preventDefault(); press("next"); }
@@ -1215,7 +1227,7 @@
       document.addEventListener("keydown", onKey);
       cleanup = () => document.removeEventListener("keydown", onKey);
 
-      const show = (v) => (v === "" ? "" : v === "-" ? "−" : num(parseInt(v, 10)));
+      const show = (v) => (v === "" ? "" : v === "-" ? "−" : (v.startsWith("-") ? "− " : "") + v.replace("-", "").replace(".", ","));
       function paint() {
         rowEls.forEach((el, k) => {
           el.classList.toggle("active", k === active && !locked);
@@ -1228,20 +1240,20 @@
       }
       function check() {
         if (ctx.exam) {
-          const wrong = rows.filter((r, k) => { const x = parseInt(vals[k], 10); return !(x === r.value || (r.either && Math.abs(x) === Math.abs(r.value))); }).map((r) => r.label);
+          const wrong = rows.filter((r, k) => !same(parseFloat(vals[k]), r)).map((r) => r.label);
           cleanup && cleanup(); cleanup = null;
           return ctx.finish({ c: rows.length - wrong.length, t: rows.length, wrong });
         }
         locked = true;
         let correct = 0;
         rows.forEach((r, k) => {
-          const x = parseInt(vals[k], 10);
-          const ok = x === r.value || (r.either && Math.abs(x) === Math.abs(r.value));
+          const x = parseFloat(vals[k]);
+          const ok = same(x, r);
           if (ok) correct++;
           const cell = rowEls[k].querySelector(".cell");
           cell.classList.add(ok ? "right" : "wrong");
-          cell.innerHTML = ok ? (r.signed ? signed(x) : show(vals[k]))
-            : `<span class="was">${show(vals[k])}</span>${r.signed ? signed(r.value) : num(r.value)}`;
+          cell.innerHTML = ok ? (r.signed ? signed(r.value, dec(r)) : num(r.value, dec(r)))
+            : `<span class="was">${show(vals[k])}</span>${r.signed ? signed(r.value, dec(r)) : num(r.value, dec(r))}`;
           rowEls[k].disabled = true;
           rowEls[k].classList.remove("active");
         });

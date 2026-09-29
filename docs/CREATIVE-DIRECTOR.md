@@ -55,6 +55,8 @@ Stilstudie der Lehrkraft war die Vorlage.
   Die Startseite zeigt nur diese Fächer; „Weiter mit …“ nur aus den eigenen Fächern. Wer per QR/Link in einen Kurs
   kommt, bekommt das Fach automatisch dazu und überspringt die Auswahl. Speicher: `lernraum.faecher`
   (`null` = nie gewählt, `[]` = alle). Grund: Lehrkraft-Feedback „PBP-Schüler könnten verwirrt werden“.
+- **Kommazahlen im Zahlenfeld (30.09.2026, Issue #15):** `calc` mit `decimals: 2` (oder Kommawert) zeigt eine Komma-Taste,
+  max. 2 Nachkommastellen, tolerante Prüfung (Toleranz 0,005), Anzeige mit festen Nachkommastellen. Erste Nutzung: GPU „A4 · Bezugskalkulation“.
 - **Geführte Probeklausur (29.09.2026):** `exam.guided: true` + `guide`-Folien pro Aufgabe. Bewertung wie Klausur, aber ohne Timer,
   mit Rückmeldung/Hilfe (Reiter „Erklärung“ im ?-Fenster). Erstes Beispiel: PBP `probeklausur-2` (Sporthaus Lindner, 11 Aufgaben,
   40 P), Link `…/app/#/f/pbp/probeklausur-2`. Steht vor der zeitlich begrenzten Übungsklausur 1 (erst üben, dann Klausur).
@@ -116,11 +118,11 @@ Stilstudie der Lehrkraft war die Vorlage.
   GPU/INWI/Förderkurs haben aus der Anfangsphase arabische Dateien – werden nicht weiter gepflegt; keine neuen Kurse übersetzen.
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 
-- [ ] **Kommazahlen im Zahlenfeld** (Wunsch aus GPU-Kurs, Bezugskalkulation) → Issue mit Label `design`.
+- [x] Kommazahlen im Zahlenfeld (#15) – erledigt 30.09.2026.
 - [ ] **Impressum** – Pflicht bei eigener Domain; Angaben muss die Lehrkraft liefern. Im Footer verlinken.
 - [ ] **Google Fonts lokal einbinden** (Datenschutz/IP-Übertragung an Google).
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
-- [ ] Endlos-Training gibt es für Personalbedarf und Zeitformen. Weitere Generatoren denkbar (z. B. Kalkulation, sobald es Kommazahlen gibt).
+- [ ] Endlos-Training gibt es für Personalbedarf und Zeitformen. Weitere Generatoren denkbar (z. B. Bezugskalkulation mit zufälligen Preisen – Kommazahlen gibt es jetzt).
 - [ ] Englisch: Wenn der Content-Agent Present Perfect / Past Progressive / will-Future liefert, diese in `tenses` des Trainings aufnehmen (der Agent darf das selbst).
 - [ ] Word-Simulation: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und
       „Speichern unter“ mit Dateinamen-Regel; Prüfungsmodus (Zeit/Punkte/Note) als mögliche Stufe 3.
