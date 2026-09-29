@@ -105,7 +105,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Offen / Ideen
 
-- [ ] Arabisch von Muttersprachler/in prüfen lassen: Oberfläche (`app/i18n.js`) und Kursinhalte (`app/uebersetzungen/*.ar.js`,
+- [ ] Arabisch von Muttersprachler/in prüfen lassen (Prüfliste: `docs/ARABISCH-PRUEFLISTE.md`; Blindtest per Rückübersetzung am 30.09.2026 ohne Bedeutungsfehler; die Lehrkraft kennt keine Muttersprachler/in – Idee: arabischsprachige Schüler/innen die Liste bestätigen lassen): Oberfläche (`app/i18n.js`) und Kursinhalte (`app/uebersetzungen/*.ar.js`,
       Stand 29.09.2026: PBP 590/606 (inkl. Probeklausur 2); früher 28.09.: PBP 405/421, GPU 179/205, INWI 197/209, Englisch 266/485 – Rest bewusst deutsch/englisch).
       Unsichere Begriffe u. a.: Fortschreibung, Zieleinkaufspreis, Selbstkosten, hochrechnen, Rücksendeangabe, rechts-/linksbündig.
 - [ ] Englische Übersetzung der Kursinhalte (gleiches Verfahren: `node app/tools/texte.js <kurs> en`).
