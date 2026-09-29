@@ -572,7 +572,7 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
       "Autonom (تلقائي) أم initiiert (بمبادرة من الشركة)؟",
 
     "<div class=\"pair\">\n                       <div><b>autonom</b>Geschieht von selbst: Rente, Elternzeit, Kündigung durch Beschäftigte.</div>\n                       <div><b>initiiert</b>Der Betrieb handelt bewusst: Einstellung, Versetzung, Entlassung.</div>\n                     </div>":
-      "<div class=\"pair\"><div><b>autonom</b>يحدث من تلقاء نفسه: التقاعد، إجازة الوالدين، استقالة الموظف.</div><div><b>initiiert</b>الشركة تتصرف عن قصد: التوظيف، النقل إلى مكان آخر، الفصل.</div></div>",
+      "<div class=\"pair\"><div><b>autonom</b>يحدث من تلقاء نفسه: التقاعد، إجازة الوالدين، استقالة الموظف.</div><div><b>initiiert</b>الشركة تتصرف عن قصد: التوظيف، النقل إلى قسم آخر في الشركة، الفصل.</div></div>",
 
     "Einflussfaktoren":
       "Einflussfaktoren (العوامل المؤثرة)",
@@ -1328,7 +1328,7 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
       "Eine Verkäuferin geht in Rente. (بائعة تتقاعد)",
 
     "Frau Lindner stellt einen Werkstattmeister ein.":
-      "Frau Lindner stellt einen Werkstattmeister ein. (Frau Lindner تعيّن معلّم ورشة)",
+      "Frau Lindner stellt einen Werkstattmeister ein. (Frau Lindner تعيّن رئيس ورشة (Werkstattmeister))",
 
     "Ein Lagerist wechselt zu einem anderen Arbeitgeber.":
       "Ein Lagerist wechselt zu einem anderen Arbeitgeber. (أمين مستودع ينتقل إلى صاحب عمل آخر)",
@@ -1571,7 +1571,7 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
       "Aushilfen für das Wochenende suchen (البحث عن عاملين مساعدين لعطلة نهاية الأسبوع)",
 
     "Eine Mitarbeiterin zur Meisterin weiterbilden":
-      "Eine Mitarbeiterin zur Meisterin weiterbilden (تأهيل موظفة لتصبح معلّمة)",
+      "Eine Mitarbeiterin zur Meisterin weiterbilden (تأهيل موظفة لتصبح «Meisterin» – شهادة الماستر المهنية)",
 
     "A8 · Kennzahlenmethode":
       "A8 · Kennzahlenmethode (طريقة المؤشرات)",
