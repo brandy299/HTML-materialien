@@ -115,6 +115,11 @@ auf JavaScript-Fehler in der Konsole achten. Playwright/Chromium ist in Claude-C
 
 ## Übersetzungen der Kursinhalte (Englisch, Arabisch)
 
+> **Entscheidung der Lehrkraft (29.09.2026): Nur der Kurs PBP (`pbp`) wird auf Arabisch übersetzt.**
+> Andere Kurse nicht übersetzen, außer die Lehrkraft verlangt es ausdrücklich.
+> **Wer PBP ändert, aktualisiert die Übersetzung mit:** `node app/tools/texte.js pbp ar` → neue `""`-Einträge übersetzen.
+> Der Inhalts-Check erinnert daran („neue Kurstexte fehlen in der Pflicht-Übersetzung“).
+
 Schüler/innen können die App auf Englisch oder Arabisch stellen. Damit auch die **Inhalte** übersetzt erscheinen,
 gibt es pro Kurs und Sprache eine Datei `app/uebersetzungen/<kurs-id>.<en|ar>.js`.
 
