@@ -108,7 +108,8 @@ Stilstudie der Lehrkraft war die Vorlage.
 - [ ] three.js-Studie (29.09.2026, Artifact „Lernraum in 3D“): A 3D-Pixelwolke Startseite, B Sechseck zum Drehen, C Abschluss-Belohnung.
       Empfehlung: gezielt (Startseite, erklärende Inhalte, Abschluss), nicht in Aufgaben; three.js lokal in app/vendor, 2D-Rückfall.
       Entscheidung der Lehrkraft steht aus.
-- [ ] Übersetzungen ar für englisch-telephoning und vw-magisches-sechseck fehlen noch.
+- Entscheidung 29.09.2026: **Arabische Kursinhalte nur für PBP** (Pflicht, im Check hinterlegt: `PFLICHT` in check-kurse.js).
+  GPU/INWI/Förderkurs haben aus der Anfangsphase arabische Dateien – werden nicht weiter gepflegt; keine neuen Kurse übersetzen.
 - [ ] Feld `color`/`glyph` der Kurse wird von der App aktuell nicht genutzt (Design bewusst einheitlich pink).
 
 - [ ] **Kommazahlen im Zahlenfeld** (Wunsch aus GPU-Kurs, Bezugskalkulation) → Issue mit Label `design`.
