@@ -922,6 +922,13 @@ html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::be
 .file-btn { cursor: pointer; display: inline-flex; align-items: center; }
 .install-card[hidden] { display: none; }
 
+/* Suche auf der Startseite */
+.search-in { width: 100%; min-height: 48px; margin-top: 18px; padding: 0 14px; border: 1.5px solid var(--ink); background: var(--paper); font: 500 16px/1 var(--grot); border-radius: 0; }
+.search-in:focus { outline: 2px solid var(--pink); outline-offset: 2px; }
+#sres { margin-top: 10px; border: 1.5px solid var(--ink); background: var(--paper); }
+#sres[hidden], #list[hidden] { display: none; }
+.s-sub { display: block; font: 400 11.5px/1.3 var(--mono); color: var(--ink-2); margin-top: 3px; }
+
 </style>
 </head>
 <body>
@@ -13370,6 +13377,7 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Thema suchen …": "Search topics …", "Nichts gefunden. Probier ein anderes Wort.": "Nothing found. Try another word.",
     "Neu hier?": "New here?",
     "Lernen, wann es dir passt.": "Learn whenever it suits you.",
     "Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.": "Slides, exercises and flashcards from your lessons. On your phone.",
@@ -13463,6 +13471,7 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Thema suchen …": "ابحث عن موضوع …", "Nichts gefunden. Probier ein anderes Wort.": "لم يتم العثور على شيء. جرّب كلمة أخرى.",
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
     "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
     "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word",
@@ -14155,6 +14164,8 @@ window.LERNRAUM_I18N = {
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
+      <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
+      <div class="list" id="sres" hidden></div>
       <div id="list"></div>
       <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
@@ -14164,6 +14175,19 @@ window.LERNRAUM_I18N = {
     const chips = v.querySelector(".fach-chips");
     if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
+    const sq = v.querySelector("#sq"), sres = v.querySelector("#sres");
+    sq.addEventListener("input", () => {
+      const w = sq.value.trim().toLowerCase();
+      sres.hidden = !w; list.hidden = !!w; chips.hidden = !!w;
+      if (!w) return;
+      const hits = [];
+      courses.forEach((x) => courseTopics(x).filter((t) => t.steps.length || t.drill).forEach((t) => {
+        if ((t.title + " " + (t.kicker || "") + " " + x.name + " " + (x.course || "")).toLowerCase().includes(w)) hits.push([x, t]);
+      }));
+      sres.innerHTML = hits.length
+        ? hits.slice(0, 30).map(([x, t]) => `<a class="list-row" href="#/f/${x.id}/${t.id}"><span>${esc(t.title)}<small class="s-sub">${esc(x.course || x.fach || "")} · ${esc(x.name)}</small></span><span class="v">→</span></a>`).join("")
+        : `<p class="hint" style="padding:14px">${tr("Nichts gefunden. Probier ein anderes Wort.")}</p>`;
+    });
     fachs.forEach((f, k) => {
       const chip = h(`<button class="tag-box">${esc(f)}</button>`);
       chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });

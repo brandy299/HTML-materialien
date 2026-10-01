@@ -23,7 +23,8 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 
 - Paket 2a · eigene Schriften statt Google Fonts: #47
 - Paket 2b · Kursübersetzungen erst bei Bedarf laden: #48
-- Paket 2c · Lerncode + Startbildschirm-Hinweis: *(PR-Nummer folgt)*
+- Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
+- Paket 1 · kompakte Startseite + Themensuche in der App: *(PR-Nummer folgt)*
 
 ## Alles auf den alten Stand zurücksetzen
 
@@ -40,7 +41,7 @@ würden dabei ebenfalls zurückgenommen – deshalb besser einzelne Pull Request
 
 ## Notfall: alte Startseite
 
-Die vorherige Startseite bleibt als `index-v1.html` erhalten (wird mit Paket 1 angelegt) und ist unter
+Die vorherige, lange Startseite bleibt als `index-v1.html` erhalten (seit Paket 1 vorhanden, nicht von Suchmaschinen indexiert) und ist unter
 `https://lernen.yannikbrand.eu/index-v1.html` erreichbar. Die App unter `/app/` ist davon unabhängig.
 
 ## Fortschritt der Schüler/innen

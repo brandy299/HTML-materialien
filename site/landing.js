@@ -43,21 +43,20 @@
 
   document.getElementById("school").textContent = `${DATA.school || ""} · Unterrichtsmaterial als Lern-App`;
 
-  // 2. Zahlen
-  const fachs = [...new Set(courses.map((c) => c.fach))];
-  const nTopics = courses.reduce((a, c) => a + topicsOf(c).length, 0);
-  document.getElementById("stats").innerHTML = [
-    [fachs.length, fachs.length === 1 ? "Fach" : "Fächer"],
-    [courses.length, courses.length === 1 ? "Kurs" : "Kurse"],
-    [nTopics, "Themen & Übungen"],
-    [0, "Logins nötig"]
-  ].map(([v, k]) => `<div class="stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("");
-
   // 3. Neuigkeiten-Fenster im Hero: neuester Kurs (zuletzt eingetragen) + Klausur-Hinweis
   const news = document.getElementById("news");
+  // „Weiter lernen“: zuletzt geöffnetes, noch nicht fertiges Thema (Fortschritt liegt im Browser)
+  let resume = null;
+  for (const c of courses) for (const t of topicsOf(c)) {
+    const p = progress[c.id + "/" + t.id];
+    if (p && p.ts && t.steps.length && !doneTopic(c, t) && (!resume || p.ts > resume.ts)) resume = { c, t, ts: p.ts, n: Object.keys(p.done || {}).length };
+  }
+  if (resume) news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Weiter lernen<span class="r">${resume.n}/${resume.t.steps.length}</span></div>
+      <div class="body"><p class="kick">${esc(resume.c.course || resume.c.fach)}</p><p class="say">${esc(resume.t.title)}</p>
+      <a class="btn" href="${appUrl(`#/f/${resume.c.id}/${resume.t.id}`)}">Weitermachen →</a></div></div>`));
   // Klausur-Countdown: nächster Kurs mit Klausurtermin in den kommenden 21 Tagen
   const soon = courses.filter((c) => daysUntil(c.klausur) >= 0 && daysUntil(c.klausur) <= 21).sort((a, b) => daysUntil(a.klausur) - daysUntil(b.klausur))[0];
-  if (soon) {
+  if (soon && !resume) {
     const n = daysUntil(soon.klausur);
     const ex = soon.topics.find((t) => t.exam && !t.exam.guided) || soon.topics.find((t) => t.exam);
     news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausur · ${esc(soon.course || soon.fach)}<span class="r">${new Date(soon.klausur).toLocaleDateString("de-DE")}</span></div>
@@ -66,36 +65,28 @@
   }
   // „Neu“: zuletzt veröffentlichter oder aktualisierter Kurs
   const newest = [...courses].sort((a, b) => fresh(a) - fresh(b))[0];
-  if (newest) {
+  if (newest && !resume && !soon) {
     news.append(h(`<div class="win"><div class="bar"><span class="d"></span>${badge(newest) || "Zuletzt"} · ${esc(newest.fach)}<span class="r">${esc(newest.course || "")}</span></div>
       <div class="body"><p class="kick">${badge(newest) === "Aktualisiert" ? "Neue Inhalte" : "Jetzt online"}</p><p class="say">${esc(newest.name)}</p>
       <p class="sub">${esc(topicsOf(newest).map((t) => t.title).slice(0, 3).join(" · "))}</p>
       <a class="btn" href="${appUrl("#/f/" + newest.id)}">Kurs öffnen →</a></div></div>`));
   }
-  const allExams = courses.flatMap((c) => c.topics.filter((t) => t.exam).map((t) => [c, t]));
-  const exam = allExams.find(([, t]) => !t.exam.guided) || allExams[0];
-  const guidedExam = allExams.find(([c, t]) => t.exam.guided && exam && c.id === exam[0].id);
-  if (exam && !soon) {
-    news.append(h(`<div class="win"><div class="bar"><span class="d"></span>Klausurtraining<span class="r">${exam[1].exam.guided ? "" : exam[1].exam.minutes + " min"}</span></div>
-      <div class="body"><p class="kick">${esc(exam[1].title)}</p><p class="sub">${exam[1].exam.guided ? "Erklärung vor jeder Aufgabe · Punkte · Note" : "Timer · Punkte · Note · Erwartungshorizont"}</p>
-      <a class="u-link" href="${appUrl(`#/f/${exam[0].id}/${exam[1].id}`)}">Probe-Klausur starten →</a>
-      ${guidedExam && guidedExam[1] !== exam[1] ? `<br><a class="u-link" href="${appUrl(`#/f/${guidedExam[0].id}/${guidedExam[1].id}`)}">Erst mit Erklärungen üben →</a>` : ""}</div></div>`));
-  }
 
-  // 4. Kurse, gruppiert nach Fach
+  // 4. Kurse, gruppiert nach Fach – kompakt: ein Aufklapp-Eintrag je Kurs
   const box = document.getElementById("courses");
   box.innerHTML = courses.length ? "" : `<p class="hint">Noch keine Kurse online.</p>`;
-  // Reihenfolge: neueste Kurse zuerst
-  [...courses].sort((a, b) => fresh(a) - fresh(b) || (a.fach || "").localeCompare(b.fach || "", "de")).forEach((c) => {
+  const norm = (x) => String(x || "").toLowerCase();
+  const sorted = [...courses].sort((a, b) => (a.fach || "").localeCompare(b.fach || "", "de") || fresh(a) - fresh(b));
+  const items = sorted.map((c) => {
     const tops = topicsOf(c);
     const done = tops.filter((t) => doneTopic(c, t)).length;
-    const el = h(`<article class="win l-course">
-      <div class="bar"><span class="d"></span>${esc(c.course || c.fach)}${badge(c) ? ` <span class="l-badge">${badge(c)}</span>` : ""}<span class="r">${daysUntil(c.klausur) >= 0 ? `Klausur ${new Date(c.klausur).toLocaleDateString("de-DE")} · ` : ""}${tops.length} Themen${done ? ` · ${done} erledigt` : ""}</span></div>
-      <div class="body">
-        <p class="l-fach">${esc(c.fach)}${fachName(c.fach) !== c.fach ? " · " + esc(fachName(c.fach)) : ""}</p>
-        <h3 class="l-c-title">${esc(c.name)}</h3>
+    const el = h(`<details class="l-course">
+      <summary><span class="l-c-main"><span class="l-fach">${esc(c.fach)}${c.course ? " · " + esc(c.course) : ""}${badge(c) ? ` <span class="l-badge">${badge(c)}</span>` : ""}</span>
+        <span class="l-c-title">${esc(c.name)}</span></span>
+        <span class="l-c-meta">${done ? done + "/" : ""}${tops.length} Themen</span></summary>
+      <div class="l-c-body">
         <p class="l-c-desc">${esc(c.description || "")}</p>
-        <ul class="l-topics">${tops.map((t, k) => `<li><a href="${appUrl(`#/f/${c.id}/${t.id}`)}">
+        <ul class="l-topics">${tops.map((t, k) => `<li data-q="${esc(norm(t.title + " " + (t.kicker || "")))}"><a href="${appUrl(`#/f/${c.id}/${t.id}`)}">
           <span class="n ${doneTopic(c, t) ? "done" : ""}">${doneTopic(c, t) ? "✓" : String(k + 1).padStart(2, "0")}</span>
           <span>${esc(t.title)}</span><span class="k">${esc(t.exam ? "Klausur" : t.drill ? "Training" : t.kicker || "")}</span></a></li>`).join("")}</ul>
         <div class="l-actions">
@@ -103,9 +94,28 @@
           <button class="icon-btn" type="button" aria-label="QR-Code für ${esc(c.name)}">
             <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg></button>
         </div>
-      </div></article>`);
+      </div></details>`);
     el.querySelector(".icon-btn").onclick = () => openQR(c.name, appUrl("#/f/" + c.id), c.course || c.fach);
     box.append(el);
+    return { c, el };
+  });
+  if (items.length === 1) items[0].el.open = true;
+
+  // Suche: filtert Kurse und Themen; Treffer klappen auf
+  const q = document.getElementById("q");
+  const none = h(`<p class="hint" hidden>Nichts gefunden. Probier ein anderes Wort.</p>`);
+  box.append(none);
+  q.addEventListener("input", () => {
+    const w = norm(q.value).trim();
+    let hits = 0;
+    items.forEach(({ c, el }) => {
+      const courseHit = !w || norm(c.name + " " + c.fach + " " + (c.course || "")).includes(w);
+      let any = false;
+      el.querySelectorAll(".l-topics li").forEach((li) => { const m = !w || courseHit || li.dataset.q.includes(w); li.hidden = !m; if (m) any = true; });
+      el.hidden = !any; hits += any ? 1 : 0;
+      el.open = !!w || items.length === 1;
+    });
+    none.hidden = hits > 0;
   });
 
   /* QR-Fenster (nutzt die Stile der App) */

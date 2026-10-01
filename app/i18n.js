@@ -17,6 +17,7 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Thema suchen …": "Search topics …", "Nichts gefunden. Probier ein anderes Wort.": "Nothing found. Try another word.",
     "Neu hier?": "New here?",
     "Lernen, wann es dir passt.": "Learn whenever it suits you.",
     "Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.": "Slides, exercises and flashcards from your lessons. On your phone.",
@@ -110,6 +111,7 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Thema suchen …": "ابحث عن موضوع …", "Nichts gefunden. Probier ein anderes Wort.": "لم يتم العثور على شيء. جرّب كلمة أخرى.",
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
     "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
     "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word",
