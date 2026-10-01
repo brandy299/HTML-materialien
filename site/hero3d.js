@@ -38,20 +38,33 @@ float bayer(vec2 c){
 }
 float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
 mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
-float map(vec3 p){
-  p.xz*=rot(uT*.25+uM.x*1.2+uS*2.);
-  p.yz*=rot(uM.y*.6+.35);
-  float d=1e3;
-  for(int i=0;i<5;i++){
-    float fi=float(i);
-    vec3 c=vec3(sin(uT*.6+fi*1.9)*.95,cos(uT*.5+fi*2.7)*.7,sin(uT*.45+fi*1.3)*.8);
-    d=smin(d,length(p-c)-(.42+.06*sin(fi+uT)),.55);
-  }
-  vec2 q=vec2(length(p.xz)-1.55,p.y);
-  d=min(d,length(q)-.09);
-  return d;
+// Logo-Einheiten (Pixel des Schullogos) → Welt
+vec2 L(float x,float y){return vec2((x-66.)/32.,(30.-y)/32.);}
+float seg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}
+// Balken mit Tiefe und abgerundeten Kanten
+float bar(vec3 p,vec2 a,vec2 b,float w,float dz){
+  vec2 q=vec2(seg(p.xy,a,b)-w,abs(p.z)-dz);
+  return length(max(q,0.))+min(max(q.x,q.y),0.)-.03;
 }
-vec3 nor(vec3 p){vec2 e=vec2(.004,0.);return normalize(vec3(map(p+e.xyy)-map(p-e.xyy),map(p+e.yxy)-map(p-e.yxy),map(p+e.yyx)-map(p-e.yyx)));}
+vec3 dp;
+vec2 map(vec3 p){
+  p.y-=sin(uT*.8)*.05;
+  p.xz*=rot(sin(uT*.45)*.35+uM.x*.9+uS*1.6);
+  p.yz*=rot(uM.y*.5);
+  // grün: Dach-Linienzug
+  float g=bar(p,L(17.,21.),L(50.,21.),.1,.16);
+  g=min(g,bar(p,L(50.,21.),L(75.,5.),.1,.16));
+  g=min(g,bar(p,L(75.,5.),L(98.,13.),.1,.16));
+  g=min(g,bar(p,L(98.,13.),L(113.,24.),.1,.16));
+  // lila: Bogen mit Pfosten
+  float v=bar(p,L(24.,42.),L(24.,33.),.085,.2);
+  v=min(v,bar(p,L(24.,33.),L(72.,19.),.14,.2));
+  v=min(v,bar(p,L(72.,19.),L(108.,36.),.14,.2));
+  v=min(v,bar(p,L(108.,36.),L(108.,62.),.085,.2));
+  v=min(v,bar(p,L(73.,30.),L(73.,46.),.085,.2));
+  return g<v?vec2(g,1.):vec2(v,0.);
+}
+vec3 nor(vec3 p){vec2 e=vec2(.004,0.);return normalize(vec3(map(p+e.xyy).x-map(p-e.xyy).x,map(p+e.yxy).x-map(p-e.yxy).x,map(p+e.yyx).x-map(p-e.yyx).x));}
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
   return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
@@ -72,32 +85,32 @@ void main(){
   vec3 col=pal(lvl);
 
   // Szene: rechts neben dem Text
-  vec3 ro=vec3(0.,0.,7.6);
-  vec2 off=vec2(.27*(uRes.x/uRes.y),-.02);
+  vec3 ro=vec3(0.,0.,8.4);
+  vec2 off=vec2(.29*(uRes.x/uRes.y),-.03);
   vec3 rd=normalize(vec3(uv-off,-1.7));
   float t=0.,hit=0.;
-  for(int i=0;i<56;i++){
-    float d=map(ro+rd*t);
+  for(int i=0;i<64;i++){
+    float d=map(ro+rd*t).x;
     if(d<.003){hit=1.;break;}
     t+=d; if(t>14.) break;
   }
   if(hit>.5){
     vec3 p=ro+rd*t, n=nor(p);
-    vec3 L=normalize(vec3(-.5,.8,.6));
-    float dif=clamp(dot(n,L),0.,1.);
+    float id=map(p).y;
+    vec3 L0=normalize(vec3(-.5,.8,.6));
+    float dif=clamp(dot(n,L0),0.,1.);
     float fre=pow(1.-clamp(dot(n,-rd),0.,1.),2.2);
-    float sh=dif*.75+.15-fre*.35;
-    // 0 → Tinte, 1..6 → rosa Stufen bis hell
-    float s=clamp(sh,0.,1.)*6.;
-    int k=int(clamp(floor(s+bd),0.,6.));
-    // Stufen: 0 Tinte, 1 magenta, 2 .. 5 → Palette rückwärts, 6 hell
-    if(k==0) col=pal(6);
-    else if(k==1) col=pal(5);
-    else if(k==2) col=pal(4);
-    else if(k==3) col=pal(3);
-    else if(k==4) col=pal(2);
-    else if(k==5) col=pal(1);
-    else col=pal(0);
+    float sh=clamp(dif*.8+.18-fre*.3,0.,1.);
+    int k=int(clamp(floor(sh*6.+bd),0.,6.));
+    if(id<.5){
+      // lila Teile: rosa Palette der Seite, dunkel = Tinte
+      if(k==0) col=pal(6); else if(k==1) col=pal(5); else if(k==2) col=pal(4);
+      else if(k==3) col=pal(3); else if(k==4) col=pal(2); else if(k==5) col=pal(1); else col=pal(0);
+    } else {
+      // grüne Teile (Logo-Grün)
+      if(k==0) col=pal(6); else if(k==1) col=vec3(.14,.36,.20); else if(k==2) col=vec3(.20,.50,.27);
+      else if(k==3) col=vec3(.32,.65,.38); else if(k==4) col=vec3(.55,.80,.55); else if(k==5) col=vec3(.80,.92,.78); else col=pal(0);
+    }
   }
   gl_FragColor=vec4(col,1.);
 }`;
@@ -116,7 +129,7 @@ void main(){
     const U = (n) => gl.getUniformLocation(pr, n);
     const uRes = U("uRes"), uT = U("uT"), uM = U("uM"), uS = U("uS");
 
-    const CELL = 4; // Bildschirm-Pixel je Rasterpunkt
+    const CELL = 3; // Bildschirm-Pixel je Rasterpunkt
     const size = () => {
       const r = host.getBoundingClientRect();
       canvas.width = Math.max(40, Math.round(r.width / CELL));
