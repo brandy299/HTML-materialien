@@ -14,6 +14,12 @@
 
   const cloud = document.getElementById("cloud");
   drawCloud(cloud);
+  // Darstellung: Knopf in der Navigation (Auto → Dunkel → Hell) und Neuzeichnen der Pixelwolke
+  const TH = window.LERNRAUM_THEME, themeBtn = document.getElementById("themeBtn");
+  const themeLabel = () => { const m = TH.mode(); themeBtn.textContent = m === "auto" ? "Auto" : m === "dark" ? "Dunkel" : "Hell"; };
+  if (TH && themeBtn) { themeLabel(); themeBtn.onclick = () => { TH.cycle(); themeLabel(); }; }
+  else if (themeBtn) themeBtn.remove();
+  addEventListener("lernraum-theme", () => drawCloud(cloud));
   let rt;
   addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => drawCloud(cloud), 200); });
 
@@ -171,7 +177,9 @@
     const box = canvas.getBoundingClientRect();
     const W = box.width < 700 ? 90 : 170, H = Math.max(40, Math.round(W * (box.height || 600) / (box.width || 400))), g = canvas.getContext("2d");
     canvas.width = W; canvas.height = H;
-    const pal = [[254, 254, 254], [251, 219, 229], [248, 176, 201], [243, 134, 161], [221, 109, 181], [212, 91, 182]];
+    const dark = document.documentElement.dataset.theme === "dark";
+    const pal = dark ? [[20, 20, 20], [46, 27, 36], [86, 38, 58], [140, 58, 94], [178, 74, 150], [200, 84, 168]]
+      : [[254, 254, 254], [251, 219, 229], [248, 176, 201], [243, 134, 161], [221, 109, 181], [212, 91, 182]];
     const B = [[0, 32, 8, 40, 2, 34, 10, 42], [48, 16, 56, 24, 50, 18, 58, 26], [12, 44, 4, 36, 14, 46, 6, 38], [60, 28, 52, 20, 62, 30, 54, 22],
       [3, 35, 11, 43, 1, 33, 9, 41], [51, 19, 59, 27, 49, 17, 57, 25], [15, 47, 7, 39, 13, 45, 5, 37], [63, 31, 55, 23, 61, 29, 53, 21]];
     const blobs = [{ x: .08, y: .3, r: .42, a: 1 }, { x: .3, y: .05, r: .35, a: .8 }, { x: .92, y: .25, r: .45, a: 1 },

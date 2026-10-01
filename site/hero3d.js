@@ -29,7 +29,7 @@
 
   const FRAG = `
 precision highp float;
-uniform sampler2D tD; uniform vec2 uRes; uniform float uT; uniform float uS;
+uniform sampler2D tD; uniform vec2 uRes; uniform float uT; uniform float uS; uniform float uDark;
 varying vec2 vUv;
 vec3 pal(int i){
   if(i==0) return vec3(.996,.996,.996);
@@ -39,6 +39,15 @@ vec3 pal(int i){
   if(i==4) return vec3(.867,.427,.710);
   if(i==5) return vec3(.831,.357,.714);
   return vec3(.067,.067,.067);
+}
+vec3 palB(int i){ // Hintergrund: hell oder dunkel
+  if(uDark<.5) return pal(i);
+  if(i==0) return vec3(.078,.078,.078);
+  if(i==1) return vec3(.18,.106,.14);
+  if(i==2) return vec3(.337,.149,.227);
+  if(i==3) return vec3(.55,.227,.37);
+  if(i==4) return vec3(.70,.29,.59);
+  return vec3(.784,.33,.659);
 }
 float bayer(vec2 c){
   vec2 q=floor(mod(c,8.));
@@ -77,7 +86,7 @@ void main(){
     float side=smoothstep(-.7,.9,uv.x/(uRes.x/uRes.y)*1.6+uv.y*.2);
     float d=clamp(cl*.9*side+.08*side,0.,1.);
     d*=smoothstep(-.55,-.1,uv.y+.45*cl);
-    col=pal(int(clamp(floor(d*5.+bd),0.,5.)));
+    col=palB(int(clamp(floor(d*5.+bd),0.,5.)));
   }
   gl_FragColor=vec4(col,1.);
 }`;
@@ -110,10 +119,12 @@ void main(){
     let target = null;
     const post = new T.Scene(), pcam = new T.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     const pmat = new T.ShaderMaterial({
-      uniforms: { tD: { value: null }, uRes: { value: new T.Vector2(1, 1) }, uT: { value: 0 }, uS: { value: 0 } },
+      uniforms: { tD: { value: null }, uRes: { value: new T.Vector2(1, 1) }, uT: { value: 0 }, uS: { value: 0 }, uDark: { value: 0 } },
       vertexShader: "varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}",
       fragmentShader: FRAG, depthTest: false, depthWrite: false
     });
+    const syncTheme = () => { pmat.uniforms.uDark.value = document.documentElement.dataset.theme === "dark" ? 1 : 0; };
+    syncTheme(); addEventListener("lernraum-theme", syncTheme);
     post.add(new T.Mesh(new T.PlaneGeometry(2, 2), pmat));
 
     const size = () => {

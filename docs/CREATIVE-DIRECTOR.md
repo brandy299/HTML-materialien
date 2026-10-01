@@ -153,3 +153,11 @@ Du bist Creative Director für meine Lern-Website Lernraum im Repo brandy299/HTM
 schau dir die offenen Issues mit Label "design" und neue Kurse seit dem letzten Stand an
 und sag mir kurz, was ansteht. Dann: [DEIN AUFTRAG]
 ```
+
+## Darstellung: Dark Mode und Textgröße (01.10.2026)
+
+- `app/theme.js` (zuerst im `<head>`) setzt `data-theme` (light/dark) und `data-ts` (m/l/xl) am `<html>`. Gespeichert in `lernraum.theme` (auto/light/dark) und `lernraum.textsize`.
+- Dark Mode = Tinte und Papier tauschen die Rollen (Variablen in `styles.css`, Block „Dark Mode“). Rosa-Flächen nutzen `--pink-fill` (im Dunkeln dunkler, damit Schrift lesbar bleibt), Terminals/Footer `--term-bg`. Neue Farben immer als Variable anlegen, nie `#fff`/`#000` für Oberflächen.
+- Pixelwolken (Canvas/Shader) haben dunkle Paletten und zeichnen bei `lernraum-theme` neu.
+- Textgröße über `zoom` auf `body` (1,12 / 1,25); untere Leiste bleibt normal groß.
+- Schalter: Profil → Darstellung; Startseite: Knopf in der Navigation.

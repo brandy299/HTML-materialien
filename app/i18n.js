@@ -17,6 +17,7 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Darstellung": "Appearance", "Automatisch": "Automatic", "Hell": "Light", "Dunkel": "Dark", "Textgröße": "Text size",
     "Thema suchen …": "Search topics …", "Nichts gefunden. Probier ein anderes Wort.": "Nothing found. Try another word.",
     "Neu hier?": "New here?",
     "Lernen, wann es dir passt.": "Learn whenever it suits you.",
@@ -111,6 +112,7 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Darstellung": "المظهر", "Automatisch": "تلقائي", "Hell": "فاتح", "Dunkel": "داكن", "Textgröße": "حجم النص",
     "Thema suchen …": "ابحث عن موضوع …", "Nichts gefunden. Probier ein anderes Wort.": "لم يتم العثور على شيء. جرّب كلمة أخرى.",
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
     "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
