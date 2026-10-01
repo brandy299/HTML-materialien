@@ -17,6 +17,27 @@
   let rt;
   addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => drawCloud(cloud), 200); });
 
+  // Desktop: gerasterte 3D-Szene statt der statischen Wolke (nur mit Maus, großem Bildschirm, ohne „weniger Bewegung“)
+  const fancy = matchMedia("(min-width: 900px) and (hover: hover) and (prefers-reduced-motion: no-preference)").matches
+    && !(navigator.connection && navigator.connection.saveData);
+  if (fancy) {
+    const hero = document.querySelector(".l-hero");
+    load("site/hero3d.js").then(() => {
+      const c = document.createElement("canvas");
+      c.id = "gl"; c.setAttribute("aria-hidden", "true");
+      hero.insertBefore(c, cloud);
+      hero.classList.add("is3d");
+      if (window.LERNRAUM_HERO3D && window.LERNRAUM_HERO3D(hero, c)) cloud.hidden = true; else { c.remove(); hero.classList.remove("is3d"); }
+    });
+  }
+
+  // Einblenden beim Scrollen (nur Bewegung, Inhalt bleibt ohne JS sichtbar)
+  const reveal = (els) => {
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+    els.forEach((el) => { el.classList.add("rv"); io.observe(el); });
+  };
+
   // 1. Basis + alle Kurse in der Reihenfolge aus app/index.html laden
   await load("app/content.js");
   let files = [];
@@ -30,6 +51,7 @@
   const DATA = window.LERNRAUM || { subjects: [] };
   const courses = DATA.subjects.filter((s) => !s.materials);
   const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
+  const fachs0 = () => [...new Set(courses.map((c) => c.fach))];
   const topicsOf = (c) => c.topics.filter((t) => (t.steps && t.steps.length) || t.drill);
   let progress = {};
   try { progress = JSON.parse(localStorage.getItem("lernraum.progress") || "{}"); } catch { /* privat */ }
@@ -100,6 +122,13 @@
     return { c, el };
   });
   if (items.length === 1) items[0].el.open = true;
+  const tick = document.getElementById("ticker");
+  if (tick && fachs0().length) {
+    const row = fachs0().map((f) => `<span>${esc(f)}</span><i>✦</i>`).join("");
+    tick.innerHTML = `<div class="l-tick-in">${row.repeat(Math.max(2, Math.ceil(12 / fachs0().length)))}</div>`;
+    tick.innerHTML += tick.innerHTML.replace('class="l-tick-in"', 'class="l-tick-in" aria-hidden="true"');
+  }
+  reveal([...document.querySelectorAll(".l-section, .l-more")]);
 
   // Suche: filtert Kurse und Themen; Treffer klappen auf
   const q = document.getElementById("q");
