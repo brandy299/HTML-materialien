@@ -590,6 +590,8 @@
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
+      <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
+      <div class="list" id="sres" hidden></div>
       <div id="list"></div>
       <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
@@ -599,6 +601,19 @@
     const chips = v.querySelector(".fach-chips");
     if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
+    const sq = v.querySelector("#sq"), sres = v.querySelector("#sres");
+    sq.addEventListener("input", () => {
+      const w = sq.value.trim().toLowerCase();
+      sres.hidden = !w; list.hidden = !!w; chips.hidden = !!w;
+      if (!w) return;
+      const hits = [];
+      courses.forEach((x) => courseTopics(x).filter((t) => t.steps.length || t.drill).forEach((t) => {
+        if ((t.title + " " + (t.kicker || "") + " " + x.name + " " + (x.course || "")).toLowerCase().includes(w)) hits.push([x, t]);
+      }));
+      sres.innerHTML = hits.length
+        ? hits.slice(0, 30).map(([x, t]) => `<a class="list-row" href="#/f/${x.id}/${t.id}"><span>${esc(t.title)}<small class="s-sub">${esc(x.course || x.fach || "")} · ${esc(x.name)}</small></span><span class="v">→</span></a>`).join("")
+        : `<p class="hint" style="padding:14px">${tr("Nichts gefunden. Probier ein anderes Wort.")}</p>`;
+    });
     fachs.forEach((f, k) => {
       const chip = h(`<button class="tag-box">${esc(f)}</button>`);
       chip.onclick = () => v.querySelector(`#fach-${k}`).scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
