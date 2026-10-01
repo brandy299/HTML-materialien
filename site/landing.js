@@ -53,6 +53,7 @@
   } catch { /* offline */ }
   for (const f of files) await load(f);
   await load("app/vendor/qrcode.js");
+  await load("app/search.js");
 
   const DATA = window.LERNRAUM || { subjects: [] };
   const courses = DATA.subjects.filter((s) => !s.materials);
@@ -141,12 +142,13 @@
   const none = h(`<p class="hint" hidden>Nichts gefunden. Probier ein anderes Wort.</p>`);
   box.append(none);
   q.addEventListener("input", () => {
-    const w = norm(q.value).trim();
+    const w = q.value.trim(), SE = window.LERNRAUM_SEARCH;
+    const sc = (text) => (!w ? 1 : SE ? SE.score(w, text) : norm(text).includes(norm(w)) ? 1 : 0);
     let hits = 0;
     items.forEach(({ c, el }) => {
-      const courseHit = !w || norm(c.name + " " + c.fach + " " + (c.course || "")).includes(w);
+      const courseHit = sc(c.name + " " + c.fach + " " + (c.course || "") + " " + (c.description || "")) > 0;
       let any = false;
-      el.querySelectorAll(".l-topics li").forEach((li) => { const m = !w || courseHit || li.dataset.q.includes(w); li.hidden = !m; if (m) any = true; });
+      el.querySelectorAll(".l-topics li").forEach((li) => { const m = !w || courseHit || sc(li.dataset.q) > 0; li.hidden = !m; if (m) any = true; });
       el.hidden = !any; hits += any ? 1 : 0;
       el.open = !!w || items.length === 1;
     });
