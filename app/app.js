@@ -605,13 +605,16 @@
     const list = v.querySelector("#list");
     const sq = v.querySelector("#sq"), sres = v.querySelector("#sres");
     sq.addEventListener("input", () => {
-      const w = sq.value.trim().toLowerCase();
+      const w = sq.value.trim();
       sres.hidden = !w; list.hidden = !!w; chips.hidden = !!w;
       if (!w) return;
-      const hits = [];
+      const SE = window.LERNRAUM_SEARCH, hits = [];
       courses.forEach((x) => courseTopics(x).filter((t) => t.steps.length || t.drill).forEach((t) => {
-        if ((t.title + " " + (t.kicker || "") + " " + x.name + " " + (x.course || "")).toLowerCase().includes(w)) hits.push([x, t]);
+        const text = [t.title, t.kicker, t.group, x.name, x.course, x.fach, x.description, t.exam ? "Klausur" : "", t.drill ? "Training" : ""].join(" ");
+        const sc = SE ? SE.score(w, text) : (text.toLowerCase().includes(w.toLowerCase()) ? 1 : 0);
+        if (sc) hits.push([x, t, sc + (SE && SE.score(w, t.title) ? 1 : 0)]);
       }));
+      hits.sort((a, b) => b[2] - a[2]);
       sres.innerHTML = hits.length
         ? hits.slice(0, 30).map(([x, t]) => `<a class="list-row" href="#/f/${x.id}/${t.id}"><span>${esc(t.title)}<small class="s-sub">${esc(x.course || x.fach || "")} · ${esc(x.name)}</small></span><span class="v">→</span></a>`).join("")
         : `<p class="hint" style="padding:14px">${tr("Nichts gefunden. Probier ein anderes Wort.")}</p>`;
