@@ -70,6 +70,10 @@ Stilstudie der Lehrkraft war die Vorlage.
   `tr("…")` laufen und in beiden Sprachen stehen – `node app/tools/check-i18n.js` prüft das (auch im GitHub-Check).
   Arabisch: Layout bleibt links→rechts (Inhalte sind deutsch), keine Sperrung, Systemschrift für arabische Zeichen.
   Die arabischen Texte sind maschinennah formuliert – **von einer muttersprachlichen Person gegenlesen lassen** (offen).
+- **Lerncode + Startbildschirm (01.10.2026):** `#/sichern` (Profil → „Fortschritt sichern“, auch auf dem Willkommensbildschirm): Code `LR1z.…` = alle
+  `lernraum.*`-Werte, komprimiert (deflate-raw), als Text kopieren oder als Datei speichern; Einlesen **führt zusammen** (je Thema der neuere Stand, Schritte vereinigt,
+  Training mit mehr Runden), stellt Name/Fächer/Sprache wieder her. Nur `lernraum.*`-Schlüssel werden gelesen/geschrieben. Hinweiskarte „App auf den Startbildschirm“
+  (nur Handy, https, nicht installiert, nach erstem Lernfortschritt, „Später“ = 14 Tage Ruhe; im Profil immer). Grund: Safari kann Browserdaten nach ca. 7 Tagen ohne Besuch löschen; installierte Apps nicht.
 - **Übersetzungen laden bei Bedarf (01.10.2026):** `app/index.html` enthält `<link rel="x-lernraum-i18n" lang="ar" href="uebersetzungen/…">`; `loadLang()` in app.js lädt die Dateien erst,
   wenn die Sprache gewählt ist (Deutsch-Schüler sparen ca. 340 KB). Einzeldatei bettet sie fest ein. Offline: wurde die Sprache einmal geladen, liegt sie im Service-Worker-Cache.
 - **Übersetzte Kursinhalte (28.09.2026):** Pro Kurs und Sprache `app/uebersetzungen/<kurs-id>.<en|ar>.js`, Schlüssel = deutscher
