@@ -17,15 +17,15 @@
   let rt;
   addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => drawCloud(cloud), 200); });
 
-  // Desktop: gerasterte 3D-Szene statt der statischen Wolke (nur mit Maus, großem Bildschirm, ohne „weniger Bewegung“)
+  // Desktop: 3D-Schullogo über der Pixelwolke (nur mit Maus, großem Bildschirm, ohne „weniger Bewegung“)
   const fancy = matchMedia("(min-width: 900px) and (hover: hover) and (prefers-reduced-motion: no-preference)").matches
     && !(navigator.connection && navigator.connection.saveData);
   if (fancy) {
     const hero = document.querySelector(".l-hero");
-    load("site/hero3d.js").then(() => {
+    load("site/vendor/three.min.js").then(() => load("site/hero3d.js")).then(() => {
       const c = document.createElement("canvas");
       c.id = "gl"; c.setAttribute("aria-hidden", "true");
-      hero.insertBefore(c, cloud);
+      cloud.after(c);
       hero.classList.add("is3d");
       if (window.LERNRAUM_HERO3D && window.LERNRAUM_HERO3D(hero, c)) cloud.hidden = true; else { c.remove(); hero.classList.remove("is3d"); }
     });
