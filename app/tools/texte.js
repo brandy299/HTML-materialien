@@ -3,7 +3,7 @@
    Aufruf:  node app/tools/texte.js <kurs-id> <sprache>      z. B.  node app/tools/texte.js pbp ar
    → schreibt app/uebersetzungen/<kurs-id>.<sprache>.js mit ALLEN übersetzbaren Texten des Kurses.
      Vorhandene Übersetzungen bleiben erhalten, neue Texte kommen mit "" dazu (leer = noch nicht übersetzt,
-     die App zeigt dann das Deutsche). Die Datei wird automatisch in app/index.html und app/sw.js eingetragen.
+     die App zeigt dann das Deutsche). Die Datei wird automatisch in app/index.html eingetragen (als Verweis, wird erst bei Bedarf geladen).
    Nur Übersicht:  node app/tools/texte.js --stand */
 "use strict";
 const fs = require("fs");
@@ -17,7 +17,7 @@ let indexHtml = fs.readFileSync(indexPath, "utf8");
 const ctx = { console }; ctx.window = ctx; vm.createContext(ctx);
 const run = (f) => vm.runInContext(fs.readFileSync(path.join(APP, f), "utf8"), ctx, { filename: f });
 run("content.js");
-[...indexHtml.matchAll(/<script src="((?:kurse|uebersetzungen)\/[^"]+)"><\/script>/g)].forEach((m) => run(m[1]));
+[...indexHtml.matchAll(/<script src="(kurse\/[^"]+)"><\/script>/g), ...indexHtml.matchAll(/<link rel="x-lernraum-i18n"[^>]*href="(uebersetzungen\/[^"]+)">/g)].forEach((m) => run(m[1]));
 const L = ctx.LERNRAUM;
 
 const textsOf = (s) => { const seen = []; ctx.mapTexts(s, (x) => { if (!seen.includes(x)) seen.push(x); return x; }); return seen; };
@@ -56,12 +56,10 @@ ${stale.map((k) => `    ${J(k)}:\n      ${J(old[k])}`).join(",\n\n")}` : ""}
 
 } });
 `);
-/* in index.html (nach den Kursen, vor vendor/qrcode.js) und sw.js eintragen */
-if (!indexHtml.includes(`src="${rel}"`)) {
-  indexHtml = indexHtml.replace('  <script src="vendor/qrcode.js"></script>', `  <script src="${rel}"></script>\n  <script src="vendor/qrcode.js"></script>`);
+/* in index.html eintragen (Verweis; die App lädt die Datei erst, wenn die Sprache gewählt wird) */
+if (!indexHtml.includes(`href="${rel}"`)) {
+  indexHtml = indexHtml.replace('  <script src="vendor/qrcode.js"></script>', `  <link rel="x-lernraum-i18n" lang="${lang}" href="${rel}">\n  <script src="vendor/qrcode.js"></script>`);
   fs.writeFileSync(indexPath, indexHtml);
 }
-let sw = fs.readFileSync(swPath, "utf8");
-if (!sw.includes(`"${rel}"`)) { sw = sw.replace('"manifest.json"', `"${rel}", "manifest.json"`); fs.writeFileSync(swPath, sw); }
 const done = all.filter((x) => old[x]).length;
 console.log(`app/${rel}: ${all.length} Texte, davon ${done} übersetzt${stale.length ? `, ${stale.length} veraltet` : ""}.`);

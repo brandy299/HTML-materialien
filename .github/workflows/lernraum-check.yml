@@ -40,7 +40,7 @@ jobs:
             echo "::error::app/kurse/materialien.js wird automatisch erzeugt und darf nicht von Hand geändert werden."
             exit 1
           fi
-          if git diff origin/${{ github.base_ref }}...HEAD -- app/index.html | grep -E '^[+-][^+-]' | grep -vE '^\+\s*<script src="(kurse/[a-z0-9-]+|uebersetzungen/[a-z0-9-]+\.(en|ar))\.js"></script>\s*$'; then
+          if git diff origin/${{ github.base_ref }}...HEAD -- app/index.html | grep -E '^[+-][^+-]' | grep -vE '^\+\s*(<script src="kurse/[a-z0-9-]+\.js"></script>|<link rel="x-lernraum-i18n" lang="(en|ar)" href="uebersetzungen/[a-z0-9-]+\.(en|ar)\.js">)\s*$'; then
             echo "::error::In app/index.html darf ein Content-Branch nur Zeilen <script src=\"kurse/…\"></script> ergänzen."
             exit 1
           fi
