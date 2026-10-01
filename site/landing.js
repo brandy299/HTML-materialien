@@ -27,7 +27,7 @@
       c.id = "gl"; c.setAttribute("aria-hidden", "true");
       cloud.after(c);
       hero.classList.add("is3d");
-      if (window.LERNRAUM_HERO3D && window.LERNRAUM_HERO3D(hero, c)) cloud.hidden = true; else { c.remove(); hero.classList.remove("is3d"); }
+      if (window.LERNRAUM_HERO3D && window.LERNRAUM_HERO3D(hero, c)) { /* Pixelwolke bleibt als Hintergrund */ } else { c.remove(); hero.classList.remove("is3d"); }
     });
   }
 
