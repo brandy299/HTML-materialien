@@ -24,7 +24,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2a · eigene Schriften statt Google Fonts: #47
 - Paket 2b · Kursübersetzungen erst bei Bedarf laden: #48
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
-- Paket 1 · kompakte Startseite + Themensuche in der App: *(PR-Nummer folgt)*
+- Paket 1 · kompakte Startseite + Themensuche in der App: #50
 
 ## Alles auf den alten Stand zurücksetzen
 
