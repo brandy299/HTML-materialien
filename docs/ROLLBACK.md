@@ -25,6 +25,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2b · Kursübersetzungen erst bei Bedarf laden: #48
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
+- Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
 - Paket 6 · Desktop-Startseite mit 3D-Szene (`site/hero3d.js`), Ticker, Einblenden: *(PR-Nummer folgt)*. Nur Desktop mit Maus; zum Abschalten reicht es, den Block „fancy“ in `site/landing.js` zu entfernen. Seit der Logo-Szene echtes three.js (r128, lokal in `site/vendor/`, nur Desktop geladen).
 
 ## Alles auf den alten Stand zurücksetzen

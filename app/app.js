@@ -253,7 +253,9 @@
   function dither(canvas, seed = 1) {
     const W = 96, H = 120, g = canvas.getContext("2d");
     canvas.width = W; canvas.height = H;
-    const pal = [[254, 254, 254], [251, 219, 229], [248, 176, 201], [243, 134, 161], [221, 109, 181], [212, 91, 182]];
+    const dark = document.documentElement.dataset.theme === "dark";
+    const pal = dark ? [[20, 20, 20], [46, 27, 36], [86, 38, 58], [140, 58, 94], [178, 74, 150], [200, 84, 168]]
+      : [[254, 254, 254], [251, 219, 229], [248, 176, 201], [243, 134, 161], [221, 109, 181], [212, 91, 182]];
     const B = [[0, 32, 8, 40, 2, 34, 10, 42], [48, 16, 56, 24, 50, 18, 58, 26], [12, 44, 4, 36, 14, 46, 6, 38], [60, 28, 52, 20, 62, 30, 54, 22],
       [3, 35, 11, 43, 1, 33, 9, 41], [51, 19, 59, 27, 49, 17, 57, 25], [15, 47, 7, 39, 13, 45, 5, 37], [63, 31, 55, 23, 61, 29, 53, 21]];
     const blobs = seed === 1
@@ -2913,6 +2915,18 @@
       <p class="section-head">${tr("Sprache")}</p>
       ${langSwitch("big")}
       <p class="hint" style="margin-top:10px">${tr("Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.")}</p>
+      <p class="section-head">${tr("Darstellung")}</p>
+      <div class="seg" role="group" aria-label="${tr("Darstellung")}" id="segTheme">
+        <button type="button" data-theme-mode="auto">${tr("Automatisch")}</button>
+        <button type="button" data-theme-mode="light">${tr("Hell")}</button>
+        <button type="button" data-theme-mode="dark">${tr("Dunkel")}</button>
+      </div>
+      <p class="hint" style="margin:14px 0 8px">${tr("Textgröße")}</p>
+      <div class="seg" role="group" aria-label="${tr("Textgröße")}" id="segSize">
+        <button type="button" data-size="m" style="font-size:14px">A</button>
+        <button type="button" data-size="l" style="font-size:18px">A</button>
+        <button type="button" data-size="xl" style="font-size:22px">A</button>
+      </div>
       <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
         <button class="list-row" id="rename"><span>${tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
@@ -2925,6 +2939,16 @@
       ${installCard(true)}
     </main>`);
     bindInstall(v);
+    const TH = window.LERNRAUM_THEME;
+    if (TH) {
+      const paint = () => {
+        v.querySelectorAll("[data-theme-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.themeMode === TH.mode())));
+        v.querySelectorAll("[data-size]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.size === TH.size())));
+      };
+      v.querySelectorAll("[data-theme-mode]").forEach((b) => { b.onclick = () => { TH.set(b.dataset.themeMode); paint(); }; });
+      v.querySelectorAll("[data-size]").forEach((b) => { b.onclick = () => { TH.setSize(b.dataset.size); paint(); }; });
+      paint();
+    }
 
     const rename = v.querySelector("#rename");
     rename.onclick = () => {
@@ -2957,6 +2981,9 @@
     if (ct && SINGLE) cardsTab.href = `#/f/${ct.s.id}/${ct.t.id}/0`;
     else cardsTab.hidden = true;
   }
+  // Hell/Dunkel: Pixelwolken (Canvas) müssen neu gezeichnet werden
+  let lastTheme = document.documentElement.dataset.theme;
+  addEventListener("lernraum-theme", () => { const t = document.documentElement.dataset.theme; if (t !== lastTheme) { lastTheme = t; render(); } });
   loadLang(LANG).then(render);
 
   if ("serviceWorker" in navigator && location.protocol === "https:") {
