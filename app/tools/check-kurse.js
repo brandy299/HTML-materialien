@@ -238,15 +238,13 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
 /* ── 4. Übersetzungen (app/uebersetzungen/<kurs-id>.<sprache>.js) ── */
 /* Pflicht-Übersetzungen (Entscheidung der Lehrkraft 29.09.2026): nur PBP auf Arabisch */
 const PFLICHT = { pbp: ["ar"] };
-const trListed = [...indexHtml.matchAll(/<script src="(uebersetzungen\/[^"]+)"><\/script>/g)].map((m) => m[1]);
+const trListed = [...indexHtml.matchAll(/<link rel="x-lernraum-i18n"[^>]*href="(uebersetzungen\/[^"]+)">/g)].map((m) => m[1]);
 const trDir = path.join(APP, "uebersetzungen");
 const trDisk = fs.existsSync(trDir) ? fs.readdirSync(trDir).filter((f) => f.endsWith(".js")).map((f) => "uebersetzungen/" + f) : [];
 for (const f of trDisk) {
   if (!trListed.includes(f)) err(f, "Übersetzung ist nicht in app/index.html eingetragen (node app/tools/texte.js <kurs> <sprache> trägt sie ein)");
-  if (!swJs.includes(`"${f}"`)) err(f, "Übersetzung fehlt in app/sw.js (Liste SHELL)");
   if (!/^uebersetzungen\/[a-z0-9-]+\.(en|ar)\.js$/.test(f)) err(f, "Dateiname muss <kurs-id>.<en|ar>.js sein");
 }
-if (trListed.length && indexHtml.indexOf(trListed[trListed.length - 1]) > indexHtml.indexOf("vendor/qrcode.js")) err("app/index.html", "Übersetzungen müssen vor vendor/qrcode.js stehen");
 const tagsOf = (x) => (String(x).match(/<\/?[a-z][a-z0-9]*/gi) || []).map((t) => t.toLowerCase()).sort().join(",");
 const gapsOf = (x) => [...String(x).matchAll(/\{([^}]*)\}/g)].map((m) => m[1]);
 const trStats = [];

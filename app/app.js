@@ -57,13 +57,28 @@
     }
   }
   /* then = was danach passiert; ohne Angabe wird die aktuelle Seite neu aufgebaut */
+  /* Übersetzungen der Kursinhalte (app/uebersetzungen/*.js) werden erst geladen, wenn die Sprache gebraucht wird */
+  const langLoaded = {};
+  function loadLang(l) {
+    if (l === "de") return Promise.resolve();
+    if (langLoaded[l]) return langLoaded[l];
+    const links = [...document.querySelectorAll(`link[rel="x-lernraum-i18n"][lang="${l}"]`)];
+    return (langLoaded[l] = Promise.all(links.map((a) => new Promise((res) => {
+      const sc = document.createElement("script");
+      sc.src = a.getAttribute("href");
+      sc.onload = sc.onerror = res;     // fehlt die Datei oder ist offline: die App zeigt dann Deutsch
+      document.head.append(sc);
+    }))));
+  }
   function setLang(l, then) {
     if (l === LANG) return;
     const prev = LANG;
-    store.set("lang", l);
-    applyLang(l);
-    toast("› " + LANGS[l]);
-    then ? then(prev) : render();
+    loadLang(l).then(() => {
+      store.set("lang", l);
+      applyLang(l);
+      toast("› " + LANGS[l]);
+      then ? then(prev) : render();
+    });
   }
   /* Bereits angezeigte Oberflächentexte in die neue Sprache umschreiben – ohne die Aufgabe neu aufzubauen.
      Erkannt werden ganze Textknoten (und aria-label/title/placeholder), die exakt einem Text aus i18n.js
@@ -114,7 +129,7 @@
   const langSwitch = (extra = "") => `<div class="lang-sw ${extra}" role="group" aria-label="Sprache / Language / اللغة">${Object.entries({ de: "DE", en: "EN", ar: "عربي" })
     .map(([k, lbl]) => `<button type="button" data-lang="${k}" aria-pressed="${k === LANG}" lang="${k}">${lbl}</button>`).join("")}</div>`;
   const bindLang = (v, then) => v.querySelectorAll("[data-lang]").forEach((b) => { b.onclick = () => setLang(b.dataset.lang, then); });
-  applyLang(store.get("lang", "de"));
+  applyLang(store.get("lang", "de"));   // Texte der Oberfläche (i18n.js) sind immer da; Kursübersetzungen kommen per loadLang()
 
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -2798,7 +2813,7 @@
     if (ct && SINGLE) cardsTab.href = `#/f/${ct.s.id}/${ct.t.id}/0`;
     else cardsTab.hidden = true;
   }
-  render();
+  loadLang(LANG).then(render);
 
   if ("serviceWorker" in navigator && location.protocol === "https:") {
     navigator.serviceWorker.register("sw.js").catch(() => {});

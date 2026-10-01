@@ -21,7 +21,8 @@ Wer will, legt in GitHub unter *Releases → Draft a new release* einen Tag auf 
 
 Pull Requests dieser Pakete (werden hier eingetragen):
 
-- Paket 2a · eigene Schriften statt Google Fonts: *(PR-Nummer folgt)*
+- Paket 2a · eigene Schriften statt Google Fonts: #47
+- Paket 2b · Kursübersetzungen erst bei Bedarf laden: *(PR-Nummer folgt)*
 
 ## Alles auf den alten Stand zurücksetzen
 

@@ -132,7 +132,7 @@ gibt es pro Kurs und Sprache eine Datei `app/uebersetzungen/<kurs-id>.<en|ar>.js
 
 1. Datei erzeugen oder aktualisieren: `node app/tools/texte.js <kurs-id> <en|ar>`
    → enthält **alle** übersetzbaren Texte des Kurses, links Deutsch (nicht ändern!), rechts `""` zum Ausfüllen.
-   Die Datei wird automatisch in `app/index.html` und `app/sw.js` eingetragen. Stand aller Kurse: `node app/tools/texte.js --stand`.
+   Die Datei wird automatisch in `app/index.html` eingetragen (als Verweis; die App lädt sie erst, wenn die Sprache gewählt wird). Stand aller Kurse: `node app/tools/texte.js --stand`.
 2. Rechts die Übersetzung eintragen. `""` lassen = die App zeigt das Deutsche (auch das ist erlaubt).
 3. `node app/tools/check-kurse.js` → 0 Fehler. Geprüft wird u. a., dass Lücken/Bausteine erhalten bleiben.
 4. Wenn sich der Kurs ändert: Schritt 1 erneut ausführen – vorhandene Übersetzungen bleiben, neue Texte kommen dazu.

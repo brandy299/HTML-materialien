@@ -14,6 +14,8 @@ fonts = re.sub(r'url\("([^"]+\.woff2)"\)', lambda m: 'url("data:font/woff2;base6
 html = re.sub(r'\s*<link rel="preload"[^>]*fonts/[^>]*>', "", html)
 html = html.replace('<link rel="stylesheet" href="fonts/fonts.css">', "<style>\n" + fonts + "\n</style>")
 html = html.replace('<link rel="stylesheet" href="styles.css">', "<style>\n" + css + "\n</style>")
+# Übersetzungen: in der Einzeldatei fest einbetten (Verweise → Skripte)
+html = re.sub(r'<link rel="x-lernraum-i18n"[^>]*href="([^"]+)">', r'<script src="\1"></script>', html)
 # alle lokalen Skripte (Basis, Kurse, QR, App) in der Reihenfolge aus index.html einbetten
 def inline(m):
     code = (here / m.group(1)).read_text(encoding="utf-8").replace("</script>", "<\\/script>")
