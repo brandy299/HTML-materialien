@@ -890,3 +890,10 @@ html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::be
 .slide.dark .dia-hex .dh-card { color: var(--ink); box-shadow: 2px 2px 0 var(--pink); }
 .topstrip .tag-box { min-width: 0; max-width: 100%; }
 .pad button[data-k="comma"] { font: 800 26px/1 var(--grot); padding-bottom: 6px; }
+
+/* ── Lerncode / Installieren ── */
+.code-box { width: 100%; font: 500 12px/1.4 var(--mono); word-break: break-all; resize: vertical; min-height: 96px; }
+.code-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.code-actions .btn { width: auto; flex: 1 1 140px; justify-content: center; }
+.file-btn { cursor: pointer; display: inline-flex; align-items: center; }
+.install-card[hidden] { display: none; }

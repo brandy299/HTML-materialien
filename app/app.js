@@ -331,6 +331,7 @@
     [/^#\/profil$/, viewProfile, "profil"],
     [/^#\/faecher$/, () => viewPickFach(false), "home"],
     [/^#\/hilfe$/, viewHelp, "hilfe"],
+    [/^#\/sichern$/, () => viewBackup(), "profil"],
     [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
@@ -341,7 +342,7 @@
   function render() {
     if (cleanup) { cleanup(); cleanup = null; }
     const hash = location.hash || "#/";
-    if (!firstName()) return mount(viewWelcome(), null);
+    if (!firstName() && hash !== "#/sichern") return mount(viewWelcome(), null);
     // Wer per Link/QR in einen Kurs kommt, bekommt dessen Fach automatisch zu „Meine Fächer“
     const deep = hash.match(/^#\/f\/([\w-]+)/), ds = deep && findSubject(deep[1]);
     if (ds && !ds.materials) addFach(ds.fach || ds.name);
@@ -390,6 +391,7 @@
         <button class="btn block" style="margin-top:14px" type="submit">${tr("Los geht's")} ${ICON.arrow}</button>
         <p class="hint">${tr("Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.")}${LANG !== "de" ? " " + tr("Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.") : ""}</p>
       </form>
+      <a class="u-link" href="#/sichern" style="display:inline-block;margin-top:18px">${tr("Schon benutzt? Lerncode einlesen")} →</a>
     </main>`);
     dither(v.querySelector("canvas"));
     bindLang(v);
@@ -587,11 +589,13 @@
         <h1 class="display">Lernraum.<small>${tr(filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.")}</small></h1>
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
+      ${installCard(false)}
       <div id="list"></div>
       <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
       <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
     </main>`);
     dither(v.querySelector("canvas"));
+    bindInstall(v);
     const chips = v.querySelector(".fach-chips");
     if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
@@ -2749,6 +2753,128 @@
     setTimeout(() => box.remove(), 3800);
   }
 
+  /* ── Lerncode: Fortschritt sichern und auf ein anderes Gerät mitnehmen (ohne Konto) ─────
+     Der Code enthält alle lernraum.*-Werte des Browsers, komprimiert und als Text. Einlesen führt den Fortschritt zusammen
+     (je Thema gewinnt der neuere Stand, bei einzelnen Schritten der neuere). Es werden nur lernraum.*-Schlüssel gelesen/geschrieben. */
+  const CODE_PREFIX = "LR1";
+  const bytesToB64u = (u8) => { let b = ""; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode(...u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
+  const b64uToBytes = (t) => { const b = atob(t.replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
+  async function pipeBytes(u8, stream) { return new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer()); }
+  async function makeCode() {
+    const d = {};
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith("lernraum.")) d[k] = localStorage.getItem(k); }
+    const raw = new TextEncoder().encode(JSON.stringify({ v: 1, t: Date.now(), d }));
+    if (typeof CompressionStream === "function") return `${CODE_PREFIX}z.${bytesToB64u(await pipeBytes(raw, new CompressionStream("deflate-raw")))}`;
+    return `${CODE_PREFIX}u.${bytesToB64u(raw)}`;
+  }
+  async function readCode(text) {
+    const m = String(text).replace(/\s+/g, "").match(/^LR1([zu])\.([A-Za-z0-9_-]+)$/);
+    if (!m) throw new Error("format");
+    let u8 = b64uToBytes(m[2]);
+    if (m[1] === "z") { if (typeof DecompressionStream !== "function") throw new Error("browser"); u8 = await pipeBytes(u8, new DecompressionStream("deflate-raw")); }
+    const o = JSON.parse(new TextDecoder().decode(u8));
+    if (!o || o.v !== 1 || !o.d || typeof o.d !== "object") throw new Error("format");
+    for (const [k, v] of Object.entries(o.d)) if (!k.startsWith("lernraum.") || typeof v !== "string" || v.length > 400000) throw new Error("format");
+    return o;
+  }
+  const parseJ = (v, f) => { try { return JSON.parse(v); } catch { return f; } };
+  /* Zusammenführen: Fortschritt je Thema nach Zeitstempel, Schritte vereinigt; Training mit mehr Runden; Rest wird übernommen */
+  function mergeCode(o) {
+    const out = [];
+    for (const [k, v] of Object.entries(o.d)) {
+      const mine = localStorage.getItem(k);
+      let val = v;
+      if (mine !== null && k === "lernraum.progress") {
+        const a = parseJ(mine, {}), b = parseJ(v, {}), m = { ...a };
+        for (const [id, nb] of Object.entries(b)) {
+          const na = a[id];
+          if (!na) { m[id] = nb; continue; }
+          const newer = (nb.ts || 0) > (na.ts || 0) ? nb : na, older = newer === nb ? na : nb;
+          m[id] = { ...older, ...newer, done: { ...(older.done || {}), ...(newer.done || {}) } };
+        }
+        val = JSON.stringify(m);
+      } else if (mine !== null && k === "lernraum.self") val = JSON.stringify({ ...parseJ(v, {}), ...parseJ(mine, {}) });
+      else if (mine !== null && k.startsWith("lernraum.drill.")) { const a = parseJ(mine, {}), b = parseJ(v, {}); val = JSON.stringify((b.rounds || 0) > (a.rounds || 0) ? b : a); }
+      try { localStorage.setItem(k, val); out.push(k); } catch { /* Speicher voll */ }
+    }
+    return out;
+  }
+  const codeSummary = (o) => {
+    const pr = parseJ(o.d["lernraum.progress"], {}), n = Object.keys(pr).filter((k) => Object.keys((pr[k] || {}).done || {}).length).length;
+    const nm = parseJ(o.d["lernraum.name"], "");
+    return `${nm ? esc(nm) + " · " : ""}${tr("{n} Themen mit Fortschritt", { n })} · ${new Date(o.t).toLocaleDateString(LANG === "ar" ? "ar" : LANG === "en" ? "en-GB" : "de-DE")}`;
+  };
+  function copyText(text, ok) {
+    const done = () => toast("› " + ok);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => done());
+    else done();
+  }
+  function viewBackup() {
+    const v = h(`<main class="view ${firstName() ? "" : "no-tabbar"}">
+      <div class="topstrip"><a class="icon-btn" href="${firstName() ? "#/profil" : "#/"}" aria-label="${tr("Zurück")}">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${tr("Lerncode")}</span>${langSwitch()}</div>
+      <h1 class="display" style="margin-top:24px">${tr("Fortschritt sichern.")}<small>${tr("Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.")}</small></h1>
+      <div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Lerncode erstellen")}</div>
+        <div class="body"><p class="hint" style="margin:0 0 10px">${tr("Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.")}</p>
+          <textarea class="input code-box" id="codeOut" readonly rows="4" aria-label="${tr("Lerncode")}" placeholder="…"></textarea>
+          <div class="code-actions"><button class="btn small" id="copyBtn" disabled>${tr("Kopieren")}</button><button class="btn small ghost" id="fileBtn" disabled>${tr("Als Datei speichern")}</button></div></div></div>
+      <div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Lerncode einlesen")}</div>
+        <div class="body"><textarea class="input code-box" id="codeIn" rows="4" placeholder="${tr("Code hier einfügen")}" aria-label="${tr("Code hier einfügen")}"></textarea>
+          <div class="code-actions"><button class="btn small" id="readBtn">${tr("Einlesen")}</button><label class="btn small ghost file-btn">${tr("Datei auswählen")}<input type="file" id="fileIn" accept=".txt,text/plain" hidden></label></div>
+          <div id="readOut"></div></div></div>
+    </main>`);
+    bindLang(v);
+    const out = v.querySelector("#codeOut"), res = v.querySelector("#readOut"), inp = v.querySelector("#codeIn");
+    makeCode().then((c) => {
+      out.value = c;
+      const copy = v.querySelector("#copyBtn"), file = v.querySelector("#fileBtn");
+      copy.disabled = file.disabled = false;
+      copy.onclick = () => { out.select(); copyText(c, tr("Code kopiert")); };
+      file.onclick = () => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([c], { type: "text/plain" }));
+        a.download = `lernraum-${(firstName() || "code").replace(/[^\w-]+/g, "")}-${new Date().toISOString().slice(0, 10)}.txt`;
+        document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      };
+    }).catch(() => { out.value = ""; out.placeholder = tr("Der Code konnte nicht erstellt werden."); });
+    const fail = (m) => res.replaceChildren(term([["p", "$ lerncode"], ["", `› <span class="no">${m}</span>`]]));
+    const check = async (text) => {
+      let o;
+      try { o = await readCode(text); } catch (e) { return fail(e.message === "browser" ? tr("Dieser Browser kann den Code nicht lesen.") : tr("Der Code ist ungültig. Kopiere ihn bitte vollständig.")); }
+      const go = h(`<div class="term-ok"><p class="hint" style="margin:10px 0">${tr("Gefunden:")} <b>${codeSummary(o)}</b><br>${tr("Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.")}</p><button class="btn small">${tr("Übernehmen")}</button></div>`);
+      go.querySelector("button").onclick = () => { mergeCode(o); location.hash = "#/"; location.reload(); };   // neu laden: Name, Sprache und Fächer kommen aus dem Code
+      res.replaceChildren(go);
+    };
+    v.querySelector("#readBtn").onclick = () => check(inp.value);
+    v.querySelector("#fileIn").onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then((t) => { inp.value = t; check(t); }); };
+    return v;
+  }
+
+  /* ── App auf den Startbildschirm: Fortschritt bleibt zuverlässiger erhalten, Start per Tipp ── */
+  let deferredInstall = null;
+  addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstall = e; document.querySelectorAll(".install-card").forEach((c) => { c.hidden = false; }); });
+  addEventListener("appinstalled", () => { deferredInstall = null; document.querySelectorAll(".install-card").forEach((c) => c.remove()); });
+  const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  function installCard(always) {
+    if (isStandalone() || !(location.protocol === "https:" || location.hostname === "localhost") || !matchMedia("(pointer: coarse)").matches) return "";
+    const st = store.get("install", {});
+    if (!always && (st.dismissed && Date.now() - st.dismissed < 14 * 864e5)) return "";
+    if (!always && !Object.keys(progress.all()).length) return "";   // erst zeigen, wenn schon etwas gelernt wurde
+    const how = isIOS() ? tr("Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.") : tr("Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.");
+    return `<div class="win install-card" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("App auf den Startbildschirm")}</div>
+      <div class="body"><p class="hint" style="margin:0 0 10px">${tr("So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.")}</p>
+        <p class="hint" style="margin:0 0 12px"><b>${how}</b></p>
+        <div class="code-actions"><button class="btn small" data-install="go" ${isIOS() ? "hidden" : ""}>${tr("Installieren")}</button>${always ? "" : `<button class="btn small ghost" data-install="later">${tr("Später")}</button>`}</div></div></div>`;
+  }
+  function bindInstall(root) {
+    root.querySelectorAll("[data-install]").forEach((b) => b.onclick = () => {
+      if (b.dataset.install === "later") { store.set("install", { dismissed: Date.now() }); b.closest(".install-card").remove(); return; }
+      if (deferredInstall) { deferredInstall.prompt(); deferredInstall.userChoice.finally(() => { deferredInstall = null; }); }
+      else toast("› " + tr("Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“."));
+    });
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch { /* egal */ }
+  }
+
   /* ── Profil ─────────────────────────────────────────────── */
   function viewProfile() {
     const name = firstName();
@@ -2775,12 +2901,15 @@
       <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
         <button class="list-row" id="rename"><span>${tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
+        <a class="list-row" href="#/sichern"><span>${tr("Fortschritt sichern (Lerncode)")}</span><span class="v">→</span></a>
         <a class="list-row" href="#/faecher"><span>${tr("Meine Fächer")}</span><span class="v">${esc((myFaecher() || []).join(" · ") || tr("alle"))}</span></a>
         <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
         <button class="list-row danger" id="reset"><span>${tr("Fortschritt zurücksetzen")}</span></button>
       </div>
       <p class="hint" style="margin-top:14px">${tr("Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.")}</p>
+      ${installCard(true)}
     </main>`);
+    bindInstall(v);
 
     const rename = v.querySelector("#rename");
     rename.onclick = () => {
