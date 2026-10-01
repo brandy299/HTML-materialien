@@ -8,6 +8,11 @@ html = (here / "index.html").read_text(encoding="utf-8")
 css = (here / "styles.css").read_text(encoding="utf-8")
 # PWA-Teile entfernen (funktionieren in einer Einzeldatei nicht)
 html = re.sub(r'\s*<link rel="(manifest|icon|apple-touch-icon)"[^>]*>', "", html)
+import base64
+fonts = (here / "fonts" / "fonts.css").read_text(encoding="utf-8")
+fonts = re.sub(r'url\("([^"]+\.woff2)"\)', lambda m: 'url("data:font/woff2;base64,' + base64.b64encode((here / "fonts" / m.group(1)).read_bytes()).decode() + '")', fonts)
+html = re.sub(r'\s*<link rel="preload"[^>]*fonts/[^>]*>', "", html)
+html = html.replace('<link rel="stylesheet" href="fonts/fonts.css">', "<style>\n" + fonts + "\n</style>")
 html = html.replace('<link rel="stylesheet" href="styles.css">', "<style>\n" + css + "\n</style>")
 # alle lokalen Skripte (Basis, Kurse, QR, App) in der Reihenfolge aus index.html einbetten
 def inline(m):

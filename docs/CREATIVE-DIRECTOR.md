@@ -42,7 +42,7 @@ Stilstudie der Lehrkraft war die Vorlage.
   Pink `#F386A1`, Pink tief `#D45BB6`, Grün (richtig) `#0A8F57`, Rot (falsch) `#C1354F`, Terminal-Grün `#5CE0A8`.
   Nur helles Design (bewusst kein Dark Mode).
 - **Schrift:** Archivo 800 für Überschriften (eng, `letter-spacing` negativ), JetBrains Mono für Labels,
-  Titelleisten, Terminal. Beide über Google Fonts (Datenschutz-Punkt offen, siehe unten).
+  Titelleisten, Terminal. Beide **lokal gehostet** in `app/fonts/` (seit 01.10.2026, keine Verbindung zu Google; OFL-Lizenzen liegen dabei).
 - **Bausteine:** `.win` + `.bar` (Fenster mit schwarzer Titelleiste, pinker Punkt), harte Schatten
   `4px 4px 0 var(--ink)`, `.term` (Terminal-Rückmeldung), `.btn` (eckig, Großbuchstaben), Pixelwolke per
   Bayer-Dithering (`dither()` in app.js, `drawCloud()` in site/landing.js), Ecken-Markierungen.
@@ -120,7 +120,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 - [x] Kommazahlen im Zahlenfeld (#15) – erledigt 30.09.2026.
 - [ ] **Impressum** – Pflicht bei eigener Domain; Angaben muss die Lehrkraft liefern. Im Footer verlinken.
-- [ ] **Google Fonts lokal einbinden** (Datenschutz/IP-Übertragung an Google).
+- [x] Google Fonts lokal eingebunden (01.10.2026). Rücksprung-Anleitung: `docs/ROLLBACK.md`.
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
 - [ ] Endlos-Training gibt es für Personalbedarf und Zeitformen. Weitere Generatoren denkbar (z. B. Bezugskalkulation mit zufälligen Preisen – Kommazahlen gibt es jetzt).
 - [ ] Englisch: Wenn der Content-Agent Present Perfect / Past Progressive / will-Future liefert, diese in `tenses` des Trainings aufnehmen (der Agent darf das selbst).
