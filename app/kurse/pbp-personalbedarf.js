@@ -8,7 +8,7 @@ LERNRAUM.subjects.push({
   id: "pbp",
   fach: "PBP",
   added: "2026-09-24",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-09-29",        // neue Inhalte: Probeklausur 2 (für „Aktualisiert“)
+  updated: "2026-10-02",        // neue Inhalte: Erklärvideos zu LS 2.1 (für „Aktualisiert“)
   name: "Personalbedarf",
   course: "PBP · HS1",
   glyph: "P",
@@ -20,6 +20,8 @@ LERNRAUM.subjects.push({
     /* ══════════════ LS 2.1 · TEIL 1 ══════════════ */
     {
       id: "bedarf-berechnen",
+      video: "pbp-bedarf-berechnen",       // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Personalbedarf kurz erklärt",
       help: `<h3>Das Rechenschema</h3>
              <p class="formula">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p>
              <h3>Abgang oder Zugang?</h3>
@@ -193,6 +195,8 @@ LERNRAUM.subjects.push({
     /* ══════════════ LS 2.1 · TEIL 2 ══════════════ */
     {
       id: "ersatz-neubedarf",
+      video: "pbp-ersatz-neubedarf",
+      videoTitle: "Ersatz oder neu?",
       help: `<h3>Gesamter Personalbedarf zerlegt</h3>
              <p class="formula">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Gesamt = Ersatzbedarf + Neubedarf</p>
              <ul><li><strong>Ersatzbedarf:</strong> Leute, die gehen und ersetzt werden müssen.</li>

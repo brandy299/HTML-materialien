@@ -56,7 +56,7 @@ for (const f of listed) {
 /* ── 3. Inhalte prüfen ──────────────────────────────────────── */
 const ID = /^[a-z0-9][a-z0-9-]*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "word", "link"];
+const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "word", "link", "video"];
 const WORDNUM = { ein: 1, eins: 1, eines: 1, einer: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
 const str = (x) => typeof x === "string" && x.trim().length > 0;
 const subjectIds = new Set();
@@ -64,6 +64,13 @@ const subjectIds = new Set();
 function checkHints(where, o) {
   if (o.hints !== undefined && (!Array.isArray(o.hints) || !o.hints.every(str))) err(where, "hints muss eine Liste von Texten sein");
   if (o.hint !== undefined && !str(o.hint)) err(where, "hint muss ein Text sein");
+}
+
+// Erklärvideo: Dateien in app/videos/ müssen vollständig sein (siehe app/VIDEO-ANLEITUNG.md)
+function checkVideoRef(where, id) {
+  if (!str(id) || !/^[a-z0-9-]+$/.test(id)) return err(where, "video muss die ID eines Videos sein (a–z, 0–9, -)");
+  const dir = path.join(__dirname, "..", "videos");
+  [`src/${id}.js`, `${id}.m4a`, `${id}.jpg`, `${id}-dark.jpg`, `${id}.txt`].forEach((f) => { if (!fs.existsSync(path.join(dir, f))) err(where, `video „${id}“: Datei app/videos/${f} fehlt (node app/tools/render-video.js ${id})`); });
 }
 
 function checkStep(where, st, topic) {
@@ -187,6 +194,9 @@ function checkStep(where, st, topic) {
     case "link":
       if (!str(st.href)) err(where, "href fehlt");
       break;
+    case "video":
+      checkVideoRef(where, st.video);
+      break;
   }
 }
 
@@ -222,6 +232,11 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
       }
       if (t.soon) return;
       if (!Array.isArray(t.steps) || !t.steps.length) return err(WT, "steps ist leer");
+      if (t.video !== undefined) {
+        checkVideoRef(`${WT} video`, t.video);
+        if (t.exam) err(WT, "video ist in einer Übungsklausur nicht erlaubt");
+        if (t.videoMinutes !== undefined && !Number.isInteger(t.videoMinutes)) err(WT, "videoMinutes muss eine ganze Zahl sein");
+      }
       if (!t.help && !t.exam && !t.steps.every((x) => x.type === "cards")) warn(WT, "kein Merkkasten (help) für den ?-Knopf");
       t.steps.forEach((st, k) => checkStep(`${WT} Schritt ${k + 1}`, st, t));
       if (t.exam) {

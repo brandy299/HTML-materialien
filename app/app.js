@@ -194,6 +194,13 @@
     arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     link: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
+    play: '<svg viewBox="0 0 24 24"><path d="M7 4.5l12 7.5-12 7.5z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>',
+    prev: '<svg viewBox="0 0 24 24"><path d="M19 5l-9 7 9 7zM5.5 5v14"/></svg>',
+    next: '<svg viewBox="0 0 24 24"><path d="M5 5l9 7-9 7zM18.5 5v14"/></svg>',
+    sound: '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 8.5a5 5 0 0 1 0 7"/></svg>',
+    mute: '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6"/></svg>',
+    text: '<svg viewBox="0 0 24 24"><path d="M5 6h14M5 11h14M5 16h9"/></svg>',
     help: '<svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15M12 18.5v.5"/></svg>',
     qr: '<svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM6.5 6.5h1v1h-1zM16.5 6.5h1v1h-1zM6.5 16.5h1v1h-1z"/></svg>',
     ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
@@ -209,11 +216,12 @@
     cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
+    video: "Tippe auf Start. Tippe links oder rechts ins Bild, um eine Szene zurück oder vor zu springen, in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
-  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben" };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", video: "Erklärvideo" };
   const STEP_LABEL = {};
   labelsReady = true;
   applyLang(LANG);
@@ -228,6 +236,7 @@
       case "cards": return tr("{n} Karten", { n: st.cards.length });
       case "selfcheck": return tr("{n} Aussagen", { n: st.items.length });
       case "sentence": return tr("{n} Bausteine", { n: (st.text.match(/\{/g) || []).length });
+      case "video": return tr("ca. {m} min", { m: st.minutes || 1 });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return tr("öffnet sich neu");
     }
@@ -338,6 +347,7 @@
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
+    [/^#\/f\/([\w-]+)\/([\w-]+)\/video$/, viewTopicVideo, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/(\d+)$/, viewPlayer, null]
   ];
 
@@ -717,13 +727,14 @@
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
       <p class="eyebrow" style="margin-top:14px">${tr("{n} Schritte", { n: t.steps.length })} · ${tr("ca. {m} min", { m: t.minutes || 10 })}${t.group ? " · " + esc(t.group) : ""}</p>
+      ${t.video && !SINGLE && location.protocol !== "file:" ? videoCard(s, t, p) : ""}
       <div class="win" style="margin-top:24px">
         <div class="bar"><span class="d"></span>${tr("Lernpfad")}<span class="r">${progress.count(s, t)}/${t.steps.length}</span></div>
         <ol class="list" id="path" style="border:0;list-style:none"></ol>
       </div>
       ${started ? `<button class="u-link reset-topic" type="button">↺ ${tr("Thema zurücksetzen")}</button>` : ""}
       <div class="dock"><div class="dock-inner">
-        <a class="btn block" href="#/f/${s.id}/${t.id}/${allDone ? 0 : next}">${tr(allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten")} ${ICON.arrow}</a>
+        <a class="btn block" href="#/f/${s.id}/${t.id}/${t.video && !SINGLE && location.protocol !== "file:" && !p.video && !started ? "video" : allDone ? 0 : next}">${tr(allDone ? "Nochmal durchgehen" : started ? "Weitermachen" : "Starten")} ${ICON.arrow}</a>
       </div></div>
     </main>`);
     const rt = v.querySelector(".reset-topic");
@@ -959,7 +970,184 @@
     return v;
   }
 
+  /* ── Erklärvideo: Live-Wiedergabe mit dem Video-Baukasten (app/videos/) ──────────
+     Die Animation läuft direkt in der App (scharf, Dark Mode, wenige KB); die Musik ist eine
+     kleine m4a-Datei. Ein Thema kann `video: "<id>"` haben: Einstieg vor dem Lernpfad, ohne die
+     Schritt-Nummern (und damit den gespeicherten Fortschritt) zu verschieben. */
+  const vidAsset = (name) => new URL((/\/dist\/[^/]*$/.test(location.pathname) ? "../videos/" : "videos/") + name, document.baseURI).href;   // Einzeldatei liegt in app/dist/
+  const vidFiles = {};
+  function vidLoadFile(kind, url) {
+    return vidFiles[url] || (vidFiles[url] = new Promise((res, rej) => {
+      if (kind === "css") { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = url; l.onload = res; l.onerror = rej; document.head.append(l); }
+      else { const sc = document.createElement("script"); sc.src = url; sc.onload = res; sc.onerror = rej; document.head.append(sc); }
+    }).catch((e) => { delete vidFiles[url]; throw e; }));
+  }
+  function loadVideo(id) {
+    if (window.LV && LV.defs && LV.defs[id]) return Promise.resolve(LV.defs[id]);
+    return Promise.all([vidLoadFile("css", vidAsset("lib/lv.css")), vidLoadFile("js", vidAsset("lib/lv.js"))])
+      .then(() => vidLoadFile("js", vidAsset("src/" + id + ".js")))
+      .then(() => { const d = window.LV && LV.defs && LV.defs[id]; if (!d) throw new Error("Video " + id); return d; });
+  }
+
+  /* Karte in der Themenübersicht: Vorschaubild (passend zu Hell/Dunkel) + Start */
+  function videoCard(s, t, p) {
+    const dark = document.documentElement.dataset.theme === "dark";
+    return `<a class="win vidcard" href="#/f/${s.id}/${t.id}/video" style="margin-top:24px">
+      <div class="bar"><span class="d"></span>${tr("Erklärvideo")}<span class="r">${p.video ? "✓ " + tr("angesehen") : tr("ca. {m} min", { m: t.videoMinutes || 1 })}</span></div>
+      <div class="body">
+        <span class="vc-poster"><img src="${vidAsset(t.video + (dark ? "-dark" : "") + ".jpg")}" alt="" loading="lazy" width="90" height="160"><span class="vc-play">${ICON.play}</span></span>
+        <span class="vc-txt"><b>${esc(t.videoTitle || t.title)}</b><small>${tr("Kurz erklärt – danach geht's an die Aufgaben.")}</small><span class="vc-cta">${tr(p.video ? "Nochmal ansehen" : "Video ansehen")} ${ICON.arrow}</span></span>
+      </div></a>`;
+  }
+
+  /* Einstieg „Erklärvideo“ eines Themas: eigene Ansicht, zählt nicht als Schritt */
+  function viewTopicVideo(sid, tid) {
+    const s = findSubject(sid), t = findTopic(s, tid);
+    if (!t || !t.video || SINGLE) { location.hash = t ? `#/f/${sid}/${tid}` : "#/"; return h("<div></div>"); }
+    const v = h(`<main class="player">
+      <div class="player-top">
+        <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
+        <div class="progress"><i style="--f:0"></i></div>
+        <span class="icon-btn" style="visibility:hidden" aria-hidden="true"></span>
+      </div>
+      <header class="player-head" style="padding-bottom:0">
+        <p class="eyebrow">${tr("Erklärvideo")} · ${esc(t.videoTitle || t.title)}</p>
+      </header>
+      <section class="player-body" style="padding-top:12px"></section>
+      <div class="dock"><div class="dock-inner"><button class="btn block" id="act"></button></div></div>
+    </main>`);
+    const btn = v.querySelector("#act"), bar = v.querySelector(".progress i");
+    const markSeen = () => { const p = progress.of(s.id, t.id); if (!p.video) { p.video = true; progress.save(s.id, t.id, p); } };
+    const ctx = {
+      body: v.querySelector(".player-body"),
+      setProgress(f) { bar.style.setProperty("--f", Math.max(0, Math.min(1, f))); },
+      action(label, fn, { enabled = true, variant = "" } = {}) { btn.innerHTML = label; btn.disabled = !enabled; btn.className = "btn block " + variant; btn.onclick = fn; },
+      seen: markSeen,
+      finish() { markSeen(); buzz(15); location.hash = `#/f/${s.id}/${t.id}/${nextStepIndex(s, t)}`; }
+    };
+    videoPlayer(t.video, ctx, { intro: true });
+    return v;
+  }
+
+  function videoPlayer(id, ctx, o) {
+    const box = h(`<div class="vid">
+      <div class="vid-stage"><div class="win vid-loading"><div class="bar"><span class="d"></span>${tr("Erklärvideo")}</div><div class="body"><p>${tr("Video wird geladen …")}</p></div></div></div>
+      <div class="vid-ctl" hidden>
+        <button class="icon-btn" type="button" data-a="prev" aria-label="${tr("Szene zurück")}">${ICON.prev}</button>
+        <button class="icon-btn" type="button" data-a="pp" aria-label="${tr("Abspielen")}">${ICON.play}</button>
+        <button class="icon-btn" type="button" data-a="next" aria-label="${tr("Szene vor")}">${ICON.next}</button>
+        <button class="icon-btn" type="button" data-a="mute" aria-label="${tr("Ton")}">${ICON.sound}</button>
+        <button class="icon-btn" type="button" data-a="text" aria-label="${tr("Text lesen")}" aria-pressed="false">${ICON.text}</button>
+      </div>
+      <div class="vid-text" hidden></div>
+    </div>`);
+    ctx.body.append(box);
+    ctx.setProgress(0);
+    const cont = () => ctx.finish(true);
+    const skipLabel = `${tr("Überspringen")} ${ICON.arrow}`, nextLabel = `${tr("Weiter")} ${ICON.arrow}`;
+    ctx.action(skipLabel, cont, { variant: "ghost" });
+
+    const fail = (single) => {
+      box.replaceChildren(h(`<div class="win"><div class="bar"><span class="d"></span>${tr("Erklärvideo")}</div><div class="body"><p>${tr(single ? "Das Video gibt es in der Web-App." : "Video konnte nicht geladen werden. Prüfe deine Verbindung.")}</p>
+        ${single ? `<a class="btn ghost block" href="https://lernen.yannikbrand.eu/app/" target="_blank" rel="noopener">${tr("In der Web-App öffnen")} ${ICON.ext}</a>` : ""}</div></div>`));
+      ctx.action(nextLabel, cont);
+    };
+    if (SINGLE || location.protocol === "file:") return fail(true);   // Datei ohne Webserver: Videos gibt es nur in der Web-App
+
+    /* Warten, bis die Ansicht wirklich in der Seite hängt (die Skripte laden oft schneller als der Seitenwechsel) */
+    const whenConnected = (def) => new Promise((res) => { let n = 0; const chk = () => (box.isConnected || ++n > 150 ? res(def) : requestAnimationFrame(chk)); chk(); });
+    loadVideo(id).then(whenConnected, (e) => whenConnected().then(() => { throw e; })).then((def) => {
+      if (!box.isConnected) return;
+      const host = box.querySelector(".vid-stage"), ctl = box.querySelector(".vid-ctl"), txt = box.querySelector(".vid-text");
+      host.replaceChildren();
+      const saveData = !!(navigator.connection && navigator.connection.saveData);
+      const inst = LV.create(def, host, { audio: vidAsset(id + ".m4a"), preload: saveData ? "none" : "auto", maxH: () => Math.max(280, innerHeight - host.getBoundingClientRect().top - 184) });
+      const info = inst.info();
+      if (window.__LV_TEST) window.__vid = inst;   // nur für automatische Tests
+      let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const muted = !!store.get("vidmute", false);
+      inst.setMuted(muted);
+      inst.seek(Math.min(2.6, inst.total - 0.1));
+      ctl.hidden = false;
+
+      const q = (a) => box.querySelector(`[data-a="${a}"]`);
+      const setPP = () => {
+        const b = q("pp");
+        b.innerHTML = inst.ended ? ICON.reset : inst.playing ? ICON.pause : ICON.play;
+        b.setAttribute("aria-label", tr(inst.ended ? "Nochmal ansehen" : inst.playing ? "Pause" : "Abspielen"));
+      };
+      const setMute = () => { q("mute").innerHTML = inst.muted ? ICON.mute : ICON.sound; q("mute").setAttribute("aria-pressed", String(inst.muted)); };
+      setMute();
+      const markSeen = () => { if (seen) return; seen = true; ctx.seen && ctx.seen(); ctx.action(nextLabel, cont); };
+
+      const ov = h(`<button class="vid-start" type="button" aria-label="${tr("Video starten")}">
+        <span class="vid-play">${ICON.play}</span>
+        <span class="vid-meta">${tr("Erklärvideo")} · ${Math.round(inst.total)} s</span>
+        <span class="vid-sound">${tr("mit Ton")}</span></button>`);
+      inst.el.append(ov);
+      const start = () => {
+        if (started) return;
+        ov.remove(); started = true; inst.seek(0); inst.play(); buzz(10);
+      };
+      ov.onclick = (e) => { e.stopPropagation(); start(); };
+
+      inst.on("state", (st) => {
+        setPP();
+        if (st === "end") markSeen();
+      }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
+        .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
+
+      /* Tippen ins Bild: links = Szene zurück, rechts = Szene vor, Mitte = Pause/Weiter */
+      inst.el.addEventListener("click", (e) => {
+        if (ov.isConnected) return;
+        const r = inst.el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+        if (x < 0.28) inst.prevScene(); else if (x > 0.72) inst.nextScene(); else inst.toggle();
+        setPP();
+      });
+      q("prev").onclick = () => { inst.prevScene(); };
+      q("next").onclick = () => { inst.nextScene(); };
+      q("pp").onclick = () => { if (ov.isConnected) start(); else inst.toggle(); setPP(); };
+      q("mute").onclick = () => { inst.setMuted(!inst.muted); store.set("vidmute", inst.muted); setMute(); };
+
+      /* Text statt Video (auch automatisch bei „weniger Bewegung“) */
+      const cardScenes = info.scenes.map((x, k) => ({ x, k })).filter((o) => o.x.text.length);
+      txt.innerHTML = cardScenes.map(({ x, k }) => `<div class="win vid-card" data-k="${k}"><div class="bar"><span class="d"></span>${esc(x.kicker || info.title)}</div><div class="body">${x.text.slice(x.kicker ? 1 : 0).map((l) => `<p>${esc(l)}</p>`).join("")}</div></div>`).join("");
+      /* Breit (Desktop): Text steht dauerhaft neben dem Video, die laufende Szene ist hervorgehoben */
+      const wideMq = matchMedia("(min-width: 900px)");
+      const wide = wideMq.matches;
+      box.classList.toggle("vid-wide", wide);
+      const sceneIdx = (t) => { let k = 0; info.scenes.forEach((x, j) => { if (t >= x.start - 1e-6) k = j; }); return k; };
+      let curK = -1;
+      const hilite = (t) => { const k = sceneIdx(t); if (k === curK) return; curK = k; txt.querySelectorAll(".vid-card").forEach((c) => c.classList.toggle("on", +c.dataset.k === k)); };
+      if (wide) { inst.on("time", hilite); hilite(inst.time); }
+      const setText = (on) => {
+        if (wide) return;
+        txt.hidden = !on; host.hidden = on; q("text").setAttribute("aria-pressed", String(on));
+        ["prev", "pp", "next"].forEach((a) => { q(a).disabled = on; });
+        if (on) { inst.pause(); setPP(); ctx.action(nextLabel, cont); }
+        else { inst.relayout(); if (!seen) ctx.action(skipLabel, cont, { variant: "ghost" }); }
+      };
+      q("text").onclick = () => setText(txt.hidden);
+      if (wide) { txt.hidden = false; q("text").hidden = true; }
+      else if (noMotion) setText(true);
+
+      const onKey = (e) => {
+        if (/^(input|textarea|select|button|a)$/i.test((e.target.tagName || "")) || !txt.hidden) return;
+        if (e.key === " ") { e.preventDefault(); if (ov.isConnected) start(); else inst.toggle(); setPP(); }
+        else if (e.key === "ArrowLeft") inst.prevScene(); else if (e.key === "ArrowRight") inst.nextScene();
+      };
+      const onVis = () => { if (document.hidden) { inst.pause(); setPP(); } };
+      document.addEventListener("keydown", onKey); document.addEventListener("visibilitychange", onVis);
+      const prev = cleanup;
+      cleanup = () => { inst.destroy(); document.removeEventListener("keydown", onKey); document.removeEventListener("visibilitychange", onVis); prev && prev(); };
+      if (!saveData) inst.preloadAudio();
+    }).catch((e) => { if (box.isConnected) fail(false); if (window.__LV_TEST) console.warn("video-fehler", e && e.message); });
+  }
+
   const PLAYERS = {
+
+    /* Erklärvideo als Schritt (Live-Wiedergabe): { type:"video", title, video:"<id>", minutes } */
+    video(step, ctx) { videoPlayer(step.video, ctx, {}); },
 
     /* Präsentation: horizontal wischen */
     slides(step, ctx) {

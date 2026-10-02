@@ -17,6 +17,12 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
+    "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
+    "Video ansehen": "Watch video", "Nochmal ansehen": "Watch again", "angesehen": "watched", "Überspringen": "Skip",
+    "Kurz erklärt – danach geht's an die Aufgaben.": "Explained in short – then on to the tasks.",
+    "Das Video gibt es in der Web-App.": "The video is available in the web app.", "Video konnte nicht geladen werden. Prüfe deine Verbindung.": "The video could not be loaded. Check your connection.",
+    "In der Web-App öffnen": "Open in the web app", "Kein Ton – das Video läuft ohne Musik.": "No sound – the video plays without music.",
     "Darstellung": "Appearance", "Automatisch": "Automatic", "Hell": "Light", "Dunkel": "Dark", "Textgröße": "Text size",
     "Thema suchen …": "Search topics …", "Nichts gefunden. Probier ein anderes Wort.": "Nothing found. Try another word.",
     "Neu hier?": "New here?",
@@ -104,6 +110,7 @@ window.LERNRAUM_I18N = {
       cards: "Think of the answer, then tap to flip. Be honest: “Again” puts the card at the back.",
       selfcheck: "Tap each statement until it fits you: empty = not sure yet, half = so-so, full = got it.",
       link: "The material opens in a new tab. Come back afterwards and tap “Done”.",
+      video: "Tap Start. Tap the left or right of the picture to jump a scene back or forward, the middle to pause. “Text” shows everything to read.",
       sentence: "Tap a gap and choose the matching block below. Step by step you build a complete answer sentence.",
       word: "Tap a line – drag the blue handles to extend the selection. Format with the toolbar, add empty lines with Enter (delete: ⌫), shortcuts: Ctrl+A/B/R. “Check” tests your task."
     }
@@ -112,6 +119,12 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
+    "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
+    "Video ansehen": "شاهد الفيديو", "Nochmal ansehen": "شاهد مرة أخرى", "angesehen": "تمت المشاهدة", "Überspringen": "تخطَّ",
+    "Kurz erklärt – danach geht's an die Aufgaben.": "شرح قصير – ثم ننتقل إلى المهام.",
+    "Das Video gibt es in der Web-App.": "الفيديو متوفر في تطبيق الويب.", "Video konnte nicht geladen werden. Prüfe deine Verbindung.": "تعذّر تحميل الفيديو. تحقّق من اتصالك.",
+    "In der Web-App öffnen": "افتح في تطبيق الويب", "Kein Ton – das Video läuft ohne Musik.": "لا صوت – يعمل الفيديو بدون موسيقى.",
     "Darstellung": "المظهر", "Automatisch": "تلقائي", "Hell": "فاتح", "Dunkel": "داكن", "Textgröße": "حجم النص",
     "Thema suchen …": "ابحث عن موضوع …", "Nichts gefunden. Probier ein anderes Wort.": "لم يتم العثور على شيء. جرّب كلمة أخرى.",
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
@@ -206,6 +219,7 @@ window.LERNRAUM_I18N = {
       cards: "فكّر في الإجابة ثم اضغط لقلب البطاقة. كن صادقًا: «مرة أخرى» تضع البطاقة في الخلف.",
       selfcheck: "اضغط على كل عبارة حتى تناسبك: فارغ = لست متأكدًا بعد، نصف = إلى حدٍّ ما، ممتلئ = أتقنتها.",
       link: "تُفتح المادة في نافذة جديدة. ارجع بعد ذلك واضغط على «تم».",
+      video: "اضغط على «ابدأ». اضغط على يسار الصورة أو يمينها للانتقال مشهدًا للخلف أو للأمام، وعلى الوسط للإيقاف المؤقت. «نص» يعرض كل شيء للقراءة.",
       sentence: "اضغط على فراغ واختر الجزء المناسب في الأسفل. هكذا تبني خطوة بخطوة جملة إجابة كاملة.",
       word: "اضغط على سطر – اسحب المقابض الزرقاء لتوسيع التحديد. نسّق باستخدام الشريط، وأضف أسطرًا فارغة بـ Enter (الحذف: ⌫)، والاختصارات: Ctrl+A/B/R. زر «تحقّق» يفحص مهمتك."
     }

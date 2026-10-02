@@ -2,13 +2,16 @@
 /* ============================================================
    LERNRAUM — Erklärvideo rendern
    Quelle:  app/videos/src/<id>.js   (Szenen mit dem Video-Baukasten)
-   Ergebnis: app/videos/<id>.mp4  (+ <id>.jpg Vorschaubild, <id>.txt Textfassung)
+   Ergebnis: app/videos/<id>.mp4 (zum Teilen) · <id>.m4a (Musik für die Live-Wiedergabe in der App)
+             <id>.jpg + <id>-dark.jpg (Vorschaubild hell/dunkel) · <id>.txt (Textfassung)
 
    Aufrufe
      node app/tools/render-video.js <id> --sheet     Vorschaubogen (1 Bild pro Sekunde) ansehen – schnell, zuerst nutzen
      node app/tools/render-video.js <id>             fertiges Video (720×1280, 30 fps, Musik)
      node app/tools/render-video.js <id> --hq        1080×1920 (nur für Weitergabe, nicht für die App)
      node app/tools/render-video.js <id> --txt-only  nur die Textfassung (<id>.txt) neu schreiben (schnell)
+     node app/tools/render-video.js <id> --audio-only  nur die Musik (<id>.m4a) neu erzeugen (schnell)
+     node app/tools/render-video.js <id> --poster-only nur die Vorschaubilder (<id>.jpg, <id>-dark.jpg) neu erzeugen (schnell)
      Weitere Schalter: --no-audio · --crf 27 · --fps 30 · --out <Ordner>
 
    Voraussetzungen: Node mit Playwright (Chromium), ffmpeg (Umgebungsvariable FFMPEG,
@@ -73,10 +76,35 @@ function serve() {
   info.scenes.forEach((s, i) => console.log(`  ${String(i + 1).padStart(2)}. ${s.type.padEnd(6)} ${s.start.toFixed(1).padStart(5)} s  ${String(s.dur).padStart(4)} s  ${s.words} Wörter  ${s.kicker}`));
   if (info.warn.length) { console.log("\nHinweise zur Lesbarkeit:"); info.warn.forEach((w) => console.log("  ⚠ " + w)); }
 
+  const shot = async (t, type = "png") => { await page.evaluate((x) => LV.seek(x), t); return page.screenshot({ type, quality: type === "jpeg" ? 88 : undefined }); };
   const writeTxt = () => { fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, id + ".txt"), `${info.title}\n${"=".repeat(info.title.length)}\n\n` + info.scenes.map((s) => s.text.join("\n")).filter(Boolean).join("\n\n") + "\n"); };
   if (flag("txt-only")) { writeTxt(); console.log(`\nTextfassung geschrieben: ${path.relative(ROOT, path.join(OUT, id + ".txt"))}`); await browser.close(); srv.close(); return; }
 
-  const shot = async (t, type = "png") => { await page.evaluate((x) => LV.seek(x), t); return page.screenshot({ type, quality: type === "jpeg" ? 88 : undefined }); };
+  const writePosters = async () => {
+    fs.mkdirSync(OUT, { recursive: true });
+    fs.writeFileSync(path.join(OUT, id + ".jpg"), await shot(info.poster, "jpeg"));
+    await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
+    fs.writeFileSync(path.join(OUT, id + "-dark.jpg"), await shot(info.poster, "jpeg"));
+    await page.evaluate(() => { delete document.documentElement.dataset.theme; });
+  };
+  if (flag("poster-only")) { await writePosters(); console.log(`\nVorschaubilder geschrieben: ${path.relative(ROOT, path.join(OUT, id + ".jpg"))} · ${id}-dark.jpg`); await browser.close(); srv.close(); return; }
+
+  const makeWav = () => {
+    const wav = path.join(os.tmpdir(), `lv-${id}.wav`);
+    const m = spawnSync("python3", [path.join(__dirname, "video-music.py"), "--seconds", String(info.total), "--bpm", String(info.bpm), "--mood", info.mood, "--seed", id, "--out", wav], { encoding: "utf8" });
+    if (m.status !== 0) { console.error("Musik fehlgeschlagen:\n" + m.stderr); process.exit(1); }
+    return wav;
+  };
+  const audioFilter = `volume=0.55,afade=t=out:st=${Math.max(0, info.total - 1.6).toFixed(2)}:d=1.6`;
+  const encodeM4a = (wav) => {
+    fs.mkdirSync(OUT, { recursive: true });
+    const out = path.join(OUT, id + ".m4a");
+    const r = spawnSync(ffmpeg, ["-y", "-loglevel", "error", "-i", wav, "-af", audioFilter, "-c:a", "aac", "-b:a", "64k", "-ac", "1", "-t", info.total.toFixed(3), "-movflags", "+faststart", out]);
+    if (r.status !== 0) { console.error(String(r.stderr)); process.exit(1); }
+    return out;
+  };
+  if (flag("audio-only")) { const out = encodeM4a(makeWav()); console.log(`\nMusik geschrieben: ${path.relative(ROOT, out)}   ${(fs.statSync(out).size / 1048576).toFixed(2)} MB`); await browser.close(); srv.close(); return; }
+
 
   if (flag("sheet")) {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "lv-sheet-"));
@@ -92,16 +120,12 @@ function serve() {
   fs.mkdirSync(OUT, { recursive: true });
   const t0 = Date.now();
   let wav = null;
-  if (!flag("no-audio")) {
-    wav = path.join(os.tmpdir(), `lv-${id}.wav`);
-    const m = spawnSync("python3", [path.join(__dirname, "video-music.py"), "--seconds", String(info.total), "--bpm", String(info.bpm), "--mood", info.mood, "--seed", id, "--out", wav], { encoding: "utf8" });
-    if (m.status !== 0) { console.error("Musik fehlgeschlagen:\n" + m.stderr); process.exit(1); }
-  }
+  if (!flag("no-audio")) { wav = makeWav(); encodeM4a(wav); }
   const mp4 = path.join(OUT, id + ".mp4");
   const a = ["-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "png", "-i", "-"];
   if (wav) a.push("-i", wav);
   a.push("-c:v", "libx264", "-preset", "slow", "-crf", CRF, "-pix_fmt", "yuv420p", "-r", String(FPS), "-movflags", "+faststart");
-  if (wav) a.push("-af", `volume=0.55,afade=t=out:st=${Math.max(0, info.total - 1.6).toFixed(2)}:d=1.6`, "-c:a", "aac", "-b:a", "80k", "-ac", "1", "-t", info.total.toFixed(3));
+  if (wav) a.push("-af", audioFilter, "-c:a", "aac", "-b:a", "80k", "-ac", "1", "-t", info.total.toFixed(3));
   a.push(mp4);
   const ff = spawn(ffmpeg, a, { stdio: ["pipe", "inherit", "inherit"] });
   const done = new Promise((r) => ff.on("close", r));
@@ -116,14 +140,14 @@ function serve() {
   process.stdout.write("\n");
   if (code !== 0) { console.error("ffmpeg fehlgeschlagen"); process.exit(1); }
 
-  fs.writeFileSync(path.join(OUT, id + ".jpg"), await shot(info.poster, "jpeg"));
+  await writePosters();
   writeTxt();
   await browser.close(); srv.close();
 
   const mb = fs.statSync(mp4).size / 1048576;
   console.log(`\nFertig in ${((Date.now() - t0) / 1000).toFixed(0)} s:`);
   console.log(`  ${path.relative(ROOT, mp4)}   ${mb.toFixed(2)} MB   (${SCALE * 360}×${SCALE * 640}, ${FPS} fps)`);
-  console.log(`  ${path.relative(ROOT, path.join(OUT, id + ".jpg"))}  ·  ${path.relative(ROOT, path.join(OUT, id + ".txt"))}`);
+  console.log(`  ${path.relative(ROOT, path.join(OUT, id + ".jpg"))}  ·  ${path.relative(ROOT, path.join(OUT, id + ".txt"))}${wav ? "  ·  " + path.relative(ROOT, path.join(OUT, id + ".m4a")) : ""}`);
   if (!HQ && mb > 4) console.log(`  ⚠ Größer als 4 MB: Video kürzen oder --crf 29 versuchen (Handys im Mobilnetz).`);
   if (HQ) console.log(`  Hinweis: --hq ist nur zum Teilen gedacht und gehört nicht in die App.`);
 })().catch((e) => { console.error(e); process.exit(1); });

@@ -10,7 +10,7 @@ Ein Werkzeug rendert daraus Bild für Bild das Video (mit selbst erzeugter Musik
 - **Content-Agent:** darf pro Kurs Videos bauen: `app/videos/src/<id>.js` (Quelle) und die erzeugten Dateien `app/videos/<id>.mp4`, `.jpg`, `.txt`. Nichts anderes ändern. Branch `kurs/<kurs-id>`, der Lernraum-Check erzwingt das.
 - **Creative Director:** besitzt den Baukasten (`app/videos/lib/`, `player.html`), die Werkzeuge (`app/tools/render-video.js`, `video-music.py`, `check-videos.js`) und die Designsprache.
 - Fehlt dir ein Baustein (z. B. ein Diagramm, das es nicht gibt)? **Nicht selbst bauen**, sondern ein GitHub-Issue mit Label `design` anlegen und beschreiben, was erklärt werden soll.
-- Dateiname/ID: nur `a–z`, `0–9`, `-`, mit Kurs davor, z. B. `pbp-nettobedarf`, `englisch-present-perfect`.
+- Dateiname/ID: nur `a–z`, `0–9`, `-`, mit Kurs davor, z. B. `pbp-bedarf-berechnen`, `englisch-present-perfect`.
 
 ## Einmalig vorbereiten
 
@@ -24,7 +24,7 @@ pip install imageio-ffmpeg          # liefert ffmpeg (oder ffmpeg im PATH haben 
 1. **Lernziel in einem Satz.** „Die Schüler/innen können den Nettopersonalbedarf berechnen.“ Ein Video = ein Lernziel.
 2. **Storyboard als Tabelle** (kurz, im Kopf oder als Kommentar): je Szene *ein* Gedanke.
    `Frage → Regel → Falle → Kurztest`. Das **Modellunternehmen des Kurses** beibehalten (PBP: Mediaworld), aber Zahlen und Szenario selbst wählen, **nicht aus den Kursaufgaben** (sonst verrät das Video die Lösung). Fachbegriffe so schreiben wie in der Kursdatei.
-3. **Quelldatei schreiben:** `app/videos/src/<id>.js` – siehe unten. Vorlagen zum Kopieren: `pbp-nettobedarf.js` (Rechenschema, Kurztest) und `englisch-present-perfect.js` (Zeitstrahl, Bauplan-Kästen, Schlagwörter).
+3. **Quelldatei schreiben:** `app/videos/src/<id>.js` – siehe unten. Vorlagen zum Kopieren: `pbp-bedarf-berechnen.js` (Rechenschema, Kurztest) und `englisch-present-perfect.js` (Zeitstrahl, Bauplan-Kästen, Schlagwörter).
 4. **Vorschaubogen ansehen** (schnell, ca. 15 s):
    ```bash
    node app/tools/render-video.js <id> --sheet
@@ -34,10 +34,10 @@ pip install imageio-ffmpeg          # liefert ffmpeg (oder ffmpeg im PATH haben 
    ```bash
    node app/tools/render-video.js <id>
    ```
-   Ergebnis: `app/videos/<id>.mp4` (720×1280, mit Musik), `<id>.jpg` (Vorschaubild), `<id>.txt` (Textfassung). Größer als 4 MB? Kürzen oder `--crf 29`.
+   Ergebnis in `app/videos/`: `<id>.mp4` (720×1280 mit Musik, zum **Teilen**), `<id>.m4a` (Musik, wird in der App abgespielt), `<id>.jpg` und `<id>-dark.jpg` (Vorschaubild hell/dunkel, vom Zeitpunkt `poster` in der Quelle), `<id>.txt` (Textfassung). Einzeln neu erzeugen: `--txt-only`, `--audio-only`, `--poster-only`. mp4 größer als 4 MB? Kürzen oder `--crf 29`.
    Nur die Textfassung neu schreiben (ohne das Video neu zu rendern): `node app/tools/render-video.js <id> --txt-only`.
-6. **Prüfen:** `node app/tools/check-videos.js` muss „0 Fehler“ melden (Größe, Länge, 9:16, alle drei Dateien da).
-7. **Committen** (Quelle + die drei Ergebnisdateien) und Pull Request wie bei Kursen. Die Videodatei nur **fertig** einchecken, nicht bei jeder Änderung neu – jede Fassung bleibt für immer im Repo-Verlauf.
+6. **Prüfen:** `node app/tools/check-videos.js` muss „0 Fehler“ melden (Größe, Länge, 9:16, alle Dateien da).
+7. **Committen** (Quelle + alle Ergebnisdateien) und Pull Request wie bei Kursen. Die Videodatei nur **fertig** einchecken, nicht bei jeder Änderung neu – jede Fassung bleibt für immer im Repo-Verlauf.
 
 Live-Vorschau im Browser (läuft in Echtzeit, ohne Rendern): `python3 -m http.server 8080`, dann
 `http://localhost:8080/app/videos/player.html?v=<id>&play=1`
@@ -46,8 +46,9 @@ Live-Vorschau im Browser (läuft in Echtzeit, ohne Rendern): `python3 -m http.se
 
 ```js
 LV.video({
-  id: "pbp-nettobedarf",              // = Dateiname ohne .js
+  id: "pbp-bedarf-berechnen",              // = Dateiname ohne .js
   title: "Nettopersonalbedarf in 45 Sekunden",
+  poster: 18.2,                       // Sekunde mit dem aussagekräftigsten Bild (Vorschaubild)
   bpm: 92, mood: "calm",              // Musik: calm (ruhig) oder bright (heller)
   scenes: [
     LV.title({ kicker: "PBP · Nettopersonalbedarf", title: "Wie viele fehlen wirklich?", sub: "Erklärt in 45 Sekunden.", dur: 4.5 }),
@@ -94,7 +95,16 @@ Faustwerte: Text 0,5 s · Kästen 0,5 s je Kasten · Rechenschema 0,85 s je Zeil
 - [ ] `node app/tools/check-videos.js` → 0 Fehler. `node app/tools/check-kurse.js` → 0 Fehler.
 - [ ] Nur Dateien in `app/videos/` geändert.
 
+## Wie die App das Video abspielt
+
+Die App spielt **nicht das mp4** ab, sondern führt die Animation **live** mit dem Baukasten aus (`app/videos/lib/`) und spielt dazu die Musik (`<id>.m4a`). Das mp4 ist nur zum Teilen (Teams, Beamer, Weitergabe).
+Deshalb: scharf auf jedem Bildschirm, folgt dem **Dark Mode**, funktioniert mit Textfassung und kostet nur wenige KB. Beim Bauen heißt das:
+
+- Farben nur über die Bausteine (sie nutzen die Variablen der App). Keine festen Farbwerte in Quelldateien.
+- Alles, was in der Quelle steht, erscheint auch in der Textfassung (`<id>.txt`) und im Textmodus der App.
+- Die App zeigt zum Video Steuerung (Szene zurück/vor, Pause, Ton, Text), am Desktop den Text daneben.
+
 ## Ins Lernmaterial einbinden
 
-Der Schritt-Typ `video` für Kursdateien ist **in Planung** (Vorschaubild, Start per Tipp, Textfassung darunter, kein Auto-Start, Video zählt nicht als „gelernt“).
-Bis er da ist: Video bauen und ablegen, aber **nicht** in die Kursdatei eintragen. In der Beschreibung des Pull Requests stehen Kurs, Thema und der Ort, an dem das Video später erscheinen soll.
+Ein Video gehört zu einem **Thema** der Kursdatei: Felder `video`, `videoTitle`, `videoMinutes` am Thema (Beispiel und Regeln: `app/AGENT-ANLEITUNG.md`, Abschnitt „Erklärvideo zu einem Thema“).
+Wichtig: **nicht** als Schritt in `steps` einfügen (das würde den gespeicherten Fortschritt der Schüler/innen verschieben). `node app/tools/check-kurse.js` prüft, dass alle Dateien vorhanden sind.

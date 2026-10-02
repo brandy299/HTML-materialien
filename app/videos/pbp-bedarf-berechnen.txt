@@ -1,7 +1,7 @@
-Nettopersonalbedarf
-===================
+Personalbedarf berechnen
+========================
 
-PBP · Nettopersonalbedarf
+PBP · Personalbedarf berechnen
 Wie viele fehlen wirklich?
 Mediaworld, ein Jahr später.
 
@@ -17,23 +17,23 @@ Im Jahr ändert sich der Bestand.
 Wer geht? Wer kommt fest dazu?
 Das zählt zuerst.
 
-03 · Der Bestand
-Fortschreibung
+03 · Die Zwischensumme
+Rechenschema
 Ist-Personalbestand: 23
 − Abgänge: 4
 + Zugänge: 1
-= Bestand am Jahresende: 20
-So viele sind dann wirklich da.
+= Zwischensumme: 20
+Das ist der neue Bestand.
 
-04 · Der Bedarf
-Soll minus Bestand
-Bruttopersonalbedarf: 25
-− Bestand am Jahresende: 20
-= Nettopersonalbedarf: 5
+04 · Der Personalbedarf
+Soll minus Zwischensumme
+Soll: 25
+− Zwischensumme: 20
+= Personalbedarf: 5
 › 5 neue Stellen
 
 05 · Kurz testen
-Mediaworld-Lager: Soll 12, Bestand am Jahresende 10. Nettopersonalbedarf?
+Mediaworld-Lager: Soll 12, Zwischensumme 10. Personalbedarf?
 A) 2
 B) 22
 C) −2
