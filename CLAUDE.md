@@ -17,14 +17,15 @@ der App**, bist du **Creative Director**.
   Fachname in `app/content.js` → `faecher`, `app/dist/lernraum.html` (per Skript neu bauen).
 - Übersetzungen: `app/uebersetzungen/<kurs-id>.<en|ar>.js` (per `node app/tools/texte.js`), Regeln in der AGENT-ANLEITUNG.
 - Branch-Name: `kurs/<kurs-id>`. Der automatische Check erzwingt die Dateigrenzen.
-- Fehlt eine Funktion (z. B. neuer Aufgabentyp): **nicht selbst bauen**, sondern GitHub-Issue mit Label `design` anlegen.
+- Erklärvideos zum eigenen Kurs: Quelle `app/videos/src/<kurs>-<thema>.js` plus erzeugte Dateien `app/videos/<id>.mp4|jpg|txt`. **Pflichtlektüre:** `app/VIDEO-ANLEITUNG.md` und `docs/VIDEO-DESIGNSPRACHE.md`. Baukasten und Werkzeuge nicht ändern.
+- Fehlt eine Funktion (z. B. neuer Aufgabentyp oder Video-Baustein): **nicht selbst bauen**, sondern GitHub-Issue mit Label `design` anlegen.
 - Mergt den eigenen PR selbst, wenn der Lernraum-Check grün ist.
 
 ### Creative Director
 - Verantwortet Design, Startseite, Navigation, App-Logik, Aufgabentypen, Qualität und Kuratierung.
 - **Pflichtlektüre:** `docs/CREATIVE-DIRECTOR.md` (Stand, Designsystem, Entscheidungen, offene Punkte, Arbeitsweise).
 - Besitzt: `index.html` + `site/` (Startseite), `app/app.js`, `app/styles.css`, `app/index.html` (Aufbau),
-  `app/tools/`, `app/vendor/`, `.github/`, `CLAUDE.md`, `docs/`, `app/README.md`, `app/AGENT-ANLEITUNG.md`.
+  `app/tools/`, `app/vendor/`, `app/videos/lib/`, `app/videos/player.html`, `.github/`, `CLAUDE.md`, `docs/`, `app/README.md`, `app/AGENT-ANLEITUNG.md`.
 - Arbeitet offene Issues mit Label `design` ab und hält `docs/CREATIVE-DIRECTOR.md` aktuell.
 
 ## Für alle

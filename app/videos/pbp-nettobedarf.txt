@@ -1,0 +1,30 @@
+Nettopersonalbedarf in 45 Sekunden
+==================================
+
+PBP · Nettopersonalbedarf
+Wie viele fehlen wirklich?
+Erklärt in 45 Sekunden.
+
+01 · Die Frage
+33 Stellen sind nötig.
+Heute arbeiten 30 Leute im Betrieb.
+Also 3 einstellen?
+Nicht so schnell.
+
+02 · Die Falle
+Im Jahr ändert sich der Bestand.
+− Abgänge · + Zugänge
+Wer geht? Wer kommt fest dazu?
+Das zählt zuerst.
+
+03 · Der Bestand
+FortschreibungIst-Personalbestandwer jetzt da ist0−Abgänge0+Zugänge0=Bestand am Jahresende0
+So viele sind dann wirklich da.
+
+04 · Der Bedarf
+Soll minus BestandBruttopersonalbedarfso viele braucht der Betrieb0−Bestand am Jahresende0=Nettopersonalbedarf0
+
+05 · Kurz testen
+Soll: 20. Bestand am Jahresende: 18. Nettopersonalbedarf?A2B38C−2
+
+Jetzt selbst rechnen.

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Lernraum · Video-Vorschau</title>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="lib/lv.css">
+</head>
+<body class="lv-body">
+  <!-- Vorschau im Browser: player.html?v=<id>&play=1 · Rendern: node app/tools/render-video.js <id> -->
+  <div id="stage"></div>
+  <script src="lib/lv.js"></script>
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search), id = q.get("v");
+      if (q.get("render")) document.body.classList.add("render");
+      if (!id) { document.body.textContent = "Fehlt: ?v=<video-id> (Datei app/videos/src/<id>.js)"; return; }
+      var s = document.createElement("script");
+      s.src = "src/" + id + ".js";
+      s.onload = function () { LV.start({ play: !!q.get("play") }); };
+      s.onerror = function () { document.body.textContent = "Video-Quelle nicht gefunden: src/" + id + ".js"; };
+      document.body.append(s);
+    })();
+  </script>
+</body>
+</html>

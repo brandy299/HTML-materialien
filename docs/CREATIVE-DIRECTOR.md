@@ -161,3 +161,17 @@ und sag mir kurz, was ansteht. Dann: [DEIN AUFTRAG]
 - Pixelwolken (Canvas/Shader) haben dunkle Paletten und zeichnen bei `lernraum-theme` neu.
 - Textgröße über `zoom` auf `body` (1,12 / 1,25); untere Leiste bleibt normal groß.
 - Schalter: Profil → Darstellung; Startseite: Knopf in der Navigation.
+
+## Erklärvideos (Machbarkeit, 02.10.2026)
+
+Stand: Prototyp läuft, noch **nicht** in der App eingebunden.
+
+- **Idee:** Videos im Plattform-Stil (9:16, 20–60 s) als Einstieg in ein Thema; danach kommen die geprüften Übungen. Der Nutzer hatte ein erstes Video in der Claude-App erzeugen lassen (Present Perfect).
+- **Baukasten:** `app/videos/lib/lv.js` + `lv.css`. Eine Szene = Liste fertiger Bausteine (`text`, `chips`, `stack`, `timeline`, `scheme`, `term`, `quiz`); jedes Bild wird nur aus der Zeit berechnet (`LV.seek(t)`), daher exakt rendbar.
+- **Rendern:** `node app/tools/render-video.js <id>` (Playwright macht Bild für Bild Screenshots, ffmpeg kodiert). `--sheet` zeigt einen Vorschaubogen (1 Bild/s) zur schnellen Kontrolle, auch für Agenten. 47 s Video ≈ 100 s Rechenzeit, 1,1 MB (720×1280, h264 + aac).
+- **Musik:** `app/tools/video-music.py` erzeugt rechtefrei ein Klangbett (Standardbibliothek, ca. 7 s). Kein Sprecher; Szenenlängen sind großzügig, damit später eine Stimme passt.
+- **Qualitätssicherung:** Render-Werkzeug warnt bei zu viel Text (max. 14 Wörter/Block, 3 Wörter/s) und zu knapper Lesezeit; `app/tools/check-videos.js` (im CI) prüft Größe ≤ 4 MB, Länge ≤ 90 s, 9:16, vollständigen Dateisatz.
+- **Agenten:** Anleitung `app/VIDEO-ANLEITUNG.md`, Designsprache `docs/VIDEO-DESIGNSPRACHE.md`; CI erlaubt Content-Branches `app/videos/src/*.js` und `app/videos/<id>.mp4|jpg|txt`.
+- **Beispiele:** `pbp-nettobedarf` (Rechenschema, Kurztest), `englisch-present-perfect` (Zeitstrahl, Kästen, Schlagwörter).
+- **Offen (bei Freigabe):** Schritt-Typ `video` in der App (Vorschaubild, Start per Tipp, Textfassung darunter, kein Auto-Start, zählt als „gesehen“ ab ca. 90 %); Service Worker darf Videos/Range-Anfragen nicht zwischenspeichern; Hosting über GitHub Pages (Limits vorher prüfen, Repo-Verlauf wächst mit jeder Fassung); „weniger Bewegung“ → Vorschaubild + Text; Sprecher; Untertitel/EN/AR über die Textfassung.
+- **Grenzen:** Ton nicht von mir gehört, nur technisch geprüft (Pegel, Dauer). Ein Video ersetzt keine Aufgabe.
