@@ -1,14 +1,14 @@
-Nettopersonalbedarf in 45 Sekunden
-==================================
+Nettopersonalbedarf
+===================
 
 PBP · Nettopersonalbedarf
 Wie viele fehlen wirklich?
-Erklärt in 45 Sekunden.
+Mediaworld, ein Jahr später.
 
 01 · Die Frage
-33 Stellen sind nötig.
-Heute arbeiten 30 Leute im Betrieb.
-Also 3 einstellen?
+Mediaworld braucht 25 Leute.
+Heute arbeiten dort 23.
+Also 2 einstellen?
 Nicht so schnell.
 
 02 · Die Falle
@@ -19,23 +19,23 @@ Das zählt zuerst.
 
 03 · Der Bestand
 Fortschreibung
-Ist-Personalbestand: 30
+Ist-Personalbestand: 23
 − Abgänge: 4
-+ Zugänge: 2
-= Bestand am Jahresende: 28
++ Zugänge: 1
+= Bestand am Jahresende: 20
 So viele sind dann wirklich da.
 
 04 · Der Bedarf
 Soll minus Bestand
-Bruttopersonalbedarf: 33
-− Bestand am Jahresende: 28
+Bruttopersonalbedarf: 25
+− Bestand am Jahresende: 20
 = Nettopersonalbedarf: 5
 › 5 neue Stellen
 
 05 · Kurz testen
-Soll: 20. Bestand am Jahresende: 18. Nettopersonalbedarf?
+Mediaworld-Lager: Soll 12, Bestand am Jahresende 10. Nettopersonalbedarf?
 A) 2
-B) 38
+B) 22
 C) −2
 Antwort: 2
 

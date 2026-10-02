@@ -3,26 +3,26 @@ Ersatz- und Neubedarf
 
 PBP · Ersatz- und Neubedarf
 Ersatz oder neu?
-Warum ein Betrieb Leute sucht.
+Mediaworld, ein Jahr später.
 
 01 · Der Fall
-Dem Café Sonnenschein fehlen 5 Leute.
-Ist 18 · − 5 Abgänge · + 2 Zugänge · Soll 20
+Bei Mediaworld fehlen 5 Leute.
+Ist 23 · − 4 Abgänge · + 1 Zugang · Soll 25
 Aber warum fehlen sie?
 
 02 · Der Ersatz
 Wer geht, wird ersetzt.
 Ersatzbedarf
-Abgänge: 5
-− Zugänge: 2
+Abgänge: 4
+− Zugänge: 1
 = Ersatzbedarf: 3
 3 Stellen: nur Ersatz.
 
 03 · Der Zuwachs
 Wachstum schafft neue Stellen.
 Neubedarf
-Soll: 20
-− ursprünglicher Ist: 18
+Soll: 25
+− ursprünglicher Ist: 23
 = Neubedarf: 2
 Der Ist von vorher zählt.
 
@@ -34,7 +34,7 @@ Ersatzbedarf: 3
 › Passt zum Rechenschema.
 
 05 · Kurz testen
-Ein Betrieb wächst um 4 Stellen. Niemand geht. Was ist das?
+Mediaworld wächst um 4 Stellen. Niemand geht. Was ist das?
 A) Ersatzbedarf
 B) Neubedarf
 C) Abgang

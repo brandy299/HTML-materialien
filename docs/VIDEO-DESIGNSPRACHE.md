@@ -36,7 +36,7 @@ Reihenfolge: **zeigen, dann benennen**. Erst das Beispiel, dann der Fachbegriff.
 - Zielgruppe: niedriges Leseniveau, Handy. Kurze Sätze, bekannte Wörter, Fachbegriffe wie im Kurs (gleiche Schreibweise wie in der Kursdatei).
 - **Höchstens 14 Wörter** pro Textblock, **höchstens 3 Wörter pro Sekunde** pro Szene. Das Werkzeug warnt bei Verstößen.
 - Mindestens **1 Sekunde Lesezeit** nach dem letzten Element einer Szene.
-- Zahlen in Beispielen **nicht aus den Kursaufgaben** übernehmen, sonst verrät das Video die Lösung. Eigene Fälle erfinden, aber gleiche Rechenwege.
+- **Modellunternehmen des Kurses beibehalten** (PBP: Mediaworld), damit Video und Aufgaben zusammenpassen. Zahlen aber **nicht aus den Kursaufgaben** übernehmen, sonst verrät das Video die Lösung: gleiche Firma, anderes Szenario (z. B. „ein Jahr später“), gleiche Rechenwege.
 - Keine Namen echter Personen, keine Daten von Schüler/innen.
 - Videos bleiben deutsch (Prüfungssprache). Übersetzungen kommen später über die Textfassung (`<id>.txt`).
 
