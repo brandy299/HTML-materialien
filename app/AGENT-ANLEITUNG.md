@@ -92,6 +92,26 @@ Aufbau, Beispiel und Regeln: `app/README.md` → „Probeklausur mit Erklärunge
 Regeln für gute Erklärungen: erst das Prinzip mit **eigenem Beispiel (andere Zahlen als in der Aufgabe)**, dann „So gehst du vor“, dann „Typische Fallen“.
 Die Erklärung verrät nie die Lösung der Aufgabe.
 
+## Erklärvideo zu einem Thema
+
+Zu einem Thema kann ein kurzes Erklärvideo gehören (20–60 s, im Stil der Plattform). **Wie man es baut:** `app/VIDEO-ANLEITUNG.md` und `docs/VIDEO-DESIGNSPRACHE.md`.
+Eingebunden wird es mit drei Feldern **am Thema** (nicht als Schritt!):
+
+```js
+{
+  id: "ersatz-neubedarf",
+  video: "pbp-ersatz-neubedarf",        // ID des Videos (Dateien in app/videos/)
+  videoTitle: "Ersatz oder neu?",       // kurze Überschrift der Karte (optional)
+  videoMinutes: 1,                      // optional, Standard 1
+  ...
+}
+```
+
+- Das Video erscheint als Karte oben im Thema und ist der Einstieg (der Start-Knopf führt zuerst dorthin, solange das Thema noch nicht begonnen wurde). Die Schüler/innen können jederzeit überspringen.
+- **Nie** ein Video als ersten Schritt in `steps` einfügen: Das verschiebt alle Schritt-Nummern und damit den gespeicherten Fortschritt der Schüler/innen.
+- `node app/tools/check-kurse.js` prüft, dass alle Videodateien vorhanden sind.
+- Das Video benutzt die Begriffe **der jeweiligen Lektion** (nicht spätere Fachbegriffe) und das Modellunternehmen des Kurses.
+
 ## Prüfen vor dem Push
 
 ```bash

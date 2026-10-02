@@ -2,15 +2,19 @@
    LERNRAUM — Video-Baukasten: Stile (Bühne 360 × 640 CSS-Pixel = 9:16)
    Baut auf app/styles.css auf (Farben, Fenster, Tag-Boxen, Schriften).
    ============================================================ */
-html, body { margin: 0; background: #1b1b1b; }
+body.lv-body { margin: 0; background: #1b1b1b; }
 .lv-body { display: grid; place-items: center; min-height: 100vh; overflow: hidden; }
 body.render { display: block; background: var(--paper); min-height: 0; }
-#stage { position: relative; width: 360px; height: 640px; overflow: hidden; background: var(--paper); color: var(--ink); flex: none; }
-body.render #stage { position: fixed; left: 0; top: 0; }
+.lv-stage { position: relative; width: 360px; height: 640px; overflow: hidden; background: var(--paper); color: var(--ink); flex: none; transform-origin: 0 0; }
+body.render .lv-stage { position: fixed; left: 0; top: 0; transform: none; }
+/* Eingebettet (App): Rahmen im Stil der Fenster, Bühne wird hineinskaliert */
+.lv-wrap { position: relative; margin: 0 auto; overflow: hidden; border: 2px solid var(--ink); box-shadow: var(--shadow); background: var(--paper); }
+.lv-wrap > .lv-stage { position: absolute; left: 0; top: 0; }
 
 /* Raster im Hintergrund (wie ein Schulheft, sehr leicht) */
-#stage::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+.lv-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none;
   background-image: radial-gradient(rgba(30,30,30,.07) 1px, transparent 1.2px); background-size: 12px 12px; }
+:root[data-theme="dark"] .lv-stage::before { background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.2px); }
 
 .lv-prog { position: absolute; left: 24px; right: 24px; top: 16px; display: flex; gap: 4px; z-index: 6; }
 .lv-prog i { flex: 1; height: 3px; background: var(--panel-2); position: relative; overflow: hidden; }
@@ -28,24 +32,31 @@ body.render #stage { position: fixed; left: 0; top: 0; }
 .lv-s { font: 500 12px/1.5 var(--mono); letter-spacing: 0; color: var(--ink-2); }
 .lv-t b { color: var(--pink-ink); font-weight: inherit; }
 .lv-t em { color: var(--good); font-style: normal; }
-.lv-t mark { background: linear-gradient(var(--pink), var(--pink)) left / calc(var(--m, 0) * 100%) 100% no-repeat; color: var(--ink); padding: 0 .1em; margin: 0 -.04em; }
+.lv-t mark { background: linear-gradient(var(--pink-fill), var(--pink-fill)) left / calc(var(--m, 0) * 100%) 100% no-repeat; color: var(--ink); padding: 0 .1em; margin: 0 -.04em; }
 .lv-w { display: inline-block; white-space: pre; }
 .tone-mut { color: var(--ink-2); }
 
 /* Chips */
 .lv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.lv-chip { font: 700 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; background: var(--pink-soft); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.lv-chip { font: 700 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; background: var(--pink-soft); color: var(--ink); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
 .lv-chip.good { background: var(--good-soft); }
 
 /* Bauplan-Kästen */
 .lv-stack { display: grid; gap: 12px; }
 .lv-box-l { font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 5px; }
 .lv-box-b { font: 800 30px/1 var(--grot); letter-spacing: -.04em; padding: 12px 14px; background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.lv-box.pink .lv-box-b { background: var(--pink); }
+.lv-box.pink .lv-box-b { background: var(--pink-fill); }
 .lv-box.green .lv-box-b { background: var(--good-soft); color: var(--good); }
 
 /* Zeitstrahl */
 .lv-tl { width: 100%; height: auto; overflow: visible; }
+.lv-tl .ax { stroke: var(--ink); stroke-width: 2; }
+.lv-tl .tk line { stroke: var(--ink); stroke-width: 1.5; }
+.lv-tl .rg { fill: var(--pink-fill); stroke: var(--ink); stroke-width: 2; }
+.lv-tl .mk rect { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.lv-tl .mk.now rect { fill: var(--pink-fill); }
+.lv-tl .arc { fill: none; stroke: var(--pink-ink); stroke-width: 3; stroke-linecap: round; }
+.lv-tl .ah { fill: var(--pink-ink); }
 .lv-tl text { font: 500 11px var(--mono); fill: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
 .lv-tl .lbl { font: 700 14px var(--grot); fill: var(--ink); text-transform: none; letter-spacing: -.01em; }
 
@@ -57,11 +68,11 @@ body.render #stage { position: fixed; left: 0; top: 0; }
 .lv-row .val { font: 700 19px/1 var(--mono); }
 .lv-row.sum { margin-top: 4px; }
 .lv-row.sum::before { content: ""; position: absolute; left: 14px; right: 14px; top: -2px; height: 2px; background: var(--ink); transform: scaleX(var(--l, 0)); transform-origin: left; }
-.lv-row.hi::after { content: ""; position: absolute; inset: 2px 8px; background: var(--pink); z-index: -1; transform: scaleX(var(--m, 0)); transform-origin: left; }
+.lv-row.hi::after { content: ""; position: absolute; inset: 2px 8px; background: var(--pink-fill); z-index: -1; transform: scaleX(var(--m, 0)); transform-origin: left; }
 .lv-row.hi { z-index: 0; }
 
 /* Terminal-Zeile (wie die Rückmeldungen in der App) */
-.lv-term { background: var(--ink); color: var(--term-text); font: 500 13.5px/1.7 var(--mono); padding: 12px 14px; border: 2px solid var(--ink); min-height: 1em; }
+.lv-term { background: var(--term-bg, var(--ink)); color: var(--term-text); font: 500 13.5px/1.7 var(--mono); padding: 12px 14px; border: 2px solid var(--term-bg, var(--ink)); min-height: 1em; }
 .lv-term .ok { color: var(--term-ok); }
 .lv-term .cur { display: inline-block; width: .55em; background: var(--term-text); height: 1em; vertical-align: -2px; }
 
@@ -72,12 +83,12 @@ body.render #stage { position: fixed; left: 0; top: 0; }
 .lv-opt.right { background: var(--good-soft); border-color: var(--good); box-shadow: 3px 3px 0 var(--good); }
 .lv-opt.right .key { background: var(--good); color: var(--paper); border-color: var(--good); }
 .lv-think { height: 4px; background: var(--panel-2); position: relative; }
-.lv-think i { position: absolute; inset: 0; background: var(--pink); transform-origin: left; }
+.lv-think i { position: absolute; inset: 0; background: var(--pink-fill); transform-origin: left; }
 
 /* Titel- und Schlussbild */
 .lv-scene.is-title { padding: 0; }
 .lv-cloud { position: absolute; left: 0; top: 0; width: 360px; height: 400px; image-rendering: pixelated; }
-.lv-scene.is-title::after { content: ""; position: absolute; left: 0; right: 0; top: 230px; height: 170px; background: linear-gradient(180deg, rgba(254,254,254,0), var(--paper)); }
+.lv-scene.is-title::after { content: ""; position: absolute; left: 0; right: 0; top: 230px; height: 170px; background: linear-gradient(180deg, rgba(var(--paper-rgb, 254, 254, 254), 0), var(--paper)); }
 .lv-title-tag { position: absolute; left: 24px; top: 36px; z-index: 3; }
 .lv-title-main { position: absolute; left: 24px; right: 24px; top: 300px; z-index: 3; }
 .lv-title-main .lv-t { font: 800 50px/.92 var(--grot); letter-spacing: -.06em; }
@@ -87,7 +98,7 @@ body.render #stage { position: fixed; left: 0; top: 0; }
 .lv-scene.is-outro .tag-box { font-size: 26px; padding: 12px 18px; box-shadow: 4px 4px 0 var(--ink); }
 .lv-scene.is-outro .lv-t { text-align: center; }
 
-#wipe { position: absolute; inset: 0; width: 360px; height: 640px; image-rendering: pixelated; z-index: 9; pointer-events: none; }
+.lv-wipe { position: absolute; inset: 0; width: 360px; height: 640px; image-rendering: pixelated; z-index: 9; pointer-events: none; }
 
 /* Stapelreihenfolge: Pixelwolke immer hinter dem Inhalt */
 .lv-scene .lv-cloud { z-index: 0; }

@@ -26,6 +26,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
+- Paket 9 · Erklärvideos live in der App (Schritt-Typ/Themenfeld `video`, Karte im Thema, `app/videos/`, `app/sw.js` v25): *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen. Nur das Video abschalten: Zeilen `video:` in `app/kurse/pbp-personalbedarf.js` entfernen. Der Fortschritt bleibt in beiden Fällen erhalten (zusätzlicher Schlüssel `video` im Thema-Fortschritt).
 - Paket 8 · Erklärvideo-Baukasten (Machbarkeit): `app/videos/`, `app/tools/render-video.js`, `video-music.py`, `check-videos.js`: *(PR-Nummer folgt)*. Reine Ergänzung: kein Eingriff in App oder Startseite, nichts verlinkt. Zurücknehmen = PR zurücksetzen.
 - Paket 7 · tolerante Themensuche (`app/search.js`: Tippfehler, Umlaute, Synonyme): *(PR-Nummer folgt)*
 - Paket 6 · Desktop-Startseite mit 3D-Szene (`site/hero3d.js`), Ticker, Einblenden: *(PR-Nummer folgt)*. Nur Desktop mit Maus; zum Abschalten reicht es, den Block „fancy“ in `site/landing.js` zu entfernen. Seit der Logo-Szene echtes three.js (r128, lokal in `site/vendor/`, nur Desktop geladen).

@@ -939,3 +939,51 @@ html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::be
 /* Die untere Leiste (Tastatur, Weiter-Knopf) bleibt bei großer Schrift in normaler Größe */
 :root[data-ts="l"] .dock, :root[data-ts="l"] .tabbar { zoom: .893; }
 :root[data-ts="xl"] .dock, :root[data-ts="xl"] .tabbar { zoom: .8; }
+
+/* ── Erklärvideo (Live-Wiedergabe, app/videos/) ─────────── */
+.vid { display: grid; gap: 14px; justify-items: center; }
+.vid [hidden] { display: none !important; }
+.vid-stage { width: 100%; display: grid; justify-items: center; }
+.vid-loading { width: 100%; }
+.vid-ctl { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.vid-ctl .icon-btn[disabled] { opacity: .4; pointer-events: none; }
+.vid-ctl .icon-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+/* Startbild: Knopf im freien oberen Teil, damit der Titel im Bild lesbar bleibt */
+.vid-start { position: absolute; inset: 0; z-index: 30; display: grid; align-content: start; justify-items: center; gap: 12px; padding-top: 76px; background: rgba(var(--paper-rgb), .18); border: 0; cursor: pointer; color: var(--ink); }
+.vid-play { width: 76px; height: 76px; display: grid; place-items: center; background: var(--pink-fill); color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.vid-play svg { width: 34px; height: 34px; fill: currentColor; stroke: currentColor; stroke-width: 1; stroke-linejoin: round; }
+.vid-start:active .vid-play { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.vid-meta { font: 700 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 6px 8px; background: var(--paper); border: 1.5px solid var(--ink); }
+.vid-sound { font: 500 11px/1 var(--mono); color: var(--ink-2); }
+.vid-text { display: grid; gap: 12px; width: 100%; }
+.vid-card .body { display: grid; gap: 6px; background: var(--paper); }
+.vid-card .body p { font-size: 15px; }
+.vid-card .body { transition: opacity .25s; }
+.vid-wide .vid-card:not(.on) .body { opacity: .62; }
+.vid-wide .vid-card.on { box-shadow: 4px 4px 0 var(--pink-fill); }
+/* Breite Bildschirme: links das Video, rechts der Text zum Mitlesen */
+@media (min-width: 900px) {
+  main.player:has(.vid-wide) { max-width: 1000px; }
+  .vid-wide { grid-template-columns: auto minmax(0, 1fr); align-items: start; justify-items: stretch; gap: 14px 32px; }
+  .vid-wide .vid-stage { grid-column: 1; grid-row: 1; width: auto; }
+  .vid-wide .vid-ctl { grid-column: 1; grid-row: 2; }
+  .vid-wide .vid-text { grid-column: 2; grid-row: 1 / span 2; align-content: start; max-height: calc(100dvh - 240px); overflow: auto; padding: 2px 6px 12px 2px; }
+}
+.vidcard { display: block; }
+.vidcard .body { display: flex; gap: 14px; align-items: center; padding: 12px; background: var(--paper); }
+.vc-poster { position: relative; flex: none; width: 90px; height: 160px; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); overflow: hidden; background: var(--paper-2); }
+.vc-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vc-play { position: absolute; inset: 0; display: grid; place-items: center; }
+.vc-play svg { width: 18px; height: 18px; padding: 9px; box-sizing: content-box; background: var(--pink-fill); border: 2px solid var(--ink); fill: currentColor; stroke: currentColor; stroke-width: 1; stroke-linejoin: round; color: var(--ink); }
+.vc-txt { display: grid; gap: 8px; min-width: 0; }
+.vc-txt b { font: 800 22px/1.05 var(--grot); letter-spacing: -.035em; }
+.vc-txt small { font-size: 13.5px; color: var(--ink-2); line-height: 1.4; }
+.vc-cta { font: 700 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; display: inline-flex; gap: 8px; align-items: center; }
+.vc-cta svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.vidcard:active { transform: translate(2px, 2px); }
+
+/* Rasterelemente dürfen schmaler werden als ihr längstes Wort (Hilfeseite lief auf Handys über den Rand) */
+.topics > * { min-width: 0; }
+.merk h3 { overflow-wrap: anywhere; }
+.merk-win .bar { flex-wrap: wrap; row-gap: 2px; }
+.merk-win .bar .r { white-space: normal; }

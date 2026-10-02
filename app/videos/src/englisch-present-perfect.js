@@ -2,6 +2,7 @@
 LV.video({
   id: "englisch-present-perfect",
   title: "Present Perfect – die Idee",
+  poster: 10.8,   // Zeitpunkt (s) für das Vorschaubild
   bpm: 96, mood: "bright",
   scenes: [
     LV.title({ kicker: "Englisch · Zeitformen", title: "Present Perfect.", sub: "Die Vergangenheit, die <b>jetzt noch zählt</b>.", dur: 4.5 }),

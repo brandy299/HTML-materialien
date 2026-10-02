@@ -1,14 +1,17 @@
-/* Erklärvideo · PBP · Nettopersonalbedarf (Lernsituation 2.1, Teil 1)
+/* Erklärvideo · PBP · Lernsituation 2.1, Teil 1 „Personalbedarf berechnen“
    Modellunternehmen: Mediaworld, „ein Jahr später“ – bewusst andere Zahlen als in den Kursaufgaben (A1–A8).
-   Rechnung: 23 − 4 + 1 = 20 (Bestand am Jahresende) · 25 − 20 = 5 (Nettopersonalbedarf)
+   Begriffe wie in der Lektion: Ist − Abgänge + Zugänge = Zwischensumme · Soll − Zwischensumme = Personalbedarf
+   (Brutto-/Nettopersonalbedarf und Fortschreibung kommen erst im Übungsblatt 1 – hier nicht verwenden!)
+   Rechnung: 23 − 4 + 1 = 20 (Zwischensumme) · 25 − 20 = 5 (Personalbedarf)
    Gleicher Fall wie im Video pbp-ersatz-neubedarf (dort in Ersatz- und Neubedarf zerlegt). */
 LV.video({
-  id: "pbp-nettobedarf",
-  title: "Nettopersonalbedarf",
+  id: "pbp-bedarf-berechnen",
+  title: "Personalbedarf berechnen",
+  poster: 22.4,   // Zeitpunkt (s) für das Vorschaubild
   bpm: 92, mood: "calm",
   scenes: [
     LV.title({
-      kicker: "PBP · Nettopersonalbedarf",
+      kicker: "PBP · Personalbedarf berechnen",
       title: "Wie viele fehlen wirklich?",
       sub: "Mediaworld, ein Jahr später.",
       dur: 4.5
@@ -35,26 +38,26 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "03 · Der Bestand", dur: 8.5,
+      kicker: "03 · Die Zwischensumme", dur: 8.5,
       items: [
         LV.scheme([
           { label: "Ist-Personalbestand", sub: "wer jetzt da ist", value: 23 },
           { op: "−", label: "Abgänge", value: 4 },
           { op: "+", label: "Zugänge", value: 1 },
-          { op: "=", label: "Bestand am Jahresende", value: 20, line: true }
-        ], { title: "Fortschreibung", at: 0.5, gap: 0.85 }),
-        LV.text("So viele sind dann <em>wirklich</em> da.", { size: "m", at: 5.2 })
+          { op: "=", label: "Zwischensumme", sub: "so viele sind dann wirklich da", value: 20, line: true }
+        ], { title: "Rechenschema", at: 0.5, gap: 0.85 }),
+        LV.text("Das ist der <em>neue</em> Bestand.", { size: "m", at: 5.2 })
       ]
     }),
 
     LV.scene({
-      kicker: "04 · Der Bedarf", dur: 8.5,
+      kicker: "04 · Der Personalbedarf", dur: 8.5,
       items: [
         LV.scheme([
-          { label: "Bruttopersonalbedarf", sub: "so viele braucht der Betrieb", value: 25 },
-          { op: "−", label: "Bestand am Jahresende", value: 20 },
-          { op: "=", label: "Nettopersonalbedarf", value: 5, line: true, hi: true }
-        ], { title: "Soll minus Bestand", at: 0.5, gap: 0.9 }),
+          { label: "Soll", sub: "so viele braucht der Betrieb", value: 25 },
+          { op: "−", label: "Zwischensumme", value: 20 },
+          { op: "=", label: "Personalbedarf", value: 5, line: true, hi: true }
+        ], { title: "Soll minus Zwischensumme", at: 0.5, gap: 0.9 }),
         LV.term(["› 5 neue Stellen"], { at: 4.2 })
       ]
     }),
@@ -62,7 +65,7 @@ LV.video({
     LV.scene({
       kicker: "05 · Kurz testen", dur: 9,
       items: [
-        LV.quiz("Mediaworld-Lager: Soll 12, Bestand am Jahresende 10. <b>Nettopersonalbedarf?</b>", ["2", "22", "−2"], 0, { at: 0.4, reveal: 6.2 })
+        LV.quiz("Mediaworld-Lager: Soll 12, Zwischensumme 10. <b>Personalbedarf?</b>", ["2", "22", "−2"], 0, { at: 0.4, reveal: 6.2 })
       ]
     }),
 

@@ -2,10 +2,11 @@
    Modellunternehmen: Mediaworld, „ein Jahr später“ – bewusst andere Zahlen als in den Kursaufgaben (A1–A8).
    Ist 23 · Abgänge 4 · Zugang 1 · Soll 25  →  Bestand am Jahresende 20 · Personalbedarf 5
    Ersatzbedarf = 4 − 1 = 3 · Neubedarf = 25 − 23 = 2 (mit dem URSPRÜNGLICHEN Ist!) · 3 + 2 = 5
-   Gleicher Fall wie im Video pbp-nettobedarf (dort als Rechenschema, hier zerlegt). */
+   Gleicher Fall wie im Video pbp-bedarf-berechnen (dort als Rechenschema, hier zerlegt). */
 LV.video({
   id: "pbp-ersatz-neubedarf",
   title: "Ersatz- und Neubedarf",
+  poster: 18.2,   // Zeitpunkt (s) für das Vorschaubild
   bpm: 92, mood: "calm",
   scenes: [
     LV.title({
@@ -43,7 +44,7 @@ LV.video({
         LV.text("Wachstum schafft <mark>neue</mark> Stellen.", { size: "l", at: 0.4 }),
         LV.scheme([
           { label: "Soll", value: 25 },
-          { op: "−", label: "ursprünglicher Ist", sub: "von vor dem Jahr – nicht die 20", value: 23 },
+          { op: "−", label: "ursprünglicher Ist", sub: "von vor dem Jahr – nicht die Zwischensumme", value: 23 },
           { op: "=", label: "Neubedarf", value: 2, line: true, hi: true }
         ], { title: "Neubedarf", at: 2.0, gap: 0.9 }),
         LV.text("Der Ist von <b>vorher</b> zählt.", { size: "m", at: 6.2 })

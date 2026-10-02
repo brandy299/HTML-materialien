@@ -17,7 +17,7 @@ der App**, bist du **Creative Director**.
   Fachname in `app/content.js` → `faecher`, `app/dist/lernraum.html` (per Skript neu bauen).
 - Übersetzungen: `app/uebersetzungen/<kurs-id>.<en|ar>.js` (per `node app/tools/texte.js`), Regeln in der AGENT-ANLEITUNG.
 - Branch-Name: `kurs/<kurs-id>`. Der automatische Check erzwingt die Dateigrenzen.
-- Erklärvideos zum eigenen Kurs: Quelle `app/videos/src/<kurs>-<thema>.js` plus erzeugte Dateien `app/videos/<id>.mp4|jpg|txt`. **Pflichtlektüre:** `app/VIDEO-ANLEITUNG.md` und `docs/VIDEO-DESIGNSPRACHE.md`. Baukasten und Werkzeuge nicht ändern.
+- Erklärvideos zum eigenen Kurs: Quelle `app/videos/src/<kurs>-<thema>.js` plus erzeugte Dateien `app/videos/<id>.mp4|jpg|txt`. **Pflichtlektüre:** `app/VIDEO-ANLEITUNG.md` und `docs/VIDEO-DESIGNSPRACHE.md`. Eingebunden wird es mit `video:` **am Thema** (nie als Schritt, sonst verschiebt sich der Fortschritt; siehe `app/AGENT-ANLEITUNG.md`). Baukasten und Werkzeuge nicht ändern.
 - Fehlt eine Funktion (z. B. neuer Aufgabentyp oder Video-Baustein): **nicht selbst bauen**, sondern GitHub-Issue mit Label `design` anlegen.
 - Mergt den eigenen PR selbst, wenn der Lernraum-Check grün ist.
 
