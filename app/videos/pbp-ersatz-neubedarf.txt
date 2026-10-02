@@ -1,0 +1,29 @@
+Ersatz- und Neubedarf
+=====================
+
+PBP · Ersatz- und Neubedarf
+Ersatz oder neu?
+Warum ein Betrieb Leute sucht.
+
+01 · Der Fall
+Dem Café Sonnenschein fehlen 5 Leute.
+Ist 18 · − 5 Abgänge · + 2 Zugänge · Soll 20
+Aber warum fehlen sie?
+
+02 · Der Ersatz
+Wer geht, wird ersetzt.
+ErsatzbedarfAbgänge0−Zugänge0=Ersatzbedarf0
+3 Stellen: nur Ersatz.
+
+03 · Der Zuwachs
+Wachstum schafft neue Stellen.
+NeubedarfSoll0−ursprünglicher Istvon vor dem Jahr – nicht die 150=Neubedarf0
+Der Ist von vorher zählt.
+
+04 · Zusammen
+Ersatz + Neu = GesamtErsatzbedarf0+Neubedarf0=Personalbedarf0
+
+05 · Kurz testen
+Ein Betrieb wächst um 4 Stellen. Niemand geht. Was ist das?AErsatzbedarfBNeubedarfCAbgang
+
+Jetzt selbst zerlegen.
