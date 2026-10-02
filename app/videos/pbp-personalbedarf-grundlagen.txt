@@ -1,0 +1,30 @@
+Personalbedarf in einer Minute
+==============================
+
+PBP · Lektion 1
+Wie viele Leute fehlen?
+Personalbedarf – in einer Minute.
+
+01 · Warum?
+Zu wenig Personal: Arbeit bleibt liegen.
+Zu viel Personal: kostet unnötig Geld.
+Darum wird der Bedarf geplant.
+
+02 · Der Fall
+Bäckerei Sonne hat 12 Beschäftigte.
+Drei gehen. Einer kommt fest dazu.
+Gebraucht werden 14.
+Wie viele fehlen?
+
+03 · Der Rechenweg
+Der RechenwegIst-Personalbestandwer jetzt da ist0−Abgänge0+Zugänge0=Zwischensumme0Soll-Personalbestandso viele werden gebraucht0−Zwischensumme0=Personalbedarf0
+
+04 · Die Falle
+Nicht Soll + Zwischensumme rechnen!
+Es heißt immer Soll − Zwischensumme.
+Sonst stimmt der Bedarf nicht.
+
+05 · Kurz testen
+Zwischensumme: 10. Soll: 14. Personalbedarf?A4B24C−4
+
+Jetzt selbst rechnen.
