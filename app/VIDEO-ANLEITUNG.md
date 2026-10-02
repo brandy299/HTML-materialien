@@ -23,7 +23,7 @@ pip install imageio-ffmpeg          # liefert ffmpeg (oder ffmpeg im PATH haben 
 
 1. **Lernziel in einem Satz.** „Die Schüler/innen können den Nettopersonalbedarf berechnen.“ Ein Video = ein Lernziel.
 2. **Storyboard als Tabelle** (kurz, im Kopf oder als Kommentar): je Szene *ein* Gedanke.
-   `Frage → Regel → Falle → Kurztest`. Zahlen und Namen selbst erfinden, **nicht aus den Kursaufgaben** (sonst verrät das Video die Lösung). Fachbegriffe so schreiben wie in der Kursdatei.
+   `Frage → Regel → Falle → Kurztest`. Das **Modellunternehmen des Kurses** beibehalten (PBP: Mediaworld), aber Zahlen und Szenario selbst wählen, **nicht aus den Kursaufgaben** (sonst verrät das Video die Lösung). Fachbegriffe so schreiben wie in der Kursdatei.
 3. **Quelldatei schreiben:** `app/videos/src/<id>.js` – siehe unten. Vorlagen zum Kopieren: `pbp-nettobedarf.js` (Rechenschema, Kurztest) und `englisch-present-perfect.js` (Zeitstrahl, Bauplan-Kästen, Schlagwörter).
 4. **Vorschaubogen ansehen** (schnell, ca. 15 s):
    ```bash
@@ -35,6 +35,7 @@ pip install imageio-ffmpeg          # liefert ffmpeg (oder ffmpeg im PATH haben 
    node app/tools/render-video.js <id>
    ```
    Ergebnis: `app/videos/<id>.mp4` (720×1280, mit Musik), `<id>.jpg` (Vorschaubild), `<id>.txt` (Textfassung). Größer als 4 MB? Kürzen oder `--crf 29`.
+   Nur die Textfassung neu schreiben (ohne das Video neu zu rendern): `node app/tools/render-video.js <id> --txt-only`.
 6. **Prüfen:** `node app/tools/check-videos.js` muss „0 Fehler“ melden (Größe, Länge, 9:16, alle drei Dateien da).
 7. **Committen** (Quelle + die drei Ergebnisdateien) und Pull Request wie bei Kursen. Die Videodatei nur **fertig** einchecken, nicht bei jeder Änderung neu – jede Fassung bleibt für immer im Repo-Verlauf.
 
@@ -87,7 +88,7 @@ Faustwerte: Text 0,5 s · Kästen 0,5 s je Kasten · Rechenschema 0,85 s je Zeil
 ## Checkliste vor dem Pull Request
 
 - [ ] Ein Lernziel, 4–7 Szenen, Beispiel vor Regel, eine Falle, ein Kurztest.
-- [ ] Zahlen/Namen **nicht** aus den Kursaufgaben; Fachbegriffe wie in der Kursdatei.
+- [ ] Modellunternehmen des Kurses verwendet; Zahlen **nicht** aus den Kursaufgaben; Fachbegriffe wie in der Kursdatei.
 - [ ] Vorschaubogen angesehen, alle Warnungen behoben.
 - [ ] Video ohne Ton verständlich (Ton ist nur Musik).
 - [ ] `node app/tools/check-videos.js` → 0 Fehler. `node app/tools/check-kurse.js` → 0 Fehler.

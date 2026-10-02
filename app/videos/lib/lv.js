@@ -22,6 +22,7 @@
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const de = (n) => n.toLocaleString("de-DE");
+  const plain = (s) => String(s ?? "").replace(/<br\s*\/?>/gi, " · ").replace(/<[^>]+>/g, "").replace(/&shy;/g, "").replace(/\s+/g, " ").trim();
   const wordCount = (s) => String(s).replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 
   /* ── Ein- und Ausblenden ───────────────────────────────── */
@@ -70,7 +71,7 @@
     const at = o.at ?? 0.4, gap = o.stagger ?? 0.16;
     const end = at + (words ? words.length * gap + 0.4 : 0.55) + (marks.length ? 0.55 + marks.length * 0.45 : 0);
     return {
-      el, at, end, words: wordCount(html),
+      el, at, end, words: wordCount(html), tx: () => [plain(html)],
       update(lt) {
         if (words) {
           el.style.opacity = lt >= at ? 1 : 0;
@@ -88,7 +89,7 @@
     const items = list.map((t) => { const c = h(`<span class="lv-chip${o.tone ? " " + o.tone : ""}">${esc(t)}</span>`); el.append(c); return c; });
     const at = o.at ?? 0.6, gap = o.stagger ?? 0.22;
     return {
-      el, at, end: at + items.length * gap + 0.4, words: items.length,
+      el, at, end: at + items.length * gap + 0.4, words: items.length, tx: () => [list.join(" · ")],
       update(lt) { items.forEach((c, i) => reveal(c, prog(lt, at + i * gap, 0.4), "pop")); el.style.opacity = lt >= at ? 1 : 0; fadeOut(el, lt, o.until); }
     };
   });
@@ -103,6 +104,7 @@
     const at = o.at ?? 0.5, gap = o.stagger ?? 0.45;
     return {
       el, at, end: at + items.length * gap + 0.3, words: boxes.reduce((n, b) => n + wordCount(b.text), 0),
+      tx: () => boxes.map((b) => (b.label ? plain(b.label) + ": " : "") + plain(b.text)),
       update(lt) { items.forEach((x, i) => reveal(x, prog(lt, at + i * gap, 0.5), "rise")); el.style.opacity = lt >= at ? 1 : 0; fadeOut(el, lt, o.until); }
     };
   });
@@ -130,6 +132,7 @@
     let arcLen = 0;
     return {
       el, at, end, words: marks.length,
+      tx: () => [(o.ticks || []).length ? "Zeitstrahl: " + o.ticks.join(" – ") : "Zeitstrahl", ...marks.map((m) => [m.label, m.sub && `(${m.sub})`].filter(Boolean).join(" ")), o.range && o.range.label].filter(Boolean),
       update(lt) {
         const pa = E.inout(prog(lt, at, 0.7)), ax = q(".ax");
         ax.setAttribute("x2", String(X0 + axisLen * pa));
@@ -154,6 +157,7 @@
     });
     return {
       el, at, end: at + rows.length * gap + 0.9, words: rows.reduce((n, r) => n + wordCount(r.label), 0),
+      tx: () => [o.title || "Rechenschema", ...rows.map((r) => `${r.op ? r.op + " " : ""}${r.label}: ${typeof r.value === "number" ? de(r.value) : r.value}`)],
       update(lt) {
         reveal(el, prog(lt, at, 0.4), "rise");
         items.forEach(({ x, r, v }, i) => {
@@ -174,7 +178,7 @@
     const at = o.at ?? 0.5, cps = o.cps ?? 26;
     const total = lines.reduce((n, l) => n + l.length, 0);
     return {
-      el, at, end: at + total / cps + 0.5, words: lines.reduce((n, l) => n + wordCount(l), 0),
+      el, at, end: at + total / cps + 0.5, words: lines.reduce((n, l) => n + wordCount(l), 0), tx: () => lines.slice(),
       update(lt) {
         el.style.opacity = lt >= at ? 1 : 0;
         let n = Math.floor(Math.max(0, lt - at) * cps), html = "";
@@ -194,6 +198,7 @@
     const at = o.at ?? 0.4, rv = o.reveal ?? at + 5;
     return {
       el, at, end: rv + 1.2, words: wordCount(q) + options.length,
+      tx: () => [plain(q), ...options.map((t, i) => `${"ABCD"[i]}) ${t}`), `Antwort: ${options[answer]}`],
       update(lt) {
         reveal(qt, prog(lt, at, 0.5), "rise");
         think.style.opacity = lt >= at + 0.6 ? 1 : 0;
@@ -314,8 +319,7 @@
         if (lastEnd + 1 > s.dur) warn.push(`${label}: Der letzte Baustein ist erst bei ${lastEnd.toFixed(1)} s fertig, die Szene endet bei ${s.dur} s. Mindestens 1 s Lesezeit am Ende lassen.`);
         s.items.forEach((b) => { if ((b.words || 0) > 14 && b.el.classList.contains("lv-t")) warn.push(`${label}: Ein Textblock hat ${b.words} Wörter (max. 14).`); });
       }
-      const itemText = (b) => (b.el.classList.contains("lv-chips") ? [...b.el.children].map((c) => c.textContent).join(" · ") : b.el.textContent).replace(/\s+/g, " ").trim();
-      const text = [s.def.kicker, s.def.title, s.def.sub, s.def.text, ...(s.def.type === "scene" ? s.items.map(itemText) : [])].filter(Boolean).map((x) => String(x).replace(/<[^>]+>/g, "").replace(/&shy;/g, ""));
+      const text = [s.def.kicker, s.def.title, s.def.sub, s.def.text, ...(s.def.type === "scene" ? s.items.flatMap((b) => (b.tx ? b.tx() : [])) : [])].filter(Boolean).map(plain);
       return { start: s.start, dur: s.dur, type: s.def.type, kicker: s.def.kicker || "", words, text };
     });
     if (total > 90) warn.push(`Das Video ist ${total.toFixed(0)} s lang (Ziel: 20–60 s, maximal 90 s).`);

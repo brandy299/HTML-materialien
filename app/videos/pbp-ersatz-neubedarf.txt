@@ -1,0 +1,43 @@
+Ersatz- und Neubedarf
+=====================
+
+PBP · Ersatz- und Neubedarf
+Ersatz oder neu?
+Mediaworld, ein Jahr später.
+
+01 · Der Fall
+Bei Mediaworld fehlen 5 Leute.
+Ist 23 · − 4 Abgänge · + 1 Zugang · Soll 25
+Aber warum fehlen sie?
+
+02 · Der Ersatz
+Wer geht, wird ersetzt.
+Ersatzbedarf
+Abgänge: 4
+− Zugänge: 1
+= Ersatzbedarf: 3
+3 Stellen: nur Ersatz.
+
+03 · Der Zuwachs
+Wachstum schafft neue Stellen.
+Neubedarf
+Soll: 25
+− ursprünglicher Ist: 23
+= Neubedarf: 2
+Der Ist von vorher zählt.
+
+04 · Zusammen
+Ersatz + Neu = Gesamt
+Ersatzbedarf: 3
++ Neubedarf: 2
+= Personalbedarf: 5
+› Passt zum Rechenschema.
+
+05 · Kurz testen
+Mediaworld wächst um 4 Stellen. Niemand geht. Was ist das?
+A) Ersatzbedarf
+B) Neubedarf
+C) Abgang
+Antwort: Neubedarf
+
+Jetzt selbst zerlegen.
