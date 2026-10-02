@@ -1,0 +1,94 @@
+/* ============================================================
+   LERNRAUM — Video-Baukasten: Stile (Bühne 360 × 640 CSS-Pixel = 9:16)
+   Baut auf app/styles.css auf (Farben, Fenster, Tag-Boxen, Schriften).
+   ============================================================ */
+html, body { margin: 0; background: #1b1b1b; }
+.lv-body { display: grid; place-items: center; min-height: 100vh; overflow: hidden; }
+body.render { display: block; background: var(--paper); min-height: 0; }
+#stage { position: relative; width: 360px; height: 640px; overflow: hidden; background: var(--paper); color: var(--ink); flex: none; }
+body.render #stage { position: fixed; left: 0; top: 0; }
+
+/* Raster im Hintergrund (wie ein Schulheft, sehr leicht) */
+#stage::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(30,30,30,.07) 1px, transparent 1.2px); background-size: 12px 12px; }
+
+.lv-prog { position: absolute; left: 24px; right: 24px; top: 16px; display: flex; gap: 4px; z-index: 6; }
+.lv-prog i { flex: 1; height: 3px; background: var(--panel-2); position: relative; overflow: hidden; }
+.lv-prog i b { position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+
+.lv-scene { position: absolute; inset: 0; padding: 92px 24px 96px; display: none; flex-direction: column; gap: 18px; z-index: 2; }
+.lv-scene.is-center { justify-content: center; padding-top: 70px; padding-bottom: 110px; } /* Standard: mittig, leicht nach oben (unten liegt die Bedienung des Handys) */
+.lv-kick { position: absolute; left: 24px; top: 36px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+
+/* Texte */
+.lv-t { margin: 0; letter-spacing: -.04em; text-wrap: balance; }
+.lv-xl { font: 800 40px/.98 var(--grot); letter-spacing: -.055em; }
+.lv-l { font: 800 29px/1.04 var(--grot); letter-spacing: -.045em; }
+.lv-m { font: 600 19px/1.3 var(--grot); letter-spacing: -.02em; }
+.lv-s { font: 500 12px/1.5 var(--mono); letter-spacing: 0; color: var(--ink-2); }
+.lv-t b { color: var(--pink-ink); font-weight: inherit; }
+.lv-t em { color: var(--good); font-style: normal; }
+.lv-t mark { background: linear-gradient(var(--pink), var(--pink)) left / calc(var(--m, 0) * 100%) 100% no-repeat; color: var(--ink); padding: 0 .1em; margin: 0 -.04em; }
+.lv-w { display: inline-block; white-space: pre; }
+.tone-mut { color: var(--ink-2); }
+
+/* Chips */
+.lv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lv-chip { font: 700 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; background: var(--pink-soft); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.lv-chip.good { background: var(--good-soft); }
+
+/* Bauplan-Kästen */
+.lv-stack { display: grid; gap: 12px; }
+.lv-box-l { font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 5px; }
+.lv-box-b { font: 800 30px/1 var(--grot); letter-spacing: -.04em; padding: 12px 14px; background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.lv-box.pink .lv-box-b { background: var(--pink); }
+.lv-box.green .lv-box-b { background: var(--good-soft); color: var(--good); }
+
+/* Zeitstrahl */
+.lv-tl { width: 100%; height: auto; overflow: visible; }
+.lv-tl text { font: 500 11px var(--mono); fill: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+.lv-tl .lbl { font: 700 14px var(--grot); fill: var(--ink); text-transform: none; letter-spacing: -.01em; }
+
+/* Rechenschema */
+.lv-scheme.win .body { padding: 6px 0; background: var(--paper); }
+.lv-row { display: grid; grid-template-columns: 26px 1fr auto; align-items: baseline; gap: 6px; padding: 11px 14px; position: relative; font: 600 15px/1.25 var(--grot); }
+.lv-row .op { font: 700 16px/1 var(--mono); color: var(--ink-2); }
+.lv-row small { display: block; font: 400 10.5px/1.3 var(--mono); color: var(--ink-2); margin-top: 3px; }
+.lv-row .val { font: 700 19px/1 var(--mono); }
+.lv-row.sum { margin-top: 4px; }
+.lv-row.sum::before { content: ""; position: absolute; left: 14px; right: 14px; top: -2px; height: 2px; background: var(--ink); transform: scaleX(var(--l, 0)); transform-origin: left; }
+.lv-row.hi::after { content: ""; position: absolute; inset: 2px 8px; background: var(--pink); z-index: -1; transform: scaleX(var(--m, 0)); transform-origin: left; }
+.lv-row.hi { z-index: 0; }
+
+/* Terminal-Zeile (wie die Rückmeldungen in der App) */
+.lv-term { background: var(--ink); color: var(--term-text); font: 500 13.5px/1.7 var(--mono); padding: 12px 14px; border: 2px solid var(--ink); min-height: 1em; }
+.lv-term .ok { color: var(--term-ok); }
+.lv-term .cur { display: inline-block; width: .55em; background: var(--term-text); height: 1em; vertical-align: -2px; }
+
+/* Kurztest */
+.lv-q { display: grid; gap: 12px; }
+.lv-opt { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px; padding: 0 12px 0 0; min-height: 54px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); font: 700 20px/1 var(--grot); }
+.lv-opt .key { display: grid; place-items: center; align-self: stretch; border-right: 2px solid var(--ink); font: 700 13px/1 var(--mono); background: var(--panel); }
+.lv-opt.right { background: var(--good-soft); border-color: var(--good); box-shadow: 3px 3px 0 var(--good); }
+.lv-opt.right .key { background: var(--good); color: var(--paper); border-color: var(--good); }
+.lv-think { height: 4px; background: var(--panel-2); position: relative; }
+.lv-think i { position: absolute; inset: 0; background: var(--pink); transform-origin: left; }
+
+/* Titel- und Schlussbild */
+.lv-scene.is-title { padding: 0; }
+.lv-cloud { position: absolute; left: 0; top: 0; width: 360px; height: 400px; image-rendering: pixelated; }
+.lv-scene.is-title::after { content: ""; position: absolute; left: 0; right: 0; top: 230px; height: 170px; background: linear-gradient(180deg, rgba(254,254,254,0), var(--paper)); }
+.lv-title-tag { position: absolute; left: 24px; top: 36px; z-index: 3; }
+.lv-title-main { position: absolute; left: 24px; right: 24px; top: 300px; z-index: 3; }
+.lv-title-main .lv-t { font: 800 50px/.92 var(--grot); letter-spacing: -.06em; }
+.lv-title-sub { position: absolute; left: 24px; right: 24px; top: 470px; z-index: 3; }
+.lv-title-sub .win .body { background: var(--paper); font: 600 16px/1.35 var(--grot); padding: 12px 14px; }
+.lv-scene.is-outro { align-items: center; justify-content: center; text-align: center; gap: 20px; padding: 0 24px; }
+.lv-scene.is-outro .tag-box { font-size: 26px; padding: 12px 18px; box-shadow: 4px 4px 0 var(--ink); }
+.lv-scene.is-outro .lv-t { text-align: center; }
+
+#wipe { position: absolute; inset: 0; width: 360px; height: 640px; image-rendering: pixelated; z-index: 9; pointer-events: none; }
+
+/* Stapelreihenfolge: Pixelwolke immer hinter dem Inhalt */
+.lv-scene .lv-cloud { z-index: 0; }
+.lv-scene.is-outro > *:not(.lv-cloud) { position: relative; z-index: 2; }
