@@ -12,18 +12,32 @@ Aber warum fehlen sie?
 
 02 · Der Ersatz
 Wer geht, wird ersetzt.
-ErsatzbedarfAbgänge0−Zugänge0=Ersatzbedarf0
+Ersatzbedarf
+Abgänge: 5
+− Zugänge: 2
+= Ersatzbedarf: 3
 3 Stellen: nur Ersatz.
 
 03 · Der Zuwachs
 Wachstum schafft neue Stellen.
-NeubedarfSoll0−ursprünglicher Istvon vor dem Jahr – nicht die 150=Neubedarf0
+Neubedarf
+Soll: 20
+− ursprünglicher Ist: 18
+= Neubedarf: 2
 Der Ist von vorher zählt.
 
 04 · Zusammen
-Ersatz + Neu = GesamtErsatzbedarf0+Neubedarf0=Personalbedarf0
+Ersatz + Neu = Gesamt
+Ersatzbedarf: 3
++ Neubedarf: 2
+= Personalbedarf: 5
+› Passt zum Rechenschema.
 
 05 · Kurz testen
-Ein Betrieb wächst um 4 Stellen. Niemand geht. Was ist das?AErsatzbedarfBNeubedarfCAbgang
+Ein Betrieb wächst um 4 Stellen. Niemand geht. Was ist das?
+A) Ersatzbedarf
+B) Neubedarf
+C) Abgang
+Antwort: Neubedarf
 
 Jetzt selbst zerlegen.

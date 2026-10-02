@@ -8,6 +8,7 @@
      node app/tools/render-video.js <id> --sheet     Vorschaubogen (1 Bild pro Sekunde) ansehen – schnell, zuerst nutzen
      node app/tools/render-video.js <id>             fertiges Video (720×1280, 30 fps, Musik)
      node app/tools/render-video.js <id> --hq        1080×1920 (nur für Weitergabe, nicht für die App)
+     node app/tools/render-video.js <id> --txt-only  nur die Textfassung (<id>.txt) neu schreiben (schnell)
      Weitere Schalter: --no-audio · --crf 27 · --fps 30 · --out <Ordner>
 
    Voraussetzungen: Node mit Playwright (Chromium), ffmpeg (Umgebungsvariable FFMPEG,
@@ -72,6 +73,9 @@ function serve() {
   info.scenes.forEach((s, i) => console.log(`  ${String(i + 1).padStart(2)}. ${s.type.padEnd(6)} ${s.start.toFixed(1).padStart(5)} s  ${String(s.dur).padStart(4)} s  ${s.words} Wörter  ${s.kicker}`));
   if (info.warn.length) { console.log("\nHinweise zur Lesbarkeit:"); info.warn.forEach((w) => console.log("  ⚠ " + w)); }
 
+  const writeTxt = () => { fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, id + ".txt"), `${info.title}\n${"=".repeat(info.title.length)}\n\n` + info.scenes.map((s) => s.text.join("\n")).filter(Boolean).join("\n\n") + "\n"); };
+  if (flag("txt-only")) { writeTxt(); console.log(`\nTextfassung geschrieben: ${path.relative(ROOT, path.join(OUT, id + ".txt"))}`); await browser.close(); srv.close(); return; }
+
   const shot = async (t, type = "png") => { await page.evaluate((x) => LV.seek(x), t); return page.screenshot({ type, quality: type === "jpeg" ? 88 : undefined }); };
 
   if (flag("sheet")) {
@@ -113,7 +117,7 @@ function serve() {
   if (code !== 0) { console.error("ffmpeg fehlgeschlagen"); process.exit(1); }
 
   fs.writeFileSync(path.join(OUT, id + ".jpg"), await shot(info.poster, "jpeg"));
-  fs.writeFileSync(path.join(OUT, id + ".txt"), `${info.title}\n${"=".repeat(info.title.length)}\n\n` + info.scenes.map((s) => s.text.join("\n")).filter(Boolean).join("\n\n") + "\n");
+  writeTxt();
   await browser.close(); srv.close();
 
   const mb = fs.statSync(mp4).size / 1048576;

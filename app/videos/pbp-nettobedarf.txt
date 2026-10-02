@@ -18,13 +18,25 @@ Wer geht? Wer kommt fest dazu?
 Das zählt zuerst.
 
 03 · Der Bestand
-FortschreibungIst-Personalbestandwer jetzt da ist0−Abgänge0+Zugänge0=Bestand am Jahresende0
+Fortschreibung
+Ist-Personalbestand: 30
+− Abgänge: 4
++ Zugänge: 2
+= Bestand am Jahresende: 28
 So viele sind dann wirklich da.
 
 04 · Der Bedarf
-Soll minus BestandBruttopersonalbedarfso viele braucht der Betrieb0−Bestand am Jahresende0=Nettopersonalbedarf0
+Soll minus Bestand
+Bruttopersonalbedarf: 33
+− Bestand am Jahresende: 28
+= Nettopersonalbedarf: 5
+› 5 neue Stellen
 
 05 · Kurz testen
-Soll: 20. Bestand am Jahresende: 18. Nettopersonalbedarf?A2B38C−2
+Soll: 20. Bestand am Jahresende: 18. Nettopersonalbedarf?
+A) 2
+B) 38
+C) −2
+Antwort: 2
 
 Jetzt selbst rechnen.

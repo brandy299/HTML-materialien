@@ -35,6 +35,7 @@ pip install imageio-ffmpeg          # liefert ffmpeg (oder ffmpeg im PATH haben 
    node app/tools/render-video.js <id>
    ```
    Ergebnis: `app/videos/<id>.mp4` (720×1280, mit Musik), `<id>.jpg` (Vorschaubild), `<id>.txt` (Textfassung). Größer als 4 MB? Kürzen oder `--crf 29`.
+   Nur die Textfassung neu schreiben (ohne das Video neu zu rendern): `node app/tools/render-video.js <id> --txt-only`.
 6. **Prüfen:** `node app/tools/check-videos.js` muss „0 Fehler“ melden (Größe, Länge, 9:16, alle drei Dateien da).
 7. **Committen** (Quelle + die drei Ergebnisdateien) und Pull Request wie bei Kursen. Die Videodatei nur **fertig** einchecken, nicht bei jeder Änderung neu – jede Fassung bleibt für immer im Repo-Verlauf.
 
