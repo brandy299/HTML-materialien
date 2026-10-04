@@ -18,6 +18,8 @@ window.LERNRAUM_I18N = {
     "öffnet sich neu": "opens in a new tab",
 
     "Das übst du am PC": "Practise this on a PC", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "The Word simulation needs a bigger screen. Open this task on a tablet or PC – on your phone, carry on with the video and the questions.",
+    "Fehler finden": "Find the mistake", "{n} Brief": "{n} letter", "{n} Briefe": "{n} letters", "Brief {a} von {b}": "Letter {a} of {b}", "Tippe auf die Zeile mit dem Fehler.": "Tap the line with the mistake.",
+    "Tippe auf eine Zeile": "Tap a line", "Nächster Brief": "Next letter", "Der Fehler steckt in der grün markierten Zeile.": "The mistake is in the line marked green.",
     "Vollbild": "Full screen", "Vollbild beenden": "Exit full screen",
     "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
     "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
@@ -114,6 +116,7 @@ window.LERNRAUM_I18N = {
       link: "The material opens in a new tab. Come back afterwards and tap “Done”.",
       video: "Tap Start. Tap the left or right of the picture to jump a scene back or forward, the middle to pause. “Text” shows everything to read.",
       sentence: "Tap a gap and choose the matching block below. Step by step you build a complete answer sentence.",
+      spot: "Read the letter excerpt and tap the line with the mistake. Afterwards you see why.",
       word: "Tap a line – drag the blue handles to extend the selection. Format with the toolbar, add empty lines with Enter (delete: ⌫), shortcuts: Ctrl+A/B/R. “Check” tests your task."
     }
   },
@@ -122,6 +125,8 @@ window.LERNRAUM_I18N = {
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
     "Das übst du am PC": "تتدرّب على هذا على الحاسوب", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "تحتاج محاكاة Word إلى شاشة أكبر. افتح هذه المهمة على جهاز لوحي أو حاسوب – على الهاتف تابع مع الفيديو والأسئلة.",
+    "Fehler finden": "ابحث عن الخطأ", "{n} Brief": "{n} رسالة", "{n} Briefe": "{n} رسائل", "Brief {a} von {b}": "الرسالة {a} من {b}", "Tippe auf die Zeile mit dem Fehler.": "اضغط على السطر الذي فيه الخطأ.",
+    "Tippe auf eine Zeile": "اضغط على سطر", "Nächster Brief": "الرسالة التالية", "Der Fehler steckt in der grün markierten Zeile.": "الخطأ في السطر المعلّم بالأخضر.",
     "Vollbild": "ملء الشاشة", "Vollbild beenden": "إنهاء ملء الشاشة",
     "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
     "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
@@ -225,6 +230,7 @@ window.LERNRAUM_I18N = {
       link: "تُفتح المادة في نافذة جديدة. ارجع بعد ذلك واضغط على «تم».",
       video: "اضغط على «ابدأ». اضغط على يسار الصورة أو يمينها للانتقال مشهدًا للخلف أو للأمام، وعلى الوسط للإيقاف المؤقت. «نص» يعرض كل شيء للقراءة.",
       sentence: "اضغط على فراغ واختر الجزء المناسب في الأسفل. هكذا تبني خطوة بخطوة جملة إجابة كاملة.",
+      spot: "اقرأ مقطع الرسالة واضغط على السطر الذي فيه الخطأ. بعد ذلك ترى السبب.",
       word: "اضغط على سطر – اسحب المقابض الزرقاء لتوسيع التحديد. نسّق باستخدام الشريط، وأضف أسطرًا فارغة بـ Enter (الحذف: ⌫)، والاختصارات: Ctrl+A/B/R. زر «تحقّق» يفحص مهمتك."
     }
   }

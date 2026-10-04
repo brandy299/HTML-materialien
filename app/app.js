@@ -220,10 +220,11 @@
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
     video: "Tippe auf Start. Tippe links oder rechts ins Bild, um eine Szene zurück oder vor zu springen, in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
+    spot: "Lies den Briefausschnitt und tippe auf die Zeile, in der der Fehler steckt. Danach siehst du, warum.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
-  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", video: "Erklärvideo" };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", spot: "Fehler finden", video: "Erklärvideo" };
   const STEP_LABEL = {};
   labelsReady = true;
   applyLang(LANG);
@@ -238,6 +239,7 @@
       case "cards": return tr("{n} Karten", { n: st.cards.length });
       case "selfcheck": return tr("{n} Aussagen", { n: st.items.length });
       case "sentence": return tr("{n} Bausteine", { n: (st.text.match(/\{/g) || []).length });
+      case "spot": return tr(st.rounds.length === 1 ? "{n} Brief" : "{n} Briefe", { n: st.rounds.length });
       case "video": return tr("ca. {m} min", { m: st.minutes || 1 });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return tr("öffnet sich neu");
@@ -309,6 +311,7 @@
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
       case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value, r.dec ?? st.decimals) : num(r.value, r.dec ?? st.decimals)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
       case "sentence": return `<p>${sentenceParts(st.text).map((x) => (typeof x === "string" ? esc(x) : `<mark>${esc(x.right)}</mark>`)).join("")}</p>`;
+      case "spot": return `<ol class="sol-list">${st.rounds.map((r) => { const l = r.lines[r.error]; return `<li>${esc(typeof l === "string" ? l : l.t)}<br><b>→ ${esc(r.explain || "")}</b></li>`; }).join("")}</ol>`;
       default: return "";
     }
   }
@@ -319,6 +322,7 @@
       : st.type === "sort" ? "Falsch zugeordnet: " + w.map(esc).join(" · ")
       : st.type === "cloze" ? "Falsche Lücken, richtig wäre: " + w.map(esc).join(", ")
       : st.type === "calc" ? "Fehler in: " + w.map(esc).join(" · ")
+      : st.type === "spot" ? "Fehler nicht gefunden: Brief " + w.join(", ")
       : st.type === "sentence" ? "Falsche Bausteine, richtig wäre: " + w.map(esc).join(", ") : "";
     return txt ? `<p class="sol-wrong">${txt}</p>` : "";
   }
@@ -1289,6 +1293,64 @@
           const last = k === qs.length - 1;
           ctx.action(`${tr(last ? "Weiter" : "Nächste Frage")} ${ICON.arrow}`, () => {
             if (last) ctx.finish({ c: correct, t: qs.length, wrong });
+            else { k++; show(); }
+          });
+        }
+      };
+      show();
+    },
+
+    /* Finde den Fehler: Briefausschnitt, eine Zeile ist falsch – antippen
+       { type:"spot", title, prompt?, rounds:[{ lines:[ "Text" | {t, bold?, right?, small?, gap?} ], error: <Zeile ab 0>, explain, hint? }] } */
+    spot(step, ctx) {
+      const rs = step.rounds;
+      let k = 0, correct = 0;
+      const wrong = [];
+      const show = () => {
+        const r = rs[k];
+        let locked = false;
+        ctx.hintsFor = () => [].concat(r.hint || [], r.hints || []);
+        ctx.hintKey = () => String(k);
+        ctx.setProgress(k / rs.length);
+        const node = h(`<div style="animation:enter .3s var(--ease) both">
+          <p class="q-count">${tr("Brief {a} von {b}", { a: k + 1, b: rs.length })}</p>
+          <p class="lead">${esc(step.prompt || tr("Tippe auf die Zeile mit dem Fehler."))}</p>
+          <div class="spot-paper"></div></div>`);
+        const paper = node.querySelector(".spot-paper");
+        const rows = r.lines.map((l, j) => {
+          const o = typeof l === "string" ? { t: l } : l;
+          if (o.gap) paper.append(h(`<div class="spot-gap" style="height:${o.gap * 1.35}em"></div>`));
+          const b = h(`<button type="button" class="spot-line${o.bold ? " b" : ""}${o.right ? " r" : ""}${o.small ? " s" : ""}"></button>`);
+          b.textContent = o.t;
+          b.onclick = () => pick(j);
+          paper.append(b);
+          return b;
+        });
+        ctx.body.replaceChildren(node);
+        ctx.action(tr("Tippe auf eine Zeile"), null, { enabled: false, variant: "ghost" });
+
+        function pick(j) {
+          if (locked) return;
+          locked = true;
+          const ok = j === r.error;
+          if (ok) correct++;
+          else wrong.push(k + 1);
+          buzz(ok ? 20 : [30, 40, 30]);
+          if (ctx.exam) {
+            if (k === rs.length - 1) return ctx.finish({ c: correct, t: rs.length, wrong });
+            k++; return show();
+          }
+          paper.classList.add("locked");
+          rows[r.error].classList.add("right");
+          if (!ok) rows[j].classList.add("wrong");
+          node.append(term([
+            ["p", "$ prüfe …"],
+            ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(r.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> <span>${tr("Der Fehler steckt in der grün markierten Zeile.")} ${esc(r.explain || "")}</span>`]
+          ]));
+          ctx.setProgress((k + 1) / rs.length);
+          const last = k === rs.length - 1;
+          ctx.action(`${tr(last ? "Weiter" : "Nächster Brief")} ${ICON.arrow}`, () => {
+            if (last) ctx.finish({ c: correct, t: rs.length, wrong });
             else { k++; show(); }
           });
         }

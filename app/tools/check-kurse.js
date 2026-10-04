@@ -56,7 +56,7 @@ for (const f of listed) {
 /* ── 3. Inhalte prüfen ──────────────────────────────────────── */
 const ID = /^[a-z0-9][a-z0-9-]*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "word", "link", "video"];
+const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "spot", "word", "link", "video"];
 const WORDNUM = { ein: 1, eins: 1, eines: 1, einer: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
 const str = (x) => typeof x === "string" && x.trim().length > 0;
 const subjectIds = new Set();
@@ -141,6 +141,17 @@ function checkStep(where, st, topic) {
       });
       break;
     }
+    case "spot":
+      if (!Array.isArray(st.rounds) || !st.rounds.length) { err(where, "rounds ist leer"); break; }
+      st.rounds.forEach((r, k) => {
+        const w = `${where} Brief ${k + 1}`;
+        if (!Array.isArray(r.lines) || r.lines.length < 3) { err(w, "lines braucht mindestens 3 Zeilen"); return; }
+        r.lines.forEach((l, j) => { if (!str(typeof l === "string" ? l : l && l.t)) err(`${w} Zeile ${j + 1}`, "Zeile ohne Text (t)"); });
+        if (!Number.isInteger(r.error) || r.error < 0 || r.error >= r.lines.length) err(w, `error ${r.error} passt nicht zu ${r.lines.length} Zeilen (zählt ab 0)`);
+        if (!str(r.explain)) err(w, "explain fehlt (warum ist die Zeile falsch?)");
+        checkHints(w, r);
+      });
+      break;
     case "calc":
       if (!Array.isArray(st.rows) || !st.rows.length) { err(where, "rows ist leer"); break; }
       st.rows.forEach((r, k) => {

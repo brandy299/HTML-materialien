@@ -511,6 +511,77 @@ LERNRAUM.subjects.push({
           ]
         },
         {
+          type: "spot",
+          title: "Finde den Fehler",
+          prompt: "In jedem Briefausschnitt steckt ein Fehler. Tippe auf die falsche Zeile.",
+          rounds: [
+            {
+              lines: [
+                { t: "Fly Bike Werke GmbH · Rostocker Str. 334 · 26121 Oldenburg", small: true },
+                "Sattel & Co. KG", "Frau Roth", "Lindenallee 5",
+                { t: "49074 Osnabrück", gap: 1 },
+                { t: "12. Oktober 2026", gap: 2 },
+                { t: "Anfrage über Fahrradsättel", bold: true, gap: 2 }
+              ],
+              error: 5,
+              explain: "Das Datum steht rechtsbündig und kurz: 12.10.2026.",
+              hint: "Schau dir das Datum an: Wo steht es, und wie ist es geschrieben?"
+            },
+            {
+              lines: [
+                { t: "12.10.2026", right: true },
+                { t: "Betreff: Anfrage über Fahrradsättel.", bold: true, gap: 2 },
+                { t: "Sehr geehrte Frau Roth,", gap: 1 },
+                { t: "wir bauen Citybikes und suchen neue Sättel.", gap: 1 }
+              ],
+              error: 1,
+              explain: "Der Betreff steht ohne das Wort „Betreff“ und ohne Punkt am Ende.",
+              hint: "Die Betreffzeile hat gleich zwei Fehler – tippe sie an."
+            },
+            {
+              lines: [
+                { t: "Anfrage über Fahrradsättel", bold: true },
+                { t: "Sehr geehrte Frau Roth", gap: 1 },
+                { t: "wir bauen Citybikes und suchen neue Sättel.", gap: 1 },
+                "Bitte senden Sie uns Ihr Angebot."
+              ],
+              error: 1,
+              explain: "Die Anrede endet mit einem Komma.",
+              hint: "Achte auf das Satzzeichen am Ende der Anrede."
+            },
+            {
+              lines: [
+                "Sattel & Co. KG", "Frau Roth", "Lindenallee 5", "49074 Osnabrück",
+                { t: "12.10.2026", right: true, gap: 2 }
+              ],
+              error: 3,
+              explain: "Vor der PLZ steht eine Leerzeile – so liest die Post die Anschrift maschinell.",
+              hint: "Zwischen Straße und PLZ fehlt etwas."
+            },
+            {
+              lines: [
+                "Bitte senden Sie uns Ihr Angebot.",
+                { t: "Mit freundlichen Grüßen,", gap: 1 },
+                { t: "Jan Weber", gap: 3 }
+              ],
+              error: 1,
+              explain: "Nach der Grußformel steht kein Komma.",
+              hint: "Schau auf das Ende der Grußformel."
+            },
+            {
+              lines: [
+                "Bitte senden Sie uns Ihr Angebot.",
+                { t: "Mit freundlichen Grüßen", gap: 1 },
+                { t: "Jan Weber", gap: 1 },
+                { t: "Anlage: Prospekt Citybike", gap: 1 }
+              ],
+              error: 2,
+              explain: "Zwischen Gruß und Name bleiben drei Leerzeilen Platz für die Unterschrift.",
+              hint: "Wo soll später die Unterschrift stehen? Dort fehlt Platz."
+            }
+          ]
+        },
+        {
           type: "sentence",
           title: "A7 · Warum die Form?",
           case: "Bau den Antwortsatz: Warum ist die Form im Geschäftsleben wichtig?",

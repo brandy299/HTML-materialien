@@ -997,3 +997,12 @@ body.vid-lock { overflow: hidden; }
 .merk h3 { overflow-wrap: anywhere; }
 .merk-win .bar { flex-wrap: wrap; row-gap: 2px; }
 .merk-win .bar .r { white-space: normal; }
+
+/* Finde den Fehler (Schritt-Typ spot) */
+.spot-paper { background: #FEFEFE; color: #1E1E1E; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: 14px 12px; font: 500 15px/1.35 var(--grot); margin-bottom: 14px; }
+.spot-line { display: block; width: 100%; min-height: 36px; text-align: left; background: none; border: 0; border-radius: 0; padding: 6px 6px; margin: 0; font: inherit; color: inherit; cursor: pointer; overflow-wrap: anywhere; }
+.spot-line.b { font-weight: 800; } .spot-line.r { text-align: right; } .spot-line.s { font-size: 11px; }
+.spot-line:active { background: var(--pink-fill); }
+.spot-paper.locked .spot-line { cursor: default; }
+.spot-line.right { background: #DCF3E6; box-shadow: inset 0 0 0 2px #0A8F57; }
+.spot-line.wrong { background: #FBDDE3; box-shadow: inset 0 0 0 2px #C1354F; animation: shake .35s; }
