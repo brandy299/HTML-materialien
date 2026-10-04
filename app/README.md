@@ -156,6 +156,16 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 ```
 In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
+**Finde den Fehler** – ein Briefausschnitt, eine Zeile ist falsch; Tippen genügt, wird automatisch geprüft (handytauglich)
+```js
+{ type: "spot", title: "Finde den Fehler", prompt: "optional",
+  rounds: [
+    { lines: [ "Sattel & Co. KG", { t: "Betreff: Anfrage.", bold: true, gap: 2 }, { t: "12.10.2026", right: true } ],
+      error: 1,                       // Nummer der falschen Zeile, zählt ab 0
+      explain: "Der Betreff steht ohne „Betreff“ und ohne Punkt.", hint: "optional" } ] }
+```
+Zeilen sind Text oder `{ t, bold, right, small, gap }` (`gap` = Leerzeilen davor). Pro Runde genau ein Fehler; `explain` ist Pflicht.
+
 **Word-Simulation** – ein Dokument (z. B. einen Brief) wie in Word formatieren; wird automatisch geprüft.
 Der Schritt öffnet als **eigene Simulator-Umgebung** im Word-Look (Vollbild; Ribbon mit Tabs, Lineale,
 A4-Seite, Statusleiste mit Zoom) – bewusst außerhalb des Lernraum-Designs.
