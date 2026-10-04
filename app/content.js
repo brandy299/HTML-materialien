@@ -186,6 +186,7 @@ function mapTexts(subject, fn) {
   return {
     ...subject,
     description: T(subject.description),
+    ...(subject.folders ? { folders: subject.folders.map((f) => ({ ...f, title: T(f.title), group: T(f.group), kicker: T(f.kicker), description: T(f.description) })) } : {}),
     topics: subject.topics.map((t0) => {
       if ((t0.exam && !t0.exam.guided) || subject.materials) return t0;
       const t = { ...t0, title: T(t0.title), kicker: T(t0.kicker), group: T(t0.group), help: T(t0.help), description: T(t0.description) };

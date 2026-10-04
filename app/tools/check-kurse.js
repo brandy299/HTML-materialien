@@ -225,6 +225,16 @@ for (const [file, subjects] of Object.entries(subjectsByFile)) {
     if (s.klausur !== undefined && !DATE.test(s.klausur)) err(W, "klausur muss ein Datum JJJJ-MM-TT sein");
     if (s.fach && ctx.LERNRAUM.faecher && !ctx.LERNRAUM.faecher[s.fach]) warn(W, `Fachname für „${s.fach}“ fehlt in app/content.js → faecher`);
     if (!Array.isArray(s.topics) || !s.topics.length) { err(W, "topics ist leer"); continue; }
+    const fids = new Set();
+    if (s.folders !== undefined && !Array.isArray(s.folders)) err(W, "folders muss eine Liste sein");
+    (s.folders || []).forEach((f) => {
+      if (!str(f.id) || !ID.test(f.id) || f.id === "ordner") err(`${W} Ordner`, "Ordner-id fehlt oder ungültig");
+      else if (fids.has(f.id)) err(`${W} Ordner ${f.id}`, "Ordner-id ist doppelt");
+      fids.add(f.id);
+      if (!str(f.title)) err(`${W} Ordner ${f.id}`, "Ordner ohne title");
+      if (!s.topics.some((t) => t.folder === f.id)) warn(`${W} Ordner ${f.id}`, "kein Thema liegt in diesem Ordner");
+    });
+    s.topics.forEach((t) => { if (t.folder !== undefined && !fids.has(t.folder)) err(`${W} Thema ${t.id}`, `folder „${t.folder}“ steht nicht in folders`); });
     const tids = new Set();
     s.topics.forEach((t) => {
       const WT = `${W} Thema ${t.id}`;

@@ -7,6 +7,15 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Lernfeld 8.1 · Personalbezogene Prozesse. Rechnen statt schätzen – am Modellunternehmen Mediaworld e. K.":
       "Lernfeld 8.1 (مجال التعلم 8.1) · العمليات المتعلقة بالموظفين. نحسب بدل أن نخمّن – في الشركة النموذجية Mediaworld e. K.",
 
+    "Klausurvorbereitung":
+      "الاستعداد للامتحان (Klausur)",
+
+    "Ordner · Klausur":
+      "مجلد · الامتحان (Klausur)",
+
+    "Übungsblätter, Endlos-Training, Mini-Klausuren, Probe- und Übungsklausur.":
+      "أوراق التمارين، التدريب المفتوح، الامتحانات المصغّرة (Mini-Klausuren)، الامتحان التجريبي وامتحان التمرين.",
+
     "Personalbedarf berechnen":
       "حساب Personalbedarf (الاحتياج من الموظفين)",
 
@@ -547,8 +556,8 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Übungsblatt 1":
       "ورقة التمارين 1",
 
-    "Übungspaket · Klausur 1":
-      "حزمة تمارين · الامتحان (Klausur) 1",
+    "Übungsblätter":
+      "أوراق التمارين",
 
     "<h3>Die Begriffe</h3>\n             <ul><li><strong>Ist-Personalbestand:</strong> wer JETZT da ist.</li>\n             <li><strong>Fortschreibung:</strong> Ist − Abgänge + Zugänge.</li>\n             <li><strong>Bruttopersonalbedarf:</strong> der Soll-Bestand – wie viele insgesamt gebraucht werden.</li>\n             <li><strong>Nettopersonalbedarf:</strong> Soll − fortgeschriebener Ist – was neu beschafft werden muss.</li></ul>\n             <h3>Autonom oder initiiert?</h3>\n             <p>Frag dich: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert (einstellen, versetzen, entlassen, ausbilden). Nein → autonom (Rente, Elternzeit, eigene Kündigung).</p>\n             <h3>Extern oder intern?</h3>\n             <p>Frag dich: <strong>Kann der Betrieb das selbst beschließen?</strong> Ja → intern (Online-Shop, Wachstum, neue Aufgaben). Nein → extern (Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison).</p>":
       "<h3>المصطلحات</h3><ul><li><strong>Ist-Personalbestand (العدد الحالي للموظفين):</strong> مَن يعمل الآن.</li><li><strong>Fortschreibung (تحديث العدد):</strong> Ist − Abgänge + Zugänge.</li><li><strong>Bruttopersonalbedarf (إجمالي الاحتياج من الموظفين):</strong> هو Soll-Bestand (العدد المطلوب) – كم موظفًا نحتاج في المجموع.</li><li><strong>Nettopersonalbedarf (صافي الاحتياج من الموظفين):</strong> Soll − fortgeschriebener Ist (العدد الحالي بعد التحديث) – ما يجب توفيره من جديد.</li></ul><h3>autonom (تلقائي) أم initiiert (بمبادرة من الشركة)؟</h3><p>اسأل نفسك: <strong>هل الشركة هي التي قرّرت ذلك؟</strong> نعم → initiiert (التوظيف، النقل، الفصل، التدريب المهني). لا → autonom (التقاعد، إجازة الوالدين، استقالة الموظف بنفسه).</p><h3>extern (خارجي) أم intern (داخلي)؟</h3><p>اسأل نفسك: <strong>هل تستطيع الشركة أن تقرّر ذلك بنفسها؟</strong> نعم → intern (متجر إلكتروني، النمو، مهام جديدة). لا → extern: الوضع الاقتصادي (Konjunktur)، القوانين، الحد الأدنى للأجور (Mindestlohn)، سوق العمل، الموسم.</p>",
@@ -1036,8 +1045,8 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Zufallsaufgaben":
       "مهام عشوائية",
 
-    "Klausurtraining":
-      "التدريب على الامتحان (Klausur)",
+    "Training":
+      "التدريب",
 
     "<h3>Das Rechenschema</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p>\n             <h3>Abgang oder Zugang?</h3>\n             <ul><li><strong>Abgang:</strong> Rente, Elternzeit, Kündigung, Wechsel zu einer anderen Firma.</li>\n             <li><strong>Zugang:</strong> Übernahme nach der Ausbildung, Rückkehr aus der Elternzeit, unterschriebener Vertrag.</li>\n             <li><strong>Nicht wichtig:</strong> Krankheit, Urlaub, Beschwerden, Fortbildung.</li></ul>\n             <h3>Stufe 3: Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → einstellen.</li><li><strong>negativ (−):</strong> Zu viele da → abbauen.</li></ul>":
       "<h3>Rechenschema (مخطط الحساب)</h3><p class=\"formula\">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p><h3>Abgang (مغادرة) أم Zugang (انضمام)؟</h3><ul><li><strong>Abgang:</strong> التقاعد، إجازة الوالدين، الاستقالة، الانتقال إلى شركة أخرى.</li><li><strong>Zugang:</strong> التعيين بعد التدريب المهني، العودة من إجازة الوالدين، عقد موقَّع.</li><li><strong>غير مهم:</strong> المرض، الإجازة، الشكاوى، الدورات التدريبية.</li></ul><h3>المستوى 3: Ersatzbedarf (احتياج الاستبدال) و Neubedarf (الاحتياج الجديد)</h3><p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist</p><h3>تفسير النتيجة</h3><ul><li><strong>positiv (+) موجب:</strong> ينقص موظفون → التوظيف.</li><li><strong>negativ (−) سالب:</strong> يوجد عدد زائد من الموظفين → تقليل الموظفين.</li></ul>",
@@ -1050,6 +1059,9 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
 
     "Übungsblatt 4":
       "ورقة التمارين 4",
+
+    "Mini-Klausuren":
+      "الامتحانات المصغّرة (Mini-Klausuren)",
 
     "<h3>In der Klausur</h3>\n             <ul><li>Erst alle Aufgaben lesen, dann arbeiten.</li>\n             <li>Beim Rechnen jeden Schritt aufschreiben – auch der Weg bringt Punkte.</li>\n             <li>Ergebnis immer mit Vorzeichen deuten und einen Antwortsatz schreiben.</li></ul>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
       "<h3>في الامتحان (Klausur)</h3><ul><li>اقرأ كل المهام أولًا، ثم ابدأ العمل.</li><li>عند الحساب اكتب كل خطوة – طريقة الحل أيضًا تعطيك نقاطًا.</li><li>فسّر النتيجة دائمًا مع الإشارة (+ أو −) واكتب Antwortsatz (جملة الإجابة).</li></ul><p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p><p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>",
@@ -1206,6 +1218,9 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
 
     "Probeklausur · mit Erklärungen":
       "Probeklausur (اختبار تجريبي) · مع شروحات",
+
+    "Große Klausuren":
+      "الامتحانات الكبيرة (Klausuren)",
 
     "<h3>Der Rechenweg</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <h3>Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → Personal beschaffen.</li>\n             <li><strong>negativ (−):</strong> Zu viele da → Personal abbauen.</li></ul>\n             <h3>Filtern</h3>\n             <p>Zählt: Abgang, fester Zugang, neue Stelle (Soll). Zählt nicht: kurze Krankheit, Urlaub, Streit, Feiern.</p>\n             <h3>Weitere Formeln</h3>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
       "<h3>طريقة الحساب</h3><p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p><h3>Ersatzbedarf und Neubedarf</h3><p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p><h3>تفسير النتيجة</h3><ul><li><strong>positiv (+):</strong> ينقص موظفون ← نبحث عن موظفين جدد.</li><li><strong>negativ (−):</strong> عدد الموظفين أكثر من اللازم ← نقلّل الموظفين.</li></ul><h3>التصفية</h3><p>يُحتسب: Abgang، Zugang ثابت، وظيفة جديدة (Soll). لا يُحتسب: مرض قصير، إجازة، خلاف، احتفالات.</p><h3>صيغ أخرى</h3><p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>",
@@ -1820,6 +1835,6 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
       "جملة للحفظ: Ausbildung (التدريب المهني)",
 
     "Azubis lösen keinen akuten Personalbedarf – Ausbildung dauert drei Jahre.":
-      "المتدرّبون (Azubis) لا يحلّون Personalbedarf (الاحتياج من الموظفين) العاجل – التدريب المهني يستغرق ثلاث سنوات."
+      "المتدرّبون (Azubis) لا يحلّون Personalbedarf (الاحتياج من الموظفين) العاجل – التدريب المهني يستغرق ثلاث سنوات.",
 
 } });
