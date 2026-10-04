@@ -17,6 +17,7 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Das übst du am PC": "Practise this on a PC", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "The Word simulation needs a bigger screen. Open this task on a tablet or PC – on your phone, carry on with the video and the questions.",
     "Vollbild": "Full screen", "Vollbild beenden": "Exit full screen",
     "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
     "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
@@ -120,6 +121,7 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Das übst du am PC": "تتدرّب على هذا على الحاسوب", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "تحتاج محاكاة Word إلى شاشة أكبر. افتح هذه المهمة على جهاز لوحي أو حاسوب – على الهاتف تابع مع الفيديو والأسئلة.",
     "Vollbild": "ملء الشاشة", "Vollbild beenden": "إنهاء ملء الشاشة",
     "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
     "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
