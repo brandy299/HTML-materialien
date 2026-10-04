@@ -1708,6 +1708,15 @@
 
     /* Word-Simulation: einen Brief wie in Word formatieren – geführt oder frei */
     word(step, ctx) {
+      /* Auf dem Handy ist die Simulation zu eng: Hinweis statt Simulator (Tablet/PC ab 700 px; step.phone = true erzwingt sie) */
+      if (window.innerWidth < 700 && !step.phone) {
+        const note = h(`<div class="win"><div class="bar"><span class="d"></span>${tr("Das übst du am PC")}</div>
+          <div class="body"><p>${tr("Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.")}</p></div></div>`);
+        ctx.body.append(note);
+        ctx.setProgress(1);
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
+        return;
+      }
       const W_FONTS = ["Calibri", "Arial", "Times New Roman", "Verdana"];
       const W_SIZES = [8, 9, 10, 11, 12, 14, 16];
       const W_STACK = {

@@ -316,6 +316,107 @@
     };
   });
 
+  // Word-Fenster: Menüband mit Mauszeiger + Brief, der Schritt für Schritt formatiert wird.
+  // o.done: Schritte, die schon erledigt sind (Ids) · o.steps: [{id, at, label?, note?}] · o.raw: Rohtext-Zeilen (Standard: Brief Fly Bike)
+  // Ids: font · margins · small · gap1 · right · bold · anrede · sign
+  C.word = comp((o = {}) => {
+    const RAW = o.raw || ["Fly Bike Werke GmbH · Rostocker Str. 334 · 26121 Oldenburg", "Sattel & Co. KG", "Frau Roth", "Lindenallee 5", "49074 Osnabrück", "12.10.2026",
+      "Anfrage über Fahrradsättel", "Sehr geehrte Frau Roth,", "wir bauen Citybikes und suchen neue Sättel.", "Mit freundlichen Grüßen", "Jan Weber"];
+    const ST = {
+      font: { tab: "Start", btn: "font", label: "Strg+A · Calibri · 11", note: "Alles markieren, dann Schrift.", sel: "all" },
+      margins: { tab: "Layout", btn: "margins", label: "Layout · Seitenränder", note: "oben 4,5 · unten 2 · links 2,5 · rechts 2 cm", sel: "none" },
+      small: { tab: "Start", btn: "size", label: "Zeile 1 · Schriftgrad 8", note: "Die Rücksendeangabe ist klein.", sel: [0] },
+      gap1: { tab: "Start", btn: "para", label: "Enter · Leerzeilen", note: "1 vor der PLZ, 2 danach.", sel: [3, 4] },
+      right: { tab: "Start", btn: "right", label: "Datum · Strg+R", note: "Rechtsbündig.", sel: [5] },
+      bold: { tab: "Start", btn: "bold", label: "Betreff · Strg+B", note: "Fett, ohne Punkt.", sel: [6] },
+      anrede: { tab: "Start", btn: "para", label: "Enter · nach der Anrede", note: "Eine Leerzeile.", sel: [7] },
+      sign: { tab: "Start", btn: "para", label: "Enter · nach dem Gruß", note: "3 Leerzeilen für die Unterschrift.", sel: [9] }
+    };
+    const IDS = Object.keys(ST);
+    const steps = (o.steps || []).map((s) => ({ ...ST[s.id], ...s }));
+    const pre = new Set(o.done || []);
+    const BTN = { Start: [["font", "Schrift ▾"], ["size", "Größe ▾"], ["bold", "<b>F</b>"], ["right", '<svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg>'], ["para", "¶"]], Layout: [["margins", "Seitenränder ▾"]] };
+    const el = h(`<div class="lv-wd"><div class="lv-wd-win">
+        <div class="lv-wd-bar"><span class="d"></span>Brief_Rohtext.docx – Word</div>
+        <div class="lv-wd-tabs">${["Datei", "Start", "Layout"].map((t) => `<span data-t="${t}">${t}</span>`).join("")}</div>
+        <div class="lv-wd-rib">${Object.keys(BTN).map((t) => `<div class="lv-wd-panel" data-p="${t}">${BTN[t].map(([k, x]) => `<span class="lv-wd-btn" data-k="${k}">${x}</span>`).join("")}</div>`).join("")}<i class="lv-wd-cur"></i></div>
+      </div>
+      <div class="lv-wd-cap"><span class="lv-wd-capn"></span><span class="lv-wd-capt"></span><span class="lv-wd-capm"></span></div>
+      <div class="lv-wd-paperwrap"><div class="lv-wd-paper"><div class="lv-wd-text"></div></div></div></div>`);
+    const tabs = [...el.querySelectorAll(".lv-wd-tabs span")], panels = [...el.querySelectorAll(".lv-wd-panel")], btns = {};
+    el.querySelectorAll(".lv-wd-btn").forEach((b) => { btns[b.dataset.k] = b; });
+    const cur = el.querySelector(".lv-wd-cur"), rib = el.querySelector(".lv-wd-rib");
+    const cap = el.querySelector(".lv-wd-cap"), capn = el.querySelector(".lv-wd-capn"), capt = el.querySelector(".lv-wd-capt"), capm = el.querySelector(".lv-wd-capm");
+    const paper = el.querySelector(".lv-wd-paper"), text = el.querySelector(".lv-wd-text");
+    const at = o.at ?? 0.4, K = 1.3;   // px je mm auf dem Blatt
+    const APPLY = 0.9, CLICK = 0.7;
+
+    function stateOf(set) {
+      const lines = RAW.map((t, i) => ({ t, i, pt: set.has("font") ? 11 : 10, bold: false, right: false, gapAfter: 0 }));
+      if (set.has("small")) lines[0].pt = 8;
+      if (set.has("gap1")) { lines[3].gapAfter = 1; lines[4].gapAfter = 2; }
+      if (set.has("right")) lines[5].right = true;
+      if (set.has("bold")) lines[6].bold = true;
+      if (set.has("anrede")) { lines[6].gapAfter = 1; lines[7].gapAfter = 1; }
+      if (set.has("sign")) lines[9].gapAfter = 3;
+      return { lines, m: set.has("margins") ? [45, 20, 25, 20] : [25, 25, 25, 25] };
+    }
+    let key = null, lineEls = [];
+    function build(set) {
+      const s = stateOf(set);
+      text.innerHTML = s.lines.map((l) => `<div class="lv-wd-l" data-i="${l.i}" style="font-size:${l.pt * 0.3528 * K * 1.5}px;line-height:${(l.pt * 0.3528 * K * 1.5) * 1.3}px;font-weight:${l.bold ? 700 : 500};text-align:${l.right ? "right" : "left"}">${esc(l.t)}</div>${"<div class='lv-wd-gap'></div>".repeat(l.gapAfter)}`).join("");
+      lineEls = [...text.querySelectorAll(".lv-wd-l")];
+      paper.style.padding = `${s.m[0] * K * 0.62}px ${s.m[3] * K * 0.62}px 0 ${s.m[2] * K * 0.62}px`;
+      text.style.setProperty("--gap", (11 * 0.3528 * K * 1.5 * 1.3) + "px");
+    }
+    const spot = (k) => {   // Mitte-rechts des Knopfes relativ zum Menüband, unabhängig von der Bühnen-Skalierung
+      const r = rib.getBoundingClientRect(), q = btns[k].getBoundingClientRect(), sc = r.width / rib.offsetWidth || 1;
+      return { x: (q.left - r.left + q.width * 0.62) / sc, y: (q.top - r.top + q.height * 0.7) / sc };
+    };
+    const end = Math.max(at + 1, ...steps.map((s) => s.at + APPLY + 1.4));
+    return {
+      el, at, end, words: steps.reduce((n, s) => n + wordCount((s.label || "") + " " + (s.note || "")), 0),
+      tx: () => steps.map((s) => `${s.label}${s.note ? ": " + s.note : ""}`),
+      update(lt) {
+        el.style.opacity = lt >= at ? 1 : 0;
+        const set = new Set(pre); steps.forEach((s) => { if (lt >= s.at + APPLY) set.add(s.id); });
+        const k = [...set].sort().join(",");
+        if (k !== key) { key = k; build(set); }
+        // aktueller Schritt
+        let ci = -1; steps.forEach((s, j) => { if (lt >= s.at) ci = j; });
+        const s = steps[ci], prev = steps[ci - 1];
+        tabs.forEach((t) => t.classList.toggle("on", t.dataset.t === (s ? s.tab : "Start")));
+        panels.forEach((p) => { p.style.display = p.dataset.p === (s ? s.tab : "Start") ? "flex" : "none"; });
+        // Zeiger
+        if (s && rib.offsetWidth) {
+          const t = E.inout(prog(lt, s.at, 0.6));
+          const b = spot(s.btn);
+          const a = prev && prev.tab === s.tab ? spot(prev.btn) : { x: b.x + 60, y: b.y + 36 };
+          cur.style.opacity = 1; cur.style.translate = `${a.x + (b.x - a.x) * t}px ${a.y + (b.y - a.y) * t}px`;
+          const c = prog(lt, s.at + CLICK, 0.12) * (1 - prog(lt, s.at + CLICK + 0.25, 0.2));
+          cur.style.scale = String(1 - 0.25 * c);
+          Object.keys(btns).forEach((n) => btns[n].classList.toggle("hot", n === s.btn && lt >= s.at + CLICK - 0.1 && lt < s.at + APPLY + 0.9));
+          capn.textContent = s.n ?? (IDS.indexOf(s.id) + 1); capt.textContent = s.label; capm.textContent = s.note || "";
+          cap.style.opacity = prog(lt, s.at, 0.3);
+        } else { cur.style.opacity = 0; cap.style.opacity = 0; Object.values(btns).forEach((b) => b.classList.remove("hot")); }
+        // Markierung und Aufleuchten
+        lineEls.forEach((le) => {
+          const i = +le.dataset.i; let bg = 0, sel = false;
+          steps.forEach((st) => {
+            const inSel = st.sel === "all" || (Array.isArray(st.sel) && st.sel.includes(i));
+            if (!inSel) return;
+            if (lt >= st.at + 0.2 && lt < st.at + APPLY) sel = true;
+            if (lt >= st.at + APPLY) bg = Math.max(bg, 1 - prog(lt, st.at + APPLY, 0.9));
+          });
+          le.style.background = sel ? "#C6DAF5" : bg > 0.02 ? `rgba(243,134,161,${0.45 * bg})` : "transparent";
+        });
+        const mg = steps.find((st) => st.id === "margins");
+        paper.classList.toggle("flash", !!mg && lt >= mg.at + APPLY && lt < mg.at + APPLY + 1.1);
+        fadeOut(el, lt, o.until);
+      }
+    };
+  });
+
   /* ── Szenen ───────────────────────────────────────────── */
   const S = {};
   // Inhaltsszene: kicker = kleine Überschrift oben („01 · Die Idee“), dur in Sekunden, items = Bausteine

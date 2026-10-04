@@ -1,0 +1,31 @@
+In Word formatieren
+===================
+
+INWI · Word
+Vom Rohtext zum Brief.
+Fly Bike Werke, Schritt für Schritt.
+
+01 · Schrift
+Strg+A · Calibri · 11: Alles markieren, dann Schrift.
+
+02 · Ränder
+Layout · Seitenränder: oben 4,5 · unten 2 · links 2,5 · rechts 2 cm
+
+03 · Anschrift
+Zeile 1 · Schriftgrad 8: Die Rücksendeangabe ist klein.
+Enter · Leerzeilen: 1 vor der PLZ, 2 danach.
+Datum · Strg+R: Rechtsbündig.
+
+04 · Betreff bis Gruß
+Betreff · Strg+B: Fett, ohne Punkt.
+Enter · nach der Anrede: Eine Leerzeile.
+Enter · nach dem Gruß: 3 Leerzeilen für die Unterschrift.
+
+05 · Kurz testen
+Wie markierst du alles auf einmal?
+A) Strg+B
+B) Strg+A
+C) Strg+R
+Antwort: Strg+A
+
+Jetzt Wege üben.
