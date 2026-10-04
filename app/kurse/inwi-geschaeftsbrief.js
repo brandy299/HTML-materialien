@@ -421,6 +421,8 @@ LERNRAUM.subjects.push({
       title: "Typische Fehler",
       kicker: "DIN 5008 · Teil 3",
       minutes: 15,
+      video: "inwi-fehlerjagd",            // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Sechs Fehler im Brief",
       help: `<h3>Die häufigsten Fehler</h3>
              <ul><li>Datum links statt <strong>rechtsbündig</strong>, lang statt kurz.</li>
              <li>„Betreff:“ davor oder Punkt am Ende.</li>
