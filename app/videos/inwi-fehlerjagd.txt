@@ -1,0 +1,30 @@
+Sechs Fehler im Brief
+=====================
+
+INWI · DIN 5008
+Sechs Fehler. Findest du sie?
+Fehlerjagd bei Fly Bike Werke.
+
+01 · Die Jagd
+6 Sechs Fehler: Schau genau hin.
+
+02 · Oben
+1 Keine Leerzeile: Vor der PLZ fehlt eine.
+2 Datum zu lang: Kurz und rechts: 12.10.2026.
+
+03 · Die Mitte
+3 Betreff: Ohne „Betreff“, ohne Punkt.
+4 Anrede: Das Komma fehlt.
+
+04 · Das Ende
+5 Gruß mit Komma: Nach dem Gruß kein Komma.
+6 Zu wenig Platz: 3 Leerzeilen für die Unterschrift.
+
+05 · Kurz testen
+Welcher Betreff ist richtig?
+A) Betreff: Anfrage über Sättel
+B) Anfrage über Sättel (fett, ohne Punkt)
+C) Anfrage über Sättel.
+Antwort: Anfrage über Sättel (fett, ohne Punkt)
+
+Jetzt Fehler jagen.

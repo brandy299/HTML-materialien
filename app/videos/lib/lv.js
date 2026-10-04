@@ -221,7 +221,8 @@
   // letter: { z1:[Zeilen], z2:[…], … z9:[…] } – leerer Text "" = Leerzeile (z8 enthält die drei Leerzeilen der Unterschrift)
   // show: "all" (Standard) oder [{zone, at}] (at < 0 = von Anfang an sichtbar) · outlines: {at, stagger} = alle Zonen als gestrichelte Kästen mit Nummern
   // focus: [{at, all:true} | {at, zone:2, pad:{x,y}} | {at, r:[x0,y0,x1,y1]}] – Kamera (mm auf dem Blatt)
-  // marks: [{zone, at, label, note, until?, ruler?:{from,to,x,label}}] – Hervorhebung + Beschriftung unter dem Blatt
+  // left: [3] setzt die rechtsbündige Zone 3 (Datum) linksbündig – für Fehlerbilder
+  // marks: [{zone, at, label, note, n?, until?, ruler?:{from,to,x,label}}] (n = Zahl im Kästchen, zone: 0 = keine Zone) – Hervorhebung + Beschriftung unter dem Blatt
   C.page = comp((o = {}) => {
     const S0 = 312 / 210, VW = 312, VH = o.height || 360;
     const L = o.letter || {};
@@ -232,7 +233,8 @@
       { z: 7, pt: PT, lh: LH, gap: 1 }, { z: 8, pt: PT, lh: LH, gap: 0 }, { z: 9, pt: PT, lh: LH, gap: 1 }
     ];
     let y = 45; const Z = {};   // Anschriftfeld beginnt 45 mm unter dem oberen Blattrand
-    plan.forEach((p) => {
+    plan.forEach((p0) => {
+      const p = p0.right && (o.left || []).includes(p0.z) ? { ...p0, right: false } : p0;   // o.left: [3] = Datum linksbündig (Fehlerbild)
       const lines = L["z" + p.z] || [""]; y += p.gap * LH;
       const h = lines.length * p.lh;
       const w = p.full ? 165 : Math.min(165, Math.max(12, Math.max(...lines.map((l) => l.length)) * p.pt * 0.3528 * 0.55 + 3));
@@ -259,6 +261,7 @@
       const r = m.ruler, d = h(`<div class="lv-pg-ruler" style="left:${mm(r.x)};top:${mm(r.from)};height:${mm(r.to - r.from)}"><i></i><b>${esc(r.label || "")}</b></div>`);
       sheet.append(d); return d;
     });
+    marks.forEach((m) => { if (m.n !== undefined && zel[m.zone] && !o.outlines) zel[m.zone].n.textContent = m.n; });   // Zahl im Kästchen = Fehlernummer
     const showMap = o.show === undefined || o.show === "all" ? null : o.show;
     const show = {}; (showMap || []).forEach((s) => { show[s.zone] = s.at; });
     const at = o.at ?? 0.4;

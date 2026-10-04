@@ -351,6 +351,7 @@
     [/^#\/sichern$/, () => viewBackup(), "profil"],
     [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
+    [/^#\/f\/([\w-]+)\/ordner\/([\w-]+)$/, viewFolder, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/video$/, viewTopicVideo, null],
@@ -480,10 +481,38 @@
     </a>`);
   }
 
-  function topicList(s) {
+  /* Ordner: Kurs-Feld folders:[{id,title,group?,description?}], Thema-Feld folder:"<id>".
+     Im Kurs erscheint pro Ordner eine Karte; die Themen stehen im Ordner (#/f/<kurs>/ordner/<id>). */
+  const folderOf = (s, id) => (s.folders || []).find((f) => f.id === id);
+  const backOf = (s, t) => (SINGLE ? "#/" : t && t.folder && folderOf(s, t.folder) ? `#/f/${s.id}/ordner/${t.folder}` : `#/f/${s.id}`);
+  function folderWin(s, f) {
+    const tops = s.topics.filter((t) => t.folder === f.id && t.steps.length);
+    const done = tops.filter((t) => progress.ratio(s, t) >= 1).length;
+    return h(`<a class="win topic-win folder-win" href="#/f/${s.id}/ordner/${f.id}">
+      <div class="bar"><span class="d"></span>${esc(f.kicker || tr("Ordner"))}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
+      <div class="body"><span class="title">${esc(f.title)}</span>
+        <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(s, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
+        ${f.description ? `<span class="meta">${esc(f.description)}</span>` : ""}</div>
+    </a>`);
+  }
+  function topicList(s, folderId) {
     const frag = document.createDocumentFragment();
     let group = null, list = null;
+    const seen = new Set();
     s.topics.forEach((t) => {
+      if (folderId) { if (t.folder !== folderId) return; }
+      else if (t.folder && folderOf(s, t.folder)) {
+        const f = folderOf(s, t.folder);
+        if (seen.has(f.id)) return;
+        seen.add(f.id);
+        if (f.group) frag.append(h(`<p class="section-head">${esc(f.group)}</p>`));
+        const box = h(`<div class="topics"></div>`);
+        if (!f.group) box.style.marginTop = "16px";
+        box.append(folderWin(s, f));
+        frag.append(box);
+        list = null;
+        return;
+      }
       if (!list || t.group !== group) {
         group = t.group;
         if (group) frag.append(h(`<p class="section-head">${esc(group)}</p>`));
@@ -494,6 +523,21 @@
       list.append(topicWin(s, t));
     });
     return frag;
+  }
+  /* Überschrift passt sich langen Wörtern an (kein seitliches Überlaufen am Handy) */
+  const fitDisplay = (txt) => { const L = Math.max(0, ...String(txt).replace(/&shy;|\u00ad/g, "").split(/[\s-]+/).map((w) => w.length)); return L > 9 ? `font-size:min(${(138 / L).toFixed(1)}vw,64px);` : ""; };
+  function viewFolder(sid, fid) {
+    const s = findSubject(sid), f = s && folderOf(s, fid);
+    if (!s || !f) { location.hash = SINGLE ? "#/" : `#/f/${sid}`; return h("<div></div>"); }
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const v = h(`<main class="view">
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="${tr("Zurück")}">${ICON.back}</a>
+        <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span></div>
+      <h1 class="display" style="margin-top:24px;${fitDisplay(f.title)}">${esc(f.title).replace(/([a-zäöüß]{4,})(vorbereitung|bedarf|klausur|training|blätter)/gi, "$1&shy;$2")}<small>${esc(f.description || "")}</small></h1>
+      <div id="list"></div>
+    </main>`);
+    v.querySelector("#list").append(topicList(s, fid));
+    return v;
   }
 
   const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
@@ -675,7 +719,7 @@
       <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a>
         <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
         <button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button></div>
-      <h1 class="display" style="margin-top:24px">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
+      <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       <div id="list"></div>
     </main>`);
     v.querySelector("#qrBtn").onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
@@ -714,7 +758,7 @@
     if (t && t.drill) return viewDrillIntro(s, t);
     if (t && t.href) {
       const v = h(`<main class="view no-tabbar">
-        <div class="topstrip"><a class="icon-btn" href="#/f/${s.id}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
+        <div class="topstrip"><a class="icon-btn" href="${backOf(s, t)}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
         <h1 class="display" style="margin-top:26px;font-size:clamp(40px,12vw,64px)">${esc(t.title)}</h1>
         <div class="qr-box" style="margin-top:22px"></div>
         <div class="dock"><div class="dock-inner"><a class="btn block" href="${matUrl(t.href)}" target="_blank" rel="noopener">Material öffnen ${ICON.ext}</a></div></div>
@@ -728,7 +772,7 @@
     const next = nextStepIndex(s, t);
     const allDone = progress.ratio(s, t) >= 1;
     const started = Object.keys(p.done).length > 0;
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -772,7 +816,7 @@
     const running = !!p.examStart && !done;
     const rest = examRemaining(s, t);
     const next = nextStepIndex(s, t);
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -822,7 +866,7 @@
     const tasks = t.steps.map((st, k) => [st, k]).filter(([st]) => st.points);
     const n = progress.count(s, t), done = n >= t.steps.length, started = n > 0;
     const next = nextStepIndex(s, t);
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Probeklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -2581,7 +2625,7 @@
   function viewDrillIntro(s, t) {
     const ds = drillStats(t);
     const LEVELS = (DRILLS[t.drill] || DRILLS.bedarf).levels;
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -2993,7 +3037,7 @@
       <div id="log"></div>
       <div class="dock"><div class="dock-inner col">
         ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">${tr("Weiter:")} ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
-        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">${tr("Zur Übersicht")}</a>
+        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${backOf(s, t)}">${tr("Zur Übersicht")}</a>
       </div></div>
     </main>`);
     v.querySelector("#log").append(term([["p", "$ auswertung " + esc(t.id)], ...log]));
@@ -3033,7 +3077,7 @@
       ${review.length ? `<p class="section-head">Das solltest du wiederholen</p><div class="topics" id="review"></div>` : ""}
       <p class="hint" style="margin-top:18px">Notenschlüssel: ${(t.exam.grading || GRADING).map(([m, n]) => `${n} ab ${m} %`).join(" · ")}</p>
       <div class="dock"><div class="dock-inner col">
-        <a class="btn block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
+        <a class="btn block" href="${backOf(s, t)}">Zur Übersicht</a>
       </div></div>
     </main>`);
     const tasks = v.querySelector("#tasks");

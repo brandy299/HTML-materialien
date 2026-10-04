@@ -73,6 +73,7 @@ Für Material, das nicht in die App passt (z. B. eine eigene interaktive Seite):
   Für „erklären/deuten/Stellung nehmen“ den Typ `sentence` verwenden.
 - **Niveau niedrig halten:** kurze Sätze, ein Gedanke pro Folie, Fachbegriffe erklären.
   Ablenker in Quiz/Satzbausteinen = typische Schülerfehler (z. B. Vorzeichen vertauscht).
+- **Ordner:** Bei vielen Themen (z. B. Übungs- und Klausurmaterial) im Kurs `folders` anlegen und an den Themen `folder: "<id>"` setzen (siehe `app/README.md`). Die Hauptseite bleibt dann übersichtlich.
 - **Aufbau eines Themas:** `slides` → 2–4 Übungen (steigende Schwierigkeit) → optional `sentence` → optional `selfcheck`.
 - **Inhalte aus den gelieferten Materialien** der Lehrkraft übernehmen (Zahlen, Namen, Modellunternehmen).
   Eigene Ergänzungen sparsam und fachlich korrekt; in der Commit-/PR-Beschreibung auflisten, was ergänzt wurde.

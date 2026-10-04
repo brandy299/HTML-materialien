@@ -1,0 +1,41 @@
+Stellenplan oder Kennzahlen?
+============================
+
+PBP · Bruttopersonalbedarf
+Zählen oder rechnen?
+Mediaworld, zwei Methoden.
+
+01 · Zwei Wege
+Wie viele Stellen braucht Mediaworld?
+Stellenplan: Zählen: jede Stelle einzeln.
+Kennzahlen: Rechnen mit dem Umsatz.
+
+02 · Stellenplan
+Jede Stelle wird einzeln gezählt.
+genau · aufwendig
+Gut für kleine Betriebe.
+
+03 · Kennzahlen
+Umsatz ÷ Umsatz je Vollzeitstelle
+Umsatz: 3 300 000 €
+÷ Umsatz je Vollzeitstelle: 150 000 €
+= Vollzeitstellen: 22
+Schnell – aber grob.
+
+04 · Der Trick
+Gleich viele Nullen streichen.
+3 300 000 ÷ 150 000
+330 ÷ 15 = 22
+
+05 · Die Falle
+Kennzahlen sehen nur den Umsatz.
+Welche Bereiche Personal brauchen, zeigt der Stellenplan.
+
+06 · Kurz testen
+Mediaworld-Filiale: Umsatz 2 000 000 €, je Vollzeitstelle 80 000 €. Stellen?
+A) 25
+B) 250
+C) 2,5
+Antwort: 25
+
+Jetzt selbst rechnen.

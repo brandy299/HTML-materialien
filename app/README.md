@@ -156,6 +156,13 @@ Für den Personalbedarf gibt es die Abkürzung `bedarfRows(ist, abgaenge, zugaen
 ```
 In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein beginnt mit `*`. Die Reihenfolge wird in der App gemischt.
 
+**Ordner** – viele Themen übersichtlich bündeln (z. B. die gesamte Klausurvorbereitung). Im Kurs steht eine Karte; die Themen liegen im Ordner (`#/f/<kurs>/ordner/<id>`), der Zurück-Knopf führt wieder dorthin.
+```js
+folders: [{ id: "klausur", group: "Klausurvorbereitung", kicker: "Ordner · Klausur", title: "Klausurvorbereitung", description: "…" }],
+topics: [ { id: "mini-klausur-1", folder: "klausur", group: "Mini-Klausuren", … } ]   // group = Zwischenüberschrift im Ordner
+```
+Die Karte steht an der Stelle des ersten Themas im Ordner. Themen-IDs und gespeicherter Fortschritt bleiben unverändert. Ordner-Texte (`title`, `group`, `kicker`, `description`) sind übersetzbar.
+
 **Finde den Fehler** – ein Briefausschnitt, eine Zeile ist falsch; Tippen genügt, wird automatisch geprüft (handytauglich)
 ```js
 { type: "spot", title: "Finde den Fehler", prompt: "optional",

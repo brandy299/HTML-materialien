@@ -1283,6 +1283,7 @@ function mapTexts(subject, fn) {
   return {
     ...subject,
     description: T(subject.description),
+    ...(subject.folders ? { folders: subject.folders.map((f) => ({ ...f, title: T(f.title), group: T(f.group), kicker: T(f.kicker), description: T(f.description) })) } : {}),
     topics: subject.topics.map((t0) => {
       if ((t0.exam && !t0.exam.guided) || subject.materials) return t0;
       const t = { ...t0, title: T(t0.title), kicker: T(t0.kicker), group: T(t0.group), help: T(t0.help), description: T(t0.description) };
@@ -1324,13 +1325,21 @@ LERNRAUM.subjects.push({
   id: "pbp",
   fach: "PBP",
   added: "2026-09-24",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-10-02",        // neue Inhalte: Erklärvideos zu LS 2.1 (für „Aktualisiert“)
+  updated: "2026-10-04",        // neue Inhalte: Ordner „Klausurvorbereitung“ (für „Aktualisiert“)
   name: "Personalbedarf",
   course: "PBP · HS1",
   glyph: "P",
   color: "#F386A1",
   company: "Mediaworld e.K.",
   description: "Lernfeld 8.1 · Personalbezogene Prozesse. Rechnen statt schätzen – am Modellunternehmen Mediaworld e. K.",
+  /* Ordner: fasst die Klausurvorbereitung zusammen (Thema-Feld folder). Zurücknehmen: folder-Zeilen entfernen. */
+  folders: [
+    {
+      id: "klausur", group: "Klausurvorbereitung", kicker: "Ordner · Klausur",
+      title: "Klausurvorbereitung",
+      description: "Übungsblätter, Endlos-Training, Mini-Klausuren, Probe- und Übungsklausur."
+    }
+  ],
   topics: [
 
     /* ══════════════ LS 2.1 · TEIL 1 ══════════════ */
@@ -1676,7 +1685,8 @@ LERNRAUM.subjects.push({
              <h3>Extern oder intern?</h3>
              <p>Frag dich: <strong>Kann der Betrieb das selbst beschließen?</strong> Ja → intern (Online-Shop, Wachstum, neue Aufgaben). Nein → extern (Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison).</p>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Fachbegriffe & Einflussfaktoren",
       kicker: "Übungsblatt 1",
       minutes: 20,
@@ -1810,10 +1820,13 @@ LERNRAUM.subjects.push({
              <h3>Rechentrick</h3>
              <p>Bei beiden Zahlen gleich viele Nullen streichen: 3 600 000 ÷ 200 000 = 36 ÷ 2 = 18.</p>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Stellenplan & Kennzahlen",
       kicker: "Übungsblatt 2",
       minutes: 15,
+      video: "pbp-stellenplan-kennzahlen",     // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Zählen oder rechnen?",
       steps: [
         {
           type: "slides",
@@ -1911,7 +1924,8 @@ LERNRAUM.subjects.push({
              <ul><li><strong>Kosten:</strong> Ausbildungsvergütung, Berufsschulzeiten, Zeit der Ausbilder/innen.</li>
              <li><strong>Nutzen:</strong> Azubis kennen die Abläufe, Übernahme sichert Fachkräfte.</li></ul>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Ausbildungsbedarf",
       kicker: "Fachkräfte von morgen",
       minutes: 10,
@@ -1993,7 +2007,8 @@ LERNRAUM.subjects.push({
     /* ══════════════ ENDLOS-TRAINING ══════════════ */
     {
       id: "training-personalbedarf",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Training",
       title: "Endlos-Training",
       kicker: "Zufallsaufgaben",
       drill: "bedarf",          // erzeugt immer neue Personalbedarf-Aufgaben
@@ -2021,7 +2036,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 1",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -2067,7 +2083,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 2",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -2112,7 +2129,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 3",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -2156,7 +2174,8 @@ LERNRAUM.subjects.push({
        aber ohne Timer und mit einer Erklärung (guide) vor jeder Aufgabe. Eigener Link: #/f/pbp/probeklausur-2 */
     {
       id: "probeklausur-2",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Große Klausuren",
       title: "Probeklausur Personalbedarf – mit Erklärungen",
       kicker: "Probeklausur · mit Erklärungen",
       minutes: 60,
@@ -2676,7 +2695,8 @@ LERNRAUM.subjects.push({
 
     {
       id: "uebungsklausur-1",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Große Klausuren",
       title: "Übungsklausur Personalbedarf",
       kicker: "Übungsklausur · Klausur 1",
       minutes: 45,
@@ -3696,6 +3716,8 @@ LERNRAUM.subjects.push({
       title: "Typische Fehler",
       kicker: "DIN 5008 · Teil 3",
       minutes: 15,
+      video: "inwi-fehlerjagd",            // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Sechs Fehler im Brief",
       help: `<h3>Die häufigsten Fehler</h3>
              <ul><li>Datum links statt <strong>rechtsbündig</strong>, lang statt kurz.</li>
              <li>„Betreff:“ davor oder Punkt am Ende.</li>
@@ -6731,6 +6753,15 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Lernfeld 8.1 · Personalbezogene Prozesse. Rechnen statt schätzen – am Modellunternehmen Mediaworld e. K.":
       "Lernfeld 8.1 (مجال التعلم 8.1) · العمليات المتعلقة بالموظفين. نحسب بدل أن نخمّن – في الشركة النموذجية Mediaworld e. K.",
 
+    "Klausurvorbereitung":
+      "الاستعداد للامتحان (Klausur)",
+
+    "Ordner · Klausur":
+      "مجلد · الامتحان (Klausur)",
+
+    "Übungsblätter, Endlos-Training, Mini-Klausuren, Probe- und Übungsklausur.":
+      "أوراق التمارين، التدريب المفتوح، الامتحانات المصغّرة (Mini-Klausuren)، الامتحان التجريبي وامتحان التمرين.",
+
     "Personalbedarf berechnen":
       "حساب Personalbedarf (الاحتياج من الموظفين)",
 
@@ -7271,8 +7302,8 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Übungsblatt 1":
       "ورقة التمارين 1",
 
-    "Übungspaket · Klausur 1":
-      "حزمة تمارين · الامتحان (Klausur) 1",
+    "Übungsblätter":
+      "أوراق التمارين",
 
     "<h3>Die Begriffe</h3>\n             <ul><li><strong>Ist-Personalbestand:</strong> wer JETZT da ist.</li>\n             <li><strong>Fortschreibung:</strong> Ist − Abgänge + Zugänge.</li>\n             <li><strong>Bruttopersonalbedarf:</strong> der Soll-Bestand – wie viele insgesamt gebraucht werden.</li>\n             <li><strong>Nettopersonalbedarf:</strong> Soll − fortgeschriebener Ist – was neu beschafft werden muss.</li></ul>\n             <h3>Autonom oder initiiert?</h3>\n             <p>Frag dich: <strong>Hat der Betrieb das entschieden?</strong> Ja → initiiert (einstellen, versetzen, entlassen, ausbilden). Nein → autonom (Rente, Elternzeit, eigene Kündigung).</p>\n             <h3>Extern oder intern?</h3>\n             <p>Frag dich: <strong>Kann der Betrieb das selbst beschließen?</strong> Ja → intern (Online-Shop, Wachstum, neue Aufgaben). Nein → extern (Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison).</p>":
       "<h3>المصطلحات</h3><ul><li><strong>Ist-Personalbestand (العدد الحالي للموظفين):</strong> مَن يعمل الآن.</li><li><strong>Fortschreibung (تحديث العدد):</strong> Ist − Abgänge + Zugänge.</li><li><strong>Bruttopersonalbedarf (إجمالي الاحتياج من الموظفين):</strong> هو Soll-Bestand (العدد المطلوب) – كم موظفًا نحتاج في المجموع.</li><li><strong>Nettopersonalbedarf (صافي الاحتياج من الموظفين):</strong> Soll − fortgeschriebener Ist (العدد الحالي بعد التحديث) – ما يجب توفيره من جديد.</li></ul><h3>autonom (تلقائي) أم initiiert (بمبادرة من الشركة)؟</h3><p>اسأل نفسك: <strong>هل الشركة هي التي قرّرت ذلك؟</strong> نعم → initiiert (التوظيف، النقل، الفصل، التدريب المهني). لا → autonom (التقاعد، إجازة الوالدين، استقالة الموظف بنفسه).</p><h3>extern (خارجي) أم intern (داخلي)؟</h3><p>اسأل نفسك: <strong>هل تستطيع الشركة أن تقرّر ذلك بنفسها؟</strong> نعم → intern (متجر إلكتروني، النمو، مهام جديدة). لا → extern: الوضع الاقتصادي (Konjunktur)، القوانين، الحد الأدنى للأجور (Mindestlohn)، سوق العمل، الموسم.</p>",
@@ -7760,8 +7791,8 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
     "Zufallsaufgaben":
       "مهام عشوائية",
 
-    "Klausurtraining":
-      "التدريب على الامتحان (Klausur)",
+    "Training":
+      "التدريب",
 
     "<h3>Das Rechenschema</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p>\n             <h3>Abgang oder Zugang?</h3>\n             <ul><li><strong>Abgang:</strong> Rente, Elternzeit, Kündigung, Wechsel zu einer anderen Firma.</li>\n             <li><strong>Zugang:</strong> Übernahme nach der Ausbildung, Rückkehr aus der Elternzeit, unterschriebener Vertrag.</li>\n             <li><strong>Nicht wichtig:</strong> Krankheit, Urlaub, Beschwerden, Fortbildung.</li></ul>\n             <h3>Stufe 3: Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → einstellen.</li><li><strong>negativ (−):</strong> Zu viele da → abbauen.</li></ul>":
       "<h3>Rechenschema (مخطط الحساب)</h3><p class=\"formula\">Ist − Abgänge + Zugänge = Zwischensumme<br>Soll − Zwischensumme = Personalbedarf</p><h3>Abgang (مغادرة) أم Zugang (انضمام)؟</h3><ul><li><strong>Abgang:</strong> التقاعد، إجازة الوالدين، الاستقالة، الانتقال إلى شركة أخرى.</li><li><strong>Zugang:</strong> التعيين بعد التدريب المهني، العودة من إجازة الوالدين، عقد موقَّع.</li><li><strong>غير مهم:</strong> المرض، الإجازة، الشكاوى، الدورات التدريبية.</li></ul><h3>المستوى 3: Ersatzbedarf (احتياج الاستبدال) و Neubedarf (الاحتياج الجديد)</h3><p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist</p><h3>تفسير النتيجة</h3><ul><li><strong>positiv (+) موجب:</strong> ينقص موظفون → التوظيف.</li><li><strong>negativ (−) سالب:</strong> يوجد عدد زائد من الموظفين → تقليل الموظفين.</li></ul>",
@@ -7774,6 +7805,9 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
 
     "Übungsblatt 4":
       "ورقة التمارين 4",
+
+    "Mini-Klausuren":
+      "الامتحانات المصغّرة (Mini-Klausuren)",
 
     "<h3>In der Klausur</h3>\n             <ul><li>Erst alle Aufgaben lesen, dann arbeiten.</li>\n             <li>Beim Rechnen jeden Schritt aufschreiben – auch der Weg bringt Punkte.</li>\n             <li>Ergebnis immer mit Vorzeichen deuten und einen Antwortsatz schreiben.</li></ul>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
       "<h3>في الامتحان (Klausur)</h3><ul><li>اقرأ كل المهام أولًا، ثم ابدأ العمل.</li><li>عند الحساب اكتب كل خطوة – طريقة الحل أيضًا تعطيك نقاطًا.</li><li>فسّر النتيجة دائمًا مع الإشارة (+ أو −) واكتب Antwortsatz (جملة الإجابة).</li></ul><p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p><p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>",
@@ -7930,6 +7964,9 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
 
     "Probeklausur · mit Erklärungen":
       "Probeklausur (اختبار تجريبي) · مع شروحات",
+
+    "Große Klausuren":
+      "الامتحانات الكبيرة (Klausuren)",
 
     "<h3>Der Rechenweg</h3>\n             <p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>\n             <h3>Ersatz- und Neubedarf</h3>\n             <p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p>\n             <h3>Ergebnis deuten</h3>\n             <ul><li><strong>positiv (+):</strong> Es fehlen Leute → Personal beschaffen.</li>\n             <li><strong>negativ (−):</strong> Zu viele da → Personal abbauen.</li></ul>\n             <h3>Filtern</h3>\n             <p>Zählt: Abgang, fester Zugang, neue Stelle (Soll). Zählt nicht: kurze Krankheit, Urlaub, Streit, Feiern.</p>\n             <h3>Weitere Formeln</h3>\n             <p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>":
       "<h3>طريقة الحساب</h3><p class=\"formula\">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p><h3>Ersatzbedarf und Neubedarf</h3><p class=\"formula\">Ersatzbedarf = Abgänge − Zugänge<br>Neubedarf = Soll − ursprünglicher Ist<br>Ersatz + Neu = Netto</p><h3>تفسير النتيجة</h3><ul><li><strong>positiv (+):</strong> ينقص موظفون ← نبحث عن موظفين جدد.</li><li><strong>negativ (−):</strong> عدد الموظفين أكثر من اللازم ← نقلّل الموظفين.</li></ul><h3>التصفية</h3><p>يُحتسب: Abgang، Zugang ثابت، وظيفة جديدة (Soll). لا يُحتسب: مرض قصير، إجازة، خلاف، احتفالات.</p><h3>صيغ أخرى</h3><p class=\"formula\">Umsatz ÷ Umsatz je Vollzeitstelle = Vollzeitstellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>",
@@ -8544,7 +8581,7 @@ LERNRAUM.translations.push({ course: "pbp", lang: "ar", strings: {
       "جملة للحفظ: Ausbildung (التدريب المهني)",
 
     "Azubis lösen keinen akuten Personalbedarf – Ausbildung dauert drei Jahre.":
-      "المتدرّبون (Azubis) لا يحلّون Personalbedarf (الاحتياج من الموظفين) العاجل – التدريب المهني يستغرق ثلاث سنوات."
+      "المتدرّبون (Azubis) لا يحلّون Personalbedarf (الاحتياج من الموظفين) العاجل – التدريب المهني يستغرق ثلاث سنوات.",
 
 } });
 
@@ -13599,6 +13636,7 @@ window.LERNRAUM_I18N = {
     "Das übst du am PC": "Practise this on a PC", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "The Word simulation needs a bigger screen. Open this task on a tablet or PC – on your phone, carry on with the video and the questions.",
     "Fehler finden": "Find the mistake", "{n} Brief": "{n} letter", "{n} Briefe": "{n} letters", "Brief {a} von {b}": "Letter {a} of {b}", "Tippe auf die Zeile mit dem Fehler.": "Tap the line with the mistake.",
     "Tippe auf eine Zeile": "Tap a line", "Nächster Brief": "Next letter", "Der Fehler steckt in der grün markierten Zeile.": "The mistake is in the line marked green.",
+    "Ordner": "Folder",
     "Vollbild": "Full screen", "Vollbild beenden": "Exit full screen",
     "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
     "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
@@ -13706,6 +13744,7 @@ window.LERNRAUM_I18N = {
     "Das übst du am PC": "تتدرّب على هذا على الحاسوب", "Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.": "تحتاج محاكاة Word إلى شاشة أكبر. افتح هذه المهمة على جهاز لوحي أو حاسوب – على الهاتف تابع مع الفيديو والأسئلة.",
     "Fehler finden": "ابحث عن الخطأ", "{n} Brief": "{n} رسالة", "{n} Briefe": "{n} رسائل", "Brief {a} von {b}": "الرسالة {a} من {b}", "Tippe auf die Zeile mit dem Fehler.": "اضغط على السطر الذي فيه الخطأ.",
     "Tippe auf eine Zeile": "اضغط على سطر", "Nächster Brief": "الرسالة التالية", "Der Fehler steckt in der grün markierten Zeile.": "الخطأ في السطر المعلّم بالأخضر.",
+    "Ordner": "مجلد",
     "Vollbild": "ملء الشاشة", "Vollbild beenden": "إنهاء ملء الشاشة",
     "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
     "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
@@ -14247,6 +14286,7 @@ window.LERNRAUM_I18N = {
     [/^#\/sichern$/, () => viewBackup(), "profil"],
     [/^#\/qr$/, viewQR, null],
     [/^#\/f\/([\w-]+)$/, viewSubject, "home"],
+    [/^#\/f\/([\w-]+)\/ordner\/([\w-]+)$/, viewFolder, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/video$/, viewTopicVideo, null],
@@ -14376,10 +14416,38 @@ window.LERNRAUM_I18N = {
     </a>`);
   }
 
-  function topicList(s) {
+  /* Ordner: Kurs-Feld folders:[{id,title,group?,description?}], Thema-Feld folder:"<id>".
+     Im Kurs erscheint pro Ordner eine Karte; die Themen stehen im Ordner (#/f/<kurs>/ordner/<id>). */
+  const folderOf = (s, id) => (s.folders || []).find((f) => f.id === id);
+  const backOf = (s, t) => (SINGLE ? "#/" : t && t.folder && folderOf(s, t.folder) ? `#/f/${s.id}/ordner/${t.folder}` : `#/f/${s.id}`);
+  function folderWin(s, f) {
+    const tops = s.topics.filter((t) => t.folder === f.id && t.steps.length);
+    const done = tops.filter((t) => progress.ratio(s, t) >= 1).length;
+    return h(`<a class="win topic-win folder-win" href="#/f/${s.id}/ordner/${f.id}">
+      <div class="bar"><span class="d"></span>${esc(f.kicker || tr("Ordner"))}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
+      <div class="body"><span class="title">${esc(f.title)}</span>
+        <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(s, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
+        ${f.description ? `<span class="meta">${esc(f.description)}</span>` : ""}</div>
+    </a>`);
+  }
+  function topicList(s, folderId) {
     const frag = document.createDocumentFragment();
     let group = null, list = null;
+    const seen = new Set();
     s.topics.forEach((t) => {
+      if (folderId) { if (t.folder !== folderId) return; }
+      else if (t.folder && folderOf(s, t.folder)) {
+        const f = folderOf(s, t.folder);
+        if (seen.has(f.id)) return;
+        seen.add(f.id);
+        if (f.group) frag.append(h(`<p class="section-head">${esc(f.group)}</p>`));
+        const box = h(`<div class="topics"></div>`);
+        if (!f.group) box.style.marginTop = "16px";
+        box.append(folderWin(s, f));
+        frag.append(box);
+        list = null;
+        return;
+      }
       if (!list || t.group !== group) {
         group = t.group;
         if (group) frag.append(h(`<p class="section-head">${esc(group)}</p>`));
@@ -14390,6 +14458,21 @@ window.LERNRAUM_I18N = {
       list.append(topicWin(s, t));
     });
     return frag;
+  }
+  /* Überschrift passt sich langen Wörtern an (kein seitliches Überlaufen am Handy) */
+  const fitDisplay = (txt) => { const L = Math.max(0, ...String(txt).replace(/&shy;|\u00ad/g, "").split(/[\s-]+/).map((w) => w.length)); return L > 9 ? `font-size:min(${(138 / L).toFixed(1)}vw,64px);` : ""; };
+  function viewFolder(sid, fid) {
+    const s = findSubject(sid), f = s && folderOf(s, fid);
+    if (!s || !f) { location.hash = SINGLE ? "#/" : `#/f/${sid}`; return h("<div></div>"); }
+    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const v = h(`<main class="view">
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="${tr("Zurück")}">${ICON.back}</a>
+        <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span></div>
+      <h1 class="display" style="margin-top:24px;${fitDisplay(f.title)}">${esc(f.title).replace(/([a-zäöüß]{4,})(vorbereitung|bedarf|klausur|training|blätter)/gi, "$1&shy;$2")}<small>${esc(f.description || "")}</small></h1>
+      <div id="list"></div>
+    </main>`);
+    v.querySelector("#list").append(topicList(s, fid));
+    return v;
   }
 
   const fachName = (f) => (DATA.faecher && DATA.faecher[f]) || f;
@@ -14571,7 +14654,7 @@ window.LERNRAUM_I18N = {
       <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a>
         <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
         <button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button></div>
-      <h1 class="display" style="margin-top:24px">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
+      <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       <div id="list"></div>
     </main>`);
     v.querySelector("#qrBtn").onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
@@ -14610,7 +14693,7 @@ window.LERNRAUM_I18N = {
     if (t && t.drill) return viewDrillIntro(s, t);
     if (t && t.href) {
       const v = h(`<main class="view no-tabbar">
-        <div class="topstrip"><a class="icon-btn" href="#/f/${s.id}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
+        <div class="topstrip"><a class="icon-btn" href="${backOf(s, t)}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
         <h1 class="display" style="margin-top:26px;font-size:clamp(40px,12vw,64px)">${esc(t.title)}</h1>
         <div class="qr-box" style="margin-top:22px"></div>
         <div class="dock"><div class="dock-inner"><a class="btn block" href="${matUrl(t.href)}" target="_blank" rel="noopener">Material öffnen ${ICON.ext}</a></div></div>
@@ -14624,7 +14707,7 @@ window.LERNRAUM_I18N = {
     const next = nextStepIndex(s, t);
     const allDone = progress.ratio(s, t) >= 1;
     const started = Object.keys(p.done).length > 0;
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -14668,7 +14751,7 @@ window.LERNRAUM_I18N = {
     const running = !!p.examStart && !done;
     const rest = examRemaining(s, t);
     const next = nextStepIndex(s, t);
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -14718,7 +14801,7 @@ window.LERNRAUM_I18N = {
     const tasks = t.steps.map((st, k) => [st, k]).filter(([st]) => st.points);
     const n = progress.count(s, t), done = n >= t.steps.length, started = n > 0;
     const next = nextStepIndex(s, t);
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Probeklausur")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -16477,7 +16560,7 @@ window.LERNRAUM_I18N = {
   function viewDrillIntro(s, t) {
     const ds = drillStats(t);
     const LEVELS = (DRILLS[t.drill] || DRILLS.bedarf).levels;
-    const back = SINGLE ? "#/" : `#/f/${s.id}`;
+    const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span>${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
@@ -16889,7 +16972,7 @@ window.LERNRAUM_I18N = {
       <div id="log"></div>
       <div class="dock"><div class="dock-inner col">
         ${nextTopic ? `<a class="btn block" href="#/f/${s.id}/${nextTopic.id}">${tr("Weiter:")} ${esc(nextTopic.title)} ${ICON.arrow}</a>` : ""}
-        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">${tr("Zur Übersicht")}</a>
+        <a class="btn ${nextTopic ? "ghost" : ""} block" href="${backOf(s, t)}">${tr("Zur Übersicht")}</a>
       </div></div>
     </main>`);
     v.querySelector("#log").append(term([["p", "$ auswertung " + esc(t.id)], ...log]));
@@ -16929,7 +17012,7 @@ window.LERNRAUM_I18N = {
       ${review.length ? `<p class="section-head">Das solltest du wiederholen</p><div class="topics" id="review"></div>` : ""}
       <p class="hint" style="margin-top:18px">Notenschlüssel: ${(t.exam.grading || GRADING).map(([m, n]) => `${n} ab ${m} %`).join(" · ")}</p>
       <div class="dock"><div class="dock-inner col">
-        <a class="btn block" href="${SINGLE ? "#/" : `#/f/${s.id}`}">Zur Übersicht</a>
+        <a class="btn block" href="${backOf(s, t)}">Zur Übersicht</a>
       </div></div>
     </main>`);
     const tasks = v.querySelector("#tasks");

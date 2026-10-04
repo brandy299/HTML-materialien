@@ -8,13 +8,21 @@ LERNRAUM.subjects.push({
   id: "pbp",
   fach: "PBP",
   added: "2026-09-24",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-10-02",        // neue Inhalte: Erklärvideos zu LS 2.1 (für „Aktualisiert“)
+  updated: "2026-10-04",        // neue Inhalte: Ordner „Klausurvorbereitung“ (für „Aktualisiert“)
   name: "Personalbedarf",
   course: "PBP · HS1",
   glyph: "P",
   color: "#F386A1",
   company: "Mediaworld e.K.",
   description: "Lernfeld 8.1 · Personalbezogene Prozesse. Rechnen statt schätzen – am Modellunternehmen Mediaworld e. K.",
+  /* Ordner: fasst die Klausurvorbereitung zusammen (Thema-Feld folder). Zurücknehmen: folder-Zeilen entfernen. */
+  folders: [
+    {
+      id: "klausur", group: "Klausurvorbereitung", kicker: "Ordner · Klausur",
+      title: "Klausurvorbereitung",
+      description: "Übungsblätter, Endlos-Training, Mini-Klausuren, Probe- und Übungsklausur."
+    }
+  ],
   topics: [
 
     /* ══════════════ LS 2.1 · TEIL 1 ══════════════ */
@@ -360,7 +368,8 @@ LERNRAUM.subjects.push({
              <h3>Extern oder intern?</h3>
              <p>Frag dich: <strong>Kann der Betrieb das selbst beschließen?</strong> Ja → intern (Online-Shop, Wachstum, neue Aufgaben). Nein → extern (Konjunktur, Gesetze, Mindestlohn, Arbeitsmarkt, Saison).</p>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Fachbegriffe & Einflussfaktoren",
       kicker: "Übungsblatt 1",
       minutes: 20,
@@ -494,10 +503,13 @@ LERNRAUM.subjects.push({
              <h3>Rechentrick</h3>
              <p>Bei beiden Zahlen gleich viele Nullen streichen: 3 600 000 ÷ 200 000 = 36 ÷ 2 = 18.</p>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Stellenplan & Kennzahlen",
       kicker: "Übungsblatt 2",
       minutes: 15,
+      video: "pbp-stellenplan-kennzahlen",     // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Zählen oder rechnen?",
       steps: [
         {
           type: "slides",
@@ -595,7 +607,8 @@ LERNRAUM.subjects.push({
              <ul><li><strong>Kosten:</strong> Ausbildungsvergütung, Berufsschulzeiten, Zeit der Ausbilder/innen.</li>
              <li><strong>Nutzen:</strong> Azubis kennen die Abläufe, Übernahme sichert Fachkräfte.</li></ul>`,
 
-      group: "Übungspaket · Klausur 1",
+      folder: "klausur",
+      group: "Übungsblätter",
       title: "Ausbildungsbedarf",
       kicker: "Fachkräfte von morgen",
       minutes: 10,
@@ -677,7 +690,8 @@ LERNRAUM.subjects.push({
     /* ══════════════ ENDLOS-TRAINING ══════════════ */
     {
       id: "training-personalbedarf",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Training",
       title: "Endlos-Training",
       kicker: "Zufallsaufgaben",
       drill: "bedarf",          // erzeugt immer neue Personalbedarf-Aufgaben
@@ -705,7 +719,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 1",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -751,7 +766,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 2",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -796,7 +812,8 @@ LERNRAUM.subjects.push({
              <p class="formula">Ist − Abgänge + Zugänge = fortgeschriebener Ist<br>Soll − fortgeschriebener Ist = Nettopersonalbedarf</p>
              <p class="formula">Umsatz ÷ Umsatz je Vollzeitstelle = Stellen<br>Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>`,
 
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Mini-Klausuren",
       title: "Mini-Klausur 3",
       kicker: "Übungsblatt 4",
       minutes: 12,
@@ -840,7 +857,8 @@ LERNRAUM.subjects.push({
        aber ohne Timer und mit einer Erklärung (guide) vor jeder Aufgabe. Eigener Link: #/f/pbp/probeklausur-2 */
     {
       id: "probeklausur-2",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Große Klausuren",
       title: "Probeklausur Personalbedarf – mit Erklärungen",
       kicker: "Probeklausur · mit Erklärungen",
       minutes: 60,
@@ -1360,7 +1378,8 @@ LERNRAUM.subjects.push({
 
     {
       id: "uebungsklausur-1",
-      group: "Klausurtraining",
+      folder: "klausur",
+      group: "Große Klausuren",
       title: "Übungsklausur Personalbedarf",
       kicker: "Übungsklausur · Klausur 1",
       minutes: 45,

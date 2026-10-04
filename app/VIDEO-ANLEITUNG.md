@@ -75,7 +75,7 @@ LV.video({
 | `LV.scheme(rows, o)` | Rechenschema, Schritt für Schritt | `rows`: `[{label, value:30, op:"−", sub, line:true, hi:true}]`, `o`: `{title, at, gap}`. Zahlen zählen hoch; `line` = Strich darüber; `hi` = rosa Ergebnis |
 | `LV.term(lines, o)` | Terminal-Rückmeldung wie in der App | `LV.term(["› 5 neue Stellen"], {at})` |
 | `LV.quiz(q, options, answer, o)` | Kurztest mit Denkpause und Auflösung | `LV.quiz("Frage?", ["2","38","−2"], 0, {at:0.4, reveal:6.2})` – `answer` = Index der richtigen Antwort, `reveal` = Sekunde der Auflösung |
-| `LV.page(o)` | Geschäftsbrief (A4, DIN 5008) mit Kamerafahrt | `{letter:{z1:[Zeilen],…,z9:[…]}, outlines:{at,stagger}, focus:[{at, zone\|all\|r}], marks:[{zone, at, label, note, ruler:{from,to,x,label}}], show, height}` – `""` = Leerzeile; Szene mit `align:"top"`; Beispiel: `inwi-neun-zonen.js` |
+| `LV.page(o)` | Geschäftsbrief (A4, DIN 5008) mit Kamerafahrt | `{letter:{z1:[Zeilen],…,z9:[…]}, outlines:{at,stagger}, focus:[{at, zone\|all\|r}], marks:[{zone, at, label, note, n?, ruler:{from,to,x,label}}], show, height, left:[3]}` (`left:[3]` = Datum links für Fehlerbilder; `n` = Zahl im Kästchen, `zone:0` = nur Beschriftung) – `""` = Leerzeile; Szene mit `align:"top"`; Beispiele: `inwi-neun-zonen.js`, Fehlerjagd `inwi-fehlerjagd.js` |
 | `LV.word(o)` | Word-Fenster: Menüband mit Mauszeiger, Brief wird Schritt für Schritt formatiert | `{done:[Ids bereits erledigt], steps:[{id, at, label?, note?}], raw:[Zeilen]}` · Ids: `font` `margins` `small` `gap1` `right` `bold` `anrede` `sign`; Szene mit `align:"top"`; Beispiel: `inwi-word-formatieren.js` |
 
 Mehrere Bausteine in einer Szene erscheinen **nacheinander**: setze `at` jeweils 1–2 s nach dem vorigen.
