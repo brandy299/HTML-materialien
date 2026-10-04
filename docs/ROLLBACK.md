@@ -26,6 +26,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
+- Paket 15 · PBP-Video „Zählen oder rechnen?“ (Übungsblatt 2), `app/sw.js` v31: *(PR-Nummer folgt)*. Abschalten: `video:`/`videoTitle:` im Thema `stellenplan-kennzahlen` entfernen.
 - Paket 14 · Ordner im Kurs (`folders`/`folder`, `viewFolder` in `app/app.js`, `mapTexts` in `app/content.js`), PBP-Klausurvorbereitung in einem Ordner, `app/sw.js` v30: *(PR-Nummer folgt)*. Zurücknehmen: im PBP-Kurs `folder:`-Zeilen und `folders:` entfernen (Gruppen-Namen ggf. zurück auf „Klausurtraining“); Fortschritt bleibt erhalten.
 - Paket 13 · Video „Sechs Fehler im Brief“ (INWI Teil 3), `LV.page` mit `left`/`n`, `app/sw.js` v29: *(PR-Nummer folgt)*. Video abschalten: `video:`/`videoTitle:` im Thema `fehlercheck` entfernen.
 - Paket 12 · Schritt-Typ `spot` („Finde den Fehler“, `app/app.js`, `app/styles.css`, `check-kurse.js`) + Schritt im INWI-Thema `fehlercheck`, `app/sw.js` v28: PR #64. Nur die Aufgabe entfernen: den Block `type: "spot"` in `app/kurse/inwi-geschaeftsbrief.js` löschen (Schritte danach rücken zurück).
