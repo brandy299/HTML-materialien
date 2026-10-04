@@ -1,0 +1,47 @@
+Der Verkaufspreis
+=================
+
+GPU · Verkaufskalkulation
+Vom Einkauf ins Regal.
+Mediaworld, in einer Minute.
+
+01 · Die Frage
+Die Soundbar kostet uns 360 €.
+Im Regal muss sie mehr kosten.
+Miete · Personal · Strom · Werbung
+
+02 · Selbstkosten
+Handelskalkulation
+Bezugspreis: 360,00 €
++ Gemeinkosten 25 %: 90,00 €
+= Selbstkosten: 450,00 €
+Das kostet der Betrieb insgesamt.
+
+03 · Der Gewinn
+Handelskalkulation
+Selbstkosten: 450,00 €
++ Gewinnaufschlag 20 %: 90,00 €
+= Barverkaufspreis: 540,00 €
+Gewinn: immer von den Selbstkosten.
+
+04 · Hochrechnen
+Nachlässe hochrechnen
+Barverkaufspreis: 540,00 €
+= Zielverkaufspreis: 562,50 €
+= Listenverkaufspreis: 625,00 €
+Das ist der Preis im Angebot.
+
+05 · Die Falle
+Nicht draufschlagen.
+562,50&nbsp;€ + 10&nbsp;% = 618,75&nbsp;€
+Der Kunde zieht 10&nbsp;% ab: nur 556,88&nbsp;€.
+Immer hochrechnen.
+
+06 · Kurz testen
+Gewinnaufschlag 20 %: Wovon wird er berechnet?
+A) Bezugspreis
+B) Selbstkosten
+C) Barverkaufspreis
+Antwort: Selbstkosten
+
+Jetzt selbst rechnen.
