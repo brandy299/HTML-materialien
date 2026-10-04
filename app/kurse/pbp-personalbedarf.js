@@ -599,6 +599,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ AUSBILDUNG ══════════════ */
     {
       id: "ausbildungsbedarf",
+      video: "pbp-ausbildungsbedarf",      // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
       help: `<h3>Ausbildungsbedarf</h3>
              <p class="formula">benötigte Fachkräfte ÷ Ausbildungsjahre = Plätze pro Jahr</p>
              <h3>Merksatz</h3>
