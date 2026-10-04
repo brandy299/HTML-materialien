@@ -612,6 +612,8 @@ LERNRAUM.subjects.push({
       title: "Ausbildungsbedarf",
       kicker: "Fachkräfte von morgen",
       minutes: 10,
+      video: "pbp-ausbildungsbedarf",      // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Wie viele Azubis pro Jahr?",
       steps: [
         {
           type: "slides",

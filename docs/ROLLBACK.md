@@ -26,7 +26,8 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
-- Paket 16 · GPU-Videos „Was kostet die Ware wirklich?“ (AB 4) und „Vom Einkauf ins Regal“ (AB 5), `app/sw.js` v32: *(PR-Nummer folgt)*. Abschalten: `video:`/`videoTitle:` in den Themen `bezugspreis` und `verkaufspreis` entfernen.
+- Paket 17 · PBP-Video „Wie viele Azubis pro Jahr?“ (Ausbildungsbedarf, vom Content-Agent, Issue #67; Kurztest vom CD angepasst), `app/sw.js` v33: *(PR-Nummer folgt)*. Abschalten: `video:`/`videoTitle:` im Thema `ausbildungsbedarf` entfernen.
+- Paket 16 · GPU-Videos „Was kostet die Ware wirklich?“ (AB 4) und „Vom Einkauf ins Regal“ (AB 5), `app/sw.js` v32: PR #66. Abschalten: `video:`/`videoTitle:` in den Themen `bezugspreis` und `verkaufspreis` entfernen.
 - Paket 15 · PBP-Video „Zählen oder rechnen?“ (Übungsblatt 2), `app/sw.js` v31: PR #65. Abschalten: `video:`/`videoTitle:` im Thema `stellenplan-kennzahlen` entfernen.
 - Paket 14 · Ordner im Kurs (`folders`/`folder`, `viewFolder` in `app/app.js`, `mapTexts` in `app/content.js`), PBP-Klausurvorbereitung in einem Ordner, `app/sw.js` v30: PR #65. Zurücknehmen: im PBP-Kurs `folder:`-Zeilen und `folders:` entfernen (Gruppen-Namen ggf. zurück auf „Klausurtraining“); Fortschritt bleibt erhalten.
 - Paket 13 · Video „Sechs Fehler im Brief“ (INWI Teil 3), `LV.page` mit `left`/`n`, `app/sw.js` v29: PR #65. Video abschalten: `video:`/`videoTitle:` im Thema `fehlercheck` entfernen.
