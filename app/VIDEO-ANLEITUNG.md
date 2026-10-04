@@ -75,6 +75,7 @@ LV.video({
 | `LV.scheme(rows, o)` | Rechenschema, Schritt für Schritt | `rows`: `[{label, value:30, op:"−", sub, line:true, hi:true}]`, `o`: `{title, at, gap}`. Zahlen zählen hoch; `line` = Strich darüber; `hi` = rosa Ergebnis |
 | `LV.term(lines, o)` | Terminal-Rückmeldung wie in der App | `LV.term(["› 5 neue Stellen"], {at})` |
 | `LV.quiz(q, options, answer, o)` | Kurztest mit Denkpause und Auflösung | `LV.quiz("Frage?", ["2","38","−2"], 0, {at:0.4, reveal:6.2})` – `answer` = Index der richtigen Antwort, `reveal` = Sekunde der Auflösung |
+| `LV.page(o)` | Geschäftsbrief (A4, DIN 5008) mit Kamerafahrt | `{letter:{z1:[Zeilen],…,z9:[…]}, outlines:{at,stagger}, focus:[{at, zone\|all\|r}], marks:[{zone, at, label, note, ruler:{from,to,x,label}}], show, height}` – `""` = Leerzeile; Szene mit `align:"top"`; Beispiel: `inwi-neun-zonen.js` |
 
 Mehrere Bausteine in einer Szene erscheinen **nacheinander**: setze `at` jeweils 1–2 s nach dem vorigen.
 Faustwerte: Text 0,5 s · Kästen 0,5 s je Kasten · Rechenschema 0,85 s je Zeile + 1 s · Zeitstrahl ca. 3 s · Kurztest ca. 6 s Denkzeit bis `reveal`.
@@ -102,7 +103,7 @@ Deshalb: scharf auf jedem Bildschirm, folgt dem **Dark Mode**, funktioniert mit 
 
 - Farben nur über die Bausteine (sie nutzen die Variablen der App). Keine festen Farbwerte in Quelldateien.
 - Alles, was in der Quelle steht, erscheint auch in der Textfassung (`<id>.txt`) und im Textmodus der App.
-- Die App zeigt zum Video Steuerung (Szene zurück/vor, Pause, Ton, Text), am Desktop den Text daneben.
+- Die App kann das Video im Vollbild zeigen (Taste, F; Esc beendet). Die App zeigt zum Video Steuerung (Szene zurück/vor, Pause, Ton, Text), am Desktop den Text daneben.
 
 ## Ins Lernmaterial einbinden
 

@@ -103,3 +103,26 @@ body.render .lv-stage { position: fixed; left: 0; top: 0; transform: none; }
 /* Stapelreihenfolge: Pixelwolke immer hinter dem Inhalt */
 .lv-scene .lv-cloud { z-index: 0; }
 .lv-scene.is-outro > *:not(.lv-cloud) { position: relative; z-index: 2; }
+
+/* ── Brief nach DIN 5008 (LV.page) ───────────────────────── */
+.lv-pg { display: grid; gap: 12px; }
+.lv-pg-view { position: relative; width: 312px; max-width: 100%; overflow: hidden; }
+.lv-pg-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+/* Das Blatt bleibt immer „Papier“ (hell mit dunkler Schrift), auch im Dark Mode */
+.lv-pg-sheet { position: relative; background: #FEFEFE; color: #1E1E1E; border: calc(1px / var(--k, 1)) solid #1E1E1E; box-shadow: calc(4px / var(--k, 1)) calc(4px / var(--k, 1)) 0 var(--pink-fill); font-family: var(--grot); }
+.lv-pg-z { position: absolute; }
+.lv-pg-t { position: relative; white-space: nowrap; text-rendering: geometricPrecision; font-kerning: none; }
+.lv-pg-out { position: absolute; inset: calc(-2px / var(--k, 1)); border: calc(1.5px / var(--k, 1)) dashed #A3186E; background: rgba(243, 134, 161, .12); opacity: 0; }
+.lv-pg-hl { position: absolute; inset: calc(-3px / var(--k, 1)); border: calc(2px / var(--k, 1)) solid #A3186E; background: rgba(243, 134, 161, .34); opacity: 0; }
+.lv-pg-n { position: absolute; left: calc(-6px / var(--k, 1)); top: 0; transform: translate(-100%, 0); width: calc(16px / var(--k, 1)); height: calc(16px / var(--k, 1)); display: grid; place-items: center; background: #A3186E; color: #FEFEFE; font: 700 calc(11px / var(--k, 1)) / 1 var(--mono); opacity: 0; z-index: 2; }
+.lv-pg-ruler { position: absolute; width: 0; opacity: 0; }
+.lv-pg-ruler i { position: absolute; left: calc(-1px / var(--k, 1)); top: 0; bottom: 0; width: calc(2px / var(--k, 1)); background: #A3186E; transform-origin: top; }
+.lv-pg-ruler i::before, .lv-pg-ruler i::after { content: ""; position: absolute; left: calc(-4px / var(--k, 1)); width: calc(10px / var(--k, 1)); height: calc(2px / var(--k, 1)); background: #A3186E; }
+.lv-pg-ruler i::before { top: 0; } .lv-pg-ruler i::after { bottom: 0; }
+.lv-pg-ruler b { position: absolute; left: calc(9px / var(--k, 1)); top: 50%; transform: translateY(-50%); font: 700 calc(12px / var(--k, 1)) / 1 var(--mono); color: #A3186E; white-space: nowrap; background: #FEFEFE; padding: 0 calc(3px / var(--k, 1)); }
+.lv-pg-cap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; min-height: 64px; }
+.lv-pg-capn { grid-row: span 2; width: 38px; height: 38px; display: grid; place-items: center; background: var(--pink-fill); color: var(--ink); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font: 800 20px/1 var(--grot); }
+.lv-pg-capt { font: 800 24px/1 var(--grot); letter-spacing: -.04em; }
+.lv-pg-capm { font: 500 12.5px/1.35 var(--mono); color: var(--ink-2); }
+
+.lv-pg-z.z1 .lv-pg-n, .lv-pg-z.z3 .lv-pg-n, .lv-pg-z.z5 .lv-pg-n, .lv-pg-z.z7 .lv-pg-n, .lv-pg-z.z9 .lv-pg-n { left: auto; right: calc(-6px / var(--k, 1)); }

@@ -110,6 +110,8 @@ LERNRAUM.subjects.push({
       title: "Die neun Zonen",
       kicker: "DIN 5008 · Teil 1",
       minutes: 15,
+      video: "inwi-neun-zonen",            // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Die neun Zonen in 1 Minute",
       help: `<h3>Warum DIN 5008?</h3>
              <p>Einheitliche Geschäftsbriefe: Die Post kann die Anschrift maschinell lesen, und der Empfänger findet alles an derselben Stelle.</p>
              <h3>Die neun Zonen</h3>

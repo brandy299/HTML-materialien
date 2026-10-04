@@ -945,11 +945,21 @@ html.lang-ar .s-body li[dir="rtl"]::before, html.lang-ar .merk li[dir="rtl"]::be
 .vid [hidden] { display: none !important; }
 .vid-stage { width: 100%; display: grid; justify-items: center; }
 .vid-loading { width: 100%; }
-.vid-ctl { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.vid-ctl { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+/* Steuerung als Leiste im unteren Bildrand (blendet sich beim Abspielen aus, Tippen blendet sie ein) */
+.vid-ctl.over { position: absolute; left: 0; right: 0; bottom: 0; z-index: 25; flex-wrap: nowrap; gap: 6px; padding: 26px 8px 10px; background: linear-gradient(180deg, rgba(var(--paper-rgb), 0), rgba(var(--paper-rgb), .9) 62%); transition: opacity .25s; }
+.vid-ctl.over.idle { opacity: 0; pointer-events: none; }
 .vid-ctl .icon-btn[disabled] { opacity: .4; pointer-events: none; }
+.vid-back { margin-bottom: 4px; }
+/* Vollbild: die Bühne füllt den ganzen Bildschirm */
+body.vid-lock { overflow: hidden; }
+.vid-stage.vid-fs { position: fixed; inset: 0; z-index: 200; width: auto; background: var(--paper); display: grid; place-items: center; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+.vid-fs .lv-wrap { border: 0; box-shadow: none; }
+.vid-exit[hidden] { display: none !important; }
+.vid-exit { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 10px); right: 10px; z-index: 210; }
 .vid-ctl .icon-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 /* Startbild: Knopf im freien oberen Teil, damit der Titel im Bild lesbar bleibt */
-.vid-start { position: absolute; inset: 0; z-index: 30; display: grid; align-content: start; justify-items: center; gap: 12px; padding-top: 76px; background: rgba(var(--paper-rgb), .18); border: 0; cursor: pointer; color: var(--ink); }
+.vid-start { position: absolute; inset: 0; z-index: 20; display: grid; align-content: start; justify-items: center; gap: 12px; padding-top: 76px; background: rgba(var(--paper-rgb), .18); border: 0; cursor: pointer; color: var(--ink); }
 .vid-play { width: 76px; height: 76px; display: grid; place-items: center; background: var(--pink-fill); color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 .vid-play svg { width: 34px; height: 34px; fill: currentColor; stroke: currentColor; stroke-width: 1; stroke-linejoin: round; }
 .vid-start:active .vid-play { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }

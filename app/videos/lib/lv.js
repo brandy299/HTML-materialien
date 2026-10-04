@@ -59,6 +59,7 @@
      Jeder Baustein: LV.xyz(...) → { _b() } ; _b() baut das Element und liefert
      { el, at, end, words, update(lt) }.  at = Einblendzeit in Sekunden ab Szenenbeginn. */
   const C = {};
+  const ZN_DE = { 1: "Briefkopf", 2: "Anschriftfeld", 3: "Datum", 4: "Betreffzeile", 5: "Anrede", 6: "Brieftext", 7: "Grußformel", 8: "Unterschrift", 9: "Anlagen" };
   const comp = (fn) => (...a) => ({ _b: () => fn(...a) });
 
   // Text. Auszeichnungen im HTML: <mark> = rosa Markierung, <b> = Magenta, <em> = Grün.
@@ -210,6 +211,106 @@
           x.querySelector(".mk").textContent = on && i === answer ? "✓" : "";
           if (on && i !== answer) x.style.opacity = String(0.35 + 0.65 * (1 - prog(lt, rv, 0.3)));
         });
+        fadeOut(el, lt, o.until);
+      }
+    };
+  });
+
+
+  // Brief nach DIN 5008: A4-Blatt mit den neun Zonen, Kamerafahrt, Hervorhebung und Beschriftung.
+  // letter: { z1:[Zeilen], z2:[…], … z9:[…] } – leerer Text "" = Leerzeile (z8 enthält die drei Leerzeilen der Unterschrift)
+  // show: "all" (Standard) oder [{zone, at}] (at < 0 = von Anfang an sichtbar) · outlines: {at, stagger} = alle Zonen als gestrichelte Kästen mit Nummern
+  // focus: [{at, all:true} | {at, zone:2, pad:{x,y}} | {at, r:[x0,y0,x1,y1]}] – Kamera (mm auf dem Blatt)
+  // marks: [{zone, at, label, note, until?, ruler?:{from,to,x,label}}] – Hervorhebung + Beschriftung unter dem Blatt
+  C.page = comp((o = {}) => {
+    const S0 = 312 / 210, VW = 312, VH = o.height || 360;
+    const L = o.letter || {};
+    const LH = 4.6, LH8 = 3.5, PT = 11;
+    const plan = [
+      { z: 1, pt: 8, lh: LH8, gap: 0 }, { z: 2, pt: PT, lh: LH, gap: 0.15 }, { z: 3, pt: PT, lh: LH, gap: 2, right: true },
+      { z: 4, pt: PT, lh: LH, gap: 2, bold: true }, { z: 5, pt: PT, lh: LH, gap: 1 }, { z: 6, pt: PT, lh: LH, gap: 1, full: true },
+      { z: 7, pt: PT, lh: LH, gap: 1 }, { z: 8, pt: PT, lh: LH, gap: 0 }, { z: 9, pt: PT, lh: LH, gap: 1 }
+    ];
+    let y = 45; const Z = {};   // Anschriftfeld beginnt 45 mm unter dem oberen Blattrand
+    plan.forEach((p) => {
+      const lines = L["z" + p.z] || [""]; y += p.gap * LH;
+      const h = lines.length * p.lh;
+      const w = p.full ? 165 : Math.min(165, Math.max(12, Math.max(...lines.map((l) => l.length)) * p.pt * 0.3528 * 0.55 + 3));
+      if (p.z === 1) { Z[1] = { ...p, lines, x: 25, y: 45 - h - 1.5, w, h }; return; }
+      Z[p.z] = { ...p, lines, x: p.right ? 190 - w : 25, y, w, h }; y += h;
+    });
+
+    const el = h(`<div class="lv-pg"><div class="lv-pg-view" style="height:${VH}px"><div class="lv-pg-world"><div class="lv-pg-sheet" style="width:${210 * S0}px;height:${297 * S0}px"></div></div></div>
+      <div class="lv-pg-cap"><span class="lv-pg-capn"></span><span class="lv-pg-capt"></span><span class="lv-pg-capm"></span></div></div>`);
+    const world = el.querySelector(".lv-pg-world"), sheet = el.querySelector(".lv-pg-sheet");
+    const capn = el.querySelector(".lv-pg-capn"), capt = el.querySelector(".lv-pg-capt"), capm = el.querySelector(".lv-pg-capm"), cap = el.querySelector(".lv-pg-cap");
+    const mm = (v) => v * S0 + "px";
+    const zel = {};
+    Object.values(Z).forEach((z) => {
+      const d = h(`<div class="lv-pg-z z${z.z}" style="left:${mm(z.x)};top:${mm(z.y)};width:${mm(z.w)};height:${mm(z.h)}"><div class="lv-pg-out"></div><div class="lv-pg-hl"></div>
+        <div class="lv-pg-t">${z.lines.map((l) => `<div style="font-size:${z.pt * 0.3528 * S0}px;line-height:${z.lh * S0}px;font-weight:${z.bold ? 700 : 500};text-align:${z.right ? "right" : "left"}">${esc(l) || "&nbsp;"}</div>`).join("")}</div>
+        <span class="lv-pg-n">${z.z}</span></div>`);
+      sheet.append(d);
+      zel[z.z] = { d, out: d.querySelector(".lv-pg-out"), hl: d.querySelector(".lv-pg-hl"), t: d.querySelector(".lv-pg-t"), n: d.querySelector(".lv-pg-n") };
+    });
+    const marks = (o.marks || []).map((m) => ({ ...m }));
+    const rulers = marks.map((m) => {
+      if (!m.ruler) return null;
+      const r = m.ruler, d = h(`<div class="lv-pg-ruler" style="left:${mm(r.x)};top:${mm(r.from)};height:${mm(r.to - r.from)}"><i></i><b>${esc(r.label || "")}</b></div>`);
+      sheet.append(d); return d;
+    });
+    const showMap = o.show === undefined || o.show === "all" ? null : o.show;
+    const show = {}; (showMap || []).forEach((s) => { show[s.zone] = s.at; });
+    const at = o.at ?? 0.4;
+
+    /* Kamera */
+    const full = { cx: 105, cy: 148.5, k: Math.min(VW / (210 * S0), VH / (297 * S0)) };
+    const viewOf = (f) => {
+      if (f.all) return { ...full };
+      let r = f.r;
+      if (f.zone) { const z = Z[f.zone], pad = f.pad || {}; const px = pad.x ?? 8, py = pad.y ?? 5; r = [z.x - px, z.y - py, z.x + z.w + px, z.y + z.h + py]; }
+      const rw = r[2] - r[0], rh = r[3] - r[1];
+      const k = Math.min(VW / (rw * S0), VH / (rh * S0), 3.6 / S0);   // höchstens ca. 3,6 px je mm (Schrift bleibt scharf)
+      return { cx: (r[0] + r[2]) / 2, cy: (r[1] + r[3]) / 2, k };
+    };
+    const fk = (o.focus && o.focus.length ? o.focus : [{ at: 0, all: true }]).map((f) => ({ at: f.at ?? 0, v: viewOf(f) }));
+    const camAt = (lt) => {
+      let i = 0; fk.forEach((f, j) => { if (lt >= f.at) i = j; });
+      if (i >= 1 && lt < fk[i].at + 0.9) {
+        const t = E.inout(prog(lt, fk[i].at, 0.9)), a = fk[i - 1].v, b = fk[i].v;
+        return { cx: a.cx + (b.cx - a.cx) * t, cy: a.cy + (b.cy - a.cy) * t, k: Math.exp(Math.log(a.k) + (Math.log(b.k) - Math.log(a.k)) * t) };
+      }
+      return fk[i].v;
+    };
+
+    const ol = o.outlines;
+    const lastMark = marks.reduce((m, x) => Math.max(m, x.at), 0);
+    const end = Math.max(lastMark + 2.2, ol ? ol.at + 9 * (ol.stagger ?? 0.25) + 0.8 : 0, at + 1);
+    let curMark = -2;
+    return {
+      el, at, end, words: marks.reduce((n, m) => n + wordCount((m.label || "") + " " + (m.note || "")), 0),
+      tx: () => [ol ? "Ein Geschäftsbrief hat neun Zonen." : "", ...marks.map((m) => `${m.n ?? m.zone} ${m.label || ""}${m.note ? ": " + plain(m.note) : ""}`)].filter(Boolean),
+      update(lt) {
+        el.style.opacity = lt >= at ? 1 : 0;
+        const c = camAt(lt);
+        world.style.setProperty("--k", c.k);
+        world.style.transform = `translate(${VW / 2 - c.cx * S0 * c.k}px, ${VH / 2 - c.cy * S0 * c.k}px) scale(${c.k})`;
+        Object.keys(Z).forEach((n, idx) => {
+          const e = zel[n];
+          e.t.style.opacity = showMap ? (show[n] === undefined ? 0 : show[n] < 0 ? 1 : prog(lt, show[n], 0.5)) : 1;
+          if (ol) { const p = prog(lt, ol.at + idx * (ol.stagger ?? 0.25), 0.35); e.out.style.opacity = p * (1 - prog(lt, ol.until ?? 1e9, 0.3)); e.n.style.opacity = p; e.n.style.transform = `translate(${+n % 2 ? "100%" : "-100%"}, 0) scale(${0.7 + 0.3 * E.back(p)})`; }
+          else { e.out.style.opacity = 0; e.n.style.opacity = 0; }
+          let a = 0;
+          marks.forEach((m, j) => { if (m.zone === +n) { const next = m.until ?? (marks[j + 1] ? marks[j + 1].at : 1e9); a = Math.max(a, prog(lt, m.at, 0.3) * (1 - prog(lt, next, 0.3))); } });
+          e.hl.style.opacity = a; if (a > 0) { e.n.style.opacity = Math.max(+e.n.style.opacity || 0, a); }
+          e.d.classList.toggle("on", a > 0.05);
+        });
+        let ai = -1; marks.forEach((m, j) => { if (lt >= m.at) ai = j; });
+        if (ai !== curMark) { curMark = ai; const m = marks[ai]; capn.textContent = m ? (m.n ?? m.zone) : ""; capt.textContent = m ? m.label || ZN_DE[m.zone] : ""; capm.textContent = m ? m.note || "" : ""; }
+        const m = marks[ai];
+        cap.style.opacity = m ? prog(lt, m.at + 0.05, 0.35) : 0;
+        cap.style.transform = m ? `translateY(${(1 - E.out(prog(lt, m.at + 0.05, 0.35))) * 10}px)` : "none";
+        rulers.forEach((r, j) => { if (!r) return; const mk = marks[j], next = mk.until ?? (marks[j + 1] ? marks[j + 1].at : 1e9); const a = prog(lt, mk.at + 0.2, 0.6) * (1 - prog(lt, next, 0.3)); r.style.opacity = a > 0 ? 1 : 0; r.firstChild.style.transform = `scaleY(${E.inout(prog(lt, mk.at + 0.2, 0.7))})`; r.lastChild.style.opacity = prog(lt, mk.at + 0.7, 0.3) * (1 - prog(lt, next, 0.3)); });
         fadeOut(el, lt, o.until);
       }
     };
