@@ -17,6 +17,7 @@ window.LERNRAUM_I18N = {
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
 
+    "Vollbild": "Full screen", "Vollbild beenden": "Exit full screen",
     "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
     "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
     "Video ansehen": "Watch video", "Nochmal ansehen": "Watch again", "angesehen": "watched", "Überspringen": "Skip",
@@ -119,6 +120,7 @@ window.LERNRAUM_I18N = {
   /* ─────────────────────────── العربية ───────────────────────────
      Bitte von einer muttersprachlichen Person gegenlesen lassen. */
   ar: {
+    "Vollbild": "ملء الشاشة", "Vollbild beenden": "إنهاء ملء الشاشة",
     "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
     "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
     "Video ansehen": "شاهد الفيديو", "Nochmal ansehen": "شاهد مرة أخرى", "angesehen": "تمت المشاهدة", "Überspringen": "تخطَّ",

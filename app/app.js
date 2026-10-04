@@ -201,6 +201,8 @@
     sound: '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 8.5a5 5 0 0 1 0 7"/></svg>',
     mute: '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6"/></svg>',
     text: '<svg viewBox="0 0 24 24"><path d="M5 6h14M5 11h14M5 16h9"/></svg>',
+    expand: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+    shrink: '<svg viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>',
     help: '<svg viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.2V15M12 18.5v.5"/></svg>',
     qr: '<svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM6.5 6.5h1v1h-1zM16.5 6.5h1v1h-1zM6.5 16.5h1v1h-1z"/></svg>',
     ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
@@ -1033,13 +1035,15 @@
     const box = h(`<div class="vid">
       <div class="vid-stage"><div class="win vid-loading"><div class="bar"><span class="d"></span>${tr("Erklärvideo")}</div><div class="body"><p>${tr("Video wird geladen …")}</p></div></div></div>
       <div class="vid-ctl" hidden>
-        <button class="icon-btn" type="button" data-a="prev" aria-label="${tr("Szene zurück")}">${ICON.prev}</button>
-        <button class="icon-btn" type="button" data-a="pp" aria-label="${tr("Abspielen")}">${ICON.play}</button>
-        <button class="icon-btn" type="button" data-a="next" aria-label="${tr("Szene vor")}">${ICON.next}</button>
-        <button class="icon-btn" type="button" data-a="mute" aria-label="${tr("Ton")}">${ICON.sound}</button>
-        <button class="icon-btn" type="button" data-a="text" aria-label="${tr("Text lesen")}" aria-pressed="false">${ICON.text}</button>
+        <button class="icon-btn small" type="button" data-a="prev" aria-label="${tr("Szene zurück")}">${ICON.prev}</button>
+        <button class="icon-btn small" type="button" data-a="pp" aria-label="${tr("Abspielen")}">${ICON.play}</button>
+        <button class="icon-btn small" type="button" data-a="next" aria-label="${tr("Szene vor")}">${ICON.next}</button>
+        <button class="icon-btn small" type="button" data-a="mute" aria-label="${tr("Ton")}">${ICON.sound}</button>
+        <button class="icon-btn small" type="button" data-a="text" aria-label="${tr("Text lesen")}" aria-pressed="false">${ICON.text}</button>
+        <button class="icon-btn small" type="button" data-a="full" aria-label="${tr("Vollbild")}" aria-pressed="false">${ICON.expand}</button>
       </div>
-      <div class="vid-text" hidden></div>
+      <button class="icon-btn small vid-exit" type="button" data-a="exit" aria-label="${tr("Vollbild beenden")}" hidden>${ICON.close}</button>
+      <div class="vid-text" hidden><button class="btn ghost block vid-back" type="button" data-a="back">${ICON.play} ${tr("Video ansehen")}</button></div>
     </div>`);
     ctx.body.append(box);
     ctx.setProgress(0);
@@ -1061,7 +1065,10 @@
       const host = box.querySelector(".vid-stage"), ctl = box.querySelector(".vid-ctl"), txt = box.querySelector(".vid-text");
       host.replaceChildren();
       const saveData = !!(navigator.connection && navigator.connection.saveData);
-      const inst = LV.create(def, host, { audio: vidAsset(id + ".m4a"), preload: saveData ? "none" : "auto", maxH: () => Math.max(280, innerHeight - host.getBoundingClientRect().top - 184) });
+      const inst = LV.create(def, host, { audio: vidAsset(id + ".m4a"), preload: saveData ? "none" : "auto", maxH: () => {
+        if (box.classList.contains("vid-full")) { const cs = getComputedStyle(host); return Math.max(200, host.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0)); }
+        return Math.max(300, innerHeight - host.getBoundingClientRect().top - 118);   // darunter bleibt nur die untere Leiste (Weiter/Überspringen)
+      } });
       const info = inst.info();
       if (window.__LV_TEST) window.__vid = inst;   // nur für automatische Tests
       let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1069,8 +1076,15 @@
       inst.setMuted(muted);
       inst.seek(Math.min(2.6, inst.total - 0.1));
       ctl.hidden = false;
+      inst.el.append(ctl); ctl.classList.add("over");                       // Steuerung liegt als Leiste im Bild (mehr Platz fürs Video)
+      ctl.addEventListener("click", (e) => e.stopPropagation());
+      let idleT = 0;
+      const showCtl = () => { ctl.classList.remove("idle"); clearTimeout(idleT); if (inst.playing) idleT = setTimeout(() => ctl.classList.add("idle"), 2600); };
+      inst.el.addEventListener("pointermove", showCtl);
 
-      const q = (a) => box.querySelector(`[data-a="${a}"]`);
+      const btnMap = {};   // Knöpfe einmal einsammeln: die Bühne zieht im Vollbild aus dem Rahmen um
+      box.querySelectorAll("[data-a]").forEach((el) => { btnMap[el.dataset.a] = el; });
+      const q = (a) => btnMap[a];
       const setPP = () => {
         const b = q("pp");
         b.innerHTML = inst.ended ? ICON.reset : inst.playing ? ICON.pause : ICON.play;
@@ -1092,7 +1106,7 @@
       ov.onclick = (e) => { e.stopPropagation(); start(); };
 
       inst.on("state", (st) => {
-        setPP();
+        setPP(); showCtl();
         if (st === "end") markSeen();
       }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
         .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
@@ -1102,16 +1116,37 @@
         if (ov.isConnected) return;
         const r = inst.el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
         if (x < 0.28) inst.prevScene(); else if (x > 0.72) inst.nextScene(); else inst.toggle();
-        setPP();
+        setPP(); showCtl();
       });
       q("prev").onclick = () => { inst.prevScene(); };
       q("next").onclick = () => { inst.nextScene(); };
       q("pp").onclick = () => { if (ov.isConnected) start(); else inst.toggle(); setPP(); };
       q("mute").onclick = () => { inst.setMuted(!inst.muted); store.set("vidmute", inst.muted); setMute(); };
 
+      /* Vollbild: füllt den ganzen Bildschirm (zusätzlich echtes Vollbild, wo der Browser es kann; iPhone: nur die Seite) */
+      const exitBtn = q("exit"), home = document.createComment("vid");
+      host.before(home);
+      const setFull = (on) => {
+        /* Die Bühne zieht in die Seite um: In der Lernansicht läuft eine Animation (transform), darin würde „fixed“ nicht den Bildschirm meinen */
+        if (on) { document.body.append(host, exitBtn); }
+        else if (home.parentNode) { home.after(host); box.append(exitBtn); }
+        host.classList.toggle("vid-fs", on);
+        box.classList.toggle("vid-full", on); document.body.classList.toggle("vid-lock", on);
+        q("full").innerHTML = on ? ICON.shrink : ICON.expand; q("full").setAttribute("aria-pressed", String(on));
+        q("full").setAttribute("aria-label", tr(on ? "Vollbild beenden" : "Vollbild")); exitBtn.hidden = !on;
+        const de = document.documentElement;
+        if (on && de.requestFullscreen && !document.fullscreenElement) de.requestFullscreen({ navigationUI: "hide" }).catch(() => {});
+        else if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        requestAnimationFrame(() => { inst.relayout(); requestAnimationFrame(() => inst.relayout()); });
+      };
+      q("full").onclick = () => setFull(!box.classList.contains("vid-full"));
+      exitBtn.onclick = () => setFull(false);
+      const onFs = () => { if (!document.fullscreenElement && box.classList.contains("vid-full")) setFull(false); };
+      document.addEventListener("fullscreenchange", onFs);
+
       /* Text statt Video (auch automatisch bei „weniger Bewegung“) */
       const cardScenes = info.scenes.map((x, k) => ({ x, k })).filter((o) => o.x.text.length);
-      txt.innerHTML = cardScenes.map(({ x, k }) => `<div class="win vid-card" data-k="${k}"><div class="bar"><span class="d"></span>${esc(x.kicker || info.title)}</div><div class="body">${x.text.slice(x.kicker ? 1 : 0).map((l) => `<p>${esc(l)}</p>`).join("")}</div></div>`).join("");
+      txt.insertAdjacentHTML("beforeend", cardScenes.map(({ x, k }) => `<div class="win vid-card" data-k="${k}"><div class="bar"><span class="d"></span>${esc(x.kicker || info.title)}</div><div class="body">${x.text.slice(x.kicker ? 1 : 0).map((l) => `<p>${esc(l)}</p>`).join("")}</div></div>`).join(""));
       /* Breit (Desktop): Text steht dauerhaft neben dem Video, die laufende Szene ist hervorgehoben */
       const wideMq = matchMedia("(min-width: 900px)");
       const wide = wideMq.matches;
@@ -1123,23 +1158,31 @@
       const setText = (on) => {
         if (wide) return;
         txt.hidden = !on; host.hidden = on; q("text").setAttribute("aria-pressed", String(on));
-        ["prev", "pp", "next"].forEach((a) => { q(a).disabled = on; });
+        if (on && box.classList.contains("vid-full")) setFull(false);
         if (on) { inst.pause(); setPP(); ctx.action(nextLabel, cont); }
         else { inst.relayout(); if (!seen) ctx.action(skipLabel, cont, { variant: "ghost" }); }
       };
       q("text").onclick = () => setText(txt.hidden);
-      if (wide) { txt.hidden = false; q("text").hidden = true; }
+      q("back").onclick = () => setText(false);
+      if (wide) { txt.hidden = false; q("text").hidden = true; q("back").hidden = true; }
       else if (noMotion) setText(true);
 
       const onKey = (e) => {
-        if (/^(input|textarea|select|button|a)$/i.test((e.target.tagName || "")) || !txt.hidden) return;
-        if (e.key === " ") { e.preventDefault(); if (ov.isConnected) start(); else inst.toggle(); setPP(); }
+        if (e.key === "Escape" && box.classList.contains("vid-full")) { setFull(false); return; }
+        if (/^(input|textarea|select|button|a)$/i.test((e.target.tagName || "")) || (!txt.hidden && !wide)) return;
+        if (e.key === "f" || e.key === "F") setFull(!box.classList.contains("vid-full"));
+        else if (e.key === " ") { e.preventDefault(); if (ov.isConnected) start(); else inst.toggle(); setPP(); }
         else if (e.key === "ArrowLeft") inst.prevScene(); else if (e.key === "ArrowRight") inst.nextScene();
       };
       const onVis = () => { if (document.hidden) { inst.pause(); setPP(); } };
       document.addEventListener("keydown", onKey); document.addEventListener("visibilitychange", onVis);
       const prev = cleanup;
-      cleanup = () => { inst.destroy(); document.removeEventListener("keydown", onKey); document.removeEventListener("visibilitychange", onVis); prev && prev(); };
+      cleanup = () => {
+        clearTimeout(idleT); document.body.classList.remove("vid-lock");
+        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        host.remove(); exitBtn.remove(); home.remove();
+        inst.destroy(); document.removeEventListener("keydown", onKey); document.removeEventListener("visibilitychange", onVis); document.removeEventListener("fullscreenchange", onFs); prev && prev();
+      };
       if (!saveData) inst.preloadAudio();
     }).catch((e) => { if (box.isConnected) fail(false); if (window.__LV_TEST) console.warn("video-fehler", e && e.message); });
   }
