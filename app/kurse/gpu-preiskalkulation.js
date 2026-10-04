@@ -9,7 +9,7 @@ LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
   added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-09-29",
+  updated: "2026-10-04",        // neu: Erklärvideos zu AB 4 und AB 5
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",
@@ -25,6 +25,8 @@ LERNRAUM.subjects.push({
       title: "Der Bezugspreis",
       kicker: "Lernfeld 4 · Stunde 4",
       minutes: 20,
+      video: "gpu-bezugspreis",      // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Was kostet die Ware wirklich?",
       help: `<h3>Die Bezugskalkulation</h3>
              <p class="formula">Listeneinkaufspreis − Lieferantenrabatt = Zieleinkaufspreis<br>Zieleinkaufspreis − Lieferantenskonto = Bareinkaufspreis<br>Bareinkaufspreis + Bezugskosten = Bezugspreis</p>
              <h3>Erst Rabatt, dann Skonto</h3>
@@ -210,6 +212,8 @@ LERNRAUM.subjects.push({
       title: "Der Verkaufspreis",
       kicker: "Lernfeld 4 · Stunde 5",
       minutes: 25,
+      video: "gpu-verkaufspreis",      // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Vom Einkauf ins Regal",
       help: `<h3>Die Handelskalkulation</h3>
              <p class="formula">Bezugspreis + Gemeinkosten = Selbstkosten<br>Selbstkosten + Gewinnaufschlag = Barverkaufspreis<br>Barverkaufspreis + Kundenskonto = Zielverkaufspreis<br>Zielverkaufspreis + Kundenrabatt = Listenverkaufspreis</p>
              <h3>Nachlässe hochrechnen</h3>

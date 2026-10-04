@@ -1,0 +1,43 @@
+Der Bezugspreis
+===============
+
+GPU · Bezugskalkulation
+Was kostet die Ware wirklich?
+Mediaworld, in einer Minute.
+
+01 · Die Frage
+Eine Soundbar für 400 €.
+So steht es im Angebot.
+Bezahlt wird weniger …
+… und doch kommt etwas dazu.
+
+02 · Erst der Rabatt
+Bezugskalkulation
+Listeneinkaufspreis: 400,00 €
+− Lieferantenrabatt 10 %: 40,00 €
+= Zieleinkaufspreis: 360,00 €
+Der Rabatt kommt zuerst.
+
+03 · Dann das Skonto
+Bezugskalkulation
+Zieleinkaufspreis: 360,00 €
+− Lieferantenskonto 2 %: 7,20 €
+= Bareinkaufspreis: 352,80 €
+Skonto: immer vom Zieleinkaufspreis.
+
+04 · Die Lieferung
+Bezugskalkulation
+Bareinkaufspreis: 352,80 €
++ Bezugskosten: 17,20 €
+= Bezugspreis: 370,00 €
+Fracht · Verpackung · Versicherung
+Das kostet die Soundbar wirklich.
+
+05 · Kurz testen
+Skonto 2 %: Von welchem Preis wird es berechnet?
+A) Listeneinkaufspreis
+B) Zieleinkaufspreis
+C) Bezugspreis
+Antwort: Zieleinkaufspreis
+
+Jetzt selbst rechnen.
