@@ -27,6 +27,7 @@ der App**, bist du **Creative Director**.
 - Besitzt: `index.html` + `site/` (Startseite), `app/app.js`, `app/styles.css`, `app/index.html` (Aufbau),
   `app/tools/`, `app/vendor/`, `app/videos/lib/`, `app/videos/player.html`, `.github/`, `CLAUDE.md`, `docs/`, `app/README.md`, `app/AGENT-ANLEITUNG.md`.
 - Arbeitet offene Issues mit Label `design` ab und hält `docs/CREATIVE-DIRECTOR.md` aktuell.
+- Technik der Live-Animationen (Video-Baukasten, eigener Baustein, Rendern, Einbindung): `docs/LIVE-ANIMATIONEN.md`.
 
 ## Für alle
 
