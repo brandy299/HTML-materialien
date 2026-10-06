@@ -210,17 +210,17 @@
     del: '<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6zM12 9l5 6M17 9l-5 6"/></svg>'
   };
   const HOWTO = {
-    slides: "Wische nach links, um weiterzublättern. Lies jede Folie in Ruhe – die Aufgaben danach bauen darauf auf.",
+    slides: "Tippe auf ‹ › oder wische nach links, um weiterzublättern. Lies jede Folie in Ruhe – die Aufgaben danach bauen darauf auf.",
     quiz: "Tippe eine Antwort an und dann auf „Prüfen“. Genau eine Antwort ist richtig.",
-    sort: "Lies die Karte und tippe auf die Kategorie, zu der sie gehört.",
+    sort: "Lies die Karte, tippe auf die Kategorie, zu der sie gehört, und dann auf „Prüfen“.",
     cloze: "Tippe zuerst eine Lücke an und dann das passende Wort unten. Einige Wörter passen nirgends.",
     calc: "Tippe ein Feld an und gib die Zahl über das Zahlenfeld ein. Mit ± machst du eine Zahl negativ, mit ↓ springst du ins nächste Feld.",
     cards: "Überlege dir die Antwort, dann tippe zum Umdrehen. Ehrlich bleiben: „Nochmal“ legt die Karte nach hinten.",
     selfcheck: "Tippe jede Aussage so oft an, bis sie zu dir passt: leer = noch unsicher, halb = geht so, voll = sitzt.",
     link: "Das Material öffnet sich in einem neuen Tab. Komm danach zurück und tippe auf „Erledigt“.",
-    video: "Tippe auf Start. Tippe links oder rechts ins Bild, um eine Szene zurück oder vor zu springen, in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
+    video: "Tippe auf Start. Mit „Szene“ links und rechts springst du eine Szene zurück oder vor (oder tippe links/rechts ins Bild), in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
-    spot: "Lies den Briefausschnitt und tippe auf die Zeile, in der der Fehler steckt. Danach siehst du, warum.",
+    spot: "Lies den Briefausschnitt, tippe auf die Zeile mit dem Fehler und dann auf „Prüfen“. Danach siehst du, warum.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
@@ -1083,9 +1083,9 @@
     const box = h(`<div class="vid">
       <div class="vid-stage"><div class="win vid-loading"><div class="bar"><span class="d"></span>${tr("Erklärvideo")}</div><div class="body"><p>${tr("Video wird geladen …")}</p></div></div></div>
       <div class="vid-ctl" hidden>
-        <button class="icon-btn small" type="button" data-a="prev" aria-label="${tr("Szene zurück")}">${ICON.prev}</button>
+        <button class="icon-btn small lab" type="button" data-a="prev" aria-label="${tr("Szene zurück")}"><b>‹</b><span>${tr("Szene")}</span></button>
         <button class="icon-btn small" type="button" data-a="pp" aria-label="${tr("Abspielen")}">${ICON.play}</button>
-        <button class="icon-btn small" type="button" data-a="next" aria-label="${tr("Szene vor")}">${ICON.next}</button>
+        <button class="icon-btn small lab" type="button" data-a="next" aria-label="${tr("Szene vor")}"><span>${tr("Szene")}</span><b>›</b></button>
         <button class="icon-btn small" type="button" data-a="mute" aria-label="${tr("Ton")}">${ICON.sound}</button>
         <button class="icon-btn small" type="button" data-a="text" aria-label="${tr("Text lesen")}" aria-pressed="false">${ICON.text}</button>
         <button class="icon-btn small" type="button" data-a="full" aria-label="${tr("Vollbild")}" aria-pressed="false">${ICON.expand}</button>
@@ -1150,6 +1150,7 @@
       const start = () => {
         if (started) return;
         ov.remove(); started = true; inst.seek(0); inst.play(); buzz(10);
+        if (!store.get("vidhint", false)) { store.set("vidhint", true); setTimeout(() => toast("› " + tr("Links/rechts tippen: Szene wechseln.")), 900); }   // einmaliger Hinweis
       };
       ov.onclick = (e) => { e.stopPropagation(); start(); };
 
@@ -1243,10 +1244,16 @@
     /* Präsentation: horizontal wischen */
     slides(step, ctx) {
       const n = step.slides.length;
-      const wrap = h(`<div class="slides"><div class="slide-track"></div><div class="dots"></div>
+      const wrap = h(`<div class="slides"><div class="slide-track"></div>
+        <div class="slide-nav">
+          <button class="icon-btn small" type="button" data-sn="prev" aria-label="${tr("Vorherige Folie")}">‹</button>
+          <div class="dots"></div>
+          <button class="icon-btn small" type="button" data-sn="next" aria-label="${tr("Nächste Folie")}">›</button>
+        </div>
         <p class="swipe-hint">${tr("← zur Seite wischen →")}</p></div>`);
       const track = wrap.querySelector(".slide-track");
       const dots = wrap.querySelector(".dots");
+      const snPrev = wrap.querySelector('[data-sn="prev"]'), snNext = wrap.querySelector('[data-sn="next"]');
       step.slides.forEach((sl, k) => {
         track.append(h(`<article class="slide ${sl.style || ""}" aria-label="Folie ${k + 1} von ${n}">
           <div class="bar"><span class="d"></span><span>${tr("Folie")}</span> ${String(k + 1).padStart(2, "0")}<span class="r">${k + 1} / ${n}</span></div>
@@ -1273,7 +1280,7 @@
         cur = k;
         [...dots.children].forEach((d, j) => d.classList.toggle("on", j === k));
         ctx.setProgress((k + 1) / n);
-        if (k > 0) wrap.querySelector(".swipe-hint").style.visibility = "hidden";
+        snPrev.disabled = k <= 0; snNext.disabled = k >= n - 1;
         if (k >= n - 1) ctx.action(`${step.lastLabel ? tr("Zur Aufgabe") : tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true));
         else ctx.action(`${tr("Nächste Folie")} ${ICON.arrow}`, () => {
           goal = Math.min(n - 1, (goal >= 0 ? goal : cur) + 1);
@@ -1281,6 +1288,21 @@
         }, { variant: "ghost" });
       };
       track.addEventListener("scroll", () => { if (track.clientWidth) update(); }, { passive: true });
+      /* Sichtbare Navigation: ‹ › und Pfeiltasten (Wischen bleibt) */
+      const go = (d) => {
+        const to = Math.max(0, Math.min(n - 1, (goal >= 0 ? goal : Math.max(cur, 0)) + d));
+        if (to === (goal >= 0 ? goal : cur)) return;
+        goal = to;
+        track.scrollTo({ left: goal * stepW(), behavior: reduced() ? "auto" : "smooth" });
+      };
+      snPrev.onclick = () => go(-1);
+      snNext.onclick = () => go(1);
+      const onSlideKey = (e) => {
+        if (!wrap.isConnected) return document.removeEventListener("keydown", onSlideKey);
+        if (e.altKey || e.ctrlKey || e.metaKey || /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName || "")) return;
+        if (e.key === "ArrowRight") { e.preventDefault(); go(1); } else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+      };
+      document.addEventListener("keydown", onSlideKey);
       requestAnimationFrame(update);
     },
 
@@ -1352,7 +1374,7 @@
       const wrong = [];
       const show = () => {
         const r = rs[k];
-        let locked = false;
+        let locked = false, sel = -1;
         ctx.hintsFor = () => [].concat(r.hint || [], r.hints || []);
         ctx.hintKey = () => String(k);
         ctx.setProgress(k / rs.length);
@@ -1364,19 +1386,28 @@
         const rows = r.lines.map((l, j) => {
           const o = typeof l === "string" ? { t: l } : l;
           if (o.gap) paper.append(h(`<div class="spot-gap" style="height:${o.gap * 1.35}em"></div>`));
-          const b = h(`<button type="button" class="spot-line${o.bold ? " b" : ""}${o.right ? " r" : ""}${o.small ? " s" : ""}"></button>`);
+          const b = h(`<button type="button" class="spot-line${o.bold ? " b" : ""}${o.right ? " r" : ""}${o.small ? " s" : ""}" aria-pressed="false"></button>`);
           b.textContent = o.t;
-          b.onclick = () => pick(j);
+          b.onclick = () => choose(j);
           paper.append(b);
           return b;
         });
         ctx.body.replaceChildren(node);
-        ctx.action(tr("Tippe auf eine Zeile"), null, { enabled: false, variant: "ghost" });
+        const label = tr(ctx.exam ? "Antwort speichern" : "Prüfen");
+        ctx.action(label, check, { enabled: false });
 
-        function pick(j) {
+        /* Tippen markiert nur die Zeile (änderbar); abgesendet wird erst mit „Prüfen“ */
+        function choose(j) {
           if (locked) return;
+          sel = j;
+          rows.forEach((x, m) => { x.classList.toggle("sel", m === j); x.setAttribute("aria-pressed", String(m === j)); });
+          buzz(8);
+          ctx.action(label, check);
+        }
+        function check() {
+          if (locked || sel < 0) return;
           locked = true;
-          const ok = j === r.error;
+          const ok = sel === r.error;
           if (ok) correct++;
           else wrong.push(k + 1);
           buzz(ok ? 20 : [30, 40, 30]);
@@ -1385,8 +1416,9 @@
             k++; return show();
           }
           paper.classList.add("locked");
+          rows[sel].classList.remove("sel");
           rows[r.error].classList.add("right");
-          if (!ok) rows[j].classList.add("wrong");
+          if (!ok) rows[sel].classList.add("wrong");
           node.append(term([
             ["p", "$ prüfe …"],
             ["", ok ? `› <span class="ok">${tr("richtig.")}</span> ${esc(r.explain || "")}` : `› <span class="no">${tr("stimmt nicht.")}</span> <span>${tr("Der Fehler steckt in der grün markierten Zeile.")} ${esc(r.explain || "")}</span>`]
@@ -1406,7 +1438,7 @@
     sort(step, ctx) {
       const items = shuffle(step.items);
       const cats = step.categories;
-      let k = 0, correct = 0;
+      let k = 0, correct = 0, sel = -1, locked = false;
       const wrong = [];
       const counts = cats.map(() => 0);
       const node = h(`<div>
@@ -1417,45 +1449,59 @@
       const stage = node.querySelector(".sort-stage");
       const bins = node.querySelector(".bins");
       cats.forEach((c, j) => {
-        const b = h(`<button class="bin">${esc(c)}<span class="cnt">0</span></button>`);
-        b.onclick = () => pick(j);
+        const b = h(`<button class="bin" aria-pressed="false">${esc(c)}<span class="cnt">0</span></button>`);
+        b.onclick = () => choose(j);
         bins.append(b);
       });
       ctx.body.append(node);
-      ctx.action(tr("Tippe auf eine Kategorie"), null, { enabled: false, variant: "ghost" });
+      const label = tr(ctx.exam ? "Antwort speichern" : "Prüfen");
 
       const card = () => {
+        sel = -1; locked = false;
         stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span><span>${tr("Karte")}</span> ${k + 1} / ${items.length}<span class="r">?</span></div>
           <div class="body"><span class="txt">${esc(items[k].text)}</span></div></div>`));
+        [...bins.children].forEach((x) => { x.classList.remove("sel"); x.setAttribute("aria-pressed", "false"); });
         bins.classList.remove("locked");
+        ctx.action(label, check, { enabled: false });
       };
-      const pick = (j) => {
-        const it = items[k];
-        const ok = j === it.cat;
+      /* Tippen wählt nur die Kategorie (änderbar); abgesendet wird erst mit „Prüfen“ */
+      const choose = (j) => {
+        if (locked) return;
+        sel = j;
+        [...bins.children].forEach((x, m) => { x.classList.toggle("sel", m === j); x.setAttribute("aria-pressed", String(m === j)); });
+        buzz(8);
+        ctx.action(label, check);
+      };
+      const summary = () => {
+        stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Auswertung")}<span class="r">${correct}/${items.length}</span></div>
+          <div class="body"><span class="txt">${tr("{a} von {b} richtig zugeordnet.", { a: correct, b: items.length })}</span></div></div>`));
+        bins.classList.add("locked");
+        ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
+      };
+      function check() {
+        if (locked || sel < 0) return;
+        locked = true;
+        const it = items[k], ok = sel === it.cat;
         if (ok) correct++;
         else wrong.push(it.text);
-        const shown = ctx.exam ? j : it.cat;
-        counts[shown]++;
-        bins.children[shown].querySelector(".cnt").textContent = counts[shown];
+        counts[sel]++;                                   // Zähler = gewählte Kategorie (Übung und Klausur gleich)
+        bins.children[sel].querySelector(".cnt").textContent = counts[sel];
         bins.classList.add("locked");
         const c = stage.firstElementChild;
-        if (ctx.exam) c.querySelector(".bar .r").textContent = "→ " + cats[j];
-        else {
-          c.classList.add(ok ? "right" : "wrong");
-          const r = c.querySelector(".bar .r");
-          if (ok) { r.textContent = "✓ "; r.append(h(`<span>${tr("richtig")}</span>`)); } else r.textContent = "✗ " + cats[it.cat];
-        }
-        buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
         k++;
         ctx.setProgress(k / items.length);
-        setTimeout(() => {
-          if (k < items.length) return card();
-          if (ctx.exam) return ctx.finish({ c: correct, t: items.length, wrong });
-          stage.replaceChildren(h(`<div class="win sort-card"><div class="bar"><span class="d"></span>${tr("Auswertung")}<span class="r">${correct}/${items.length}</span></div>
-            <div class="body"><span class="txt">${tr("{a} von {b} richtig zugeordnet.", { a: correct, b: items.length })}</span></div></div>`));
-          ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish({ c: correct, t: items.length, wrong }));
-        }, ctx.exam ? 350 : ok ? 650 : 1500);
-      };
+        buzz(ctx.exam ? 8 : ok ? 15 : [30, 40, 30]);
+        if (ctx.exam) {
+          c.querySelector(".bar .r").textContent = "→ " + cats[sel];
+          if (k >= items.length) return ctx.finish({ c: correct, t: items.length, wrong });
+          return setTimeout(card, 350);
+        }
+        c.classList.add(ok ? "right" : "wrong");
+        const r = c.querySelector(".bar .r");
+        if (ok) { r.textContent = "✓ "; r.append(h(`<span>${tr("richtig")}</span>`)); } else r.textContent = "✗ " + cats[it.cat];
+        const more = k < items.length;
+        ctx.action(`${tr(more ? "Weiter" : "Zur Auswertung")} ${ICON.arrow}`, more ? card : summary);
+      }
       card();
     },
 
@@ -1881,7 +1927,7 @@
         <div class="sim-keys" role="group" aria-label="Tasten">
           <button type="button" class="sim-key" data-key="enter" title="Leerzeile einfügen (Enter)">↵&nbsp;Enter</button>
           <button type="button" class="sim-key" data-key="back" title="Leerzeile löschen (Backspace)">⌫</button>
-          <button type="button" class="sim-key" data-key="a" title="Alles markieren (Strg+A)">Strg+A</button>
+          <button type="button" class="sim-key" data-key="a" title="Alles markieren (Strg+A)">Alles markieren <small>Strg+A</small></button>
           <button type="button" class="sim-key" data-key="b" title="Fett (Strg+B)">Strg+B</button>
           <button type="button" class="sim-key" data-key="r" title="Rechtsbündig (Strg+R)">Strg+R</button>
         </div>
@@ -1967,9 +2013,9 @@
         const top = lineEl(a), bot = lineEl(b);
         if (!top || !bot) return;
         const hTop = h(`<span class="sim-handle top" data-h="top" role="presentation"></span>`);
-        hTop.style.top = Math.round(top.offsetTop - 9) + "px";
+        hTop.style.top = Math.round(top.offsetTop - 12) + "px";
         const hBot = h(`<span class="sim-handle bottom" data-h="bottom" role="presentation"></span>`);
-        hBot.style.top = Math.round(bot.offsetTop + bot.offsetHeight - 9) + "px";
+        hBot.style.top = Math.round(bot.offsetTop + bot.offsetHeight - 12) + "px";
         [hTop, hBot].forEach((el) => {
           el.addEventListener("pointerdown", (e) => {
             e.preventDefault();

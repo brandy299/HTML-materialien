@@ -1,5 +1,5 @@
 /* Lernraum – Offline-Cache. Netzwerk zuerst, damit neue Inhalte sofort ankommen. */
-const CACHE = "lernraum-v33";
+const CACHE = "lernraum-v34";
 const SHELL = ["./", "index.html", "styles.css", "app.js", "content.js", "vendor/qrcode.js", "i18n.js", "theme.js", "search.js", "kurse/pbp-personalbedarf.js", "kurse/gpu-preiskalkulation.js", "kurse/inwi-geschaeftsbrief.js", "kurse/englisch-foerderkurs.js", "kurse/englisch-telephoning.js", "kurse/vw-magisches-sechseck.js", "kurse/materialien.js", "fonts/fonts.css", "fonts/archivo-latin-500-normal.woff2", "fonts/archivo-latin-600-normal.woff2", "fonts/archivo-latin-700-normal.woff2", "fonts/archivo-latin-800-normal.woff2", "fonts/jetbrains-mono-latin-400-normal.woff2", "fonts/jetbrains-mono-latin-500-normal.woff2", "fonts/jetbrains-mono-latin-700-normal.woff2", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => {
