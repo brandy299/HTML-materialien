@@ -44,10 +44,17 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
   gestochener Kupferstich** (erzeugte Plates `plates/plate-N.webp`, transparent,
   in dünnem Waldgrün-Rahmen; Provenance pro Datei im Sidecar `*.webp.json`),
   Specimen-Unterzeile, Lead-Absatz mit Initial.
-- **Field notes (`.notes`):** Grammatik als Notizen mit Haarlinie oben, kein Kasten.
+- **Schema (`.schema`):** **grafische Grammatik-Erklärung** vor den Übungen — Subjekt-Chips,
+  gezeichneter Pfeil, Verb-Chip, rote `+ s`-Marke, Beispielsatz rechts; darunter Schreibregeln
+  bzw. `be`/`have`-Leaders. Deterministisch (HTML), nicht generativ.
 - **Specimen-Tabelle (`.spec`):** English · Deutsch · Tiếng Việt, nummerierte Zeilen.
-- **Practice (Cloze):** Chips, unterstrichene Lücken, „Mark it".
-- **Quiz (`.quiz`):** Zeilenoptionen mit gezeichneten Häkchen/Kreuzen.
+- **Übungen (`.ex`), fünf je Tafel, mit roter Korrektur-Marke:**
+  - `match` — Paare finden (Chip antippen → Feld antippen), `.mt-*`
+  - `cloze` — Lückentext mit Wortbank, `.gap`
+  - `order` — Satz aus Wörtern bauen, `.o-target` / `.o-chip`
+  - `spot` — den falschen Satz finden, `.spot-item`
+  - `sort` — einer Kategorie zuordnen, `.sort-btn`
+  - `quiz` — Multiple Choice mit Erklärung, `.opt`
 - **Tear-outs:** PDF-Downloads.
 
 ## Signatur & Motion
