@@ -40,8 +40,10 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
 - **Masthead:** Titel + Ornament-Sprig + Standfirst + Doppellinie.
 - **Register (`.register`):** römische Nummern I–III als Wegweiser; aktiv = rot +
   Doppellinie. Mobil: waagerechte Tabs.
-- **Tafel (`.plate`):** `Plate N` + Titel, Doppellinie, **Emblem** (gezeichnetes
-  SVG-Linienbild im Rahmen) mit Specimen-Unterzeile, Lead-Absatz mit Initial.
+- **Tafel (`.plate`):** `Plate N` + Titel, Doppellinie, **Tafel-Illustration als
+  gestochener Kupferstich** (erzeugte Plates `plates/plate-N.webp`, transparent,
+  in dünnem Waldgrün-Rahmen; Provenance pro Datei im Sidecar `*.webp.json`),
+  Specimen-Unterzeile, Lead-Absatz mit Initial.
 - **Field notes (`.notes`):** Grammatik als Notizen mit Haarlinie oben, kein Kasten.
 - **Specimen-Tabelle (`.spec`):** English · Deutsch · Tiếng Việt, nummerierte Zeilen.
 - **Practice (Cloze):** Chips, unterstrichene Lücken, „Mark it".
@@ -62,5 +64,13 @@ WebKit-Scrollbar aus der Palette — bewusst gestaltet.
 ## Verboten (bewusst vermieden)
 
 Kein Eyebrow/Kicker über Überschriften, keine gleichförmigen Icon-Karten als
-Seitenstruktur, keine Emoji-Icons (alles gezeichnete SVG), kein `border-left`,
-keine Gradient-Text/Glass/Hartschatten, keine System-Display-Schrift.
+Seitenstruktur, keine Emoji-Icons (Icons gezeichnet, Tafel-Embleme erzeugte
+Kupferstiche), kein `border-left`, keine Gradient-Text/Glass/Hartschatten,
+keine System-Display-Schrift.
+
+## Bild-Assets
+
+Die drei Tafel-Stiche sind mit `gpt-image-2.5` erzeugt (Vorgabe: freigestellter
+antiquarischer Kupferstich, dunkelgrüne Tinte, transparent), dann zu WebP
+(`cwebp -alpha_q 100`, Breite 1400) konvertiert. Der Erzeugungsprompt je Datei
+liegt als `plates/plate-N.webp.json` bei (Provenance).
