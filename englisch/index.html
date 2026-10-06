@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English for Beginners · Englisch für Anfänger</title>
+<meta name="description" content="Englisch für Anfänger im Förderkurs: Tagesablauf, Familie, Freizeit. Simple Present üben mit Lückentexten und Quiz – mit Hilfe auf Vietnamesisch.">
+<meta name="theme-color" content="#FBF6EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2321492F'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23F3E8D5' font-family='Georgia,serif'%3Ea%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#FBF6EC; --paper2:#F3E8D5; --card:#FFFDF8; --ink:#2A2118; --muted:#7C6B57;
+  --forest:#21492F; --forest2:#2E5B3D; --honey:#C58A2C; --berry:#9C3A33;
+  --line:#E7D9C0; --good:#2E7D4F; --bad:#B03A3A; --goodbg:#EAF6EE; --badbg:#F8ECEA;
+  --serif: Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif;
+  --sans: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  background-image:radial-gradient(circle at 18% 8%, rgba(197,138,44,.07), transparent 42%),
+    radial-gradient(circle at 88% 34%, rgba(33,73,47,.05), transparent 46%);}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px}
+a{color:var(--forest2)}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:20;background:rgba(251,246,236,.93);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hdr{display:flex;align-items:center;gap:12px;padding:11px 18px;max-width:720px;margin:0 auto}
+.crest{width:46px;height:46px;flex:none}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand-t{font-family:var(--serif);font-weight:700;font-size:1.06rem;line-height:1.08;color:var(--forest)}
+.brand-s{font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.vi-toggle{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+  background:var(--card);border-radius:999px;padding:7px 11px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink)}
+.vi-toggle .dot{width:30px;height:17px;border-radius:999px;background:#DCCDB2;position:relative;transition:.2s}
+.vi-toggle .dot::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:.2s}
+body.show-vi .vi-toggle{color:var(--forest);border-color:var(--forest)}
+body.show-vi .vi-toggle .dot{background:var(--forest)}
+body.show-vi .vi-toggle .dot::after{left:15px}
+
+/* Hero */
+.hero{padding:30px 0 4px}
+.eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--honey);font-weight:700}
+.hero h1{font-family:var(--serif);font-size:2.05rem;line-height:1.08;margin:.18em 0 .1em;color:var(--forest)}
+.hero .lead{color:var(--muted);font-size:1.02rem;margin:0}
+.hero .intro-cards{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--forest2)}
+
+/* Divider */
+.stitch{height:1px;margin:22px 0;background-image:linear-gradient(90deg,var(--line) 55%,transparent 0);
+  background-size:12px 1px;background-repeat:repeat-x}
+
+/* Unit cards */
+.unit{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 18px;margin:20px 0;
+  box-shadow:0 10px 26px rgba(42,33,24,.06);scroll-margin-top:76px}
+.unit-head{display:flex;align-items:flex-start;gap:12px}
+.unit-no{flex:none;width:44px;height:44px;border-radius:12px;background:var(--forest);color:var(--paper2);
+  display:grid;place-items:center;font-family:var(--serif);font-size:1.35rem;font-weight:700;box-shadow:0 4px 10px rgba(33,73,47,.25)}
+.unit-title{font-family:var(--serif);font-size:1.4rem;line-height:1.1;color:var(--forest);margin:0}
+.unit-de{font-size:.85rem;color:var(--muted)}
+.unit-tag{margin-top:2px;font-size:.9rem;color:var(--ink)}
+
+.block{margin-top:18px}
+.block h3{font-family:var(--serif);font-size:1.08rem;margin:0 0 8px;color:var(--berry);
+  display:flex;align-items:center;gap:8px}
+.block h3::before{content:"";width:16px;height:2px;background:var(--honey);display:inline-block}
+.merken{background:linear-gradient(180deg,#FBF3E3,#F8EEDB);border:1px solid var(--line);
+  border-left:4px solid var(--honey);border-radius:12px;padding:12px 14px}
+.merken ul{margin:0;padding-left:1.1em}
+.merken li{margin:5px 0}
+.merken .ex{color:var(--forest2);font-style:italic}
+
+/* Vocab */
+table.vocab{width:100%;border-collapse:collapse;font-size:.95rem}
+.vocab th,.vocab td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.vocab th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.vocab td.en{font-weight:600;color:var(--forest)}
+.vocab td.de{color:var(--ink)}
+.vocab td.vi{color:var(--berry)}
+.vi{display:none}
+body.show-vi .vi{display:table-cell}
+.vi-hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+
+/* Cloze */
+.bank{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:.86rem;cursor:pointer;color:var(--forest)}
+.chip:hover{border-color:var(--honey)}
+.cloze-item{display:block;margin:9px 0;font-size:1.02rem}
+.cloze-num{display:inline-block;width:1.5em;color:var(--muted);font-variant-numeric:tabular-nums}
+input.gap{font:inherit;font-weight:600;color:var(--forest);background:transparent;border:none;
+  border-bottom:2px dotted var(--honey);min-width:120px;padding:1px 5px;text-align:center}
+input.gap:focus{outline:none;border-bottom-color:var(--forest);background:#FBF3E3}
+input.gap.ok{border-bottom-color:var(--good);color:var(--good)}
+input.gap.no{border-bottom-color:var(--bad);color:var(--bad)}
+.fb{font-size:.85rem;margin-top:8px;min-height:1.2em}
+.fb.ok{color:var(--good)}.fb.no{color:var(--bad)}.fb.tip{color:var(--muted)}
+.btn{border:none;border-radius:12px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--forest);color:#fff}
+.btn.primary:active{transform:translateY(1px)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--forest)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* Quiz */
+.quiz .q{margin:12px 0 4px;font-weight:600}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;
+  padding:10px 13px;margin:6px 0;font:inherit;cursor:pointer;color:var(--ink)}
+.opt:hover{border-color:var(--forest2)}
+.opt.correct{border-color:var(--good);background:var(--goodbg);font-weight:600}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt .mark{float:right;font-weight:700}
+.explain{font-size:.86rem;color:var(--muted);margin:4px 0 10px;display:none}
+.explain.show{display:block}
+
+/* PDF buttons */
+.pdfs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.pdfs a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border:1px solid var(--line);
+  background:#fff;border-radius:12px;padding:9px 13px;color:var(--forest);font-size:.88rem;font-weight:600}
+.pdfs a:hover{border-color:var(--honey)}
+.pdfs a svg{width:16px;height:16px}
+
+/* Footer */
+footer{margin:34px 0 40px;color:var(--muted);font-size:.85rem}
+.foot-card{background:var(--paper2);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.foot-card h3{font-family:var(--serif);color:var(--forest);margin:0 0 6px}
+.tiny{font-size:.76rem;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+@media (max-width:420px){
+  .hero h1{font-size:1.75rem}
+  .unit-title{font-size:1.25rem}
+}
+
+@media print{
+  .site-header,.vi-toggle,.btnrow,.chip,.pdfs,.explain{display:none !important}
+  body{background:#fff}
+  .unit{box-shadow:none;break-inside:avoid;border-color:#ccc}
+  .vi{display:table-cell !important}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="hdr">
+    <svg class="crest" viewBox="0 0 64 64" role="img" aria-label="Englisch für Anfänger">
+      <rect x="6" y="6" width="52" height="52" rx="14" fill="#21492F"/>
+      <path d="M20 30h24v3a12 12 0 0 1-12 12 12 12 0 0 1-12-12z" fill="#F3E8D5"/>
+      <path d="M44 31h4a6 6 0 0 1 0 12h-2" fill="none" stroke="#F3E8D5" stroke-width="3"/>
+      <path d="M26 25c0-3 3-4 3-7M32 25c0-3 3-4 3-7" fill="none" stroke="#C58A2C" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M20 48h24" stroke="#C58A2C" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div class="brand">
+      <span class="brand-t">English for Beginners</span>
+      <span class="brand-s">Förderkurs · Anfänger</span>
+    </div>
+    <button class="vi-toggle" id="viBtn" type="button" aria-pressed="false">
+      <span class="dot" aria-hidden="true"></span> Tiếng Việt
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Everyday English · Simple Present</p>
+    <h1>Erst reden,<br>dann schreiben.</h1>
+    <p class="lead">Drei ruhige Einheiten für den Anfang: <strong>mein Tag</strong>,
+      <strong>Familie</strong> und <strong>Freizeit</strong>. Kurze Erklärungen, viele
+      kleine Übungen – und auf Wunsch Hilfe auf Vietnamesisch.</p>
+    <div class="intro-cards">
+      <span class="pill">🇬🇧 kurze Sätze</span>
+      <span class="pill">✏️ Lückentexte &amp; Quiz</span>
+      <span class="pill">🇻🇳 Tiếng Việt-Hilfe</span>
+      <span class="pill">🖨️ zum Ausdrucken</span>
+    </div>
+  </section>
+
+  <div class="stitch" aria-hidden="true"></div>
+
+  <div id="units"></div>
+
+  <footer>
+    <div class="foot-card">
+      <h3>Für die Lehrkraft</h3>
+      <p style="margin:.2em 0 .7em">Reihenplan und Arbeitsblätter (mit Lösungen) liegen im Materialordner.</p>
+      <div class="pdfs">
+        <a href="downloads/FE_Everyday_English_Overview.pdf" target="_blank" rel="noopener">Übersicht &amp; Reihenplan (PDF)</a>
+      </div>
+      <p class="tiny" style="margin-top:12px">HBBK Oberhausen · Förderkurs Englisch · Everyday English.
+        Vietnamesisch ist eine Lernhilfe (Standardsprache). Kein Schuljahr, keine echten Personendaten.
+        „Tiếng Việt" zeigt die vietnamesische Spalte ein und aus.</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+"use strict";
+const UNITS = [
+  {
+    id:"u1", no:"1", title:"My Day", de:"Mein Tag",
+    tag:"Erzähle, was du jeden Tag machst.",
+    grammar:{
+      title:"Simple Present · Grundform und -s",
+      points:[
+        "I / you / we / they + <strong>Grundform</strong>: <span class='ex'>I get up at six.</span>",
+        "he / she / it + Verb + <strong>-s</strong>: <span class='ex'>She gets up at five.</span>",
+        "Schreibung: watch &rarr; watch<strong>es</strong> · go &rarr; go<strong>es</strong> · study &rarr; stud<strong>ies</strong> · have &rarr; <strong>has</strong>"
+      ]
+    },
+    vocab:[
+      ["wake up","aufwachen","thức dậy"],
+      ["get up","aufstehen","ra khỏi giường"],
+      ["have breakfast","frühstücken","ăn sáng"],
+      ["go to school","zur Schule gehen","đi học"],
+      ["go to work","zur Arbeit gehen","đi làm"],
+      ["come home","nach Hause kommen","về nhà"],
+      ["do my homework","Hausaufgaben machen","làm bài tập"],
+      ["watch TV","fernsehen","xem tivi"],
+      ["go to bed","ins Bett gehen","đi ngủ"],
+      ["every day","jeden Tag","mỗi ngày"]
+    ],
+    cloze:{
+      bank:["get up","gets up","have","goes","watches"],
+      items:[
+        {b:"I ", a:["get up"], af:" at six o’clock."},
+        {b:"My mother ", a:["gets up"], af:" at five o’clock."},
+        {b:"We ", a:["have"], af:" breakfast at home."},
+        {b:"My sister ", a:["goes"], af:" to school at eight."},
+        {b:"He ", a:["watches"], af:" TV in the evening."}
+      ]
+    },
+    quiz:[
+      {q:"My father ______ at six o’clock.", o:["get up","gets up","getting up"], c:1, e:"he / she / it → Verb + s: gets up."},
+      {q:"______ you like coffee?", o:["Do","Does","Is"], c:0, e:"I / you / we / they → Do."},
+      {q:"She ______ breakfast at home.", o:["have","has","haves"], c:1, e:"have wird bei he/she/it zu has."},
+      {q:"Welches Wort zeigt eine Gewohnheit?", o:["now","every day","at the moment"], c:1, e:"every day = jeden Tag."}
+    ],
+    pdfs:[["Vokabeln (PDF)","downloads/FE_U1_My_Day_Vocab.pdf"],["Übungen (PDF)","downloads/FE_U1_My_Day_Practice.pdf"]]
+  },
+  {
+    id:"u2", no:"2", title:"People & Family", de:"Menschen & Familie",
+    tag:"Beschreibe deine Familie und andere Menschen.",
+    grammar:{
+      title:"sein und haben · am / is / are · have / has",
+      points:[
+        "I <strong>am</strong> · you / we / they <strong>are</strong> · he / she / it <strong>is</strong>",
+        "I / you / we / they <strong>have</strong> · he / she / it <strong>has</strong>",
+        "Frage: <span class='ex'>Are you busy?</span> · <span class='ex'>Does she have a bike?</span>"
+      ]
+    },
+    vocab:[
+      ["mother","Mutter","mẹ"],
+      ["father","Vater","bố"],
+      ["parents","Eltern","bố mẹ"],
+      ["sister","Schwester","chị / em gái"],
+      ["brother","Bruder","anh / em trai"],
+      ["grandmother","Großmutter","bà"],
+      ["grandfather","Großvater","ông"],
+      ["friend","Freund / Freundin","bạn"],
+      ["tall","groß","cao"],
+      ["nice","nett","tốt bụng"],
+      ["young","jung","trẻ"],
+      ["happy","glücklich","vui vẻ"]
+    ],
+    cloze:{
+      bank:["am","is","are","has","have"],
+      items:[
+        {b:"I ", a:["am"], af:" from Vietnam."},
+        {b:"My mother ", a:["is"], af:" a teacher."},
+        {b:"We ", a:["are"], af:" a happy family."},
+        {b:"My father ", a:["has"], af:" a car."},
+        {b:"My cousins ", a:["have"], af:" two dogs."}
+      ]
+    },
+    quiz:[
+      {q:"She ______ very nice.", o:["am","is","are"], c:1, e:"he / she / it → is."},
+      {q:"My brother ______ a bike.", o:["have","has","haves"], c:1, e:"he / she / it → has."},
+      {q:"______ you busy?", o:["Are","Is","Do"], c:0, e:"you → are."},
+      {q:"We ______ students.", o:["am","is","are"], c:2, e:"we → are."}
+    ],
+    pdfs:[["Vokabeln (PDF)","downloads/FE_U2_People_and_Family_Vocab.pdf"],["Übungen (PDF)","downloads/FE_U2_People_and_Family_Practice.pdf"]]
+  },
+  {
+    id:"u3", no:"3", title:"Free Time & Likes", de:"Freizeit & Vorlieben",
+    tag:"Sag, was du magst – und was nicht.",
+    grammar:{
+      title:"mögen · like + Nomen / Verb-ing",
+      points:[
+        "like / love / don’t like + <strong>Nomen</strong>: <span class='ex'>I like music.</span>",
+        "like + <strong>Verb + ing</strong>: <span class='ex'>I like cooking.</span>",
+        "he / she / it: like &rarr; <strong>likes</strong>: <span class='ex'>She likes tea.</span>",
+        "Frage: <strong>Do</strong> you like …? · <strong>Does</strong> she like …? – Yes, I do. / No, she doesn’t."
+      ]
+    },
+    vocab:[
+      ["play football","Fußball spielen","chơi bóng đá"],
+      ["listen to music","Musik hören","nghe nhạc"],
+      ["read books","Bücher lesen","đọc sách"],
+      ["go shopping","einkaufen gehen","đi mua sắm"],
+      ["watch films","Filme schauen","xem phim"],
+      ["meet friends","Freunde treffen","gặp bạn bè"],
+      ["rice","Reis","cơm"],
+      ["water","Wasser","nước"],
+      ["like","mögen","thích"],
+      ["love","sehr mögen","rất thích"],
+      ["don’t like","nicht mögen","không thích"]
+    ],
+    cloze:{
+      bank:["cooking","likes","don’t like","Does","like"],
+      items:[
+        {b:"I like ", a:["cooking","to cook"], af:"."},
+        {b:"She ", a:["likes"], af:" music."},
+        {b:"We ", a:["don’t like","do not like"], af:" coffee."},
+        {b:"", a:["Does"], af:" she like tea?"},
+        {b:"He ", a:["likes"], af:" playing games."}
+      ]
+    },
+    quiz:[
+      {q:"She ______ music.", o:["like","likes","liking"], c:1, e:"he / she / it → likes."},
+      {q:"______ he like tea?", o:["Do","Does","Is"], c:1, e:"he / she / it → Does + Grundform."},
+      {q:"I like ______.", o:["cook","cooking","cooks"], c:1, e:"like + Verb-ing: cooking."},
+      {q:"I don’t ______ coffee.", o:["likes","like","liking"], c:1, e:"don’t + Grundform: like."}
+    ],
+    pdfs:[["Vokabeln (PDF)","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen (PDF)","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]]
+  }
+];
+
+/* ---------- Helfer ---------- */
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = (s) => String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/\s+/g," ").trim();
+
+/* ---------- Aufbau ---------- */
+function vocabTable(v){
+  let rows = v.map(([en,de,vi]) =>
+    `<tr><td class="en">${esc(en)}</td><td class="de">${esc(de)}</td><td class="vi">${esc(vi)}</td></tr>`).join("");
+  return `<table class="vocab"><thead><tr><th>English</th><th>Deutsch</th><th class="vi">Tiếng Việt</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function grammarBox(g){
+  return `<div class="merken"><ul>${g.points.map(p=>`<li>${p}</li>`).join("")}</ul></div>`;
+}
+function clozeBlock(u){
+  const items = u.cloze.items.map((it,i) =>
+    `<label class="cloze-item"><span class="cloze-num">${i+1}.</span>${esc(it.b)}<input class="gap" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Lücke ${i+1}">${esc(it.af)}</label>`).join("");
+  const chips = u.cloze.bank.map(w=>`<button class="chip" type="button" data-w="${esc(w)}">${esc(w)}</button>`).join("");
+  return `<div class="cloze" data-unit="${u.id}">
+    <div class="bank">${chips}</div>
+    ${items}
+    <div class="fb" data-fb></div>
+    <div class="btnrow"><button class="btn primary" type="button" data-check="${u.id}">Prüfen</button>
+      <button class="btn ghost" type="button" data-reset="${u.id}">Zurücksetzen</button></div>
+  </div>`;
+}
+function quizBlock(u){
+  const qs = u.quiz.map((q,qi) =>
+    `<div class="q">${esc(q.q)}</div>
+     ${q.o.map((o,oi)=>
+       `<button class="opt" type="button" data-q="${qi}" data-o="${oi}" data-c="${q.c}">${esc(o)}<span class="mark"></span></button>`).join("")}
+     <div class="explain" data-ex="${qi}">${esc(q.e)}</div>`).join("");
+  return `<div class="quiz" data-unit="${u.id}">${qs}</div>`;
+}
+function pdfBlock(u){
+  const ic = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h9l4 4v14H6z"/><path d="M9 13h6M9 17h6"/></svg>`;
+  return `<div class="pdfs">${u.pdfs.map(([t,h])=>`<a href="${h}" target="_blank" rel="noopener">${ic}${esc(t)}</a>`).join("")}</div>`;
+}
+function unitCard(u){
+  return `<section class="unit" id="${u.id}" aria-labelledby="${u.id}-t">
+    <div class="unit-head">
+      <div class="unit-no" aria-hidden="true">${u.no}</div>
+      <div><h2 class="unit-title" id="${u.id}-t">${esc(u.title)}</h2>
+        <div class="unit-de">${esc(u.de)}</div>
+        <div class="unit-tag">${esc(u.tag)}</div></div>
+    </div>
+    <div class="block"><h3>Merken</h3>${grammarBox(u.grammar)}</div>
+    <div class="block"><h3>Vokabeln</h3>${vocabTable(u.vocab)}
+      <p class="vi-hint">Tippe oben auf „Tiếng Việt", um die vietnamesische Hilfe zu zeigen.</p></div>
+    <div class="block"><h3>Übung · Lückentext</h3>${clozeBlock(u)}</div>
+    <div class="block"><h3>Quiz</h3>${quizBlock(u)}</div>
+    <div class="block"><h3>Zum Ausdrucken</h3>${pdfBlock(u)}</div>
+  </section>`;
+}
+document.getElementById("units").innerHTML = UNITS.map(unitCard).join("");
+
+/* ---------- Sprache (VI) ---------- */
+const viBtn = document.getElementById("viBtn");
+viBtn.addEventListener("click", () => {
+  const on = document.body.classList.toggle("show-vi");
+  viBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  try{ localStorage.setItem("englisch.vi", on ? "1" : "0"); }catch(e){}
+});
+try{ if(localStorage.getItem("englisch.vi")==="1"){ document.body.classList.add("show-vi"); viBtn.setAttribute("aria-pressed","true"); } }catch(e){}
+
+/* ---------- Interaktion (Delegation) ---------- */
+document.addEventListener("click", (ev) => {
+  const chip = ev.target.closest(".chip");
+  if(chip){
+    const scope = chip.closest(".cloze");
+    const gaps = [...scope.querySelectorAll("input.gap")];
+    const target = scope.querySelector("input.gap:focus") ||
+                   gaps.find(g=>!g.value.trim()) || gaps[0];
+    if(target){ target.value = chip.dataset.w; target.focus(); }
+    return;
+  }
+  const opt = ev.target.closest(".opt");
+  if(opt){
+    const quiz = opt.closest(".quiz");
+    const qi = opt.dataset.q;
+    quiz.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(b=>{
+      b.disabled = true;
+      const isC = b.dataset.c === b.dataset.o;
+      if(isC){ b.classList.add("correct"); b.querySelector(".mark").textContent = "✓"; }
+    });
+    if(opt.dataset.c !== opt.dataset.o){ opt.classList.add("wrong"); opt.querySelector(".mark").textContent = "✗"; }
+    const ex = quiz.querySelector(`.explain[data-ex="${qi}"]`); if(ex) ex.classList.add("show");
+    return;
+  }
+  const chk = ev.target.closest("[data-check]");
+  if(chk){
+    const scope = chk.closest(".cloze");
+    const u = UNITS.find(x=>x.id===chk.dataset.check);
+    let ok = 0, n = 0;
+    scope.querySelectorAll("input.gap").forEach((inp,i)=>{
+      n++;
+      const ans = (u.cloze.items[i].a || []).map(norm);
+      const good = ans.includes(norm(inp.value));
+      inp.classList.toggle("ok", good);
+      inp.classList.toggle("no", !good);
+      if(!good){ inp.title = "Richtig wäre: " + (u.cloze.items[i].a[0]); }
+      else { inp.title = ""; }
+      if(good) ok++;
+    });
+    const fb = scope.querySelector("[data-fb]");
+    fb.className = "fb " + (ok===n ? "ok" : (ok>0 ? "tip" : "no"));
+    fb.textContent = ok===n ? `Super! ${ok}/${n} richtig. 🎉`
+      : `${ok}/${n} richtig. Die roten Lücken noch einmal ansehen – Tipp: auf eine rote Lücke tippen.`;
+    return;
+  }
+  const rst = ev.target.closest("[data-reset]");
+  if(rst){
+    const scope = rst.closest(".cloze");
+    scope.querySelectorAll("input.gap").forEach(inp=>{ inp.value=""; inp.classList.remove("ok","no"); inp.title=""; });
+    const fb = scope.querySelector("[data-fb]"); fb.className="fb"; fb.textContent="";
+    return;
+  }
+});
+
+/* Chip in fokussiertes Feld tippen, dann direkt prüfen mit Enter */
+document.addEventListener("keydown", (ev)=>{
+  if(ev.key==="Enter" && ev.target.matches && ev.target.matches("input.gap")){
+    ev.preventDefault();
+    const scope = ev.target.closest(".cloze");
+    const btn = scope.querySelector("[data-check]"); if(btn) btn.click();
+  }
+});
+</script>
+</body>
+</html>
