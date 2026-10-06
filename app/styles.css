@@ -742,11 +742,11 @@ body.sim-on .dock-inner .btn svg { width: 15px; height: 15px; }
 .sim-pil { flex: none; font: 400 10px/1.6 var(--sim-font); color: var(--sim-blue); }
 .sim-gap { height: 19px; padding: 0 2px; font: 400 10px/19px var(--sim-font); color: var(--sim-blue); cursor: pointer; }
 .sim-handle {
-  position: absolute; left: 8px; z-index: 3; width: 16px; height: 16px; border-radius: 50%;
+  position: absolute; left: 8px; z-index: 3; width: 24px; height: 24px; border-radius: 50%;
   background: var(--sim-blue); border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
   touch-action: none; cursor: grab;
 }
-.sim-handle::after { content: ""; position: absolute; left: 50%; width: 2px; height: 7px; background: var(--sim-blue); transform: translateX(-50%); }
+.sim-handle::after { content: ""; position: absolute; left: 50%; width: 2px; height: 9px; background: var(--sim-blue); transform: translateX(-50%); }
 .sim-handle.top::after { bottom: 100%; }
 .sim-handle.bottom::after { top: 100%; }
 .sim-bubble {
@@ -1006,3 +1006,15 @@ body.vid-lock { overflow: hidden; }
 .spot-paper.locked .spot-line { cursor: default; }
 .spot-line.right { background: #DCF3E6; box-shadow: inset 0 0 0 2px #0A8F57; }
 .spot-line.wrong { background: #FBDDE3; box-shadow: inset 0 0 0 2px #C1354F; animation: shake .35s; }
+
+/* Bedienung intuitiver (B): Auswahl vor „Prüfen“, sichtbare Folien-Navigation, beschriftete Szenen-Knöpfe */
+.spot-line.sel { background: #FBDBE5; box-shadow: inset 0 0 0 2px #A3186E; }
+.bin.sel { background: var(--pink-fill); }
+.bins.locked .bin { pointer-events: none; }
+.slide-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 12px; }
+.slide-nav .icon-btn { font: 800 32px/1 var(--grot); padding: 0 0 4px; }
+.slide-nav .icon-btn[disabled] { opacity: .35; pointer-events: none; box-shadow: none; }
+.vid-ctl .icon-btn.lab { width: auto; padding: 0 7px; gap: 4px; display: inline-flex; align-items: center; font: 600 10.5px/1 var(--mono); }
+.vid-ctl .icon-btn.lab b { font: 800 20px/1 var(--grot); margin-top: -3px; }
+.sim-key small { font: 400 10px/1 var(--mono); color: #666; margin-left: 4px; }
+.vid-ctl.over { gap: 4px; padding-left: 6px; padding-right: 6px; }

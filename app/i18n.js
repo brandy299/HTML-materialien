@@ -21,6 +21,7 @@ window.LERNRAUM_I18N = {
     "Fehler finden": "Find the mistake", "{n} Brief": "{n} letter", "{n} Briefe": "{n} letters", "Brief {a} von {b}": "Letter {a} of {b}", "Tippe auf die Zeile mit dem Fehler.": "Tap the line with the mistake.",
     "Tippe auf eine Zeile": "Tap a line", "Nächster Brief": "Next letter", "Der Fehler steckt in der grün markierten Zeile.": "The mistake is in the line marked green.",
     "Ordner": "Folder",
+    "Vorherige Folie": "Previous slide", "Szene": "Scene", "Zur Auswertung": "To the results", "Links/rechts tippen: Szene wechseln.": "Tap left/right: change scene.",
     "Vollbild": "Full screen", "Vollbild beenden": "Exit full screen",
     "Erklärvideo": "Explainer video", "Video wird geladen …": "Loading video …", "Video starten": "Start video", "mit Ton": "with sound",
     "Szene zurück": "Previous scene", "Szene vor": "Next scene", "Abspielen": "Play", "Pause": "Pause", "Ton": "Sound", "Text lesen": "Read the text",
@@ -107,17 +108,17 @@ window.LERNRAUM_I18N = {
     "Zurück": "Back", "Schon benutzt? Lerncode einlesen": "Used it before? Enter your code", "Fortschritt sichern (Lerncode)": "Back up progress (code)", "Lerncode": "Code", "Fortschritt sichern.": "Back up your progress.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "Your progress is only stored on this phone. With the code you can back it up or move it to a new phone. No account needed.", "Lerncode erstellen": "Create code", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "Keep the code safe, for example as a message to yourself.", "Kopieren": "Copy", "Als Datei speichern": "Save as file", "Lerncode einlesen": "Enter code", "Code hier einfügen": "Paste code here", "Einlesen": "Read", "Datei auswählen": "Choose file", "Der Code konnte nicht erstellt werden.": "The code could not be created.", "Dieser Browser kann den Code nicht lesen.": "This browser cannot read the code.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "The code is not valid. Please copy it completely.", "Gefunden:": "Found:", "{n} Themen mit Fortschritt": "{n} topics with progress", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "Your progress is merged with the code. Nothing gets lost.", "Übernehmen": "Apply", "Fortschritt übernommen": "Progress restored", "Code kopiert": "Code copied", "App auf den Startbildschirm": "App on your home screen", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "Start with one tap, and your progress stays stored more reliably.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "Tap “Share” at the bottom, then “Add to Home Screen”.", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "Tap Install – or open the browser menu (⋮) and choose “Add to Home screen”.", "Installieren": "Install", "Später": "Later", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "Open the browser menu (⋮) and choose “Add to Home screen”.",
 
     howto: {
-      slides: "Swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
+      slides: "Tap ‹ › or swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
       quiz: "Tap an answer, then “Check”. Exactly one answer is correct.",
-      sort: "Read the card and tap the category it belongs to.",
+      sort: "Read the card, tap the category it belongs to, then tap “Check”.",
       cloze: "First tap a gap, then the matching word below. Some words don’t fit anywhere.",
       calc: "Tap a field and enter the number with the keypad. ± makes a number negative, ↓ jumps to the next field.",
       cards: "Think of the answer, then tap to flip. Be honest: “Again” puts the card at the back.",
       selfcheck: "Tap each statement until it fits you: empty = not sure yet, half = so-so, full = got it.",
       link: "The material opens in a new tab. Come back afterwards and tap “Done”.",
-      video: "Tap Start. Tap the left or right of the picture to jump a scene back or forward, the middle to pause. “Text” shows everything to read.",
+      video: "Tap Start. Use “Scene” on the left and right to jump a scene back or forward (or tap the left or right of the picture), the middle to pause. “Text” shows everything to read.",
       sentence: "Tap a gap and choose the matching block below. Step by step you build a complete answer sentence.",
-      spot: "Read the letter excerpt and tap the line with the mistake. Afterwards you see why.",
+      spot: "Read the letter excerpt, tap the line with the mistake, then tap “Check”. Afterwards you see why.",
       word: "Tap a line – drag the blue handles to extend the selection. Format with the toolbar, add empty lines with Enter (delete: ⌫), shortcuts: Ctrl+A/B/R. “Check” tests your task."
     }
   },
@@ -129,6 +130,7 @@ window.LERNRAUM_I18N = {
     "Fehler finden": "ابحث عن الخطأ", "{n} Brief": "{n} رسالة", "{n} Briefe": "{n} رسائل", "Brief {a} von {b}": "الرسالة {a} من {b}", "Tippe auf die Zeile mit dem Fehler.": "اضغط على السطر الذي فيه الخطأ.",
     "Tippe auf eine Zeile": "اضغط على سطر", "Nächster Brief": "الرسالة التالية", "Der Fehler steckt in der grün markierten Zeile.": "الخطأ في السطر المعلّم بالأخضر.",
     "Ordner": "مجلد",
+    "Vorherige Folie": "الشريحة السابقة", "Szene": "مشهد", "Zur Auswertung": "إلى النتيجة", "Links/rechts tippen: Szene wechseln.": "اضغط يسارًا/يمينًا: تغيير المشهد.",
     "Vollbild": "ملء الشاشة", "Vollbild beenden": "إنهاء ملء الشاشة",
     "Erklärvideo": "فيديو توضيحي", "Video wird geladen …": "جارٍ تحميل الفيديو …", "Video starten": "ابدأ الفيديو", "mit Ton": "مع الصوت",
     "Szene zurück": "المشهد السابق", "Szene vor": "المشهد التالي", "Abspielen": "تشغيل", "Pause": "إيقاف مؤقت", "Ton": "الصوت", "Text lesen": "قراءة النص",
@@ -222,17 +224,17 @@ window.LERNRAUM_I18N = {
     "Zurück": "رجوع", "Schon benutzt? Lerncode einlesen": "استخدمت التطبيق من قبل؟ أدخل رمزك", "Fortschritt sichern (Lerncode)": "حفظ التقدّم (رمز)", "Lerncode": "الرمز", "Fortschritt sichern.": "احفظ تقدّمك.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "تقدّمك محفوظ على هذا الهاتف فقط. بالرمز يمكنك حفظه أو نقله إلى هاتف جديد. لا حاجة إلى حساب.", "Lerncode erstellen": "إنشاء رمز", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "احتفظ بالرمز جيدًا، مثلًا كرسالة إلى نفسك.", "Kopieren": "نسخ", "Als Datei speichern": "حفظ كملف", "Lerncode einlesen": "إدخال الرمز", "Code hier einfügen": "الصق الرمز هنا", "Einlesen": "قراءة", "Datei auswählen": "اختيار ملف", "Der Code konnte nicht erstellt werden.": "تعذّر إنشاء الرمز.", "Dieser Browser kann den Code nicht lesen.": "هذا المتصفح لا يستطيع قراءة الرمز.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "الرمز غير صالح. يرجى نسخه كاملًا.", "Gefunden:": "تم العثور على:", "{n} Themen mit Fortschritt": "{n} مواضيع مع تقدّم", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "سيُدمج تقدّمك مع الرمز. لن يضيع شيء.", "Übernehmen": "تطبيق", "Fortschritt übernommen": "تمت استعادة التقدّم", "Code kopiert": "تم نسخ الرمز", "App auf den Startbildschirm": "التطبيق على الشاشة الرئيسية", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "تبدأ بنقرة واحدة ويبقى تقدّمك محفوظًا بشكل أكثر أمانًا.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "اضغط «مشاركة» في الأسفل ثم «إضافة إلى الشاشة الرئيسية».", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "اضغط «تثبيت» – أو افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».", "Installieren": "تثبيت", "Später": "لاحقًا", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».",
 
     howto: {
-      slides: "اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",
+      slides: "اضغط على ‹ › أو اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",
       quiz: "اضغط على إجابة ثم على «تحقّق». إجابة واحدة فقط صحيحة.",
-      sort: "اقرأ البطاقة واضغط على الفئة التي تنتمي إليها.",
+      sort: "اقرأ البطاقة، اضغط على الفئة التي تنتمي إليها، ثم اضغط على «تحقّق».",
       cloze: "اضغط أولًا على فراغ ثم على الكلمة المناسبة في الأسفل. بعض الكلمات لا تناسب أي فراغ.",
       calc: "اضغط على حقل وأدخل الرقم بلوحة الأرقام. زر ± يجعل الرقم سالبًا، وزر ↓ ينقلك إلى الحقل التالي.",
       cards: "فكّر في الإجابة ثم اضغط لقلب البطاقة. كن صادقًا: «مرة أخرى» تضع البطاقة في الخلف.",
       selfcheck: "اضغط على كل عبارة حتى تناسبك: فارغ = لست متأكدًا بعد، نصف = إلى حدٍّ ما، ممتلئ = أتقنتها.",
       link: "تُفتح المادة في نافذة جديدة. ارجع بعد ذلك واضغط على «تم».",
-      video: "اضغط على «ابدأ». اضغط على يسار الصورة أو يمينها للانتقال مشهدًا للخلف أو للأمام، وعلى الوسط للإيقاف المؤقت. «نص» يعرض كل شيء للقراءة.",
+      video: "اضغط على «ابدأ». استخدم «مشهد» على اليسار واليمين للانتقال مشهدًا للخلف أو للأمام (أو اضغط على يسار الصورة أو يمينها)، وعلى الوسط للإيقاف المؤقت. «نص» يعرض كل شيء للقراءة.",
       sentence: "اضغط على فراغ واختر الجزء المناسب في الأسفل. هكذا تبني خطوة بخطوة جملة إجابة كاملة.",
-      spot: "اقرأ مقطع الرسالة واضغط على السطر الذي فيه الخطأ. بعد ذلك ترى السبب.",
+      spot: "اقرأ مقطع الرسالة، اضغط على السطر الذي فيه الخطأ، ثم اضغط على «تحقّق». بعد ذلك ترى السبب.",
       word: "اضغط على سطر – اسحب المقابض الزرقاء لتوسيع التحديد. نسّق باستخدام الشريط، وأضف أسطرًا فارغة بـ Enter (الحذف: ⌫)، والاختصارات: Ctrl+A/B/R. زر «تحقّق» يفحص مهمتك."
     }
   }

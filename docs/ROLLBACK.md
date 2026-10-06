@@ -26,6 +26,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
+- Paket 18 · Bedienung intuitiver B (Issue #70: `spot`/`sort` mit „Prüfen“, Folien-Navigation, Szenen-Knöpfe im Video, Word-Griffe/„Alles markieren“), `app/sw.js` v34: *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen; Kursdaten und Fortschritt sind nicht betroffen.
 - Paket 17 · PBP-Video „Wie viele Azubis pro Jahr?“ (Ausbildungsbedarf, vom Content-Agent, Issue #67; Kurztest vom CD angepasst), `app/sw.js` v33: *(PR-Nummer folgt)*. Abschalten: `video:`/`videoTitle:` im Thema `ausbildungsbedarf` entfernen.
 - Paket 16 · GPU-Videos „Was kostet die Ware wirklich?“ (AB 4) und „Vom Einkauf ins Regal“ (AB 5), `app/sw.js` v32: PR #66. Abschalten: `video:`/`videoTitle:` in den Themen `bezugspreis` und `verkaufspreis` entfernen.
 - Paket 15 · PBP-Video „Zählen oder rechnen?“ (Übungsblatt 2), `app/sw.js` v31: PR #65. Abschalten: `video:`/`videoTitle:` im Thema `stellenplan-kennzahlen` entfernen.
