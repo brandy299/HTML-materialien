@@ -28,6 +28,8 @@ LERNRAUM.subjects.push({
     /* ══════════════ LS 2.2 · STELLENANZEIGE & PROFIL ══════════════ */
     {
       id: "intern-extern",
+      video: "pbp-intern-extern",          // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Intern oder extern?",
       folder: "stellenanzeige",
       help: `<h3>Personalbeschaffung</h3>
              <p class="formula">Alle Maßnahmen, mit denen ein Unternehmen seinen Nettopersonalbedarf deckt – offene Stellen also besetzt.</p>
@@ -167,6 +169,8 @@ LERNRAUM.subjects.push({
 
     {
       id: "anforderungsprofil",
+      video: "pbp-anforderungsprofil",
+      videoTitle: "Muss erfüllen – mit Kann punkten",
       folder: "stellenanzeige",
       help: `<h3>Anforderungsprofil</h3>
              <p class="formula">Alle fachlichen und persönlichen Anforderungen für eine Stelle – der Maßstab für die Auswahl.</p>
@@ -288,6 +292,8 @@ LERNRAUM.subjects.push({
 
     {
       id: "anzeigen-code",
+      video: "pbp-anzeigen-code",
+      videoTitle: "Der Code der Stellenanzeige",
       folder: "stellenanzeige",
       help: `<h3>Die sechs Bausteine</h3>
              <p class="formula">1. Wer wir sind · 2. Was wir bieten · 3. Wen wir suchen · 4. Deine Aufgaben · 5. Dein Profil · 6. So bewirbst du dich</p>
