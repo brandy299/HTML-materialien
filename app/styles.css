@@ -1027,3 +1027,8 @@ body.vid-lock { overflow: hidden; }
 .crumbs > :last-child { flex: 0 1 auto; }
 .player-top .prev-btn { width: 40px; height: 40px; box-shadow: 2px 2px 0 var(--ink); flex: none; }
 @media (max-width: 420px) { .player-top { gap: 8px; } }
+
+/* Kurs-Illustrationen (SVG im Typesafe-Stil) – feste helle Fläche, damit sie im Dunkelmodus gleich aussehen */
+.art { display: block; width: 100%; height: auto; max-height: 150px; object-fit: contain; margin: 0 0 12px; background: #E9E9E6; }
+.art.big { max-height: none; margin: 20px 0 0; border: 2px solid var(--ink); box-shadow: var(--shadow); padding: 6px 10px; }
+.topic-win .body > .art { margin-bottom: 8px; }

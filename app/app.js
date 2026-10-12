@@ -708,6 +708,10 @@
     return v;
   }
 
+  /* Kurs-Illustrationen (app/art/<kurs-id>.svg, Quellen in app/art/src); nicht in der Einzeldatei */
+  const ART = new Set(["pbp-bewerbung", "pbp", "inwi-geschaeftsbrief", "gpu-preiskalkulation", "vw-magisches-sechseck", "englisch-foerderkurs", "englisch-telephoning"]);
+  const artImg = (x, cls) => (ART.has(x.id) && !SINGLE && location.protocol !== "file:" && !/\/dist\//.test(location.pathname)
+    ? `<img class="art ${cls || ""}" src="art/${x.id}.svg" alt="" width="600" height="340" loading="lazy" decoding="async">` : "");
   const isNew = (x) => x.added && (Date.now() - new Date(x.added)) / 864e5 <= 14;
   function subjectWin(x) {
     if (x.materials) {
@@ -721,7 +725,7 @@
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
     return h(`<a class="win topic-win" href="#/f/${x.id}">
       <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ` <span class="badge-new">${tr("Neu")}</span>` : ""}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
-      <div class="body"><span class="title">${esc(x.name)}</span>
+      <div class="body">${artImg(x)}<span class="title">${esc(x.name)}</span>
         <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);
   }
@@ -736,6 +740,7 @@
         <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
         <button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button></div>
       <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
+      ${artImg(s, "big")}
       <div id="list"></div>
     </main>`);
     v.querySelector("#qrBtn").onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
