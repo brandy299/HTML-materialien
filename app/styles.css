@@ -1032,3 +1032,14 @@ body.vid-lock { overflow: hidden; }
 .art { display: block; width: 100%; height: auto; max-height: 150px; object-fit: contain; margin: 0 0 12px; background: #E9E9E6; }
 .art.big { max-height: none; margin: 20px 0 0; border: 2px solid var(--ink); box-shadow: var(--shadow); padding: 6px 10px; }
 .topic-win .body > .art { margin-bottom: 8px; }
+
+/* Große Motive: gerahmt wie ein Plakat, in Hell und Dunkel gleich */
+.big-art { display: block; width: 100%; max-width: 340px; height: auto; margin: 22px auto 0; background: #EEEBE7; border: 2px solid var(--ink); box-shadow: var(--shadow); }
+.finish-art { max-width: 240px; margin: 14px auto 6px; }
+
+/* Willkommen: drei kurze Hinweise */
+.intro-steps { list-style: none; counter-reset: st; margin: 26px 0 0; padding: 0; display: grid; gap: 10px; }
+.intro-steps li { counter-increment: st; display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; align-items: start; padding: 10px 12px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); }
+.intro-steps li::before { content: counter(st); grid-row: span 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--ink); background: var(--pink); font: 700 14px/1 var(--mono); }
+.intro-steps b { font: 800 16px/1.2 var(--grot); letter-spacing: -.02em; }
+.intro-steps span { font: 400 13px/1.45 var(--mono); color: var(--ink-2); }
