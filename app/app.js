@@ -1080,7 +1080,6 @@
     const v = h(`<main class="player">
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
-        ${i > 0 && !exam ? `<a class="icon-btn prev-btn" href="#/f/${s.id}/${t.id}/${i - 1}" aria-label="${tr("Vorherige Aufgabe")}">${ICON.back}</a>` : ""}
         <div class="progress"><i style="--f:0"></i></div>
         <span class="icon-btn" style="visibility:hidden" aria-hidden="true"></span>
       </div>
