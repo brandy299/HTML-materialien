@@ -16037,6 +16037,8 @@ window.LERNRAUM_I18N = {
   }
   /* Überschrift passt sich langen Wörtern an (kein seitliches Überlaufen am Handy) */
   const fitDisplay = (txt) => { const L = Math.max(0, ...String(txt).replace(/&shy;|\u00ad/g, "").split(/[\s-]+/).map((w) => w.length)); return L > 9 ? `font-size:min(${(138 / L).toFixed(1)}vw,64px);` : ""; };
+  /* Themen-Überschrift: sehr lange Wörter („Anforderungsprofil“) verkleinern, damit nichts seitlich überläuft */
+  const titleFit = (txt, base) => { const L = Math.max(0, ...String(txt).replace(/&shy;|\u00ad/g, "").split(/[\s-]+/).map((w) => w.length)); return `font-size:min(${base},${(170 / Math.max(L, 1)).toFixed(1)}vw);`; };
   function viewFolder(sid, fid) {
     const s = findSubject(sid), f = s && folderOf(s, fid);
     if (!s || !f) { location.hash = SINGLE ? "#/" : `#/f/${sid}`; return h("<div></div>"); }
@@ -16270,7 +16272,7 @@ window.LERNRAUM_I18N = {
     if (t && t.href) {
       const v = h(`<main class="view no-tabbar">
         <div class="topstrip"><a class="icon-btn" href="${backOf(s, t)}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
-        <h1 class="display" style="margin-top:26px;font-size:clamp(40px,12vw,64px)">${esc(t.title)}</h1>
+        <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(40px,12vw,64px)")}">${esc(t.title)}</h1>
         <div class="qr-box" style="margin-top:22px"></div>
         <div class="dock"><div class="dock-inner"><a class="btn block" href="${matUrl(t.href)}" target="_blank" rel="noopener">Material öffnen ${ICON.ext}</a></div></div>
       </main>`);
@@ -16286,7 +16288,7 @@ window.LERNRAUM_I18N = {
     const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
-      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(44px,13vw,72px)")}">${esc(t.title)}</h1>
       <p class="eyebrow" style="margin-top:14px">${tr("{n} Schritte", { n: t.steps.length })} · ${tr("ca. {m} min", { m: t.minutes || 10 })}${t.group ? " · " + esc(t.group) : ""}</p>
       ${t.video && !SINGLE && location.protocol !== "file:" ? videoCard(s, t, p) : ""}
       <div class="win" style="margin-top:24px">
@@ -16330,7 +16332,7 @@ window.LERNRAUM_I18N = {
     const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Übungsklausur")}</span>${qrButton(s, t)}</div>
-      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(44px,13vw,72px)")}">${esc(t.title)}</h1>
       <div class="stat-row" style="margin-top:22px">
         <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">Minuten</div></div>
         <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">Punkte</div></div>
@@ -16380,7 +16382,7 @@ window.LERNRAUM_I18N = {
     const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Probeklausur")}</span>${qrButton(s, t)}</div>
-      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(44px,13vw,72px)")}">${esc(t.title)}</h1>
       <div class="stat-row" style="margin-top:22px">
         <div class="stat"><div class="v">${t.exam.minutes}</div><div class="k">${tr("Min. empfohlen")}</div></div>
         <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
@@ -18185,7 +18187,7 @@ window.LERNRAUM_I18N = {
     const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || "Training")}</span>${qrButton(s, t)}</div>
-      <h1 class="display" style="margin-top:26px;font-size:clamp(44px,13vw,72px)">${esc(t.title)}</h1>
+      <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(44px,13vw,72px)")}">${esc(t.title)}</h1>
       <p class="lead" style="margin-top:14px">${esc(t.description || "")}</p>
       <div class="stat-row" style="margin-top:22px">
         <div class="stat"><div class="v">${ds.rounds}</div><div class="k">${tr("gelöst")}</div></div>
