@@ -104,3 +104,11 @@ Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wieder
 4. `node app/tools/check-englisch.js` → **0 Fehler** (läuft auch in der CI).
 5. Vietnamesisch ist eine Lernhilfe: bitte von einer Person mit Vietnamesisch-Kenntnissen gegenlesen lassen.
 6. Keine Lehrer-Lösungen online, kein Schuljahr, keine echten Personendaten, keine Harry-Potter-Beispiele (siehe `PRODUCT.md`).
+
+## Arbeitsblätter (PDF)
+
+Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Việt) und **Übungen** (ohne Lösungen, zum Ausfüllen). Tafeln IV–VI werden **aus den Daten erzeugt**: `NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js 4 5 6` → `englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf` / `_Practice.pdf` (Hub-Schriften, Waldgrün/Ocker auf Weiß, keine Lösungen). Die PDFs der Tafeln I–III und der Reihenplan stammen aus dem Quell-Workspace der Lehrkraft und werden nicht neu erzeugt. Nach Änderungen an Vokabeln oder Übungen das Blatt neu erzeugen.
+
+## Tafel-Bilder (Stiche)
+
+Jede Tafel hat optional ein Kupferstich-Bild (`plate: "plates/plate-N.webp"`). Ohne Bild erscheint nur das Ornament. Für die Tafeln IV–VI liegt der gewünschte **Prompt** als `platePrompt` an der Tafel (Stil wie Tafel II; transparent, dunkelgrüne Tinte, Breite 1400, WebP). Bild erzeugen, als `plates/plate-N.webp` (+ `.webp.json` mit Prompt) ablegen und `plate:` an der Tafel eintragen.
