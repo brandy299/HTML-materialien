@@ -57,6 +57,14 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
   - `quiz` — Multiple Choice mit Erklärung, `.opt`
 - **Tear-outs:** PDF-Downloads.
 
+## Gemütlich (12.10.2026)
+
+- **Kicker** „Tea-time lessons“ mit Teetassen über dem Titel.
+- **Tafel-Bild** im doppelten Rahmen (Innenrahmen + feine Außenlinie, Blatt-Ornamente `❦`).
+- **Übungen als Karten** (leichtes Papier, kleiner Versatzschatten); geschaffte Übung zeigt „✓ done“.
+- **Tee-Tally:** unter „Practice“ eine Tasse je Übung, gefüllt, wenn alles richtig war (`localStorage` `fe.done`, nur auf dem Gerät). Bei Vollmarke: „Zeit für eine Tasse Tee!“. Symbol `#cup`.
+- Leitlinie: gemütlich, aber nicht überladen – Schmuck nur an Rahmen und Rückmeldung, die Lesespalte bleibt ruhig.
+
 ## Signatur & Motion
 
 Die **rote Korrektur-Marke**: Beim Prüfen wird im Rand eine handschriftliche Tinte-
@@ -94,7 +102,7 @@ Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wieder
 - **Zuordnen (match):** Auf dem Handy liegen Englisch und Lücke in einer Zeile; die deutsche **Wortliste klebt am unteren Rand**, solange die Übung im Bild ist (kein Hin-und-her-Scrollen).
 - **Alle Übungen bestätigen mit „Mark it“:** Tippen wählt nur aus (änderbar), geprüft wird erst mit dem Knopf; „Again“ setzt zurück. Auch das Quiz.
 - **Sprachen auszeichnen:** Die Seite ist Deutsch (`lang="de"`), englische Inhalte tragen `lang="en"`, Vietnamesisch `lang="vi"` (richtige Vorlesestimme). Das erledigt ein Skript nach dem Rendern; neue Bausteine dort eintragen.
-- Ein Tafel-Bild ist optional: Fehlt `plate`, erscheint nur das Ornament. Die Tafel-Stiche selbst entstehen außerhalb des Repos (siehe „Bild-Assets“); der gewünschte Prompt steht als `platePrompt` an der Tafel.
+- Ein Tafel-Bild ist optional: Fehlt `plate`, erscheint nur das Ornament. Tafeln I–III sind erzeugte WebP-Stiche, **IV–VI sind handgezeichnete SVG-Stiche** (siehe „Bild-Assets“).
 
 ## Neue Tafel (Einheit) anlegen
 
@@ -111,4 +119,4 @@ Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Vi�
 
 ## Tafel-Bilder (Stiche)
 
-Jede Tafel hat optional ein Kupferstich-Bild (`plate: "plates/plate-N.webp"`). Ohne Bild erscheint nur das Ornament. Für die Tafeln IV–VI liegt der gewünschte **Prompt** als `platePrompt` an der Tafel (Stil wie Tafel II; transparent, dunkelgrüne Tinte, Breite 1400, WebP). Bild erzeugen, als `plates/plate-N.webp` (+ `.webp.json` mit Prompt) ablegen und `plate:` an der Tafel eintragen.
+Jede Tafel hat optional ein Kupferstich-Bild (`plate: "plates/plate-N.webp"` oder `.svg`). Tafeln IV–VI sind **SVG** (scharf, wenige KB), erzeugt mit `python3 englisch/plates/src/p4.py` (bzw. p5, p6; gemeinsame Bausteine `gen.py`: Schraffur-Muster, Efeu-Blatt, Bodenlinie). Stil: Waldgrün `#23402B`, Papier-Füllung `#F4EEDD`, Schraffur statt Verlauf, Format 1400×933, transparent. Neue Tafel: eigenes `pN.py` nach diesem Muster anlegen und `plate:` eintragen.

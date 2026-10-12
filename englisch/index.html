@@ -272,11 +272,35 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
   .vi{display:table-cell!important}
   .plate{break-inside:avoid}
 }
+
+/* ---------- Gemütlich: Kicker, gerahmte Tafel, Übungskarten, Tee-Tally ---------- */
+.kicker{display:flex; align-items:center; justify-content:center; gap:.6rem; margin:0 0 .9rem; color:var(--ochre);
+  font-size:.72rem; letter-spacing:.3em; text-transform:uppercase}
+.kicker::before,.kicker::after{content:""; width:2.4rem; height:1px; background:var(--line-2)}
+.kicker svg{width:20px; height:20px; flex:none}
+.emblem{margin:1.9rem 0 2rem; padding:.7rem; background:rgba(255,251,240,.55); border:1.5px solid var(--forest); outline:1px solid var(--line-2); outline-offset:5px; position:relative}
+.emblem img{border:0}
+.emblem::before,.emblem::after{content:"❦"; position:absolute; top:-.78rem; font-size:1.3rem; line-height:1; color:var(--forest-2); background:var(--paper); padding:0 .35rem}
+.emblem::before{left:1.2rem} .emblem::after{right:1.2rem}
+.ex{background:rgba(255,251,240,.5); border:1px solid var(--line-2); border-radius:3px; padding:.2rem 1.1rem 1.1rem; box-shadow:3px 3px 0 rgba(35,64,43,.07)}
+.ex h3{margin-top:1rem}
+.ex.done h3::after{content:"✓ done"; float:right; color:var(--forest); letter-spacing:.1em}
+.tally{display:flex; align-items:center; gap:.45rem; margin:-.2rem 0 .4rem; color:var(--line-2)}
+.tally small{margin-left:.4rem; color:var(--muted); font-size:.82rem}
+.cup{width:30px; height:30px; flex:none; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round}
+.cup .tea,.cup .steam{opacity:0; transition:opacity .4s}
+.cup .tea{fill:var(--forest); stroke:none}
+.cup.on{color:var(--forest)} .cup.on .tea{opacity:.85} .cup.on .steam{opacity:.6}
+.cheer{display:inline-flex; align-items:center; gap:.45rem; color:var(--forest); font-style:normal; font-weight:600}
+.cheer .cup{width:24px; height:24px; color:var(--forest)} .cheer .cup .tea{opacity:.85}
+@media (max-width:480px){.ex{padding:.1rem .8rem .9rem; margin-left:-.3rem; margin-right:-.3rem}.emblem{padding:.45rem}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="cup" viewBox="0 0 24 24"><path d="M4 10h13v3a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6Z"/><path d="M17 11h1.4a2.6 2.6 0 0 1 0 5.2H16.2"/><path d="M3 21.5h16"/><path class="tea" d="M5.2 11.2h10.6v1.6a5 5 0 0 1-5 5h-.6a5 5 0 0 1-5-5Z"/><path class="steam" d="M8 7c-1-1.2 1-2 0-3.5M12 7c-1-1.2 1-2 0-3.5"/></symbol></svg>
 
 <header class="masthead">
+  <p class="kicker"><svg viewBox="0 0 24 24" class="cup" aria-hidden="true"><use href="#cup"/></svg>Tea-time lessons<svg viewBox="0 0 24 24" class="cup" aria-hidden="true"><use href="#cup"/></svg></p>
   <h1>English for Beginners</h1>
   <svg class="sprig" viewBox="0 0 120 26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
     <path d="M4 13h112"/><path d="M20 13c0-5 4-8 8-8M20 13c0 5 4 8 8 8M100 13c0-5-4-8-8-8M100 13c0 5-4 8-8 8"/>
@@ -500,8 +524,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]] },
 
   { id:"plate-4", no:"Plate IV", title:"Food &amp; Drink", de:"Essen &amp; Trinken",
-    caption:"Teapot · bread · apple",
-    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A small teapot, a loaf of bread and an apple side by side, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    plate:"plates/plate-4.svg",    caption:"Teapot · bread · apple",
     lead:"A good meal starts with a small word: <i>want</i>. Say what you eat and drink — and ask nicely when you are hungry.",
     schema:"want",
     schemaTitle:"How it works · want &amp; would like",
@@ -535,8 +558,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U4_Food_and_Drink_Vocab.pdf"],["Übungen","downloads/FE_U4_Food_and_Drink_Practice.pdf"]] },
 
   { id:"plate-5", no:"Plate V", title:"Home &amp; Town", de:"Wohnen &amp; Stadt",
-    caption:"House · key · window",
-    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A small cottage with a chimney, an old door key and a window with a flower pot, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    plate:"plates/plate-5.svg",    caption:"House · key · window",
     lead:"Home is where the kettle is. Say what you can see around you — a room, a street, a shop — with <i>there is</i> and <i>there are</i>.",
     schema:"there",
     schemaTitle:"How it works · there is / there are",
@@ -571,8 +593,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U5_Home_and_Town_Vocab.pdf"],["Übungen","downloads/FE_U5_Home_and_Town_Practice.pdf"]] },
 
   { id:"plate-6", no:"Plate VI", title:"Shopping &amp; Prices", de:"Einkaufen &amp; Preise",
-    caption:"Basket · coins · scale",
-    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A wicker shopping basket with an apple and a loaf, a few old coins and a small brass balance scale, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    plate:"plates/plate-6.svg",    caption:"Basket · coins · scale",
     lead:"A small shop, a fair price: ask <i>how much</i>, count your coins and pay with a smile.",
     schema:"price",
     schemaTitle:"How it works · How much is / are …?",
@@ -688,6 +709,7 @@ function plateHTML(u){
     ${vocabHTML(u.vocab)}
     <p class="vi-note">Tipp: links auf „Tiếng Việt" tippen, um die vietnamesische Spalte einzublenden.</p>
     <h3 class="sec">Practice</h3>
+    <div class="tally" data-tally="${u.id}" role="img" aria-label="Fortschritt: geschaffte Übungen">${u.exercises.map(()=>`<svg class="cup" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>`).join("")}<small></small></div>
     ${u.exercises.map(renderExercise).join("")}
     ${tearHTML(u)}
   </section>`;
@@ -820,10 +842,27 @@ document.addEventListener("click", ev => {
 function setFb(scope, ok, n){
   const fb = scope.querySelector("[data-fb]");
   if(!fb) return;
-  if(ok===n) fb.textContent = `Sehr gut — ${ok}/${n} richtig.`;
+  if(ok===n) fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Sehr gut — ${ok}/${n} richtig. Zeit für eine Tasse Tee!</span>`;
   else if(ok===0) fb.textContent = `${n} Aufgaben · noch keine richtig. Tipp: links ins Diagramm schauen.`;
   else fb.textContent = `${ok}/${n} richtig. Die roten Marken noch einmal ansehen.`;
 }
+
+/* ---------- Tee-Tally: geschaffte Übungen (nur auf diesem Gerät) ---------- */
+const DONE_KEY="fe.done";
+const doneSet=()=>{ try{ return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||"[]")); }catch(e){ return new Set(); } };
+function saveDone(set){ try{ localStorage.setItem(DONE_KEY, JSON.stringify([...set])); }catch(e){} }
+function paintTally(){
+  const done=doneSet();
+  UNITS.forEach(u=>{
+    const box=document.querySelector(`[data-tally="${u.id}"]`); if(!box) return;
+    let c=0;
+    box.querySelectorAll(".cup").forEach((cup,i)=>{ const on=done.has(u.exercises[i].id); cup.classList.toggle("on",on); if(on) c++; });
+    box.querySelector("small").textContent = `${c} / ${u.exercises.length} geschafft`;
+    u.exercises.forEach(e=>{ const el=document.querySelector(`.ex[data-ex="${e.id}"]`); if(el) el.classList.toggle("done",done.has(e.id)); });
+  });
+}
+function markDone(id){ const d=doneSet(); if(!d.has(id)){ d.add(id); saveDone(d); } paintTally(); }
+paintTally();
 function check(id){
   const ex = EX[id]; if(!ex) return;
   const scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
@@ -889,6 +928,7 @@ function check(id){
     });
   }
   if(ex.type!=="spot" && ex.type!=="order") setFb(scope, ok, n);
+  if(n>0 && ok===n) markDone(id);
 }
 function reset(id){
   const ex = EX[id]; if(!ex) return;

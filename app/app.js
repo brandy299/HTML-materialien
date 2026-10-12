@@ -487,6 +487,15 @@
   /* Ein einziger Ordner, der alle Themen des Kurses enthält, wäre nur ein zusätzlicher Klick: dann stehen die Themen direkt im Kurs. */
   const folderShown = (s, id) => { const f = folderOf(s, id); return f && !((s.folders || []).length === 1 && s.topics.every((t) => t.folder === f.id)) ? f : null; };
   const backOf = (s, t) => (SINGLE ? "#/" : t && t.folder && folderShown(s, t.folder) ? `#/f/${s.id}/ordner/${t.folder}` : `#/f/${s.id}`);
+  /* Brotkrumen: Kurs › Ordner – jede Stufe antippbar (Einzeldatei: nur Text) */
+  function crumbs(s, t, last) {
+    const part = (label, href) => href ? `<a href="${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`;
+    const out = [part(s.course || s.fach || s.name, SINGLE ? "" : `#/f/${s.id}`)];
+    const f = t && t.folder && folderShown(s, t.folder) && folderOf(s, t.folder);
+    if (f) out.push(part(f.title, SINGLE ? "" : `#/f/${s.id}/ordner/${f.id}`));
+    if (last) out.push(part(last, ""));
+    return `<nav class="tag-box crumbs" aria-label="${tr("Pfad")}"><span class="sq"></span>${out.join('<i aria-hidden="true">›</i>')}</nav>`;
+  }
   function folderWin(s, f) {
     const tops = s.topics.filter((t) => t.folder === f.id && t.steps.length);
     const done = tops.filter((t) => progress.ratio(s, t) >= 1).length;
@@ -536,7 +545,7 @@
     const back = SINGLE ? "#/" : `#/f/${s.id}`;
     const v = h(`<main class="view">
       <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="${tr("Zurück")}">${ICON.back}</a>
-        <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span></div>
+        ${crumbs(s)}</div>
       <h1 class="display" style="margin-top:24px;${fitDisplay(f.title)}">${esc(f.title).replace(/([a-zäöüß]{4,})(vorbereitung|bedarf|klausur|training|blätter)/gi, "$1&shy;$2")}<small>${esc(f.description || "")}</small></h1>
       <div id="list"></div>
     </main>`);
@@ -762,7 +771,7 @@
     if (t && t.drill) return viewDrillIntro(s, t);
     if (t && t.href) {
       const v = h(`<main class="view no-tabbar">
-        <div class="topstrip"><a class="icon-btn" href="${backOf(s, t)}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(s.fach)} · ${esc(t.group || "Material")}</span></div>
+        <div class="topstrip"><a class="icon-btn" href="${backOf(s, t)}" aria-label="Zurück">${ICON.back}</a>${crumbs(s, t)}</div>
         <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(40px,12vw,64px)")}">${esc(t.title)}</h1>
         <div class="qr-box" style="margin-top:22px"></div>
         <div class="dock"><div class="dock-inner"><a class="btn block" href="${matUrl(t.href)}" target="_blank" rel="noopener">Material öffnen ${ICON.ext}</a></div></div>
@@ -778,7 +787,7 @@
     const started = Object.keys(p.done).length > 0;
     const back = backOf(s, t);
     const v = h(`<main class="view no-tabbar">
-      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a><span class="tag-box"><span class="sq"></span>${esc(t.kicker || s.name)}</span>${qrButton(s, t)}</div>
+      <div class="topstrip"><a class="icon-btn" href="${back}" aria-label="Zurück">${ICON.back}</a>${crumbs(s, t)}${qrButton(s, t)}</div>
       <h1 class="display" style="margin-top:26px;${titleFit(t.title, "clamp(44px,13vw,72px)")}">${esc(t.title)}</h1>
       <p class="eyebrow" style="margin-top:14px">${tr("{n} Schritte", { n: t.steps.length })} · ${tr("ca. {m} min", { m: t.minutes || 10 })}${t.group ? " · " + esc(t.group) : ""}</p>
       ${t.video && !SINGLE && location.protocol !== "file:" ? videoCard(s, t, p) : ""}
@@ -933,6 +942,7 @@
     const v = h(`<main class="player">
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
+        ${i > 0 && !exam ? `<a class="icon-btn prev-btn" href="#/f/${s.id}/${t.id}/${i - 1}" aria-label="${tr("Vorherige Aufgabe")}">${ICON.back}</a>` : ""}
         <div class="progress">${t.steps.map((_, k) => `<i style="--f:${k < i ? 1 : 0}"></i>`).join("")}</div>
         ${exam ? `<span class="timer" id="timer" aria-label="Restzeit">--:--</span>` : `<button class="icon-btn reset-btn" id="resetBtn" aria-label="${tr("Aufgabe zurücksetzen")}" title="${tr("Aufgabe zurücksetzen")}">${ICON.reset}</button><button class="icon-btn help-btn" id="helpBtn" aria-label="${tr("Ich brauche Hilfe")}">${ICON.help}</button>`}
       </div>
@@ -963,6 +973,7 @@
         progress.complete(s.id, t.id, i, score);
         if (exam && progress.count(s, t) >= t.steps.length) { const p = progress.of(s.id, t.id); if (!p.examEnd) { p.examEnd = Date.now(); progress.save(s.id, t.id, p); } }
         buzz(15);
+        if (exam) toast("✓ " + tr("Gespeichert"));
         location.hash = i + 1 < t.steps.length ? `#/f/${s.id}/${t.id}/${i + 1}` : `#/f/${s.id}/${t.id}/fertig`;
       },
       key: `${s.id}/${t.id}/${i}`,
@@ -1061,6 +1072,7 @@
     const v = h(`<main class="player">
       <div class="player-top">
         <a class="icon-btn" href="#/f/${s.id}/${t.id}" aria-label="${tr("Schließen")}">${ICON.close}</a>
+        ${i > 0 && !exam ? `<a class="icon-btn prev-btn" href="#/f/${s.id}/${t.id}/${i - 1}" aria-label="${tr("Vorherige Aufgabe")}">${ICON.back}</a>` : ""}
         <div class="progress"><i style="--f:0"></i></div>
         <span class="icon-btn" style="visibility:hidden" aria-hidden="true"></span>
       </div>
