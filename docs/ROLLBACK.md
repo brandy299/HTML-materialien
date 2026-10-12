@@ -26,7 +26,8 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 2c · Lerncode + Startbildschirm-Hinweis: #49
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
-- Paket 19 · Lange Wörter in Themen-Überschriften (z. B. „Anforderungsprofil“) laufen am Handy nicht mehr über (`titleFit` in `app/app.js`), `app/sw.js` v37: *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen.
+- Paket 20 · Englisch-Hub: Handy-Fixes, Quiz mit „Mark it“, klebende Reiter-Leiste, dynamische Navigation, `app/tools/check-englisch.js` + CI-Schritt, Doku: *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen (nur `englisch/`, `app/tools/check-englisch.js`, Workflow, Docs).
+- Paket 19 · Lange Wörter in Themen-Überschriften (z. B. „Anforderungsprofil“) laufen am Handy nicht mehr über (`titleFit` in `app/app.js`), `app/sw.js` v37: PR #78. Zurücknehmen = PR zurücksetzen.
 - Paket 18 · Bedienung intuitiver B (Issue #70: `spot`/`sort` mit „Prüfen“, Folien-Navigation, Szenen-Knöpfe im Video, Word-Griffe/„Alles markieren“), `app/sw.js` v34: *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen; Kursdaten und Fortschritt sind nicht betroffen.
 - Paket 17 · PBP-Video „Wie viele Azubis pro Jahr?“ (Ausbildungsbedarf, vom Content-Agent, Issue #67; Kurztest vom CD angepasst), `app/sw.js` v33: *(PR-Nummer folgt)*. Abschalten: `video:`/`videoTitle:` im Thema `ausbildungsbedarf` entfernen.
 - Paket 16 · GPU-Videos „Was kostet die Ware wirklich?“ (AB 4) und „Vom Einkauf ins Regal“ (AB 5), `app/sw.js` v32: PR #66. Abschalten: `video:`/`videoTitle:` in den Themen `bezugspreis` und `verkaufspreis` entfernen.

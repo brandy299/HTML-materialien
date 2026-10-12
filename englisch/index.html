@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>English for Beginners · A Field Guide to Everyday English</title>
-<meta name="description" content="Ein gemütlicher britischer Naturführer für Anfänger-Englisch: drei Tafeln zu Tagesablauf, Familie und Freizeit im Simple Present – mit grafischen Erklärungen, vielen Übungen, Vokabeln (English·Deutsch·Tiếng Việt) und Arbeitsblättern.">
+<meta name="description" content="Ein gemütlicher britischer Naturführer für Anfänger-Englisch: Tafeln zu Tagesablauf, Familie und Freizeit im Simple Present – mit grafischen Erklärungen, vielen Übungen, Vokabeln (English·Deutsch·Tiếng Việt) und Arbeitsblättern.">
 <meta name="theme-color" content="#E9DFC6">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2323402B'/%3E%3Cpath d='M9 15h11v2a5.5 5.5 0 0 1-11 0z' fill='%23E9DFC6'/%3E%3Cpath d='M20 16h3a3 3 0 0 1 0 6h-1.5' fill='none' stroke='%238A5A14' stroke-width='1.6'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/bvp-2.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,6 +33,7 @@ body{
 :focus-visible{outline:2px solid var(--forest); outline-offset:3px; border-radius:2px}
 a{color:var(--forest); text-underline-offset:3px; text-decoration-thickness:1px}
 input,button{font:inherit}
+button,.chip,.o-chip,.mt-chip,.opt,.spot-item,.sort-btn{touch-action:manipulation; -webkit-tap-highlight-color:rgba(35,64,43,.12)}
 @-webkit-scrollbar{width:12px} @-webkit-scrollbar-track{background:var(--paper-2)}
 @-webkit-scrollbar-thumb{background:var(--line-2); border:3px solid var(--paper-2); border-radius:8px}
 
@@ -68,7 +69,7 @@ input,button{font:inherit}
 .register li.active .rn{color:var(--red)}
 .register li.active .rt{color:var(--ink); border-color:var(--ink)}
 .vi-switch{border-top:1px solid var(--line); padding-top:1rem}
-.vi-switch button{display:flex; align-items:center; gap:.6rem; background:none; border:none; cursor:pointer; color:var(--muted); padding:0; text-align:left}
+.vi-switch button{display:flex; align-items:center; gap:.6rem; min-height:46px; background:none; border:none; cursor:pointer; color:var(--muted); padding:0; text-align:left}
 .vi-switch .leaf{width:22px; height:22px; color:var(--forest-2)}
 .vi-switch .lbl small{display:block; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase}
 .vi-switch .lbl b{font-weight:600; font-size:.9rem; color:var(--ink)}
@@ -87,6 +88,7 @@ input,button{font:inherit}
 /* Emblem */
 .emblem{margin:1.7rem 0 1.4rem}
 .emblem img{display:block; width:100%; height:auto; border:1.5px solid var(--forest)}
+.emblem-none{height:0; margin:1.2rem 0 .6rem}
 .emblem figcaption{font-family:var(--text); text-transform:uppercase; letter-spacing:.34em; font-size:.68rem; color:var(--muted); text-align:center; margin-top:.75rem}
 
 .lead{font-size:1.12rem}
@@ -139,25 +141,25 @@ body.show-vi td.vi, body.show-vi th.vi{display:table-cell}
 .ex-lead{font-size:.95rem; color:var(--muted); margin:.1rem 0 .9rem}
 .row{position:relative; display:flex; align-items:baseline; gap:.5rem; padding:.7rem 2rem .7rem .2rem; border-bottom:1px solid var(--line)}
 .row-n{font-family:var(--serif); color:var(--ochre); min-width:1.5em}
-.row-body{flex:1; min-width:0}
+.row-body{flex:1; min-width:0; line-height:1.9}
 .mark-slot{position:absolute; right:0; top:50%; transform:translateY(-50%); width:24px; height:24px; display:grid; place-items:center}
 .pen{width:24px; height:24px}
 .pen path{fill:none; stroke:var(--red); stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:44; stroke-dashoffset:44}
 .pen.on path{animation:draw .5s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
-input.gap{font-family:var(--text); font-weight:600; color:var(--forest); background:transparent;
-  border:none; border-bottom:1.5px solid var(--line-2); min-width:8.5ch; padding:0 .25rem; text-align:center; caret-color:var(--red)}
+input.gap{font-family:var(--text); font-weight:600; font-size:1rem; color:var(--forest); background:transparent;
+  border:none; border-bottom:1.5px solid var(--line-2); border-radius:0; width:9.5ch; max-width:100%; min-height:2.2rem; padding:0 .25rem; margin:0 .1rem; text-align:center; caret-color:var(--red); vertical-align:baseline}
 input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba(169,116,31,.08)}
 .fb{margin:.9rem 0 0; font-style:italic; color:var(--muted); min-height:1.3em}
 .fb .pen{display:inline-block; vertical-align:-5px; width:22px; height:22px}
 .btnrow{display:flex; gap:.7rem; flex-wrap:wrap; margin-top:.9rem}
-.btn{border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:.5rem 1.1rem; cursor:pointer; border-radius:2px; font-weight:600; transition:.2s}
+.btn{border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:.5rem 1.2rem; min-height:46px; cursor:pointer; border-radius:2px; font-weight:600; transition:.2s}
 .btn:hover{background:var(--ink); color:var(--paper)}
 .btn.ghost{border-color:var(--line-2); color:var(--muted)}
 .btn.ghost:hover{background:var(--paper-2); color:var(--ink)}
 
 .bank{display:flex; flex-wrap:wrap; gap:.5rem; margin:.2rem 0 1rem}
-.chip,.o-chip{background:var(--paper-2); border:1px solid var(--line-2); border-radius:2px; padding:.3rem .75rem; font-size:.88rem; color:var(--forest); cursor:pointer; transition:.2s}
+.chip,.o-chip{display:inline-flex; align-items:center; min-height:44px; background:var(--paper-2); border:1px solid var(--line-2); border-radius:2px; padding:.3rem .95rem; font-size:.95rem; color:var(--forest); cursor:pointer; transition:.2s}
 .chip:hover,.o-chip:hover{border-color:var(--forest); background:#F3ECD8}
 .o-chip.used{opacity:.3; pointer-events:none}
 
@@ -165,10 +167,10 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .match{display:grid; grid-template-columns:1fr 1fr; gap:0 1.6rem; align-items:start}
 .mt-left{list-style:none; margin:0; padding:0}
 .mt-right{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.5rem}
-.mt-slot{min-width:10rem; border:1px dashed var(--line-2); background:transparent; border-radius:2px; padding:.2rem .55rem; text-align:left; cursor:pointer; color:var(--forest); font-weight:600; font-size:.9rem}
+.mt-slot{min-width:10rem; min-height:44px; border:1px dashed var(--line-2); background:transparent; border-radius:2px; padding:.2rem .65rem; text-align:left; cursor:pointer; color:var(--forest); font-weight:600; font-size:.95rem}
 .mt-slot.sel{border-color:var(--forest); background:rgba(169,116,31,.1)}
 .mt-slot.filled{border-style:solid; border-color:var(--forest)}
-.mt-chip{border:1px solid var(--line-2); background:#fff; border-radius:2px; padding:.35rem .7rem; font-size:.9rem; cursor:pointer; color:var(--ink); width:100%; text-align:left}
+.mt-chip{min-height:44px; border:1px solid var(--line-2); background:#fff; border-radius:2px; padding:.35rem .75rem; font-size:.95rem; cursor:pointer; color:var(--ink); width:100%; text-align:left}
 .mt-chip:hover{border-color:var(--forest)}
 .mt-chip.used{opacity:.35}
 .mt-chip.sel{border-color:var(--ochre); background:rgba(169,116,31,.12)}
@@ -179,19 +181,21 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .o-words{display:flex; flex-wrap:wrap; gap:.4rem}
 
 /* Spot */
-.spot-item{display:block; width:100%; text-align:left; background:transparent; border:none; border-bottom:1px solid var(--line); padding:.7rem 2rem .7rem .2rem; cursor:pointer; color:var(--ink); position:relative}
+.spot-item{display:block; width:100%; min-height:48px; text-align:left; background:transparent; border:none; border-bottom:1px solid var(--line); padding:.8rem 2.2rem .8rem .3rem; cursor:pointer; color:var(--ink); position:relative}
 .spot-item:hover{background:var(--paper-2)}
 .spot-item.sel{background:rgba(169,116,31,.12)}
 .spot-item.pick{font-weight:600}
 
 /* Sort */
 .sort-row .sort-btns{display:inline-flex; gap:.35rem; flex:none}
-.sort-btn{border:1px solid var(--line-2); background:transparent; border-radius:2px; padding:.2rem .6rem; font-size:.82rem; cursor:pointer; color:var(--muted)}
+.sort-btn{min-height:44px; min-width:44px; border:1px solid var(--line-2); background:transparent; border-radius:2px; padding:.2rem .8rem; font-size:.9rem; cursor:pointer; color:var(--muted)}
 .sort-btn.sel{background:var(--forest); border-color:var(--forest); color:var(--paper)}
 
 /* Quiz / Choice */
 .quiz .q{font-family:var(--serif); font-size:1.3rem; margin:1.3rem 0 .2rem}
-.opt{display:block; width:100%; text-align:left; background:transparent; border:none; border-bottom:1px solid var(--line); padding:.6rem .3rem; cursor:pointer; color:var(--ink); position:relative; transition:.2s}
+.opt{display:block; width:100%; min-height:48px; text-align:left; background:transparent; border:none; border-bottom:1px solid var(--line); padding:.8rem .5rem; cursor:pointer; color:var(--ink); position:relative; transition:.2s}
+.opt.sel{background:rgba(169,116,31,.14); font-weight:600}
+.opt[disabled]{cursor:default}
 .opt:hover{background:var(--paper-2)}
 .opt .tick{float:right; color:var(--line-2); display:inline-flex; align-items:center; height:1.4em}
 .opt .tick svg{width:17px; height:17px}
@@ -204,7 +208,7 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 
 /* Tear-outs */
 .tear{margin:2.2rem 0 0; display:flex; gap:.9rem; flex-wrap:wrap}
-.tear a{display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--forest); border:1px solid var(--line-2); border-radius:2px; padding:.55rem .9rem; font-size:.92rem; font-weight:600}
+.tear a{display:inline-flex; align-items:center; gap:.55rem; min-height:46px; text-decoration:none; color:var(--forest); border:1px solid var(--line-2); border-radius:2px; padding:.55rem .9rem; font-size:.95rem; font-weight:600}
 .tear a:hover{background:var(--paper-2)}
 .tear svg{width:17px;height:17px}
 
@@ -212,25 +216,50 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .colophon{max-width:var(--col); margin:3rem auto 0; padding-top:1.2rem; border-top:2px solid var(--ink); color:var(--muted); font-size:.86rem}
 .colophon h3{font-family:var(--serif); color:var(--ink); font-size:1.2rem; margin:.2rem 0 .4rem}
 .colophon .row2{display:flex; gap:.8rem; flex-wrap:wrap; margin-top:.7rem}
-.colophon a{border:1px solid var(--line-2); border-radius:2px; padding:.45rem .8rem; text-decoration:none; font-weight:600; font-size:.88rem}
+.colophon a{display:inline-flex; align-items:center; min-height:46px; border:1px solid var(--line-2); border-radius:2px; padding:.45rem .9rem; text-decoration:none; font-weight:600; font-size:.92rem}
 .colophon a:hover{background:var(--paper-2)}
 .tiny{font-size:.78rem; margin-top:1rem; line-height:1.5}
 
 /* Responsive */
 @media (max-width:820px){
-  .layout{grid-template-columns:1fr; gap:0}
-  .register{position:static; padding-top:1.6rem; border-bottom:1px solid var(--line)}
-  .register ol{display:flex; gap:.4rem; overflow-x:auto; margin:.7rem 0 1rem; padding-bottom:.2rem}
-  .register li{margin:0; flex:none}
-  .register a{flex-direction:column; align-items:flex-start; gap:.1rem; padding:.3rem .6rem; border:1px solid var(--line-2); border-radius:2px}
-  .register .rn{font-size:1.25rem}
-  .register li.active a{border-color:var(--ink)}
-  .vi-switch{border-top:none; margin-bottom:.4rem}
+  .layout{grid-template-columns:minmax(0,1fr); gap:0}
+  .register{min-width:0; position:sticky; top:0; z-index:20; padding:.5rem 0 .2rem; background:var(--paper); border-bottom:1px solid var(--line-2); display:flex; align-items:center; gap:.5rem; margin:0 -1.2rem; padding-left:1.2rem; padding-right:1.2rem}
+  .reg-title{display:none}
+  .register ol{display:flex; flex:1; min-width:0; gap:.4rem; overflow-x:auto; margin:0; padding:.1rem 0 .35rem; scrollbar-width:none; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity}
+  .register ol::-webkit-scrollbar{display:none}
+  .register li{margin:0; flex:none; scroll-snap-align:center}
+  .register a{flex-direction:row; align-items:center; gap:.4rem; min-height:44px; padding:.2rem .7rem; border:1px solid var(--line-2); border-radius:2px; white-space:nowrap}
+  .register .rn{font-size:1.2rem; min-width:0}
+  .register .rt{font-size:.85rem; border-bottom:none; padding:0}
+  .register li.active a{border-color:var(--ink); background:var(--paper-2)}
+  .vi-switch{border-top:none; padding:0; flex:none; border-left:1px solid var(--line-2); padding-left:.5rem}
+  .vi-switch .lbl small{display:none}
+  .vi-switch .lbl b{font-size:.8rem; max-width:7rem; line-height:1.15}
   .column{padding-top:1.4rem}
+  .plate{scroll-margin-top:4.6rem}
 }
 @media (max-width:620px){
+  body{font-size:17px}
   .match{grid-template-columns:1fr; gap:1rem}
+  .match{display:block}
+  .mt-slot{min-width:0; flex:1 1 9rem; margin-top:0}
+  .match .row{align-items:center; padding-right:2.4rem}
+  .match .row .row-body{flex:1 1 38%}
+  /* Wortliste klebt am unteren Rand, solange die Übung im Bild ist – kein Hin-und-her-Scrollen */
+  .mt-right{position:sticky; bottom:0; z-index:10; display:grid; grid-template-columns:1fr 1fr; gap:.4rem; padding:.55rem 0 .6rem; margin-top:.4rem; background:var(--paper); border-top:1px solid var(--line-2); box-shadow:0 -10px 14px -10px rgba(35,32,26,.18)}
+  .mt-chip{font-size:.9rem; padding:.3rem .55rem}
   .schema-row .sx{margin-left:0; width:100%}
+  .sort-row{flex-wrap:wrap}
+  .sort-row .row-body{flex:1 0 100%}
+  .sort-row .sort-btns{margin-top:.3rem}
+  .lead .dc{font-size:3rem}
+  .spec td,.spec th{padding-right:.4rem}
+  .tear a,.colophon .row2 a{flex:1 1 100%; justify-content:flex-start}
+}
+@media (max-width:360px){
+  .register .rt{display:none}
+  .vi-switch .lbl b{max-width:5.5rem}
+  .btn{padding:.5rem .9rem}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -253,18 +282,14 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
     <path d="M4 13h112"/><path d="M20 13c0-5 4-8 8-8M20 13c0 5 4 8 8 8M100 13c0-5-4-8-8-8M100 13c0 5-4 8-8 8"/>
     <circle cx="60" cy="13" r="3.2"/><path d="M60 6.5v-2M60 21.5v-2M66.5 13h2M51.5 13h2"/>
   </svg>
-  <p class="standfirst">A field guide to everyday English — three plates on the simple present, with diagrams and practice for the Förderkurs</p>
+  <p class="standfirst">A field guide to everyday English — plates on the simple present and daily life, with diagrams and practice for the Förderkurs</p>
   <div class="double-rule"></div>
 </header>
 
 <div class="layout">
-  <nav class="register" aria-label="Die drei Tafeln">
+  <nav class="register" aria-label="Die Tafeln">
     <p class="reg-title">The Plates</p>
-    <ol>
-      <li><a href="#plate-1" data-plate="1"><span class="rn">I</span><span class="rt">My Day</span></a></li>
-      <li><a href="#plate-2" data-plate="2"><span class="rn">II</span><span class="rt">People &amp; Family</span></a></li>
-      <li><a href="#plate-3" data-plate="3"><span class="rn">III</span><span class="rt">Free Time &amp; Likes</span></a></li>
-    </ol>
+    <ol id="regList"></ol>
     <div class="vi-switch">
       <button id="viBtn" type="button" aria-pressed="false">
         <svg class="leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -495,8 +520,9 @@ function renderExercise(ex){
   if(ex.type === "quiz"){
     return `<div class="ex quiz" data-ex="${ex.id}">${exHead(ex)}
       ${ex.items.map((q,qi)=>`<p class="q">${esc(q.q)}</p>
-        ${q.o.map((o,oi)=>`<button class="opt" type="button" data-q="${qi}" data-o="${oi}" data-c="${q.c}">${esc(o)}<span class="tick"></span></button>`).join("")}
-        <p class="explain" data-x="${qi}">${esc(q.e)}</p>`).join("")}</div>`;
+        ${q.o.map((o,oi)=>`<button class="opt" type="button" data-q="${qi}" data-o="${oi}" data-c="${q.c}" aria-pressed="false">${esc(o)}<span class="tick"></span></button>`).join("")}
+        <p class="explain" data-x="${qi}">${esc(q.e)}</p>`).join("")}
+      ${btns}</div>`;
   }
   return "";
 }
@@ -508,7 +534,7 @@ function plateHTML(u){
   return `<section class="plate" id="${u.id}" aria-labelledby="${u.id}-t">
     <div class="plate-head"><span class="plate-no">${u.no}</span><h2 id="${u.id}-t">${u.title}</h2><span class="plate-de">${u.de}</span></div>
     <div class="plate-open"></div>
-    <figure class="emblem"><img src="${u.plate}" alt="Gestochene Tafel-Illustration: ${esc(u.caption)}" width="1400" height="933" loading="lazy" decoding="async"><figcaption>${u.caption}</figcaption></figure>
+    ${u.plate ? `<figure class="emblem"><img src="${u.plate}" alt="Gestochene Tafel-Illustration: ${esc(u.caption)}" width="1400" height="933" loading="lazy" decoding="async"><figcaption>${u.caption}</figcaption></figure>` : `<div class="emblem-none" aria-hidden="true"></div>`}
     <p class="lead"><span class="dc">${u.lead.charAt(0)}</span>${u.lead.slice(1)}</p>
     ${schemaHTML(u)}
     ${vocabHTML(u.vocab)}
@@ -518,16 +544,23 @@ function plateHTML(u){
     ${tearHTML(u)}
   </section>`;
 }
+const ROMAN = ["I","II","III","IV","V","VI","VII","VIII","IX","X"];
+document.getElementById("regList").innerHTML = UNITS.map((u,i)=>`<li><a href="#${u.id}" data-plate="${u.id.replace("plate-","")}"><span class="rn">${ROMAN[i]}</span><span class="rt">${u.title}</span></a></li>`).join("");
 document.getElementById("column").innerHTML = UNITS.map(plateHTML).join("") + `
   <footer class="colophon">
     <h3>A field guide to everyday English</h3>
-    <p>Drei Tafeln für den Anfang: <i>My Day</i>, <i>People &amp; Family</i>, <i>Free Time &amp; Likes</i>.
+    <p>${UNITS.length} Tafeln für den Anfang: ${UNITS.map(u=>`<i>${u.title}</i>`).join(", ")}.
        Diagramm, Vokabeln und fünf Übungen pro Tafel — projiziert im Unterricht oder am Handy wiederholt.</p>
     <div class="row2"><a href="downloads/FE_Everyday_English_Overview.pdf" target="_blank" rel="noopener">Reihenplan für die Lehrkraft (PDF)</a></div>
     <p class="tiny">HBBK Oberhausen · Förderkurs Englisch · Everyday English. Vietnamesisch ist eine Lernhilfe
        (Standardsprache). Keine Lehrer-Lösungen online · kein Schuljahr · keine echten Personendaten.
        Schriften: IM Fell English &amp; Be Vietnam Pro (selbst gehostet, OFL).</p>
   </footer>`;
+
+/* ---------- Sprache auszeichnen: die Seite ist Deutsch, die Lerninhalte Englisch (richtige Vorlesestimme) ---------- */
+document.querySelectorAll(".masthead h1, .plate-head h2, .spec td.en, .mt-en, .cloze-row .row-body, input.gap, .chip, .o-chip, .o-target, .spot-item .row-body, .sort-row .row-body, .opt, .schema .sx, .l-l, .l-r, .chip-label, .chip-verb, .spell").forEach(el=>el.setAttribute("lang","en"));
+document.querySelectorAll(".quiz .q").forEach(el=>{ if(el.textContent.includes("___")) el.setAttribute("lang","en"); });
+document.querySelectorAll(".spec td.vi, .spec th.vi").forEach(el=>el.setAttribute("lang","vi"));
 
 /* ---------- Hilfe-Sprache ---------- */
 const viBtn = document.getElementById("viBtn");
@@ -541,7 +574,8 @@ if("IntersectionObserver" in window){
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{ if(e.isIntersecting){
       const id = e.target.id;
-      links.forEach(a=>a.parentElement.classList.toggle("active", a.dataset.plate===id.replace("plate-","")));
+      links.forEach(a=>{ const on = a.dataset.plate===id.replace("plate-",""); a.parentElement.classList.toggle("active", on);
+        if(on){ const ol=a.closest("ol"); if(ol && ol.scrollWidth>ol.clientWidth+2){ ol.scrollTo({left:a.offsetLeft-ol.clientWidth/2+a.offsetWidth/2, behavior:"smooth"}); } } });
     }});
   }, {rootMargin:"-30% 0px -60% 0px"});
   document.querySelectorAll(".plate").forEach(s=>io.observe(s));
@@ -619,16 +653,12 @@ document.addEventListener("click", ev => {
     row.dataset.cat = sbtn.dataset.c;
     return;
   }
-  /* Quiz */
+  /* Quiz: Tippen wählt nur aus (änderbar), geprüft wird mit „Mark it“ */
   const opt = t.closest(".opt");
   if(opt){
+    if(opt.disabled) return;
     const scope = opt.closest(".ex"), qi = opt.dataset.q;
-    scope.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(b=>{
-      b.disabled = true;
-      if(b.dataset.c===b.dataset.o){ b.classList.add("correct"); b.querySelector(".tick").innerHTML = TICK; }
-    });
-    if(opt.dataset.c!==opt.dataset.o){ opt.classList.add("wrong"); opt.querySelector(".tick").innerHTML = XMARK; }
-    const expl = scope.querySelector(`.explain[data-x="${qi}"]`); if(expl) expl.classList.add("show");
+    scope.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(b=>{ const on = b===opt; b.classList.toggle("sel", on); b.setAttribute("aria-pressed", on?"true":"false"); });
     return;
   }
   /* Check */
@@ -695,6 +725,20 @@ function check(id){
       if(good) ok++;
       mark(row.querySelector(".mark-slot"), good);
     });
+  } else if(ex.type==="quiz"){
+    ex.items.forEach((q,qi)=>{
+      n++;
+      const opts = [...scope.querySelectorAll(`.opt[data-q="${qi}"]`)];
+      const picked = opts.find(b=>b.classList.contains("sel"));
+      const good = !!picked && picked.dataset.o===picked.dataset.c;
+      if(good) ok++;
+      opts.forEach(b=>{
+        b.disabled = true; b.classList.remove("sel","correct","wrong"); b.querySelector(".tick").innerHTML = "";
+        if(b.dataset.c===b.dataset.o){ b.classList.add("correct"); b.querySelector(".tick").innerHTML = TICK; }
+        else if(b===picked){ b.classList.add("wrong"); b.querySelector(".tick").innerHTML = XMARK; }
+      });
+      const expl = scope.querySelector(`.explain[data-x="${qi}"]`); if(expl) expl.classList.add("show");
+    });
   }
   if(ex.type!=="spot" && ex.type!=="order") setFb(scope, ok, n);
 }
@@ -708,6 +752,7 @@ function reset(id){
   else if(ex.type==="order"){ const tgt=scope.querySelector(".o-target"); tgt.innerHTML=""; scope.querySelectorAll(".o-words .o-chip").forEach(c=>c.classList.remove("used")); tgt.querySelectorAll(".mark-slot").forEach(s=>s.remove()); }
   else if(ex.type==="spot"){ scope.querySelectorAll(".spot-item").forEach(s=>{s.classList.remove("sel","pick");}); }
   else if(ex.type==="sort"){ scope.querySelectorAll(".sort-btn").forEach(b=>b.classList.remove("sel")); scope.querySelectorAll(".sort-row").forEach(r=>r.dataset.cat=""); }
+  else if(ex.type==="quiz"){ scope.querySelectorAll(".opt").forEach(b=>{ b.disabled=false; b.classList.remove("sel","correct","wrong"); b.setAttribute("aria-pressed","false"); b.querySelector(".tick").innerHTML=""; }); scope.querySelectorAll(".explain").forEach(e=>e.classList.remove("show")); }
 }
 document.addEventListener("keydown", ev=>{
   if(ev.key==="Enter" && ev.target.matches && ev.target.matches("input.gap")){
