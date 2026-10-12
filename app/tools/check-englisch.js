@@ -29,7 +29,7 @@ UNITS.forEach((u, ui) => {
   else if (u.id !== `plate-${ui + 1}`) err(W, `id passt nicht zur Reihenfolge (erwartet plate-${ui + 1})`);
   if (unitIds.has(u.id)) err(W, "id doppelt"); unitIds.add(u.id);
   ["no", "title", "de", "lead", "caption"].forEach((k) => { if (!str(u[k])) err(W, `${k} fehlt`); });
-  if (u.plate) { if (!exists(u.plate)) err(W, `Bild fehlt: ${u.plate}`); } else warn(W, "kein Tafel-Bild (plate) – es erscheint nur das Ornament; Prompt: platePrompt");
+  if (u.plate) { if (!exists(u.plate)) err(W, `Bild fehlt: ${u.plate}`); } else warn(W, "kein Tafel-Bild (plate) – es erscheint nur das Ornament;");
   if (!schemaKeys.includes(u.schema)) err(W, `schema „${u.schema}“ gibt es nicht in SCHEMA (${schemaKeys.join(", ")})`);
   if (!str(u.schemaTitle)) err(W, "schemaTitle fehlt");
   if (!Array.isArray(u.explain) || u.explain.length !== 2 || !u.explain.every(str)) err(W, "explain braucht genau 2 Texte");
