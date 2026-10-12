@@ -57,6 +57,14 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
   - `quiz` — Multiple Choice mit Erklärung, `.opt`
 - **Tear-outs:** PDF-Downloads.
 
+## Gemütlich (12.10.2026)
+
+- **Kicker** „Tea-time lessons“ mit Teetassen über dem Titel.
+- **Tafel-Bild** im doppelten Rahmen (Innenrahmen + feine Außenlinie, Blatt-Ornamente `❦`).
+- **Übungen als Karten** (leichtes Papier, kleiner Versatzschatten); geschaffte Übung zeigt „✓ done“.
+- **Tee-Tally:** unter „Practice“ eine Tasse je Übung, gefüllt, wenn alles richtig war (`localStorage` `fe.done`, nur auf dem Gerät). Bei Vollmarke: „Zeit für eine Tasse Tee!“. Symbol `#cup`.
+- Leitlinie: gemütlich, aber nicht überladen – Schmuck nur an Rahmen und Rückmeldung, die Lesespalte bleibt ruhig.
+
 ## Signatur & Motion
 
 Die **rote Korrektur-Marke**: Beim Prüfen wird im Rand eine handschriftliche Tinte-
