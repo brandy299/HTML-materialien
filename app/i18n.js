@@ -91,6 +91,9 @@ window.LERNRAUM_I18N = {
     "Dranbleiben. Einmal wiederholen hilft.": "Keep going. One more round will help.",
     "erledigt": "done", "{a} von {b} Punkten": "{a} of {b} points", "abgeschlossen": "completed", "Zur Übersicht": "Back to overview",
 
+    "{c} von {n} richtig": "{c} of {n} correct", "Aufgaben geübt": "tasks practised", "{c} von {n} Antworten richtig. Folien und Videos zählen hier nicht mit.": "{c} of {n} answers correct. Slides and videos do not count here.", "Sobald du Aufgaben löst, siehst du hier deine Treffer. Folien und Videos zählen hier nicht mit.": "Once you solve tasks, your hits show up here. Slides and videos do not count here.", "{n} Runden · Stufe {l} · beste Serie {b}": "{n} rounds · level {l} · best streak {b}", 
+    "Training": "Training",
+    "Alles durchgesehen. Als Nächstes kommt das Üben.": "All reviewed. Practice comes next.",
     "Profil": "Profile", "Fortschritt": "Progress", "Themen fertig": "topics done", "Schritte": "steps", "Treffer": "correct",
     "Sprache": "Language", "Einstellungen": "Settings", "Name ändern": "Change name", "alle": "all", "Fortschritt zurücksetzen": "Reset progress",
     "Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "The language is used for buttons, instructions and feedback. The exercises stay in German – just like in your exam.",
@@ -208,6 +211,9 @@ window.LERNRAUM_I18N = {
     "Dranbleiben. Einmal wiederholen hilft.": "استمر. التكرار مرة واحدة يساعد.",
     "erledigt": "تم", "{a} von {b} Punkten": "{a} من {b} نقاط", "abgeschlossen": "مكتمل", "Zur Übersicht": "العودة إلى النظرة العامة",
 
+    "{c} von {n} richtig": "{c} من {n} صحيحة", "Aufgaben geübt": "مهام تم التدرّب عليها", "{c} von {n} Antworten richtig. Folien und Videos zählen hier nicht mit.": "{c} من {n} إجابات صحيحة. الشرائح والفيديوهات لا تُحتسب هنا.", "Sobald du Aufgaben löst, siehst du hier deine Treffer. Folien und Videos zählen hier nicht mit.": "عندما تحلّ المهام ستظهر نتائجك هنا. الشرائح والفيديوهات لا تُحتسب هنا.", "{n} Runden · Stufe {l} · beste Serie {b}": "{n} جولات · المستوى {l} · أفضل سلسلة {b}", 
+    "Training": "تدريب",
+    "Alles durchgesehen. Als Nächstes kommt das Üben.": "تمت المراجعة. التالي: التدريب.",
     "Profil": "الملف الشخصي", "Fortschritt": "التقدّم", "Themen fertig": "مواضيع منجزة", "Schritte": "خطوات", "Treffer": "صحيح",
     "Sprache": "اللغة", "Einstellungen": "الإعدادات", "Name ändern": "تغيير الاسم", "alle": "الكل", "Fortschritt zurücksetzen": "حذف التقدّم",
     "Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.": "اللغة تُستخدم للأزرار والتعليمات والملاحظات. تبقى التمارين باللغة الألمانية – كما في امتحانك.",

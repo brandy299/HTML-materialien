@@ -245,6 +245,9 @@
       default: return tr("öffnet sich neu");
     }
   }
+  /* Ehrliche Trefferquote: Prozent erst ab 5 bewerteten Antworten, davor „c von n“ (1 von 1 ist keine 100 %) */
+  const hitText = (c, n) => (n >= 5 ? tr("{p} % richtig", { p: Math.round((c / n) * 100) }) : tr("{c} von {n} richtig", { c, n }));
+  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word"];
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
 
   function toast(msg) {
@@ -476,7 +479,7 @@
       <div class="body">
         <span class="title">${esc(t.title)}</span>
         ${blocks(s, t)}
-        <span class="meta">${tr("{a}/{b} Schritte", { a: n, b: total })}${sc.n ? " · " + tr("{p} % richtig", { p: Math.round((sc.c / sc.n) * 100) }) : ""}</span>
+        <span class="meta">${tr("{a}/{b} Schritte", { a: n, b: total })}${sc.n ? " · " + hitText(sc.c, sc.n) : ""}</span>
       </div>
     </a>`);
   }
@@ -3078,8 +3081,8 @@
     if (t.exam) return viewExamResult(s, t);
     const p = progress.of(s.id, t.id);
     const sc = progress.score(s, t);
-    const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : 100;
-    const msg = tr(pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.");
+    const pct = sc.n ? Math.round((sc.c / sc.n) * 100) : null;   // ohne bewertete Aufgaben keine Prozentzahl
+    const msg = pct === null ? tr("Alles durchgesehen. Als Nächstes kommt das Üben.") : tr(pct >= 90 ? "Stark. Das sitzt." : pct >= 70 ? "Richtig gut." : pct >= 50 ? "Solide – schau dir die Fehler nochmal an." : "Dranbleiben. Einmal wiederholen hilft.");
     const idx = s.topics.indexOf(t);
     const nextTopic = s.topics.slice(idx + 1).concat(s.topics.slice(0, idx)).find((x) => x.steps.length && progress.ratio(s, x) < 1);
     const log = t.steps.map((st, k) => {
@@ -3092,7 +3095,7 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · ${tr("erledigt")}</span></div>
-        <p class="finish-num">${pct}<small>%</small></p>
+        <p class="finish-num">${pct === null ? "✓" : `${pct}<small>%</small>`}</p>
         <p class="h2" style="margin-top:16px">${msg}</p>
         <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? tr("{a} von {b} Punkten", { a: sc.c, b: sc.n }) : tr("abgeschlossen")}</p>
       </section>
@@ -3307,9 +3310,12 @@
   function viewProfile() {
     const name = firstName();
     let topicsDone = 0, stepsDone = 0, c = 0, n = 0;
+    const drills = [];
     allSubjects().forEach((s) => s.topics.forEach((t) => {
+      if (t.drill) { const ds = drillStats(t); if (ds.rounds) drills.push({ s, t, ds }); }
       if (!t.steps.length) return;
-      stepsDone += progress.count(s, t);
+      const dn = progress.of(s.id, t.id).done;
+      stepsDone += t.steps.filter((st, k) => GRADED.includes(st.type) && dn[k]).length;
       if (progress.ratio(s, t) >= 1) topicsDone++;
       const sc = progress.score(s, t); c += sc.c; n += sc.n;
     }));
@@ -3320,9 +3326,11 @@
       <p class="section-head">${tr("Fortschritt")}</p>
       <div class="stat-row">
         <div class="stat"><div class="v">${topicsDone}</div><div class="k">${tr("Themen fertig")}</div></div>
-        <div class="stat"><div class="v">${stepsDone}</div><div class="k">${tr("Schritte")}</div></div>
-        <div class="stat"><div class="v">${n ? Math.round((c / n) * 100) + "%" : "–"}</div><div class="k">${tr("Treffer")}</div></div>
+        <div class="stat"><div class="v">${stepsDone}</div><div class="k">${tr("Aufgaben geübt")}</div></div>
+        <div class="stat"><div class="v">${n >= 5 ? Math.round((c / n) * 100) + "%" : n ? c + "/" + n : "–"}</div><div class="k">${tr("Treffer")}</div></div>
       </div>
+      <p class="hint" style="margin-top:8px">${n ? tr("{c} von {n} Antworten richtig. Folien und Videos zählen hier nicht mit.", { c, n }) : tr("Sobald du Aufgaben löst, siehst du hier deine Treffer. Folien und Videos zählen hier nicht mit.")}</p>
+      ${drills.length ? `<p class="section-head">${tr("Training")}</p><div class="list">${drills.map(({ s, t, ds }) => `<a class="list-row" href="#/f/${s.id}/${t.id}"><span>${esc(t.title)}<small style="display:block;font:400 12px/1.4 var(--mono);color:var(--ink-2)">${tr("{n} Runden · Stufe {l} · beste Serie {b}", { n: ds.rounds, l: ds.level, b: ds.best })}</small></span><span class="v">→</span></a>`).join("")}</div>` : ""}
       <p class="section-head">${tr("Sprache")}</p>
       ${langSwitch("big")}
       <p class="hint" style="margin-top:10px">${tr("Die Sprache gilt für Knöpfe, Anleitungen und Rückmeldungen. Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.")}</p>
