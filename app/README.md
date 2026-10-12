@@ -161,7 +161,7 @@ In `{…}` stehen die Bausteine, getrennt durch `|`. Der richtige Baustein begin
 folders: [{ id: "klausur", group: "Klausurvorbereitung", kicker: "Ordner · Klausur", title: "Klausurvorbereitung", description: "…" }],
 topics: [ { id: "mini-klausur-1", folder: "klausur", group: "Mini-Klausuren", … } ]   // group = Zwischenüberschrift im Ordner
 ```
-Die Karte steht an der Stelle des ersten Themas im Ordner. Themen-IDs und gespeicherter Fortschritt bleiben unverändert. Ordner-Texte (`title`, `group`, `kicker`, `description`) sind übersetzbar.
+Die Karte steht an der Stelle des ersten Themas im Ordner. Enthält ein einziger Ordner **alle** Themen des Kurses, zeigt die App die Themen direkt (keine Extra-Karte). Themen-IDs und gespeicherter Fortschritt bleiben unverändert. Ordner-Texte (`title`, `group`, `kicker`, `description`) sind übersetzbar.
 
 **Finde den Fehler** – ein Briefausschnitt, eine Zeile ist falsch; Tippen genügt, wird automatisch geprüft (handytauglich)
 ```js
