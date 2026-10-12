@@ -1,0 +1,9 @@
+{
+  "model": "gpt-image-1-mini",
+  "quality": "low",
+  "size": "1536x1024 → WebP 1200 px",
+  "createdAt": "2026-10-12",
+  "style": "Tusche + Aquarell, Stillleben ohne Menschen (Stil-Idee: Repo watercolor-sketch-style, MIT)",
+  "description": "Fensterbank mit Blumentopf, Schlüssel und kleinem Haus (Tafel V)",
+  "script": "englisch/plates/src/make-plate.py"
+}

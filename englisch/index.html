@@ -432,7 +432,7 @@ const SCHEMA = {
 /* ---------- Inhalte ---------- */
 const UNITS = [
   { id:"plate-1", no:"Plate I", title:"My Day", de:"Mein Tag", plate:"plates/plate-1.webp",
-    caption:"Alarm clock · Tea cup · Sprig",
+    caption:"Alarm clock · Tea cup · Diary",
     lead:"Small moments make a big day. A cup of tea, a clock on the wall, a bird at the window — everyday life in England, told in simple English.",
     schema:"sp",
     schemaTitle:"How it works · das Simple Present",
@@ -468,7 +468,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U1_My_Day_Vocab.pdf"],["Übungen","downloads/FE_U1_My_Day_Practice.pdf"]] },
 
   { id:"plate-2", no:"Plate II", title:"People &amp; Family", de:"Menschen &amp; Familie", plate:"plates/plate-2.webp",
-    caption:"Two cups · one heart · sprig",
+    caption:"Two cups · scarf · little heart",
     lead:"Who sits around your table? Name the people you love, and say what they are like — with <i>am, is, are</i> and <i>have, has</i>.",
     schema:"be",
     schemaTitle:"How it works · sein und haben",
@@ -508,7 +508,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U2_People_and_Family_Vocab.pdf"],["Übungen","downloads/FE_U2_People_and_Family_Practice.pdf"]] },
 
   { id:"plate-3", no:"Plate III", title:"Free Time &amp; Likes", de:"Freizeit &amp; Vorlieben", plate:"plates/plate-3.webp",
-    caption:"Open book · butterfly · tea cup",
+    caption:"Book · headphones · football",
     lead:"Say what you enjoy — and what you don’t. Books, music, football, a good cup of tea: <i>like</i> opens the sentence.",
     schema:"like",
     schemaTitle:"How it works · mögen",
@@ -544,7 +544,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]] },
 
   { id:"plate-4", no:"Plate IV", title:"Food &amp; Drink", de:"Essen &amp; Trinken",
-    plate:"plates/plate-4.svg",    caption:"Teapot · bread · apple",
+    plate:"plates/plate-4.webp",    caption:"Teapot · bread · apple · jam",
     lead:"A good meal starts with a small word: <i>want</i>. Say what you eat and drink — and ask nicely when you are hungry.",
     schema:"want",
     schemaTitle:"How it works · want &amp; would like",
@@ -578,7 +578,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U4_Food_and_Drink_Vocab.pdf"],["Übungen","downloads/FE_U4_Food_and_Drink_Practice.pdf"]] },
 
   { id:"plate-5", no:"Plate V", title:"Home &amp; Town", de:"Wohnen &amp; Stadt",
-    plate:"plates/plate-5.svg",    caption:"House · key · window",
+    plate:"plates/plate-5.webp",    caption:"Flowerpot · key · little house",
     lead:"Home is where the kettle is. Say what you can see around you — a room, a street, a shop — with <i>there is</i> and <i>there are</i>.",
     schema:"there",
     schemaTitle:"How it works · there is / there are",
@@ -613,7 +613,7 @@ const UNITS = [
     pdfs:[["Vokabeln","downloads/FE_U5_Home_and_Town_Vocab.pdf"],["Übungen","downloads/FE_U5_Home_and_Town_Practice.pdf"]] },
 
   { id:"plate-6", no:"Plate VI", title:"Shopping &amp; Prices", de:"Einkaufen &amp; Preise",
-    plate:"plates/plate-6.svg",    caption:"Basket · coins · scale",
+    plate:"plates/plate-6.webp",    caption:"Basket · baguette · scales",
     lead:"A small shop, a fair price: ask <i>how much</i>, count your coins and pay with a smile.",
     schema:"price",
     schemaTitle:"How it works · How much is / are …?",
@@ -723,7 +723,7 @@ function plateHTML(u){
   return `<section class="plate" id="${u.id}" aria-labelledby="${u.id}-t">
     <div class="plate-head"><span class="plate-no">${u.no}</span><h2 id="${u.id}-t">${u.title}</h2><span class="plate-de">${u.de}</span><button class="qr-btn" type="button" data-qr="${u.id}" data-t="${esc(u.title.replace(/&amp;/g,"&"))}" aria-label="QR-Code für diese Tafel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/></svg>QR</button></div>
     <div class="plate-open"></div>
-    ${u.plate ? `<figure class="emblem"><img src="${u.plate}" alt="Gestochene Tafel-Illustration: ${esc(u.caption)}" width="1400" height="933" loading="lazy" decoding="async"><figcaption>${u.caption}</figcaption></figure>` : `<div class="emblem-none" aria-hidden="true"></div>`}
+    ${u.plate ? `<figure class="emblem"><img src="${u.plate}" alt="Aquarell-Illustration: ${esc(u.caption)}" width="1200" height="800" loading="lazy" decoding="async"><figcaption>${u.caption}</figcaption></figure>` : `<div class="emblem-none" aria-hidden="true"></div>`}
     <p class="lead"><span class="dc">${u.lead.charAt(0)}</span>${u.lead.slice(1)}</p>
     ${schemaHTML(u)}
     ${vocabHTML(u.vocab)}
