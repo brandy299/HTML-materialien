@@ -81,3 +81,26 @@ Die drei Tafel-Stiche sind mit `gpt-image-2.5` erzeugt (Vorgabe: freigestellter
 antiquarischer Kupferstich, dunkelgrüne Tinte, transparent), dann zu WebP
 (`cwebp -alpha_q 100`, Breite 1400) konvertiert. Der Erzeugungsprompt je Datei
 liegt als `plates/plate-N.webp.json` bei (Provenance).
+
+
+## Handy-Regeln (Pflicht)
+
+Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wiederholt. Darum gilt:
+
+- **Tippflächen ≥ 44 px** hoch (Chips, Zuordnungs-Knöpfe, Antworten, Links, Knöpfe); `touch-action: manipulation`.
+- **Kein seitliches Scrollen** von 320 px Breite an (außer der Reiter-Leiste, die innen scrollt).
+- **Register wird zur klebenden Leiste** (`position: sticky`, oben): römische Nummer + Titel, daneben die Vietnamesisch-Hilfe. Der aktive Reiter scrollt von selbst ins Bild. Unter 360 px zeigen die Reiter nur die Nummern.
+- **Lücken bleiben im Satz** (`input.gap` hat feste Breite ≈ 9,5 Zeichen). Der Satz darf nie in drei Zeilen zerfallen.
+- **Zuordnen (match):** Auf dem Handy liegen Englisch und Lücke in einer Zeile; die deutsche **Wortliste klebt am unteren Rand**, solange die Übung im Bild ist (kein Hin-und-her-Scrollen).
+- **Alle Übungen bestätigen mit „Mark it“:** Tippen wählt nur aus (änderbar), geprüft wird erst mit dem Knopf; „Again“ setzt zurück. Auch das Quiz.
+- **Sprachen auszeichnen:** Die Seite ist Deutsch (`lang="de"`), englische Inhalte tragen `lang="en"`, Vietnamesisch `lang="vi"` (richtige Vorlesestimme). Das erledigt ein Skript nach dem Rendern; neue Bausteine dort eintragen.
+- Ein Tafel-Bild ist optional: Fehlt `plate`, erscheint nur das Ornament. Die Tafel-Stiche selbst entstehen außerhalb des Repos (siehe „Bild-Assets“); der gewünschte Prompt steht als `platePrompt` an der Tafel.
+
+## Neue Tafel (Einheit) anlegen
+
+1. In `englisch/index.html` ein Objekt an `UNITS` anhängen: `id: "plate-N"` (fortlaufend), `no`, `title`, `de`, `lead`, `caption`, `schema` (Schlüssel in `SCHEMA`), `schemaTitle`, `explain` (2 Texte), `vocab` (mindestens 8 × [English, Deutsch, Tiếng Việt]), `exercises` (mindestens 5, Ids `pN-a` … , Buchstaben A, B, C …, am Ende ein `quiz`).
+2. Übungstypen: `match` · `cloze` (mit `bank`) · `order` · `spot` · `sort` · `quiz` – Aufbau wie in den vorhandenen Tafeln.
+3. Neues Schema (grafische Erklärung) in `SCHEMA` ergänzen – nur HTML/CSS aus den Bausteinen `.schema-row`, `.chip-label`, `.chip-verb`, `.leader`.
+4. `node app/tools/check-englisch.js` → **0 Fehler** (läuft auch in der CI).
+5. Vietnamesisch ist eine Lernhilfe: bitte von einer Person mit Vietnamesisch-Kenntnissen gegenlesen lassen.
+6. Keine Lehrer-Lösungen online, kein Schuljahr, keine echten Personendaten, keine Harry-Potter-Beispiele (siehe `PRODUCT.md`).
