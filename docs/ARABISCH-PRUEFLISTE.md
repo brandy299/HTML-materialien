@@ -6,7 +6,7 @@ Es genügt, diese Begriffsliste durchzugehen (ca. 10 Minuten): pro Zeile **OK** 
 
 ## Kurs „Bewerbung“ (`pbp-bewerbung`, 12.10.2026)
 
-Alle 279 Texte maschinell übersetzt (GPT-4.1 mit Glossar, Regeln aus `app/AGENT-ANLEITUNG.md`), danach per Rückübersetzung geprüft; 11 Stellen wurden korrigiert (u. a. „für alle Geschlechter“ statt „Nationalitäten“, „Zuverlässigkeit“, „Einarbeitung“). **Muttersprachliche Durchsicht steht aus.** Besonders prüfen: **Profil** (jetzt „ملفك الشخصي“ / „المتطلبات“ je nach Satz – einheitlich?), **Stellenanzeige** (إعلان وظيفي), **Floskeln** (belastbar = قادر على التحمّل, flexibel = مرن), **m/w/d** („الوظيفة مفتوحة لجميع الأجناس“), **Einarbeitung** (فترة تأهيل), **Anforderungsprofil**, **Bewerbungsunterlagen**.
+Alle 279 Texte maschinell übersetzt (GPT-4.1 mit Glossar, Regeln aus `app/AGENT-ANLEITUNG.md`), danach per Rückübersetzung geprüft; 11 Stellen wurden korrigiert (u. a. „für alle Geschlechter“ statt „Nationalitäten“, „Zuverlässigkeit“, „Einarbeitung“). **Muttersprachliche Durchsicht steht aus** – kurzer Prüfbogen mit 45 Sätzen: `docs/ARABISCH-PRUEFBOGEN-BEWERBUNG.md`. Besonders prüfen: **Profil** (jetzt „ملفك الشخصي“ / „المتطلبات“ je nach Satz – einheitlich?), **Stellenanzeige** (إعلان وظيفي), **Floskeln** (belastbar = قادر على التحمّل, flexibel = مرن), **m/w/d** („الوظيفة مفتوحة لجميع الأجناس“), **Einarbeitung** (فترة تأهيل), **Anforderungsprofil**, **Bewerbungsunterlagen**.
 
 ## Offene Fragen (aus dem Blindtest)
 

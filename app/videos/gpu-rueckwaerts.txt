@@ -1,0 +1,46 @@
+Rückwärtskalkulation
+====================
+
+GPU · Rückwärtskalkulation
+Wie teuer darf der Einkauf sein?
+Mediaworld, in einer Minute.
+
+01 · Die Frage
+Die Gaming-Maus kostet am Markt 200 €.
+Der Preis steht fest.
+Wie viel darf der Einkauf höchstens kosten?
+
+02 · Die Regel
+Rückwärts rechnest du Stufe für Stufe.
+Rabatt · Skonto: mal 0,90 · mal 0,96
+Gewinn · Gemeinkosten: teilen durch 1,20
+Aufschläge werden nicht abgezogen.
+
+03 · Nachlässe zurück
+Von oben nach unten
+Listenverkaufspreis: 200,00 €
+= Zielverkaufspreis: 180,00 €
+= Barverkaufspreis: 172,80 €
+Der Nachlass steckt schon im Preis.
+
+04 · Aufschläge teilen
+Durch den Aufschlag teilen
+Barverkaufspreis: 172,80 €
+= Selbstkosten: 144,00 €
+= Bezugspreis (höchstens): 120,00 €
+Mehr als 120 € darf der Einkauf nicht kosten.
+
+05 · Die Falle
+Nicht einfach abziehen.
+172,80&nbsp;€ − 20&nbsp;% = 138,24&nbsp;€
+Zu niedrig! Richtig: ÷ 1,20 = 144,00&nbsp;€.
+Aufschläge immer teilen.
+
+06 · Kurz testen
+Barverkaufspreis 120,00 €, Gewinn 20 %. Die Selbstkosten sind …
+A) 100,00 €
+B) 96,00 €
+C) 144,00 €
+Antwort: 100,00 €
+
+Jetzt selbst rechnen.
