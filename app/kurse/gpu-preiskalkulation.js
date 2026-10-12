@@ -398,6 +398,8 @@ LERNRAUM.subjects.push({
       title: "Rückwärtskalkulation",
       kicker: "Lernfeld 4 · Stunde 6",
       minutes: 25,
+      video: "gpu-rueckwaerts",      // Erklärvideo als Einstieg (app/videos/), zählt nicht als Schritt
+      videoTitle: "Vom Marktpreis zurück",
       help: `<h3>Die Rückwärtskalkulation</h3>
              <p>Manchmal steht der Verkaufspreis fest – der <strong>Markt</strong> gibt ihn vor. Dann rechnest du <strong>rückwärts</strong> bis zu dem Preis, den die Ware beim Einkauf <strong>höchstens</strong> kosten darf (Bezugspreis).</p>
              <p class="formula">Listenverkaufspreis × 0,90 → Zielverkaufspreis (Rabatt 10 %)<br>Zielverkaufspreis × 0,96 → Barverkaufspreis (Skonto 4 %)<br>Barverkaufspreis ÷ 1,25 → Selbstkosten (Gewinn 25 %)<br>Selbstkosten ÷ 1,20 → Bezugspreis (Gemeinkosten 20 %)</p>

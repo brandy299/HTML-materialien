@@ -7,7 +7,7 @@
 LV.video({
   id: "gpu-rueckwaerts",
   title: "Rückwärtskalkulation",
-  poster: 37,   // Zeitpunkt (s) für das Vorschaubild
+  poster: 39,   // Zeitpunkt (s) für das Vorschaubild
   bpm: 98, mood: "bright",
   scenes: [
     LV.title({ kicker: "GPU · Rückwärtskalkulation", title: "Wie teuer darf der Einkauf sein?", sub: "Mediaworld, in einer Minute.", dur: 4.5 }),
