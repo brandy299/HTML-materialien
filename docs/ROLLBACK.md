@@ -27,6 +27,7 @@ Pull Requests dieser Pakete (werden hier eingetragen):
 - Paket 1 · kompakte Startseite + Themensuche in der App: #50
 - Paket 4 · Dark Mode + Textgröße (`app/theme.js`, Abschnitt „Dark Mode“ am Ende von `app/styles.css`): *(PR-Nummer folgt)*. Gespeicherte Einstellung: `lernraum.theme`, `lernraum.textsize` (zusätzliche Schlüssel, Fortschritt bleibt unberührt).
 - Paket 22 · Ordner mit allen Themen des Kurses zeigt keine Extra-Karte mehr (`folderShown` in `app/app.js`, betrifft `pbp-bewerbung`), `app/sw.js` v38: im selben PR wie Paket 21 (*PR-Nummer folgt*). Zurücknehmen: `folderShown` wieder durch `folderOf` ersetzen.
+- Paket 23 · Bündel A: Brotkrumen (`crumbs` in `app/app.js`, `.crumbs` in `app/styles.css`), „‹“ im Player, „✓ Gespeichert“ in der Klausur, `app/sw.js` v39 (*PR-Nummer folgt*). Zurücknehmen: Revert des PR; Fortschrittsdaten bleiben unberührt.
 - Paket 21 · Englisch-Hub: Tafeln IV–VI (insgesamt 6 Tafeln, 30 Übungen), `app/tools/render-englisch-pdf.js` + 6 PDFs, Doku: *(PR-Nummer folgt)*. Zurücknehmen = PR zurücksetzen (nur `englisch/`, Tool, Docs).
 - Paket 20 · Englisch-Hub: Handy-Fixes, Quiz mit „Mark it“, klebende Reiter-Leiste, dynamische Navigation, `app/tools/check-englisch.js` + CI-Schritt, Doku: PR #79. Zurücknehmen = PR zurücksetzen (nur `englisch/`, `app/tools/check-englisch.js`, Workflow, Docs).
 - Paket 19 · Lange Wörter in Themen-Überschriften (z. B. „Anforderungsprofil“) laufen am Handy nicht mehr über (`titleFit` in `app/app.js`), `app/sw.js` v37: PR #78. Zurücknehmen = PR zurücksetzen.

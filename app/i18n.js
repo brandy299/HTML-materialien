@@ -59,6 +59,7 @@ window.LERNRAUM_I18N = {
     "{n} Schritte": "{n} steps", "Lernpfad": "Learning path", "Thema zurücksetzen": "Reset topic", "Nochmal durchgehen": "Go through again",
     "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "Really delete everything in this topic? Tap again.", "Thema zurückgesetzt": "Topic reset",
 
+    "Pfad": "Path", "Vorherige Aufgabe": "Previous task", "Gespeichert": "Saved",
     "Schließen": "Close", "schließen": "close", "Aufgabe zurücksetzen": "Reset task", "Ich brauche Hilfe": "I need help",
     "← zur Seite wischen →": "← swipe sideways →", "Folie": "Slide", "Weiter": "Next", "Weiter:": "Next:", "Nächste Folie": "Next slide",
     "Frage {a} von {b}": "Question {a} of {b}", "Antwort speichern": "Save answer", "Prüfen": "Check", "Nächste Frage": "Next question",
@@ -175,6 +176,7 @@ window.LERNRAUM_I18N = {
     "{n} Schritte": "{n} خطوات", "Lernpfad": "مسار التعلّم", "Thema zurücksetzen": "إعادة تعيين الموضوع", "Nochmal durchgehen": "راجع من جديد",
     "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "هل تريد حقًا حذف كل شيء في هذا الموضوع؟ اضغط مرة أخرى.", "Thema zurückgesetzt": "تمت إعادة تعيين الموضوع",
 
+    "Pfad": "المسار", "Vorherige Aufgabe": "المهمة السابقة", "Gespeichert": "تم الحفظ",
     "Schließen": "إغلاق", "schließen": "إغلاق", "Aufgabe zurücksetzen": "إعادة المهمة", "Ich brauche Hilfe": "أحتاج مساعدة",
     "← zur Seite wischen →": "← اسحب إلى الجانب →", "Folie": "شريحة", "Weiter": "التالي", "Weiter:": "التالي:", "Nächste Folie": "الشريحة التالية",
     "Frage {a} von {b}": "السؤال {a} من {b}", "Antwort speichern": "احفظ الإجابة", "Prüfen": "تحقّق", "Nächste Frage": "السؤال التالي",

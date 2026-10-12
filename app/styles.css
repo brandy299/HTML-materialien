@@ -1018,3 +1018,12 @@ body.vid-lock { overflow: hidden; }
 .vid-ctl .icon-btn.lab b { font: 800 20px/1 var(--grot); margin-top: -3px; }
 .sim-key small { font: 400 10px/1 var(--mono); color: #666; margin-left: 4px; }
 .vid-ctl.over { gap: 4px; padding-left: 6px; padding-right: 6px; }
+
+/* Brotkrumen (Kurs › Ordner) + Schritt zurück im Player */
+.tag-box.crumbs { gap: 6px; overflow: hidden; white-space: nowrap; }
+.crumbs > a, .crumbs > span:not(.sq) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.crumbs > a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; padding: 6px 0; }
+.crumbs > i { font-style: normal; opacity: .55; flex: none; }
+.crumbs > :last-child { flex: 0 1 auto; }
+.player-top .prev-btn { width: 40px; height: 40px; box-shadow: 2px 2px 0 var(--ink); flex: none; }
+@media (max-width: 420px) { .player-top { gap: 8px; } }
