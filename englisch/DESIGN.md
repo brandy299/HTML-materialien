@@ -65,6 +65,10 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
 - **Tee-Tally:** unter „Practice“ eine Tasse je Übung, gefüllt, wenn alles richtig war (`localStorage` `fe.done`, nur auf dem Gerät). Bei Vollmarke: „Zeit für eine Tasse Tee!“. Symbol `#cup`.
 - Leitlinie: gemütlich, aber nicht überladen – Schmuck nur an Rahmen und Rückmeldung, die Lesespalte bleibt ruhig.
 
+## QR-Code (12.10.2026)
+
+Jede Tafel hat im Kopf einen Knopf **QR** (Link `…/englisch/#plate-N`), im Register gibt es **QR-Code** für den ganzen Hub. Das Fenster zeigt den Code in Waldgrün auf Papier, den Link, **Beamer** (Vollbild, Tippen schließt) und **Link kopieren**. Eigener Generator `englisch/vendor/qrcode.js` (MIT, Kopie – der Hub teilt bewusst keine Dateien mit der App). Offline/`file://`: Hinweis statt Code. Mobil im Register nur als Symbol. Im Druck ausgeblendet.
+
 ## Signatur & Motion
 
 Die **rote Korrektur-Marke**: Beim Prüfen wird im Rand eine handschriftliche Tinte-

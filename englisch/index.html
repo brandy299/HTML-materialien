@@ -265,8 +265,26 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
   html{scroll-behavior:auto}
   .pen.on path{animation:none; stroke-dashoffset:0}
 }
+
+/* ---------- QR-Code (Beamer / Aushang) ---------- */
+@media (max-width:620px){.vi-switch{display:flex; align-items:center; gap:.2rem} #qrAll{margin:0!important; padding:0 .6rem} #qrAll .t{display:none}}
+.qr-btn{display:inline-flex; align-items:center; gap:.45rem; min-height:44px; min-width:44px; padding:0 .8rem; background:transparent; border:1px solid var(--line-2); border-radius:2px; color:var(--forest); cursor:pointer; font-size:.82rem; font-weight:600; letter-spacing:.04em}
+.qr-btn:hover{background:var(--paper-2)} .qr-btn svg{width:20px; height:20px; flex:none}
+.plate-head .qr-btn{margin-left:auto; align-self:center}
+.qr-back{position:fixed; inset:0; z-index:50; background:rgba(35,32,26,.55); display:grid; place-items:center; padding:1rem}
+.qr-card{background:var(--paper); border:1.5px solid var(--forest); outline:1px solid var(--line-2); outline-offset:5px; width:min(100%,380px); padding:1.4rem 1.3rem 1.2rem; text-align:center}
+.qr-card h2{font-family:var(--serif); font-weight:400; font-size:1.7rem; margin:.1rem 0 .1rem; color:var(--ink)}
+.qr-card .qr-sub{margin:0 0 .9rem; color:var(--muted); font-style:italic; font-size:.92rem}
+.qr-box{background:#FFFDF5; border:1px solid var(--line-2); padding:.8rem; margin:0 auto; width:min(100%,260px)}
+.qr-box svg{display:block; width:100%; height:auto}
+.qr-url{font-size:.78rem; color:var(--muted); word-break:break-all; margin:.7rem 0 0}
+.qr-card .btnrow{justify-content:center}
+.qr-full{position:fixed; inset:0; z-index:60; background:#FFFDF5; display:grid; place-items:center; padding:2vmin; cursor:pointer; text-align:center}
+.qr-full .qr-box{width:min(78vmin,720px); border:0}
+.qr-full h2{font-family:var(--serif); font-weight:400; font-size:clamp(1.8rem,5vmin,3.4rem); margin:0 0 1rem; color:var(--forest)}
+.qr-full p{color:var(--muted); margin:.8rem 0 0}
 @media print{
-  .register,.vi-switch,.btnrow,.chip,.o-chip,.tear,.explain,.masthead .sprig,.mark-slot{display:none!important}
+  .register,.vi-switch,.qr-btn,.qr-back,.qr-full,.btnrow,.chip,.o-chip,.tear,.explain,.masthead .sprig,.mark-slot{display:none!important}
   body{background:#fff}
   .layout{display:block; padding:0}
   .vi{display:table-cell!important}
@@ -315,6 +333,7 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
     <p class="reg-title">The Plates</p>
     <ol id="regList"></ol>
     <div class="vi-switch">
+      <button id="qrAll" class="qr-btn" type="button" aria-label="QR-Code für den ganzen Hub" style="margin-bottom:.8rem" data-qr=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/></svg><span class="t">QR-Code</span></button>
       <button id="viBtn" type="button" aria-pressed="false">
         <svg class="leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path d="M4 20c0-8 6-14 16-14 0 8-5 14-12 14"/><path d="M8 16c2-4 5-6 9-7"/></svg>
@@ -326,6 +345,7 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
   <main class="column" id="column"></main>
 </div>
 
+<script src="vendor/qrcode.js"></script>
 <script>
 "use strict";
 const ARW = `<svg class="arw" viewBox="0 0 24 12" aria-hidden="true"><path d="M1 6h18M15 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -701,7 +721,7 @@ function tearHTML(u){
 }
 function plateHTML(u){
   return `<section class="plate" id="${u.id}" aria-labelledby="${u.id}-t">
-    <div class="plate-head"><span class="plate-no">${u.no}</span><h2 id="${u.id}-t">${u.title}</h2><span class="plate-de">${u.de}</span></div>
+    <div class="plate-head"><span class="plate-no">${u.no}</span><h2 id="${u.id}-t">${u.title}</h2><span class="plate-de">${u.de}</span><button class="qr-btn" type="button" data-qr="${u.id}" data-t="${esc(u.title.replace(/&amp;/g,"&"))}" aria-label="QR-Code für diese Tafel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/></svg>QR</button></div>
     <div class="plate-open"></div>
     ${u.plate ? `<figure class="emblem"><img src="${u.plate}" alt="Gestochene Tafel-Illustration: ${esc(u.caption)}" width="1400" height="933" loading="lazy" decoding="async"><figcaption>${u.caption}</figcaption></figure>` : `<div class="emblem-none" aria-hidden="true"></div>`}
     <p class="lead"><span class="dc">${u.lead.charAt(0)}</span>${u.lead.slice(1)}</p>
@@ -846,6 +866,40 @@ function setFb(scope, ok, n){
   else if(ok===0) fb.textContent = `${n} Aufgaben · noch keine richtig. Tipp: links ins Diagramm schauen.`;
   else fb.textContent = `${ok}/${n} richtig. Die roten Marken noch einmal ansehen.`;
 }
+
+/* ---------- QR-Code für diese Seite (Beamer / Aushang) ---------- */
+function qrSvg(url){
+  if(typeof qrcode!=="function") return "";
+  const q=qrcode(0,"M"); q.addData(url); q.make();
+  return q.createSvgTag({cellSize:8, margin:0, scalable:true, alt:"QR-Code"}).replace(/fill="black"/g,'fill="#23402B"');
+}
+function openQR(id, title){
+  if(document.querySelector(".qr-back")) return;
+  const online=/^https?:$/.test(location.protocol);
+  const url = location.origin + location.pathname + (id ? "#"+id : "");
+  const back=document.createElement("div"); back.className="qr-back";
+  back.innerHTML=`<div class="qr-card" role="dialog" aria-modal="true" aria-label="QR-Code">
+    <h2>${esc(title||"English for Beginners")}</h2><p class="qr-sub">Mit der Handykamera scannen</p>
+    <div class="qr-box">${online?qrSvg(url):""}</div>
+    ${online?`<p class="qr-url">${esc(url)}</p>`:`<p class="qr-url">Der QR-Code funktioniert nur auf der Online-Seite.</p>`}
+    <div class="btnrow"><button class="btn" type="button" data-a="beamer"${online?"":" disabled"}>Beamer</button><button class="btn ghost" type="button" data-a="copy"${online?"":" disabled"}>Link kopieren</button><button class="btn ghost" type="button" data-a="close">Schließen</button></div></div>`;
+  const close=()=>{ document.removeEventListener("keydown",onKey); back.remove(); };
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  document.addEventListener("keydown",onKey);
+  back.addEventListener("click",async e=>{
+    const a=e.target.closest("[data-a]")?.dataset.a;
+    if(e.target===back||a==="close") return close();
+    if(a==="copy"){ const b=e.target.closest("button"); try{ await navigator.clipboard.writeText(url); b.textContent="Kopiert ✓"; }catch(_){ b.textContent="Link unten markieren"; const r=document.createRange(); r.selectNodeContents(back.querySelector(".qr-url")); getSelection().removeAllRanges(); getSelection().addRange(r); } }
+    if(a==="beamer"){
+      const full=document.createElement("div"); full.className="qr-full"; full.setAttribute("role","dialog"); full.setAttribute("aria-label","QR-Code groß");
+      full.innerHTML=`<div><h2>${esc(title||"English for Beginners")}</h2><div class="qr-box">${qrSvg(url)}</div><p>Mit der Handykamera scannen · Tippen zum Schließen</p></div>`;
+      full.onclick=()=>full.remove(); document.body.append(full);
+      try{ full.requestFullscreen&&full.requestFullscreen().catch(()=>{}); }catch(_){}
+    }
+  });
+  document.body.append(back); back.querySelector("[data-a=close]").focus();
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-qr]"); if(b) openQR(b.dataset.qr, b.dataset.t||""); });
 
 /* ---------- Tee-Tally: geschaffte Übungen (nur auf diesem Gerät) ---------- */
 const DONE_KEY="fe.done";
