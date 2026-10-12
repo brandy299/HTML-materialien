@@ -1,6 +1,6 @@
 /* Erklärvideo · PBP · Lernsituation 2.2, Teil 3 „Der Code der Stellenanzeige“
    Modellunternehmen: Mediaworld, „ein Jahr später“ – anderes Szenario als in den Kursaufgaben.
-   Begriffe wie in der Lektion: sechs Bausteine · Floskeln · Warnsignale. */
+   Begriffe wie in der Lektion: sechs Bausteine · Floskeln (belastbar, flexibel, Teamplayer, selbstständig, flache Hierarchien) · m/w/d · Warnsignale. */
 
 LV.video({
   id: "pbp-anzeigen-code",
@@ -18,7 +18,7 @@ LV.video({
     LV.scene({
       kicker: "01 · Die Frage", dur: 7,
       items: [
-        LV.text("m/w/d … z. K. … flache Hierarchien …", { size: "l", at: 0.5 }),
+        LV.text("m/w/d … belastbar … flache Hierarchien …", { size: "l", at: 0.5 }),
         LV.text("Was heißt das <mark>alles</mark>?", { size: "xl", at: 2.0 }),
         LV.text("Anzeigen haben ihren eigenen Code.", { size: "m", at: 3.8, tone: "mut" })
       ]
@@ -49,16 +49,31 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "04 · Floskeln übersetzen", dur: 8,
+      kicker: "04 · Floskeln übersetzen", dur: 9.5,
       items: [
-        LV.text("Floskeln – einfach übersetzt:", { size: "xl", at: 0.5 }),
-        LV.chips(["hält Stress aus", "springt ein", "arbeitet im Team", "fängt allein an"], { at: 2.2 }),
-        LV.text("Nie blind überfliegen.", { size: "m", at: 5.4, tone: "mut" })
+        LV.text("Floskeln haben eine <mark>Übersetzung</mark>.", { size: "l", at: 0.5 }),
+        LV.stack([
+          { label: "belastbar", text: "hält Stress aus" },
+          { label: "flexibel", text: "springt auch mal ein" },
+          { label: "Teamplayer", text: "arbeitet gern mit anderen" }
+        ], { at: 2.4, stagger: 1.2 })
       ]
     }),
 
     LV.scene({
-      kicker: "05 · Die Falle", dur: 7.5,
+      kicker: "05 · Noch mehr Code", dur: 9.5,
+      items: [
+        LV.text("Mehr Code – <mark>einfach</mark> übersetzt.", { size: "l", at: 0.5 }),
+        LV.stack([
+          { label: "selbstständig", text: "fragt nicht bei jedem Schritt nach" },
+          { label: "flache Hierarchien", text: "kurze Wege zur Chefin" },
+          { label: "m/w/d", text: "für alle Geschlechter" }
+        ], { at: 2.4, stagger: 1.2 })
+      ]
+    }),
+
+    LV.scene({
+      kicker: "06 · Die Falle", dur: 7.5,
       items: [
         LV.text("Warnsignale <mark>erkennen</mark>.", { size: "xl", at: 0.5 }),
         LV.chips(["kein Firmenname", "nur Handynummer", "Druck und Eile", "Vorauszahlung"], { at: 2.0 }),
@@ -67,7 +82,7 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "06 · Kurz testen", dur: 9,
+      kicker: "07 · Kurz testen", dur: 9,
       items: [
         LV.quiz("Kein Firmenname, nur eine Handynummer, Druck. Die Anzeige ist …", ["unseriös", "seriös", "amtlich"], 0, { at: 0.4, reveal: 6.2 })
       ]

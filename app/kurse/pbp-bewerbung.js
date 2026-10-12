@@ -304,7 +304,7 @@ LERNRAUM.subjects.push({
              <li><strong>selbstständig:</strong> fragt nicht bei jedem kleinen Schritt nach.</li>
              <li><strong>flache Hierarchien:</strong> kurze Wege – du sprichst direkt mit der Chefin.</li></ul>
              <h3>Abkürzungen</h3>
-             <ul><li><strong>m/w/d</strong> männlich/weiblich/divers · <strong>VZ/TZ</strong> Vollzeit/Teilzeit · <strong>ggf.</strong> gegebenenfalls · <strong>z. K.</strong> zur Kennzeichnung.</li></ul>
+             <ul><li><strong>m/w/d</strong> männlich/weiblich/divers – die Stelle ist für alle Geschlechter offen · <strong>VZ/TZ</strong> Vollzeit/Teilzeit · <strong>ggf.</strong> gegebenenfalls.</li></ul>
              <h3>Warnsignale</h3>
              <ul><li>Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung oder Ausweiskopie per Chat.</li></ul>`,
       group: "Stellenanzeige & Profil",
@@ -320,7 +320,7 @@ LERNRAUM.subjects.push({
               style: "dark",
               kicker: "Mediaworld e. K. · Tara am Laptop",
               title: "„Was heißt das alles?“",
-              body: `<p>Tara sitzt über einer Anzeige aus dem Internet: „m/w/d … z. K. … wir bieten flache Hierarchien und ein dynamisches Team …“</p>
+              body: `<p>Tara sitzt über einer Anzeige aus dem Internet: „m/w/d … wir suchen belastbare Teamplayer … flache Hierarchien …“</p>
                      <p>Melike setzt sich dazu: „Stellenanzeigen haben ihre eigene Sprache. Sie sind wie ein <strong>Code</strong> – wer ihn kennt, weiß sofort, was der Betrieb wirklich sucht.“</p>`
             },
             {

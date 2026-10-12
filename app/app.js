@@ -176,6 +176,8 @@
   const findSubject = (id) => Lsub(DATA.subjects.find((s) => s.id === id));
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
   const firstName = () => store.get("name", "");
+  /* Lehrkraft-Modus: QR-Knöpfe und -Übersicht nur für Lehrkräfte (Aufruf: /app/#/lehrer), Schüler/innen sehen sie nicht */
+  const isTeacher = () => store.get("teacher", false) === true;
   /* Zahlen: Dezimalkomma, optional feste Nachkommastellen d (z. B. 2 für Euro-Beträge) */
   const fmtNum = (v, d) => (d != null ? Math.abs(v).toFixed(d) : String(Math.abs(v))).replace(".", ",");
   const num = (v, d) => (v < 0 ? "− " : "") + fmtNum(v, d);
@@ -357,6 +359,7 @@
     [/^#\/f\/([\w-]+)\/ordner\/([\w-]+)$/, viewFolder, "home"],
     [/^#\/f\/([\w-]+)\/([\w-]+)$/, viewTopic, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/fertig$/, viewFinish, null],
+    [/^#\/lehrer$/, viewLehrer, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/video$/, viewTopicVideo, null],
     [/^#\/f\/([\w-]+)\/([\w-]+)\/(\d+)$/, viewPlayer, null]
   ];
@@ -364,7 +367,7 @@
   function render() {
     if (cleanup) { cleanup(); cleanup = null; }
     const hash = location.hash || "#/";
-    if (!firstName() && hash !== "#/sichern") return mount(viewWelcome(), null);
+    if (!firstName() && hash !== "#/sichern" && hash !== "#/lehrer") return mount(viewWelcome(), null);
     // Wer per Link/QR in einen Kurs kommt, bekommt dessen Fach automatisch zu „Meine Fächer“
     const deep = hash.match(/^#\/f\/([\w-]+)/), ds = deep && findSubject(deep[1]);
     if (ds && !ds.materials) addFach(ds.fach || ds.name);
@@ -407,11 +410,17 @@
         </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
-      <form style="margin-top:32px">
+      <ol class="intro-steps" aria-label="${tr("So funktioniert's")}">
+        <li><b>${tr("Kurze Aufgaben")}</b><span>${tr("Antwort antippen, auf „Prüfen“ tippen, fertig.")}</span></li>
+        <li><b>${tr("Videos und Lernkarten")}</b><span>${tr("Wenn du etwas nochmal brauchst – jederzeit.")}</span></li>
+        <li><b>${tr("Alles auf deinem Handy")}</b><span>${tr("Dein Fortschritt bleibt hier. Kein Konto, kein Passwort.")}</span></li>
+      </ol>
+      <form style="margin-top:24px">
         <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
           <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>
         <button class="btn block" style="margin-top:14px" type="submit">${tr("Los geht's")} ${ICON.arrow}</button>
-        <p class="hint">${tr("Dein Fortschritt bleibt auf diesem Gerät. Es gibt kein Konto und kein Passwort.")}${LANG !== "de" ? " " + tr("Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.") : ""}</p>
+        <button class="btn ghost block" style="margin-top:10px" type="button" id="guest">${tr("Ohne Namen weitermachen")}</button>
+        <p class="hint">${LANG !== "de" ? tr("Die Aufgaben bleiben auf Deutsch – wie in deiner Prüfung.") : tr("Den Namen kannst du später unter „Ich“ ändern.")}</p>
       </form>
       <a class="u-link" href="#/sichern" style="display:inline-block;margin-top:18px">${tr("Schon benutzt? Lerncode einlesen")} →</a>
     </main>`);
@@ -420,9 +429,18 @@
     v.querySelector("form").addEventListener("submit", (e) => {
       e.preventDefault();
       const n = e.target.n.value.trim();
-      if (n) { store.set("name", n.slice(0, 24)); render(); }
+      if (n) { store.set("name", n.slice(0, 24)); store.set("guest", false); render(); }
     });
+    v.querySelector("#guest").onclick = () => { store.set("name", tr("Gast")); store.set("guest", true); render(); };
     return v;
+  }
+
+  /* Lehrkraft-Modus ein/aus (Link für Lehrkräfte: …/app/#/lehrer) */
+  function viewLehrer() {
+    store.set("teacher", true);
+    toast("› Lehrkraft-Modus an – QR-Knöpfe sind jetzt sichtbar");
+    location.hash = "#/qr";
+    return h("<div></div>");
   }
 
   /* ── Start ──────────────────────────────────────────────── */
@@ -665,6 +683,7 @@
           <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Wähle dein Fach.")}</p>`}</div>
         </div>
         <h1 class="display">Lernraum.<small>${tr(filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.")}</small></h1>
+        ${bigArt("hero-phone", "hero-art")}
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
@@ -672,7 +691,7 @@
       <div class="list" id="sres" hidden></div>
       <div id="list"></div>
       <a class="list-row more-fach" href="#/faecher"><span>${filtered ? tr("Andere Fächer ({n}) · Fächer ändern", { n: allFachs().length - fachs.length }) : tr("Meine Fächer auswählen")}</span><span class="v">→</span></a>
-      <a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>
+      ${isTeacher() ? `<a class="u-link" href="#/qr" style="display:inline-block;margin-top:28px">Für Lehrkräfte: QR-Codes für alle Übungen →</a>` : ""}
     </main>`);
     dither(v.querySelector("canvas"));
     bindInstall(v);
@@ -712,6 +731,9 @@
   const ART = new Set(["pbp-bewerbung", "pbp", "inwi-geschaeftsbrief", "gpu-preiskalkulation", "vw-magisches-sechseck", "englisch-foerderkurs", "englisch-telephoning"]);
   const artImg = (x, cls) => (ART.has(x.id) && !SINGLE && location.protocol !== "file:" && !/\/dist\//.test(location.pathname)
     ? `<img class="art ${cls || ""}" src="art/${x.id}.svg" alt="" width="600" height="340" loading="lazy" decoding="async">` : "");
+  /* Große Motive (KI-Bilder im Typesafe-Stil): Startseite, Abschluss, Klausurergebnis */
+  const bigArt = (name, cls) => (!SINGLE && location.protocol !== "file:" && !/\/dist\//.test(location.pathname)
+    ? `<img class="big-art ${cls}" src="art/${name}.webp" alt="" width="1000" height="667" decoding="async">` : "");
   const isNew = (x) => x.added && (Date.now() - new Date(x.added)) / 864e5 <= 14;
   function subjectWin(x) {
     if (x.materials) {
@@ -738,12 +760,12 @@
     const v = h(`<main class="view">
       <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a>
         <span class="tag-box"><span class="sq"></span>${esc(s.course || s.name)}</span>
-        <button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button></div>
+        ${isTeacher() ? `<button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button>` : ""}</div>
       <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       ${artImg(s, "big")}
       <div id="list"></div>
     </main>`);
-    v.querySelector("#qrBtn").onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
+    const qb = v.querySelector("#qrBtn"); if (qb) qb.onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
     v.querySelector("#list").append(topicList(s));
     return v;
   }
@@ -2837,6 +2859,7 @@
     return q.createSvgTag({ cellSize: 8, margin: 2, scalable: true, alt: "QR-Code" });
   }
   function qrButton(s, t) {
+    if (!isTeacher()) return "";
     return `<button class="icon-btn" data-qr="${esc(s.id)}/${esc(t.id)}" aria-label="QR-Code für diese Übung">${ICON.qr}</button>`;
   }
   document.addEventListener("click", (e) => {
@@ -2898,7 +2921,9 @@
       <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>Für Lehrkräfte</span></div>
       <h1 class="display" style="margin-top:24px">QR-Codes.<small>Für jede Übung und jedes Material. Tippe auf den QR-Knopf, dann auf „Beamer-Ansicht“ – die Schüler scannen mit der Handykamera und landen direkt in der Übung.</small></h1>
       <div id="list"></div>
+      <button class="u-link" id="teacherOff" type="button" style="margin-top:28px">${isTeacher() ? "Lehrkraft-Modus beenden (QR-Knöpfe wieder ausblenden)" : "Lehrkraft-Modus einschalten"}</button>
     </main>`);
+    v.querySelector("#teacherOff").onclick = () => { store.set("teacher", !isTeacher()); toast("› " + (isTeacher() ? "Lehrkraft-Modus an" : "Lehrkraft-Modus aus")); render(); };
     const list = v.querySelector("#list");
     const addRow = (box, title, sub, url) => {
       const row = h(`<div class="list-row mat-row"><span class="mat-open"><span>${esc(title)}</span></span>
@@ -3099,6 +3124,7 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || "Thema")} · ${tr("erledigt")}</span></div>
+        ${bigArt("finish-rocket", "finish-art")}
         <p class="finish-num">${pct === null ? "✓" : `${pct}<small>%</small>`}</p>
         <p class="h2" style="margin-top:16px">${msg}</p>
         <p class="eyebrow" style="margin-top:10px">${esc(t.title)} · ${sc.n ? tr("{a} von {b} Punkten", { a: sc.c, b: sc.n }) : tr("abgeschlossen")}</p>
@@ -3136,6 +3162,7 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box ink"><span class="sq"></span>${esc(t.kicker || t.title)} · Ergebnis</span></div>
+        ${parseFloat(String(note).replace(",", ".")) <= 3 ? bigArt("finish-trophy", "finish-art") : ""}
         <p class="finish-num">${fmtP(got)}<small>/${total} P</small></p>
         <p class="h2" style="margin-top:16px">Note ${note} · ${word}</p>
         <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} %${gd ? "" : ` · Zeit ${clock(used).replace("+", "")} min`}${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
@@ -3352,10 +3379,10 @@
       </div>
       <p class="section-head">${tr("Einstellungen")}</p>
       <div class="list">
-        <button class="list-row" id="rename"><span>${tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
+        <button class="list-row" id="rename"><span>${store.get("guest", false) ? tr("Namen festlegen") : tr("Name ändern")}</span><span class="v">${esc(name)}</span></button>
         <a class="list-row" href="#/sichern"><span>${tr("Fortschritt sichern (Lerncode)")}</span><span class="v">→</span></a>
         <a class="list-row" href="#/faecher"><span>${tr("Meine Fächer")}</span><span class="v">${esc((myFaecher() || []).join(" · ") || tr("alle"))}</span></a>
-        <a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>
+        ${isTeacher() ? `<a class="list-row" href="#/qr"><span>Für Lehrkräfte: QR-Codes</span><span class="v">→</span></a>` : ""}
         <button class="list-row danger" id="reset"><span>${tr("Fortschritt zurücksetzen")}</span></button>
       </div>
       <p class="hint" style="margin-top:14px">${tr("Alles bleibt auf diesem Gerät gespeichert. Die Lehrkraft sieht deinen Fortschritt nicht.")}</p>
@@ -3381,7 +3408,7 @@
       row.onsubmit = (e) => {
         e.preventDefault();
         const nn = row.querySelector("input").value.trim();
-        if (nn) { store.set("name", nn.slice(0, 24)); toast("› " + tr("Name gespeichert")); render(); }
+        if (nn) { store.set("name", nn.slice(0, 24)); store.set("guest", false); toast("› " + tr("Name gespeichert")); render(); }
       };
       rename.replaceWith(row);
       row.querySelector("input").focus();
