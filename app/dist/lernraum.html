@@ -3625,7 +3625,7 @@ LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
   added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-10-04",        // neu: Erklärvideos zu AB 4 und AB 5
+  updated: "2026-10-12",        // neu: AB 6 Rückwärtskalkulation
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",
@@ -4007,6 +4007,218 @@ LERNRAUM.subjects.push({
       ]
     },
 
+    /* ══════════════ AB 6 · RÜCKWÄRTSKALKULATION ══════════════ */
+    {
+      id: "rueckwaerts",
+      group: "AB 6 · Rückwärtskalkulation",
+      title: "Rückwärtskalkulation",
+      kicker: "Lernfeld 4 · Stunde 6",
+      minutes: 25,
+      help: `<h3>Die Rückwärtskalkulation</h3>
+             <p>Manchmal steht der Verkaufspreis fest – der <strong>Markt</strong> gibt ihn vor. Dann rechnest du <strong>rückwärts</strong> bis zu dem Preis, den die Ware beim Einkauf <strong>höchstens</strong> kosten darf (Bezugspreis).</p>
+             <p class="formula">Listenverkaufspreis × 0,90 → Zielverkaufspreis (Rabatt 10 %)<br>Zielverkaufspreis × 0,96 → Barverkaufspreis (Skonto 4 %)<br>Barverkaufspreis ÷ 1,25 → Selbstkosten (Gewinn 25 %)<br>Selbstkosten ÷ 1,20 → Bezugspreis (Gemeinkosten 20 %)</p>
+             <h3>Nachlässe zurück, Aufschläge teilen</h3>
+             <p><strong>Rabatt</strong> und <strong>Skonto</strong> rechnest du mit <strong>× 0,90</strong> bzw. <strong>× 0,96</strong> zurück. <strong>Gewinn</strong> und <strong>Gemeinkosten</strong> sind Aufschläge – die rechnest du durch <strong>Teilen</strong> weg.</p>
+             <p class="note">Falsch: 432,00 − 25 % = 324,00. Richtig: 432,00 ÷ 1,25 = 345,60.</p>
+             <h3>Höchster Einkaufspreis</h3>
+             <p>Der <strong>Bezugspreis</strong> ist der höchste Preis, den die Ware beim Einkauf kosten darf, wenn alle Prozentsätze bleiben sollen.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Der Fall: 500 € stehen fest",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Stunde 6",
+              title: "Der Markt sagt 500 €. Reicht das?",
+              body: `<p>Sofia will den <strong>Notebook-Ständer</strong> für <strong>500,00 €</strong> (netto) verkaufen. So viel verlangt der Markt.</p>
+                     <p>Doch der <strong>Einkaufspreis</strong> steht noch nicht fest. Sofia fragt: <mark>Wie teuer darf der Ständer beim Einkauf höchstens sein?</mark></p>`
+            },
+            {
+              kicker: "Lernziel · Operator AFB II",
+              title: "Ich kann vom <mark>Verkaufspreis</mark> <mark>rückwärts</mark> zum höchsten Einkaufspreis rechnen.",
+              body: `<p class="box"><strong>rückwärts rechnen</strong> heißt: Du startest beim Listenverkaufspreis und arbeitest die Kalkulation Stufe für Stufe nach unten ab.</p>`
+            },
+            {
+              kicker: "Grundwissen",
+              title: "Vorwärts und rückwärts – derselbe Weg.",
+              body: `${ablauf([
+                       { text: "Bezugspreis" },
+                       { op: "+ Gemeinkosten", note: "× 1,20" },
+                       { text: "Selbstkosten", sub: true },
+                       { op: "+ Gewinn", note: "× 1,25" },
+                       { text: "Barverkaufspreis", sub: true },
+                       { op: "+ Skonto, + Rabatt", note: "Umlage nach oben" },
+                       { text: "Listenverkaufspreis", hi: true }
+                     ])}
+                     <p class="note">Vorwärts rechnest du auf, rückwärts gehst du denselben Weg zurück.</p>`
+            },
+            {
+              kicker: "So rechnest du",
+              title: "Von 500,00 € zurück",
+              body: `<table class="scheme">
+                       <tr><td>Listenverkaufspreis</td><td>500,00 €</td></tr>
+                       <tr><td>× 0,90 (Rabatt 10 %)</td><td>____</td></tr>
+                       <tr class="sum"><td>= Zielverkaufspreis</td><td>____</td></tr>
+                       <tr><td>× 0,96 (Skonto 4 %)</td><td>____</td></tr>
+                       <tr class="sum"><td>= Barverkaufspreis</td><td>____</td></tr>
+                       <tr><td>÷ 1,25 (Gewinn 25 %)</td><td>____</td></tr>
+                       <tr class="sum"><td>= Selbstkosten</td><td>____</td></tr>
+                       <tr><td>÷ 1,20 (Gemeinkosten 20 %)</td><td>____</td></tr>
+                       <tr class="sum"><td>= Bezugspreis (höchstens)</td><td>____</td></tr>
+                     </table>
+                     <p class="note">Übertrage das Schema in dein Heft.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Nachlässe mit × – Aufschläge durch Teilen.",
+              body: `<p>Rabatt und Skonto: <strong>× 0,90</strong> bzw. <strong>× 0,96</strong>. Gewinn und Gemeinkosten: <strong>teilen</strong> – nicht abziehen.</p>`
+            }
+          ]
+        },
+        {
+          type: "calc",
+          title: "A1 · Notebook-Ständer",
+          decimals: 2,
+          case: `Sofia verkauft den <b>Notebook-Ständer</b> für einen <b>Listenverkaufspreis (netto) von 500,00 €</b>.<br>
+                 <b>Kundenrabatt:</b> 10 % · <b>Kundenskonto:</b> 4 % · <b>Gewinnaufschlag:</b> 25 % · <b>Gemeinkosten:</b> 20 %<br><br>
+                 Berechne rückwärts, wie viel der Ständer beim Einkauf (Bezugspreis) <b>höchstens</b> kosten darf.`,
+          rows: [
+            { label: "Listenverkaufspreis (netto)", value: 500 },
+            { label: "× 0,90  → Zielverkaufspreis", value: 450, sum: true },
+            { label: "× 0,96  → Barverkaufspreis", value: 432, sum: true },
+            { label: "÷ 1,25  → Selbstkosten", value: 345.6, sum: true },
+            { label: "÷ 1,20  → Bezugspreis (höchstens)", value: 288, sum: true }
+          ],
+          hints: [
+            "Rückwärts gehst du Stufe für Stufe nach unten. Der Rabatt steckt schon im Listenverkaufspreis: × 0,90.",
+            "Zuerst der Rabatt: 500,00 × 0,90 = Zielverkaufspreis. Danach das Skonto: × 0,96.",
+            "Gewinn und Gemeinkosten sind Aufschläge – beim Rückwärtsrechnen teilst du: ÷ 1,25 und ÷ 1,20.",
+            "Lösungsweg: 500,00 × 0,90 = 450,00 → × 0,96 = 432,00 → ÷ 1,25 = 345,60 → ÷ 1,20 = 288,00."
+          ],
+          result: "Der Ständer darf höchstens 288,00 € kosten (Bezugspreis). Probe vorwärts: 288,00 + 20 % = 345,60 · + 25 % = 432,00 · × 100 ÷ 96 = 450,00 · × 100 ÷ 90 = 500,00 €."
+        },
+        {
+          type: "quiz",
+          title: "A2 · Verstehen",
+          questions: [
+            {
+              q: "Sofia kennt den Listenverkaufspreis. Wie kommt sie rückwärts auf den Zielverkaufspreis bei 10 % Kundenrabatt?",
+              hint: "Der Listenverkaufspreis ist 100 %, der Zielverkaufspreis 90 % davon.",
+              options: ["Sie zieht 10 % ab.", "Sie rechnet Listenverkaufspreis × 0,90.", "Sie rechnet Listenverkaufspreis × 1,10.", "Sie rechnet Listenverkaufspreis ÷ 0,90."],
+              answer: 1,
+              explain: "Der Rabatt steckt schon im Listenverkaufspreis. Zurück rechnest du × 0,90: 500,00 × 0,90 = 450,00 €."
+            },
+            {
+              q: "Du hast den Barverkaufspreis 432,00 € und den Gewinnaufschlag 25 %. Wie kommst du auf die Selbstkosten?",
+              hint: "Gewinn ist ein Aufschlag auf die Selbstkosten – rückwärts also teilen.",
+              options: ["432,00 × 1,25", "432,00 − 25 %", "432,00 ÷ 1,25", "432,00 × 0,75"],
+              answer: 2,
+              explain: "Selbstkosten × 1,25 = Barverkaufspreis. Rückwärts: 432,00 ÷ 1,25 = 345,60 €."
+            },
+            {
+              q: "Was bedeutet der Bezugspreis beim Rückwärtsrechnen?",
+              options: ["der Preis im Regal", "der höchste Preis, den die Ware beim Einkauf kosten darf", "der Preis ohne Mehrwertsteuer", "der Katalogpreis des Lieferanten"],
+              answer: 1,
+              explain: "Der Bezugspreis ist der höchste zulässige Einkaufspreis – sonst bleiben Gewinn und Gemeinkosten nicht gedeckt."
+            },
+            {
+              q: "Warum rechnet man überhaupt rückwärts?",
+              options: ["weil der Verkaufspreis am Markt feststeht und der Einkaufspreis gesucht ist", "weil die Mehrwertsteuer fehlt", "weil Rabatt und Skonto gleich hoch sind", "weil der Bezugspreis schon bekannt ist"],
+              answer: 0,
+              explain: "Der Markt gibt oft den Verkaufspreis vor. Dann ist die Frage: Wie teuer darf der Einkauf höchstens sein?"
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A3 · Vorwärts oder rückwärts?",
+          prompt: "Welche Richtung beschreibt die Aussage?",
+          hints: ["Vorwärts: vom Einkauf zum Verkauf (+ Gemeinkosten, + Gewinn). Rückwärts: vom Verkauf zum Einkauf (÷ für Aufschläge)."],
+          categories: ["vorwärts", "rückwärts"],
+          items: [
+            { text: "Gegeben ist der Bezugspreis, gesucht der Listenverkaufspreis.", cat: 0 },
+            { text: "Gegeben ist der Listenverkaufspreis, gesucht der höchste Bezugspreis.", cat: 1 },
+            { text: "Sofia rechnet + Gemeinkosten und + Gewinn.", cat: 0 },
+            { text: "Sofia rechnet ÷ 1,25 und ÷ 1,20.", cat: 1 },
+            { text: "Skonto und Rabatt werden hochgerechnet: × 100 ÷ 96.", cat: 0 },
+            { text: "Skonto und Rabatt werden zurückgerechnet: × 0,96.", cat: 1 },
+            { text: "Der Marktpreis steht fest, der Einkaufspreis ist die Frage.", cat: 1 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A4 · Fachbegriffe sichern",
+          prompt: "Drei Wörter passen nicht.",
+          hints: ["Gestartet wird beim Listenverkaufspreis.", "Gewinn und Gemeinkosten sind Aufschläge – rückwärts rechnet man sie durch Teilen weg."],
+          text: "Beim Rückwärtsrechnen startest du beim {Listenverkaufspreis}. Den 10 %igen Kundenrabatt rechnest du mit × 0,90 zurück und erhältst den {Zielverkaufspreis}. Nach dem Skonto heißt der Preis {Barverkaufspreis}. Gewinn und Gemeinkosten sind Aufschläge – sie werden zurück {geteilt}. Am Ende steht der {Bezugspreis}: der {höchste} Preis, den die Ware beim Einkauf kosten darf.",
+          distractors: ["abgezogen", "Selbstkosten", "niedrigste"]
+        },
+        {
+          type: "calc",
+          title: "A5 ★ · Bis zum Listeneinkaufspreis",
+          decimals: 2,
+          case: `Für den Kopfhörer <b>SILENT ONE</b> gibt der Markt einen <b>Listenverkaufspreis (netto) von 150,00 €</b> vor. Sofia will bis zum <b>Listeneinkaufspreis</b> zurückrechnen.<br>
+                 <b>Kundenrabatt:</b> 10 % · <b>Kundenskonto:</b> 4 % · <b>Gewinnaufschlag:</b> 20 % · <b>Gemeinkosten:</b> 20 %<br>
+                 <b>Bezugskosten:</b> 11,60 € · <b>Lieferantenskonto:</b> 2 % · <b>Lieferantenrabatt:</b> 20 %`,
+          rows: [
+            { label: "Listenverkaufspreis (netto)", value: 150 },
+            { label: "× 0,90  → Zielverkaufspreis", value: 135, sum: true },
+            { label: "× 0,96  → Barverkaufspreis", value: 129.6, sum: true },
+            { label: "÷ 1,20  → Selbstkosten", value: 108, sum: true },
+            { label: "÷ 1,20  → Bezugspreis", value: 90, sum: true },
+            { label: "− 11,60 € Bezugskosten  → Bareinkaufspreis", value: 78.4, sum: true },
+            { label: "÷ 0,98  → Zieleinkaufspreis", value: 80, sum: true },
+            { label: "÷ 0,80  → Listeneinkaufspreis (höchstens)", value: 100, sum: true }
+          ],
+          hints: [
+            "Erst der Verkaufsteil wie in A1: × 0,90, × 0,96, dann ÷ 1,20 (Gewinn 20 %) und ÷ 1,20 (Gemeinkosten 20 %).",
+            "Danach kommt der Einkaufsteil: Vom Bezugspreis (90,00 €) die Bezugskosten 11,60 € abziehen → Bareinkaufspreis.",
+            "Lieferantenskonto 2 % heißt × 0,98, Lieferantenrabatt 20 % heißt × 0,80 (bzw. ÷ 0,98 und ÷ 0,80 rückwärts).",
+            "Lösungsweg: 150,00 × 0,90 = 135,00 → × 0,96 = 129,60 → ÷ 1,20 = 108,00 → ÷ 1,20 = 90,00 → − 11,60 = 78,40 → ÷ 0,98 = 80,00 → ÷ 0,80 = 100,00."
+          ],
+          result: "Der Listeneinkaufspreis darf höchstens 100,00 € betragen. Probe vorwärts: 100,00 − 20 % = 80,00 · − 2 % = 78,40 · + 11,60 = 90,00 € (Bezugspreis)."
+        },
+        {
+          type: "spot",
+          title: "A6 · Finde den Fehler",
+          prompt: "Der Azubi hat rückwärts gerechnet. Eine Zeile ist falsch – tippe sie an.",
+          rounds: [
+            {
+              lines: [
+                "Rückwärtskalkulation (Azubi) – SILENT ONE",
+                "Barverkaufspreis: 129,60 €",
+                "Gewinnaufschlag 20 % einfach abgezogen",
+                "Selbstkosten: 103,68 €"
+              ],
+              error: 3,
+              hint: "Gewinn und Gemeinkosten rechnet man rückwärts nicht durch Abziehen weg.",
+              explain: "Der Gewinnaufschlag ist ein Aufschlag auf die Selbstkosten: Selbstkosten × 1,20 = Barverkaufspreis. Rückwärts muss man deshalb teilen: 129,60 ÷ 1,20 = 108,00 €. Die 103,68 € entstehen, wenn man 20 % einfach abzieht – zu niedrig."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A7 · Antwortsatz bauen",
+          case: "In der Klausur gehört zu jeder Rechnung ein <b>Antwortsatz</b>. Bau ihn aus den Bausteinen.",
+          text: "Der Notebook-Ständer darf höchstens {*288,00 €|345,60 €|450,00 €} beim Einkauf kosten. Gewinn- und Gemeinkostenaufschläge rechnet man rückwärts {*weg|dazu}, indem man {*teilt|abzieht}. Am Ende steht der {*Bezugspreis|Listenverkaufspreis}.",
+          hints: ["Der höchste Einkaufspreis ist der Bezugspreis aus A1.", "Aufschläge werden rückwärts durch Teilen weggerechnet."],
+          explain: "Guter Antwortsatz: Ergebnis mit Einheit → Fachbegriff (Bezugspreis) → kurze Begründung mit dem Rechenweg."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann von einem festen Listenverkaufspreis rückwärts rechnen.",
+            "Ich kann den höchsten zulässigen Einkaufspreis (Bezugspreis) bestimmen.",
+            "Ich weiß, dass Gewinn und Gemeinkosten rückwärts geteilt werden – nicht abgezogen.",
+            "Ich kann Skonto und Rabatt rückwärts mit × 0,96 bzw. × 0,90 zurückrechnen."
+          ]
+        }
+      ]
+    },
+
     /* ══════════════ LERNKARTEN ══════════════ */
     {
       id: "lernkarten",
@@ -4035,7 +4247,13 @@ LERNRAUM.subjects.push({
             { front: "Kundenrabatt", back: "Nachlass auf den Zielverkaufspreis. Listenverkaufspreis = Zielverkaufspreis × 100 ÷ 90." },
             { front: "Listenverkaufspreis", back: "Angebotspreis (netto) vor der Mehrwertsteuer. Hier: 1.250,00 €." },
             { front: "Bruttopreis", back: "Listenverkaufspreis + 19 % Mehrwertsteuer: 1.250,00 € × 1,19 = 1.487,50 €." },
-            { front: "Drei Wege zum Preis", back: "kostenorientiert · nachfrageorientiert · konkurrenzorientiert." }
+            { front: "Drei Wege zum Preis", back: "kostenorientiert · nachfrageorientiert · konkurrenzorientiert." },
+            { front: "Rückwärtskalkulation", back: "Bei festem Listenverkaufspreis zum höchsten zulässigen Einkaufspreis (Bezugspreis) zurückrechnen." },
+            { front: "Rabatt rückwärts", back: "Zielverkaufspreis = Listenverkaufspreis × 0,90 (bei 10 % Rabatt). Der Rabatt steckt schon im Listenverkaufspreis." },
+            { front: "Skonto rückwärts", back: "Barverkaufspreis = Zielverkaufspreis × 0,96 (bei 4 % Skonto)." },
+            { front: "Gewinn rückwärts", back: "Selbstkosten = Barverkaufspreis ÷ 1,25 (bei 25 % Aufschlag) – teilen, nicht abziehen!" },
+            { front: "Gemeinkosten rückwärts", back: "Bezugspreis = Selbstkosten ÷ 1,20 (bei 20 %). Gewinn und Gemeinkosten sind beides Aufschläge." },
+            { front: "Höchster Einkaufspreis", back: "Der Bezugspreis ist der höchste Preis, den die Ware beim Einkauf kosten darf." }
           ]
         }
       ]
