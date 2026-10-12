@@ -7,7 +7,7 @@ Lernraum-App.
 ## Welt
 
 Ein gemütlicher **britischer Naturführer**: gealtertes Creme-Papier, feine Doppellinien,
-gestochene Tafel-Embleme, ein Register, Specimen-Tabellen und rote „Sammler-Marken".
+Aquarell-Tafelbilder, ein Register, Specimen-Tabellen und rote „Sammler-Marken".
 Die Welt besitzt den **Rahmen** (Kopfleiste, Linien, Tafeln, Register, Beschriftungen);
 die **Lesespalte bleibt ruhig** (ca. 64 Zeichen, hoher Kontrast). Kein Harry-Potter-IP,
 kein Union Jack — nur die Stimmung einer englischen Bibliothek/Teestube.
@@ -41,8 +41,7 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
 - **Register (`.register`):** römische Nummern I–III als Wegweiser; aktiv = rot +
   Doppellinie. Mobil: waagerechte Tabs.
 - **Tafel (`.plate`):** `Plate N` + Titel, Doppellinie, **Tafel-Illustration als
-  gestochener Kupferstich** (erzeugte Plates `plates/plate-N.webp`, transparent,
-  in dünnem Waldgrün-Rahmen; Provenance pro Datei im Sidecar `*.webp.json`),
+  Aquarell-Stillleben** (`plates/plate-N.webp`, 1200×800, in dünnem Waldgrün-Rahmen; Provenance im Sidecar `*.webp.json`),
   Specimen-Unterzeile, Lead-Absatz mit Initial.
 - **Schema (`.schema`):** **grafische Grammatik-Erklärung** vor den Übungen — Subjekt-Chips,
   gezeichneter Pfeil, Verb-Chip, rote `+ s`-Marke, Beispielsatz rechts; darunter Schreibregeln
@@ -65,6 +64,10 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
 - **Tee-Tally:** unter „Practice“ eine Tasse je Übung, gefüllt, wenn alles richtig war (`localStorage` `fe.done`, nur auf dem Gerät). Bei Vollmarke: „Zeit für eine Tasse Tee!“. Symbol `#cup`.
 - Leitlinie: gemütlich, aber nicht überladen – Schmuck nur an Rahmen und Rückmeldung, die Lesespalte bleibt ruhig.
 
+## QR-Code (12.10.2026)
+
+Jede Tafel hat im Kopf einen Knopf **QR** (Link `…/englisch/#plate-N`), im Register gibt es **QR-Code** für den ganzen Hub. Das Fenster zeigt den Code in Waldgrün auf Papier, den Link, **Beamer** (Vollbild, Tippen schließt) und **Link kopieren**. Eigener Generator `englisch/vendor/qrcode.js` (MIT, Kopie – der Hub teilt bewusst keine Dateien mit der App). Offline/`file://`: Hinweis statt Code. Mobil im Register nur als Symbol. Im Druck ausgeblendet.
+
 ## Signatur & Motion
 
 Die **rote Korrektur-Marke**: Beim Prüfen wird im Rand eine handschriftliche Tinte-
@@ -78,17 +81,14 @@ WebKit-Scrollbar aus der Palette — bewusst gestaltet.
 
 ## Verboten (bewusst vermieden)
 
-Kein Eyebrow/Kicker über Überschriften, keine gleichförmigen Icon-Karten als
-Seitenstruktur, keine Emoji-Icons (Icons gezeichnet, Tafel-Embleme erzeugte
-Kupferstiche), kein `border-left`, keine Gradient-Text/Glass/Hartschatten,
+Kein Eyebrow/Kicker über Überschriften (Ausnahme: „Tea-time lessons“ im Masthead), keine gleichförmigen Icon-Karten als
+Seitenstruktur, keine Emoji-Icons (Icons gezeichnet, Tafelbilder erzeugte
+Aquarelle), kein `border-left`, keine Gradient-Text/Glass/Hartschatten,
 keine System-Display-Schrift.
 
 ## Bild-Assets
 
-Die drei Tafel-Stiche sind mit `gpt-image-2.5` erzeugt (Vorgabe: freigestellter
-antiquarischer Kupferstich, dunkelgrüne Tinte, transparent), dann zu WebP
-(`cwebp -alpha_q 100`, Breite 1400) konvertiert. Der Erzeugungsprompt je Datei
-liegt als `plates/plate-N.webp.json` bei (Provenance).
+Die sechs Tafelbilder sind erzeugte Aquarell-Stillleben (OpenAI `gpt-image-1-mini`, Skript `englisch/plates/src/make-plate.py`), als WebP 1200 px (~100 KB). Provenance je Datei in `plates/plate-N.webp.json`. Die früheren Kupferstich-Bilder (Tafeln I–III) und die selbstgezeichneten SVGs (IV–VI) sind ersetzt und nur noch in der Git-Historie.
 
 
 ## Handy-Regeln (Pflicht)
@@ -102,7 +102,7 @@ Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wieder
 - **Zuordnen (match):** Auf dem Handy liegen Englisch und Lücke in einer Zeile; die deutsche **Wortliste klebt am unteren Rand**, solange die Übung im Bild ist (kein Hin-und-her-Scrollen).
 - **Alle Übungen bestätigen mit „Mark it“:** Tippen wählt nur aus (änderbar), geprüft wird erst mit dem Knopf; „Again“ setzt zurück. Auch das Quiz.
 - **Sprachen auszeichnen:** Die Seite ist Deutsch (`lang="de"`), englische Inhalte tragen `lang="en"`, Vietnamesisch `lang="vi"` (richtige Vorlesestimme). Das erledigt ein Skript nach dem Rendern; neue Bausteine dort eintragen.
-- Ein Tafel-Bild ist optional: Fehlt `plate`, erscheint nur das Ornament. Tafeln I–III sind erzeugte WebP-Stiche, **IV–VI sind handgezeichnete SVG-Stiche** (siehe „Bild-Assets“).
+- Ein Tafel-Bild ist optional: Fehlt `plate`, erscheint nur das Ornament.
 
 ## Neue Tafel (Einheit) anlegen
 
@@ -119,4 +119,4 @@ Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Vi�
 
 ## Tafel-Bilder (Stiche)
 
-Jede Tafel hat optional ein Kupferstich-Bild (`plate: "plates/plate-N.webp"` oder `.svg`). Tafeln IV–VI sind **SVG** (scharf, wenige KB), erzeugt mit `python3 englisch/plates/src/p4.py` (bzw. p5, p6; gemeinsame Bausteine `gen.py`: Schraffur-Muster, Efeu-Blatt, Bodenlinie). Stil: Waldgrün `#23402B`, Papier-Füllung `#F4EEDD`, Schraffur statt Verlauf, Format 1400×933, transparent. Neue Tafel: eigenes `pN.py` nach diesem Muster anlegen und `plate:` eintragen.
+Alle sechs Tafeln haben ein **einheitliches Aquarell-Stillleben** (Tusche + Aquarell, Creme/Waldgrün/Pastell, **keine Menschen, keine Schrift im Bild**), erzeugt mit der OpenAI-Bild-API (`gpt-image-1-mini`, Qualität low – günstig, ca. 100 KB je WebP). Neue Tafel: `python3 englisch/plates/src/make-plate.py <N> "<Szene auf Englisch>"`, dann `node englisch/plates/src/webp.js plate-N.png englisch/plates/plate-N.webp 0.8 1200` (Playwright nötig), `plate:` an der Tafel eintragen und Sidecar-JSON anlegen. Das Ergebnis immer ansehen: Fremdzeichen/Schrift/Signatur im Bild oder verformte Dinge → einmal neu erzeugen. Der API-Key liegt als Umgebungs-Secret (`OPENAI_API_KEY`), nie im Repo.
