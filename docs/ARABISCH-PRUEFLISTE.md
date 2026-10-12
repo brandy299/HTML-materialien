@@ -4,6 +4,10 @@ Die arabischen Texte des Kurses **PBP** (`app/uebersetzungen/pbp.ar.js`) sind ma
 (30.09.2026: keine Bedeutungsfehler, Zahlen/Vorzeichen/Lösungswörter stimmen). Eine Prüfung durch eine Person mit Arabischkenntnissen steht aus.
 Es genügt, diese Begriffsliste durchzugehen (ca. 10 Minuten): pro Zeile **OK** oder **Korrektur**. Änderungen dann als Issue mit Label `design` melden.
 
+## Kurs „Bewerbung“ (`pbp-bewerbung`, 12.10.2026)
+
+Alle 279 Texte maschinell übersetzt (GPT-4.1 mit Glossar, Regeln aus `app/AGENT-ANLEITUNG.md`), danach per Rückübersetzung geprüft; 11 Stellen wurden korrigiert (u. a. „für alle Geschlechter“ statt „Nationalitäten“, „Zuverlässigkeit“, „Einarbeitung“). **Muttersprachliche Durchsicht steht aus.** Besonders prüfen: **Profil** (jetzt „ملفك الشخصي“ / „المتطلبات“ je nach Satz – einheitlich?), **Stellenanzeige** (إعلان وظيفي), **Floskeln** (belastbar = قادر على التحمّل, flexibel = مرن), **m/w/d** („الوظيفة مفتوحة لجميع الأجناس“), **Einarbeitung** (فترة تأهيل), **Anforderungsprofil**, **Bewerbungsunterlagen**.
+
 ## Offene Fragen (aus dem Blindtest)
 
 1. **Fachkraft:** zwei Varianten im Kurs – „العمّال المؤهَّلون“ (15×, klingt nach Arbeitern) und „الكوادر المتخصصة“ (7×, klingt nach Führungskräften). Welche passt? Dann überall gleich.
