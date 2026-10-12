@@ -342,6 +342,46 @@ const SCHEMA = {
       <div class="schema-row"><span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">like<span class="add-s">s</span></span><span class="sx">She likes music.</span></div>
       <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">Do / Does</span><span class="sx">Does she like tea? — No, she doesn’t.</span></div>
       <p class="schema-note">like bleibt wie es ist · bei he / she / it kommt <b>s</b> · Fragen mit <b>Do / Does</b> + Grundform.</p>
+    </div>`,
+  want: `
+    <div class="schema">
+      <div class="schema-row">
+        <span class="chip-label">I · you · we · they</span>${ARW}<span class="chip-verb">want</span>
+        <span class="sx">I want a tea.</span></div>
+      <div class="schema-row">
+        <span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">want<span class="add-s">s</span></span>
+        <span class="sx">She wants coffee.</span></div>
+      <div class="schema-row">
+        <span class="chip-label">Frage</span>${ARW}<span class="chip-verb">Do / Does</span>
+        <span class="sx">Do you want milk? — Yes, I do.</span></div>
+      <div class="schema-row">
+        <span class="chip-label">höflich</span>${ARW}<span class="chip-verb">I would like …</span>
+        <span class="sx">I would like a coffee, please.</span></div>
+      <p class="schema-note">want = wollen / möchten · bei he / she / it kommt <b>s</b> · im Café immer <b>please</b> sagen.</p>
+    </div>`,
+  there: `
+    <div class="schema">
+      <div class="schema-row"><span class="l-l">there is</span><span class="l-dots"></span><span class="l-r">1 Ding</span>
+        <span class="sx">There is a table.</span></div>
+      <div class="schema-row"><span class="l-l he">there are</span><span class="l-dots"></span><span class="l-r">2 oder mehr</span>
+        <span class="sx">There are two chairs.</span></div>
+      <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">Is there …? / Are there …?</span>
+        <span class="sx">Is there a window?</span></div>
+      <div class="spell">
+        <span><b>in</b> the kitchen</span><span><b>on</b> the table</span><span><b>next to</b> the door</span></div>
+      <p class="schema-note">there is = es gibt (einmal) · there are = es gibt (mehrere) · in = in · on = auf · next to = neben.</p>
+    </div>`,
+  price: `
+    <div class="schema">
+      <div class="schema-row"><span class="chip-label">How much</span>${ARW}<span class="chip-verb">is</span><span class="chip-label">1 Ding?</span>
+        <span class="sx">How much is the bag? — It is ten euros.</span></div>
+      <div class="schema-row"><span class="chip-label he">How much</span>${ARW}<span class="chip-verb">are</span><span class="chip-label he">mehrere?</span>
+        <span class="sx">How much are the apples? — They are two euros.</span></div>
+      <div class="schema-row"><span class="l-l">cheap</span><span class="l-dots"></span><span class="l-r">expensive</span>
+        <span class="sx">billig · teuer</span></div>
+      <div class="schema-row"><span class="l-l">100 cent</span><span class="l-dots"></span><span class="l-r">1 euro</span>
+        <span class="sx">It is fifty cent.</span></div>
+      <p class="schema-note"><b>is</b> bei einem Ding, <b>are</b> bei mehreren · Preis immer mit <b>euro</b> oder <b>cent</b>.</p>
     </div>`
 };
 
@@ -457,7 +497,114 @@ const UNITS = [
         {q:"I don’t ______ coffee.", o:["likes","like","liking"], c:1, e:"don’t + Grundform: like."},
         {q:"Do you like rice? — Yes, ______.", o:["I do","I am","I like"], c:0, e:"Kurzantwort mit do: Yes, I do."}] }
     ],
-    pdfs:[["Vokabeln","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]] }
+    pdfs:[["Vokabeln","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]] },
+
+  { id:"plate-4", no:"Plate IV", title:"Food &amp; Drink", de:"Essen &amp; Trinken",
+    caption:"Teapot · bread · apple",
+    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A small teapot, a loaf of bread and an apple side by side, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    lead:"A good meal starts with a small word: <i>want</i>. Say what you eat and drink — and ask nicely when you are hungry.",
+    schema:"want",
+    schemaTitle:"How it works · want &amp; would like",
+    explain:[ "Mit <b>want</b> sagst du, was du möchtest oder brauchst: <i>I want a tea.</i> Bei he / she / it kommt ein <b>-s</b>: <i>She wants coffee.</i>",
+      "Höflicher ist <b>I would like …</b> (ich hätte gern …) — im Café oder Restaurant sagst du immer „please“." ],
+    vocab:[["bread","Brot","bánh mì"],["cheese","Käse","phô mai"],["egg","Ei","trứng"],["apple","Apfel","táo"],
+      ["soup","Suppe","súp"],["noodles","Nudeln","mì"],["tea","Tee","trà"],["coffee","Kaffee","cà phê"],
+      ["milk","Milch","sữa"],["juice","Saft","nước ép"],["hungry","hungrig","đói"],["thirsty","durstig","khát"]],
+    exercises:[
+      { id:"p4-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst ein englisches Wort, dann den passenden deutschen Begriff (oder umgekehrt).",
+        pairs:[["bread","Brot"],["cheese","Käse"],["egg","Ei"],["apple","Apfel"],["noodles","Nudeln"],["juice","Saft"]] },
+      { id:"p4-b", n:"B", type:"cloze", title:"want · Lückentext mit Wortbank", lead:"Setze das passende Wort ein.",
+        bank:["want","wants","Do","Does","would like"], items:[
+          {b:"I ",a:["want"],af:" a cup of tea."},
+          {b:"My brother ",a:["wants"],af:" an apple."},
+          {b:"I ",a:["would like"],af:" a coffee, please."},
+          {b:"",a:["Do"],af:" you want some milk?"},
+          {b:"She ",a:["wants"],af:" noodles for lunch."}] },
+      { id:"p4-c", n:"C", type:"sort", title:"Sort · Food or drink?", lead:"Ordne zu: Ist das etwas zum Essen (F) oder zum Trinken (D)?",
+        cats:["F · Food","D · Drink"],
+        items:[["bread","0"],["tea","1"],["cheese","0"],["milk","1"],["noodles","0"],["juice","1"]] },
+      { id:"p4-d", n:"D", type:"order", title:"Build the sentence · Satzbau", lead:"Tippe die Wörter in der richtigen Reihenfolge an.",
+        answer:"I would like a cup of tea." },
+      { id:"p4-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"She ______ a coffee.", o:["want","wants","wanting"], c:1, e:"he / she / it → want + s: wants."},
+        {q:"______ you want some milk?", o:["Do","Does","Is"], c:0, e:"I / you / we / they → Do."},
+        {q:"Does he ______ juice?", o:["want","wants","wanting"], c:0, e:"Nach Does steht die Grundform: Does he want …?"},
+        {q:"Im Café sagst du höflich:", o:["Give me tea.","I want tea.","I would like a tea, please."], c:2, e:"I would like … + please ist höflich."},
+        {q:"Welches Wort ist ein Getränk?", o:["bread","soup","tea"], c:2, e:"tea = Tee – ein Getränk."}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U4_Food_and_Drink_Vocab.pdf"],["Übungen","downloads/FE_U4_Food_and_Drink_Practice.pdf"]] },
+
+  { id:"plate-5", no:"Plate V", title:"Home &amp; Town", de:"Wohnen &amp; Stadt",
+    caption:"House · key · window",
+    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A small cottage with a chimney, an old door key and a window with a flower pot, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    lead:"Home is where the kettle is. Say what you can see around you — a room, a street, a shop — with <i>there is</i> and <i>there are</i>.",
+    schema:"there",
+    schemaTitle:"How it works · there is / there are",
+    explain:[ "Mit <b>there is</b> sagst du, dass es etwas <b>einmal</b> gibt: <i>There is a table in the kitchen.</i>",
+      "Mit <b>there are</b> sagst du, dass es etwas <b>mehrmals</b> gibt: <i>There are two chairs.</i> Ortswörter: <b>in</b> (in), <b>on</b> (auf), <b>next to</b> (neben)." ],
+    vocab:[["house","Haus","ngôi nhà"],["flat","Wohnung","căn hộ"],["kitchen","Küche","nhà bếp"],
+      ["bedroom","Schlafzimmer","phòng ngủ"],["bathroom","Badezimmer","phòng tắm"],["living room","Wohnzimmer","phòng khách"],
+      ["door","Tür","cửa ra vào"],["window","Fenster","cửa sổ"],["table","Tisch","cái bàn"],
+      ["chair","Stuhl","cái ghế"],["bed","Bett","cái giường"],["shop","Geschäft","cửa hàng"]],
+    exercises:[
+      { id:"p5-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst ein englisches Wort, dann den passenden deutschen Begriff (oder umgekehrt).",
+        pairs:[["house","Haus"],["flat","Wohnung"],["kitchen","Küche"],["bedroom","Schlafzimmer"],["window","Fenster"],["chair","Stuhl"]] },
+      { id:"p5-b", n:"B", type:"cloze", title:"is / are / in / on · Lückentext", lead:"Setze das passende Wort ein.",
+        bank:["is","are","in","on","next to"], items:[
+          {b:"There ",a:["is"],af:" a table in the kitchen."},
+          {b:"There ",a:["are"],af:" two chairs at the table."},
+          {b:"The bed is ",a:["in"],af:" the bedroom."},
+          {b:"The book is ",a:["on"],af:" the table."},
+          {b:"The shop is ",a:["next to"],af:" the school."}] },
+      { id:"p5-c", n:"C", type:"spot", title:"Find the mistake · der falsche Satz", lead:"Tippe den Satz an, der einen Fehler hat.",
+        sentences:["There is a bed in my room.","There are a window in the kitchen.","There are two doors in the flat."],
+        wrong:1, correction:"There is a window in the kitchen." },
+      { id:"p5-d", n:"D", type:"order", title:"Build the sentence · Satzbau", lead:"Tippe die Wörter in der richtigen Reihenfolge an.",
+        answer:"There is a big table in the kitchen." },
+      { id:"p5-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"There ______ a chair in my room.", o:["is","are","be"], c:0, e:"ein Stuhl (einmal) → there is."},
+        {q:"There ______ three windows.", o:["is","are","am"], c:1, e:"three = mehrmals → there are."},
+        {q:"The bed is ______ the bedroom.", o:["in","on","at"], c:0, e:"in = in einem Raum."},
+        {q:"The phone is ______ the table.", o:["in","on","next"], c:1, e:"on = auf."},
+        {q:"Welches Wort passt zu „neben“?", o:["in","on","next to"], c:2, e:"next to = neben."}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U5_Home_and_Town_Vocab.pdf"],["Übungen","downloads/FE_U5_Home_and_Town_Practice.pdf"]] },
+
+  { id:"plate-6", no:"Plate VI", title:"Shopping &amp; Prices", de:"Einkaufen &amp; Preise",
+    caption:"Basket · coins · scale",
+    platePrompt:"Fine antique copperplate engraving, pen-and-ink line art with delicate cross-hatching, isolated on a fully transparent background. A wicker shopping basket with an apple and a loaf, a few old coins and a small brass balance scale, a trailing ivy sprig. Dark bottle-green ink lines only. Objects centered, generous margin, no frame, no text, no colour fills.",
+    lead:"A small shop, a fair price: ask <i>how much</i>, count your coins and pay with a smile.",
+    schema:"price",
+    schemaTitle:"How it works · How much is / are …?",
+    explain:[ "Mit <b>How much is it?</b> fragst du nach dem Preis. Für mehrere Dinge sagst du <b>How much are they?</b>",
+      "<b>is</b> bei einem Ding, <b>are</b> bei mehreren: <i>The apple is one euro. The apples are two euros.</i>" ],
+    vocab:[["one hundred","hundert","một trăm"],["twenty","zwanzig","hai mươi"],["fifty","fünfzig","năm mươi"],
+      ["euro","Euro","euro"],["cent","Cent","xu (cent)"],["price","Preis","giá"],
+      ["cheap","billig","rẻ"],["expensive","teuer","đắt"],["buy","kaufen","mua"],
+      ["pay","bezahlen","trả tiền"],["bag","Tasche / Tüte","túi"],["How much is it?","Was kostet das?","Cái này bao nhiêu tiền?"]],
+    exercises:[
+      { id:"p6-a", n:"A", type:"match", title:"Match the numbers · Paare finden", lead:"Tippe erst das englische Zahlwort, dann die passende Zahl (oder umgekehrt).",
+        pairs:[["ten","10"],["twenty","20"],["thirty","30"],["fifty","50"],["eighty","80"],["one hundred","100"]] },
+      { id:"p6-b", n:"B", type:"cloze", title:"much / is / are · Lückentext", lead:"Setze das passende Wort ein.",
+        bank:["much","is","are","cheap","expensive"], items:[
+          {b:"How ",a:["much"],af:" is the tea?"},
+          {b:"The apple ",a:["is"],af:" one euro."},
+          {b:"The apples ",a:["are"],af:" two euros."},
+          {b:"A coat for 200 euros is ",a:["expensive"],af:"."},
+          {b:"A bus ticket for one euro is ",a:["cheap"],af:"."}] },
+      { id:"p6-c", n:"C", type:"sort", title:"Sort · is or are?", lead:"Wie fragst du nach dem Preis? Tippe is (ein Ding) oder are (mehrere Dinge).",
+        cats:["is","are"],
+        items:[["How much … the apple?","0"],["How much … the apples?","1"],["How much … the bag?","0"],["How much … the bags?","1"],["How much … the tea?","0"],["How much … the shoes?","1"]] },
+      { id:"p6-d", n:"D", type:"order", title:"Build the sentence · Satzbau", lead:"Tippe die Wörter in der richtigen Reihenfolge an.",
+        answer:"How much are the apples, please?" },
+      { id:"p6-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"How much ______ the bag?", o:["is","are","do"], c:0, e:"bag = ein Ding → is."},
+        {q:"How much ______ the shoes?", o:["is","are","does"], c:1, e:"shoes = mehrere → are."},
+        {q:"100 cent = ______", o:["one euro","ten euros","one hundred euros"], c:0, e:"100 cent sind 1 euro."},
+        {q:"Das Gegenteil von cheap ist ______.", o:["expensive","small","nice"], c:0, e:"cheap = billig · expensive = teuer."},
+        {q:"Im Laden fragst du:", o:["Where is it?","How much is it?","Who is it?"], c:1, e:"How much is it? = Was kostet das?"}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U6_Shopping_and_Prices_Vocab.pdf"],["Übungen","downloads/FE_U6_Shopping_and_Prices_Practice.pdf"]] }
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -527,6 +674,7 @@ function renderExercise(ex){
   return "";
 }
 function tearHTML(u){
+  if(!u.pdfs || !u.pdfs.length) return "";
   const ic = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg>`;
   return `<div class="tear">${u.pdfs.map(([t,h])=>`<a href="${h}" target="_blank" rel="noopener">${ic}Tear-out: ${esc(t)}</a>`).join("")}</div>`;
 }

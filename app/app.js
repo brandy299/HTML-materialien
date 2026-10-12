@@ -484,7 +484,9 @@
   /* Ordner: Kurs-Feld folders:[{id,title,group?,description?}], Thema-Feld folder:"<id>".
      Im Kurs erscheint pro Ordner eine Karte; die Themen stehen im Ordner (#/f/<kurs>/ordner/<id>). */
   const folderOf = (s, id) => (s.folders || []).find((f) => f.id === id);
-  const backOf = (s, t) => (SINGLE ? "#/" : t && t.folder && folderOf(s, t.folder) ? `#/f/${s.id}/ordner/${t.folder}` : `#/f/${s.id}`);
+  /* Ein einziger Ordner, der alle Themen des Kurses enthält, wäre nur ein zusätzlicher Klick: dann stehen die Themen direkt im Kurs. */
+  const folderShown = (s, id) => { const f = folderOf(s, id); return f && !((s.folders || []).length === 1 && s.topics.every((t) => t.folder === f.id)) ? f : null; };
+  const backOf = (s, t) => (SINGLE ? "#/" : t && t.folder && folderShown(s, t.folder) ? `#/f/${s.id}/ordner/${t.folder}` : `#/f/${s.id}`);
   function folderWin(s, f) {
     const tops = s.topics.filter((t) => t.folder === f.id && t.steps.length);
     const done = tops.filter((t) => progress.ratio(s, t) >= 1).length;
@@ -501,7 +503,7 @@
     const seen = new Set();
     s.topics.forEach((t) => {
       if (folderId) { if (t.folder !== folderId) return; }
-      else if (t.folder && folderOf(s, t.folder)) {
+      else if (t.folder && folderShown(s, t.folder)) {
         const f = folderOf(s, t.folder);
         if (seen.has(f.id)) return;
         seen.add(f.id);
