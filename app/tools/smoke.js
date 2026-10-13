@@ -20,6 +20,7 @@ const base = process.argv[2] || "http://localhost:8080/app/";
     for (const t of s.topics) {
       await visit(`#/f/${s.id}/${t.id}`);
       if (t.video) await visit(`#/f/${s.id}/${t.id}/video`, 1500);
+      if (t.drill) await visit(`#/f/${s.id}/${t.id}/0`, 700);
       if (t.steps && !t.exam) { await visit(`#/f/${s.id}/${t.id}/0`); await visit(`#/f/${s.id}/${t.id}/${t.steps - 1}`); }
     }
   }

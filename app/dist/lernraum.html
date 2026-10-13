@@ -4221,6 +4221,25 @@ LERNRAUM.subjects.push({
       ]
     },
 
+    /* ══════════════ ENDLOS-TRAINING RÜCKWÄRTSKALKULATION ══════════════ */
+    {
+      id: "training-rueckwaerts",
+      group: "Training",
+      title: "Endlos-Training Rückwärtskalkulation",
+      kicker: "Zufallsaufgaben",
+      drill: "rueckwaerts",          // erzeugt immer neue Rückwärtskalkulationen (Zahlen gehen in Cent auf)
+      description: "Immer neue Rückwärtsrechnungen mit Antwortsatz. Wähle deine Stufe und übe, bis es sitzt.",
+      steps: [],
+      help: `<h3>Rückwärts rechnen</h3>
+             <p class="formula">Listenverkaufspreis × (100 % − Rabatt) = Zielverkaufspreis<br>Zielverkaufspreis × (100 % − Skonto) = Barverkaufspreis<br>Barverkaufspreis ÷ (1 + Gewinn) = Selbstkosten<br>Selbstkosten ÷ (1 + Gemeinkosten) = Bezugspreis</p>
+             <h3>Stufe 3: bis zum Einkauf</h3>
+             <p class="formula">Bezugspreis − Bezugskosten = Bareinkaufspreis<br>Bareinkaufspreis ÷ (1 − Skonto) = Zieleinkaufspreis<br>Zieleinkaufspreis ÷ (1 − Rabatt) = Listeneinkaufspreis</p>
+             <h3>Merke</h3>
+             <ul><li>Nachlässe des Kunden: <strong>mal Faktor</strong> (z. B. 10 % → × 0,90).</li>
+             <li>Aufschläge: <strong>teilen</strong> (z. B. 20 % → ÷ 1,20) – nicht abziehen.</li>
+             <li>Nachlässe des Lieferanten rückwärts: <strong>teilen</strong> (2 % Skonto → ÷ 0,98).</li></ul>`
+    },
+
     /* ══════════════ LERNKARTEN ══════════════ */
     {
       id: "lernkarten",
@@ -18457,6 +18476,89 @@ window.LERNRAUM_I18N = {
     };
   }
 
+  /* ── Endlos-Training Rückwärtskalkulation (GPU) ───────────────
+     Alle Zwischenwerte sind exakt in Cent (keine Rundungsstreit): Der Generator sucht Zahlen, bei denen jede Stufe aufgeht.
+     Stufe 1: Listenverkaufspreis → Barverkaufspreis · Stufe 2: bis zum Bezugspreis · Stufe 3: bis zum Listeneinkaufspreis. */
+  const RW_PRODUCTS = ["Gaming-Maus", "Webcam", "Bluetooth-Lautsprecher", "Monitorständer", "Tastatur", "Powerbank", "USB-Hub", "Schreibtischlampe",
+    "WLAN-Router", "Smartwatch", "Ladegerät", "Headset", "Laptop-Tasche", "Grafiktablett", "Mikrofon", "Fernbedienung"];
+  const cent = (c) => (c / 100).toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " €";
+  const f2 = (x) => (x / 100).toFixed(2).replace(".", ",");
+  const step = (c, num, den) => (c * num) % den === 0 ? (c * num) / den : null;   // exakt oder null
+  function makeRueckwaertsRound(level) {
+    const product = pick(RW_PRODUCTS);
+    for (let tries = 0; tries < 4000; tries++) {
+      const r = pick([5, 10, 15, 20, 25]), sk = pick([2, 3, 4]), g = pick([10, 20, 25, 30]), k = pick([10, 20, 25, 30]);
+      const L = rint(40, 600) * 100;                            // Cent: ganze Euro
+      const Z = step(L, 100 - r, 100); if (Z == null) continue;
+      const B = step(Z, 100 - sk, 100); if (B == null) continue;
+      let S = null, Bz = null;
+      if (level >= 2) { S = step(B, 100, 100 + g); if (S == null) continue; Bz = step(S, 100, 100 + k); if (Bz == null) continue; }
+      let E = null;
+      if (level === 3) {
+        const rl = pick([10, 20, 25]), sl = pick([2, 4, 5]);
+        const ok = [];
+        for (let bk = Math.round(Bz * .04 / 10) * 10; bk <= Bz * .15; bk += 10) {
+          const BE = Bz - bk, ZE = step(BE, 100, 100 - sl); if (ZE == null) continue;
+          const LE = step(ZE, 100, 100 - rl); if (LE == null) continue;
+          ok.push({ bk, BE, ZE, LE, rl, sl });
+        }
+        if (!ok.length) continue;
+        E = pick(ok);
+      }
+      const rows = [{ label: "Listenverkaufspreis (netto)", value: L / 100 }];
+      const fac = (p) => (((100 - p) / 100).toFixed(2)).replace(".", ",");
+      const div = (p) => (((100 + p) / 100).toFixed(2)).replace(".", ",");
+      rows.push({ label: `× ${fac(r)}  → Zielverkaufspreis`, value: Z / 100, sum: true });
+      rows.push({ label: `× ${fac(sk)}  → Barverkaufspreis`, value: B / 100, sum: true });
+      let ans = B, ansName = "Barverkaufspreis", wrong, sentence, hints, caseTxt;
+      const cond = [`<b>Kundenrabatt:</b> ${r} %`, `<b>Kundenskonto:</b> ${sk} %`];
+      if (level >= 2) {
+        rows.push({ label: `÷ ${div(g)}  → Selbstkosten`, value: S / 100, sum: true });
+        rows.push({ label: `÷ ${div(k)}  → Bezugspreis (höchstens)`, value: Bz / 100, sum: true });
+        cond.push(`<b>Gewinnaufschlag:</b> ${g} %`, `<b>Gemeinkosten:</b> ${k} %`);
+        ans = Bz; ansName = "Bezugspreis";
+      }
+      if (level === 3) {
+        rows[rows.length - 1].label = `÷ ${div(k)}  → Bezugspreis`;
+        rows.push({ label: `− ${f2(E.bk)} € Bezugskosten  → Bareinkaufspreis`, value: E.BE / 100, sum: true });
+        rows.push({ label: `÷ ${fac(E.sl)}  → Zieleinkaufspreis`, value: E.ZE / 100, sum: true });
+        rows.push({ label: `÷ ${fac(E.rl)}  → Listeneinkaufspreis (höchstens)`, value: E.LE / 100, sum: true });
+        cond.push(`<b>Bezugskosten:</b> ${cent(E.bk)}`, `<b>Lieferantenskonto:</b> ${E.sl} %`, `<b>Lieferantenrabatt:</b> ${E.rl} %`);
+        ans = E.LE; ansName = "Listeneinkaufspreis";
+      }
+      const w1 = level === 1 ? Math.round(L * (100 - r - sk) / 100) : level === 2 ? Math.round(B * (100 - g) / 100 * (100 - k) / 100) : Bz;
+      const w2 = level === 1 ? Z : level === 2 ? S : E.BE;
+      wrong = [...new Set([w1, w2].filter((x) => x !== ans))];
+      while (wrong.length < 2) wrong.push(Math.round(ans * (wrong.length ? 1.1 : .9) / 100) * 100 + 1);
+      wrong = wrong.slice(0, 2);
+      const goal = level === 1 ? "den <b>Barverkaufspreis</b>" : level === 2 ? "wie viel die Ware beim Einkauf <b>höchstens</b> kosten darf (Bezugspreis)" : "den <b>Listeneinkaufspreis</b> (höchstens)";
+      caseTxt = `Mediaworld e. K. kann den Artikel <b>${esc(product)}</b> für einen <b>Listenverkaufspreis (netto) von ${cent(L)}</b> verkaufen.<br>${cond.join(" · ")}<br><br>Berechne rückwärts${level === 2 ? "," : ""} ${goal}.`;
+      const walk = rows.slice(1).map((x) => `${x.label.split("→")[0].trim()} = ${cent(Math.round(x.value * 100))}`).join(" → ");
+      hints = [
+        "Rückwärts gehst du Stufe für Stufe nach unten. Nachlässe (Rabatt, Skonto) steckst du schon im Preis: × (100 % − Prozentsatz).",
+        level === 1 ? `Rabatt ${r} % → × ${fac(r)}. Skonto ${sk} % → × ${fac(sk)}.`
+          : "Zuerst Rabatt und Skonto mit dem Faktor, dann Gewinn und Gemeinkosten: Aufschläge teilst du (÷ 1 + Prozentsatz)." + (level === 3 ? " Danach: Bezugskosten abziehen, Lieferantenskonto und -rabatt durch den Faktor teilen." : ""),
+        "Aufschläge und Skonto/Rabatt des Lieferanten werden rückwärts <b>geteilt</b> – nicht abgezogen.",
+        `Lösungsweg: ${cent(L)} → ${walk}`
+      ];
+      const t1 = `{*${cent(ans)}|${wrong.map(cent).join("|")}}`;
+      sentence = level === 1
+        ? `Der Barverkaufspreis der ${product} beträgt ${t1}. Rabatt und Skonto rechnet man rückwärts {*mit dem Faktor (× 0,9 …)|durch Abziehen der Prozente}. Der Rabatt steckt schon {*im Listenverkaufspreis|im Bezugspreis}.`
+        : level === 2
+        ? `Die ${product} darf beim Einkauf höchstens ${t1} kosten. Gewinn und Gemeinkosten rechnet man rückwärts {*durch Teilen|durch Abziehen}. Dieser Preis heißt {*Bezugspreis|Listenverkaufspreis}.`
+        : `Der Listeneinkaufspreis darf höchstens ${t1} betragen. Die Bezugskosten werden rückwärts {*abgezogen|addiert}. Lieferantenrabatt und -skonto rechnet man {*durch Teilen|durch Abziehen} zurück.`;
+      return {
+        label: product,
+        phases: [
+          { title: "Rückwärts rechnen", step: { type: "calc", title: product, decimals: 2, case: caseTxt, rows, hints, result: `${product}: ${ansName} ${cent(ans)}.` } },
+          { title: "Antwortsatz bauen", step: { type: "sentence", title: "Antwortsatz", case: `Bau den Antwortsatz für den Artikel <b>${esc(product)}</b>.`, text: sentence,
+            hints: ["Das Ergebnis steht in der letzten Zeile deines Rechenschemas.", "Aufschläge werden rückwärts geteilt, nicht abgezogen."] } }
+        ]
+      };
+    }
+    throw new Error("Rückwärtskalkulation: keine passenden Zahlen gefunden");
+  }
+
   const DRILLS = {
     bedarf: {
       make: (level) => {
@@ -18467,6 +18569,14 @@ window.LERNRAUM_I18N = {
         { n: 1, name: "Zahlen", text: "Ist, Abgänge, Zugänge und Soll stehen direkt da. Ideal zum Einstieg." },
         { n: 2, name: "Fall", text: "Eine kurze Geschichte mit Namen. Du liest Abgänge und Zugänge selbst heraus." },
         { n: 3, name: "Profi", text: "Mit Ablenkern, Ersatz- und Neubedarf. Das Ergebnis kann auch negativ sein." }
+      ]
+    },
+    rueckwaerts: {
+      make: (level) => makeRueckwaertsRound(level),
+      levels: [
+        { n: 1, name: "Nachlässe", text: "Vom Listenverkaufspreis zurück zum Barverkaufspreis: Rabatt und Skonto." },
+        { n: 2, name: "Bezugspreis", text: "Dazu Gewinn und Gemeinkosten: Wie viel darf die Ware beim Einkauf höchstens kosten?" },
+        { n: 3, name: "Profi", text: "Bis zum Listeneinkaufspreis – mit Bezugskosten, Lieferantenskonto und Lieferantenrabatt." }
       ]
     },
     zeitformen: {

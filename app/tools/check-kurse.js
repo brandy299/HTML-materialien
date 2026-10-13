@@ -10,6 +10,7 @@
 /* Endlos-Trainings in app/app.js (DRILLS) – bei neuen Generatoren hier ergänzen */
 const DRILLS = {
   bedarf: [],
+  rueckwaerts: [],
   zeitformen: ["simple-present", "present-progressive", "simple-past", "present-perfect", "past-progressive", "will-future"]
 };
 const fs = require("fs");
