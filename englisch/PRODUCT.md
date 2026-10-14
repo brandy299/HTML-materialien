@@ -16,7 +16,7 @@ wiederholen. Kein Login, kein Backend.
 
 ## Product Purpose
 
-Ein Anfänger-Englisch-HUB, der sechs Einheiten Alltagsenglisch auf Basis des Simple Present
+Ein Anfänger-Englisch-HUB, der neun Einheiten Alltagsenglisch auf Basis des Simple Present
 bündelt — je mit kurzer Grammatikerklärung, Vokabeln (EN·DE), interaktiven Übungen
 (Lückentext, Quiz) und druckbaren Arbeitsblättern. Er macht fundamentales Anfänger-Englisch
 projizierbar und selbstlernbar. Erfolg heißt: eine Einheit lässt sich in 45 Minuten
@@ -42,7 +42,7 @@ Vietnamesisch-Hilfe. Ergänzt den bestehenden Lernraum-Kurs „Förderkurs Engli
 
 - Statische, **selbstenthaltende** HTML-Seite (kein Build-Schritt), ausgeliefert über
   GitHub Pages unter `lernen.yannikbrand.eu/englisch/`.
-- Sechs Einheiten (Tafeln): **My Day**, **People & Family**, **Free Time & Likes**, **Food & Drink**, **Home & Town**, **Shopping & Prices** – je Diagramm, 12 Vokabeln (EN·DE·VI) und fünf Übungen. Neue Tafeln: siehe `DESIGN.md` „Neue Tafel anlegen“.
+- Neun Einheiten (Tafeln): **My Day**, **People & Family**, **Free Time & Likes**, **Food & Drink**, **Home & Town**, **Shopping & Prices**, **Weather & Clothes**, **Body & Health**, **Jobs & Work** – je Diagramm, 12 Vokabeln (EN·DE·VI) und fünf Übungen. Neue Tafeln: siehe `DESIGN.md` „Neue Tafel anlegen“.
 - Interaktive, **automatisch auswertbare** Übungen (Lückentext, Multiple-Choice) —
   keine Freitext-Aufgaben.
 - **Vietnamesisch-Umschalter** (ein/aus) für Vokabeln.
@@ -60,11 +60,9 @@ Vietnamesisch-Hilfe. Ergänzt den bestehenden Lernraum-Kurs „Förderkurs Engli
 
 ## Evidence on Hand
 
-- Fertige Arbeitsblätter als PDF: `englisch/downloads/FE_U1…`, `FE_U2…`, `FE_U3…` und
-  `FE_Everyday_English_Overview.pdf` (Quelle im Gigastefan-Workspace,
-  `faecher/englisch/output/FE_Everyday_English/`).
-- Vorhandenes Incumbent-Markup: `englisch/index.html` (erste, zu einfache Fassung).
-- Es gibt **keine** echten Fotos/Illustrationen; eigene Schrift-/Flächengestaltung nötig.
+- Arbeitsblätter als PDF für alle Tafeln: `englisch/downloads/FE_U<N>_…_Vocab.pdf` und `…_Practice.pdf` (erzeugt mit `app/tools/render-englisch-pdf.js`), Reihenplan `FE_Everyday_English_Overview.pdf` (`--overview`).
+- Quelle aller Inhalte: `englisch/index.html` (Daten in `UNITS` und `SCHEMA`).
+- Tafelbilder sind **erzeugte Aquarell-Stillleben** (keine Fotos, keine Menschen); Schrift und Flächen gestaltet der Hub selbst.
   Keine erfundenen Erfolgszahlen, Kunden oder Zitate.
 
 ## Product Principles

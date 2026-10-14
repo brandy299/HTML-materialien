@@ -115,7 +115,7 @@ Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wieder
 
 ## Arbeitsblätter (PDF)
 
-Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Việt) und **Übungen** (ohne Lösungen, zum Ausfüllen). Tafeln IV–VI werden **aus den Daten erzeugt**: `NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js 4 5 6` → `englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf` / `_Practice.pdf` (Hub-Schriften, Waldgrün/Ocker auf Weiß, keine Lösungen). Die PDFs der Tafeln I–III und der Reihenplan stammen aus dem Quell-Workspace der Lehrkraft und werden nicht neu erzeugt. Nach Änderungen an Vokabeln oder Übungen das Blatt neu erzeugen.
+Der **Reihenplan** für die Lehrkraft entsteht mit `node app/tools/render-englisch-pdf.js --overview` (eine A4-Seite, alle Tafeln). Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Việt) und **Übungen** (ohne Lösungen, zum Ausfüllen). Tafeln IV–IX werden **aus den Daten erzeugt**: `NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js 4 5 6` → `englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf` / `_Practice.pdf` (Hub-Schriften, Waldgrün/Ocker auf Weiß, keine Lösungen). Die PDFs der Tafeln I–III und der Reihenplan stammen aus dem Quell-Workspace der Lehrkraft und werden nicht neu erzeugt. Nach Änderungen an Vokabeln oder Übungen das Blatt neu erzeugen.
 
 ## Tafel-Bilder (Stiche)
 
