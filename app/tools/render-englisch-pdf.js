@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Arbeitsblätter (PDF) für Tafeln des Englisch-Hubs erzeugen: Vokabelblatt + Übungsblatt (ohne Lösungen).
    Aufruf:  NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js <Tafelnummer> [weitere …]      z. B.  … 4 5 6
+            NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js --overview      Reihenplan für die Lehrkraft (alle Tafeln) → FE_Everyday_English_Overview.pdf
    Liest die Inhalte aus englisch/index.html (UNITS), schreibt englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf und _Practice.pdf.
    Danach in UNITS an der Tafel eintragen:  pdfs:[["Vokabeln","downloads/…_Vocab.pdf"],["Übungen","downloads/…_Practice.pdf"]]
    Eigenständiges Produkt: nutzt nur Schriften und Gestaltung des Hubs (englisch/DESIGN.md), keine Lernraum-App-Dateien. */
@@ -96,14 +97,50 @@ function practiceDoc(u, ui) {
   ${u.exercises.map((ex, ei) => exDoc(ex, ui, ei)).join("")}${foot(u)}`;
 }
 
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+function overviewDoc() {
+  const rows = UNITS.map((u, i) => `<tr><td class="n">${ROMAN[i]}</td><td><b lang="en">${esc(u.title)}</b><br><span class="small">${esc(u.de)}</span></td>
+    <td>${esc(u.schemaTitle.replace(/^How it works · /, ""))}</td>
+    <td lang="en" class="small">${u.vocab.slice(0, 6).map((v) => esc(v[0])).join(" · ")} …</td>
+    <td class="small">${u.exercises.map((e) => e.type).join(" · ")}</td></tr>`).join("");
+  return `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="FONTS"><style>${CSS}
+    body{font-size:9.5pt; line-height:1.38} td{padding:.18rem .35rem .18rem 0; font-size:9pt} h1{font-size:21pt} h2{margin:.8rem 0 .3rem}\n    .small{font-size:8.5pt; color:#6A5F49} td.n{font-family:"IM Fell English",Georgia,serif; color:#8A5A14; font-size:14pt; width:12mm}
+    ol.plan{margin:.2rem 0 0 1.2rem; padding:0} ol.plan li{margin:.15rem 0}</style>
+    <div class="kick">English for Beginners · Reihenplan</div><h1>A field guide to everyday English</h1>
+    <p class="sub">${UNITS.length} Tafeln für den Förderkurs · Simple Present und Alltag · für die Lehrkraft</p><div class="rule"></div>
+    <h2>Die Tafeln</h2>
+    <table><thead><tr><th></th><th>Tafel</th><th>Grammatik</th><th>Wortschatz (Auszug)</th><th>Übungen A–E</th></tr></thead><tbody>${rows}</tbody></table>
+    <h2>Eine Einheit in 45 Minuten</h2>
+    <ol class="plan"><li><b>Einstieg (5 min):</b> Bild und Einstiegssatz am Beamer, Vorwissen sammeln.</li>
+      <li><b>Schema (10 min):</b> Grammatik-Diagramm erklären, Beispielsätze laut sprechen.</li>
+      <li><b>Wortschatz (10 min):</b> Vokabeltabelle (Englisch · Deutsch, optional Tiếng Việt), Wörter nachsprechen.</li>
+      <li><b>Übungen (15 min):</b> A–E gemeinsam oder in Paaren; „Mark it“ zeigt die Korrektur.</li>
+      <li><b>Abschluss (5 min):</b> Blatt „Übungen“ als Hausaufgabe oder Wiederholung am Handy.</li></ol>
+    <h2>Material</h2>
+    <p>Online: <b>lernen.yannikbrand.eu/englisch/</b> (Handy und Beamer, ohne Anmeldung). Pro Tafel zwei A4-Blätter zum Ausdrucken: Vokabeln und Übungen (<b>ohne Lösungen</b>).
+    Fortschritt (Tee-Tassen) bleibt nur auf dem jeweiligen Gerät. Vietnamesisch ist eine Verständnishilfe und lässt sich ein- und ausblenden.</p>
+    <p class="small">HBBK Oberhausen · Förderkurs Englisch · Everyday English</p>`;
+}
+
 (async () => {
   const nums = process.argv.slice(2).map(Number).filter(Boolean);
-  if (!nums.length) { console.log("Aufruf: node app/tools/render-englisch-pdf.js <Tafelnummer …>  (z. B. 4 5 6)"); process.exit(1); }
+  const wantOverview = process.argv.includes("--overview");
+  if (!nums.length && !wantOverview) { console.log("Aufruf: node app/tools/render-englisch-pdf.js <Tafelnummer …>  (z. B. 4 5 6)"); process.exit(1); }
   let chromium;
   try { ({ chromium } = require("playwright")); } catch (e) { console.log("Playwright fehlt (NODE_PATH setzen, siehe app/VIDEO-ANLEITUNG.md)"); process.exit(1); }
   const browser = await chromium.launch();
   const fontsUrl = "file://" + path.join(ROOT, "fonts", "fonts.css");
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "fe-pdf-"));
+  if (wantOverview) {
+    const f = path.join(tmp, "overview.html");
+    fs.writeFileSync(f, overviewDoc().replace(/FONTS/g, fontsUrl));
+    const page = await browser.newPage();
+    await page.goto("file://" + f); await page.evaluate(() => document.fonts.ready);
+    const out = path.join(ROOT, "downloads", "FE_Everyday_English_Overview.pdf");
+    await page.pdf({ path: out, format: "A4", printBackground: true, preferCSSPageSize: true });
+    await page.close();
+    console.log("geschrieben:", path.relative(path.join(ROOT, ".."), out), `(${Math.round(fs.statSync(out).size / 1024)} KB)`);
+  }
   for (const n of nums) {
     const u = UNITS[n - 1]; if (!u) { console.log(`Tafel ${n} gibt es nicht`); continue; }
     const base = `FE_U${n}_${slug(u.title)}`;

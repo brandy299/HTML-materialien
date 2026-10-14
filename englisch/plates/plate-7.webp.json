@@ -1,0 +1,9 @@
+{
+  "model": "gpt-image-1-mini",
+  "quality": "low",
+  "size": "1536x1024 → WebP 1200 px",
+  "createdAt": "2026-10-14",
+  "style": "Tusche + Aquarell, Stillleben ohne Menschen (Stil-Idee: Repo watercolor-sketch-style, MIT)",
+  "description": "Roter Regenschirm, grüner Regenmantel, rosa Mütze und Tasse am Regenfenster (Tafel VII)",
+  "script": "englisch/plates/src/make-plate.py"
+}

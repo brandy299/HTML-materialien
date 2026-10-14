@@ -426,6 +426,42 @@ const SCHEMA = {
       <div class="schema-row"><span class="l-l">100 cent</span><span class="l-dots"></span><span class="l-r">1 euro</span>
         <span class="sx">It is fifty cent.</span></div>
       <p class="schema-note"><b>is</b> bei einem Ding, <b>are</b> bei mehreren · Preis immer mit <b>euro</b> oder <b>cent</b>.</p>
+    </div>`,
+  weather: `
+    <div class="schema">
+      <div class="schema-row"><span class="chip-label">Wetter</span>${ARW}<span class="chip-verb">It is …</span>
+        <span class="sx">It is sunny today.</span></div>
+      <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">What’s the weather like?</span>
+        <span class="sx">It is cold and windy.</span></div>
+      <div class="schema-row"><span class="chip-label">I · you · we · they</span>${ARW}<span class="chip-verb">wear</span>
+        <span class="sx">I wear a coat.</span></div>
+      <div class="schema-row"><span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">wear<span class="add-s">s</span></span>
+        <span class="sx">She wears a hat.</span></div>
+      <p class="schema-note">Beim Wetter sagst du immer <b>It is</b> · wear = tragen (Kleidung) · bei he / she / it kommt <b>s</b>.</p>
+    </div>`,
+  health: `
+    <div class="schema">
+      <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">What’s the matter?</span>
+        <span class="sx">What’s the matter? — I have a headache.</span></div>
+      <div class="schema-row"><span class="chip-label">I · you · we · they</span>${ARW}<span class="chip-verb">have</span>
+        <span class="sx">I have a fever.</span></div>
+      <div class="schema-row"><span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">has</span>
+        <span class="sx">She has a toothache.</span></div>
+      <div class="schema-row"><span class="l-l">I am</span><span class="l-dots"></span><span class="l-r">tired</span>
+        <span class="sx">I am tired. He is tired.</span></div>
+      <p class="schema-note">Krankheit und Schmerz: <b>have / has</b> + Nomen · müde sein: <b>be</b> + tired.</p>
+    </div>`,
+  jobs: `
+    <div class="schema">
+      <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">What do you do?</span>
+        <span class="sx">What do you do? — I am a cook.</span></div>
+      <div class="schema-row"><span class="l-l">I am</span><span class="l-dots"></span><span class="l-r">a / an + Beruf</span>
+        <span class="sx">I am a nurse. He is a driver.</span></div>
+      <div class="schema-row"><span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">work<span class="add-s">s</span></span>
+        <span class="sx">She works in a hospital.</span></div>
+      <div class="spell">
+        <span><b>a</b> teacher</span><span><b>a</b> driver</span><span><b>an</b> office worker</span></div>
+      <p class="schema-note">Beruf: <b>I am a …</b> (vor Vokal <b>an</b>) · arbeiten: <b>work</b> / <b>works</b> + <b>in</b> + Ort.</p>
     </div>`
 };
 
@@ -645,7 +681,114 @@ const UNITS = [
         {q:"Das Gegenteil von cheap ist ______.", o:["expensive","small","nice"], c:0, e:"cheap = billig · expensive = teuer."},
         {q:"Im Laden fragst du:", o:["Where is it?","How much is it?","Who is it?"], c:1, e:"How much is it? = Was kostet das?"}] }
     ],
-    pdfs:[["Vokabeln","downloads/FE_U6_Shopping_and_Prices_Vocab.pdf"],["Übungen","downloads/FE_U6_Shopping_and_Prices_Practice.pdf"]] }
+    pdfs:[["Vokabeln","downloads/FE_U6_Shopping_and_Prices_Vocab.pdf"],["Übungen","downloads/FE_U6_Shopping_and_Prices_Practice.pdf"]] },
+
+  { id:"plate-7", no:"Plate VII", title:"Weather &amp; Clothes", de:"Wetter &amp; Kleidung",
+    plate:"plates/plate-7.webp",    caption:"Umbrella · coat · hat",
+    lead:"Rain on the window, a warm hat on the hook — in England everybody talks about the weather, so let’s do the same.",
+    schema:"weather",
+    schemaTitle:"How it works · It is … / wear",
+    explain:[ "Über das Wetter sprichst du mit <b>It is …</b>: <i>It is sunny. It is cold.</i> Fragen kannst du mit <b>What’s the weather like?</b>",
+      "Mit <b>wear</b> sagst du, was du anhast: <i>I wear a coat.</i> Bei he / she / it kommt ein <b>-s</b>: <i>She wears a hat.</i>" ],
+    vocab:[["sunny","sonnig","nắng"],["rainy","regnerisch","mưa"],["windy","windig","có gió"],
+      ["cold","kalt","lạnh"],["hot","heiß","nóng"],["snow","Schnee","tuyết"],
+      ["coat","Mantel","áo khoác"],["T-shirt","T-Shirt","áo phông"],["shoes","Schuhe","giày"],
+      ["hat","Mütze / Hut","mũ"],["umbrella","Regenschirm","ô (dù)"],["What’s the weather like?","Wie ist das Wetter?","Thời tiết hôm nay thế nào?"]],
+    exercises:[
+      { id:"p7-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst das englische Wort, dann das deutsche Wort (oder umgekehrt).",
+        pairs:[["sunny","sonnig"],["rainy","regnerisch"],["windy","windig"],["cold","kalt"],["hot","heiß"],["umbrella","Regenschirm"]] },
+      { id:"p7-b", n:"B", type:"cloze", title:"It is / wear · Lückentext", lead:"Setze das passende Wort ein.",
+        bank:["is","wear","wears","umbrella","cold"], items:[
+          {b:"It ",a:["is"],af:" sunny today."},
+          {b:"I ",a:["wear"],af:" a T-shirt in summer."},
+          {b:"She ",a:["wears"],af:" a hat."},
+          {b:"It is rainy. I take an ",a:["umbrella"],af:"."},
+          {b:"In winter it is ",a:["cold"],af:"."}] },
+      { id:"p7-c", n:"C", type:"sort", title:"Sort · wear or wears?", lead:"Welches Wort passt? Tippe wear oder wears.",
+        cats:["wear","wears"],
+        items:[["I … a coat.","0"],["He … a hat.","1"],["We … shoes.","0"],["She … a T-shirt.","1"],["You … a coat.","0"],["It … nothing.","1"]] },
+      { id:"p7-d", n:"D", type:"spot", title:"Find the mistake · der falsche Satz", lead:"Tippe den Satz an, der einen Fehler hat.",
+        sentences:["It is cold in winter.","She wear a coat.","I wear shoes."],
+        wrong:1, correction:"She wears a coat." },
+      { id:"p7-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"What’s the weather like? — It ______ sunny.", o:["is","are","do"], c:0, e:"Wetter: immer It is …"},
+        {q:"He ______ a hat.", o:["wear","wears","wearing"], c:1, e:"he → wears."},
+        {q:"Bei Regen nimmst du einen ______.", o:["umbrella","T-shirt","hat"], c:0, e:"umbrella = Regenschirm."},
+        {q:"Das Gegenteil von hot ist ______.", o:["cold","sunny","windy"], c:0, e:"hot = heiß · cold = kalt."},
+        {q:"Wie fragst du nach dem Wetter?", o:["What’s the weather like?","How much is it?","Where is it?"], c:0, e:"What’s the weather like? = Wie ist das Wetter?"}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U7_Weather_and_Clothes_Vocab.pdf"],["Übungen","downloads/FE_U7_Weather_and_Clothes_Practice.pdf"]] },
+
+  { id:"plate-8", no:"Plate VIII", title:"Body &amp; Health", de:"Körper &amp; Gesundheit",
+    plate:"plates/plate-8.webp",    caption:"Thermometer · tea · medicine",
+    lead:"A warm cup of tea, a quiet day in bed — and the right words for the doctor when something hurts.",
+    schema:"health",
+    schemaTitle:"How it works · have / has",
+    explain:[ "Wenn dir etwas wehtut oder du krank bist, sagst du <b>I have …</b>: <i>I have a headache. I have a fever.</i>",
+      "Bei he / she / it wird <b>have</b> zu <b>has</b>: <i>She has a toothache.</i> Müde bist du mit <b>be</b>: <i>I am tired.</i>" ],
+    vocab:[["head","Kopf","đầu"],["back","Rücken","lưng"],["arm","Arm","cánh tay"],
+      ["leg","Bein","chân"],["hand","Hand","bàn tay"],["headache","Kopfschmerzen","đau đầu"],
+      ["toothache","Zahnschmerzen","đau răng"],["fever","Fieber","sốt"],["tired","müde","mệt"],
+      ["doctor","Arzt / Ärztin","bác sĩ"],["medicine","Medikament","thuốc"],["What’s the matter?","Was ist los?","Bạn bị sao thế?"]],
+    exercises:[
+      { id:"p8-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst das englische Wort, dann das deutsche Wort (oder umgekehrt).",
+        pairs:[["head","Kopf"],["back","Rücken"],["arm","Arm"],["leg","Bein"],["fever","Fieber"],["doctor","Arzt / Ärztin"]] },
+      { id:"p8-b", n:"B", type:"cloze", title:"have / has · Lückentext", lead:"Setze have, has oder ein Wort aus der Bank ein.",
+        bank:["have","has","tired","doctor","headache"], items:[
+          {b:"I ",a:["have"],af:" a headache."},
+          {b:"She ",a:["has"],af:" a fever."},
+          {b:"We ",a:["have"],af:" a cold day."},
+          {b:"I am very ",a:["tired"],af:"."},
+          {b:"My leg hurts. I see a ",a:["doctor"],af:"."}] },
+      { id:"p8-c", n:"C", type:"sort", title:"Sort · have or has?", lead:"Welches Wort passt? Tippe have oder has.",
+        cats:["have","has"],
+        items:[["I … a headache.","0"],["He … a fever.","1"],["They … toothache.","0"],["She … medicine.","1"],["We … tired legs.","0"],["The doctor … a bag.","1"]] },
+      { id:"p8-d", n:"D", type:"spot", title:"Find the mistake · der falsche Satz", lead:"Tippe den Satz an, der einen Fehler hat.",
+        sentences:["I have a headache.","He have a fever.","She is tired."],
+        wrong:1, correction:"He has a fever." },
+      { id:"p8-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"What’s the matter? — I ______ a headache.", o:["have","has","am"], c:0, e:"I → have."},
+        {q:"She ______ a toothache.", o:["have","has","is"], c:1, e:"she → has."},
+        {q:"Wenn du krank bist, gehst du zum ______.", o:["doctor","shop","bus"], c:0, e:"doctor = Arzt / Ärztin."},
+        {q:"I am ______. Ich möchte schlafen.", o:["tired","hot","cheap"], c:0, e:"tired = müde."},
+        {q:"Was fragt der Arzt?", o:["What’s the matter?","How much is it?","Where is the bag?"], c:0, e:"What’s the matter? = Was ist los?"}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U8_Body_and_Health_Vocab.pdf"],["Übungen","downloads/FE_U8_Body_and_Health_Practice.pdf"]] },
+
+  { id:"plate-9", no:"Plate IX", title:"Jobs &amp; Work", de:"Berufe &amp; Arbeit",
+    plate:"plates/plate-9.webp",    caption:"Chef’s hat · scissors · stethoscope",
+    lead:"Everybody works somewhere — in a kitchen, in a salon, in a hospital. What do you do?",
+    schema:"jobs",
+    schemaTitle:"How it works · I am a … / works in",
+    explain:[ "Nach dem Beruf fragst du mit <b>What do you do?</b> Die Antwort: <b>I am a …</b> — <i>I am a cook.</i>",
+      "Wo jemand arbeitet, sagst du mit <b>work</b> + <b>in</b>: <i>I work in a shop. She works in a hospital.</i> Bei he / she / it kommt ein <b>-s</b>." ],
+    vocab:[["teacher","Lehrer / Lehrerin","giáo viên"],["nurse","Krankenpfleger / -schwester","y tá"],["driver","Fahrer / Fahrerin","tài xế"],
+      ["cook","Koch / Köchin","đầu bếp"],["hairdresser","Friseur / Friseurin","thợ làm tóc"],["shop assistant","Verkäufer / Verkäuferin","nhân viên bán hàng"],
+      ["office","Büro","văn phòng"],["hospital","Krankenhaus","bệnh viện"],["kitchen","Küche","nhà bếp"],
+      ["work","arbeiten","làm việc"],["boss","Chef / Chefin","sếp"],["What do you do?","Was machst du beruflich?","Bạn làm nghề gì?"]],
+    exercises:[
+      { id:"p9-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst das englische Wort, dann das deutsche Wort (oder umgekehrt).",
+        pairs:[["teacher","Lehrer / Lehrerin"],["nurse","Krankenpfleger / -schwester"],["cook","Koch / Köchin"],["hairdresser","Friseur / Friseurin"],["office","Büro"],["hospital","Krankenhaus"]] },
+      { id:"p9-b", n:"B", type:"cloze", title:"am / works · Lückentext", lead:"Setze das passende Wort ein.",
+        bank:["am","is","work","works","hospital"], items:[
+          {b:"I ",a:["am"],af:" a cook."},
+          {b:"She ",a:["is"],af:" a nurse."},
+          {b:"I ",a:["work"],af:" in a shop."},
+          {b:"He ",a:["works"],af:" in an office."},
+          {b:"A nurse works in a ",a:["hospital"],af:"."}] },
+      { id:"p9-c", n:"C", type:"sort", title:"Sort · work or works?", lead:"Welches Wort passt? Tippe work oder works.",
+        cats:["work","works"],
+        items:[["I … in a kitchen.","0"],["She … in a hospital.","1"],["We … in a shop.","0"],["He … in an office.","1"],["You … with a boss.","0"],["The cook … in a hotel.","1"]] },
+      { id:"p9-d", n:"D", type:"order", title:"Build the sentence · Satzbau", lead:"Tippe die Wörter in der richtigen Reihenfolge an.",
+        answer:"She works in a hospital." },
+      { id:"p9-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"What do you do? — I ______ a driver.", o:["am","is","work"], c:0, e:"I → am."},
+        {q:"He ______ in an office.", o:["work","works","am"], c:1, e:"he → works."},
+        {q:"Eine Krankenschwester arbeitet im ______.", o:["hospital","kitchen","shop"], c:0, e:"nurse → hospital."},
+        {q:"Ein Koch arbeitet in der ______.", o:["kitchen","office","hospital"], c:0, e:"cook → kitchen."},
+        {q:"Wie fragst du nach dem Beruf?", o:["What do you do?","Where is it?","How much is it?"], c:0, e:"What do you do? = Was machst du beruflich?"}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U9_Jobs_and_Work_Vocab.pdf"],["Übungen","downloads/FE_U9_Jobs_and_Work_Practice.pdf"]] }
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
