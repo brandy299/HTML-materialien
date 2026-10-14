@@ -3,7 +3,7 @@
 Mobile Web-App, in der Schüler ihre Fächer öffnen und Themen als Lernpfad durcharbeiten:
 erst eine Präsentation zum Wischen, dann kleine Aufgaben.
 
-Startseite: **Fächer → Kurse & Materialsammlungen → Übungen**, jede Übung mit QR-Code (QR-Knöpfe nur im **Lehrkraft-Modus**: einmal `…/app/#/lehrer` öffnen).
+Startseite: **Fächer → Kurse & Materialsammlungen → Übungen**, jede Übung mit QR-Code (QR-Knöpfe für alle sichtbar; Übersicht unter `#/qr`).
 Erster Kurs: **PBP · HS1 – Personalbedarf** (LF 8.1, Modellunternehmen Mediaworld e. K.),
 gestaltet im Stil der Typesafe-Stilstudie: Fenster mit Titelleiste, Terminal-Rückmeldungen, Pixelwolke.
 
@@ -254,6 +254,11 @@ Firmen, Namen und Ereignisse stehen in `DRILL_DATA` in `app.js` und lassen sich 
 { id: "training-personalbedarf", title: "Endlos-Training", kicker: "Zufallsaufgaben",
   drill: "bedarf", description: "…", steps: [], help: "Merkkasten …" }
 ```
+
+**Endlos-Training Rückwärtskalkulation (GPU):** `drill: "rueckwaerts"` erzeugt Rückwärtsrechnungen (Rechenschema `calc` + Antwortsatz)
+in drei Stufen: 1 Nachlässe (Liste → Barverkaufspreis), 2 bis zum Bezugspreis, 3 bis zum Listeneinkaufspreis. Jede Stufe geht **in ganzen Cent auf**
+(der Generator sucht Zahlen ohne Rundungsstreit). Artikel: Mediaworld e. K. Beispiel: `{ id: "training-rueckwaerts", group: "Training", title: "Endlos-Training Rückwärtskalkulation",
+kicker: "Zufallsaufgaben", drill: "rueckwaerts", description: "…", steps: [], help: "Merkkasten …" }`.
 
 **Endlos-Training Zeitformen (Englisch):** `drill: "zeitformen"` erzeugt Zufallsaufgaben (Quiz mit 4 Sätzen + Mini-Story)
 in drei Stufen: 1 Signalwörter · 2 Fragen & Verneinung · 3 Profi mit Fehlerformen und Zustandsverben.

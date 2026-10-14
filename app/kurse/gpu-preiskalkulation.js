@@ -605,6 +605,25 @@ LERNRAUM.subjects.push({
       ]
     },
 
+    /* ══════════════ ENDLOS-TRAINING RÜCKWÄRTSKALKULATION ══════════════ */
+    {
+      id: "training-rueckwaerts",
+      group: "Training",
+      title: "Endlos-Training Rückwärtskalkulation",
+      kicker: "Zufallsaufgaben",
+      drill: "rueckwaerts",          // erzeugt immer neue Rückwärtskalkulationen (Zahlen gehen in Cent auf)
+      description: "Immer neue Rückwärtsrechnungen mit Antwortsatz. Wähle deine Stufe und übe, bis es sitzt.",
+      steps: [],
+      help: `<h3>Rückwärts rechnen</h3>
+             <p class="formula">Listenverkaufspreis × (100 % − Rabatt) = Zielverkaufspreis<br>Zielverkaufspreis × (100 % − Skonto) = Barverkaufspreis<br>Barverkaufspreis ÷ (1 + Gewinn) = Selbstkosten<br>Selbstkosten ÷ (1 + Gemeinkosten) = Bezugspreis</p>
+             <h3>Stufe 3: bis zum Einkauf</h3>
+             <p class="formula">Bezugspreis − Bezugskosten = Bareinkaufspreis<br>Bareinkaufspreis ÷ (1 − Skonto) = Zieleinkaufspreis<br>Zieleinkaufspreis ÷ (1 − Rabatt) = Listeneinkaufspreis</p>
+             <h3>Merke</h3>
+             <ul><li>Nachlässe des Kunden: <strong>mal Faktor</strong> (z. B. 10 % → × 0,90).</li>
+             <li>Aufschläge: <strong>teilen</strong> (z. B. 20 % → ÷ 1,20) – nicht abziehen.</li>
+             <li>Nachlässe des Lieferanten rückwärts: <strong>teilen</strong> (2 % Skonto → ÷ 0,98).</li></ul>`
+    },
+
     /* ══════════════ LERNKARTEN ══════════════ */
     {
       id: "lernkarten",
