@@ -15961,8 +15961,9 @@ window.LERNRAUM_I18N = {
   const findSubject = (id) => Lsub(DATA.subjects.find((s) => s.id === id));
   const findTopic = (s, id) => s && s.topics.find((t) => t.id === id);
   const firstName = () => store.get("name", "");
-  /* Lehrkraft-Modus: QR-Knöpfe und -Übersicht nur für Lehrkräfte (Aufruf: /app/#/lehrer), Schüler/innen sehen sie nicht */
-  const isTeacher = () => store.get("teacher", false) === true;
+  /* QR-Knöpfe sind für alle sichtbar (Entscheidung der Lehrkraft, 14.10.2026: Schüler/innen dürfen sie sehen).
+     Der Lehrkraft-Modus aus Bündel D ist damit abgeschaltet; die Funktion bleibt, falls er später wieder gewünscht wird. */
+  const isTeacher = () => true;
   /* Zahlen: Dezimalkomma, optional feste Nachkommastellen d (z. B. 2 für Euro-Beträge) */
   const fmtNum = (v, d) => (d != null ? Math.abs(v).toFixed(d) : String(Math.abs(v))).replace(".", ",");
   const num = (v, d) => (v < 0 ? "− " : "") + fmtNum(v, d);
@@ -16222,9 +16223,7 @@ window.LERNRAUM_I18N = {
 
   /* Lehrkraft-Modus ein/aus (Link für Lehrkräfte: …/app/#/lehrer) */
   function viewLehrer() {
-    store.set("teacher", true);
-    toast("› Lehrkraft-Modus an – QR-Knöpfe sind jetzt sichtbar");
-    location.hash = "#/qr";
+    location.hash = "#/qr";   // alter Link …/app/#/lehrer führt weiter zur QR-Übersicht
     return h("<div></div>");
   }
 
@@ -18797,9 +18796,7 @@ window.LERNRAUM_I18N = {
       <div class="topstrip"><a class="icon-btn" href="#/" aria-label="Zurück">${ICON.back}</a><span class="tag-box ink"><span class="sq"></span>Für Lehrkräfte</span></div>
       <h1 class="display" style="margin-top:24px">QR-Codes.<small>Für jede Übung und jedes Material. Tippe auf den QR-Knopf, dann auf „Beamer-Ansicht“ – die Schüler scannen mit der Handykamera und landen direkt in der Übung.</small></h1>
       <div id="list"></div>
-      <button class="u-link" id="teacherOff" type="button" style="margin-top:28px">${isTeacher() ? "Lehrkraft-Modus beenden (QR-Knöpfe wieder ausblenden)" : "Lehrkraft-Modus einschalten"}</button>
     </main>`);
-    v.querySelector("#teacherOff").onclick = () => { store.set("teacher", !isTeacher()); toast("› " + (isTeacher() ? "Lehrkraft-Modus an" : "Lehrkraft-Modus aus")); render(); };
     const list = v.querySelector("#list");
     const addRow = (box, title, sub, url) => {
       const row = h(`<div class="list-row mat-row"><span class="mat-open"><span>${esc(title)}</span></span>
