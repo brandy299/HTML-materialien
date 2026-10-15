@@ -3581,6 +3581,106 @@ LERNRAUM.subjects.push({
     },
 
     {
+      id: "leistungsabfrage",
+      folder: "stellenanzeige",
+      group: "Leistungsabfrage",
+      title: "Leistungsabfrage Personalbeschaffung",
+      kicker: "Leistungsabfrage · benotet",
+      minutes: 20,
+      exam: {
+        minutes: 20,
+        graded: true,    // Kürzel + Klassen-PIN vor dem Start, Ergebnis-Code am Ende (app/lehrer.html liest ihn ein)
+        tools: "keine",
+        grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+      },
+      steps: [
+        {
+          type: "quiz",
+          title: "A1 · Fachbegriffe",
+          points: 6,
+          review: "intern-extern",
+          questions: [
+            { q: "Alle Maßnahmen, mit denen ein Betrieb offene Stellen besetzt.", options: ["Personalbeschaffung", "Personalabbau", "Personalplanung", "Lohnabrechnung"], answer: 0 },
+            { q: "Die neue Kraft kommt aus dem eigenen Betrieb.", options: ["Externe Beschaffung", "Interne Beschaffung", "Stellenanzeige", "Personalberater"], answer: 1 },
+            { q: "Der Betrieb kennt nur die eigenen Abläufe und bekommt keine neuen Ideen von außen.", options: ["Betriebsblindheit", "Kann-Anforderung", "Anforderungsprofil", "Muss-Anforderung"], answer: 0 },
+            { q: "Die Zusammenstellung aller fachlichen und persönlichen Anforderungen an eine Stelle.", options: ["Stellenanzeige", "Anforderungsprofil", "Arbeitsvertrag", "Kann-Liste"], answer: 1 },
+            { q: "Wer diese Anforderung nicht erfüllt, kommt nicht in die Auswahl.", options: ["Kann-Anforderung", "Muss-Anforderung", "Persönliche Anforderung", "Warnsignal"], answer: 1 },
+            { q: "Die öffentliche Ausschreibung einer offenen Stelle.", options: ["Bewerbung", "Anforderungsprofil", "Stellenanzeige", "Zeugnis"], answer: 2 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A2 · Intern oder extern?",
+          points: 3,
+          review: "intern-extern",
+          prompt: "Ordne jeden Weg der Personalbeschaffung zu.",
+          categories: ["intern", "extern"],
+          items: [
+            { text: "Eine Verkäuferin wird zur Abteilungsleiterin befördert.", cat: 0 },
+            { text: "Der Betrieb schaltet eine Anzeige in einer Jobbörse.", cat: 1 },
+            { text: "Ein Lagerist wird in den Verkauf versetzt.", cat: 0 },
+            { text: "Ein Personalberater sucht eine Fachkraft.", cat: 1 },
+            { text: "Eine Auszubildende wird nach der Prüfung übernommen.", cat: 0 },
+            { text: "Die Arbeitsagentur schlägt zwei Bewerber vor.", cat: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A3 · Muss oder Kann?",
+          points: 3,
+          review: "anforderungsprofil",
+          prompt: "Ordne jede Anforderung aus einer Stellenanzeige zu.",
+          categories: ["Muss", "Kann"],
+          items: [
+            { text: "Hauptschulabschluss ist Pflicht.", cat: 0 },
+            { text: "Ein Praktikum im Handel ist von Vorteil.", cat: 1 },
+            { text: "Gute Deutschkenntnisse sind Voraussetzung.", cat: 0 },
+            { text: "Ein Führerschein Klasse B ist wünschenswert.", cat: 1 },
+            { text: "Sicherer Umgang mit Zahlen ist zwingend.", cat: 0 },
+            { text: "Erfahrung mit Kassensystemen ist ein Pluspunkt.", cat: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A4 · Fachlich oder persönlich?",
+          points: 3,
+          review: "anforderungsprofil",
+          prompt: "Ordne jede Anforderung zu.",
+          categories: ["fachlich", "persönlich"],
+          items: [
+            { text: "PC-Grundlagen", cat: 0 },
+            { text: "Teamfähigkeit", cat: 1 },
+            { text: "Sicheres Rechnen", cat: 0 },
+            { text: "Zuverlässigkeit", cat: 1 },
+            { text: "Schulabschluss", cat: 0 },
+            { text: "Freundlichkeit", cat: 1 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A5 · Lückentext",
+          points: 5,
+          review: "intern-extern",
+          prompt: "Zwei Wörter passen nicht.",
+          text: "Personalbeschaffung deckt den {Nettopersonalbedarf}. Kommt die Kraft aus dem eigenen Betrieb, heißt das {intern}. Ein Nachteil ist die {Betriebsblindheit}. Außerdem wird die alte Stelle frei, das Loch {wandert}. Kommt die Kraft von außen, spricht man vom {externen} Weg.",
+          distractors: ["Umsatzrendite", "Kündigung"]
+        },
+        {
+          type: "quiz",
+          title: "A6 · Stellenanzeige prüfen",
+          points: 4,
+          review: "anzeigen-check",
+          questions: [
+            { q: "Welches Merkmal spricht für eine seriöse Anzeige?", options: ["Nur eine Handynummer", "Vollständiger Firmenname und Adresse", "Es wird Vorauszahlung verlangt", "Bewerbung nur heute möglich"], answer: 1 },
+            { q: "Welches Merkmal ist ein Warnsignal?", options: ["Klare Aufgabenbeschreibung", "Erreichbare Kontaktperson", "Druck und Eile", "Genaues Anforderungsprofil"], answer: 2 },
+            { q: "Was gehört in eine gute Stellenanzeige?", options: ["Aufgaben, Profil und Bewerbungsweg", "Nur der Verdienst", "Das Privatleben der Chefin", "Nur ein Foto"], answer: 0 },
+            { q: "Vorteil der internen Beschaffung?", options: ["Immer neue Ideen von außen", "Schnell und günstig, die Kraft kennt den Betrieb", "Keine Stelle wird frei", "Es braucht keine Einarbeitung mehr"], answer: 1 }
+          ]
+        }
+      ]
+    },
+
+    {
       id: "fachbegriffe",
       folder: "stellenanzeige",
       group: "Stellenanzeige & Profil",
@@ -16094,6 +16194,17 @@ window.LERNRAUM_I18N = {
     return (t.exam.grading || GRADING).find(([min]) => pct >= min) || GRADING[GRADING.length - 1];
   }
 
+  /* Benotete Leistungsabfrage (exam.graded): Pseudonym + Klassen-PIN vor dem Start, am Ende ein Ergebnis-Code für die Lehrkraft.
+     Code = "LA1." + Daten (Base64url) + "." + Prüfsumme (HMAC-SHA256 mit der Klassen-PIN, 10 Hex-Zeichen). Es wird nichts übertragen;
+     app/lehrer.html liest die Codes lokal ein. Die Prüfsumme schützt vor Tippfehlern und Zufall, nicht vor gezielter Fälschung. */
+  async function examCode(s, t, p, got, total, used) {
+    const data = { v: 1, a: p.alias, t: s.id + "/" + t.id, p: got, m: total, s: Math.round(used), d: new Date(p.examEnd || Date.now()).toISOString().slice(0, 10), n: Math.random().toString(36).slice(2, 6) };
+    const body = bytesToB64u(new TextEncoder().encode(JSON.stringify(data)));
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(p.pin || "")), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)));
+    return `LA1.${body}.${[...sig.slice(0, 5)].map((b) => b.toString(16).padStart(2, "0")).join("")}`;
+  }
+
   /* Erwartungshorizont je Aufgabe */
   function solutionHTML(st) {
     switch (st.type) {
@@ -16684,7 +16795,20 @@ window.LERNRAUM_I18N = {
       };
       dock.append(again);
     } else {
-      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${running ? `Weiter schreiben · ${clock(rest)} übrig` : "Klausur starten"} ${ICON.arrow}</a>`));
+      if (t.exam.graded && !running) {
+        v.querySelector(".dock").before(h(`<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Bevor es losgeht<span class="r">zählt für die Note</span></div>
+          <div class="body"><p class="hint" style="margin:0 0 10px">Dein <b>Kürzel</b> kennt nur ihr beide (du und deine Lehrkraft). Schreibe keinen Namen. Die <b>Klassen-PIN</b> bekommst du von der Lehrkraft.</p>
+            <input class="input" id="gAlias" maxlength="12" autocomplete="off" autocapitalize="characters" placeholder="Dein Kürzel, z. B. K7M2" aria-label="Kürzel" style="margin-bottom:10px">
+            <input class="input" id="gPin" maxlength="12" autocomplete="off" inputmode="numeric" placeholder="Klassen-PIN" aria-label="Klassen-PIN"></div></div>`));
+        const go = h(`<button class="btn block">Klausur starten ${ICON.arrow}</button>`);
+        go.onclick = () => {
+          const alias = v.querySelector("#gAlias").value.trim().toUpperCase(), pin = v.querySelector("#gPin").value.trim();
+          if (alias.length < 2 || pin.length < 3) return toast("› Bitte Kürzel und Klassen-PIN eintragen");
+          const q = progress.of(s.id, t.id); q.alias = alias; q.pin = pin; progress.save(s.id, t.id, q);
+          location.hash = `#/f/${s.id}/${t.id}/${next}`;
+        };
+        dock.append(go);
+      } else dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${running ? `Weiter schreiben · ${clock(rest)} übrig` : "Klausur starten"} ${ICON.arrow}</a>`));
     }
     return v;
   }
@@ -19042,6 +19166,10 @@ window.LERNRAUM_I18N = {
         <p class="h2" style="margin-top:16px">Note ${note} · ${word}</p>
         <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} %${gd ? "" : ` · Zeit ${clock(used).replace("+", "")} min`}${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
       </section>
+      ${t.exam.graded && p.alias ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Ergebnis-Code<span class="r">für die Lehrkraft</span></div>
+        <div class="body"><p class="hint" style="margin:0 0 10px">Kürzel <b>${esc(p.alias)}</b>. Gib diesen Code deiner Lehrkraft (kopieren und schicken oder vorzeigen). Er enthält nur Kürzel, Punkte und Datum.</p>
+          <textarea class="input code-box" id="gCode" readonly rows="3" aria-label="Ergebnis-Code" placeholder="…"></textarea>
+          <div class="code-actions"><button class="btn small" id="gCopy" disabled>Kopieren</button></div></div></div>` : ""}
       <p class="section-head">Punkte je Aufgabe</p>
       <div class="win"><div class="bar"><span class="d"></span>Auswertung<span class="r">${fmtP(got)}/${total}</span></div>
         <div id="tasks"></div></div>
@@ -19067,6 +19195,12 @@ window.LERNRAUM_I18N = {
     });
     const rv = v.querySelector("#review");
     if (rv) review.forEach((rt) => rv.append(topicWin(s, rt)));
+    const gBox = v.querySelector("#gCode");
+    if (gBox) examCode(s, t, p, got, total, used).then((c) => {
+      gBox.value = c;
+      const b = v.querySelector("#gCopy"); b.disabled = false;
+      b.onclick = () => { gBox.select(); copyText(c, "Code kopiert"); };
+    }).catch(() => { gBox.placeholder = "Der Code konnte nicht erstellt werden (https nötig)."; });
     dither(v.querySelector("canvas"), 2);
     if (pct >= 67) confetti();
     return v;
