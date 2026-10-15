@@ -674,6 +674,106 @@ LERNRAUM.subjects.push({
     },
 
     {
+      id: "leistungsabfrage",
+      folder: "stellenanzeige",
+      group: "Leistungsabfrage",
+      title: "Leistungsabfrage Personalbeschaffung",
+      kicker: "Leistungsabfrage · benotet",
+      minutes: 20,
+      exam: {
+        minutes: 20,
+        graded: true,    // Kürzel + Klassen-PIN vor dem Start, Ergebnis-Code am Ende (app/lehrer.html liest ihn ein)
+        tools: "keine",
+        grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+      },
+      steps: [
+        {
+          type: "quiz",
+          title: "A1 · Fachbegriffe",
+          points: 6,
+          review: "intern-extern",
+          questions: [
+            { q: "Alle Maßnahmen, mit denen ein Betrieb offene Stellen besetzt.", options: ["Personalbeschaffung", "Personalabbau", "Personalplanung", "Lohnabrechnung"], answer: 0 },
+            { q: "Die neue Kraft kommt aus dem eigenen Betrieb.", options: ["Externe Beschaffung", "Interne Beschaffung", "Stellenanzeige", "Personalberater"], answer: 1 },
+            { q: "Der Betrieb kennt nur die eigenen Abläufe und bekommt keine neuen Ideen von außen.", options: ["Betriebsblindheit", "Kann-Anforderung", "Anforderungsprofil", "Muss-Anforderung"], answer: 0 },
+            { q: "Die Zusammenstellung aller fachlichen und persönlichen Anforderungen an eine Stelle.", options: ["Stellenanzeige", "Anforderungsprofil", "Arbeitsvertrag", "Kann-Liste"], answer: 1 },
+            { q: "Wer diese Anforderung nicht erfüllt, kommt nicht in die Auswahl.", options: ["Kann-Anforderung", "Muss-Anforderung", "Persönliche Anforderung", "Warnsignal"], answer: 1 },
+            { q: "Die öffentliche Ausschreibung einer offenen Stelle.", options: ["Bewerbung", "Anforderungsprofil", "Stellenanzeige", "Zeugnis"], answer: 2 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A2 · Intern oder extern?",
+          points: 3,
+          review: "intern-extern",
+          prompt: "Ordne jeden Weg der Personalbeschaffung zu.",
+          categories: ["intern", "extern"],
+          items: [
+            { text: "Eine Verkäuferin wird zur Abteilungsleiterin befördert.", cat: 0 },
+            { text: "Der Betrieb schaltet eine Anzeige in einer Jobbörse.", cat: 1 },
+            { text: "Ein Lagerist wird in den Verkauf versetzt.", cat: 0 },
+            { text: "Ein Personalberater sucht eine Fachkraft.", cat: 1 },
+            { text: "Eine Auszubildende wird nach der Prüfung übernommen.", cat: 0 },
+            { text: "Die Arbeitsagentur schlägt zwei Bewerber vor.", cat: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A3 · Muss oder Kann?",
+          points: 3,
+          review: "anforderungsprofil",
+          prompt: "Ordne jede Anforderung aus einer Stellenanzeige zu.",
+          categories: ["Muss", "Kann"],
+          items: [
+            { text: "Hauptschulabschluss ist Pflicht.", cat: 0 },
+            { text: "Ein Praktikum im Handel ist von Vorteil.", cat: 1 },
+            { text: "Gute Deutschkenntnisse sind Voraussetzung.", cat: 0 },
+            { text: "Ein Führerschein Klasse B ist wünschenswert.", cat: 1 },
+            { text: "Sicherer Umgang mit Zahlen ist zwingend.", cat: 0 },
+            { text: "Erfahrung mit Kassensystemen ist ein Pluspunkt.", cat: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A4 · Fachlich oder persönlich?",
+          points: 3,
+          review: "anforderungsprofil",
+          prompt: "Ordne jede Anforderung zu.",
+          categories: ["fachlich", "persönlich"],
+          items: [
+            { text: "PC-Grundlagen", cat: 0 },
+            { text: "Teamfähigkeit", cat: 1 },
+            { text: "Sicheres Rechnen", cat: 0 },
+            { text: "Zuverlässigkeit", cat: 1 },
+            { text: "Schulabschluss", cat: 0 },
+            { text: "Freundlichkeit", cat: 1 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A5 · Lückentext",
+          points: 5,
+          review: "intern-extern",
+          prompt: "Zwei Wörter passen nicht.",
+          text: "Personalbeschaffung deckt den {Nettopersonalbedarf}. Kommt die Kraft aus dem eigenen Betrieb, heißt das {intern}. Ein Nachteil ist die {Betriebsblindheit}. Außerdem wird die alte Stelle frei, das Loch {wandert}. Kommt die Kraft von außen, spricht man vom {externen} Weg.",
+          distractors: ["Umsatzrendite", "Kündigung"]
+        },
+        {
+          type: "quiz",
+          title: "A6 · Stellenanzeige prüfen",
+          points: 4,
+          review: "anzeigen-check",
+          questions: [
+            { q: "Welches Merkmal spricht für eine seriöse Anzeige?", options: ["Nur eine Handynummer", "Vollständiger Firmenname und Adresse", "Es wird Vorauszahlung verlangt", "Bewerbung nur heute möglich"], answer: 1 },
+            { q: "Welches Merkmal ist ein Warnsignal?", options: ["Klare Aufgabenbeschreibung", "Erreichbare Kontaktperson", "Druck und Eile", "Genaues Anforderungsprofil"], answer: 2 },
+            { q: "Was gehört in eine gute Stellenanzeige?", options: ["Aufgaben, Profil und Bewerbungsweg", "Nur der Verdienst", "Das Privatleben der Chefin", "Nur ein Foto"], answer: 0 },
+            { q: "Vorteil der internen Beschaffung?", options: ["Immer neue Ideen von außen", "Schnell und günstig, die Kraft kennt den Betrieb", "Keine Stelle wird frei", "Es braucht keine Einarbeitung mehr"], answer: 1 }
+          ]
+        }
+      ]
+    },
+
+    {
       id: "fachbegriffe",
       folder: "stellenanzeige",
       group: "Stellenanzeige & Profil",
