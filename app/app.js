@@ -686,6 +686,7 @@
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
+      ${backupCard()}
       <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
       <div class="list" id="sres" hidden></div>
       <div id="list"></div>
@@ -694,6 +695,7 @@
     </main>`);
     dither(v.querySelector("canvas"));
     bindInstall(v);
+    bindBackup(v);
     const chips = v.querySelector(".fach-chips");
     if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
@@ -3378,12 +3380,13 @@
       out.value = c;
       const copy = v.querySelector("#copyBtn"), file = v.querySelector("#fileBtn");
       copy.disabled = file.disabled = false;
-      copy.onclick = () => { out.select(); copyText(c, tr("Code kopiert")); };
+      copy.onclick = () => { out.select(); copyText(c, tr("Code kopiert")); markBackup(); };
       file.onclick = () => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(new Blob([c], { type: "text/plain" }));
         a.download = `lernraum-${(firstName() || "code").replace(/[^\w-]+/g, "")}-${new Date().toISOString().slice(0, 10)}.txt`;
         document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        markBackup();
       };
     }).catch(() => { out.value = ""; out.placeholder = tr("Der Code konnte nicht erstellt werden."); });
     const fail = (m) => res.replaceChildren(term([["p", "$ lerncode"], ["", `› <span class="no">${m}</span>`]]));
@@ -3397,6 +3400,26 @@
     v.querySelector("#readBtn").onclick = () => check(inp.value);
     v.querySelector("#fileIn").onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then((t) => { inp.value = t; check(t); }); };
     return v;
+  }
+
+  /* ── Erinnerung ans Sichern: Karte auf der Startseite, wenn Fortschritt da ist und der letzte Lerncode über 7 Tage her ist ── */
+  const markBackup = () => store.set("backup", { last: Date.now() });
+  function backupCard() {
+    if (!Object.keys(progress.all()).length) return "";
+    const st = store.get("backup", {}), now = Date.now();
+    if (st.last && now - st.last < 7 * 864e5) return "";
+    if (st.dismissed && now - st.dismissed < 3 * 864e5) return "";
+    return `<div class="win backup-card" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Fortschritt sichern")}</div>
+      <div class="body"><p class="hint" style="margin:0 0 12px">${tr("Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.")}</p>
+        <div class="code-actions"><button class="btn small" data-backup="copy">${tr("Code kopieren")}</button><button class="btn small ghost" data-backup="later">${tr("Später")}</button></div></div></div>`;
+  }
+  function bindBackup(root) {
+    root.querySelectorAll("[data-backup]").forEach((b) => b.onclick = async () => {
+      const card = b.closest(".backup-card");
+      if (b.dataset.backup === "later") { store.set("backup", { ...store.get("backup", {}), dismissed: Date.now() }); card.remove(); return; }
+      try { const c = await makeCode(); copyText(c, tr("Code kopiert")); markBackup(); card.remove(); }
+      catch { toast("› " + tr("Der Code konnte nicht erstellt werden.")); }
+    });
   }
 
   /* ── App auf den Startbildschirm: Fortschritt bleibt zuverlässiger erhalten, Start per Tipp ── */
