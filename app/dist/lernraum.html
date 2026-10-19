@@ -96,7 +96,7 @@
   --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --gutter: 16px;
-  --tabbar-h: 58px;
+  --tabbar-h: 60px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
   --ease: cubic-bezier(.2, .8, .2, 1);
@@ -237,7 +237,7 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 .btn.good { background: var(--good); color: var(--paper); }
 .btn.small { min-height: 40px; padding: 0 14px; font-size: 13px; }
 .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
-.u-link { font: 500 13px/1 var(--mono); text-decoration: underline; text-underline-offset: 3px; color: var(--ink-2); padding: 12px 4px; }
+.u-link { font: 500 13px/1 var(--mono); text-decoration: underline; text-underline-offset: 3px; color: var(--ink-2); padding: 16px 4px; }
 
 .dock {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
@@ -259,7 +259,7 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
 .tabbar.hidden { transform: translateY(110%); pointer-events: none; }
 .tabbar a {
   flex: 1; max-width: 150px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px;
-  height: 42px; border: 1px solid var(--ink); background: var(--paper);
+  height: 44px; border: 1px solid var(--ink); background: var(--paper);
   font: 600 13.5px/1 var(--grot); color: var(--ink);
 }
 .tabbar a.active { background: var(--ink); color: var(--paper); }
@@ -900,7 +900,7 @@ body.sim-on .dock-inner .btn svg { width: 15px; height: 15px; }
 
 /* ── Sprache ────────────────────────────────────────────── */
 .lang-sw { display: inline-flex; margin-left: auto; border: 2px solid var(--ink); background: var(--paper); box-shadow: 2px 2px 0 var(--ink); }
-.lang-sw button { min-width: 44px; min-height: 36px; padding: 0 10px; font: 700 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink); background: transparent; }
+.lang-sw button { min-width: 44px; min-height: 44px; padding: 0 10px; font: 700 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink); background: transparent; }
 .lang-sw button + button { border-left: 1.5px solid var(--ink); }
 .lang-sw button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .lang-sw button[lang="ar"] { font: 700 14px/1 system-ui, sans-serif; letter-spacing: 0; }
