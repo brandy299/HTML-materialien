@@ -97,19 +97,21 @@ function practiceDoc(u, ui) {
   ${u.exercises.map((ex, ei) => exDoc(ex, ui, ei)).join("")}${foot(u)}`;
 }
 
+/* Übungen, die nur am Bildschirm Sinn ergeben (nicht auf den Blättern, nicht im Reihenplan als Blatt-Aufgabe) */
+const SCREEN_ONLY = ["find", "memory"];
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 function overviewDoc() {
   const rows = UNITS.map((u, i) => `<tr><td class="n">${ROMAN[i]}</td><td><b lang="en">${esc(u.title)}</b><br><span class="small">${esc(u.de)}</span></td>
     <td>${esc(u.schemaTitle.replace(/^How it works · /, ""))}</td>
     <td lang="en" class="small">${u.vocab.slice(0, 6).map((v) => esc(v[0])).join(" · ")} …</td>
-    <td class="small">${u.exercises.map((e) => e.type).join(" · ")}</td></tr>`).join("");
+    <td class="small">${u.exercises.filter((e) => !SCREEN_ONLY.includes(e.type)).map((e) => e.type).join(" · ")}${u.exercises.some((e) => SCREEN_ONLY.includes(e.type)) ? "<br>+ Spot it · Memory (nur am Bildschirm)" : ""}</td></tr>`).join("");
   return `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="FONTS"><style>${CSS}
     body{font-size:9.5pt; line-height:1.38} td{padding:.18rem .35rem .18rem 0; font-size:9pt} h1{font-size:21pt} h2{margin:.8rem 0 .3rem}\n    .small{font-size:8.5pt; color:#6A5F49} td.n{font-family:"IM Fell English",Georgia,serif; color:#8A5A14; font-size:14pt; width:12mm}
     ol.plan{margin:.2rem 0 0 1.2rem; padding:0} ol.plan li{margin:.15rem 0}</style>
     <div class="kick">English for Beginners · Reihenplan</div><h1>A field guide to everyday English</h1>
     <p class="sub">${UNITS.length} Tafeln für den Förderkurs · Simple Present und Alltag · für die Lehrkraft</p><div class="rule"></div>
     <h2>Die Tafeln</h2>
-    <table><thead><tr><th></th><th>Tafel</th><th>Grammatik</th><th>Wortschatz (Auszug)</th><th>Übungen A–E</th></tr></thead><tbody>${rows}</tbody></table>
+    <table><thead><tr><th></th><th>Tafel</th><th>Grammatik</th><th>Wortschatz (Auszug)</th><th>Übungen</th></tr></thead><tbody>${rows}</tbody></table>
     <h2>Eine Einheit in 45 Minuten</h2>
     <ol class="plan"><li><b>Einstieg (5 min):</b> Bild und Einstiegssatz am Beamer, Vorwissen sammeln.</li>
       <li><b>Schema (10 min):</b> Grammatik-Diagramm erklären, Beispielsätze laut sprechen.</li>

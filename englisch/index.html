@@ -285,9 +285,12 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .qr-full p{color:var(--muted); margin:.8rem 0 0}
 
 /* ---------- Kreative Übungen: Spot it, Memory, Aussprache ---------- */
-.say{display:inline-grid; place-items:center; width:32px; height:32px; margin-left:.35rem; padding:0; vertical-align:middle; background:transparent; border:1px solid var(--line-2); border-radius:50%; color:var(--forest); cursor:pointer}
+.say{display:inline-grid; place-items:center; width:44px; height:44px; margin-left:.25rem; padding:0; vertical-align:middle; background:transparent; border:1px solid var(--line-2); border-radius:50%; color:var(--forest); cursor:pointer}
 .say:hover{background:var(--paper-2)} .say svg{width:18px; height:18px}
-.no-tts .say{display:none}
+.no-tts .say,.say[hidden]{display:none}
+/* nur für Tastatur/Schalter: Fingertipps gehen durch aufs Bild (dort wertet die Nähe-Regel), Enter/Leertaste lösen trotzdem aus */
+.find-spot{position:absolute; width:44px; height:44px; transform:translate(-50%,-50%); padding:0; border:0; border-radius:50%; background:transparent; pointer-events:none}
+.find-spot:focus-visible{outline:3px solid var(--forest); outline-offset:2px; background:rgba(239,230,210,.4)}
 .spec td.en{white-space:normal}
 .find-q{font-size:1.1rem; margin:.2rem 0 .7rem; min-height:2.3rem} .find-n{color:var(--muted); font-size:.82rem; margin-left:.4rem}
 .find-pic{position:relative; border:1.5px solid var(--forest); outline:1px solid var(--line-2); outline-offset:4px; background:#FFFBF0; cursor:crosshair; user-select:none; -webkit-user-select:none; touch-action:manipulation}
@@ -299,10 +302,11 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .miss{position:absolute; width:30px; height:30px; transform:translate(-50%,-50%); border-radius:50%; border:2.5px solid var(--red); opacity:.8; pointer-events:none; animation:fade .7s ease-out forwards}
 @keyframes pop{from{transform:translate(-50%,-50%) scale(.5); opacity:0} to{transform:translate(-50%,-50%) scale(1); opacity:1}}
 @keyframes fade{to{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
-.mem-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.55rem; margin:.4rem 0 .2rem}
-@media (min-width:560px){.mem-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mem-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin:.4rem 0 .2rem}
+@media (min-width:430px){.mem-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:620px){.mem-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .mem-card{position:relative; min-height:68px; padding:.3rem .4rem; display:grid; place-items:center; text-align:center; background:var(--paper-2); border:1.5px solid var(--forest); border-radius:3px; cursor:pointer; font-weight:600; font-size:.95rem; color:var(--forest); box-shadow:2px 2px 0 rgba(35,64,43,.12); transition:transform .15s ease, background .2s}
-.mem-card .mem-face{display:none; overflow-wrap:anywhere; line-height:1.2} .mem-card .mem-back{font-size:1.5rem; color:var(--forest-2); opacity:.7}
+.mem-card .mem-face{display:none; overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto; line-height:1.2} .mem-card .mem-back{font-size:1.5rem; color:var(--forest-2); opacity:.7}
 .mem-card.up{background:#FFFBF0} .mem-card.up .mem-face{display:block} .mem-card.up .mem-back{display:none}
 .mem-card.ok{background:rgba(35,64,43,.1); border-color:var(--forest-2); color:var(--forest-2); cursor:default}
 .mem-card:active{transform:scale(.97)}
@@ -728,7 +732,7 @@ const UNITS = [
       { id:"p6-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
         find:{"targets":[{"w":"basket","de":"Korb","spots":[[29.3,49,21.5]]},{"w":"baguette","de":"Baguette","spots":[[45.6,29,14.3]]},{"w":"scales","de":"Waage","spots":[[73,46,18]]},{"w":"coin","de":"Münze","spots":[[15,80,5],[24,82,5]]},{"w":"price tag","de":"Preisschild","spots":[[46,83,7.8]]}]} },
       { id:"p6-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
-        pairs:[["one hundred","hundert"],["twenty","zwanzig"],["fifty","fünfzig"],["euro","Euro"],["cent","Cent"],["price","Preis"]] }
+        pairs:[["one hundred","hundert"],["twenty","zwanzig"],["fifty","fünfzig"],["price","Preis"],["cheap","billig"],["expensive","teuer"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U6_Shopping_and_Prices_Vocab.pdf"],["Übungen","downloads/FE_U6_Shopping_and_Prices_Practice.pdf"]] },
 
@@ -808,7 +812,7 @@ const UNITS = [
       { id:"p8-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
         find:{"targets":[{"w":"medicine","de":"Medizin","spots":[[40.4,41,13]]},{"w":"thermometer","de":"Thermometer","spots":[[32.5,71,15]]},{"w":"cup of tea","de":"Tasse Tee","spots":[[65,62.5,17.6]]},{"w":"blanket","de":"Decke","spots":[[71.6,34,18]]}]} },
       { id:"p8-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
-        pairs:[["head","Kopf"],["back","Rücken"],["arm","Arm"],["leg","Bein"],["hand","Hand"],["headache","Kopfschmerzen"]] }
+        pairs:[["head","Kopf"],["back","Rücken"],["leg","Bein"],["headache","Kopfschmerzen"],["toothache","Zahnschmerzen"],["fever","Fieber"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U8_Body_and_Health_Vocab.pdf"],["Übungen","downloads/FE_U8_Body_and_Health_Practice.pdf"]] },
 
@@ -869,7 +873,7 @@ function vocabHTML(v){
   return `<h3 class="sec">Specimens · Vokabeln</h3>
     <table class="spec"><caption>English · Deutsch · Tiếng Việt (optional über die Hilfe links)</caption>
     <thead><tr><th>English</th><th>Deutsch</th><th class="vi">Tiếng Việt</th></tr></thead><tbody>
-    ${v.map(([en,de,vi],i)=>`<tr><td class="en"><span class="num">${String(i+1).padStart(2,"0")}</span>${esc(en)}<button class="say" type="button" data-say="${esc(en)}" aria-label="${esc(en)} anhören"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button></td><td>${esc(de)}</td><td class="vi">${esc(vi)}</td></tr>`).join("")}
+    ${v.map(([en,de,vi],i)=>`<tr><td class="en"><span class="num">${String(i+1).padStart(2,"0")}</span>${esc(en)}${sayBtn(en)}</td><td>${esc(de)}</td><td class="vi">${esc(vi)}</td></tr>`).join("")}
     </tbody></table>`;
 }
 function exHead(ex){ return `<h3>Exercise ${ex.n} · ${esc(ex.title)}</h3>${ex.lead?`<p class="ex-lead">${ex.lead}</p>`:""}`; }
@@ -917,17 +921,18 @@ function renderExercise(ex, u){
       ${btns}</div>`;
   }
   if(ex.type === "find"){
-    FIND[ex.id] = {order:shuffle(ex.find.targets.map((_,i)=>i)), i:0, miss:0};
+    const T = ex.find.targets;
     return `<div class="ex" data-ex="${ex.id}">${exHead(ex)}
-      <p class="find-q" data-q aria-live="polite"></p>
-      <div class="find-pic" data-find="${ex.id}" role="img" aria-label="Tafelbild: tippe auf den gesuchten Gegenstand"><img src="${u.plate}" alt="" width="1200" height="800" draggable="false"></div>
+      <p class="find-q"><span data-q aria-live="polite"></span>${sayBtn("")}<span class="find-n" data-n></span></p>
+      <div class="find-pic" data-find="${ex.id}" role="group" aria-label="Bild: Tippe auf den gesuchten Gegenstand. Mit der Tabulatortaste erreichst du die Stellen im Bild.">
+        <img src="${u.plate}" alt="Aquarell: ${esc(u.caption)}" width="1200" height="800" loading="lazy" decoding="async" draggable="false">
+        ${shuffle(T.map((t,ti)=>({t,ti}))).map(({t,ti},k)=>`<button class="find-spot" type="button" data-t="${ti}" style="left:${t.spots[0][0]}%;top:${t.spots[0][1]}%" aria-label="Stelle ${k+1}"></button>`).join("")}
+      </div>
       <div class="btnrow"><button class="btn ghost" type="button" data-reset="${ex.id}">Again</button></div><p class="fb" data-fb aria-live="polite"></p></div>`;
   }
   if(ex.type === "memory"){
-    const cards = shuffle(ex.pairs.flatMap((p,i)=>[{k:i,t:p[0],l:"en"},{k:i,t:p[1],l:"de"}]));
-    MEM[ex.id] = {open:[], lock:false, turns:0, found:0};
     return `<div class="ex" data-ex="${ex.id}">${exHead(ex)}
-      <div class="mem-grid" data-mem="${ex.id}">${cards.map((c,i)=>`<button class="mem-card" type="button" data-k="${c.k}" aria-label="Karte ${i+1}" aria-pressed="false"><span class="mem-back" aria-hidden="true">❦</span><span class="mem-face" lang="${c.l}">${esc(c.t)}</span></button>`).join("")}</div>
+      <div class="mem-grid" data-mem="${ex.id}"></div>
       <div class="btnrow"><button class="btn ghost" type="button" data-reset="${ex.id}">Again</button></div><p class="fb" data-fb aria-live="polite"></p></div>`;
   }
   return "";
@@ -1120,72 +1125,107 @@ function openQR(id, title){
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-qr]"); if(b) openQR(b.dataset.qr, b.dataset.t||""); });
 
 /* ---------- Neue Übungen: Spot it (Bild), Memory; Aussprache ---------- */
-const TTS = ("speechSynthesis" in window);
-if(!TTS) document.documentElement.classList.add("no-tts");
+/* Lautsprecher-Knopf (Funktion statt const: wird schon beim Aufbau der Tafeln gebraucht) */
+function sayBtn(w){
+  return `<button class="say" type="button" data-say="${esc(w)}" aria-label="${esc(w)} anhören"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>`;
+}
+/* Sprachausgabe: Knöpfe erst zeigen, wenn eine englische Stimme da ist (Stimmen laden oft verzögert) */
+const TTS = ("speechSynthesis" in window) && typeof SpeechSynthesisUtterance !== "undefined";
+let ttsVoices = [];
+document.documentElement.classList.add("no-tts");
+function ttsCheck(){
+  try{ ttsVoices = speechSynthesis.getVoices() || []; if(ttsVoices.some(v=>/^en/i.test(v.lang))) document.documentElement.classList.remove("no-tts"); }catch(e){}
+}
+if(TTS){ ttsCheck(); if(speechSynthesis.addEventListener) speechSynthesis.addEventListener("voiceschanged", ttsCheck); else speechSynthesis.onvoiceschanged = ttsCheck; }
 function say(text){
   if(!TTS) return;
   try{
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/&amp;/g,"&"));
+    const u = new SpeechSynthesisUtterance(String(text));
     u.lang = "en-GB"; u.rate = .85;
-    const v = speechSynthesis.getVoices().find(x=>/^en[-_]GB/i.test(x.lang)) || speechSynthesis.getVoices().find(x=>/^en/i.test(x.lang));
+    const v = ttsVoices.find(x=>/^en[-_]GB/i.test(x.lang)) || ttsVoices.find(x=>/^en/i.test(x.lang));
     if(v) u.voice = v;
-    speechSynthesis.speak(u);
+    /* direkt nach cancel() verschluckt Chrome/Safari ein speak() oft – kurz warten */
+    if(speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(()=>speechSynthesis.speak(u), 80); }
+    else speechSynthesis.speak(u);
   }catch(e){}
 }
+/* Spot it */
 function findAsk(id){
   const ex = EX[id], st = FIND[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
-  const q = scope.querySelector("[data-q]");
-  if(st.i >= st.order.length){ q.innerHTML = "All found! <b lang=\"en\">Well done.</b>"; return; }
+  const q = scope.querySelector("[data-q]"), n = scope.querySelector("[data-n]"), sb = scope.querySelector(".find-q .say");
+  if(st.i >= st.order.length){ q.innerHTML = 'All found! <b lang="en">Well done.</b>'; n.textContent = ""; sb.hidden = true; return; }
   const t = ex.find.targets[st.order[st.i]];
-  q.innerHTML = `Tap: <b lang="en">${esc(t.w)}</b> <button class="say" type="button" data-say="${esc(t.w)}" aria-label="${esc(t.w)} anhören"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button> <span class="find-n">${st.i+1} / ${st.order.length}</span>`;
+  q.innerHTML = `Tap: <b lang="en">${esc(t.w)}</b>`;
+  sb.hidden = false; sb.dataset.say = t.w; sb.setAttribute("aria-label", `${t.w} anhören`);
+  n.textContent = `${st.i+1} / ${st.order.length}`;
 }
 function findReset(id){
   const ex = EX[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
   FIND[id] = {order:shuffle(ex.find.targets.map((_,i)=>i)), i:0, miss:0};
   scope.querySelectorAll(".find-pic .pin, .find-pic .miss").forEach(e=>e.remove());
-  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent="";
+  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent = "";
   findAsk(id);
 }
+/* Tipp auswerten: Überlappen sich Flächen, gewinnt der Gegenstand, dessen Mitte (relativ zum Radius) am nächsten liegt */
+function findTap(pic, px, py){
+  const id = pic.dataset.find, ex = EX[id], st = FIND[id];
+  if(!ex || !st || st.i >= st.order.length) return;
+  const r = pic.querySelector("img").getBoundingClientRect(), W = r.width, H = r.height;
+  let best = null;
+  ex.find.targets.forEach((tg,ti)=>tg.spots.forEach(sp=>{
+    const d = Math.hypot(px - sp[0]/100*W, py - sp[1]/100*H) / (sp[2]/100*W);
+    if(d <= 1 && (!best || d < best.d)) best = {ti, sp, d};
+  }));
+  const want = st.order[st.i], tg = ex.find.targets[want];
+  const scope = pic.closest(".ex"), fb = scope.querySelector("[data-fb]");
+  if(best && best.ti === want){
+    const pin = document.createElement("span");
+    pin.className = "pin"; pin.style.left = best.sp[0]+"%"; pin.style.top = best.sp[1]+"%";
+    pin.innerHTML = `<i></i><b lang="en">${esc(tg.w)}</b><em>${esc(tg.de)}</em>`;
+    pic.appendChild(pin);
+    st.i++; fb.textContent = "";
+    findAsk(id);
+    if(st.i >= st.order.length){
+      fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Alles gefunden${st.miss ? ` · ${st.miss} Fehlversuch${st.miss>1?"e":""}` : " – ohne Fehler"}!</span>`;
+      markDone(id);
+    }
+  } else {
+    st.miss++;
+    const m = document.createElement("span"); m.className = "miss";
+    m.style.left = (px/W*100)+"%"; m.style.top = (py/H*100)+"%";
+    pic.appendChild(m); setTimeout(()=>m.remove(), 700);
+    fb.textContent = "Nicht ganz – schau noch einmal hin.";
+  }
+}
+/* Memory */
 function memBuild(id){
   const ex = EX[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
   const cards = shuffle(ex.pairs.flatMap((p,i)=>[{k:i,t:p[0],l:"en"},{k:i,t:p[1],l:"de"}]));
   MEM[id] = {open:[], lock:false, turns:0, found:0};
-  scope.querySelector(".mem-grid").innerHTML = cards.map((c,i)=>`<button class="mem-card" type="button" data-k="${c.k}" aria-label="Karte ${i+1}" aria-pressed="false"><span class="mem-back" aria-hidden="true">❦</span><span class="mem-face" lang="${c.l}">${esc(c.t)}</span></button>`).join("");
-  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent="";
+  scope.querySelector(".mem-grid").innerHTML = cards.map((c,i)=>`<button class="mem-card" type="button" data-k="${c.k}" data-n="${i+1}" aria-label="Karte ${i+1}, verdeckt" aria-pressed="false"><span class="mem-back" aria-hidden="true">❦</span><span class="mem-face" lang="${c.l}">${esc(c.t)}</span></button>`).join("");
+  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent = "";
+}
+const memFace = (c) => c.querySelector(".mem-face").textContent;
+function memShow(c, up){
+  c.classList.toggle("up", up); c.setAttribute("aria-pressed", up ? "true" : "false");
+  c.setAttribute("aria-label", up ? memFace(c) : `Karte ${c.dataset.n}, verdeckt`);
 }
 document.addEventListener("click", ev=>{
   const t = ev.target;
   const sb = t.closest("[data-say]");
   if(sb){ say(sb.dataset.say); return; }
-  /* Spot it */
+  /* Spot it: Stelle per Tastatur/Knopf oder Tipp ins Bild */
+  const spot = t.closest(".find-spot");
+  if(spot){
+    const pic = spot.closest(".find-pic"), ex = EX[pic.dataset.find], r = pic.querySelector("img").getBoundingClientRect();
+    const sp = ex.find.targets[+spot.dataset.t].spots[0];
+    findTap(pic, sp[0]/100*r.width, sp[1]/100*r.height);
+    return;
+  }
   const pic = t.closest(".find-pic");
   if(pic){
-    const id = pic.dataset.find, ex = EX[id], st = FIND[id];
-    if(!ex || !st || st.i >= st.order.length) return;
-    const img = pic.querySelector("img"), r = img.getBoundingClientRect();
-    const px = ev.clientX - r.left, py = ev.clientY - r.top;
-    const tg = ex.find.targets[st.order[st.i]];
-    const hit = tg.spots.find(([x,y,rad])=>Math.hypot(px - x/100*r.width, py - y/100*r.height) <= rad/100*r.width);
-    const scope = pic.closest(".ex"), fb = scope.querySelector("[data-fb]");
-    if(hit){
-      const pin = document.createElement("span");
-      pin.className = "pin"; pin.style.left = (hit[0])+"%"; pin.style.top = (hit[1])+"%";
-      pin.innerHTML = `<i></i><b lang="en">${esc(tg.w)}</b><em>${esc(tg.de)}</em>`;
-      pic.appendChild(pin);
-      st.i++; fb.textContent = "";
-      findAsk(id);
-      if(st.i >= st.order.length){
-        fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Alles gefunden${st.miss?` · ${st.miss} Fehlversuch${st.miss>1?"e":""}`:" – ohne Fehler"}!</span>`;
-        markDone(id);
-      }
-    } else {
-      st.miss++;
-      const m = document.createElement("span"); m.className = "miss";
-      m.style.left = (px/r.width*100)+"%"; m.style.top = (py/r.height*100)+"%";
-      pic.appendChild(m); setTimeout(()=>m.remove(), 700);
-      fb.textContent = "Nicht ganz – schau noch einmal hin.";
-    }
+    const r = pic.querySelector("img").getBoundingClientRect();
+    findTap(pic, ev.clientX - r.left, ev.clientY - r.top);
     return;
   }
   /* Memory */
@@ -1193,20 +1233,21 @@ document.addEventListener("click", ev=>{
   if(card){
     const grid = card.closest(".mem-grid"), id = grid.dataset.mem, st = MEM[id], scope = grid.closest(".ex"), fb = scope.querySelector("[data-fb]");
     if(!st || st.lock || card.classList.contains("up") || card.classList.contains("ok")) return;
-    card.classList.add("up"); card.setAttribute("aria-pressed","true"); st.open.push(card);
+    memShow(card, true); st.open.push(card);
     if(st.open.length === 2){
       st.turns++; st.lock = true;
-      const [a,b] = st.open;
+      const [a,b] = st.open, n = EX[id].pairs.length;
       if(a.dataset.k === b.dataset.k){
-        a.classList.add("ok"); b.classList.add("ok"); st.open = []; st.lock = false; st.found++;
-        fb.textContent = `${st.found} / ${EX[id].pairs.length} Paare · ${st.turns} Züge`;
-        if(st.found === EX[id].pairs.length){
+        [a,b].forEach(c=>{ c.classList.add("ok"); c.setAttribute("aria-label", `${memFace(c)} – Paar gefunden`); });
+        st.open = []; st.lock = false; st.found++;
+        fb.textContent = `${st.found} / ${n} Paare · ${st.turns} Züge`;
+        if(st.found === n){
           fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Alle Paare gefunden in ${st.turns} Zügen!</span>`;
           markDone(id);
         }
       } else {
-        setTimeout(()=>{ a.classList.remove("up"); b.classList.remove("up"); a.setAttribute("aria-pressed","false"); b.setAttribute("aria-pressed","false"); st.open = []; st.lock = false; }, 900);
-        fb.textContent = `${st.found} / ${EX[id].pairs.length} Paare · ${st.turns} Züge`;
+        setTimeout(()=>{ memShow(a, false); memShow(b, false); st.open = []; st.lock = false; }, 900);
+        fb.textContent = `${st.found} / ${n} Paare · ${st.turns} Züge`;
       }
     }
     return;
@@ -1229,7 +1270,7 @@ function paintTally(){
 }
 function markDone(id){ const d=doneSet(); if(!d.has(id)){ d.add(id); saveDone(d); } paintTally(); }
 paintTally();
-Object.keys(FIND).forEach(findAsk);
+Object.values(EX).forEach(ex=>{ if(ex.type==="find") findReset(ex.id); else if(ex.type==="memory") memBuild(ex.id); });
 function check(id){
   const ex = EX[id]; if(!ex) return;
   const scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;

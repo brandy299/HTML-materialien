@@ -110,6 +110,11 @@ UNITS.forEach((u, ui) => {
           if (!Array.isArray(t.spots) || !t.spots.length) return err(E, `Ziel ${i + 1} (${t.w}): spots [[x%, y%, Radius%], …] nötig`);
           t.spots.forEach((sp) => { if (!Array.isArray(sp) || sp.length !== 3 || sp.some((v) => typeof v !== "number") || sp[0] < 0 || sp[0] > 100 || sp[1] < 0 || sp[1] > 100 || sp[2] < 3 || sp[2] > 30) err(E, `Ziel ${i + 1} (${t.w}): spot [x 0–100, y 0–100, Radius 3–30 (% der Bildbreite)] erwartet`); });
         });
+        /* Überlappung: Die App wertet einen Tipp für den Gegenstand, dessen Mitte (relativ zum Radius) am nächsten liegt.
+           Fehler nur, wenn zwei verschiedene Gegenstände (fast) dieselbe Mitte haben – dann ist der Tipp nicht eindeutig. */
+        T.forEach((a, ia) => (a.spots || []).forEach((sa) => T.forEach((b, ib) => { if (ib <= ia) return; (b.spots || []).forEach((sb) => {
+          if (Math.hypot(sa[0] - sb[0], (sa[1] - sb[1]) * 2 / 3) < 3) err(E, `„${a.w}“ und „${b.w}“ haben fast dieselbe Mitte – Trefferflächen trennen`);
+        }); })));
         break;
       }
       case "memory": {
@@ -118,6 +123,7 @@ UNITS.forEach((u, ui) => {
         ex.pairs.forEach((p, i) => {
           if (!Array.isArray(p) || p.length !== 2 || !p.every(str)) return err(E, `Paar ${i + 1} braucht [Englisch, Deutsch]`);
           if (l.has(norm(p[0])) || r.has(norm(p[1]))) err(E, `Paar ${i + 1}: doppelt`);
+          if (norm(p[0]) === norm(p[1])) err(E, `Paar ${i + 1}: „${p[0]}“ steht auf beiden Karten gleich – lernt nichts, anderes Wort nehmen`);
           l.add(norm(p[0])); r.add(norm(p[1]));
         });
         break;
