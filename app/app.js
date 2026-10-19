@@ -309,6 +309,17 @@
     return (t.exam.grading || GRADING).find(([min]) => pct >= min) || GRADING[GRADING.length - 1];
   }
 
+  /* Benotete Leistungsabfrage (exam.graded): Pseudonym + Klassen-PIN vor dem Start, am Ende ein Ergebnis-Code für die Lehrkraft.
+     Code = "LA1." + Daten (Base64url) + "." + Prüfsumme (HMAC-SHA256 mit der Klassen-PIN, 10 Hex-Zeichen). Es wird nichts übertragen;
+     app/lehrer.html liest die Codes lokal ein. Die Prüfsumme schützt vor Tippfehlern und Zufall, nicht vor gezielter Fälschung. */
+  async function examCode(s, t, p, got, total, used) {
+    const data = { v: 1, a: p.alias, t: s.id + "/" + t.id, p: got, m: total, s: Math.round(used), d: new Date(p.examEnd || Date.now()).toISOString().slice(0, 10), n: Math.random().toString(36).slice(2, 6) };
+    const body = bytesToB64u(new TextEncoder().encode(JSON.stringify(data)));
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(p.pin || "")), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)));
+    return `LA1.${body}.${[...sig.slice(0, 5)].map((b) => b.toString(16).padStart(2, "0")).join("")}`;
+  }
+
   /* Erwartungshorizont je Aufgabe */
   function solutionHTML(st) {
     switch (st.type) {
@@ -686,6 +697,7 @@
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
+      ${backupCard()}
       <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
       <div class="list" id="sres" hidden></div>
       <div id="list"></div>
@@ -694,6 +706,7 @@
     </main>`);
     dither(v.querySelector("canvas"));
     bindInstall(v);
+    bindBackup(v);
     const chips = v.querySelector(".fach-chips");
     if (fachs.length < 2) chips.remove();
     const list = v.querySelector("#list");
@@ -897,7 +910,20 @@
       };
       dock.append(again);
     } else {
-      dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${running ? `Weiter schreiben · ${clock(rest)} übrig` : "Klausur starten"} ${ICON.arrow}</a>`));
+      if (t.exam.graded && !running) {
+        v.querySelector(".dock").before(h(`<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Bevor es losgeht<span class="r">zählt für die Note</span></div>
+          <div class="body"><p class="hint" style="margin:0 0 10px">Dein <b>Kürzel</b> kennt nur ihr beide (du und deine Lehrkraft). Schreibe keinen Namen. Die <b>Klassen-PIN</b> bekommst du von der Lehrkraft.</p>
+            <input class="input" id="gAlias" maxlength="12" autocomplete="off" autocapitalize="characters" placeholder="Dein Kürzel, z. B. K7M2" aria-label="Kürzel" style="margin-bottom:10px">
+            <input class="input" id="gPin" maxlength="12" autocomplete="off" inputmode="numeric" placeholder="Klassen-PIN" aria-label="Klassen-PIN"></div></div>`));
+        const go = h(`<button class="btn block">Klausur starten ${ICON.arrow}</button>`);
+        go.onclick = () => {
+          const alias = v.querySelector("#gAlias").value.trim().toUpperCase(), pin = v.querySelector("#gPin").value.trim();
+          if (alias.length < 2 || pin.length < 3) return toast("› Bitte Kürzel und Klassen-PIN eintragen");
+          const q = progress.of(s.id, t.id); q.alias = alias; q.pin = pin; progress.save(s.id, t.id, q);
+          location.hash = `#/f/${s.id}/${t.id}/${next}`;
+        };
+        dock.append(go);
+      } else dock.append(h(`<a class="btn block" href="#/f/${s.id}/${t.id}/${next}">${running ? `Weiter schreiben · ${clock(rest)} übrig` : "Klausur starten"} ${ICON.arrow}</a>`));
     }
     return v;
   }
@@ -3255,6 +3281,10 @@
         <p class="h2" style="margin-top:16px">Note ${note} · ${word}</p>
         <p class="eyebrow" style="margin-top:10px">${Math.round(pct)} %${gd ? "" : ` · Zeit ${clock(used).replace("+", "")} min`}${over ? ` · <span style="color:var(--bad)">${clock(t.exam.minutes * 60 - used)} über der Zeit</span>` : ""}</p>
       </section>
+      ${t.exam.graded && p.alias ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Ergebnis-Code<span class="r">für die Lehrkraft</span></div>
+        <div class="body"><p class="hint" style="margin:0 0 10px">Kürzel <b>${esc(p.alias)}</b>. Gib diesen Code deiner Lehrkraft (kopieren und schicken oder vorzeigen). Er enthält nur Kürzel, Punkte und Datum.</p>
+          <textarea class="input code-box" id="gCode" readonly rows="3" aria-label="Ergebnis-Code" placeholder="…"></textarea>
+          <div class="code-actions"><button class="btn small" id="gCopy" disabled>Kopieren</button></div></div></div>` : ""}
       <p class="section-head">Punkte je Aufgabe</p>
       <div class="win"><div class="bar"><span class="d"></span>Auswertung<span class="r">${fmtP(got)}/${total}</span></div>
         <div id="tasks"></div></div>
@@ -3280,6 +3310,12 @@
     });
     const rv = v.querySelector("#review");
     if (rv) review.forEach((rt) => rv.append(topicWin(s, rt)));
+    const gBox = v.querySelector("#gCode");
+    if (gBox) examCode(s, t, p, got, total, used).then((c) => {
+      gBox.value = c;
+      const b = v.querySelector("#gCopy"); b.disabled = false;
+      b.onclick = () => { gBox.select(); copyText(c, "Code kopiert"); };
+    }).catch(() => { gBox.placeholder = "Der Code konnte nicht erstellt werden (https nötig)."; });
     dither(v.querySelector("canvas"), 2);
     if (pct >= 67) confetti();
     return v;
@@ -3378,12 +3414,13 @@
       out.value = c;
       const copy = v.querySelector("#copyBtn"), file = v.querySelector("#fileBtn");
       copy.disabled = file.disabled = false;
-      copy.onclick = () => { out.select(); copyText(c, tr("Code kopiert")); };
+      copy.onclick = () => { out.select(); copyText(c, tr("Code kopiert")); markBackup(); };
       file.onclick = () => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(new Blob([c], { type: "text/plain" }));
         a.download = `lernraum-${(firstName() || "code").replace(/[^\w-]+/g, "")}-${new Date().toISOString().slice(0, 10)}.txt`;
         document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        markBackup();
       };
     }).catch(() => { out.value = ""; out.placeholder = tr("Der Code konnte nicht erstellt werden."); });
     const fail = (m) => res.replaceChildren(term([["p", "$ lerncode"], ["", `› <span class="no">${m}</span>`]]));
@@ -3397,6 +3434,26 @@
     v.querySelector("#readBtn").onclick = () => check(inp.value);
     v.querySelector("#fileIn").onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then((t) => { inp.value = t; check(t); }); };
     return v;
+  }
+
+  /* ── Erinnerung ans Sichern: Karte auf der Startseite, wenn Fortschritt da ist und der letzte Lerncode über 7 Tage her ist ── */
+  const markBackup = () => store.set("backup", { last: Date.now() });
+  function backupCard() {
+    if (!Object.keys(progress.all()).length) return "";
+    const st = store.get("backup", {}), now = Date.now();
+    if (st.last && now - st.last < 7 * 864e5) return "";
+    if (st.dismissed && now - st.dismissed < 3 * 864e5) return "";
+    return `<div class="win backup-card" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Fortschritt sichern")}</div>
+      <div class="body"><p class="hint" style="margin:0 0 12px">${tr("Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.")}</p>
+        <div class="code-actions"><button class="btn small" data-backup="copy">${tr("Code kopieren")}</button><button class="btn small ghost" data-backup="later">${tr("Später")}</button></div></div></div>`;
+  }
+  function bindBackup(root) {
+    root.querySelectorAll("[data-backup]").forEach((b) => b.onclick = async () => {
+      const card = b.closest(".backup-card");
+      if (b.dataset.backup === "later") { store.set("backup", { ...store.get("backup", {}), dismissed: Date.now() }); card.remove(); return; }
+      try { const c = await makeCode(); copyText(c, tr("Code kopiert")); markBackup(); card.remove(); }
+      catch { toast("› " + tr("Der Code konnte nicht erstellt werden.")); }
+    });
   }
 
   /* ── App auf den Startbildschirm: Fortschritt bleibt zuverlässiger erhalten, Start per Tipp ── */

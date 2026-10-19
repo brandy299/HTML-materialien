@@ -70,6 +70,9 @@ Stilstudie der Lehrkraft war die Vorlage.
   `tr("…")` laufen und in beiden Sprachen stehen – `node app/tools/check-i18n.js` prüft das (auch im GitHub-Check).
   Arabisch: Layout bleibt links→rechts (Inhalte sind deutsch), keine Sperrung, Systemschrift für arabische Zeichen.
   Die arabischen Texte sind maschinennah formuliert – **von einer muttersprachlichen Person gegenlesen lassen** (offen).
+- **Benotete Leistungsabfrage (Prototyp, 15.10.2026):** `exam.graded: true` an einer Klausur: vor dem Start Kürzel (Pseudonym) + Klassen-PIN, am Ende ein Ergebnis-Code `LA1.<Daten>.<HMAC mit PIN>`.
+  `app/lehrer.html` (nicht verlinkt) liest die Codes lokal ein (Tabelle, Note, CSV, Duplikate, falsche Prüfsumme). Nichts wird übertragen. Prüfsumme schützt nicht vor gezielter Fälschung – nur unter Aufsicht einsetzen.
+  Erster Test: „Leistungsabfrage Personalbeschaffung“ (`pbp-bewerbung`). Offen: Aufgaben pro Person mischen, Übersetzungen, Abstimmung mit Schulleitung/Datenschutz, QR-Code statt Text.
 - **Lerncode + Startbildschirm (01.10.2026):** `#/sichern` (Profil → „Fortschritt sichern“, auch auf dem Willkommensbildschirm): Code `LR1z.…` = alle
   `lernraum.*`-Werte, komprimiert (deflate-raw), als Text kopieren oder als Datei speichern; Einlesen **führt zusammen** (je Thema der neuere Stand, Schritte vereinigt,
   Training mit mehr Runden), stellt Name/Fächer/Sprache wieder her. Nur `lernraum.*`-Schlüssel werden gelesen/geschrieben. Hinweiskarte „App auf den Startbildschirm“
