@@ -1,6 +1,6 @@
 # Prüfbogen Arabisch · Kurs „Bewerbung“ (pbp-bewerbung)
 
-Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 15 Minuten). Fachbegriffe bleiben absichtlich deutsch und stehen beim ersten Vorkommen mit arabischer Erklärung in Klammern. Auswahl aus 279 Texten; die Begriffsliste steht in `docs/ARABISCH-PRUEFLISTE.md`.
+Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 25 Minuten). Fachbegriffe bleiben absichtlich deutsch und stehen beim ersten Vorkommen mit arabischer Erklärung in Klammern. Auswahl aus 599 Texten (Teil 1: 279, Teil 2: 320); die Begriffsliste steht in `docs/ARABISCH-PRUEFLISTE.md`.
 
 | # | Deutsch | Arabisch | OK / Korrektur |
 |---|---|---|---|
@@ -49,3 +49,33 @@ Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 15 Minuten). Fachb
 | 43 | Erst die Muss-Anforderungen absichern, dann mit Kann-Anforderungen punkten – immer ehrlich und mit Beispiel. | أولاً، تحقق من تحقيق Muss-Anforderungen (المتطلبات الأساسية)، ثم أظهر Kann-Anforderungen (المتطلبات الإضافية) – دائماً بصدق ومع مثال. | |
 | 44 | Nein – ohne Führerschein ist die Bewerbung zwecklos. | لا – بدون رخصة القيادة، التقديم بلا فائدة. | |
 | 45 | Was gehört in eine ehrliche Selbsteinschätzung? | ما الذي يجب أن يتضمنه التقييم الذاتي الصادق؟ | |
+
+
+## Teil 2 · Bewerbung & Auswahl (LS 2.3) – neu am 19.10.2026
+
+320 neue Texte, maschinell übersetzt und mit Rückübersetzung geprüft. Bitte besonders auf die **Noten** achten (Schulnoten 1–5 = ممتاز · جيد جدًا · جيد · مقبول · ضعيف) und auf **AGG / Diskriminierung**. Zeugnis-Formeln bleiben absichtlich deutsch, weil sie so im echten Zeugnis stehen.
+
+| # | Deutsch | Arabisch | OK / Korrektur |
+|---|---|---|---|
+| 46 | Bewerbung & Auswahl | التقديم والاختيار | |
+| 47 | Bewerbungsmappe | Bewerbungsmappe | |
+| 48 | A-, B-, C-Stapel | A-، B-، C-Stapel | |
+| 49 | Prüfe zuerst die Muss-Anforderungen. Fehlt eine, ist es C. | تحقّق أولاً من Muss-Anforderungen (المتطلبات الإلزامية). إذا نقص واحد منها، يكون التصنيف C. | |
+| 50 | Zufriedenheitsformel | Zufriedenheitsformel (صيغة الرضا) | |
+| 51 | zu unserer Zufriedenheit | zu unserer Zufriedenheit (لرضانا) | |
+| 52 | ausreichend | مقبول | |
+| 53 | Was steht zwischen den Zeilen? | ماذا تعني الجمل بين السطور؟ | |
+| 54 | Sie war sehr fleißig. | كانت مجتهدة جدًا. | |
+| 55 | Er muss ehrlich antworten. | يجب عليه أن يجيب بصدق. | |
+| 56 | Im Gespräch | في المقابلة | |
+| 57 | Auftreten: 30 × 5 | Auftreten (الحضور والتصرف): 30 × 5 | |
+| 58 | Freundlich, kurz, ohne falsche Gründe. | ودود، مختصر، بدون أسباب غير صحيحة. | |
+| 59 | Die E-Mail-Adressen der Bewerber für Werbung nutzen. | استخدام عناوين البريد الإلكتروني للمتقدمين في الإعلانات. | |
+| 60 | In die Absage schreiben: „Sie sind uns zu alt.“ | في الرفض schreiben: „Sie sind uns zu alt.“ | |
+| 61 | Darf Mediaworld ein Bewerbungsfoto verlangen? | هل يمكن لشركة Mediaworld أن تطلب صورة شخصية في Bewerbung (طلب التوظيف)؟ | |
+| 62 | Ich weiß, warum Zeugnisse einen eigenen Code haben. | أعرف لماذا الشهادات لها رموز خاصة بها. | |
+| 63 | Mia: Abschluss, Deutsch 4, keine Kann-Anforderung | Mia: شهادة التخرج، اللغة الألمانية 4، لا توجد أي Kann-Anforderung (متطلب إضافي) | |
+| 64 | Deutsch mindestens ausreichend ist Muss. Mit Note 5 ist sie nicht erfüllt → C. Kann-Anforderungen gleichen ein fehlendes Muss nicht aus. | اللغة الألمانية بدرجة „ausreichend“ (مقبول) على الأقل هي شرط Muss (إلزامي). مع الدرجة 5 هذا الشرط غير متحقق → C. متطلبات Kann (إضافية) لا تعوّض شرط Muss الناقص. | |
+| 65 | Mediaworld gibt {*Elif\|Jonas} die Zusage, weil sie mit {*390\|370} Punkten die {*höchste\|niedrigste} Summe hat. Das bessere Auftreten von Jonas {*reicht nicht aus\|entscheidet allein}, weil alle Kriterien zählen. | تعطي Mediaworld {*Elif\|Jonas} Zusage (القبول)، لأنها حصلت على {*390\|370} نقطة، وهو المجموع {*höchste\|niedrigste}. Auftreten (الحضور) الأفضل لـ Jonas {*reicht nicht aus\|entscheidet allein}، لأن كل المعايير مهمة. | |
+| 66 | A: einladen · B: Reserve · C: Absage, weil eine Muss-Anforderung fehlt. | A: دعوة · B: احتياطي · C: رفض، لأن هناك متطلبًا أساسيًا مفقودًا. | |
+| 67 | Der Code im Zeugnis: „stets zu unserer vollsten Zufriedenheit“ = sehr gut, „zu unserer Zufriedenheit“ = ausreichend. | الرمز في Arbeitszeugnis: „stets zu unserer vollsten Zufriedenheit“ = ممتاز، „zu unserer Zufriedenheit“ = مقبول. | |
