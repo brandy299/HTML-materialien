@@ -39,7 +39,7 @@
 </main>
 <script>
 (() => {
-  const GRADING = [[92,"1"],[81,"2"],[67,"3"],[50,"4"],[30,"5"],[0,"6"]];
+  const GRADING = [[87,"1"],[73,"2"],[59,"3"],[45,"4"],[18,"5"],[0,"6"]];   // Notenschlüssel Handelsschule
   const $ = (id) => document.getElementById(id);
   const b64uToBytes = (t) => Uint8Array.from(atob(t.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
   const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
