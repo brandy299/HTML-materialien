@@ -12,7 +12,9 @@
      node app/tools/render-video.js <id> --txt-only  nur die Textfassung (<id>.txt) neu schreiben (schnell)
      node app/tools/render-video.js <id> --audio-only  nur die Musik (<id>.m4a) neu erzeugen (schnell)
      node app/tools/render-video.js <id> --poster-only nur die Vorschaubilder (<id>.jpg, <id>-dark.jpg) neu erzeugen (schnell)
-     Weitere Schalter: --no-audio · --crf 27 · --fps 30 · --out <Ordner>
+     node app/tools/render-video.js <id> --voice     mit Sprecherstimme: Text aus `voice:` je Szene wird per OpenAI-Sprachausgabe gesprochen
+                                                     und über die Musik gelegt (im mp4 und in der m4a, die die App abspielt)
+     Weitere Schalter: --no-audio · --voice-name nova (Stimme) · --voice-gain 1.0 · --crf 27 · --fps 30 · --out <Ordner>
 
    Voraussetzungen: Node mit Playwright (Chromium), ffmpeg (Umgebungsvariable FFMPEG,
    „ffmpeg“ im PATH oder  pip install imageio-ffmpeg), python3 für die Musik.
@@ -20,6 +22,7 @@
 "use strict";
 const fs = require("fs"), path = require("path"), os = require("os"), http = require("http");
 const { spawn, spawnSync } = require("child_process");
+const crypto = require("crypto");
 
 const ROOT = path.resolve(__dirname, "..", "..");
 const args = process.argv.slice(2);
@@ -95,6 +98,45 @@ function serve() {
     if (m.status !== 0) { console.error("Musik fehlgeschlagen:\n" + m.stderr); process.exit(1); }
     return wav;
   };
+  // Sprecherstimme: je Szene `voice: "..."` → OpenAI-TTS (zwischengespeichert), Musik wird unter der Stimme leiser
+  const VOICE = flag("voice"), VNAME = opt("voice-name", "nova"), VGAIN = opt("voice-gain", "1.0");
+  const voiceClips = [];
+  const prepareVoice = async () => {
+    const cache = path.join(os.tmpdir(), "lv-voice-cache"); fs.mkdirSync(cache, { recursive: true });
+    for (const [i, s] of info.scenes.entries()) {
+      if (!s.voice) continue;
+      const f = path.join(cache, crypto.createHash("sha1").update(VNAME + "|" + s.voice).digest("hex") + ".mp3");
+      if (!fs.existsSync(f)) {
+        const body = JSON.stringify({ model: "gpt-4o-mini-tts", voice: VNAME, input: s.voice.replace(/<[^>]+>/g, ""), response_format: "mp3",
+          instructions: "Sprich deutsch, ruhig, freundlich und deutlich wie eine Lehrerin in einem kurzen Erklärvideo. Nicht zu schnell." });
+        const hdr = process.env.OPENAI_API_KEY ? ["-H", "Authorization: Bearer " + process.env.OPENAI_API_KEY] : [];
+        // curl statt fetch: curl nutzt den Proxy der Cloud-Umgebung (HTTPS_PROXY) automatisch
+        const r = spawnSync("curl", ["-sS", "--fail-with-body", "-o", f, "https://api.openai.com/v1/audio/speech", "-H", "Content-Type: application/json", ...hdr, "-d", body], { encoding: "utf8" });
+        if (r.status !== 0) { try { fs.unlinkSync(f); } catch {} console.error(`Sprachausgabe fehlgeschlagen (Szene ${i + 1}): ${r.stderr || r.stdout}`); process.exit(1); }
+      }
+      const pr = spawnSync(ffmpeg, ["-i", f, "-f", "null", "-"], { encoding: "utf8" });
+      const m = /time=(\d+):(\d+):([\d.]+)/g; let t = 0, x; while ((x = m.exec(pr.stderr))) t = +x[1] * 3600 + +x[2] * 60 + +x[3];
+      const at = s.start + (s.type === "scene" ? 0.6 : 0.4);
+      if (at + t > s.start + s.dur - 0.2) console.log(`  ⚠ Szene ${i + 1}: Sprechtext dauert ${t.toFixed(1)} s, die Szene nur ${s.dur} s – Text kürzen oder Szene verlängern.`);
+      voiceClips.push({ f, at, t });
+    }
+    if (!voiceClips.length) { console.error("--voice: keine Szene hat ein Feld `voice:`."); process.exit(1); }
+  };
+  if (VOICE) await prepareVoice();
+  // Mischt Stimme über die Musik (Musik wird unter der Stimme abgesenkt) und liefert die fertige WAV-Datei
+  const withVoice = (wav) => {
+    if (!voiceClips.length) return wav;
+    const out = path.join(os.tmpdir(), `lv-${id}-mix.wav`);
+    const a = ["-y", "-loglevel", "error", "-i", wav];
+    voiceClips.forEach((c) => a.push("-i", c.f));
+    const delays = voiceClips.map((c, i) => `[${i + 1}:a]aformat=sample_rates=44100:channel_layouts=mono,adelay=${Math.round(c.at * 1000)}:all=1[v${i}]`);
+    const vmix = voiceClips.map((_, i) => `[v${i}]`).join("") + `amix=inputs=${voiceClips.length}:normalize=0,volume=${VGAIN}[vo]`;
+    const fc = [...delays, vmix, "[vo]asplit[vo1][vo2]", "[0:a]aformat=sample_rates=44100:channel_layouts=mono[mu]",
+      "[mu][vo1]sidechaincompress=threshold=0.02:ratio=6:attack=30:release=500[md]", "[md][vo2]amix=inputs=2:normalize=0:duration=first[mix]"].join(";");
+    a.push("-filter_complex", fc, "-map", "[mix]", out);
+    const r = spawnSync(ffmpeg, a); if (r.status !== 0) { console.error(String(r.stderr)); process.exit(1); }
+    return out;
+  };
   const audioFilter = `volume=0.55,afade=t=out:st=${Math.max(0, info.total - 1.6).toFixed(2)}:d=1.6`;
   const encodeM4a = (wav) => {
     fs.mkdirSync(OUT, { recursive: true });
@@ -103,7 +145,7 @@ function serve() {
     if (r.status !== 0) { console.error(String(r.stderr)); process.exit(1); }
     return out;
   };
-  if (flag("audio-only")) { const out = encodeM4a(makeWav()); console.log(`\nMusik geschrieben: ${path.relative(ROOT, out)}   ${(fs.statSync(out).size / 1048576).toFixed(2)} MB`); await browser.close(); srv.close(); return; }
+  if (flag("audio-only")) { const out = encodeM4a(withVoice(makeWav())); console.log(`\nMusik geschrieben: ${path.relative(ROOT, out)}   ${(fs.statSync(out).size / 1048576).toFixed(2)} MB`); await browser.close(); srv.close(); return; }
 
 
   if (flag("sheet")) {
@@ -120,7 +162,7 @@ function serve() {
   fs.mkdirSync(OUT, { recursive: true });
   const t0 = Date.now();
   let wav = null;
-  if (!flag("no-audio")) { wav = makeWav(); encodeM4a(wav); }
+  if (!flag("no-audio")) { wav = withVoice(makeWav()); encodeM4a(wav); }
   const mp4 = path.join(OUT, id + ".mp4");
   const a = ["-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "png", "-i", "-"];
   if (wav) a.push("-i", wav);
