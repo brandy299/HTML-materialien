@@ -1132,6 +1132,13 @@ body.vid-lock { overflow: hidden; }
 
   <!-- Basis, dann alle Kurse (neue Kurse hier eintragen), dann QR-Bibliothek und App -->
   <script>
+/* Online-Abgabe der Leistungsabfrage (optional, Supabase in der EU, Einrichtung: docs/LEISTUNGSABFRAGE-ONLINE.md).
+   Beide Werte leer lassen = die App zeigt nur den Code zum Kopieren, es wird nichts gesendet.
+   url: "https://<projekt>.supabase.co"   key: der öffentliche „anon“/„publishable“-Schlüssel (darf im Code stehen, die Rechte regelt die Datenbank). */
+window.LERNRAUM_CLOUD = { url: "", key: "" };
+
+</script>
+  <script>
 /* ============================================================
    LERNRAUM — BASIS (Einstellungen + Helfer)
    Die Kurse selbst liegen in app/kurse/*.js und werden in index.html geladen.
@@ -16201,22 +16208,37 @@ window.LERNRAUM_I18N = {
      Es wird nichts übertragen; app/lehrer.html liest die Codes lokal ein. Wer das Klassen-Passwort kennt, kann Codes auch erzeugen
      (kein Schutz vor gezielter Fälschung durch Schüler/innen). Gegenstück: app/lehrer.html (gleiche Parameter!). */
   const LA_SALT = "lernraum-la2", LA_ITER = 300000, LA_MIN_PW = 6;
+  /* Ein PBKDF2-Lauf liefert 64 Byte: die ersten 32 sind der AES-Schlüssel, die nächsten 16 die Klassen-Kennung (cid) für die Online-Abgabe.
+     So lässt sich die Kennung nicht schneller erraten als das Passwort. */
   async function laKey(pw) {
-    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
-    return crypto.subtle.deriveKey({ name: "PBKDF2", salt: new TextEncoder().encode(LA_SALT), iterations: LA_ITER, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+    const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", salt: new TextEncoder().encode(LA_SALT), iterations: LA_ITER, hash: "SHA-256" }, base, 512));
+    return { key: await crypto.subtle.importKey("raw", bits.slice(0, 32), "AES-GCM", false, ["encrypt", "decrypt"]), cid: [...bits.slice(32, 48)].map((b) => b.toString(16).padStart(2, "0")).join("") };
+  }
+  /* Online-Abgabe (optional): app/cloud.js trägt die Supabase-Adresse ein. Gesendet wird nur Klassen-Kennung + verschlüsselter Code. */
+  const cloudOn = () => !!(window.LERNRAUM_CLOUD && window.LERNRAUM_CLOUD.url && window.LERNRAUM_CLOUD.key);
+  async function cloudSend(cid, code) {
+    const c = window.LERNRAUM_CLOUD;
+    const r = await fetch(c.url.replace(/\/$/, "") + "/rest/v1/abgaben", { method: "POST", headers: { apikey: c.key, Authorization: "Bearer " + c.key, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ klasse: cid, code }) });
+    if (!r.ok) throw new Error("http " + r.status);
+  }
+  /* Zufallswert je Abgabe, einmal gespeichert: Wird derselbe Test zweimal gesendet, erkennt die Lehrer-Seite das als dieselbe Abgabe */
+  function nonceOf(s, t, p) {
+    if (!p.nonce) { p.nonce = Math.random().toString(36).slice(2, 6); progress.save(s.id, t.id, p); }
+    return p.nonce;
   }
   async function examCode(s, t, p, got, total, used) {
     const tasks = t.steps.map((st, k) => [st, k]).filter(([st]) => st.points);
     const data = {
       v: 2, a: p.alias, t: s.id + "/" + t.id, p: got, m: total, s: Math.round(used),
-      d: new Date(p.examEnd || Date.now()).toISOString().slice(0, 10), n: Math.random().toString(36).slice(2, 6),
+      d: new Date(p.examEnd || Date.now()).toISOString().slice(0, 10), n: nonceOf(s, t, p),
       l: tasks.map(([st]) => String(st.title).split("·")[0].trim()),                    // Kurzname je Aufgabe, z. B. "A1"
       q: tasks.map(([st, k]) => [stepPoints(st, p.done[k]), st.points])                 // [erreicht, maximal] je Aufgabe
     };
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await laKey(String(p.pin || "")), new TextEncoder().encode(JSON.stringify(data))));
+    const iv = crypto.getRandomValues(new Uint8Array(12)), k = await laKey(String(p.pin || ""));
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, k.key, new TextEncoder().encode(JSON.stringify(data))));
     const out = new Uint8Array(12 + ct.length); out.set(iv); out.set(ct, 12);
-    return "LA2." + bytesToB64u(out);
+    return { code: "LA2." + bytesToB64u(out), cid: k.cid };
   }
 
   /* Erwartungshorizont je Aufgabe */
@@ -19183,7 +19205,8 @@ window.LERNRAUM_I18N = {
       ${t.exam.graded && p.alias ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>Ergebnis-Code<span class="r">für die Lehrkraft</span></div>
         <div class="body"><p class="hint" style="margin:0 0 10px">Kürzel <b>${esc(p.alias)}</b>. Gib diesen Code deiner Lehrkraft (kopieren und schicken oder vorzeigen). Er ist verschlüsselt und enthält nur Kürzel, Punkte und Datum.</p>
           <textarea class="input code-box" id="gCode" readonly rows="3" aria-label="Ergebnis-Code" placeholder="…"></textarea>
-          <div class="code-actions"><button class="btn small" id="gCopy" disabled>Kopieren</button></div></div></div>` : ""}
+          <div class="code-actions"><button class="btn small" id="gCopy" disabled>Kopieren</button>${cloudOn() ? `<button class="btn small pink" id="gSend" disabled>${p.sent ? "Nochmal senden" : "An Lehrkraft senden"}</button>` : ""}</div>
+          ${cloudOn() ? `<p class="hint" id="gSendHint" style="margin-top:10px">${p.sent ? "✓ Gesendet. Deine Lehrkraft sieht jetzt dein Ergebnis." : "Beim Senden geht nur der verschlüsselte Code an einen Server in der EU. Ohne das Klassen-Passwort kann ihn niemand lesen."}</p>` : ""}</div></div>` : ""}
       <p class="section-head">Punkte je Aufgabe</p>
       <div class="win"><div class="bar"><span class="d"></span>Auswertung<span class="r">${fmtP(got)}/${total}</span></div>
         <div id="tasks"></div></div>
@@ -19210,10 +19233,20 @@ window.LERNRAUM_I18N = {
     const rv = v.querySelector("#review");
     if (rv) review.forEach((rt) => rv.append(topicWin(s, rt)));
     const gBox = v.querySelector("#gCode");
-    if (gBox) examCode(s, t, p, got, total, used).then((c) => {
+    if (gBox) examCode(s, t, p, got, total, used).then(({ code: c, cid }) => {
       gBox.value = c;
       const b = v.querySelector("#gCopy"); b.disabled = false;
       b.onclick = () => { gBox.select(); copyText(c, "Code kopiert"); };
+      const send = v.querySelector("#gSend");
+      if (send) {
+        send.disabled = false;
+        send.onclick = async () => {
+          const hint = v.querySelector("#gSendHint"); send.disabled = true; hint.textContent = "Sende …";
+          try { await cloudSend(cid, c); const q = progress.of(s.id, t.id); q.sent = Date.now(); progress.save(s.id, t.id, q); hint.textContent = "✓ Gesendet. Deine Lehrkraft sieht jetzt dein Ergebnis."; send.textContent = "Nochmal senden"; }
+          catch { hint.textContent = "Das Senden hat nicht geklappt (Internet?). Kopiere den Code und schicke ihn deiner Lehrkraft."; }
+          send.disabled = false;
+        };
+      }
     }).catch(() => { gBox.placeholder = "Der Code konnte nicht erstellt werden (https nötig)."; });
     dither(v.querySelector("canvas"), 2);
     if (pct >= 67) confetti();

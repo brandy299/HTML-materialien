@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<!-- Keine Verbindung nach außen möglich: connect-src 'none' sperrt fetch, XHR und WebSocket. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline'; font-src 'self'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<!-- Verbindungen nach außen sind nur zu Supabase erlaubt (connect-src), und nur, wenn du „Online abholen“ drückst. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'self'; font-src 'self'; img-src data:; connect-src https://*.supabase.co; base-uri 'none'; form-action 'none'">
 <title>Lernraum · Auswertung</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
@@ -97,7 +97,7 @@
 <main>
   <div class="top">
     <span class="tag"><i></i>Lernraum · Auswertung</span>
-    <span class="lock" title="Die Seite darf keine Verbindung nach außen aufbauen (Content-Security-Policy: connect-src 'none').">🔒 Nur in diesem Browser · nichts wird gesendet</span>
+    <span class="lock" id="lockTag" title="Entschlüsselt wird nur in deinem Browser. Die Seite darf sich nur mit der Datenbank in der EU verbinden (Content-Security-Policy).">🔒 Entschlüsselt nur in diesem Browser</span>
   </div>
   <h1>Ergebnisse<br>auswerten.<small>Füge die Ergebnis-Codes der Klasse ein. Sie werden hier entschlüsselt und als Dashboard angezeigt. Namen kennt die Seite nicht, nur die Kürzel.</small></h1>
 
@@ -118,6 +118,15 @@
       <input id="pw" type="password" autocomplete="off" spellcheck="false" placeholder="das Passwort, das die Klasse eingetippt hat">
       <label for="codes">Ergebnis-Codes (einer pro Zeile)</label>
       <textarea id="codes" spellcheck="false" placeholder="LA2.…"></textarea>
+      <div id="cloudBox" hidden>
+        <label for="cmail">Online-Konto der Lehrkraft</label>
+        <input id="cmail" type="email" autocomplete="username" placeholder="E-Mail" style="margin-bottom:8px">
+        <input id="cpw" type="password" autocomplete="current-password" placeholder="Konto-Passwort">
+        <div class="row" style="margin-top:12px"><button id="cget">Online abholen</button>
+          <label class="btn ghost" style="margin:0;cursor:pointer;gap:8px"><input type="checkbox" id="live" style="width:auto"> Live (alle 20 s)</label>
+          <button id="wipeOnline" class="ghost">Online-Abgaben der Klasse löschen</button></div>
+        <p class="hint">Holt die verschlüsselten Abgaben der Klasse aus der Datenbank in der EU. Entschlüsselt wird erst hier, mit dem Klassen-Passwort.</p>
+      </div>
       <div class="row">
         <button id="go">Auswerten</button>
         <label class="btn ghost" style="margin:0;cursor:pointer">Datei laden<input type="file" id="file" accept=".txt,text/plain" hidden multiple></label>
@@ -174,6 +183,7 @@
   <p class="foot">Verschlüsselung: AES-256-GCM, Schlüssel aus dem Klassen-Passwort per PBKDF2 (300 000 Runden). Ein langes Passwort aus mehreren Wörtern ist wichtig, ein kurzes ließe sich durch Ausprobieren knacken. Wer das Klassen-Passwort kennt, kann Codes auch selbst erzeugen: Der Schutz ist für Tests unter Aufsicht gedacht, nicht gegen gezielte Fälschung.</p>
 </main>
 
+<script src="cloud.js"></script>
 <script>
 (() => {
   /* ===== Parameter: müssen zu app/app.js (LA_SALT, LA_ITER) passen ===== */
@@ -190,16 +200,18 @@
   const gradeOf = (pct) => GRADING.find(([min]) => pct >= min);
   const mmss = (s) => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
 
+  /* Ein PBKDF2-Lauf liefert 64 Byte: 32 Byte AES-Schlüssel + 16 Byte Klassen-Kennung (wie in app/app.js, laKey) */
   async function deriveKey(pw, salt, iter) {
-    const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveKey"]);
-    return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"]);
+    const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: iter, hash: "SHA-256" }, base, 512));
+    return { key: await crypto.subtle.importKey("raw", bits.slice(0, 32), "AES-GCM", false, ["encrypt", "decrypt"]), cid: [...bits.slice(32, 48)].map((b) => b.toString(16).padStart(2, "0")).join("") };
   }
   async function decode(line, key) {
     const m = line.trim().match(/^LA2\.([A-Za-z0-9_-]+)$/);
     if (!m) return { err: line.trim().startsWith("LA1.") ? "alte Code-Version" : "kein Ergebnis-Code" };
     try {
       const u8 = b64uToBytes(m[1]);
-      const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: u8.slice(0, 12) }, key, u8.slice(12));
+      const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: u8.slice(0, 12) }, key.key, u8.slice(12));
       const d = JSON.parse(dec.decode(pt));
       if (typeof d.a !== "string" || typeof d.p !== "number" || typeof d.m !== "number" || !d.m) return { err: "Inhalt ungültig" };
       return { d };
@@ -208,8 +220,7 @@
 
   let rows = [], bad = [], sort = { k: "a", asc: true }, lastLines = [];
 
-  async function evaluate(lines, pw) {
-    const key = await deriveKey(pw, enc.encode(LA_SALT), LA_ITER);
+  async function evaluate(lines, key) {
     const seen = new Set(), perAlias = {};
     rows = []; bad = [];
     for (const line of lines) {
@@ -285,21 +296,72 @@
   const setMsg = (el, text, cls) => { el.textContent = text; el.className = "msg " + (cls || ""); };
   const linesOf = (t) => t.split(/\s*\n\s*/).map((x) => x.trim()).filter(Boolean);
 
-  async function run(lines, pw) {
+  /* ===== Online abholen (Supabase, nur lesen/löschen mit Lehrer-Konto) ===== */
+  const CLOUD = window.LERNRAUM_CLOUD || {}, cloudOn = !!(CLOUD.url && CLOUD.key);
+  let token = null, tokenFor = "", liveTimer = null;
+  async function login(email, pw) {
+    const r = await fetch(CLOUD.url.replace(/\/$/, "") + "/auth/v1/token?grant_type=password", { method: "POST", headers: { apikey: CLOUD.key, "Content-Type": "application/json" }, body: JSON.stringify({ email, password: pw }) });
+    if (!r.ok) throw new Error("login");
+    token = (await r.json()).access_token; tokenFor = email;
+  }
+  async function rest(path, opt = {}) {
+    const r = await fetch(CLOUD.url.replace(/\/$/, "") + "/rest/v1/" + path, { ...opt, headers: { apikey: CLOUD.key, Authorization: "Bearer " + token, ...(opt.headers || {}) } });
+    if (r.status === 401) { token = null; throw new Error("login"); }
+    if (!r.ok) throw new Error("http " + r.status);
+    return r;
+  }
+  async function fetchOnline(cid) {
+    if (!token || tokenFor !== $("cmail").value.trim()) await login($("cmail").value.trim(), $("cpw").value);
+    const out = [];
+    for (let from = 0; from < 5000; from += 1000) {   // seitenweise, bis alles da ist
+      const list = await (await rest("abgaben?klasse=eq." + encodeURIComponent(cid) + "&select=code&order=created_at.asc", { headers: { Range: from + "-" + (from + 999) } })).json();
+      out.push(...list.map((x) => x.code));
+      if (list.length < 1000) break;
+    }
+    return out;
+  }
+
+  async function run(lines, pw, online) {
     const msg = $("msg"); lastLines = lines;
     if (pw.length < 6) return setMsg(msg, "Bitte das Klassen-Passwort eintragen (mind. 6 Zeichen).", "bad");
-    if (!lines.length) return setMsg(msg, "Bitte Codes einfügen.", "bad");
+    if (!lines.length && !online) return setMsg(msg, "Bitte Codes einfügen.", "bad");
     setMsg(msg, "Entschlüssele …");
     try {
-      const n = await evaluate(lines, pw);
-      if (!n) { $("dash").hidden = true; return setMsg(msg, "Kein Code konnte gelesen werden: " + (bad[0] ? bad[0].err : "") + ".", "bad"); }
-      setMsg(msg, n + " von " + lines.length + " Codes gelesen." + (bad.length ? " Nicht gewertet: " + [...new Set(bad.map((b) => b.err))].join(", ") + "." : ""), bad.length ? "bad" : "ok");
+      const key = await deriveKey(pw, enc.encode(LA_SALT), LA_ITER);
+      let from = "";
+      if (online) {
+        try { const got = await fetchOnline(key.cid); lines = [...new Set([...lines, ...got])]; from = got.length + " online abgeholt. "; }
+        catch (e) { return setMsg(msg, e.message === "login" ? "Anmeldung am Online-Konto fehlgeschlagen." : "Online abholen hat nicht geklappt (" + e.message + ").", "bad"); }
+      }
+      lastLines = lines;
+      const n = await evaluate(lines, key);
+      if (!n) { $("dash").hidden = true; return setMsg(msg, from + (lines.length ? "Kein Code konnte gelesen werden: " + (bad[0] ? bad[0].err : "") + "." : "Noch keine Abgaben."), lines.length ? "bad" : ""); }
+      setMsg(msg, from + n + " von " + lines.length + " Codes gelesen." + (bad.length ? " Nicht gewertet: " + [...new Set(bad.map((b) => b.err))].join(", ") + "." : ""), bad.length ? "bad" : "ok");
       render();
-      $("dash").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!online || !liveTimer) $("dash").scrollIntoView({ behavior: "smooth", block: "start" });
     } catch { setMsg(msg, "Das hat nicht geklappt. Dieser Browser kann die Verschlüsselung nicht (https nötig).", "bad"); }
   }
 
   $("go").onclick = () => run(linesOf($("codes").value), $("pw").value);
+  if (cloudOn) {
+    $("cloudBox").hidden = false;
+    $("cget").onclick = () => run(linesOf($("codes").value), $("pw").value, true);
+    $("live").onchange = () => {
+      clearInterval(liveTimer); liveTimer = null;
+      if ($("live").checked) { $("cget").click(); liveTimer = setInterval(() => run(linesOf($("codes").value), $("pw").value, true), 20000); }
+    };
+    $("wipeOnline").onclick = async () => {
+      const b = $("wipeOnline");
+      if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Wirklich online löschen?"; return; }
+      delete b.dataset.armed; b.textContent = "Online-Abgaben der Klasse löschen";
+      try {
+        if (!token) await login($("cmail").value.trim(), $("cpw").value);
+        const key = await deriveKey($("pw").value, enc.encode(LA_SALT), LA_ITER);
+        await rest("abgaben?klasse=eq." + encodeURIComponent(key.cid), { method: "DELETE" });
+        setMsg($("msg"), "Online-Abgaben dieser Klasse gelöscht.", "ok");
+      } catch { setMsg($("msg"), "Löschen hat nicht geklappt (Anmeldung und Klassen-Passwort prüfen).", "bad"); }
+    };
+  } else $("lockTag").textContent = "🔒 Nichts wird gesendet";
   $("file").onchange = async (e) => { const t = (await Promise.all([...e.target.files].map((f) => f.text()))).join("\n"); $("codes").value = ($("codes").value.trim() + "\n" + t).trim(); };
   $("q").oninput = renderTable; $("testSel").onchange = render;
 
@@ -317,12 +379,12 @@
   /* ===== Verschlüsselt auf dem Gerät merken: Codes + Klassen-Passwort, nochmals mit dem Lehrer-Passwort (PBKDF2 + AES-GCM, eigenes Salz) ===== */
   async function seal(obj, pw) {
     const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
-    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await deriveKey(pw, salt, LA_ITER), enc.encode(JSON.stringify(obj))));
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, (await deriveKey(pw, salt, LA_ITER)).key, enc.encode(JSON.stringify(obj))));
     return JSON.stringify({ v: 1, s: bytesToB64u(salt), i: bytesToB64u(iv), c: bytesToB64u(ct) });
   }
   async function unseal(txt, pw) {
     const o = JSON.parse(txt);
-    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64uToBytes(o.i) }, await deriveKey(pw, b64uToBytes(o.s), LA_ITER), b64uToBytes(o.c));
+    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64uToBytes(o.i) }, (await deriveKey(pw, b64uToBytes(o.s), LA_ITER)).key, b64uToBytes(o.c));
     return JSON.parse(dec.decode(pt));
   }
   const stored = () => { try { return localStorage.getItem(STORE); } catch { return null; } };
