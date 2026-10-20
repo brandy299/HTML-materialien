@@ -4,84 +4,415 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Lernraum · Ergebnisse einlesen</title>
+<!-- Verbindungen nach außen sind nur zu Supabase erlaubt (connect-src), und nur, wenn du „Online abholen“ drückst. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'self'; font-src 'self'; img-src data:; connect-src https://*.supabase.co; base-uri 'none'; form-action 'none'">
+<title>Lernraum · Auswertung</title>
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
-  :root { --ink:#1E1E1E; --paper:#FBF8F2; --pink:#F386A1; --ok:#117a4d; --bad:#c0262d; --line:#1E1E1E; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.45 system-ui,-apple-system,sans-serif; }
-  main { max-width:760px; margin:0 auto; padding:20px 16px 60px; }
-  h1 { font-size:26px; line-height:1.15; margin:8px 0 6px; }
-  p.hint { font-size:14px; color:#444; margin:0 0 16px; }
-  label { display:block; font-weight:700; margin:16px 0 6px; }
-  textarea, input { width:100%; font:14px/1.4 ui-monospace,Menlo,monospace; border:2px solid var(--line); background:#fff; padding:10px; border-radius:0; }
-  textarea { min-height:140px; }
-  button { min-height:48px; padding:0 18px; font:700 15px system-ui; border:2px solid var(--line); background:var(--pink); color:var(--ink); cursor:pointer; margin:14px 10px 0 0; }
-  button.ghost { background:#fff; }
-  .scroll { overflow-x:auto; margin-top:18px; border:2px solid var(--line); background:#fff; }
-  table { border-collapse:collapse; width:100%; min-width:520px; font-size:14px; }
-  th, td { padding:9px 10px; border-bottom:1px solid #ddd; text-align:left; white-space:nowrap; }
-  th { background:var(--ink); color:var(--paper); }
-  .ok { color:var(--ok); font-weight:700; } .bad { color:var(--bad); font-weight:700; }
-  .note { font-size:13px; color:#555; margin-top:14px; }
+  :root {
+    --paper:#FEFEFE; --paper-2:#F4F4F2; --panel:#E9E9E6; --ink:#1E1E1E; --ink-2:#4A4A4A; --ink-3:#8A8A86;
+    --pink:#F386A1; --pink-soft:#FBDDE3; --good:#0A8F57; --good-soft:#DCF3E6; --bad:#C1354F;
+    --grot:"Archivo","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    --shadow:4px 4px 0 var(--ink); color-scheme:light;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); color:var(--ink); font:16px/1.5 var(--grot); -webkit-font-smoothing:antialiased; }
+  main { max-width:980px; margin:0 auto; padding:18px 16px 70px; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .tag { display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:var(--paper); font:700 12px/1 var(--mono); letter-spacing:.04em; text-transform:uppercase; padding:9px 12px; }
+  .tag i { width:9px; height:9px; background:var(--pink); display:block; }
+  .lock { font:500 12px/1.3 var(--mono); color:var(--good); border:2px solid var(--good); background:var(--good-soft); padding:6px 10px; }
+  h1 { font-weight:800; font-size:clamp(34px,8vw,56px); line-height:.98; letter-spacing:-.02em; margin:22px 0 8px; }
+  h1 small { display:block; font:500 14px/1.5 var(--mono); letter-spacing:0; color:var(--ink-2); margin-top:10px; max-width:60ch; }
+  .win { background:var(--paper); border:2px solid var(--ink); box-shadow:var(--shadow); margin-top:22px; }
+  .bar { display:flex; align-items:center; gap:9px; background:var(--ink); color:var(--paper); font:500 12px/1 var(--mono); letter-spacing:.04em; text-transform:uppercase; padding:11px 12px; }
+  .bar .d { width:9px; height:9px; background:var(--pink); flex:none; }
+  .bar .r { margin-left:auto; color:#bbb; }
+  .body { padding:16px; background:var(--panel); }
+  .body.plain { background:var(--paper); }
+  label { display:block; font:700 13px/1.2 var(--mono); text-transform:uppercase; letter-spacing:.03em; margin:14px 0 6px; }
+  label:first-child { margin-top:0; }
+  input, textarea, select { width:100%; font:500 15px/1.4 var(--mono); border:2px solid var(--ink); background:#fff; color:var(--ink); padding:11px 12px; border-radius:0; }
+  input:focus, textarea:focus, select:focus { outline:none; background:var(--pink-soft); }
+  textarea { min-height:130px; resize:vertical; }
+  .hint { font:400 12.5px/1.5 var(--mono); color:var(--ink-2); margin-top:8px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  button, .btn { min-height:48px; padding:0 18px; font:700 14px/1 var(--grot); text-transform:uppercase; letter-spacing:.04em; border:2px solid var(--ink); background:var(--pink); color:var(--ink); cursor:pointer; box-shadow:3px 3px 0 var(--ink); display:inline-flex; align-items:center; }
+  button:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  button.ghost, .btn.ghost { background:var(--paper); }
+  button:disabled { opacity:.45; cursor:default; }
+  .msg { font:500 13px/1.5 var(--mono); margin-top:12px; }
+  .msg.bad { color:var(--bad); } .msg.ok { color:var(--good); }
+
+  /* Kennzahlen */
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); border:2px solid var(--ink); background:var(--paper); box-shadow:var(--shadow); margin-top:22px; }
+  .kpi { padding:14px 14px 12px; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink); margin:0 -2px -2px 0; }
+  .kpi .v { font:800 36px/1 var(--grot); letter-spacing:-.02em; }
+  .kpi .v small { font:700 14px var(--mono); color:var(--ink-2); letter-spacing:0; margin-left:3px; }
+  .kpi .k { font:500 11.5px/1.3 var(--mono); text-transform:uppercase; letter-spacing:.04em; color:var(--ink-2); margin-top:8px; }
+  .kpi.warn .v { color:var(--bad); }
+
+  .grid2 { display:grid; grid-template-columns:1fr; gap:0 22px; }
+  @media (min-width:820px) { .grid2 { grid-template-columns:1fr 1fr; } }
+
+  /* Balken */
+  .bars { display:grid; gap:9px; }
+  .brow { display:grid; grid-template-columns:54px 1fr 54px; align-items:center; gap:10px; font:500 13px/1.2 var(--mono); }
+  .brow .n { font:800 20px/1 var(--grot); }
+  .brow .l { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; }
+  .track { height:22px; border:2px solid var(--ink); background:var(--paper); position:relative; }
+  .fill { position:absolute; inset:0 auto 0 0; background:var(--pink); }
+  .fill.good { background:#5CE0A8; } .fill.bad { background:var(--bad); } .fill.ink { background:var(--ink); }
+  .brow .v { text-align:right; color:var(--ink-2); }
+  .brow.low .v { color:var(--bad); font-weight:700; }
+
+  /* Tabelle */
+  .tools { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .tools input { flex:1 1 180px; width:auto; } .tools select { flex:0 1 220px; width:auto; }
+  .scroll { overflow-x:auto; border:2px solid var(--ink); background:#fff; }
+  table { border-collapse:collapse; width:100%; min-width:560px; font:500 14px/1.3 var(--mono); }
+  th, td { padding:10px 11px; text-align:left; border-bottom:1px solid #ddd; white-space:nowrap; }
+  th { background:var(--paper-2); font-weight:700; text-transform:uppercase; font-size:12px; letter-spacing:.03em; cursor:pointer; user-select:none; border-bottom:2px solid var(--ink); }
+  th.sorted::after { content:" ▾"; } th.sorted.asc::after { content:" ▴"; }
+  tr.data { cursor:pointer; } tr.data:hover td { background:var(--pink-soft); }
+  td.note { font:800 18px/1 var(--grot); } td.note.bad { color:var(--bad); }
+  tr.detail td { background:var(--paper-2); white-space:normal; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { border:2px solid var(--ink); background:var(--paper); padding:4px 8px; font:500 12px/1.2 var(--mono); }
+  .chip.bad { border-color:var(--bad); color:var(--bad); } .chip.full { background:var(--good-soft); border-color:var(--good); }
+  .tagw { font:700 11px/1 var(--mono); text-transform:uppercase; padding:3px 6px; border:2px solid var(--bad); color:var(--bad); }
+  .empty { padding:26px 16px; text-align:center; font:500 13px/1.5 var(--mono); color:var(--ink-2); }
+  .foot { font:400 12.5px/1.6 var(--mono); color:var(--ink-2); margin-top:26px; }
+  [hidden] { display:none !important; }
+
+  @media print {
+    body { background:#fff; } .noprint, .win.noprint { display:none !important; }
+    .win, .kpis { box-shadow:none; } main { padding:0; max-width:none; }
+    .scroll { overflow:visible; } table { min-width:0; }
+    tr.detail { display:none; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <h1>Ergebnisse einlesen</h1>
-  <p class="hint">Alles läuft nur in diesem Browser. Es wird nichts hochgeladen und nichts gespeichert.</p>
-  <label for="pin">Klassen-PIN</label>
-  <input id="pin" inputmode="numeric" autocomplete="off" placeholder="die PIN, die du der Klasse genannt hast">
-  <label for="codes">Ergebnis-Codes (einer pro Zeile)</label>
-  <textarea id="codes" placeholder="LA1.…"></textarea>
-  <button id="go">Auswerten</button><button id="csv" class="ghost" disabled>Als CSV speichern</button>
-  <div id="out"></div>
-  <p class="note">Die Prüfsumme erkennt Tippfehler und falsche PIN, schützt aber nicht vor gezielter Fälschung. Gib die Note nur nach Aufsicht in der Stunde. Die Zuordnung Kürzel ↔ Name bleibt bei dir.</p>
+  <div class="top">
+    <span class="tag"><i></i>Lernraum · Auswertung</span>
+    <span class="lock" id="lockTag" title="Entschlüsselt wird nur in deinem Browser. Die Seite darf sich nur mit der Datenbank in der EU verbinden (Content-Security-Policy).">🔒 Entschlüsselt nur in diesem Browser</span>
+  </div>
+  <h1>Ergebnisse<br>auswerten.<small>Füge die Ergebnis-Codes der Klasse ein. Sie werden hier entschlüsselt und als Dashboard angezeigt. Namen kennt die Seite nicht, nur die Kürzel.</small></h1>
+
+  <section class="win noprint" id="openWin" hidden>
+    <div class="bar"><span class="d"></span>Gespeicherte Auswertung</div>
+    <div class="body">
+      <label for="opw">Lehrer-Passwort</label>
+      <input id="opw" type="password" autocomplete="current-password">
+      <div class="row"><button id="open">Öffnen</button></div>
+      <p class="msg" id="omsg" role="status"></p>
+    </div>
+  </section>
+
+  <section class="win noprint" id="inputWin">
+    <div class="bar"><span class="d"></span>Codes einlesen<span class="r" id="storeState"></span></div>
+    <div class="body">
+      <label for="pw">Klassen-Passwort</label>
+      <input id="pw" type="password" autocomplete="off" spellcheck="false" placeholder="das Passwort, das die Klasse eingetippt hat">
+      <label for="codes">Ergebnis-Codes (einer pro Zeile)</label>
+      <textarea id="codes" spellcheck="false" placeholder="LA2.…"></textarea>
+      <div id="cloudBox" hidden>
+        <label for="cmail">Online-Konto der Lehrkraft</label>
+        <input id="cmail" type="email" autocomplete="username" placeholder="E-Mail" style="margin-bottom:8px">
+        <input id="cpw" type="password" autocomplete="current-password" placeholder="Konto-Passwort">
+        <div class="row" style="margin-top:12px"><button id="cget">Online abholen</button>
+          <label class="btn ghost" style="margin:0;cursor:pointer;gap:8px"><input type="checkbox" id="live" style="width:auto"> Live (alle 20 s)</label>
+          <button id="wipeOnline" class="ghost">Online-Abgaben der Klasse löschen</button></div>
+        <p class="hint">Holt die verschlüsselten Abgaben der Klasse aus der Datenbank in der EU. Entschlüsselt wird erst hier, mit dem Klassen-Passwort.</p>
+      </div>
+      <div class="row">
+        <button id="go">Auswerten</button>
+        <label class="btn ghost" style="margin:0;cursor:pointer">Datei laden<input type="file" id="file" accept=".txt,text/plain" hidden multiple></label>
+      </div>
+      <p class="msg" id="msg" role="status"></p>
+    </div>
+  </section>
+
+  <div id="dash" hidden>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid2">
+      <section class="win">
+        <div class="bar"><span class="d"></span>Notenverteilung<span class="r" id="gradeKey"></span></div>
+        <div class="body plain"><div class="bars" id="gradeBars"></div></div>
+      </section>
+      <section class="win">
+        <div class="bar"><span class="d"></span>Aufgaben<span class="r">Ø Lösungsquote</span></div>
+        <div class="body plain"><div class="bars" id="taskBars"></div><p class="hint">Rot markiert: Aufgaben, die unter 50 % gelöst wurden. Hier lohnt sich eine Wiederholung.</p></div>
+      </section>
+    </div>
+
+    <section class="win">
+      <div class="bar"><span class="d"></span>Ergebnisliste<span class="r" id="count"></span></div>
+      <div class="body plain">
+        <div class="tools noprint">
+          <input id="q" placeholder="Kürzel suchen" aria-label="Kürzel suchen" autocomplete="off">
+          <select id="testSel" aria-label="Test wählen" hidden></select>
+        </div>
+        <div class="scroll"><table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
+        <p class="hint noprint">Zeile antippen: Punkte je Aufgabe.</p>
+      </div>
+    </section>
+
+    <section class="win noprint">
+      <div class="bar"><span class="d"></span>Weiterverwenden</div>
+      <div class="body">
+        <div class="row" style="margin-top:0">
+          <button id="csv">CSV speichern</button>
+          <button id="print" class="ghost">Drucken / PDF</button>
+        </div>
+        <label for="tpw" style="margin-top:20px">Verschlüsselt auf diesem Gerät merken</label>
+        <input id="tpw" type="password" autocomplete="new-password" placeholder="eigenes Lehrer-Passwort (mind. 8 Zeichen)">
+        <div class="row">
+          <button id="save" class="ghost">Speichern</button>
+          <button id="wipe" class="ghost">Alles löschen</button>
+        </div>
+        <p class="hint">Gespeichert werden nur die Codes, nochmals mit deinem Lehrer-Passwort verschlüsselt (AES-256). Das Klassen-Passwort ist den Schüler/innen bekannt, dein Lehrer-Passwort nicht. Ohne Speichern ist nach dem Schließen der Seite alles weg.</p>
+        <p class="msg" id="smsg" role="status"></p>
+      </div>
+    </section>
+  </div>
+
+  <p class="foot">Verschlüsselung: AES-256-GCM, Schlüssel aus dem Klassen-Passwort per PBKDF2 (300 000 Runden). Ein langes Passwort aus mehreren Wörtern ist wichtig, ein kurzes ließe sich durch Ausprobieren knacken. Wer das Klassen-Passwort kennt, kann Codes auch selbst erzeugen: Der Schutz ist für Tests unter Aufsicht gedacht, nicht gegen gezielte Fälschung.</p>
 </main>
+
+<script src="cloud.js"></script>
 <script>
 (() => {
-  const GRADING = [[87,"1"],[73,"2"],[59,"3"],[45,"4"],[18,"5"],[0,"6"]];   // Notenschlüssel Handelsschule
+  /* ===== Parameter: müssen zu app/app.js (LA_SALT, LA_ITER) passen ===== */
+  const LA_SALT = "lernraum-la2", LA_ITER = 300000;
+  const GRADING = [[87,"1","sehr gut"],[73,"2","gut"],[59,"3","befriedigend"],[45,"4","ausreichend"],[18,"5","mangelhaft"],[0,"6","ungenügend"]];   // Notenschlüssel Handelsschule
+  const STORE = "lernraum.lehrer.v1";
+
   const $ = (id) => document.getElementById(id);
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const esc = (x) => String(x).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const fmt = (x, d = 1) => (Math.round(x * 10 ** d) / 10 ** d).toString().replace(".", ",");
   const b64uToBytes = (t) => Uint8Array.from(atob(t.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
-  const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
-  const fmt = (x) => String(x).replace(".", ",");
-  let rows = [];
-  async function check(line, pin) {
-    const m = line.trim().match(/^LA1\.([A-Za-z0-9_-]+)\.([0-9a-f]{10})$/);
-    if (!m) return { err: "Format" };
-    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-    const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(m[1])));
-    const hex = [...sig.slice(0, 5)].map((b) => b.toString(16).padStart(2, "0")).join("");
-    let d;
-    try { d = JSON.parse(new TextDecoder().decode(b64uToBytes(m[1]))); } catch { return { err: "Format" }; }
-    if (hex !== m[2]) return { err: "Prüfsumme falsch", d };
-    return { d };
+  const bytesToB64u = (u8) => { let b = ""; u8.forEach((x) => b += String.fromCharCode(x)); return btoa(b).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
+  const gradeOf = (pct) => GRADING.find(([min]) => pct >= min);
+  const mmss = (s) => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+
+  /* Ein PBKDF2-Lauf liefert 64 Byte: 32 Byte AES-Schlüssel + 16 Byte Klassen-Kennung (wie in app/app.js, laKey) */
+  async function deriveKey(pw, salt, iter) {
+    const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"]);
+    const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: iter, hash: "SHA-256" }, base, 512));
+    return { key: await crypto.subtle.importKey("raw", bits.slice(0, 32), "AES-GCM", false, ["encrypt", "decrypt"]), cid: [...bits.slice(32, 48)].map((b) => b.toString(16).padStart(2, "0")).join("") };
   }
-  $("go").onclick = async () => {
-    const pin = $("pin").value.trim();
-    const lines = $("codes").value.split(/\n+/).map((x) => x.trim()).filter(Boolean);
-    const seen = new Set();
-    rows = [];
+  async function decode(line, key) {
+    const m = line.trim().match(/^LA2\.([A-Za-z0-9_-]+)$/);
+    if (!m) return { err: line.trim().startsWith("LA1.") ? "alte Code-Version" : "kein Ergebnis-Code" };
+    try {
+      const u8 = b64uToBytes(m[1]);
+      const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: u8.slice(0, 12) }, key.key, u8.slice(12));
+      const d = JSON.parse(dec.decode(pt));
+      if (typeof d.a !== "string" || typeof d.p !== "number" || typeof d.m !== "number" || !d.m) return { err: "Inhalt ungültig" };
+      return { d };
+    } catch { return { err: "Passwort falsch oder Code beschädigt" }; }
+  }
+
+  let rows = [], bad = [], sort = { k: "a", asc: true }, lastLines = [];
+
+  async function evaluate(lines, key) {
+    const seen = new Set(), perAlias = {};
+    rows = []; bad = [];
     for (const line of lines) {
-      const r = await check(line, pin);
-      const d = r.d || {};
-      const id = [d.a, d.t, d.n, d.d].join("|");
-      let status = r.err || "gültig";
-      if (!r.err) { if (seen.has(id)) status = "doppelt"; seen.add(id); }
-      const pct = d.m ? d.p / d.m * 100 : 0;
-      rows.push({ a: d.a || "?", t: d.t || "?", p: d.p, m: d.m, pct, note: d.m ? GRADING.find(([min]) => pct >= min)[1] : "–", s: d.s, d: d.d || "", status });
+      const r = await decode(line, key);
+      if (r.err) { bad.push({ line, err: r.err }); continue; }
+      const d = r.d, id = [d.a, d.t, d.n, d.d].join("|");
+      if (seen.has(id)) { bad.push({ line, err: "doppelt (" + d.a + ")" }); continue; }
+      seen.add(id);
+      const pct = d.p / d.m * 100, g = gradeOf(pct);
+      const al = d.a + "|" + d.t; perAlias[al] = (perAlias[al] || 0) + 1;
+      rows.push({ a: d.a, t: d.t, p: d.p, m: d.m, pct, note: g[1], word: g[2], s: d.s, d: d.d, l: d.l || [], q: d.q || [], al });
     }
-    rows.sort((x, y) => String(x.a).localeCompare(String(y.a), "de"));
-    $("out").innerHTML = rows.length ? `<div class="scroll"><table><thead><tr><th>Kürzel</th><th>Test</th><th>Punkte</th><th>%</th><th>Note</th><th>Zeit</th><th>Datum</th><th>Status</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${esc(r.a)}</td><td>${esc(r.t)}</td><td>${r.p === undefined ? "–" : fmt(r.p) + "/" + r.m}</td><td>${Math.round(r.pct)}</td><td>${esc(r.note)}</td><td>${r.s === undefined ? "–" : Math.floor(r.s / 60) + ":" + String(r.s % 60).padStart(2, "0")}</td><td>${esc(r.d)}</td><td class="${r.status === "gültig" ? "ok" : "bad"}">${esc(r.status)}</td></tr>`).join("")}</tbody></table></div>` : "";
-    $("csv").disabled = !rows.length;
+    rows.forEach((r) => r.multi = perAlias[r.al] > 1);
+    return rows.length;
+  }
+
+  const view = () => {
+    const sel = $("testSel").value, q = $("q").value.trim().toLowerCase();
+    return rows.filter((r) => (!sel || r.t === sel)).filter((r) => !q || r.a.toLowerCase().includes(q));
   };
+  const tests = () => [...new Set(rows.map((r) => r.t))].sort();
+
+  function bars(el, items) {
+    el.innerHTML = items.map((i) => `<div class="brow ${i.low ? "low" : ""}"><span class="${i.n ? "n" : "l"}" title="${esc(i.label)}">${esc(i.label)}</span><span class="track" role="img" aria-label="${esc(i.label)}: ${esc(i.text)}"><span class="fill ${i.cls || ""}" style="width:${Math.max(0, Math.min(100, i.pct))}%"></span></span><span class="v">${esc(i.text)}</span></div>`).join("");
+  }
+
+  function render() {
+    const all = rows.filter((r) => !$("testSel").value || r.t === $("testSel").value);
+    $("dash").hidden = !rows.length;
+    if (!rows.length) return;
+    const n = all.length, pcts = all.map((r) => r.pct).sort((a, b) => a - b);
+    const avg = pcts.reduce((a, b) => a + b, 0) / (n || 1);
+    const med = n ? (n % 2 ? pcts[(n - 1) / 2] : (pcts[n / 2 - 1] + pcts[n / 2]) / 2) : 0;
+    const passed = all.filter((r) => +r.note <= 4).length;
+    const avgNote = n ? all.reduce((a, r) => a + +r.note, 0) / n : 0;
+    $("kpis").innerHTML = `
+      <div class="kpi"><div class="v">${n}</div><div class="k">Abgaben</div></div>
+      <div class="kpi"><div class="v">${fmt(avg, 0)}<small>%</small></div><div class="k">Ø Punkte</div></div>
+      <div class="kpi"><div class="v">${fmt(med, 0)}<small>%</small></div><div class="k">Median</div></div>
+      <div class="kpi"><div class="v">${fmt(avgNote)}</div><div class="k">Ø Note</div></div>
+      <div class="kpi"><div class="v">${passed}<small>/${n}</small></div><div class="k">Note 4 oder besser</div></div>
+      ${bad.length ? `<div class="kpi warn"><div class="v">${bad.length}</div><div class="k">nicht gewertet</div></div>` : ""}`;
+
+    $("gradeKey").textContent = "Handelsschule";
+    const max = Math.max(1, ...GRADING.map(([, g]) => all.filter((r) => r.note === g).length));
+    bars($("gradeBars"), GRADING.map(([min, g, w]) => { const c = all.filter((r) => r.note === g).length; return { n: 1, label: g, text: String(c), pct: c / max * 100, cls: +g <= 4 ? "good" : "bad" }; }));
+
+    // Aufgaben: Mittelwert der Lösungsquote; gruppiert nach Kurzname
+    const agg = {};
+    all.forEach((r) => r.q.forEach(([got, mx], i) => { const k = r.l[i] || "Aufgabe " + (i + 1); (agg[k] = agg[k] || { got: 0, mx: 0 }); agg[k].got += got; agg[k].mx += mx; }));
+    const items = Object.entries(agg).map(([k, a]) => { const pct = a.mx ? a.got / a.mx * 100 : 0; return { label: k, pct, text: fmt(pct, 0) + " %", low: pct < 50, cls: pct < 50 ? "bad" : "" }; });
+    bars($("taskBars"), items.length ? items : [{ label: "–", pct: 0, text: "keine Aufgabendaten" }]);
+
+    const ts = tests(), sel = $("testSel");
+    if (ts.length > 1 && sel.options.length !== ts.length + 1) {
+      const cur = sel.value; sel.innerHTML = `<option value="">Alle Tests</option>` + ts.map((t) => `<option>${esc(t)}</option>`).join(""); sel.value = cur; sel.hidden = false;
+    } else if (ts.length <= 1) sel.hidden = true;
+    renderTable();
+  }
+
+  const cols = [["a", "Kürzel"], ["p", "Punkte"], ["pct", "%"], ["note", "Note"], ["s", "Zeit"], ["d", "Datum"]];
+  function renderTable() {
+    const list = view().slice().sort((x, y) => { const a = x[sort.k], b = y[sort.k]; const c = typeof a === "number" ? a - b : String(a).localeCompare(String(b), "de", { numeric: true }); return sort.asc ? c : -c; });
+    $("count").textContent = list.length + " Zeilen";
+    $("thead").innerHTML = cols.map(([k, l]) => `<th data-k="${k}" class="${sort.k === k ? "sorted" + (sort.asc ? " asc" : "") : ""}">${l}</th>`).join("") + "<th></th>";
+    $("tbody").innerHTML = list.length ? list.map((r, i) => `<tr class="data" data-i="${i}"><td><b>${esc(r.a)}</b></td><td>${fmt(r.p)}/${r.m}</td><td>${fmt(r.pct, 0)}</td><td class="note ${+r.note >= 5 ? "bad" : ""}">${r.note}</td><td>${r.s === undefined ? "–" : mmss(r.s)}</td><td>${esc(r.d.split("-").reverse().join("."))}</td><td>${r.multi ? '<span class="tagw">mehrfach</span>' : ""}</td></tr>`
+      + `<tr class="detail" hidden><td colspan="7"><div class="chips">${r.q.length ? r.q.map(([g, m], k) => `<span class="chip ${g >= m ? "full" : g < m / 2 ? "bad" : ""}">${esc(r.l[k] || "A" + (k + 1))}: ${fmt(g)}/${m}</span>`).join("") : "keine Aufgabendaten"}<span class="chip">${esc(r.word)}</span></div></td></tr>`).join("")
+      : `<tr><td colspan="7" class="empty">Keine Treffer.</td></tr>`;
+    $("tbody").onclick = (e) => { const tr = e.target.closest("tr.data"); if (tr) tr.nextElementSibling.hidden = !tr.nextElementSibling.hidden; };
+    $("thead").onclick = (e) => { const th = e.target.closest("th[data-k]"); if (!th) return; sort = { k: th.dataset.k, asc: sort.k === th.dataset.k ? !sort.asc : true }; renderTable(); };
+  }
+
+  const setMsg = (el, text, cls) => { el.textContent = text; el.className = "msg " + (cls || ""); };
+  const linesOf = (t) => t.split(/\s*\n\s*/).map((x) => x.trim()).filter(Boolean);
+
+  /* ===== Online abholen (Supabase, nur lesen/löschen mit Lehrer-Konto) ===== */
+  const CLOUD = window.LERNRAUM_CLOUD || {}, cloudOn = !!(CLOUD.url && CLOUD.key);
+  let token = null, tokenFor = "", liveTimer = null;
+  async function login(email, pw) {
+    const r = await fetch(CLOUD.url.replace(/\/$/, "") + "/auth/v1/token?grant_type=password", { method: "POST", headers: { apikey: CLOUD.key, "Content-Type": "application/json" }, body: JSON.stringify({ email, password: pw }) });
+    if (!r.ok) throw new Error("login");
+    token = (await r.json()).access_token; tokenFor = email;
+  }
+  async function rest(path, opt = {}) {
+    const r = await fetch(CLOUD.url.replace(/\/$/, "") + "/rest/v1/" + path, { ...opt, headers: { apikey: CLOUD.key, Authorization: "Bearer " + token, ...(opt.headers || {}) } });
+    if (r.status === 401) { token = null; throw new Error("login"); }
+    if (!r.ok) throw new Error("http " + r.status);
+    return r;
+  }
+  async function fetchOnline(cid) {
+    if (!token || tokenFor !== $("cmail").value.trim()) await login($("cmail").value.trim(), $("cpw").value);
+    const out = [];
+    for (let from = 0; from < 5000; from += 1000) {   // seitenweise, bis alles da ist
+      const list = await (await rest("abgaben?klasse=eq." + encodeURIComponent(cid) + "&select=code&order=created_at.asc", { headers: { Range: from + "-" + (from + 999) } })).json();
+      out.push(...list.map((x) => x.code));
+      if (list.length < 1000) break;
+    }
+    return out;
+  }
+
+  async function run(lines, pw, online) {
+    const msg = $("msg"); lastLines = lines;
+    if (pw.length < 6) return setMsg(msg, "Bitte das Klassen-Passwort eintragen (mind. 6 Zeichen).", "bad");
+    if (!lines.length && !online) return setMsg(msg, "Bitte Codes einfügen.", "bad");
+    setMsg(msg, "Entschlüssele …");
+    try {
+      const key = await deriveKey(pw, enc.encode(LA_SALT), LA_ITER);
+      let from = "";
+      if (online) {
+        try { const got = await fetchOnline(key.cid); lines = [...new Set([...lines, ...got])]; from = got.length + " online abgeholt. "; }
+        catch (e) { return setMsg(msg, e.message === "login" ? "Anmeldung am Online-Konto fehlgeschlagen." : "Online abholen hat nicht geklappt (" + e.message + ").", "bad"); }
+      }
+      lastLines = lines;
+      const n = await evaluate(lines, key);
+      if (!n) { $("dash").hidden = true; return setMsg(msg, from + (lines.length ? "Kein Code konnte gelesen werden: " + (bad[0] ? bad[0].err : "") + "." : "Noch keine Abgaben."), lines.length ? "bad" : ""); }
+      setMsg(msg, from + n + " von " + lines.length + " Codes gelesen." + (bad.length ? " Nicht gewertet: " + [...new Set(bad.map((b) => b.err))].join(", ") + "." : ""), bad.length ? "bad" : "ok");
+      render();
+      if (!online || !liveTimer) $("dash").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch { setMsg(msg, "Das hat nicht geklappt. Dieser Browser kann die Verschlüsselung nicht (https nötig).", "bad"); }
+  }
+
+  $("go").onclick = () => run(linesOf($("codes").value), $("pw").value);
+  if (cloudOn) {
+    $("cloudBox").hidden = false;
+    $("cget").onclick = () => run(linesOf($("codes").value), $("pw").value, true);
+    $("live").onchange = () => {
+      clearInterval(liveTimer); liveTimer = null;
+      if ($("live").checked) { $("cget").click(); liveTimer = setInterval(() => run(linesOf($("codes").value), $("pw").value, true), 20000); }
+    };
+    $("wipeOnline").onclick = async () => {
+      const b = $("wipeOnline");
+      if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Wirklich online löschen?"; return; }
+      delete b.dataset.armed; b.textContent = "Online-Abgaben der Klasse löschen";
+      try {
+        if (!token) await login($("cmail").value.trim(), $("cpw").value);
+        const key = await deriveKey($("pw").value, enc.encode(LA_SALT), LA_ITER);
+        await rest("abgaben?klasse=eq." + encodeURIComponent(key.cid), { method: "DELETE" });
+        setMsg($("msg"), "Online-Abgaben dieser Klasse gelöscht.", "ok");
+      } catch { setMsg($("msg"), "Löschen hat nicht geklappt (Anmeldung und Klassen-Passwort prüfen).", "bad"); }
+    };
+  } else $("lockTag").textContent = "🔒 Nichts wird gesendet";
+  $("file").onchange = async (e) => { const t = (await Promise.all([...e.target.files].map((f) => f.text()))).join("\n"); $("codes").value = ($("codes").value.trim() + "\n" + t).trim(); };
+  $("q").oninput = renderTable; $("testSel").onchange = render;
+
   $("csv").onclick = () => {
     const q = (x) => `"${String(x).replace(/"/g, '""')}"`;
-    const csv = "﻿" + [["Kürzel","Test","Punkte","Max","Prozent","Note","Sekunden","Datum","Status"], ...rows.map((r) => [r.a, r.t, r.p ?? "", r.m ?? "", Math.round(r.pct), r.note, r.s ?? "", r.d, r.status])].map((r) => r.map(q).join(";")).join("\r\n");
+    const list = view();
+    const csv = "﻿" + [["Kürzel", "Test", "Punkte", "Max", "Prozent", "Note", "Sekunden", "Datum", "Mehrfach"], ...list.map((r) => [r.a, r.t, r.p, r.m, Math.round(r.pct), r.note, r.s ?? "", r.d, r.multi ? "ja" : ""])].map((r) => r.map(q).join(";")).join("\r\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     a.download = "ergebnisse-" + new Date().toISOString().slice(0, 10) + ".csv";
     document.body.append(a); a.click(); a.remove();
   };
+  $("print").onclick = () => print();
+
+  /* ===== Verschlüsselt auf dem Gerät merken: Codes + Klassen-Passwort, nochmals mit dem Lehrer-Passwort (PBKDF2 + AES-GCM, eigenes Salz) ===== */
+  async function seal(obj, pw) {
+    const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, (await deriveKey(pw, salt, LA_ITER)).key, enc.encode(JSON.stringify(obj))));
+    return JSON.stringify({ v: 1, s: bytesToB64u(salt), i: bytesToB64u(iv), c: bytesToB64u(ct) });
+  }
+  async function unseal(txt, pw) {
+    const o = JSON.parse(txt);
+    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64uToBytes(o.i) }, (await deriveKey(pw, b64uToBytes(o.s), LA_ITER)).key, b64uToBytes(o.c));
+    return JSON.parse(dec.decode(pt));
+  }
+  const stored = () => { try { return localStorage.getItem(STORE); } catch { return null; } };
+  const refreshStore = () => { const has = !!stored(); $("openWin").hidden = !has; $("storeState").textContent = has ? "🔒 gespeichert" : ""; };
+
+  $("save").onclick = async () => {
+    const m = $("smsg"), tp = $("tpw").value;
+    if (tp.length < 8) return setMsg(m, "Das Lehrer-Passwort braucht mindestens 8 Zeichen.", "bad");
+    if (!lastLines.length) return setMsg(m, "Es gibt nichts zu speichern.", "bad");
+    try { localStorage.setItem(STORE, await seal({ lines: lastLines, pw: $("pw").value }, tp)); $("tpw").value = ""; setMsg(m, "Verschlüsselt gespeichert. Beim nächsten Öffnen brauchst du nur das Lehrer-Passwort.", "ok"); refreshStore(); }
+    catch { setMsg(m, "Speichern ist in diesem Browser nicht möglich.", "bad"); }
+  };
+  $("wipe").onclick = () => {
+    const b = $("wipe");
+    if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; return; }
+    try { localStorage.removeItem(STORE); } catch {}
+    rows = []; bad = []; lastLines = []; $("codes").value = ""; $("pw").value = ""; $("dash").hidden = true;
+    b.textContent = "Alles löschen"; delete b.dataset.armed; setMsg($("msg"), "Alles gelöscht.", "ok"); refreshStore();
+  };
+  $("open").onclick = async () => {
+    const m = $("omsg"); setMsg(m, "Entschlüssele …");
+    try {
+      const o = await unseal(stored(), $("opw").value);
+      $("codes").value = o.lines.join("\n"); $("pw").value = o.pw; $("opw").value = "";
+      setMsg(m, "", ""); await run(o.lines, o.pw);
+    } catch { setMsg(m, "Lehrer-Passwort falsch.", "bad"); }
+  };
+  refreshStore();
 })();
 </script>
 </body>
