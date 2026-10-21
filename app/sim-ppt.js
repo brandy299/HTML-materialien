@@ -182,8 +182,13 @@
     const thumbs = node.querySelector("#ppThumbs");
     const popEl = node.querySelector("#ppPop");
 
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
     function simMsg(kind, html) {
       out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
     }
 
     /* ── Folien-Leiste und Bühne ───────────────────── */
@@ -589,6 +594,7 @@
       document.body.classList.remove("sim-on", "sim-ppt");
       timers.forEach(clearTimeout);
       cancelIdle();
+      clearTimeout(msgTimer);
       if (player) player.remove();
     };
   };

@@ -90,7 +90,14 @@
     </div>`);
     const q = (s) => node.querySelector(s);
     const out = q("#wnOut"), winEl = q("#wnWin"), iconsEl = q("#wnIcons"), startEl = q("#wnStart"), popEl = q("#wnPop"), barEl = q("#wnBar");
-    function simMsg(kind, html) { out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`; }
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
+    function simMsg(kind, html) {
+      out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
+    }
 
     const icon = (n) => {
       if (n.kind === "folder") return `<span class="wn-ico folder"><i></i></span>`;
@@ -146,7 +153,7 @@
       iconsEl.innerHTML = items.map((n) => `<button type="button" class="wn-dicon${selIds.has(n.id) && here === desk && win === "closed" ? " sel" : ""}" data-did="${n.id}">${n.id === "trash" ? `<span class="wn-ico trash"><i></i></span>` : n.id === "pc" ? `<span class="wn-ico pc"><i></i></span>` : icon(n)}<span>${esc(n.special ? n.name : shownName(n))}</span></button>`).join("");
       iconsEl.querySelectorAll("[data-did]").forEach((b) => b.onclick = () => {
         startOpen = false; pop = null;
-        const id = b.dataset.did, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 450;
+        const id = b.dataset.did, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 600;
         lastTap = { id, t: now };
         if (!dbl) { toast("› Doppelt tippen öffnet."); return; }
         if (id === "pc") openExplorer(root);
@@ -287,7 +294,7 @@
       if (b && !b.disabled) { act(b.dataset.act); return; }
       const it = e.target.closest("[data-id]");
       if (it) {
-        const id = +it.dataset.id, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 450;
+        const id = +it.dataset.id, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 600;
         lastTap = { id, t: now };
         if (dbl) {
           const n = find(id);
