@@ -283,8 +283,37 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .qr-full .qr-box{width:min(78vmin,720px); border:0}
 .qr-full h2{font-family:var(--serif); font-weight:400; font-size:clamp(1.8rem,5vmin,3.4rem); margin:0 0 1rem; color:var(--forest)}
 .qr-full p{color:var(--muted); margin:.8rem 0 0}
+
+/* ---------- Kreative Übungen: Spot it, Memory, Aussprache ---------- */
+.say{display:inline-grid; place-items:center; width:44px; height:44px; margin-left:.25rem; padding:0; vertical-align:middle; background:transparent; border:1px solid var(--line-2); border-radius:50%; color:var(--forest); cursor:pointer}
+.say:hover{background:var(--paper-2)} .say svg{width:18px; height:18px}
+.no-tts .say,.say[hidden]{display:none}
+/* nur für Tastatur/Schalter: Fingertipps gehen durch aufs Bild (dort wertet die Nähe-Regel), Enter/Leertaste lösen trotzdem aus */
+.find-spot{position:absolute; width:44px; height:44px; transform:translate(-50%,-50%); padding:0; border:0; border-radius:50%; background:transparent; pointer-events:none}
+.find-spot:focus-visible{outline:3px solid var(--forest); outline-offset:2px; background:rgba(239,230,210,.4)}
+.spec td.en{white-space:normal}
+.find-q{font-size:1.1rem; margin:.2rem 0 .7rem; min-height:2.3rem} .find-n{color:var(--muted); font-size:.82rem; margin-left:.4rem}
+.find-pic{position:relative; border:1.5px solid var(--forest); outline:1px solid var(--line-2); outline-offset:4px; background:#FFFBF0; cursor:crosshair; user-select:none; -webkit-user-select:none; touch-action:manipulation}
+.find-pic img{display:block; width:100%; height:auto; pointer-events:none}
+.pin{position:absolute; transform:translate(-50%,-50%); pointer-events:none; text-align:center; animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+.pin i{display:block; width:26px; height:26px; margin:0 auto; border-radius:50%; border:2.5px solid var(--forest); background:rgba(35,64,43,.22)}
+.pin b{display:block; margin-top:3px; padding:0 .4rem; background:var(--paper); border:1px solid var(--forest); font-size:.78rem; line-height:1.35; white-space:nowrap; color:var(--forest)}
+.pin em{display:block; padding:0 .4rem; background:var(--paper-2); font-size:.7rem; font-style:normal; line-height:1.3; color:var(--muted); white-space:nowrap}
+.miss{position:absolute; width:30px; height:30px; transform:translate(-50%,-50%); border-radius:50%; border:2.5px solid var(--red); opacity:.8; pointer-events:none; animation:fade .7s ease-out forwards}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.5); opacity:0} to{transform:translate(-50%,-50%) scale(1); opacity:1}}
+@keyframes fade{to{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
+.mem-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin:.4rem 0 .2rem}
+@media (min-width:430px){.mem-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:620px){.mem-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mem-card{position:relative; min-height:68px; padding:.3rem .4rem; display:grid; place-items:center; text-align:center; background:var(--paper-2); border:1.5px solid var(--forest); border-radius:3px; cursor:pointer; font-weight:600; font-size:.95rem; color:var(--forest); box-shadow:2px 2px 0 rgba(35,64,43,.12); transition:transform .15s ease, background .2s}
+.mem-card .mem-face{display:none; overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto; line-height:1.2} .mem-card .mem-back{font-size:1.5rem; color:var(--forest-2); opacity:.7}
+.mem-card.up{background:#FFFBF0} .mem-card.up .mem-face{display:block} .mem-card.up .mem-back{display:none}
+.mem-card.ok{background:rgba(35,64,43,.1); border-color:var(--forest-2); color:var(--forest-2); cursor:default}
+.mem-card:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.pin,.miss{animation:none}}
+@media (max-width:420px){.cup{width:26px; height:26px} .tally small{flex-basis:100%; margin-left:0}}
 @media print{
-  .register,.vi-switch,.qr-btn,.qr-back,.qr-full,.btnrow,.chip,.o-chip,.tear,.explain,.masthead .sprig,.mark-slot{display:none!important}
+  .register,.vi-switch,.say,.find-pic,.mem-grid,.qr-btn,.qr-back,.qr-full,.btnrow,.chip,.o-chip,.tear,.explain,.masthead .sprig,.mark-slot{display:none!important}
   body{background:#fff}
   .layout{display:block; padding:0}
   .vi{display:table-cell!important}
@@ -303,7 +332,7 @@ input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba
 .ex{background:rgba(255,251,240,.5); border:1px solid var(--line-2); border-radius:3px; padding:.2rem 1.1rem 1.1rem; box-shadow:3px 3px 0 rgba(35,64,43,.07)}
 .ex h3{margin-top:1rem}
 .ex.done h3::after{content:"✓ done"; float:right; color:var(--forest); letter-spacing:.1em}
-.tally{display:flex; align-items:center; gap:.45rem; margin:-.2rem 0 .4rem; color:var(--line-2)}
+.tally{display:flex; flex-wrap:wrap; align-items:center; gap:.35rem .45rem; margin:-.2rem 0 .4rem; color:var(--line-2)}
 .tally small{margin-left:.4rem; color:var(--muted); font-size:.82rem}
 .cup{width:30px; height:30px; flex:none; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round}
 .cup .tea,.cup .steam{opacity:0; transition:opacity .4s}
@@ -499,7 +528,11 @@ const UNITS = [
         {q:"______ you like coffee?", o:["Do","Does","Is"], c:0, e:"I / you / we / they → Do."},
         {q:"She ______ breakfast at home.", o:["have","has","haves"], c:1, e:"have wird bei he/she/it zu has."},
         {q:"Welches Wort zeigt eine Gewohnheit?", o:["now","every day","at the moment"], c:1, e:"every day = jeden Tag."},
-        {q:"My brother ______ TV in the evening.", o:["watch","watchs","watches"], c:2, e:"Nach -ch kommt -es: watches."}] }
+        {q:"My brother ______ TV in the evening.", o:["watch","watchs","watches"], c:2, e:"Nach -ch kommt -es: watches."}] },
+      { id:"p1-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"alarm clock","de":"Wecker","spots":[[24.4,45.9,13]]},{"w":"cup","de":"Tasse","spots":[[64.5,61,11]]},{"w":"diary","de":"Tagebuch","spots":[[28,78,11]]},{"w":"ivy","de":"Efeu","spots":[[77,24,14]]}]} },
+      { id:"p1-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["wake up","aufwachen"],["get up","aufstehen"],["have breakfast","frühstücken"],["go to school","zur Schule gehen"],["go to work","zur Arbeit gehen"],["come home","nach Hause kommen"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U1_My_Day_Vocab.pdf"],["Übungen","downloads/FE_U1_My_Day_Practice.pdf"]] },
 
@@ -539,7 +572,11 @@ const UNITS = [
         {q:"My brother ______ a bike.", o:["have","has","haves"], c:1, e:"he / she / it → has."},
         {q:"______ you busy?", o:["Are","Is","Do"], c:0, e:"you → are."},
         {q:"We ______ students.", o:["am","is","are"], c:2, e:"we → are."},
-        {q:"My cousins ______ two dogs.", o:["has","have","haves"], c:1, e:"they → have."}] }
+        {q:"My cousins ______ two dogs.", o:["has","have","haves"], c:1, e:"they → have."}] },
+      { id:"p2-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"cup","de":"Tasse","spots":[[17.6,52.7,12.4],[36.5,47,10]]},{"w":"picture frame","de":"Bilderrahmen","spots":[[60,30,12]]},{"w":"scarf","de":"Schal","spots":[[75.5,55.7,19.5]]},{"w":"heart biscuit","de":"Herzkeks","spots":[[50.8,77,7]]}]} },
+      { id:"p2-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["mother","Mutter"],["father","Vater"],["parents","Eltern"],["sister","Schwester"],["brother","Bruder"],["grandmother","Großmutter"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U2_People_and_Family_Vocab.pdf"],["Übungen","downloads/FE_U2_People_and_Family_Practice.pdf"]] },
 
@@ -575,7 +612,11 @@ const UNITS = [
         {q:"______ he like tea?", o:["Do","Does","Is"], c:1, e:"he / she / it → Does + Grundform."},
         {q:"I like ______.", o:["cook","cooking","cooks"], c:1, e:"like + Verb-ing: cooking."},
         {q:"I don’t ______ coffee.", o:["likes","like","liking"], c:1, e:"don’t + Grundform: like."},
-        {q:"Do you like rice? — Yes, ______.", o:["I do","I am","I like"], c:0, e:"Kurzantwort mit do: Yes, I do."}] }
+        {q:"Do you like rice? — Yes, ______.", o:["I do","I am","I like"], c:0, e:"Kurzantwort mit do: Yes, I do."}] },
+      { id:"p3-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"football","de":"Fußball","spots":[[48.8,35,12.4]]},{"w":"headphones","de":"Kopfhörer","spots":[[21.5,52.7,11]]},{"w":"book","de":"Buch","spots":[[40,73,17]]},{"w":"butterfly","de":"Schmetterling","spots":[[52,66.4,6.5]]},{"w":"cup","de":"Tasse","spots":[[76.8,50.8,11.7]]}]} },
+      { id:"p3-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["play football","Fußball spielen"],["read books","Bücher lesen"],["go shopping","einkaufen gehen"],["watch films","Filme schauen"],["meet friends","Freunde treffen"],["rice","Reis"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U3_Free_Time_and_Likes_Vocab.pdf"],["Übungen","downloads/FE_U3_Free_Time_and_Likes_Practice.pdf"]] },
 
@@ -609,7 +650,11 @@ const UNITS = [
         {q:"______ you want some milk?", o:["Do","Does","Is"], c:0, e:"I / you / we / they → Do."},
         {q:"Does he ______ juice?", o:["want","wants","wanting"], c:0, e:"Nach Does steht die Grundform: Does he want …?"},
         {q:"Im Café sagst du höflich:", o:["Give me tea.","I want tea.","I would like a tea, please."], c:2, e:"I would like … + please ist höflich."},
-        {q:"Welches Wort ist ein Getränk?", o:["bread","soup","tea"], c:2, e:"tea = Tee – ein Getränk."}] }
+        {q:"Welches Wort ist ein Getränk?", o:["bread","soup","tea"], c:2, e:"tea = Tee – ein Getränk."}] },
+      { id:"p4-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"teapot","de":"Teekanne","spots":[[35.8,50.8,12.4]]},{"w":"bread","de":"Brot","spots":[[41,78,11.7]]},{"w":"apple","de":"Apfel","spots":[[68.4,84,6.5]]},{"w":"jam jar","de":"Marmeladenglas","spots":[[76.8,64.5,7.8]]},{"w":"cup","de":"Tasse","spots":[[18.9,63.5,9],[59.2,65.4,9]]}]} },
+      { id:"p4-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["bread","Brot"],["cheese","Käse"],["egg","Ei"],["apple","Apfel"],["soup","Suppe"],["noodles","Nudeln"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U4_Food_and_Drink_Vocab.pdf"],["Übungen","downloads/FE_U4_Food_and_Drink_Practice.pdf"]] },
 
@@ -644,7 +689,11 @@ const UNITS = [
         {q:"There ______ three windows.", o:["is","are","am"], c:1, e:"three = mehrmals → there are."},
         {q:"The bed is ______ the bedroom.", o:["in","on","at"], c:0, e:"in = in einem Raum."},
         {q:"The phone is ______ the table.", o:["in","on","next"], c:1, e:"on = auf."},
-        {q:"Welches Wort passt zu „neben“?", o:["in","on","next to"], c:2, e:"next to = neben."}] }
+        {q:"Welches Wort passt zu „neben“?", o:["in","on","next to"], c:2, e:"next to = neben."}] },
+      { id:"p5-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"flowerpot","de":"Blumentopf","spots":[[28.6,46,17.6]]},{"w":"key","de":"Schlüssel","spots":[[37,77,15]]},{"w":"house","de":"Haus","spots":[[71,60.5,14.3]]},{"w":"window","de":"Fenster","spots":[[68,18,12]]}]} },
+      { id:"p5-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["house","Haus"],["flat","Wohnung"],["kitchen","Küche"],["bedroom","Schlafzimmer"],["bathroom","Badezimmer"],["living room","Wohnzimmer"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U5_Home_and_Town_Vocab.pdf"],["Übungen","downloads/FE_U5_Home_and_Town_Practice.pdf"]] },
 
@@ -679,7 +728,11 @@ const UNITS = [
         {q:"How much ______ the shoes?", o:["is","are","does"], c:1, e:"shoes = mehrere → are."},
         {q:"100 cent = ______", o:["one euro","ten euros","one hundred euros"], c:0, e:"100 cent sind 1 euro."},
         {q:"Das Gegenteil von cheap ist ______.", o:["expensive","small","nice"], c:0, e:"cheap = billig · expensive = teuer."},
-        {q:"Im Laden fragst du:", o:["Where is it?","How much is it?","Who is it?"], c:1, e:"How much is it? = Was kostet das?"}] }
+        {q:"Im Laden fragst du:", o:["Where is it?","How much is it?","Who is it?"], c:1, e:"How much is it? = Was kostet das?"}] },
+      { id:"p6-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"basket","de":"Korb","spots":[[29.3,49,21.5]]},{"w":"baguette","de":"Baguette","spots":[[45.6,29,14.3]]},{"w":"scales","de":"Waage","spots":[[73,46,18]]},{"w":"coin","de":"Münze","spots":[[15,80,5],[24,82,5]]},{"w":"price tag","de":"Preisschild","spots":[[46,83,7.8]]}]} },
+      { id:"p6-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["one hundred","hundert"],["twenty","zwanzig"],["fifty","fünfzig"],["price","Preis"],["cheap","billig"],["expensive","teuer"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U6_Shopping_and_Prices_Vocab.pdf"],["Übungen","downloads/FE_U6_Shopping_and_Prices_Practice.pdf"]] },
 
@@ -715,7 +768,11 @@ const UNITS = [
         {q:"He ______ a hat.", o:["wear","wears","wearing"], c:1, e:"he → wears."},
         {q:"Bei Regen nimmst du einen ______.", o:["umbrella","T-shirt","hat"], c:0, e:"umbrella = Regenschirm."},
         {q:"Das Gegenteil von hot ist ______.", o:["cold","sunny","windy"], c:0, e:"hot = heiß · cold = kalt."},
-        {q:"Wie fragst du nach dem Wetter?", o:["What’s the weather like?","How much is it?","Where is it?"], c:0, e:"What’s the weather like? = Wie ist das Wetter?"}] }
+        {q:"Wie fragst du nach dem Wetter?", o:["What’s the weather like?","How much is it?","Where is it?"], c:0, e:"What’s the weather like? = Wie ist das Wetter?"}] },
+      { id:"p7-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"raincoat","de":"Regenmantel","spots":[[23.4,37,18]]},{"w":"hat","de":"Mütze","spots":[[44,41,8.5]]},{"w":"umbrella","de":"Regenschirm","spots":[[45.6,76,15]]},{"w":"window","de":"Fenster","spots":[[73,37,21.5]]},{"w":"mug","de":"Becher","spots":[[70.6,52.7,5.2]]}]} },
+      { id:"p7-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["sunny","sonnig"],["rainy","regnerisch"],["windy","windig"],["cold","kalt"],["hot","heiß"],["snow","Schnee"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U7_Weather_and_Clothes_Vocab.pdf"],["Übungen","downloads/FE_U7_Weather_and_Clothes_Practice.pdf"]] },
 
@@ -751,7 +808,11 @@ const UNITS = [
         {q:"She ______ a toothache.", o:["have","has","is"], c:1, e:"she → has."},
         {q:"Wenn du krank bist, gehst du zum ______.", o:["doctor","shop","bus"], c:0, e:"doctor = Arzt / Ärztin."},
         {q:"I am ______. Ich möchte schlafen.", o:["tired","hot","cheap"], c:0, e:"tired = müde."},
-        {q:"Was fragt der Arzt?", o:["What’s the matter?","How much is it?","Where is the bag?"], c:0, e:"What’s the matter? = Was ist los?"}] }
+        {q:"Was fragt der Arzt?", o:["What’s the matter?","How much is it?","Where is the bag?"], c:0, e:"What’s the matter? = Was ist los?"}] },
+      { id:"p8-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"medicine","de":"Medizin","spots":[[40.4,41,13]]},{"w":"thermometer","de":"Thermometer","spots":[[32.5,71,15]]},{"w":"cup of tea","de":"Tasse Tee","spots":[[65,62.5,17.6]]},{"w":"blanket","de":"Decke","spots":[[71.6,34,18]]}]} },
+      { id:"p8-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["head","Kopf"],["back","Rücken"],["leg","Bein"],["headache","Kopfschmerzen"],["toothache","Zahnschmerzen"],["fever","Fieber"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U8_Body_and_Health_Vocab.pdf"],["Übungen","downloads/FE_U8_Body_and_Health_Practice.pdf"]] },
 
@@ -786,7 +847,11 @@ const UNITS = [
         {q:"He ______ in an office.", o:["work","works","am"], c:1, e:"he → works."},
         {q:"Eine Krankenschwester arbeitet im ______.", o:["hospital","kitchen","shop"], c:0, e:"nurse → hospital."},
         {q:"Ein Koch arbeitet in der ______.", o:["kitchen","office","hospital"], c:0, e:"cook → kitchen."},
-        {q:"Wie fragst du nach dem Beruf?", o:["What do you do?","Where is it?","How much is it?"], c:0, e:"What do you do? = Was machst du beruflich?"}] }
+        {q:"Wie fragst du nach dem Beruf?", o:["What do you do?","Where is it?","How much is it?"], c:0, e:"What do you do? = Was machst du beruflich?"}] },
+      { id:"p9-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"chef’s hat","de":"Kochmütze","spots":[[25.4,37,17]]},{"w":"briefcase","de":"Aktentasche","spots":[[73,41,17]]},{"w":"stethoscope","de":"Stethoskop","spots":[[57,66,18]]},{"w":"scissors","de":"Schere","spots":[[28,76,13.7]]},{"w":"comb","de":"Kamm","spots":[[27.3,87,5.2]]}]} },
+      { id:"p9-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["teacher","Lehrer / Lehrerin"],["driver","Fahrer / Fahrerin"],["cook","Koch / Köchin"],["office","Büro"],["hospital","Krankenhaus"],["kitchen","Küche"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U9_Jobs_and_Work_Vocab.pdf"],["Übungen","downloads/FE_U9_Jobs_and_Work_Practice.pdf"]] }
 ];
@@ -794,7 +859,7 @@ const UNITS = [
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm = s => String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/\s+/g," ").replace(/[.,!?]/g,"").trim();
 const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
-const EX = {};
+const EX = {}, FIND = {}, MEM = {};
 
 /* ---------- Render ---------- */
 function schemaHTML(u){
@@ -808,12 +873,12 @@ function vocabHTML(v){
   return `<h3 class="sec">Specimens · Vokabeln</h3>
     <table class="spec"><caption>English · Deutsch · Tiếng Việt (optional über die Hilfe links)</caption>
     <thead><tr><th>English</th><th>Deutsch</th><th class="vi">Tiếng Việt</th></tr></thead><tbody>
-    ${v.map(([en,de,vi],i)=>`<tr><td class="en"><span class="num">${String(i+1).padStart(2,"0")}</span>${esc(en)}</td><td>${esc(de)}</td><td class="vi">${esc(vi)}</td></tr>`).join("")}
+    ${v.map(([en,de,vi],i)=>`<tr><td class="en"><span class="num">${String(i+1).padStart(2,"0")}</span>${esc(en)}${sayBtn(en)}</td><td>${esc(de)}</td><td class="vi">${esc(vi)}</td></tr>`).join("")}
     </tbody></table>`;
 }
 function exHead(ex){ return `<h3>Exercise ${ex.n} · ${esc(ex.title)}</h3>${ex.lead?`<p class="ex-lead">${ex.lead}</p>`:""}`; }
 
-function renderExercise(ex){
+function renderExercise(ex, u){
   EX[ex.id] = ex;
   const btns = `<div class="btnrow"><button class="btn" type="button" data-check="${ex.id}">Mark it</button><button class="btn ghost" type="button" data-reset="${ex.id}">Again</button></div><p class="fb" data-fb></p>`;
   if(ex.type === "match"){
@@ -855,6 +920,21 @@ function renderExercise(ex){
         <p class="explain" data-x="${qi}">${esc(q.e)}</p>`).join("")}
       ${btns}</div>`;
   }
+  if(ex.type === "find"){
+    const T = ex.find.targets;
+    return `<div class="ex" data-ex="${ex.id}">${exHead(ex)}
+      <p class="find-q"><span data-q aria-live="polite"></span>${sayBtn("")}<span class="find-n" data-n></span></p>
+      <div class="find-pic" data-find="${ex.id}" role="group" aria-label="Bild: Tippe auf den gesuchten Gegenstand. Mit der Tabulatortaste erreichst du die Stellen im Bild.">
+        <img src="${u.plate}" alt="Aquarell: ${esc(u.caption)}" width="1200" height="800" loading="lazy" decoding="async" draggable="false">
+        ${shuffle(T.map((t,ti)=>({t,ti}))).map(({t,ti},k)=>`<button class="find-spot" type="button" data-t="${ti}" style="left:${t.spots[0][0]}%;top:${t.spots[0][1]}%" aria-label="Stelle ${k+1}"></button>`).join("")}
+      </div>
+      <div class="btnrow"><button class="btn ghost" type="button" data-reset="${ex.id}">Again</button></div><p class="fb" data-fb aria-live="polite"></p></div>`;
+  }
+  if(ex.type === "memory"){
+    return `<div class="ex" data-ex="${ex.id}">${exHead(ex)}
+      <div class="mem-grid" data-mem="${ex.id}"></div>
+      <div class="btnrow"><button class="btn ghost" type="button" data-reset="${ex.id}">Again</button></div><p class="fb" data-fb aria-live="polite"></p></div>`;
+  }
   return "";
 }
 function tearHTML(u){
@@ -873,7 +953,7 @@ function plateHTML(u){
     <p class="vi-note">Tipp: links auf „Tiếng Việt" tippen, um die vietnamesische Spalte einzublenden.</p>
     <h3 class="sec">Practice</h3>
     <div class="tally" data-tally="${u.id}" role="img" aria-label="Fortschritt: geschaffte Übungen">${u.exercises.map(()=>`<svg class="cup" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>`).join("")}<small></small></div>
-    ${u.exercises.map(renderExercise).join("")}
+    ${u.exercises.map(ex=>renderExercise(ex,u)).join("")}
     ${tearHTML(u)}
   </section>`;
 }
@@ -883,7 +963,7 @@ document.getElementById("column").innerHTML = UNITS.map(plateHTML).join("") + `
   <footer class="colophon">
     <h3>A field guide to everyday English</h3>
     <p>${UNITS.length} Tafeln für den Anfang: ${UNITS.map(u=>`<i>${u.title}</i>`).join(", ")}.
-       Diagramm, Vokabeln und fünf Übungen pro Tafel — projiziert im Unterricht oder am Handy wiederholt.</p>
+       Diagramm, Vokabeln (zum Anhören) und sieben Übungen pro Tafel, darunter „Spot it“ im Bild und Memory — projiziert im Unterricht oder am Handy wiederholt.</p>
     <div class="row2"><a href="downloads/FE_Everyday_English_Overview.pdf" target="_blank" rel="noopener">Reihenplan für die Lehrkraft (PDF)</a></div>
     <p class="tiny">HBBK Oberhausen · Förderkurs Englisch · Everyday English. Vietnamesisch ist eine Lernhilfe
        (Standardsprache). Keine Lehrer-Lösungen online · kein Schuljahr · keine echten Personendaten.
@@ -1044,6 +1124,136 @@ function openQR(id, title){
 }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-qr]"); if(b) openQR(b.dataset.qr, b.dataset.t||""); });
 
+/* ---------- Neue Übungen: Spot it (Bild), Memory; Aussprache ---------- */
+/* Lautsprecher-Knopf (Funktion statt const: wird schon beim Aufbau der Tafeln gebraucht) */
+function sayBtn(w){
+  return `<button class="say" type="button" data-say="${esc(w)}" aria-label="${esc(w)} anhören"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>`;
+}
+/* Sprachausgabe: Knöpfe erst zeigen, wenn eine englische Stimme da ist (Stimmen laden oft verzögert) */
+const TTS = ("speechSynthesis" in window) && typeof SpeechSynthesisUtterance !== "undefined";
+let ttsVoices = [];
+document.documentElement.classList.add("no-tts");
+function ttsCheck(){
+  try{ ttsVoices = speechSynthesis.getVoices() || []; if(ttsVoices.some(v=>/^en/i.test(v.lang))) document.documentElement.classList.remove("no-tts"); }catch(e){}
+}
+if(TTS){ ttsCheck(); if(speechSynthesis.addEventListener) speechSynthesis.addEventListener("voiceschanged", ttsCheck); else speechSynthesis.onvoiceschanged = ttsCheck; }
+function say(text){
+  if(!TTS) return;
+  try{
+    const u = new SpeechSynthesisUtterance(String(text));
+    u.lang = "en-GB"; u.rate = .85;
+    const v = ttsVoices.find(x=>/^en[-_]GB/i.test(x.lang)) || ttsVoices.find(x=>/^en/i.test(x.lang));
+    if(v) u.voice = v;
+    /* direkt nach cancel() verschluckt Chrome/Safari ein speak() oft – kurz warten */
+    if(speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(()=>speechSynthesis.speak(u), 80); }
+    else speechSynthesis.speak(u);
+  }catch(e){}
+}
+/* Spot it */
+function findAsk(id){
+  const ex = EX[id], st = FIND[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
+  const q = scope.querySelector("[data-q]"), n = scope.querySelector("[data-n]"), sb = scope.querySelector(".find-q .say");
+  if(st.i >= st.order.length){ q.innerHTML = 'All found! <b lang="en">Well done.</b>'; n.textContent = ""; sb.hidden = true; return; }
+  const t = ex.find.targets[st.order[st.i]];
+  q.innerHTML = `Tap: <b lang="en">${esc(t.w)}</b>`;
+  sb.hidden = false; sb.dataset.say = t.w; sb.setAttribute("aria-label", `${t.w} anhören`);
+  n.textContent = `${st.i+1} / ${st.order.length}`;
+}
+function findReset(id){
+  const ex = EX[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
+  FIND[id] = {order:shuffle(ex.find.targets.map((_,i)=>i)), i:0, miss:0};
+  scope.querySelectorAll(".find-pic .pin, .find-pic .miss").forEach(e=>e.remove());
+  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent = "";
+  findAsk(id);
+}
+/* Tipp auswerten: Überlappen sich Flächen, gewinnt der Gegenstand, dessen Mitte (relativ zum Radius) am nächsten liegt */
+function findTap(pic, px, py){
+  const id = pic.dataset.find, ex = EX[id], st = FIND[id];
+  if(!ex || !st || st.i >= st.order.length) return;
+  const r = pic.querySelector("img").getBoundingClientRect(), W = r.width, H = r.height;
+  let best = null;
+  ex.find.targets.forEach((tg,ti)=>tg.spots.forEach(sp=>{
+    const d = Math.hypot(px - sp[0]/100*W, py - sp[1]/100*H) / (sp[2]/100*W);
+    if(d <= 1 && (!best || d < best.d)) best = {ti, sp, d};
+  }));
+  const want = st.order[st.i], tg = ex.find.targets[want];
+  const scope = pic.closest(".ex"), fb = scope.querySelector("[data-fb]");
+  if(best && best.ti === want){
+    const pin = document.createElement("span");
+    pin.className = "pin"; pin.style.left = best.sp[0]+"%"; pin.style.top = best.sp[1]+"%";
+    pin.innerHTML = `<i></i><b lang="en">${esc(tg.w)}</b><em>${esc(tg.de)}</em>`;
+    pic.appendChild(pin);
+    st.i++; fb.textContent = "";
+    findAsk(id);
+    if(st.i >= st.order.length){
+      fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Alles gefunden${st.miss ? ` · ${st.miss} Fehlversuch${st.miss>1?"e":""}` : " – ohne Fehler"}!</span>`;
+      markDone(id);
+    }
+  } else {
+    st.miss++;
+    const m = document.createElement("span"); m.className = "miss";
+    m.style.left = (px/W*100)+"%"; m.style.top = (py/H*100)+"%";
+    pic.appendChild(m); setTimeout(()=>m.remove(), 700);
+    fb.textContent = "Nicht ganz – schau noch einmal hin.";
+  }
+}
+/* Memory */
+function memBuild(id){
+  const ex = EX[id], scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
+  const cards = shuffle(ex.pairs.flatMap((p,i)=>[{k:i,t:p[0],l:"en"},{k:i,t:p[1],l:"de"}]));
+  MEM[id] = {open:[], lock:false, turns:0, found:0};
+  scope.querySelector(".mem-grid").innerHTML = cards.map((c,i)=>`<button class="mem-card" type="button" data-k="${c.k}" data-n="${i+1}" aria-label="Karte ${i+1}, verdeckt" aria-pressed="false"><span class="mem-back" aria-hidden="true">❦</span><span class="mem-face" lang="${c.l}">${esc(c.t)}</span></button>`).join("");
+  const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent = "";
+}
+const memFace = (c) => c.querySelector(".mem-face").textContent;
+function memShow(c, up){
+  c.classList.toggle("up", up); c.setAttribute("aria-pressed", up ? "true" : "false");
+  c.setAttribute("aria-label", up ? memFace(c) : `Karte ${c.dataset.n}, verdeckt`);
+}
+document.addEventListener("click", ev=>{
+  const t = ev.target;
+  const sb = t.closest("[data-say]");
+  if(sb){ say(sb.dataset.say); return; }
+  /* Spot it: Stelle per Tastatur/Knopf oder Tipp ins Bild */
+  const spot = t.closest(".find-spot");
+  if(spot){
+    const pic = spot.closest(".find-pic"), ex = EX[pic.dataset.find], r = pic.querySelector("img").getBoundingClientRect();
+    const sp = ex.find.targets[+spot.dataset.t].spots[0];
+    findTap(pic, sp[0]/100*r.width, sp[1]/100*r.height);
+    return;
+  }
+  const pic = t.closest(".find-pic");
+  if(pic){
+    const r = pic.querySelector("img").getBoundingClientRect();
+    findTap(pic, ev.clientX - r.left, ev.clientY - r.top);
+    return;
+  }
+  /* Memory */
+  const card = t.closest(".mem-card");
+  if(card){
+    const grid = card.closest(".mem-grid"), id = grid.dataset.mem, st = MEM[id], scope = grid.closest(".ex"), fb = scope.querySelector("[data-fb]");
+    if(!st || st.lock || card.classList.contains("up") || card.classList.contains("ok")) return;
+    memShow(card, true); st.open.push(card);
+    if(st.open.length === 2){
+      st.turns++; st.lock = true;
+      const [a,b] = st.open, n = EX[id].pairs.length;
+      if(a.dataset.k === b.dataset.k){
+        [a,b].forEach(c=>{ c.classList.add("ok"); c.setAttribute("aria-label", `${memFace(c)} – Paar gefunden`); });
+        st.open = []; st.lock = false; st.found++;
+        fb.textContent = `${st.found} / ${n} Paare · ${st.turns} Züge`;
+        if(st.found === n){
+          fb.innerHTML = `<span class="cheer"><svg class="cup on" viewBox="0 0 24 24" aria-hidden="true"><use href="#cup"/></svg>Alle Paare gefunden in ${st.turns} Zügen!</span>`;
+          markDone(id);
+        }
+      } else {
+        setTimeout(()=>{ memShow(a, false); memShow(b, false); st.open = []; st.lock = false; }, 900);
+        fb.textContent = `${st.found} / ${n} Paare · ${st.turns} Züge`;
+      }
+    }
+    return;
+  }
+});
+
 /* ---------- Tee-Tally: geschaffte Übungen (nur auf diesem Gerät) ---------- */
 const DONE_KEY="fe.done";
 const doneSet=()=>{ try{ return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||"[]")); }catch(e){ return new Set(); } };
@@ -1060,6 +1270,7 @@ function paintTally(){
 }
 function markDone(id){ const d=doneSet(); if(!d.has(id)){ d.add(id); saveDone(d); } paintTally(); }
 paintTally();
+Object.values(EX).forEach(ex=>{ if(ex.type==="find") findReset(ex.id); else if(ex.type==="memory") memBuild(ex.id); });
 function check(id){
   const ex = EX[id]; if(!ex) return;
   const scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
@@ -1129,6 +1340,8 @@ function check(id){
 }
 function reset(id){
   const ex = EX[id]; if(!ex) return;
+  if(ex.type==="find"){ findReset(id); return; }
+  if(ex.type==="memory"){ memBuild(id); return; }
   const scope = document.querySelector(`.ex[data-ex="${id}"]`); if(!scope) return;
   clearMarks(scope);
   const fb = scope.querySelector("[data-fb]"); if(fb) fb.textContent="";

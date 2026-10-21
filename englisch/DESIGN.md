@@ -47,13 +47,15 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
   gezeichneter Pfeil, Verb-Chip, rote `+ s`-Marke, Beispielsatz rechts; darunter Schreibregeln
   bzw. `be`/`have`-Leaders. Deterministisch (HTML), nicht generativ.
 - **Specimen-Tabelle (`.spec`):** English · Deutsch · Tiếng Việt, nummerierte Zeilen.
-- **Übungen (`.ex`), fünf je Tafel, mit roter Korrektur-Marke:**
+- **Übungen (`.ex`), sieben je Tafel (A–E mit roter Korrektur-Marke, F–G spielerisch):**
   - `match` — Paare finden (Chip antippen → Feld antippen), `.mt-*`
   - `cloze` — Lückentext mit Wortbank, `.gap`
   - `order` — Satz aus Wörtern bauen, `.o-target` / `.o-chip`
   - `spot` — den falschen Satz finden, `.spot-item`
   - `sort` — einer Kategorie zuordnen, `.sort-btn`
   - `quiz` — Multiple Choice mit Erklärung, `.opt`
+  - `find` — **Spot it**: im Tafelbild auf den gefragten Gegenstand tippen (`.find-pic`); Trefferflächen als Kreise `[x %, y %, Radius %]` (Prozent von Bildhöhe/-breite; Radius in % der Bildbreite) je Gegenstand, mehrere Flächen möglich. Treffer zeigt Wort + Deutsch am Gegenstand (`.pin`), Fehlklick einen roten Ring. Fertig, wenn alle gefunden sind (zählt für die Tee-Tally). **Überlappen sich Flächen, gewinnt der Gegenstand, dessen Mitte (relativ zum Radius) am nächsten liegt** – ein Tipp auf den Schmetterling zählt also nie als „book“. **Tastatur:** Jeder Gegenstand hat einen unsichtbaren Knopf „Stelle n“ an seiner Mitte (Tab + Enter); die Knöpfe lassen Fingertipps durch (`pointer-events:none`), damit ein großer Knopf eines kleinen Nachbarn keine Tipps abfängt.
+  - `memory` — Kartenpaare Englisch ↔ Deutsch aufdecken (`.mem-card`), 6 Paare aus dem Wortschatz; Züge werden gezählt, fertig bei allen Paaren. Englisches und deutsches Wort dürfen nicht gleich geschrieben sein (z. B. nicht euro/Euro) – das prüft `check-englisch.js`. Bildschirmleser hören bei aufgedeckten Karten das Wort, sonst „Karte n, verdeckt“.
 - **Tear-outs:** PDF-Downloads.
 
 ## Gemütlich (12.10.2026)
@@ -63,6 +65,11 @@ Kontrast: Tinte auf Creme ≈ 14:1, `--muted`/`--ochre` ≥ 4.5:1 (kleine Labels
 - **Übungen als Karten** (leichtes Papier, kleiner Versatzschatten); geschaffte Übung zeigt „✓ done“.
 - **Tee-Tally:** unter „Practice“ eine Tasse je Übung, gefüllt, wenn alles richtig war (`localStorage` `fe.done`, nur auf dem Gerät). Bei Vollmarke: „Zeit für eine Tasse Tee!“. Symbol `#cup`.
 - Leitlinie: gemütlich, aber nicht überladen – Schmuck nur an Rahmen und Rückmeldung, die Lesespalte bleibt ruhig.
+
+## Aussprache und Spielübungen (14.10.2026)
+
+- **🔊 Anhören:** Jedes Vokabelwort (und das gesuchte Wort bei „Spot it“) hat einen kleinen Lautsprecher-Knopf, der das Wort mit der Sprachausgabe des Geräts vorliest (`speechSynthesis`, `en-GB`, etwas langsamer). Die Knöpfe erscheinen erst, wenn das Gerät eine englische Stimme meldet (`voiceschanged`), sonst bleiben sie verborgen (`.no-tts`). Tippfläche 44 px.
+- **Neue Tafel mit Spot it:** Trefferflächen legt man in `UNITS` an (`find:{targets:[{w,de,spots:[[x,y,r]]}]}`) und prüft sie mit einer Überlagerung (Kreise über das Bild legen und ansehen). `node app/tools/check-englisch.js` prüft Format und Grenzen. In den Arbeitsblatt-PDFs erscheinen F und G nicht (nur am Bildschirm sinnvoll); der Reihenplan nennt sie als „Spot it · Memory (nur am Bildschirm)“. **Hinweis Tee-Tally:** Seit es F und G gibt, hat jede Tafel 7 Tassen – wer vorher alle 5 hatte, sieht jetzt „5 / 7 geschafft“.
 
 ## QR-Code (12.10.2026)
 

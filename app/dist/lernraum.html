@@ -2908,8 +2908,8 @@ LERNRAUM.subjects.push({
 /* ============================================================
    KURS: PBP · HS1 – Bewerbung
    Fach PBP · Lernfeld 8.1 · Modellunternehmen Mediaworld e. K.
-   Teil 1: Stellenanzeige & Profil (LS 2.2). Teil 2 (Bewerbung &
-   Auswahl, LS 2.3) folgt.
+   Teil 1: Stellenanzeige & Profil (LS 2.2).
+   Teil 2: Bewerbung & Auswahl (LS 2.3) – ohne Arbeitsblatt nach Standard-Lehrplan erstellt.
    Aufbau und alle Aufgabentypen: app/README.md
    ============================================================ */
 
@@ -2917,6 +2917,7 @@ LERNRAUM.subjects.push({
   id: "pbp-bewerbung",
   fach: "PBP",
   added: "2026-10-08",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
+  updated: "2026-10-19",        // neu: Teil 2 Bewerbung & Auswahl (LS 2.3)
   name: "Bewerbung",
   course: "PBP · HS1",
   glyph: "B",
@@ -2928,6 +2929,11 @@ LERNRAUM.subjects.push({
       id: "stellenanzeige", group: "Stellenanzeige & Profil", kicker: "Ordner · LS 2.2",
       title: "Stellenanzeige & Profil",
       description: "Personalbeschaffung, Anforderungsprofil, Anzeigen-Sprache, Anzeigen-Check und das eigene Stärkenprofil."
+    },
+    {
+      id: "auswahl", group: "Bewerbung & Auswahl", kicker: "Ordner · LS 2.3",
+      title: "Bewerbung & Auswahl",
+      description: "Bewerbungsmappe, Vorauswahl, Zeugnisse lesen, Vorstellungsgespräch, Bewertungstabelle, Zusage und Absage – Mediaworld wählt aus."
     }
   ],
   topics: [
@@ -3708,7 +3714,720 @@ LERNRAUM.subjects.push({
           ]
         }
       ]
+    },
+    /* ══════════════ LS 2.3 · BEWERBUNG & AUSWAHL ══════════════
+       Ohne Arbeitsblatt der Lehrkraft nach Standard-Lehrplan erstellt (Creative Director, 19.10.2026):
+       Bewerbungsmappe · Vorauswahl · Zeugnisse lesen · Vorstellungsgespräch · Bewertungstabelle · Zusage/Absage/Datenschutz. */
+    {
+      id: "bewerbungsmappe",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Die Bewerbungsmappe",
+      kicker: "LS 2.3 · Teil 1",
+      minutes: 15,
+      help: `<h3>Bewerbungsmappe</h3>
+             <p class="formula">Anschreiben + Lebenslauf + Zeugnisse + Nachweise</p>
+             <ul><li><strong>Anschreiben:</strong> Warum diese Stelle? Warum passe ich?</li>
+             <li><strong>Lebenslauf:</strong> Daten, Schule, Praktika, Kenntnisse – tabellarisch, lückenlos, aktuell.</li>
+             <li><strong>Zeugnisse:</strong> das letzte Schulzeugnis.</li>
+             <li><strong>Nachweise:</strong> Praktikumsbescheinigungen, Kurse, Zertifikate.</li></ul>
+             <h3>Gehört nicht hinein</h3>
+             <ul><li>Ausweis-Kopie, Kontoauszug, Krankmeldung, private Fotos.</li></ul>
+             <p class="note">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Die Post ist da",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Zwei Wochen nach der Anzeige",
+              title: "„Fünf Bewerbungen – und jetzt?“",
+              body: `<p>Die Anzeige für die Azubi-Stelle war online. Jetzt liegen <strong>fünf Bewerbungen</strong> im Postfach.</p>
+                     <p>Melike sagt zu Tara: „Bevor wir lesen, prüfen wir: Ist jede <strong>Bewerbungsmappe</strong> vollständig?“</p>`
+            },
+            {
+              kicker: "Was gehört hinein?",
+              title: "Vier Teile machen die Mappe komplett.",
+              body: `<ol>
+                       <li><strong>Anschreiben</strong> – Warum diese Stelle? Warum passe ich?</li>
+                       <li><strong>Lebenslauf</strong> – Daten, Schule, Praktika, Kenntnisse</li>
+                       <li><strong>Zeugnisse</strong> – das letzte Schulzeugnis</li>
+                       <li><strong>Nachweise</strong> – Praktikumsbescheinigungen, Kurse</li>
+                     </ol>
+                     <p class="note">Heute kommt die Mappe meist als <strong>eine PDF-Datei</strong> per E-Mail oder über ein Online-Formular.</p>`
+            },
+            {
+              kicker: "Der Lebenslauf",
+              title: "Tabellarisch, lückenlos, aktuell.",
+              body: `<ul><li><strong>tabellarisch:</strong> kurze Zeilen mit Datum, keine langen Sätze</li>
+                       <li><strong>lückenlos:</strong> keine Monate, die einfach fehlen</li>
+                       <li><strong>aktuell:</strong> mit Ort und Datum von heute</li></ul>
+                     <p class="note">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>`
+            },
+            {
+              kicker: "Achtung",
+              title: "Das gehört nicht in die Mappe.",
+              body: `<ul class="pm"><li class="m">Kopie vom Personalausweis</li><li class="m">Kontoauszug</li><li class="m">Krankmeldung</li><li class="m">Fotos von der Party</li></ul>
+                     <p>Solche Unterlagen sind privat. Der Betrieb braucht sie für die Auswahl nicht.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Vollständig – sonst wird es schwer.",
+              body: `<p>Fehlt ein wichtiger Teil, wirkt die Bewerbung <strong>unsorgfältig</strong>. Das kostet Punkte, bevor jemand den Inhalt liest.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Rein oder raus?",
+          prompt: "Gehört das in die Bewerbungsmappe für Mediaworld?",
+          hints: ["In die Mappe gehört alles, was zeigt: Ich passe zur Stelle.",
+                  "Private Unterlagen wie Kontoauszüge oder Krankmeldungen gehören nicht hinein."],
+          categories: ["Gehört hinein", "Gehört nicht hinein"],
+          items: [
+            { text: "Anschreiben", cat: 0 },
+            { text: "Kopie vom Personalausweis", cat: 1 },
+            { text: "Lebenslauf", cat: 0 },
+            { text: "Kontoauszug", cat: 1 },
+            { text: "letztes Schulzeugnis", cat: 0 },
+            { text: "Krankmeldung vom Arzt", cat: 1 },
+            { text: "Praktikumsbescheinigung", cat: 0 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Wo steht was?",
+          questions: [
+            {
+              q: "Wo erklärt die Bewerberin, <b>warum</b> sie gut zur Stelle passt?",
+              hint: "Ein Teil der Mappe ist ein Brief an den Betrieb.",
+              options: ["im Anschreiben", "im Lebenslauf", "im Schulzeugnis"],
+              answer: 0,
+              explain: "Das Anschreiben ist der Brief: Warum diese Stelle? Warum passe ich?"
+            },
+            {
+              q: "Wo stehen Schule, Praktika und Kenntnisse kurz mit Datum?",
+              options: ["im Anschreiben", "im Lebenslauf", "in der Praktikumsbescheinigung"],
+              answer: 1,
+              explain: "Der Lebenslauf ist tabellarisch: kurze Zeilen mit Datum."
+            },
+            {
+              q: "Ein Lebenslauf zeigt: Schule bis Juni, dann nichts bis Dezember. Was fehlt?",
+              hint: "Denk an die drei Regeln für den Lebenslauf.",
+              options: ["Er ist nicht tabellarisch.", "Er ist nicht lückenlos.", "Er hat kein Foto."],
+              answer: 1,
+              explain: "Lückenlos heißt: Auch Juli bis November müssen erklärt sein (z. B. Praktikum, Jobben, Ferien)."
+            },
+            {
+              q: "Darf Mediaworld ein Bewerbungsfoto verlangen?",
+              options: ["Ja, immer.", "Nein, das Foto ist freiwillig.", "Nur von Frauen."],
+              answer: 1,
+              explain: "Das Foto ist freiwillig. Der Betrieb darf niemanden ohne Foto schlechter behandeln."
+            }
+          ]
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann die vier Teile einer Bewerbungsmappe nennen.",
+            "Ich kann erklären, wie ein guter Lebenslauf aussieht.",
+            "Ich weiß, welche Unterlagen nicht in die Mappe gehören."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "vorauswahl",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Die Vorauswahl",
+      kicker: "LS 2.3 · Teil 2",
+      minutes: 20,
+      help: `<h3>Vorauswahl</h3>
+             <p class="formula">Formal prüfen → Inhalt mit dem Anforderungsprofil vergleichen → A, B oder C</p>
+             <h3>Formal</h3>
+             <ul><li>vollständig, ordentlich, ohne Rechtschreibfehler, richtiger Betriebsname</li></ul>
+             <h3>Inhaltlich</h3>
+             <ul><li>Muss-Anforderungen erfüllt? Wie viele Kann-Anforderungen?</li>
+             <li>Lebenslauf: Lücken? Schulzeugnis: Noten in Deutsch und Mathe, Fehltage</li></ul>
+             <h3>Drei Stapel</h3>
+             <ul><li><strong>A:</strong> passt gut → zum Gespräch einladen</li>
+             <li><strong>B:</strong> passt teilweise → Reserve</li>
+             <li><strong>C:</strong> eine Muss-Anforderung fehlt → Absage</li></ul>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Fünf Mappen, drei Stapel",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vorauswahl",
+              title: "„Wir können nicht alle einladen.“",
+              body: `<p>Melike: „Gespräche kosten Zeit. Deshalb machen wir eine <strong>Vorauswahl</strong>. Der Maßstab ist unser <strong>Anforderungsprofil</strong>.“</p>`
+            },
+            {
+              big: "1.",
+              kicker: "Formal prüfen",
+              title: "Ist die Mappe in Ordnung?",
+              body: `<ul><li>vollständig?</li><li>ordentlich und übersichtlich?</li><li>ohne Rechtschreibfehler?</li><li>richtiger Betriebsname – nicht „Sehr geehrte Firma Mediamarkt“?</li></ul>`
+            },
+            {
+              big: "2.",
+              kicker: "Inhalt prüfen",
+              title: "Passt die Person zum Profil?",
+              body: `<ul><li><strong>Muss-Anforderungen</strong> erfüllt? Fehlt eine, ist die Bewerbung raus.</li>
+                       <li>Wie viele <strong>Kann-Anforderungen</strong>?</li>
+                       <li>Lebenslauf lückenlos? Schulzeugnis: Deutsch, Mathe, <strong>Fehltage</strong>?</li></ul>`
+            },
+            {
+              big: "3.",
+              kicker: "Sortieren",
+              title: "A, B oder C?",
+              body: `<dl class="terms">
+                       <dt>A-Stapel</dt><dd>passt gut → zum Vorstellungsgespräch einladen</dd>
+                       <dt>B-Stapel</dt><dd>passt teilweise → Reserve, falls A nicht klappt</dd>
+                       <dt>C-Stapel</dt><dd>eine Muss-Anforderung fehlt → freundliche Absage</dd>
+                     </dl>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Erst Muss, dann Kann.",
+              body: `<p>Wer eine Muss-Anforderung nicht erfüllt, landet auf C – egal wie gut der Rest ist. Kann-Anforderungen entscheiden zwischen A und B.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Formal oder inhaltlich?",
+          prompt: "Tara notiert Auffälligkeiten. Ist das ein formaler oder ein inhaltlicher Punkt?",
+          hints: ["Formal heißt: Wie sieht die Mappe aus? Ist sie vollständig und fehlerfrei?",
+                  "Inhaltlich heißt: Passt die Person zum Anforderungsprofil?"],
+          categories: ["Formal", "Inhaltlich"],
+          items: [
+            { text: "Im Anschreiben stehen viele Rechtschreibfehler.", cat: 0 },
+            { text: "Der Schulabschluss fehlt noch.", cat: 1 },
+            { text: "Das Schulzeugnis liegt nicht bei.", cat: 0 },
+            { text: "Praktikum im Büro – eine Kann-Anforderung.", cat: 1 },
+            { text: "Im Anschreiben steht ein falscher Betriebsname.", cat: 0 },
+            { text: "Note 5 in Deutsch.", cat: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Welcher Stapel?",
+          prompt: "Muss-Anforderungen für die Azubi-Stelle: Hauptschulabschluss, Deutsch mindestens ausreichend. Kann: Praktikum im Büro, Führerschein. Sortiere die Bewerbungen.",
+          hints: ["Prüfe zuerst die Muss-Anforderungen. Fehlt eine, ist es C.",
+                  "Alle Muss erfüllt? Dann entscheiden die Kann-Anforderungen: viele → A, keine → B."],
+          categories: ["A · einladen", "B · Reserve", "C · Absage"],
+          items: [
+            { text: "Elif: Abschluss, Deutsch 3, Praktikum im Büro", cat: 0 },
+            { text: "Jonas: Abschluss, Deutsch 2, Praktikum im Büro, Führerschein", cat: 0 },
+            { text: "Mia: Abschluss, Deutsch 4, keine Kann-Anforderung", cat: 1 },
+            { text: "Luca: Schulabschluss fehlt, Praktikum im Büro", cat: 2 },
+            { text: "Sara: Abschluss, Deutsch 5, Führerschein", cat: 2 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Antwortsatz bauen",
+          case: "Sara hat einen Führerschein (Kann-Anforderung), aber in Deutsch die Note 5. Deutsch mindestens ausreichend ist eine Muss-Anforderung.",
+          text: "Sara erfüllt eine {*Muss-Anforderung|Kann-Anforderung} nicht. Deshalb kommt ihre Bewerbung auf den {*C-Stapel|A-Stapel}. Der Führerschein {*ändert daran nichts|gleicht das aus}.",
+          hints: ["Note 5 ist schlechter als ausreichend (4).", "Eine fehlende Muss-Anforderung kann keine Kann-Anforderung ausgleichen."],
+          explain: "Deutsch mindestens ausreichend ist Muss. Mit Note 5 ist sie nicht erfüllt → C. Kann-Anforderungen gleichen ein fehlendes Muss nicht aus."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann eine Bewerbung formal prüfen.",
+            "Ich kann eine Bewerbung mit dem Anforderungsprofil vergleichen.",
+            "Ich kann Bewerbungen begründet dem A-, B- oder C-Stapel zuordnen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "zeugnisse",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Zeugnisse lesen",
+      kicker: "LS 2.3 · Teil 3",
+      minutes: 15,
+      help: `<h3>Zeugnissprache</h3>
+             <p>Arbeits- und Praktikumszeugnisse müssen freundlich klingen. Die Note steckt in der <strong>Zufriedenheitsformel</strong>.</p>
+             <ul><li><strong>stets zu unserer vollsten Zufriedenheit</strong> = sehr gut</li>
+             <li><strong>stets zu unserer vollen Zufriedenheit</strong> = gut</li>
+             <li><strong>zu unserer vollen Zufriedenheit</strong> = befriedigend</li>
+             <li><strong>zu unserer Zufriedenheit</strong> = ausreichend</li>
+             <li><strong>im Großen und Ganzen zu unserer Zufriedenheit</strong> = mangelhaft</li></ul>
+             <h3>Signalwörter</h3>
+             <ul><li><strong>stets</strong> = immer → besser</li><li><strong>bemühte sich</strong> = hat es versucht, aber nicht geschafft</li></ul>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Was steht zwischen den Zeilen?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Jonas’ Praktikumszeugnis",
+              title: "„Klingt doch alles gut?“",
+              body: `<p>Tara liest: „Jonas erledigte seine Aufgaben <strong>zu unserer Zufriedenheit</strong>.“ – „Super, oder?“</p>
+                     <p>Melike lächelt: „Zeugnisse haben einen eigenen <strong>Code</strong>. Das hier ist nur eine Vier.“</p>`
+            },
+            {
+              kicker: "Warum ein Code?",
+              title: "Zeugnisse müssen freundlich klingen.",
+              body: `<p>Ein Betrieb darf in ein Zeugnis nichts Böses schreiben. Deshalb steckt die Note in festen <strong>Formeln</strong>.</p>
+                     <p class="note">Wer den Code kennt, liest die Note sofort.</p>`
+            },
+            {
+              kicker: "Die Zufriedenheitsformel",
+              title: "Ein Wort macht eine Note.",
+              body: `<dl class="terms">
+                       <dt>stets zu unserer vollsten Zufriedenheit</dt><dd>1 · sehr gut</dd>
+                       <dt>stets zu unserer vollen Zufriedenheit</dt><dd>2 · gut</dd>
+                       <dt>zu unserer vollen Zufriedenheit</dt><dd>3 · befriedigend</dd>
+                       <dt>zu unserer Zufriedenheit</dt><dd>4 · ausreichend</dd>
+                       <dt>im Großen und Ganzen zu unserer Zufriedenheit</dt><dd>5 · mangelhaft</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Signalwörter",
+              title: "Achte auf diese Wörter.",
+              body: `<ul><li><strong>stets</strong> heißt immer – das macht die Note besser.</li>
+                       <li><strong>bemühte sich</strong> heißt: hat es versucht, aber nicht geschafft.</li></ul>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "„Stets“ und „vollsten“ – dann ist es eine Eins.",
+              body: `<p>Je mehr Lob in der Formel steckt, desto besser die Note.</p>`
+            }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Code knacken",
+          questions: [
+            {
+              q: "„Sie erledigte ihre Aufgaben <b>stets zu unserer vollsten Zufriedenheit</b>.“ Welche Note ist das?",
+              options: ["sehr gut", "gut", "befriedigend", "ausreichend"],
+              answer: 0,
+              explain: "„stets“ + „vollsten“ = die beste Formel = sehr gut."
+            },
+            {
+              q: "„Er erledigte seine Aufgaben <b>zu unserer Zufriedenheit</b>.“ Welche Note ist das?",
+              hint: "Hier fehlen „stets“ und „vollen“.",
+              options: ["gut", "befriedigend", "ausreichend", "sehr gut"],
+              answer: 2,
+              explain: "Ohne „stets“ und ohne „vollen“ = ausreichend (4)."
+            },
+            {
+              q: "„Sie <b>bemühte sich</b>, die Aufgaben zu erledigen.“ Was bedeutet das?",
+              options: ["Sie war sehr fleißig.", "Sie hat es versucht, aber nicht geschafft.", "Sie war immer pünktlich."],
+              answer: 1,
+              explain: "„bemühte sich“ ist ein Warnsignal: versucht, aber nicht geschafft."
+            },
+            {
+              q: "Welches Wort macht die Note besser?",
+              options: ["stets", "im Großen und Ganzen", "bemühte sich"],
+              answer: 0,
+              explain: "„stets“ heißt immer – das lobt."
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Gut oder schwach?",
+          prompt: "Sortiere die Sätze aus Praktikumszeugnissen.",
+          hints: ["Gut: „stets“ und „vollen/vollsten“. Schwach: „im Großen und Ganzen“, „bemühte sich“, nur „zu unserer Zufriedenheit“."],
+          categories: ["sehr gut / gut", "schwach (4 oder schlechter)"],
+          items: [
+            { text: "stets zu unserer vollen Zufriedenheit", cat: 0 },
+            { text: "im Großen und Ganzen zu unserer Zufriedenheit", cat: 1 },
+            { text: "stets zu unserer vollsten Zufriedenheit", cat: 0 },
+            { text: "bemühte sich um Pünktlichkeit", cat: 1 },
+            { text: "zu unserer Zufriedenheit", cat: 1 }
+          ]
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich weiß, warum Zeugnisse einen eigenen Code haben.",
+            "Ich kann die Zufriedenheitsformel einer Note zuordnen.",
+            "Ich erkenne Signalwörter wie „stets“ und „bemühte sich“."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "vorstellungsgespraech",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Das Vorstellungsgespräch",
+      kicker: "LS 2.3 · Teil 4",
+      minutes: 20,
+      help: `<h3>Ablauf</h3>
+             <p class="formula">Begrüßung → Bewerber stellt sich vor → Fragen an den Bewerber → Infos und Fragen des Bewerbers → Abschluss</p>
+             <h3>Zulässige Fragen</h3>
+             <ul><li>Schule und Noten, Praktika, Stärken und Schwächen, Motivation („Warum Mediaworld?“)</li></ul>
+             <h3>Unzulässige Fragen (AGG)</h3>
+             <ul><li>Schwangerschaft und Kinderwunsch, Religion, Partei, Gewerkschaft, Herkunft, sexuelle Orientierung</li></ul>
+             <p class="note">Bei unzulässigen Fragen musst du nicht ehrlich antworten („Recht zur Lüge“). Du darfst auch freundlich ausweichen.</p>
+             <h3>Andere Auswahlverfahren</h3>
+             <ul><li><strong>Einstellungstest:</strong> Aufgaben zu Wissen und Logik</li><li><strong>Assessment-Center:</strong> Gruppen- und Rollenspiele, eher in großen Firmen</li></ul>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Jetzt wird es persönlich",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Gesprächstermine",
+              title: "„Elif und Jonas laden wir ein.“",
+              body: `<p>Der A-Stapel steht. Melike plant zwei <strong>Vorstellungsgespräche</strong>. Tara darf dabei sein und mitschreiben.</p>`
+            },
+            {
+              kicker: "Der Ablauf",
+              title: "Fünf Phasen",
+              body: `<ol><li><strong>Begrüßung</strong> – kurzer Small Talk</li>
+                       <li><strong>Vorstellung</strong> – die Bewerberin erzählt von sich</li>
+                       <li><strong>Fragen an die Bewerberin</strong> – Schule, Praktikum, Stärken</li>
+                       <li><strong>Infos zur Stelle</strong> – und Fragen der Bewerberin</li>
+                       <li><strong>Abschluss</strong> – wie geht es weiter?</li></ol>`
+            },
+            {
+              kicker: "Erlaubt",
+              title: "Zulässige Fragen",
+              body: `<p>Alles, was mit der <strong>Stelle</strong> zu tun hat:</p>
+                     <ul><li>„Warum möchten Sie zu Mediaworld?“</li><li>„Was haben Sie im Praktikum gemacht?“</li><li>„Was ist Ihre größte Stärke?“</li></ul>`
+            },
+            {
+              kicker: "Verboten",
+              title: "Unzulässige Fragen",
+              body: `<p>Das <strong>AGG</strong> (Allgemeines Gleichbehandlungsgesetz) schützt vor Benachteiligung, z. B. wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität.</p>
+                     <ul class="pm"><li class="m">„Sind Sie schwanger?“</li><li class="m">„Welcher Religion gehören Sie an?“</li><li class="m">„In welcher Partei sind Sie?“</li></ul>`
+            },
+            {
+              kicker: "Dein Recht",
+              title: "Was tun bei unzulässigen Fragen?",
+              body: `<p>Du musst <strong>nicht ehrlich</strong> antworten – das nennt man das <strong>„Recht zur Lüge“</strong>. Du darfst auch freundlich ausweichen: „Das hat mit der Stelle nichts zu tun.“</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Gefragt wird nur, was zur Stelle gehört.",
+              body: `<p>Neben dem Gespräch gibt es weitere Verfahren: den <strong>Einstellungstest</strong> und – eher in großen Firmen – das <strong>Assessment-Center</strong>.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Zulässig oder unzulässig?",
+          prompt: "Darf Mediaworld diese Frage im Vorstellungsgespräch stellen?",
+          hints: ["Zulässig ist, was mit der Stelle zu tun hat.",
+                  "Schwangerschaft, Religion, Partei und Gewerkschaft sind privat – das schützt das AGG."],
+          categories: ["zulässig", "unzulässig"],
+          items: [
+            { text: "Warum möchten Sie bei uns eine Ausbildung machen?", cat: 0 },
+            { text: "Planen Sie, bald Kinder zu bekommen?", cat: 1 },
+            { text: "Was haben Sie im Praktikum gelernt?", cat: 0 },
+            { text: "Sind Sie in einer Gewerkschaft?", cat: 1 },
+            { text: "Welche Stärken bringen Sie mit?", cat: 0 },
+            { text: "Gehen Sie regelmäßig in die Kirche oder Moschee?", cat: 1 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Im Gespräch",
+          questions: [
+            {
+              q: "In welcher Phase fragt die Bewerberin nach den Arbeitszeiten?",
+              hint: "Die Bewerberin darf auch selbst fragen – wann ist dafür Platz?",
+              options: ["Begrüßung", "Infos zur Stelle und Fragen der Bewerberin", "Abschluss"],
+              answer: 1,
+              explain: "Nach den Fragen des Betriebs gibt es Infos zur Stelle – dann darf die Bewerberin fragen."
+            },
+            {
+              q: "Jonas wird gefragt: „Welcher Partei gehören Sie an?“ Was darf er tun?",
+              options: ["Er muss ehrlich antworten.", "Er darf ausweichen oder nicht ehrlich antworten.", "Er muss das Gespräch abbrechen."],
+              answer: 1,
+              explain: "Die Frage ist unzulässig. Jonas darf ausweichen oder die Unwahrheit sagen („Recht zur Lüge“)."
+            },
+            {
+              q: "Wofür steht AGG?",
+              options: ["Allgemeines Gleichbehandlungsgesetz", "Arbeits- und Gesundheitsgesetz", "Ausbildungs- und Gehaltsgesetz"],
+              answer: 0,
+              explain: "Das Allgemeine Gleichbehandlungsgesetz schützt vor Benachteiligung."
+            },
+            {
+              q: "Gruppenaufgaben und Rollenspiele an einem ganzen Tag – welches Verfahren ist das?",
+              options: ["Einstellungstest", "Assessment-Center", "Vorauswahl"],
+              answer: 1,
+              explain: "Im Assessment-Center lösen mehrere Bewerber Aufgaben in Gruppen und Rollenspielen."
+            }
+          ]
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann die Phasen eines Vorstellungsgesprächs nennen.",
+            "Ich kann zulässige und unzulässige Fragen unterscheiden.",
+            "Ich weiß, was ich bei einer unzulässigen Frage tun darf."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "entscheidung",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Die Entscheidung: Bewertungstabelle",
+      kicker: "LS 2.3 · Teil 5",
+      minutes: 20,
+      help: `<h3>Gewichtete Bewertungstabelle</h3>
+             <p class="formula">Gewicht (%) × Punkte = gewichtete Punkte<br>Alle gewichteten Punkte addieren → die höchste Summe gewinnt</p>
+             <ul><li><strong>Kriterien</strong> kommen aus dem Anforderungsprofil.</li>
+             <li><strong>Gewicht:</strong> Wie wichtig ist das Kriterium? Alle Gewichte zusammen = 100 %.</li>
+             <li><strong>Punkte:</strong> 1 (schwach) bis 5 (sehr gut).</li></ul>
+             <p class="note">Beispiel: Gewicht 40 %, Punkte 3 → 40 × 3 = 120.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Elif oder Jonas?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Nach den Gesprächen",
+              title: "„Beide waren gut. Und jetzt?“",
+              body: `<p>Tara mag Jonas, Melike findet Elif stark. Damit die Entscheidung <strong>fair</strong> ist, nutzen sie eine <strong>Bewertungstabelle</strong>.</p>`
+            },
+            {
+              kicker: "So geht’s",
+              title: "Kriterien, Gewicht, Punkte",
+              body: `<ol><li><strong>Kriterien</strong> aus dem Anforderungsprofil wählen</li>
+                       <li>jedes Kriterium <strong>gewichten</strong> – zusammen 100 %</li>
+                       <li>jede Person bekommt <strong>Punkte</strong> von 1 bis 5</li>
+                       <li><strong>Gewicht × Punkte</strong> rechnen und alles addieren</li></ol>`
+            },
+            {
+              kicker: "Beispiel",
+              title: "Gewicht × Punkte",
+              body: `<table class="scheme">
+                       <tr><td>Deutsch (40 %) · 3 Punkte</td><td>40 × 3 = 120</td></tr>
+                       <tr><td>Mathe (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>
+                       <tr><td>Auftreten (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>
+                       <tr class="sum"><td>= Summe</td><td>360</td></tr>
+                     </table>
+                     <p class="note">Die Person mit der höchsten Summe bekommt die Zusage.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Erst rechnen, dann entscheiden.",
+              body: `<p>Die Tabelle macht die Entscheidung <strong>nachvollziehbar</strong>: Nicht Sympathie entscheidet, sondern die Kriterien.</p>`
+            }
+          ]
+        },
+        {
+          type: "calc",
+          title: "A1 · Bewertung Jonas",
+          case: `Kriterien und Gewichte bei Mediaworld:<br><b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten im Gespräch 30 %</b> · <b>Praktikum 20 %</b><br><br>
+                 Punkte für <b>Jonas</b>: Deutsch 4 · Mathe 3 · Auftreten 5 · Praktikum 2<br>Rechne Gewicht × Punkte und addiere.`,
+          rows: [
+            { label: "Deutsch: 30 × 4", value: 120 },
+            { label: "Mathe: 20 × 3", value: 60 },
+            { label: "Auftreten: 30 × 5", value: 150 },
+            { label: "Praktikum: 20 × 2", value: 40 },
+            { label: "= Summe Jonas", value: 370, sum: true }
+          ],
+          hints: ["Rechne jede Zeile einzeln: Gewicht mal Punkte.", "Zum Schluss alle vier Ergebnisse addieren: 120 + 60 + 150 + 40."],
+          result: "Jonas erreicht 370 gewichtete Punkte."
+        },
+        {
+          type: "calc",
+          title: "A2 · Bewertung Elif",
+          case: `Gleiche Kriterien und Gewichte: <b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten 30 %</b> · <b>Praktikum 20 %</b><br><br>
+                 Punkte für <b>Elif</b>: Deutsch 3 · Mathe 5 · Auftreten 4 · Praktikum 4`,
+          rows: [
+            { label: "Deutsch: 30 × 3", value: 90 },
+            { label: "Mathe: 20 × 5", value: 100 },
+            { label: "Auftreten: 30 × 4", value: 120 },
+            { label: "Praktikum: 20 × 4", value: 80 },
+            { label: "= Summe Elif", value: 390, sum: true }
+          ],
+          hints: ["Wie bei Jonas: Gewicht mal Punkte, dann addieren.", "90 + 100 + 120 + 80 – rechne die Summe in Ruhe aus."],
+          result: "Elif erreicht 390 gewichtete Punkte."
+        },
+        {
+          type: "sentence",
+          title: "Antwortsatz bauen",
+          case: "Jonas: 370 Punkte · Elif: 390 Punkte. Jonas war im Gespräch am stärksten (Auftreten 5).",
+          text: "Mediaworld gibt {*Elif|Jonas} die Zusage, weil sie mit {*390|370} Punkten die {*höchste|niedrigste} Summe hat. Das bessere Auftreten von Jonas {*reicht nicht aus|entscheidet allein}, weil alle Kriterien zählen.",
+          hints: ["Vergleiche die beiden Summen.", "In der Tabelle zählt die Summe aller Kriterien – nicht ein einzelnes."],
+          explain: "Elif hat mit 390 die höchste Summe. Jonas punktet beim Auftreten, verliert aber bei Mathe und Praktikum."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann eine gewichtete Bewertungstabelle ausrechnen.",
+            "Ich kann erklären, was das Gewicht bedeutet.",
+            "Ich kann eine Auswahlentscheidung mit der Tabelle begründen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "zusage-absage",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Zusage, Absage und Datenschutz",
+      kicker: "LS 2.3 · Teil 6",
+      minutes: 15,
+      help: `<h3>Zusage</h3>
+             <ul><li>Einladung zur Unterschrift unter den Ausbildungsvertrag.</li></ul>
+             <h3>Absage</h3>
+             <ul><li>freundlich, kurz, mit Dank für die Bewerbung</li>
+             <li>keine Gründe nennen, die benachteiligen (AGG) – z. B. Alter, Herkunft, Religion</li></ul>
+             <h3>Datenschutz</h3>
+             <ul><li>Bewerberdaten nur für die Auswahl nutzen, nur die Entscheider sehen sie.</li>
+             <li>Nach der Absage: Papier zurückschicken, Dateien löschen – meist nach einigen Monaten (oft 6).</li></ul>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Ja für Elif – und die anderen?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Die Entscheidung steht",
+              title: "„Jetzt schreiben wir allen.“",
+              body: `<p>Elif bekommt die <strong>Zusage</strong>. Alle anderen bekommen eine <strong>Absage</strong>. Melike: „Auch eine Absage muss fair und freundlich sein.“</p>`
+            },
+            {
+              kicker: "Die Absage",
+              title: "Freundlich, kurz, ohne falsche Gründe.",
+              body: `<ul><li>für die Bewerbung <strong>danken</strong></li><li>kurz absagen</li><li>alles Gute wünschen</li></ul>
+                     <p class="note">Keine Gründe, die benachteiligen – z. B. Alter, Herkunft oder Religion. Das verbietet das AGG.</p>`
+            },
+            {
+              kicker: "Datenschutz",
+              title: "Bewerbungen sind vertraulich.",
+              body: `<ul><li>Nur die Personen, die entscheiden, lesen die Unterlagen.</li>
+                       <li>Die Daten werden nur für die Auswahl genutzt – nicht für Werbung.</li>
+                       <li>Nach der Absage: Papier zurückschicken, Dateien <strong>löschen</strong> – meist nach einigen Monaten.</li></ul>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Fair bis zum letzten Brief.",
+              body: `<p>Zusage, Absage, Datenschutz: Auch wer nicht genommen wird, soll Mediaworld in guter Erinnerung behalten.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Darf Mediaworld das?",
+          prompt: "Was ist erlaubt – und was nicht?",
+          hints: ["Bewerbungen sind vertraulich: nur für die Auswahl, nur für die Entscheider.",
+                  "Gründe wie Alter, Herkunft oder Religion dürfen in keiner Absage stehen."],
+          categories: ["erlaubt", "nicht erlaubt"],
+          items: [
+            { text: "Die Unterlagen nach der Absage zurückschicken.", cat: 0 },
+            { text: "Bewerbungen in der Pause herumzeigen.", cat: 1 },
+            { text: "Die E-Mail-Adressen der Bewerber für Werbung nutzen.", cat: 1 },
+            { text: "Nur die Ausbilderin und die Chefin lesen die Unterlagen.", cat: 0 },
+            { text: "In die Absage schreiben: „Sie sind uns zu alt.“", cat: 1 },
+            { text: "Die Dateien nach einigen Monaten löschen.", cat: 0 }
+          ]
+        },
+        {
+          type: "spot",
+          title: "Finde den Fehler",
+          prompt: "Tara hat Briefe vorbereitet. In jedem Brief ist eine Zeile nicht in Ordnung – tippe sie an.",
+          rounds: [
+            {
+              lines: [
+                "Mediaworld e. K.",
+                { t: "Ihre Bewerbung als Auszubildende", bold: true, gap: 1 },
+                { t: "Sehr geehrte Frau Novak,", gap: 1 },
+                "vielen Dank für Ihre Bewerbung und Ihr Interesse an Mediaworld.",
+                "Leider haben wir uns für eine jüngere Bewerberin entschieden.",
+                "Wir wünschen Ihnen für Ihren weiteren Weg alles Gute."
+              ],
+              error: 4,
+              hint: "Welche Zeile nennt einen Grund, der benachteiligt?",
+              explain: "Das Alter darf kein Grund für eine Absage sein – das verbietet das AGG. Besser ohne Grund: „Leider können wir Ihnen keinen Ausbildungsplatz anbieten.“"
+            },
+            {
+              lines: [
+                "Mediaworld e. K.",
+                { t: "Einladung zum Vorstellungsgespräch", bold: true, gap: 1 },
+                { t: "Sehr geehrter Herr Weber,", gap: 1 },
+                "wir laden Sie zu einem Vorstellungsgespräch ein.",
+                "Termin: Dienstag, 10:00 Uhr, in unserem Büro.",
+                "Bitte teilen Sie uns vorher Ihre Religion mit."
+              ],
+              error: 5,
+              hint: "Welche Angabe hat nichts mit der Stelle zu tun?",
+              explain: "Die Religion ist privat und hat nichts mit der Stelle zu tun. Danach darf Mediaworld nicht fragen (AGG)."
+            }
+          ]
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich weiß, was in eine faire Absage gehört.",
+            "Ich kann erklären, wie ein Betrieb mit Bewerberdaten umgehen muss.",
+            "Ich erkenne Gründe, die in einer Absage nicht stehen dürfen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "fachbegriffe-auswahl",
+      folder: "auswahl",
+      group: "Bewerbung & Auswahl",
+      title: "Fachbegriffe: Bewerbung & Auswahl",
+      kicker: "Lernkarten",
+      minutes: 10,
+      steps: [
+        {
+          type: "cards",
+          title: "Lernkarten Bewerbung & Auswahl",
+          cards: [
+            { front: "Bewerbungsmappe", back: "Anschreiben, Lebenslauf, Zeugnisse und Nachweise – heute meist als eine PDF-Datei." },
+            { front: "Anschreiben", back: "Der Brief in der Bewerbung: Warum diese Stelle? Warum passe ich?" },
+            { front: "Lebenslauf", back: "Tabellarisch, lückenlos und aktuell: Daten, Schule, Praktika, Kenntnisse." },
+            { front: "Vorauswahl", back: "Bewerbungen formal und inhaltlich prüfen und auf den A-, B- oder C-Stapel legen." },
+            { front: "A-, B-, C-Stapel", back: "A: einladen · B: Reserve · C: Absage, weil eine Muss-Anforderung fehlt." },
+            { front: "Zufriedenheitsformel", back: "Der Code im Zeugnis: „stets zu unserer vollsten Zufriedenheit“ = sehr gut, „zu unserer Zufriedenheit“ = ausreichend." },
+            { front: "Vorstellungsgespräch", back: "Begrüßung, Vorstellung, Fragen an die Bewerberin, Infos und Fragen der Bewerberin, Abschluss." },
+            { front: "Unzulässige Frage", back: "Frage ohne Bezug zur Stelle, z. B. nach Schwangerschaft, Religion, Partei oder Gewerkschaft." },
+            { front: "Recht zur Lüge", back: "Bei einer unzulässigen Frage muss man nicht ehrlich antworten." },
+            { front: "AGG", back: "Allgemeines Gleichbehandlungsgesetz: schützt vor Benachteiligung wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität." },
+            { front: "Einstellungstest", back: "Schriftliche Aufgaben zu Wissen und Logik." },
+            { front: "Assessment-Center", back: "Auswahltag mit Gruppenaufgaben und Rollenspielen, eher in großen Firmen." },
+            { front: "Bewertungstabelle", back: "Gewicht × Punkte für jedes Kriterium, dann addieren – die höchste Summe gewinnt." },
+            { front: "Datenschutz bei Bewerbungen", back: "Nur für die Auswahl, nur für die Entscheider; nach der Absage Unterlagen zurück und Dateien löschen." }
+          ]
+        }
+      ]
     }
+
 
   ]
 });
@@ -12424,6 +13143,15 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "Personalbeschaffung, Anforderungsprofil, Anzeigen-Sprache, Anzeigen-Check und das eigene Stärkenprofil.":
       "توفير موظفين، Anforderungsprofil (ملف المتطلبات)، لغة الإعلان، فحص الإعلان وملف نقاط القوة الشخصية.",
 
+    "Bewerbung & Auswahl":
+      "التقديم والاختيار",
+
+    "Ordner · LS 2.3":
+      "مجلد · LS 2.3",
+
+    "Bewerbungsmappe, Vorauswahl, Zeugnisse lesen, Vorstellungsgespräch, Bewertungstabelle, Zusage und Absage – Mediaworld wählt aus.":
+      "ب Bewerbungsmappe (ملف التقديم)، Vorauswahl (الاختيار المبدئي)، Zeugnisse (شهادات)، Vorstellungsgespräch (مقابلة العمل)، Bewertungstabelle (جدول التقييم)، Zusage (قبول) und Absage (رفض) – Mediaworld تختار.",
+
     "Personal beschaffen: intern oder extern?":
       "توفير موظفين: داخلي أم خارجي؟",
 
@@ -13247,7 +13975,958 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
       "إشارات تحذيرية",
 
     "Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung.":
-      "لا يوجد اسم شركة، فقط رقم هاتف محمول، ضغط وسرعة، أخطاء إملائية، طلب دفع مقدمًا."
+      "لا يوجد اسم شركة، فقط رقم هاتف محمول، ضغط وسرعة، أخطاء إملائية، طلب دفع مقدمًا.",
+
+    "Die Bewerbungsmappe":
+      "ملف التقديم",
+
+    "LS 2.3 · Teil 1":
+      "LS 2.3 · الجزء 1",
+
+    "<h3>Bewerbungsmappe</h3>\n             <p class=\"formula\">Anschreiben + Lebenslauf + Zeugnisse + Nachweise</p>\n             <ul><li><strong>Anschreiben:</strong> Warum diese Stelle? Warum passe ich?</li>\n             <li><strong>Lebenslauf:</strong> Daten, Schule, Praktika, Kenntnisse – tabellarisch, lückenlos, aktuell.</li>\n             <li><strong>Zeugnisse:</strong> das letzte Schulzeugnis.</li>\n             <li><strong>Nachweise:</strong> Praktikumsbescheinigungen, Kurse, Zertifikate.</li></ul>\n             <h3>Gehört nicht hinein</h3>\n             <ul><li>Ausweis-Kopie, Kontoauszug, Krankmeldung, private Fotos.</li></ul>\n             <p class=\"note\">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>":
+      "<h3>ب Bewerbungsmappe</h3>\n             <p class=\"formula\">Anschreiben (خطاب التقديم) + Lebenslauf (السيرة الذاتية) + Zeugnisse (الشهادات) + Nachweise (إثباتات)</p>\n             <ul><li><strong>Anschreiben:</strong> لماذا هذه Stelle (وظيفة)؟ لماذا أكون مناسبًا؟</li>\n             <li><strong>Lebenslauf:</strong> بيانات، مدرسة، Praktika (تدريبات عملية)، مهارات – جدول، بدون فراغات، حديث.</li>\n             <li><strong>Zeugnisse:</strong> آخر شهادة مدرسية.</li>\n             <li><strong>Nachweise:</strong> إثباتات التدريب العملي، الدورات، الشهادات.</li></ul>\n             <h3>لا يجب أن يكون في الملف</h3>\n             <ul><li>نسخة من الهوية، كشف حساب بنكي، تقرير مرضي، صور خاصة.</li></ul>\n             <p class=\"note\">الصورة اختيارية. الشركة لا يحق لها طلبها.</p>",
+
+    "Die Post ist da":
+      "وصل البريد",
+
+    "Mediaworld e. K. · Zwei Wochen nach der Anzeige":
+      "Mediaworld e. K. · بعد أسبوعين من الإعلان",
+
+    "„Fünf Bewerbungen – und jetzt?“":
+      "„خمس Bewerbungen (طلبات التوظيف) – وماذا الآن؟“",
+
+    "<p>Die Anzeige für die Azubi-Stelle war online. Jetzt liegen <strong>fünf Bewerbungen</strong> im Postfach.</p>\n                     <p>Melike sagt zu Tara: „Bevor wir lesen, prüfen wir: Ist jede <strong>Bewerbungsmappe</strong> vollständig?“</p>":
+      "<p>Die Anzeige (إعلان وظيفي) لوظيفة Azubi (المتدرّب/ة) كانت على الإنترنت. الآن يوجد <strong>خمس Bewerbungen</strong> في صندوق البريد.</p>\n                     <p>Melike تقول لـ Tara: „قبل أن نقرأ، نتحقق: هل كل <strong>Bewerbungsmappe (ملف التقديم)</strong> كاملة؟“</p>",
+
+    "Was gehört hinein?":
+      "ما الذي يجب أن يكون داخل الملف؟",
+
+    "Vier Teile machen die Mappe komplett.":
+      "أربعة أجزاء تجعل الملف كاملاً.",
+
+    "<ol>\n                       <li><strong>Anschreiben</strong> – Warum diese Stelle? Warum passe ich?</li>\n                       <li><strong>Lebenslauf</strong> – Daten, Schule, Praktika, Kenntnisse</li>\n                       <li><strong>Zeugnisse</strong> – das letzte Schulzeugnis</li>\n                       <li><strong>Nachweise</strong> – Praktikumsbescheinigungen, Kurse</li>\n                     </ol>\n                     <p class=\"note\">Heute kommt die Mappe meist als <strong>eine PDF-Datei</strong> per E-Mail oder über ein Online-Formular.</p>":
+      "<ol>\n                       <li><strong>Anschreiben (خطاب التقديم)</strong> – لماذا هذه Stelle (وظيفة)؟ لماذا أنا مناسب/ة؟</li>\n                       <li><strong>Lebenslauf (السيرة الذاتية)</strong> – بيانات، مدرسة، Praktika (تدريبات عملية)، مهارات</li>\n                       <li><strong>Zeugnisse (الشهادات)</strong> – آخر شهادة مدرسية</li>\n                       <li><strong>Nachweise (إثباتات)</strong> – شهادات Praktikum (تدريب عملي)، دورات</li>\n                     </ol>\n                     <p class=\"note\">اليوم، يأتي الملف غالباً كـ <strong>ملف PDF واحد</strong> عبر البريد الإلكتروني أو من خلال نموذج إلكتروني.</p>",
+
+    "Der Lebenslauf":
+      "السيرة الذاتية",
+
+    "Tabellarisch, lückenlos, aktuell.":
+      "جدولية، بدون فراغات، حديثة.",
+
+    "<ul><li><strong>tabellarisch:</strong> kurze Zeilen mit Datum, keine langen Sätze</li>\n                       <li><strong>lückenlos:</strong> keine Monate, die einfach fehlen</li>\n                       <li><strong>aktuell:</strong> mit Ort und Datum von heute</li></ul>\n                     <p class=\"note\">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>":
+      "<ul><li><strong>جدولية:</strong> أسطر قصيرة مع تاريخ، بدون جمل طويلة</li>\n                       <li><strong>بدون فراغات:</strong> لا يوجد أشهر مفقودة</li>\n                       <li><strong>حديثة:</strong> مع المكان والتاريخ اليوم</li></ul>\n                     <p class=\"note\">الصورة اختيارية. الشركة لا يحق لها أن تطلبها.</p>",
+
+    "Achtung":
+      "انتباه",
+
+    "Das gehört nicht in die Mappe.":
+      "هذا لا ينتمي إلى الملف.",
+
+    "<ul class=\"pm\"><li class=\"m\">Kopie vom Personalausweis</li><li class=\"m\">Kontoauszug</li><li class=\"m\">Krankmeldung</li><li class=\"m\">Fotos von der Party</li></ul>\n                     <p>Solche Unterlagen sind privat. Der Betrieb braucht sie für die Auswahl nicht.</p>":
+      "<ul class=\"pm\"><li class=\"m\">نسخة من بطاقة الهوية الشخصية</li><li class=\"m\">كشف حساب بنكي</li><li class=\"m\">تقرير مرضي</li><li class=\"m\">صور من الحفلة</li></ul>\n                     <p>هذه المستندات خاصة. الشركة لا تحتاجها للاختيار.</p>",
+
+    "Vollständig – sonst wird es schwer.":
+      "كامل – وإلا سيكون الأمر صعبًا.",
+
+    "<p>Fehlt ein wichtiger Teil, wirkt die Bewerbung <strong>unsorgfältig</strong>. Das kostet Punkte, bevor jemand den Inhalt liest.</p>":
+      "<p>إذا كان جزء مهم مفقود، تبدو Bewerbung <strong>غير مرتبة</strong>. هذا يقلل النقاط قبل أن يقرأ أحد المحتوى.</p>",
+
+    "Rein oder raus?":
+      "يدخل أم لا؟",
+
+    "Gehört das in die Bewerbungsmappe für Mediaworld?":
+      "هل هذا ينتمي إلى ملف Bewerbung لـ Mediaworld؟",
+
+    "In die Mappe gehört alles, was zeigt: Ich passe zur Stelle.":
+      "في الملف يجب أن يكون كل شيء يوضح: أنا مناسب لـ Stelle.",
+
+    "Private Unterlagen wie Kontoauszüge oder Krankmeldungen gehören nicht hinein.":
+      "المستندات الخاصة مثل كشوف الحساب البنكي أو تقارير المرض لا توضع هنا.",
+
+    "Gehört hinein":
+      "يجب وضعه",
+
+    "Gehört nicht hinein":
+      "لا يجب وضعه",
+
+    "Anschreiben":
+      "خطاب التقديم",
+
+    "Kopie vom Personalausweis":
+      "نسخة من بطاقة الهوية",
+
+    "Lebenslauf":
+      "السيرة الذاتية",
+
+    "Kontoauszug":
+      "كشف الحساب البنكي",
+
+    "letztes Schulzeugnis":
+      "آخر شهادة مدرسية",
+
+    "Krankmeldung vom Arzt":
+      "تقرير مرضي من الطبيب",
+
+    "Praktikumsbescheinigung":
+      "شهادة التدريب العملي",
+
+    "Wo steht was?":
+      "أين يوجد ماذا؟",
+
+    "Wo erklärt die Bewerberin, <b>warum</b> sie gut zur Stelle passt?":
+      "أين تشرح المتقدمة <b>لماذا</b> تناسب الوظيفة جيدًا؟",
+
+    "im Anschreiben":
+      "في خطاب التقديم",
+
+    "im Lebenslauf":
+      "في السيرة الذاتية",
+
+    "im Schulzeugnis":
+      "في الشهادة المدرسية",
+
+    "Das Anschreiben ist der Brief: Warum diese Stelle? Warum passe ich?":
+      "خطاب التقديم هو الرسالة: لماذا هذه الوظيفة؟ لماذا أنا مناسبة؟",
+
+    "Ein Teil der Mappe ist ein Brief an den Betrieb.":
+      "جزء من المجلد هو رسالة إلى الشركة.",
+
+    "Wo stehen Schule, Praktika und Kenntnisse kurz mit Datum?":
+      "أين توجد معلومات عن المدرسة، التدريب العملي والمعارف بشكل مختصر مع التاريخ؟",
+
+    "in der Praktikumsbescheinigung":
+      "في شهادة التدريب العملي.",
+
+    "Der Lebenslauf ist tabellarisch: kurze Zeilen mit Datum.":
+      "السيرة الذاتية تكون في جدول: أسطر قصيرة مع التاريخ.",
+
+    "Ein Lebenslauf zeigt: Schule bis Juni, dann nichts bis Dezember. Was fehlt?":
+      "السيرة الذاتية تظهر: المدرسة حتى يونيو، ثم لا شيء حتى ديسمبر. ماذا ينقص؟",
+
+    "Er ist nicht tabellarisch.":
+      "ليست في جدول.",
+
+    "Er ist nicht lückenlos.":
+      "ليست كاملة بدون فراغات.",
+
+    "Er hat kein Foto.":
+      "لا يوجد صورة.",
+
+    "Lückenlos heißt: Auch Juli bis November müssen erklärt sein (z. B. Praktikum, Jobben, Ferien).":
+      "بدون فجوات يعني: يجب توضيح الفترة من يوليو حتى نوفمبر أيضًا (مثلاً: تدريب عملي، عمل مؤقت، عطلة).",
+
+    "Denk an die drei Regeln für den Lebenslauf.":
+      "تذكّر القواعد الثلاثة للسيرة الذاتية.",
+
+    "Darf Mediaworld ein Bewerbungsfoto verlangen?":
+      "هل يمكن لشركة Mediaworld أن تطلب صورة شخصية في Bewerbung (طلب التوظيف)؟",
+
+    "Ja, immer.":
+      "نعم، دائمًا.",
+
+    "Nein, das Foto ist freiwillig.":
+      "لا، الصورة اختيارية.",
+
+    "Nur von Frauen.":
+      "فقط من النساء.",
+
+    "Das Foto ist freiwillig. Der Betrieb darf niemanden ohne Foto schlechter behandeln.":
+      "الصورة اختيارية. لا يجوز للشركة أن تعامل أي شخص بشكل أسوأ بسبب عدم وجود صورة.",
+
+    "Ich kann die vier Teile einer Bewerbungsmappe nennen.":
+      "أستطيع ذكر الأجزاء الأربعة من Bewerbungsmappe (حافظة التقديم).",
+
+    "Ich kann erklären, wie ein guter Lebenslauf aussieht.":
+      "أستطيع أن أشرح كيف تبدو السيرة الذاتية الجيدة.",
+
+    "Ich weiß, welche Unterlagen nicht in die Mappe gehören.":
+      "أعرف أي مستندات لا يجب أن تكون في الملف.",
+
+    "Die Vorauswahl":
+      "الفرز الأولي",
+
+    "LS 2.3 · Teil 2":
+      "LS 2.3 · الجزء 2",
+
+    "<h3>Vorauswahl</h3>\n             <p class=\"formula\">Formal prüfen → Inhalt mit dem Anforderungsprofil vergleichen → A, B oder C</p>\n             <h3>Formal</h3>\n             <ul><li>vollständig, ordentlich, ohne Rechtschreibfehler, richtiger Betriebsname</li></ul>\n             <h3>Inhaltlich</h3>\n             <ul><li>Muss-Anforderungen erfüllt? Wie viele Kann-Anforderungen?</li>\n             <li>Lebenslauf: Lücken? Schulzeugnis: Noten in Deutsch und Mathe, Fehltage</li></ul>\n             <h3>Drei Stapel</h3>\n             <ul><li><strong>A:</strong> passt gut → zum Gespräch einladen</li>\n             <li><strong>B:</strong> passt teilweise → Reserve</li>\n             <li><strong>C:</strong> eine Muss-Anforderung fehlt → Absage</li></ul>":
+      "<h3>الفرز الأولي</h3>\n             <p class=\"formula\">فحص الشروط الشكلية → مقارنة المحتوى مع ملف المتطلبات → A أو B أو C</p>\n             <h3>الشروط الشكلية</h3>\n             <ul><li>كامل، مرتب، بدون أخطاء إملائية، اسم الشركة صحيح</li></ul>\n             <h3>من حيث المحتوى</h3>\n             <ul><li>هل تم تحقيق المتطلبات الأساسية؟ كم عدد المتطلبات الإضافية؟</li>\n             <li>السيرة الذاتية: هل هناك فجوات؟ الشهادة المدرسية: الدرجات في اللغة الألمانية والرياضيات، أيام الغياب</li></ul>\n             <h3>ثلاث مجموعات</h3>\n             <ul><li><strong>A:</strong> مناسب جداً → دعوة للمقابلة</li>\n             <li><strong>B:</strong> مناسب جزئياً → احتياطي</li>\n             <li><strong>C:</strong> متطلب أساسي مفقود → رفض</li></ul>",
+
+    "Fünf Mappen, drei Stapel":
+      "خمسة ملفات، ثلاث مجموعات",
+
+    "Mediaworld e. K. · Vorauswahl":
+      "Mediaworld e. K. · الفرز الأولي",
+
+    "„Wir können nicht alle einladen.“":
+      "„لا يمكننا دعوة الجميع.“",
+
+    "<p>Melike: „Gespräche kosten Zeit. Deshalb machen wir eine <strong>Vorauswahl</strong>. Der Maßstab ist unser <strong>Anforderungsprofil</strong>.“</p>":
+      "<p>Melike: „المقابلات تحتاج إلى وقت. لذلك نقوم بعمل <strong>Vorauswahl (الاختيار المبدئي)</strong>. المعيار هو <strong>Anforderungsprofil (ملف المتطلبات)</strong> الخاص بنا.“</p>",
+
+    "Formal prüfen":
+      "الفحص الشكلي",
+
+    "Ist die Mappe in Ordnung?":
+      "هل الملف منظم؟",
+
+    "<ul><li>vollständig?</li><li>ordentlich und übersichtlich?</li><li>ohne Rechtschreibfehler?</li><li>richtiger Betriebsname – nicht „Sehr geehrte Firma Mediamarkt“?</li></ul>":
+      "<ul><li>كامل؟</li><li>مرتب وواضح؟</li><li>بدون أخطاء إملائية؟</li><li>اسم الشركة صحيح – ليس „Sehr geehrte Firma Mediamarkt“؟</li></ul>",
+
+    "1.":
+      "1.",
+
+    "Inhalt prüfen":
+      "فحص المحتوى",
+
+    "Passt die Person zum Profil?":
+      "هل الشخص مناسب للملف؟",
+
+    "<ul><li><strong>Muss-Anforderungen</strong> erfüllt? Fehlt eine, ist die Bewerbung raus.</li>\n                       <li>Wie viele <strong>Kann-Anforderungen</strong>?</li>\n                       <li>Lebenslauf lückenlos? Schulzeugnis: Deutsch, Mathe, <strong>Fehltage</strong>?</li></ul>":
+      "<ul><li><strong>Muss-Anforderungen (المتطلبات الأساسية)</strong> متوفرة؟ إذا كان هناك نقص، يتم رفض الطلب.</li>\n                       <li>كم عدد <strong>Kann-Anforderungen (المتطلبات الإضافية)</strong>؟</li>\n                       <li>السيرة الذاتية بدون فجوات؟ الشهادة المدرسية: اللغة الألمانية، الرياضيات، <strong>Fehltage (أيام الغياب)</strong>؟</li></ul>",
+
+    "2.":
+      "2.",
+
+    "Sortieren":
+      "الفرز",
+
+    "A, B oder C?":
+      "A أو B أو C؟",
+
+    "<dl class=\"terms\">\n                       <dt>A-Stapel</dt><dd>passt gut → zum Vorstellungsgespräch einladen</dd>\n                       <dt>B-Stapel</dt><dd>passt teilweise → Reserve, falls A nicht klappt</dd>\n                       <dt>C-Stapel</dt><dd>eine Muss-Anforderung fehlt → freundliche Absage</dd>\n                     </dl>":
+      "<dl class=\"terms\">\n                       <dt>مجموعة A</dt><dd>يناسب جيدًا → دعوة لمقابلة العمل</dd>\n                       <dt>مجموعة B</dt><dd>يناسب جزئيًا → احتياطي، إذا لم تنجح مجموعة A</dd>\n                       <dt>مجموعة C</dt><dd>شرط أساسي مفقود → رفض ودّي</dd>\n                     </dl>",
+
+    "3.":
+      "3.",
+
+    "Erst Muss, dann Kann.":
+      "أولاً الشروط الأساسية، ثم الشروط الإضافية.",
+
+    "<p>Wer eine Muss-Anforderung nicht erfüllt, landet auf C – egal wie gut der Rest ist. Kann-Anforderungen entscheiden zwischen A und B.</p>":
+      "<p>من لا يحقق شرطًا أساسيًا، يوضع في مجموعة C – مهما كانت بقية الأمور جيدة. الشروط الإضافية تحدد الفرق بين مجموعة A وB.</p>",
+
+    "Formal oder inhaltlich?":
+      "رسمي أم من حيث المحتوى؟",
+
+    "Tara notiert Auffälligkeiten. Ist das ein formaler oder ein inhaltlicher Punkt?":
+      "تسجّل Tara الملاحظات. هل هذا جانب شكلي أم جانب مضموني؟",
+
+    "Formal heißt: Wie sieht die Mappe aus? Ist sie vollständig und fehlerfrei?":
+      "شكلي يعني: كيف تبدو الحقيبة؟ هل هي كاملة وخالية من الأخطاء؟",
+
+    "Inhaltlich heißt: Passt die Person zum Anforderungsprofil?":
+      "مضموني يعني: هل تناسب هذه الشخص المواصفات المطلوبة؟",
+
+    "Formal":
+      "شكلي",
+
+    "Inhaltlich":
+      "مضموني",
+
+    "Im Anschreiben stehen viele Rechtschreibfehler.":
+      "يوجد الكثير من أخطاء الإملاء في خطاب التقديم.",
+
+    "Der Schulabschluss fehlt noch.":
+      "شهادة التخرج المدرسية غير موجودة بعد.",
+
+    "Das Schulzeugnis liegt nicht bei.":
+      "شهادة المدرسة غير مرفقة.",
+
+    "Praktikum im Büro – eine Kann-Anforderung.":
+      "تدريب عملي في المكتب – هذا من المتطلبات الممكنة (Kann-Anforderung).",
+
+    "Im Anschreiben steht ein falscher Betriebsname.":
+      "في خطاب التقديم يوجد اسم شركة خاطئ.",
+
+    "Note 5 in Deutsch.":
+      "درجة 5 في مادة اللغة الألمانية.",
+
+    "Welcher Stapel?":
+      "أي رزمة؟",
+
+    "Muss-Anforderungen für die Azubi-Stelle: Hauptschulabschluss, Deutsch mindestens ausreichend. Kann: Praktikum im Büro, Führerschein. Sortiere die Bewerbungen.":
+      "المتطلبات الأساسية (Muss-Anforderungen) لوظيفة المتدرّب/ة: شهادة المدرسة الإعدادية، اللغة الألمانية على الأقل بدرجة مقبول. المتطلبات الممكنة (Kann): تدريب عملي في المكتب، رخصة قيادة. رتّب الطلبات.",
+
+    "Prüfe zuerst die Muss-Anforderungen. Fehlt eine, ist es C.":
+      "تحقّق أولاً من Muss-Anforderungen (المتطلبات الإلزامية). إذا نقص واحد منها، يكون التصنيف C.",
+
+    "Alle Muss erfüllt? Dann entscheiden die Kann-Anforderungen: viele → A, keine → B.":
+      "هل كل متطلبات Muss متوفرة؟ عندها تقرّر Kann-Anforderungen (المتطلبات الإضافية): كثيرة → A، لا شيء → B.",
+
+    "A · einladen":
+      "A · يدعو",
+
+    "B · Reserve":
+      "B · الاحتياطي",
+
+    "C · Absage":
+      "C · الرفض",
+
+    "Elif: Abschluss, Deutsch 3, Praktikum im Büro":
+      "Elif: شهادة التخرج، اللغة الألمانية 3، تدريب عملي في المكتب",
+
+    "Jonas: Abschluss, Deutsch 2, Praktikum im Büro, Führerschein":
+      "Jonas: شهادة التخرج، اللغة الألمانية 2، تدريب عملي في المكتب، رخصة قيادة",
+
+    "Mia: Abschluss, Deutsch 4, keine Kann-Anforderung":
+      "Mia: شهادة التخرج، اللغة الألمانية 4، لا توجد أي Kann-Anforderung (متطلب إضافي)",
+
+    "Luca: Schulabschluss fehlt, Praktikum im Büro":
+      "Luca: شهادة التخرج مفقودة، تدريب عملي في المكتب",
+
+    "Sara: Abschluss, Deutsch 5, Führerschein":
+      "Sara: شهادة التخرج، اللغة الألمانية 5، رخصة قيادة",
+
+    "Sara hat einen Führerschein (Kann-Anforderung), aber in Deutsch die Note 5. Deutsch mindestens ausreichend ist eine Muss-Anforderung.":
+      "Sara لديها رخصة قيادة (Kann-Anforderung)، لكن لديها في اللغة الألمانية درجة 5. اللغة الألمانية بدرجة كافية على الأقل هي Muss-Anforderung.",
+
+    "Deutsch mindestens ausreichend ist Muss. Mit Note 5 ist sie nicht erfüllt → C. Kann-Anforderungen gleichen ein fehlendes Muss nicht aus.":
+      "اللغة الألمانية بدرجة „ausreichend“ (مقبول) على الأقل هي شرط Muss (إلزامي). مع الدرجة 5 هذا الشرط غير متحقق → C. متطلبات Kann (إضافية) لا تعوّض شرط Muss الناقص.",
+
+    "Sara erfüllt eine {*Muss-Anforderung|Kann-Anforderung} nicht. Deshalb kommt ihre Bewerbung auf den {*C-Stapel|A-Stapel}. Der Führerschein {*ändert daran nichts|gleicht das aus}.":
+      "Sara لم تحقق {*Muss-Anforderung|Kann-Anforderung} واحدًا. لذلك يوضع طلبها على {*C-Stapel|A-Stapel}. رخصة القيادة {*ändert daran nichts|gleicht das aus}.",
+
+    "Note 5 ist schlechter als ausreichend (4).":
+      "الدرجة 5 أقل من كافية (4).",
+
+    "Eine fehlende Muss-Anforderung kann keine Kann-Anforderung ausgleichen.":
+      "لا يمكن لأي Kann-Anforderung (شرط اختياري) أن تعوّض غياب Muss-Anforderung (شرط أساسي).",
+
+    "Ich kann eine Bewerbung formal prüfen.":
+      "أستطيع فحص طلب التوظيف من الناحية الشكلية.",
+
+    "Ich kann eine Bewerbung mit dem Anforderungsprofil vergleichen.":
+      "أستطيع مقارنة طلب التوظيف مع ملف المتطلبات.",
+
+    "Ich kann Bewerbungen begründet dem A-, B- oder C-Stapel zuordnen.":
+      "أستطيع أن أضع طلبات التوظيف في مجموعة A أو B أو C مع ذكر السبب.",
+
+    "Zeugnisse lesen":
+      "قراءة الشهادات.",
+
+    "LS 2.3 · Teil 3":
+      "LS 2.3 · الجزء 3",
+
+    "<h3>Zeugnissprache</h3>\n             <p>Arbeits- und Praktikumszeugnisse müssen freundlich klingen. Die Note steckt in der <strong>Zufriedenheitsformel</strong>.</p>\n             <ul><li><strong>stets zu unserer vollsten Zufriedenheit</strong> = sehr gut</li>\n             <li><strong>stets zu unserer vollen Zufriedenheit</strong> = gut</li>\n             <li><strong>zu unserer vollen Zufriedenheit</strong> = befriedigend</li>\n             <li><strong>zu unserer Zufriedenheit</strong> = ausreichend</li>\n             <li><strong>im Großen und Ganzen zu unserer Zufriedenheit</strong> = mangelhaft</li></ul>\n             <h3>Signalwörter</h3>\n             <ul><li><strong>stets</strong> = immer → besser</li><li><strong>bemühte sich</strong> = hat es versucht, aber nicht geschafft</li></ul>":
+      "<h3>لغة الشهادات (Zeugnissprache)</h3>\n             <p>شهادات العمل والتدريب يجب أن تكون بصيغة ودية. التقييم يكون في <strong>صيغة الرضا (Zufriedenheitsformel)</strong>.</p>\n             <ul><li><strong>stets zu unserer vollsten Zufriedenheit</strong> = ممتاز</li>\n             <li><strong>stets zu unserer vollen Zufriedenheit</strong> = جيد جدًا</li>\n             <li><strong>zu unserer vollen Zufriedenheit</strong> = جيد</li>\n             <li><strong>zu unserer Zufriedenheit</strong> = مقبول</li>\n             <li><strong>im Großen und Ganzen zu unserer Zufriedenheit</strong> = ضعيف</li></ul>\n             <h3>كلمات إشارة (Signalwörter)</h3>\n             <ul><li><strong>stets</strong> = دائمًا → أفضل</li><li><strong>bemühte sich</strong> = حاول، لكنه لم ينجح</li></ul>",
+
+    "Was steht zwischen den Zeilen?":
+      "ماذا تعني الجمل بين السطور؟",
+
+    "Mediaworld e. K. · Jonas’ Praktikumszeugnis":
+      "Mediaworld e. K. · شهادة تدريب Jonas",
+
+    "„Klingt doch alles gut?“":
+      "„هل يبدو كل شيء جيدًا؟“",
+
+    "<p>Tara liest: „Jonas erledigte seine Aufgaben <strong>zu unserer Zufriedenheit</strong>.“ – „Super, oder?“</p>\n                     <p>Melike lächelt: „Zeugnisse haben einen eigenen <strong>Code</strong>. Das hier ist nur eine Vier.“</p>":
+      "<p>تقرأ Tara: „Jonas erledigte seine Aufgaben <strong>zu unserer Zufriedenheit</strong>.“ – „جيد، أليس كذلك؟“</p>\n                     <p>Melike تبتسم: „الشهادات لها <strong>رمز (Code)</strong> خاص بها. هذه الجملة تعني فقط درجة أربعة.“</p>",
+
+    "Warum ein Code?":
+      "لماذا يوجد رمز (Code)؟",
+
+    "Zeugnisse müssen freundlich klingen.":
+      "يجب أن تكون الشهادات بصيغة ودية.",
+
+    "<p>Ein Betrieb darf in ein Zeugnis nichts Böses schreiben. Deshalb steckt die Note in festen <strong>Formeln</strong>.</p>\n                     <p class=\"note\">Wer den Code kennt, liest die Note sofort.</p>":
+      "<p>لا يجوز للشركة أن تكتب شيئًا سيئًا في شهادة العمل. لذلك، تكون الدرجة في <strong>صيغ ثابتة</strong>.</p>\n                     <p class=\"note\">من يعرف الشيفرة، يقرأ الدرجة فورًا.</p>",
+
+    "Die Zufriedenheitsformel":
+      "صيغة الرضا",
+
+    "Ein Wort macht eine Note.":
+      "كلمة واحدة تعطي درجة.",
+
+    "<dl class=\"terms\">\n                       <dt>stets zu unserer vollsten Zufriedenheit</dt><dd>1 · sehr gut</dd>\n                       <dt>stets zu unserer vollen Zufriedenheit</dt><dd>2 · gut</dd>\n                       <dt>zu unserer vollen Zufriedenheit</dt><dd>3 · befriedigend</dd>\n                       <dt>zu unserer Zufriedenheit</dt><dd>4 · ausreichend</dd>\n                       <dt>im Großen und Ganzen zu unserer Zufriedenheit</dt><dd>5 · mangelhaft</dd>\n                     </dl>":
+      "<dl class=\"terms\">\n                       <dt>stets zu unserer vollsten Zufriedenheit</dt><dd>1 · ممتاز</dd>\n                       <dt>stets zu unserer vollen Zufriedenheit</dt><dd>2 · جيد جدًا</dd>\n                       <dt>zu unserer vollen Zufriedenheit</dt><dd>3 · جيد</dd>\n                       <dt>zu unserer Zufriedenheit</dt><dd>4 · مقبول</dd>\n                       <dt>im Großen und Ganzen zu unserer Zufriedenheit</dt><dd>5 · ضعيف</dd>\n                     </dl>",
+
+    "Signalwörter":
+      "كلمات الإشارة",
+
+    "Achte auf diese Wörter.":
+      "انتبه لهذه الكلمات.",
+
+    "<ul><li><strong>stets</strong> heißt immer – das macht die Note besser.</li>\n                       <li><strong>bemühte sich</strong> heißt: hat es versucht, aber nicht geschafft.</li></ul>":
+      "<ul><li><strong>stets</strong> تعني دائمًا – هذا يجعل الدرجة أفضل.</li>\n                       <li><strong>bemühte sich</strong> تعني: حاول، لكنه لم ينجح.</li></ul>",
+
+    "„Stets“ und „vollsten“ – dann ist es eine Eins.":
+      "إذا وجدت „stets“ و„vollsten“ – إذًا الدرجة هي واحد.",
+
+    "<p>Je mehr Lob in der Formel steckt, desto besser die Note.</p>":
+      "<p>كلما زاد المدح في الصياغة، كانت الدرجة أفضل.</p>",
+
+    "Code knacken":
+      "اكسر الشيفرة",
+
+    "„Sie erledigte ihre Aufgaben <b>stets zu unserer vollsten Zufriedenheit</b>.“ Welche Note ist das?":
+      "„Sie erledigte ihre Aufgaben <b>stets zu unserer vollsten Zufriedenheit</b>.“ (أنجزت مهامها دائمًا لرضانا الأقصى.) أي درجة هذه؟",
+
+    "sehr gut":
+      "ممتاز",
+
+    "gut":
+      "جيد جدًا",
+
+    "befriedigend":
+      "جيد",
+
+    "ausreichend":
+      "مقبول",
+
+    "„stets“ + „vollsten“ = die beste Formel = sehr gut.":
+      "„دائمًا“ + „تمامًا“ = أفضل صياغة = ممتاز.",
+
+    "„Er erledigte seine Aufgaben <b>zu unserer Zufriedenheit</b>.“ Welche Note ist das?":
+      "„Er erledigte seine Aufgaben <b>zu unserer Zufriedenheit</b>.“ (أنجز مهامه لرضانا.) أي درجة هذه؟",
+
+    "Ohne „stets“ und ohne „vollen“ = ausreichend (4).":
+      "بدون „دائمًا“ وبدون „الكامل“ = مقبول (4).",
+
+    "Hier fehlen „stets“ und „vollen“.":
+      "هنا ينقص „دائمًا“ و„الكامل“.",
+
+    "„Sie <b>bemühte sich</b>, die Aufgaben zu erledigen.“ Was bedeutet das?":
+      "„لقد <b>اجتهدت</b> في إنجاز المهام.“ ماذا يعني ذلك؟",
+
+    "Sie war sehr fleißig.":
+      "كانت مجتهدة جدًا.",
+
+    "Sie hat es versucht, aber nicht geschafft.":
+      "حاولت، لكنها لم تنجح.",
+
+    "Sie war immer pünktlich.":
+      "كانت دائمًا في الوقت المحدد.",
+
+    "„bemühte sich“ ist ein Warnsignal: versucht, aber nicht geschafft.":
+      "„اجتهدت“ هي إشارة تحذير: حاولت، لكنها لم تنجح.",
+
+    "Welches Wort macht die Note besser?":
+      "أي كلمة تجعل التقييم أفضل؟",
+
+    "stets":
+      "دائمًا (stets)",
+
+    "im Großen und Ganzen":
+      "بشكل عام (im Großen und Ganzen)",
+
+    "bemühte sich":
+      "كان يحاول (bemühte sich)",
+
+    "„stets“ heißt immer – das lobt.":
+      "„stets“ تعني دائمًا – هذا مدح.",
+
+    "Gut oder schwach?":
+      "جيد أم ضعيف؟",
+
+    "Sortiere die Sätze aus Praktikumszeugnissen.":
+      "رتب الجمل من شهادات التدريب العملي.",
+
+    "Gut: „stets“ und „vollen/vollsten“. Schwach: „im Großen und Ganzen“, „bemühte sich“, nur „zu unserer Zufriedenheit“.":
+      "جيد: „stets“ و „vollen/vollsten“. ضعيف: „im Großen und Ganzen“، „bemühte sich“، فقط „zu unserer Zufriedenheit“.",
+
+    "sehr gut / gut":
+      "ممتاز / جيد جدًا",
+
+    "schwach (4 oder schlechter)":
+      "ضعيف (4 أو أقل)",
+
+    "stets zu unserer vollen Zufriedenheit":
+      "stets zu unserer vollen Zufriedenheit (دائمًا لرضانا التام)",
+
+    "im Großen und Ganzen zu unserer Zufriedenheit":
+      "im Großen und Ganzen zu unserer Zufriedenheit (بشكل عام لرضانا)",
+
+    "stets zu unserer vollsten Zufriedenheit":
+      "stets zu unserer vollsten Zufriedenheit (دائمًا لرضانا الأقصى)",
+
+    "bemühte sich um Pünktlichkeit":
+      "كان يسعى للالتزام بالمواعيد",
+
+    "zu unserer Zufriedenheit":
+      "zu unserer Zufriedenheit (لرضانا)",
+
+    "Ich weiß, warum Zeugnisse einen eigenen Code haben.":
+      "أعرف لماذا الشهادات لها رموز خاصة بها.",
+
+    "Ich kann die Zufriedenheitsformel einer Note zuordnen.":
+      "أستطيع ربط صيغة الرضا بدرجة.",
+
+    "Ich erkenne Signalwörter wie „stets“ und „bemühte sich“.":
+      "أتعرف على كلمات الإشارة مثل „دائمًا“ و„بذل جهدًا“.",
+
+    "Das Vorstellungsgespräch":
+      "مقابلة العمل (مقابلة التوظيف)",
+
+    "LS 2.3 · Teil 4":
+      "LS 2.3 · الجزء 4",
+
+    "<h3>Ablauf</h3>\n             <p class=\"formula\">Begrüßung → Bewerber stellt sich vor → Fragen an den Bewerber → Infos und Fragen des Bewerbers → Abschluss</p>\n             <h3>Zulässige Fragen</h3>\n             <ul><li>Schule und Noten, Praktika, Stärken und Schwächen, Motivation („Warum Mediaworld?“)</li></ul>\n             <h3>Unzulässige Fragen (AGG)</h3>\n             <ul><li>Schwangerschaft und Kinderwunsch, Religion, Partei, Gewerkschaft, Herkunft, sexuelle Orientierung</li></ul>\n             <p class=\"note\">Bei unzulässigen Fragen musst du nicht ehrlich antworten („Recht zur Lüge“). Du darfst auch freundlich ausweichen.</p>\n             <h3>Andere Auswahlverfahren</h3>\n             <ul><li><strong>Einstellungstest:</strong> Aufgaben zu Wissen und Logik</li><li><strong>Assessment-Center:</strong> Gruppen- und Rollenspiele, eher in großen Firmen</li></ul>":
+      "<h3>سير المقابلة</h3>\n             <p class=\"formula\">الترحيب → المتقدّم يعرّف بنفسه → أسئلة للمتقدّم → معلومات وأسئلة من المتقدّم → الختام</p>\n             <h3>الأسئلة المسموح بها</h3>\n             <ul><li>المدرسة والدرجات، التدريب العملي، نقاط القوة والضعف، الدافع („لماذا Mediaworld؟“)</li></ul>\n             <h3>الأسئلة غير المسموح بها (AGG)</h3>\n             <ul><li>الحمل والرغبة في الإنجاب، الدين، الحزب، النقابة، الأصل، التوجه الجنسي</li></ul>\n             <p class=\"note\">في حالة الأسئلة غير المسموح بها، لا يجب أن تجيب بصدق („الحق في الكذب“). يمكنك أيضًا الرد بلطف دون إجابة مباشرة.</p>\n             <h3>طرق اختيار أخرى</h3>\n             <ul><li><strong>اختبار التوظيف:</strong> مهام حول المعرفة والمنطق</li><li><strong>مركز التقييم:</strong> ألعاب جماعية وأدوار، غالبًا في الشركات الكبيرة</li></ul>",
+
+    "Jetzt wird es persönlich":
+      "الآن يصبح الأمر شخصيًا",
+
+    "Mediaworld e. K. · Gesprächstermine":
+      "Mediaworld e. K. · مواعيد المقابلات",
+
+    "„Elif und Jonas laden wir ein.“":
+      "„ندعو Elif وJonas.“",
+
+    "<p>Der A-Stapel steht. Melike plant zwei <strong>Vorstellungsgespräche</strong>. Tara darf dabei sein und mitschreiben.</p>":
+      "<p>تم تجهيز مجموعة A. تخطط Melike لإجراء مقابلتي <strong>Vorstellungsgespräch (مقابلة عمل)</strong>. Tara يمكنها الحضور وتدوين الملاحظات.</p>",
+
+    "Der Ablauf":
+      "سير العملية",
+
+    "Fünf Phasen":
+      "خمس مراحل",
+
+    "<ol><li><strong>Begrüßung</strong> – kurzer Small Talk</li>\n                       <li><strong>Vorstellung</strong> – die Bewerberin erzählt von sich</li>\n                       <li><strong>Fragen an die Bewerberin</strong> – Schule, Praktikum, Stärken</li>\n                       <li><strong>Infos zur Stelle</strong> – und Fragen der Bewerberin</li>\n                       <li><strong>Abschluss</strong> – wie geht es weiter?</li></ol>":
+      "<ol><li><strong>الترحيب</strong> – حديث قصير</li>\n                       <li><strong>التعريف بالنفس</strong> – تتحدث المتقدمة عن نفسها</li>\n                       <li><strong>أسئلة للمتقدمة</strong> – المدرسة، التدريب العملي، نقاط القوة</li>\n                       <li><strong>معلومات عن Stelle (الوظيفة)</strong> – وأسئلة من المتقدمة</li>\n                       <li><strong>الختام</strong> – ما هي الخطوة التالية؟</li></ol>",
+
+    "Erlaubt":
+      "مسموح",
+
+    "Zulässige Fragen":
+      "الأسئلة المسموح بها",
+
+    "<p>Alles, was mit der <strong>Stelle</strong> zu tun hat:</p>\n                     <ul><li>„Warum möchten Sie zu Mediaworld?“</li><li>„Was haben Sie im Praktikum gemacht?“</li><li>„Was ist Ihre größte Stärke?“</li></ul>":
+      "<p>كل ما يتعلق بـ <strong>Stelle (الوظيفة)</strong>:</p>\n                     <ul><li>\"لماذا تريدين العمل في Mediaworld؟\"</li><li>\"ماذا فعلتِ في التدريب العملي؟\"</li><li>\"ما هي أكبر نقطة قوة لديكِ؟\"</li></ul>",
+
+    "Verboten":
+      "ممنوع",
+
+    "Unzulässige Fragen":
+      "أسئلة غير مسموح بها",
+
+    "<p>Das <strong>AGG</strong> (Allgemeines Gleichbehandlungsgesetz) schützt vor Benachteiligung, z. B. wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität.</p>\n                     <ul class=\"pm\"><li class=\"m\">„Sind Sie schwanger?“</li><li class=\"m\">„Welcher Religion gehören Sie an?“</li><li class=\"m\">„In welcher Partei sind Sie?“</li></ul>":
+      "<p>يحمي <strong>AGG</strong> (قانون المساواة العامة) من التمييز، مثلاً بسبب الأصل أو الجنس أو الدين أو الإعاقة أو العمر أو الهوية الجنسية.</p>\n                     <ul class=\"pm\"><li class=\"m\">„هل أنتِ حامل؟“</li><li class=\"m\">„ما هو دينك؟“</li><li class=\"m\">„في أي حزب أنت؟“</li></ul>",
+
+    "Dein Recht":
+      "حقك",
+
+    "Was tun bei unzulässigen Fragen?":
+      "ماذا تفعل عند أسئلة غير مسموح بها؟",
+
+    "<p>Du musst <strong>nicht ehrlich</strong> antworten – das nennt man das <strong>„Recht zur Lüge“</strong>. Du darfst auch freundlich ausweichen: „Das hat mit der Stelle nichts zu tun.“</p>":
+      "<p>لا يجب أن <strong>تجيب بصدق</strong> – هذا يسمى <strong>„حق الكذب“</strong>. يمكنك أيضاً الرد بلطف: „هذا لا يتعلق بالوظيفة.“</p>",
+
+    "Gefragt wird nur, was zur Stelle gehört.":
+      "يُسأل فقط عما يخص الوظيفة.",
+
+    "<p>Neben dem Gespräch gibt es weitere Verfahren: den <strong>Einstellungstest</strong> und – eher in großen Firmen – das <strong>Assessment-Center</strong>.</p>":
+      "<p>بالإضافة إلى المقابلة، هناك طرق أخرى: <strong>Einstellungstest</strong> (اختبار التوظيف) وأيضاً – غالباً في الشركات الكبيرة – <strong>Assessment-Center</strong> (مركز التقييم).</p>",
+
+    "Zulässig oder unzulässig?":
+      "مسموح أم غير مسموح؟",
+
+    "Darf Mediaworld diese Frage im Vorstellungsgespräch stellen?":
+      "هل يحق لـ Mediaworld أن تطرح هذا السؤال في مقابلة العمل؟",
+
+    "Zulässig ist, was mit der Stelle zu tun hat.":
+      "مسموح ما له علاقة بالوظيفة.",
+
+    "Schwangerschaft, Religion, Partei und Gewerkschaft sind privat – das schützt das AGG.":
+      "الحمل، الدين، الحزب والنقابة أمور خاصة – يحميها قانون AGG.",
+
+    "zulässig":
+      "مسموح",
+
+    "unzulässig":
+      "غير مسموح",
+
+    "Warum möchten Sie bei uns eine Ausbildung machen?":
+      "لماذا تريد أن تقوم بالتدريب المهني لدينا؟",
+
+    "Planen Sie, bald Kinder zu bekommen?":
+      "هل تخطط/تخططين لإنجاب أطفال قريبًا؟",
+
+    "Was haben Sie im Praktikum gelernt?":
+      "ماذا تعلمت في التدريب العملي؟",
+
+    "Sind Sie in einer Gewerkschaft?":
+      "هل أنت عضو في نقابة عمالية؟",
+
+    "Welche Stärken bringen Sie mit?":
+      "ما هي نقاط القوة التي تملكها؟",
+
+    "Gehen Sie regelmäßig in die Kirche oder Moschee?":
+      "هل تذهب بانتظام إلى الكنيسة أو المسجد؟",
+
+    "Im Gespräch":
+      "في المقابلة",
+
+    "In welcher Phase fragt die Bewerberin nach den Arbeitszeiten?":
+      "في أي مرحلة تسأل المتقدمة عن أوقات العمل؟",
+
+    "Begrüßung":
+      "الترحيب",
+
+    "Infos zur Stelle und Fragen der Bewerberin":
+      "معلومات عن الوظيفة وأسئلة المتقدمة",
+
+    "Abschluss":
+      "الختام",
+
+    "Nach den Fragen des Betriebs gibt es Infos zur Stelle – dann darf die Bewerberin fragen.":
+      "بعد أسئلة الشركة، تأتي معلومات عن الوظيفة (وظيفة). بعد ذلك، يمكن للمتقدّمة أن تسأل.",
+
+    "Die Bewerberin darf auch selbst fragen – wann ist dafür Platz?":
+      "يمكن للمتقدّمة أيضًا أن تسأل بنفسها. متى يكون هناك وقت لذلك؟",
+
+    "Jonas wird gefragt: „Welcher Partei gehören Sie an?“ Was darf er tun?":
+      "يُسأل Jonas: „إلى أي حزب تنتمي؟“ ماذا يمكنه أن يفعل؟",
+
+    "Er muss ehrlich antworten.":
+      "يجب عليه أن يجيب بصدق.",
+
+    "Er darf ausweichen oder nicht ehrlich antworten.":
+      "يمكنه أن يتهرّب أو لا يجيب بصدق.",
+
+    "Er muss das Gespräch abbrechen.":
+      "يجب عليه أن يوقف المقابلة.",
+
+    "Die Frage ist unzulässig. Jonas darf ausweichen oder die Unwahrheit sagen („Recht zur Lüge“).":
+      "السؤال غير مسموح به. يمكن لـ Jonas أن يتهرّب أو يقول شيئًا غير صحيح (\"حق الكذب\").",
+
+    "Wofür steht AGG?":
+      "ما معنى AGG؟",
+
+    "Allgemeines Gleichbehandlungsgesetz":
+      "قانون المعاملة المتساوية العام (Allgemeines Gleichbehandlungsgesetz)",
+
+    "Arbeits- und Gesundheitsgesetz":
+      "قانون العمل والصحة",
+
+    "Ausbildungs- und Gehaltsgesetz":
+      "قانون التدريب المهني والرواتب",
+
+    "Das Allgemeine Gleichbehandlungsgesetz schützt vor Benachteiligung.":
+      "قانون المعاملة المتساوية العام (Allgemeines Gleichbehandlungsgesetz) يحمي من التمييز.",
+
+    "Gruppenaufgaben und Rollenspiele an einem ganzen Tag – welches Verfahren ist das?":
+      "مهام جماعية وأدوار تمثيلية طوال اليوم – ما هو هذا الإجراء؟",
+
+    "Einstellungstest":
+      "اختبار التوظيف",
+
+    "Assessment-Center":
+      "Assessment-Center (مركز التقييم)",
+
+    "Vorauswahl":
+      "الفرز الأولي",
+
+    "Im Assessment-Center lösen mehrere Bewerber Aufgaben in Gruppen und Rollenspielen.":
+      "في مركز التقييم (Assessment-Center)، يقوم عدة متقدمين بحل مهام في مجموعات وأدوار تمثيلية.",
+
+    "Ich kann die Phasen eines Vorstellungsgesprächs nennen.":
+      "أستطيع ذكر مراحل مقابلة العمل (Vorstellungsgespräch).",
+
+    "Ich kann zulässige und unzulässige Fragen unterscheiden.":
+      "أستطيع التمييز بين الأسئلة المسموح بها وغير المسموح بها.",
+
+    "Ich weiß, was ich bei einer unzulässigen Frage tun darf.":
+      "أعرف ما الذي يُسمح لي فعله عند سؤال غير مسموح به.",
+
+    "Die Entscheidung: Bewertungstabelle":
+      "القرار: جدول التقييم (Bewertungstabelle)",
+
+    "LS 2.3 · Teil 5":
+      "LS 2.3 · الجزء 5",
+
+    "<h3>Gewichtete Bewertungstabelle</h3>\n             <p class=\"formula\">Gewicht (%) × Punkte = gewichtete Punkte<br>Alle gewichteten Punkte addieren → die höchste Summe gewinnt</p>\n             <ul><li><strong>Kriterien</strong> kommen aus dem Anforderungsprofil.</li>\n             <li><strong>Gewicht:</strong> Wie wichtig ist das Kriterium? Alle Gewichte zusammen = 100 %.</li>\n             <li><strong>Punkte:</strong> 1 (schwach) bis 5 (sehr gut).</li></ul>\n             <p class=\"note\">Beispiel: Gewicht 40 %, Punkte 3 → 40 × 3 = 120.</p>":
+      "<h3>جدول التقييم الموزون (Bewertungstabelle)</h3>\n             <p class=\"formula\">الوزن (%) × النقاط = النقاط الموزونة<br>يتم جمع جميع النقاط الموزونة → المجموع الأعلى هو الفائز</p>\n             <ul><li><strong>المعايير</strong> تأتي من ملف المتطلبات (Anforderungsprofil).</li>\n             <li><strong>الوزن:</strong> ما مدى أهمية المعيار؟ مجموع الأوزان = 100 %.</li>\n             <li><strong>النقاط:</strong> 1 (ضعيف) إلى 5 (ممتاز).</li></ul>\n             <p class=\"note\">مثال: الوزن 40 %، النقاط 3 → 40 × 3 = 120.</p>",
+
+    "Elif oder Jonas?":
+      "إليف أم يوناس؟",
+
+    "Mediaworld e. K. · Nach den Gesprächen":
+      "Mediaworld e. K. · بعد المحادثات",
+
+    "„Beide waren gut. Und jetzt?“":
+      "„كلاهما كان جيدًا. وماذا الآن؟“",
+
+    "<p>Tara mag Jonas, Melike findet Elif stark. Damit die Entscheidung <strong>fair</strong> ist, nutzen sie eine <strong>Bewertungstabelle</strong>.</p>":
+      "<p>تارا تحب يوناس، ميليك ترى أن إليف قوية. لكي يكون القرار <strong>عادلًا</strong>، يستخدمون <strong>Bewertungstabelle (جدول التقييم)</strong>.</p>",
+
+    "So geht’s":
+      "هكذا يتم الأمر",
+
+    "Kriterien, Gewicht, Punkte":
+      "المعايير، الوزن، النقاط",
+
+    "<ol><li><strong>Kriterien</strong> aus dem Anforderungsprofil wählen</li>\n                       <li>jedes Kriterium <strong>gewichten</strong> – zusammen 100 %</li>\n                       <li>jede Person bekommt <strong>Punkte</strong> von 1 bis 5</li>\n                       <li><strong>Gewicht × Punkte</strong> rechnen und alles addieren</li></ol>":
+      "<ol><li>اختيار <strong>المعايير</strong> من ملف المتطلبات</li>\n                       <li>تحديد <strong>وزن</strong> لكل معيار – المجموع 100%</li>\n                       <li>كل شخص يحصل على <strong>نقاط</strong> من 1 إلى 5</li>\n                       <li>حساب <strong>الوزن × النقاط</strong> وجمع الكل</li></ol>",
+
+    "Beispiel":
+      "مثال",
+
+    "Gewicht × Punkte":
+      "الوزن × النقاط",
+
+    "<table class=\"scheme\">\n                       <tr><td>Deutsch (40 %) · 3 Punkte</td><td>40 × 3 = 120</td></tr>\n                       <tr><td>Mathe (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>\n                       <tr><td>Auftreten (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>\n                       <tr class=\"sum\"><td>= Summe</td><td>360</td></tr>\n                     </table>\n                     <p class=\"note\">Die Person mit der höchsten Summe bekommt die Zusage.</p>":
+      "<table class=\"scheme\">\n                       <tr><td>الألمانية (40 %) · 3 نقاط</td><td>40 × 3 = 120</td></tr>\n                       <tr><td>الرياضيات (30 %) · 4 نقاط</td><td>30 × 4 = 120</td></tr>\n                       <tr><td>Auftreten (الحضور والتصرف) (30 %) · 4 نقاط</td><td>30 × 4 = 120</td></tr>\n                       <tr class=\"sum\"><td>= المجموع</td><td>360</td></tr>\n                     </table>\n                     <p class=\"note\">الشخص صاحب أعلى مجموع يحصل على Zusage (القبول).</p>",
+
+    "Erst rechnen, dann entscheiden.":
+      "أولاً احسب، ثم قرر.",
+
+    "<p>Die Tabelle macht die Entscheidung <strong>nachvollziehbar</strong>: Nicht Sympathie entscheidet, sondern die Kriterien.</p>":
+      "<p>الجدول يجعل القرار <strong>واضحًا</strong>: ليست المشاعر هي التي تقرر، بل المعايير.</p>",
+
+    "A1 · Bewertung Jonas":
+      "A1 · تقييم Jonas",
+
+    "Kriterien und Gewichte bei Mediaworld:<br><b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten im Gespräch 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 Punkte für <b>Jonas</b>: Deutsch 4 · Mathe 3 · Auftreten 5 · Praktikum 2<br>Rechne Gewicht × Punkte und addiere.":
+      "المعايير والأوزان في Mediaworld:<br><b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten im Gespräch 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 النقاط لـ <b>Jonas</b>: Deutsch 4 · Mathe 3 · Auftreten 5 · Praktikum 2<br>احسب الوزن × النقاط واجمع.",
+
+    "Jonas erreicht 370 gewichtete Punkte.":
+      "Jonas حصل على 370 نقطة موزونة.",
+
+    "Rechne jede Zeile einzeln: Gewicht mal Punkte.":
+      "احسب كل سطر على حدة: الوزن مضروبًا في النقاط.",
+
+    "Zum Schluss alle vier Ergebnisse addieren: 120 + 60 + 150 + 40.":
+      "في النهاية اجمع النتائج الأربعة: 120 + 60 + 150 + 40.",
+
+    "Deutsch: 30 × 4":
+      "ألماني: 30 × 4",
+
+    "Mathe: 20 × 3":
+      "رياضيات: 20 × 3",
+
+    "Auftreten: 30 × 5":
+      "Auftreten (الحضور والتصرف): 30 × 5",
+
+    "Praktikum: 20 × 2":
+      "تدريب عملي: 20 × 2",
+
+    "= Summe Jonas":
+      "= المجموع Jonas",
+
+    "A2 · Bewertung Elif":
+      "A2 · تقييم Elif",
+
+    "Gleiche Kriterien und Gewichte: <b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 Punkte für <b>Elif</b>: Deutsch 3 · Mathe 5 · Auftreten 4 · Praktikum 4":
+      "نفس المعايير والأوزان: <b>ألماني 30 %</b> · <b>رياضيات 20 %</b> · <b>Auftreten (الحضور والتصرف) 30 %</b> · <b>تدريب عملي 20 %</b><br><br>\n                 النقاط لـ <b>Elif</b>: ألماني 3 · رياضيات 5 · Auftreten 4 · تدريب عملي 4",
+
+    "Elif erreicht 390 gewichtete Punkte.":
+      "Elif حصلت على 390 نقطة موزونة.",
+
+    "Wie bei Jonas: Gewicht mal Punkte, dann addieren.":
+      "مثل ما فعل Jonas: الوزن مضروب في النقاط، ثم نجمع النتائج.",
+
+    "90 + 100 + 120 + 80 – rechne die Summe in Ruhe aus.":
+      "90 + 100 + 120 + 80 – احسب المجموع بهدوء.",
+
+    "Deutsch: 30 × 3":
+      "Deutsch: 30 × 3",
+
+    "Mathe: 20 × 5":
+      "Mathe: 20 × 5",
+
+    "Auftreten: 30 × 4":
+      "Auftreten: 30 × 4",
+
+    "Praktikum: 20 × 4":
+      "Praktikum: 20 × 4",
+
+    "= Summe Elif":
+      "= Summe Elif",
+
+    "Jonas: 370 Punkte · Elif: 390 Punkte. Jonas war im Gespräch am stärksten (Auftreten 5).":
+      "Jonas: 370 Punkte · Elif: 390 Punkte. Jonas كان الأقوى في المقابلة (Auftreten 5).",
+
+    "Elif hat mit 390 die höchste Summe. Jonas punktet beim Auftreten, verliert aber bei Mathe und Praktikum.":
+      "إليف لديها أعلى مجموع وهو 390. يحقق جوناس نقاطًا في الظهور، لكنه يخسر في الرياضيات والتدريب العملي.",
+
+    "Mediaworld gibt {*Elif|Jonas} die Zusage, weil sie mit {*390|370} Punkten die {*höchste|niedrigste} Summe hat. Das bessere Auftreten von Jonas {*reicht nicht aus|entscheidet allein}, weil alle Kriterien zählen.":
+      "تعطي Mediaworld {*Elif|Jonas} Zusage (القبول)، لأنها حصلت على {*390|370} نقطة، وهو المجموع {*höchste|niedrigste}. Auftreten (الحضور) الأفضل لـ Jonas {*reicht nicht aus|entscheidet allein}، لأن كل المعايير مهمة.",
+
+    "Vergleiche die beiden Summen.":
+      "قارن بين المجموعين.",
+
+    "In der Tabelle zählt die Summe aller Kriterien – nicht ein einzelnes.":
+      "في الجدول، يُحسب مجموع جميع المعايير – وليس معيارًا واحدًا فقط.",
+
+    "Ich kann eine gewichtete Bewertungstabelle ausrechnen.":
+      "أستطيع حساب جدول تقييم موزون.",
+
+    "Ich kann erklären, was das Gewicht bedeutet.":
+      "أستطيع شرح ماذا يعني الوزن.",
+
+    "Ich kann eine Auswahlentscheidung mit der Tabelle begründen.":
+      "أستطيع تبرير قرار الاختيار باستخدام الجدول.",
+
+    "Zusage, Absage und Datenschutz":
+      "الموافقة، الرفض وحماية البيانات",
+
+    "LS 2.3 · Teil 6":
+      "LS 2.3 · الجزء 6",
+
+    "<h3>Zusage</h3>\n             <ul><li>Einladung zur Unterschrift unter den Ausbildungsvertrag.</li></ul>\n             <h3>Absage</h3>\n             <ul><li>freundlich, kurz, mit Dank für die Bewerbung</li>\n             <li>keine Gründe nennen, die benachteiligen (AGG) – z. B. Alter, Herkunft, Religion</li></ul>\n             <h3>Datenschutz</h3>\n             <ul><li>Bewerberdaten nur für die Auswahl nutzen, nur die Entscheider sehen sie.</li>\n             <li>Nach der Absage: Papier zurückschicken, Dateien löschen – meist nach einigen Monaten (oft 6).</li></ul>":
+      "<h3>القبول (Zusage)</h3>\n             <ul><li>دعوة لتوقيع عقد التدريب المهني (Ausbildungsvertrag).</li></ul>\n             <h3>الرفض (Absage)</h3>\n             <ul><li>بأسلوب ودود، مختصر، مع الشكر على التقديم.</li>\n             <li>لا تذكر أسبابًا قد تضر (AGG) – مثل العمر، الأصل، الدين.</li></ul>\n             <h3>حماية البيانات (Datenschutz)</h3>\n             <ul><li>يتم استخدام بيانات المتقدمين فقط للاختيار، ويطلع عليها فقط أصحاب القرار.</li>\n             <li>بعد الرفض: إعادة الأوراق الورقية، حذف الملفات – غالبًا بعد عدة أشهر (غالبًا 6).</li></ul>",
+
+    "Ja für Elif – und die anderen?":
+      "نعم لإليف – وماذا عن الآخرين؟",
+
+    "Mediaworld e. K. · Die Entscheidung steht":
+      "Mediaworld e. K. · القرار جاهز",
+
+    "„Jetzt schreiben wir allen.“":
+      "„الآن سنكتب للجميع.“",
+
+    "<p>Elif bekommt die <strong>Zusage</strong>. Alle anderen bekommen eine <strong>Absage</strong>. Melike: „Auch eine Absage muss fair und freundlich sein.“</p>":
+      "<p>إليف تحصل على <strong>القبول (Zusage)</strong>. جميع الآخرين يحصلون على <strong>الرفض (Absage)</strong>. ميليك: „حتى الرفض يجب أن يكون عادلًا وودودًا.“</p>",
+
+    "Die Absage":
+      "الرفض (Absage)",
+
+    "Freundlich, kurz, ohne falsche Gründe.":
+      "ودود، مختصر، بدون أسباب غير صحيحة.",
+
+    "<ul><li>für die Bewerbung <strong>danken</strong></li><li>kurz absagen</li><li>alles Gute wünschen</li></ul>\n                     <p class=\"note\">Keine Gründe, die benachteiligen – z. B. Alter, Herkunft oder Religion. Das verbietet das AGG.</p>":
+      "<ul><li><strong>نشكر</strong> على Bewerbung (طلب التوظيف)</li><li>رفض قصير</li><li>تمنيات بالتوفيق</li></ul>\n                     <p class=\"note\">لا يجوز ذكر أسباب فيها تمييز ضد الشخص – مثل العمر أو الأصل أو الدين. هذا ممنوع حسب AGG.</p>",
+
+    "Datenschutz":
+      "حماية البيانات",
+
+    "Bewerbungen sind vertraulich.":
+      "طلبات التوظيف (Bewerbungen) سرية.",
+
+    "<ul><li>Nur die Personen, die entscheiden, lesen die Unterlagen.</li>\n                       <li>Die Daten werden nur für die Auswahl genutzt – nicht für Werbung.</li>\n                       <li>Nach der Absage: Papier zurückschicken, Dateien <strong>löschen</strong> – meist nach einigen Monaten.</li></ul>":
+      "<ul><li>فقط الأشخاص الذين يقررون يطّلعون على المستندات.</li>\n                       <li>تُستخدم البيانات فقط للاختيار – وليس للإعلانات.</li>\n                       <li>بعد الرفض: إعادة الأوراق الورقية، حذف <strong>الملفات</strong> – غالبًا بعد عدة أشهر.</li></ul>",
+
+    "Fair bis zum letzten Brief.":
+      "الإنصاف حتى آخر رسالة.",
+
+    "<p>Zusage, Absage, Datenschutz: Auch wer nicht genommen wird, soll Mediaworld in guter Erinnerung behalten.</p>":
+      "<p>القبول، الرفض، حماية البيانات: حتى من لم يتم قبوله يجب أن يتذكر Mediaworld بشكل جيد.</p>",
+
+    "Darf Mediaworld das?":
+      "هل يحق لـ Mediaworld ذلك؟",
+
+    "Was ist erlaubt – und was nicht?":
+      "ما هو المسموح – وما هو غير المسموح؟",
+
+    "Bewerbungen sind vertraulich: nur für die Auswahl, nur für die Entscheider.":
+      "الطلبات سرية: فقط للاختيار، فقط للمسؤولين عن القرار.",
+
+    "Gründe wie Alter, Herkunft oder Religion dürfen in keiner Absage stehen.":
+      "أسباب مثل العمر أو الأصل أو الدين لا يجوز ذكرها في أي رفض.",
+
+    "erlaubt":
+      "مسموح",
+
+    "nicht erlaubt":
+      "غير مسموح",
+
+    "Die Unterlagen nach der Absage zurückschicken.":
+      "إرجاع المستندات بعد الرفض.",
+
+    "Bewerbungen in der Pause herumzeigen.":
+      "عرض الطلبات على الآخرين أثناء الاستراحة.",
+
+    "Die E-Mail-Adressen der Bewerber für Werbung nutzen.":
+      "استخدام عناوين البريد الإلكتروني للمتقدمين في الإعلانات.",
+
+    "Nur die Ausbilderin und die Chefin lesen die Unterlagen.":
+      "فقط المدربة والمديرة يقرأن المستندات.",
+
+    "In die Absage schreiben: „Sie sind uns zu alt.“":
+      "في الرفض schreiben: „Sie sind uns zu alt.“",
+
+    "Die Dateien nach einigen Monaten löschen.":
+      "حذف الملفات بعد عدة أشهر.",
+
+    "Finde den Fehler":
+      "اكتشف الخطأ",
+
+    "Tara hat Briefe vorbereitet. In jedem Brief ist eine Zeile nicht in Ordnung – tippe sie an.":
+      "حضّرت Tara رسائل. في كل رسالة هناك سطر غير صحيح – اضغط عليه.",
+
+    "Ich weiß, was in eine faire Absage gehört.":
+      "أعرف ما يجب أن يكون في رفض عادل.",
+
+    "Ich kann erklären, wie ein Betrieb mit Bewerberdaten umgehen muss.":
+      "أستطيع أن أشرح كيف يجب أن تتعامل الشركة مع بيانات المتقدمين.",
+
+    "Ich erkenne Gründe, die in einer Absage nicht stehen dürfen.":
+      "أستطيع أن أتعرف على الأسباب التي لا يجوز ذكرها في الرفض.",
+
+    "Fachbegriffe: Bewerbung & Auswahl":
+      "مصطلحات: Bewerbung (التقديم على وظيفة) & Auswahl (الاختيار)",
+
+    "Lernkarten Bewerbung & Auswahl":
+      "بطاقات تعليمية حول Bewerbung & Auswahl",
+
+    "Bewerbungsmappe":
+      "Bewerbungsmappe",
+
+    "Anschreiben, Lebenslauf, Zeugnisse und Nachweise – heute meist als eine PDF-Datei.":
+      "Anschreiben، Lebenslauf، Zeugnisse und Nachweise – غالبًا اليوم في ملف PDF واحد.",
+
+    "Der Brief in der Bewerbung: Warum diese Stelle? Warum passe ich?":
+      "الرسالة في Bewerbung: لماذا هذه Stelle؟ لماذا أنا مناسب؟",
+
+    "Tabellarisch, lückenlos und aktuell: Daten, Schule, Praktika, Kenntnisse.":
+      "بشكل جدولي، بدون فجوات وحديث: بيانات، مدرسة، Praktika، مهارات.",
+
+    "Bewerbungen formal und inhaltlich prüfen und auf den A-, B- oder C-Stapel legen.":
+      "فحص Bewerbungen من الناحية الشكلية والمحتوى ووضعها على كومة A أو B أو C.",
+
+    "A-, B-, C-Stapel":
+      "A-، B-، C-Stapel",
+
+    "A: einladen · B: Reserve · C: Absage, weil eine Muss-Anforderung fehlt.":
+      "A: دعوة · B: احتياطي · C: رفض، لأن هناك متطلبًا أساسيًا مفقودًا.",
+
+    "Zufriedenheitsformel":
+      "Zufriedenheitsformel (صيغة الرضا)",
+
+    "Der Code im Zeugnis: „stets zu unserer vollsten Zufriedenheit“ = sehr gut, „zu unserer Zufriedenheit“ = ausreichend.":
+      "الرمز في Arbeitszeugnis: „stets zu unserer vollsten Zufriedenheit“ = ممتاز، „zu unserer Zufriedenheit“ = مقبول.",
+
+    "Vorstellungsgespräch":
+      "Vorstellungsgespräch (مقابلة العمل)",
+
+    "Begrüßung, Vorstellung, Fragen an die Bewerberin, Infos und Fragen der Bewerberin, Abschluss.":
+      "الترحيب، التعريف بالنفس، أسئلة إلى المتقدمة، معلومات وأسئلة من المتقدمة، الختام.",
+
+    "Unzulässige Frage":
+      "سؤال غير مسموح",
+
+    "Frage ohne Bezug zur Stelle, z. B. nach Schwangerschaft, Religion, Partei oder Gewerkschaft.":
+      "سؤال ليس له علاقة بالوظيفة، مثل سؤال عن الحمل، الدين، الحزب أو النقابة.",
+
+    "Recht zur Lüge":
+      "حق الكذب",
+
+    "Bei einer unzulässigen Frage muss man nicht ehrlich antworten.":
+      "عند سؤال غير مسموح، لا يجب أن يجيب الشخص بصدق.",
+
+    "AGG":
+      "AGG",
+
+    "Allgemeines Gleichbehandlungsgesetz: schützt vor Benachteiligung wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität.":
+      "قانون المعاملة المتساوية العام (AGG): يحمي من التمييز بسبب الأصل أو الجنس أو الدين أو الإعاقة أو العمر أو الهوية الجنسية.",
+
+    "Schriftliche Aufgaben zu Wissen und Logik.":
+      "مهام كتابية حول المعرفة والمنطق.",
+
+    "Auswahltag mit Gruppenaufgaben und Rollenspielen, eher in großen Firmen.":
+      "يوم الاختيار مع مهام جماعية ولعب أدوار، غالبًا في الشركات الكبيرة.",
+
+    "Bewertungstabelle":
+      "جدول التقييم",
+
+    "Gewicht × Punkte für jedes Kriterium, dann addieren – die höchste Summe gewinnt.":
+      "الوزن × النقاط لكل معيار، ثم نجمع – المجموع الأعلى يفوز.",
+
+    "Datenschutz bei Bewerbungen":
+      "حماية البيانات في التقديمات",
+
+    "Nur für die Auswahl, nur für die Entscheider; nach der Absage Unterlagen zurück und Dateien löschen.":
+      "فقط للاختيار، فقط للمسؤولين عن القرار؛ بعد الرفض تُعاد المستندات وتُحذف الملفات."
 
 } });
 

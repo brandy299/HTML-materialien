@@ -131,6 +131,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 - [ ] **Impressum** – Pflicht bei eigener Domain; Angaben muss die Lehrkraft liefern. Im Footer verlinken.
 - [x] Google Fonts lokal eingebunden (01.10.2026). Rücksprung-Anleitung: `docs/ROLLBACK.md`.
 - [ ] Übungspaket 3 (PBP) wurde nie geliefert.
+- [ ] **PBP Teil 2 „Bewerbung & Auswahl“ (LS 2.3, 19.10.2026)** ohne Arbeitsblatt nach Standard-Lehrplan gebaut (Ordner `auswahl` in `pbp-bewerbung`: Bewerbungsmappe, Vorauswahl A/B/C, Zeugnissprache/Zufriedenheitsformel, Vorstellungsgespräch + AGG/„Recht zur Lüge“, gewichtete Bewertungstabelle, Zusage/Absage + Datenschutz, Lernkarten). Lehrkraft soll Inhalte gegen den eigenen Unterricht prüfen; Arabisch (320 neue Texte) im Prüfbogen Teil 2.
 - [ ] Endlos-Training gibt es für Personalbedarf und Zeitformen. Weitere Generatoren denkbar (z. B. Bezugskalkulation mit zufälligen Preisen – Kommazahlen gibt es jetzt).
 - [ ] Englisch: Wenn der Content-Agent Present Perfect / Past Progressive / will-Future liefert, diese in `tenses` des Trainings aufnehmen (der Agent darf das selbst).
 - [ ] Word-Simulation: zweiter Fall als Transfer (z. B. Kunststoffwerke-Brief), Blocksatz-Aufgabe und

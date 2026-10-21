@@ -99,7 +99,36 @@ UNITS.forEach((u, ui) => {
           if (!str(q.e)) err(E, `Frage ${i + 1}: Erklärung (e) fehlt`);
         });
         break;
-      default: err(E, `Typ „${ex.type}“ unbekannt (match, cloze, order, spot, sort, quiz)`);
+      case "find": {
+        if (!u.plate) return err(E, "find braucht ein Tafelbild (plate) an der Tafel");
+        const T = ex.find && ex.find.targets;
+        if (!Array.isArray(T) || T.length < 3) return err(E, "find.targets braucht mindestens 3 Gegenstände");
+        const seen = new Set();
+        T.forEach((t, i) => {
+          if (!str(t.w) || !str(t.de)) err(E, `Ziel ${i + 1}: w (English) und de (Deutsch) nötig`);
+          if (seen.has(String(t.w).toLowerCase())) err(E, `Ziel ${i + 1}: „${t.w}“ doppelt`); seen.add(String(t.w).toLowerCase());
+          if (!Array.isArray(t.spots) || !t.spots.length) return err(E, `Ziel ${i + 1} (${t.w}): spots [[x%, y%, Radius%], …] nötig`);
+          t.spots.forEach((sp) => { if (!Array.isArray(sp) || sp.length !== 3 || sp.some((v) => typeof v !== "number") || sp[0] < 0 || sp[0] > 100 || sp[1] < 0 || sp[1] > 100 || sp[2] < 3 || sp[2] > 30) err(E, `Ziel ${i + 1} (${t.w}): spot [x 0–100, y 0–100, Radius 3–30 (% der Bildbreite)] erwartet`); });
+        });
+        /* Überlappung: Die App wertet einen Tipp für den Gegenstand, dessen Mitte (relativ zum Radius) am nächsten liegt.
+           Fehler nur, wenn zwei verschiedene Gegenstände (fast) dieselbe Mitte haben – dann ist der Tipp nicht eindeutig. */
+        T.forEach((a, ia) => (a.spots || []).forEach((sa) => T.forEach((b, ib) => { if (ib <= ia) return; (b.spots || []).forEach((sb) => {
+          if (Math.hypot(sa[0] - sb[0], (sa[1] - sb[1]) * 2 / 3) < 3) err(E, `„${a.w}“ und „${b.w}“ haben fast dieselbe Mitte – Trefferflächen trennen`);
+        }); })));
+        break;
+      }
+      case "memory": {
+        if (!Array.isArray(ex.pairs) || ex.pairs.length < 4 || ex.pairs.length > 8) return err(E, "memory braucht 4–8 Paare");
+        const l = new Set(), r = new Set();
+        ex.pairs.forEach((p, i) => {
+          if (!Array.isArray(p) || p.length !== 2 || !p.every(str)) return err(E, `Paar ${i + 1} braucht [Englisch, Deutsch]`);
+          if (l.has(norm(p[0])) || r.has(norm(p[1]))) err(E, `Paar ${i + 1}: doppelt`);
+          if (norm(p[0]) === norm(p[1])) err(E, `Paar ${i + 1}: „${p[0]}“ steht auf beiden Karten gleich – lernt nichts, anderes Wort nehmen`);
+          l.add(norm(p[0])); r.add(norm(p[1]));
+        });
+        break;
+      }
+      default: err(E, `Typ „${ex.type}“ unbekannt (match, cloze, order, spot, sort, quiz, find, memory)`);
     }
   });
   if ((u.exercises || []).length && !(u.exercises || []).some((e) => e.type === "quiz")) warn(W, "keine quiz-Übung am Ende");
