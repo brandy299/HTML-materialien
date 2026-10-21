@@ -1380,6 +1380,10 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
 /* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
 @media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }
 
+/* Dezente Untertitel im Erklärvideo (nur bei Videos mit Sprecherstimme) */
+.vid-cap { position: absolute; left: 50%; bottom: 58px; z-index: 22; transform: translateX(-50%); width: max-content; max-width: calc(100% - 28px); padding: 4px 10px; text-align: center; font: 500 12.5px/1.35 var(--grot); color: #fff; background: rgba(30, 30, 30, .55); pointer-events: none; }
+.vid-cap[hidden] { display: none; }
+
 </style>
 </head>
 <body>
@@ -20338,6 +20342,16 @@ window.LERNRAUM_I18N = {
       let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const muted = !!store.get("vidmute", false);
       inst.setMuted(muted);
+      /* Dezente Untertitel: der gesprochene Text (`voice:` je Szene) erscheint klein unten im Bild, solange er gesprochen wird */
+      const caps = info.scenes.filter((x) => x.voice).map((x) => ({ a: x.start + (x.type === "scene" ? 0.6 : 0.4), b: x.start + x.dur - 0.2, t: x.voice.replace(/<[^>]+>/g, "") }));
+      const cap = h(`<div class="vid-cap" aria-hidden="true" hidden></div>`);
+      inst.el.append(cap);
+      const showCap = (t) => {
+        const c = caps.find((x) => t >= x.a && t < x.b);
+        if (!c) { cap.hidden = true; return; }
+        if (cap.textContent !== c.t) cap.textContent = c.t;
+        cap.hidden = false;
+      };
       inst.seek(Math.min(2.6, inst.total - 0.1));
       ctl.hidden = false;
       inst.el.append(ctl); ctl.classList.add("over");                       // Steuerung liegt als Leiste im Bild (mehr Platz fürs Video)
@@ -20373,7 +20387,7 @@ window.LERNRAUM_I18N = {
       inst.on("state", (st) => {
         setPP(); showCtl();
         if (st === "end") markSeen();
-      }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
+      }).on("time", (t, total) => { showCap(t); ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
         .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
 
       /* Tippen ins Bild: links = Szene zurück, rechts = Szene vor, Mitte = Pause/Weiter */

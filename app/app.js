@@ -1209,6 +1209,16 @@
       let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const muted = !!store.get("vidmute", false);
       inst.setMuted(muted);
+      /* Dezente Untertitel: der gesprochene Text (`voice:` je Szene) erscheint klein unten im Bild, solange er gesprochen wird */
+      const caps = info.scenes.filter((x) => x.voice).map((x) => ({ a: x.start + (x.type === "scene" ? 0.6 : 0.4), b: x.start + x.dur - 0.2, t: x.voice.replace(/<[^>]+>/g, "") }));
+      const cap = h(`<div class="vid-cap" aria-hidden="true" hidden></div>`);
+      inst.el.append(cap);
+      const showCap = (t) => {
+        const c = caps.find((x) => t >= x.a && t < x.b);
+        if (!c) { cap.hidden = true; return; }
+        if (cap.textContent !== c.t) cap.textContent = c.t;
+        cap.hidden = false;
+      };
       inst.seek(Math.min(2.6, inst.total - 0.1));
       ctl.hidden = false;
       inst.el.append(ctl); ctl.classList.add("over");                       // Steuerung liegt als Leiste im Bild (mehr Platz fürs Video)
@@ -1244,7 +1254,7 @@
       inst.on("state", (st) => {
         setPP(); showCtl();
         if (st === "end") markSeen();
-      }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
+      }).on("time", (t, total) => { showCap(t); ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
         .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
 
       /* Tippen ins Bild: links = Szene zurück, rechts = Szene vor, Mitte = Pause/Weiter */
