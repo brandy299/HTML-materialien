@@ -1343,6 +1343,12 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
 .fold > summary::after { content: "+"; margin-left: 10px; font: 700 16px/1 var(--mono); }
 .fold[open] > summary::after { content: "\2212"; }
 
+/* Kurskarten auf dem Handy kompakter: kleineres Bild, Beschreibung auf 3 Zeilen gekürzt */
+@media (max-width: 520px) {
+  .topic-win .body > .art { max-height: 84px; margin-bottom: 4px; }
+  .topic-win:not(.exam-win) .body > .meta { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
 </style>
 </head>
 <body>
