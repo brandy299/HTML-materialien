@@ -1936,8 +1936,8 @@
 
     /* Word-Simulation: einen Brief wie in Word formatieren – geführt oder frei */
     word(step, ctx) {
-      /* Auf dem Handy ist die Simulation zu eng: Hinweis statt Simulator (Tablet/PC ab 700 px; step.phone = true erzwingt sie) */
-      if (window.innerWidth < 700 && !step.phone) {
+      /* Nur auf winzigen Bildschirmen (< 340 px) Hinweis statt Simulator; ab Handybreite läuft die Simulation (step.phone = true erzwingt sie immer) */
+      if (window.innerWidth < 340 && !step.phone) {
         const note = h(`<div class="win"><div class="bar"><span class="d"></span>${tr("Das übst du am PC")}</div>
           <div class="body"><p>${tr("Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.")}</p></div></div>`);
         ctx.body.append(note);

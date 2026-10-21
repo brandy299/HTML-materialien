@@ -1349,6 +1349,34 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
   .topic-win:not(.exam-win) .body > .meta { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 }
 
+/* ── Simulatoren: Politur für kleine Bildschirme und Tastatur ── */
+.sim button:focus-visible, .sim input:focus-visible, .sim textarea:focus-visible { outline: 2px solid var(--sim-blue); outline-offset: -2px; }
+@media (max-height: 720px) {
+  .sim .sim-lbl { display: none; }
+  .sim .sim-groups { padding-top: 4px; padding-bottom: 4px; }
+  .sim-msg { margin-top: 6px; padding: 6px 8px; }
+  .ppt-thumbs { padding: 6px; }
+  .ppt-th { width: 92px; }
+  .ppt-stage { padding: 8px; gap: 4px; }
+  .wn-status { display: none; }
+  .wn-title, .wn-wb { height: 34px; }
+  .wn-b { min-height: 40px; }
+  .wn-nav { padding: 2px 6px; }
+  .wn-quick { padding: 2px 6px; }
+  .wn-q { min-height: 36px; }
+}
+@media (max-height: 640px) {
+  .ppt-info { display: none; }
+  .ppt-th { width: 76px; }
+  .xl-keys { padding: 3px 8px; }
+  .xl-key { min-height: 36px; }
+}
+
+/* Meldungen der Simulatoren schweben über der Arbeitsfläche (kein Springen des Layouts); Antippen schließt sie */
+.sim.ppt, .sim.xls, .sim.win { position: relative; }
+#ppOut, #xlOut, #wnOut { position: relative; height: 0; z-index: 30; }
+#ppOut .sim-msg, #xlOut .sim-msg, #wnOut .sim-msg { position: absolute; left: 8px; right: 8px; top: 6px; margin: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .25); cursor: pointer; }
+
 </style>
 </head>
 <body>
@@ -17331,8 +17359,13 @@ window.LERNRAUM_I18N = {
     const thumbs = node.querySelector("#ppThumbs");
     const popEl = node.querySelector("#ppPop");
 
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
     function simMsg(kind, html) {
       out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
     }
 
     /* ── Folien-Leiste und Bühne ───────────────────── */
@@ -17738,6 +17771,7 @@ window.LERNRAUM_I18N = {
       document.body.classList.remove("sim-on", "sim-ppt");
       timers.forEach(clearTimeout);
       cancelIdle();
+      clearTimeout(msgTimer);
       if (player) player.remove();
     };
   };
@@ -18159,7 +18193,14 @@ window.LERNRAUM_I18N = {
     </div>`);
     const q = (s) => node.querySelector(s);
     const out = q("#xlOut"), groups = q("#xlGroups"), popEl = q("#xlPop"), sheetEl = q("#xlSheet"), input = q("#xlInput"), keysEl = q("#xlKeys");
-    function simMsg(kind, html) { out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`; }
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
+    function simMsg(kind, html) {
+      out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
+    }
 
     /* ── Tabelle ───────────────────────────────────── */
     function paintSheet() {
@@ -18638,6 +18679,7 @@ window.LERNRAUM_I18N = {
       document.body.classList.remove("sim-on", "sim-xls");
       timers.forEach(clearTimeout);
       cancelIdle();
+      clearTimeout(msgTimer);
       document.removeEventListener("keydown", onKey);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
@@ -18743,7 +18785,14 @@ window.LERNRAUM_I18N = {
     </div>`);
     const q = (s) => node.querySelector(s);
     const out = q("#wnOut"), winEl = q("#wnWin"), iconsEl = q("#wnIcons"), startEl = q("#wnStart"), popEl = q("#wnPop"), barEl = q("#wnBar");
-    function simMsg(kind, html) { out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`; }
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
+    function simMsg(kind, html) {
+      out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
+    }
 
     const icon = (n) => {
       if (n.kind === "folder") return `<span class="wn-ico folder"><i></i></span>`;
@@ -18799,7 +18848,7 @@ window.LERNRAUM_I18N = {
       iconsEl.innerHTML = items.map((n) => `<button type="button" class="wn-dicon${selIds.has(n.id) && here === desk && win === "closed" ? " sel" : ""}" data-did="${n.id}">${n.id === "trash" ? `<span class="wn-ico trash"><i></i></span>` : n.id === "pc" ? `<span class="wn-ico pc"><i></i></span>` : icon(n)}<span>${esc(n.special ? n.name : shownName(n))}</span></button>`).join("");
       iconsEl.querySelectorAll("[data-did]").forEach((b) => b.onclick = () => {
         startOpen = false; pop = null;
-        const id = b.dataset.did, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 450;
+        const id = b.dataset.did, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 600;
         lastTap = { id, t: now };
         if (!dbl) { toast("› Doppelt tippen öffnet."); return; }
         if (id === "pc") openExplorer(root);
@@ -18940,7 +18989,7 @@ window.LERNRAUM_I18N = {
       if (b && !b.disabled) { act(b.dataset.act); return; }
       const it = e.target.closest("[data-id]");
       if (it) {
-        const id = +it.dataset.id, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 450;
+        const id = +it.dataset.id, now = Date.now(), dbl = lastTap.id === id && now - lastTap.t < 600;
         lastTap = { id, t: now };
         if (dbl) {
           const n = find(id);
@@ -21013,8 +21062,8 @@ window.LERNRAUM_I18N = {
 
     /* Word-Simulation: einen Brief wie in Word formatieren – geführt oder frei */
     word(step, ctx) {
-      /* Auf dem Handy ist die Simulation zu eng: Hinweis statt Simulator (Tablet/PC ab 700 px; step.phone = true erzwingt sie) */
-      if (window.innerWidth < 700 && !step.phone) {
+      /* Nur auf winzigen Bildschirmen (< 340 px) Hinweis statt Simulator; ab Handybreite läuft die Simulation (step.phone = true erzwingt sie immer) */
+      if (window.innerWidth < 340 && !step.phone) {
         const note = h(`<div class="win"><div class="bar"><span class="d"></span>${tr("Das übst du am PC")}</div>
           <div class="body"><p>${tr("Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.")}</p></div></div>`);
         ctx.body.append(note);
