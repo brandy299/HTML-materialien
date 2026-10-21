@@ -1287,5 +1287,33 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
   .topic-win:not(.exam-win) .body > .meta { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 }
 
+/* ── Simulatoren: Politur für kleine Bildschirme und Tastatur ── */
+.sim button:focus-visible, .sim input:focus-visible, .sim textarea:focus-visible { outline: 2px solid var(--sim-blue); outline-offset: -2px; }
+@media (max-height: 720px) {
+  .sim .sim-lbl { display: none; }
+  .sim .sim-groups { padding-top: 4px; padding-bottom: 4px; }
+  .sim-msg { margin-top: 6px; padding: 6px 8px; }
+  .ppt-thumbs { padding: 6px; }
+  .ppt-th { width: 92px; }
+  .ppt-stage { padding: 8px; gap: 4px; }
+  .wn-status { display: none; }
+  .wn-title, .wn-wb { height: 34px; }
+  .wn-b { min-height: 40px; }
+  .wn-nav { padding: 2px 6px; }
+  .wn-quick { padding: 2px 6px; }
+  .wn-q { min-height: 36px; }
+}
+@media (max-height: 640px) {
+  .ppt-info { display: none; }
+  .ppt-th { width: 76px; }
+  .xl-keys { padding: 3px 8px; }
+  .xl-key { min-height: 36px; }
+}
+
+/* Meldungen der Simulatoren schweben über der Arbeitsfläche (kein Springen des Layouts); Antippen schließt sie */
+.sim.ppt, .sim.xls, .sim.win { position: relative; }
+#ppOut, #xlOut, #wnOut { position: relative; height: 0; z-index: 30; }
+#ppOut .sim-msg, #xlOut .sim-msg, #wnOut .sim-msg { position: absolute; left: 8px; right: 8px; top: 6px; margin: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .25); cursor: pointer; }
+
 /* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
 @media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }

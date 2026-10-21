@@ -412,7 +412,14 @@
     </div>`);
     const q = (s) => node.querySelector(s);
     const out = q("#xlOut"), groups = q("#xlGroups"), popEl = q("#xlPop"), sheetEl = q("#xlSheet"), input = q("#xlInput"), keysEl = q("#xlKeys");
-    function simMsg(kind, html) { out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`; }
+    out.setAttribute("aria-live", "polite");
+    let msgTimer = null;
+    out.onclick = () => { clearTimeout(msgTimer); out.innerHTML = ""; };
+    function simMsg(kind, html) {
+      out.innerHTML = `<div class="sim-msg ${kind}"><span class="ico">${kind === "ok" ? "✓" : kind === "no" ? "✗" : "i"}</span><span>${html}</span></div>`;
+      clearTimeout(msgTimer);
+      if (kind !== "no") msgTimer = setTimeout(() => { out.innerHTML = ""; }, kind === "ok" ? 3500 : 7000);
+    }
 
     /* ── Tabelle ───────────────────────────────────── */
     function paintSheet() {
@@ -891,6 +898,7 @@
       document.body.classList.remove("sim-on", "sim-xls");
       timers.forEach(clearTimeout);
       cancelIdle();
+      clearTimeout(msgTimer);
       document.removeEventListener("keydown", onKey);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
