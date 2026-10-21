@@ -704,6 +704,7 @@
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
       ${backupCard()}
+      ${practiceCard(courses)}
       <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
       <div class="list" id="sres" hidden></div>
       <div id="list"></div>
@@ -1209,6 +1210,16 @@
       let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const muted = !!store.get("vidmute", false);
       inst.setMuted(muted);
+      /* Dezente Untertitel: der gesprochene Text (`voice:` je Szene) erscheint klein unten im Bild, solange er gesprochen wird */
+      const caps = info.scenes.filter((x) => x.voice).map((x) => ({ a: x.start + (x.type === "scene" ? 0.6 : 0.4), b: x.start + x.dur - 0.2, t: x.voice.replace(/<[^>]+>/g, "") }));
+      const cap = h(`<div class="vid-cap" aria-hidden="true" hidden></div>`);
+      inst.el.append(cap);
+      const showCap = (t) => {
+        const c = caps.find((x) => t >= x.a && t < x.b);
+        if (!c) { cap.hidden = true; return; }
+        if (cap.textContent !== c.t) cap.textContent = c.t;
+        cap.hidden = false;
+      };
       inst.seek(Math.min(2.6, inst.total - 0.1));
       ctl.hidden = false;
       inst.el.append(ctl); ctl.classList.add("over");                       // Steuerung liegt als Leiste im Bild (mehr Platz fürs Video)
@@ -1244,7 +1255,7 @@
       inst.on("state", (st) => {
         setPP(); showCtl();
         if (st === "end") markSeen();
-      }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
+      }).on("time", (t, total) => { showCap(t); ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
         .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
 
       /* Tippen ins Bild: links = Szene zurück, rechts = Szene vor, Mitte = Pause/Weiter */
@@ -3469,6 +3480,25 @@
     v.querySelector("#readBtn").onclick = () => check(inp.value);
     v.querySelector("#fileIn").onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then((t) => { inp.value = t; check(t); }); };
     return v;
+  }
+
+  /* ── „Nochmal üben“: Schritte, die nicht ganz richtig waren (Quiz, Zuordnen, Rechnen …), die schwächsten zuerst ── */
+  function practiceCard(subjects) {
+    const all = progress.all(), rows = [];
+    for (const s of subjects) for (const t of courseTopics(s)) {
+      const p = all[s.id + "/" + t.id];
+      if (!p || t.exam || t.drill) continue;
+      t.steps.forEach((st, k) => {
+        const d = (p.done || {})[k];
+        if (d && typeof d === "object" && d.t > 0 && d.c < d.t) rows.push({ s, t, st, k, c: d.c, n: d.t, ts: p.ts || 0 });
+      });
+    }
+    if (!rows.length) return "";
+    rows.sort((a, b) => a.c / a.n - b.c / b.n || a.ts - b.ts);
+    return `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Nochmal üben")}</div>
+      <div class="list" style="border:0">${rows.slice(0, 3).map((r) => `<a class="list-row" href="#/f/${r.s.id}/${r.t.id}/${r.k}" style="min-height:56px">
+        <span style="line-height:1.25"><b>${esc(r.st.title || r.t.title)}</b><br><small style="font:400 12px/1.3 var(--mono);color:var(--ink-2)">${esc(r.t.title)}</small></span>
+        <span class="v">${tr("{c} von {n} richtig", { c: r.c, n: r.n })}</span></a>`).join("")}</div></div>`;
   }
 
   /* ── Erinnerung ans Sichern: Karte auf der Startseite, wenn Fortschritt da ist und der letzte Lerncode über 7 Tage her ist ── */

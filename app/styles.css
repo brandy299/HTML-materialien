@@ -1317,3 +1317,7 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
 
 /* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
 @media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }
+
+/* Dezente Untertitel im Erklärvideo (nur bei Videos mit Sprecherstimme) */
+.vid-cap { position: absolute; left: 50%; bottom: 58px; z-index: 22; transform: translateX(-50%); width: max-content; max-width: calc(100% - 28px); padding: 4px 10px; text-align: center; font: 500 12.5px/1.35 var(--grot); color: #fff; background: rgba(30, 30, 30, .55); pointer-events: none; }
+.vid-cap[hidden] { display: none; }

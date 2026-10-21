@@ -1380,6 +1380,10 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
 /* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
 @media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }
 
+/* Dezente Untertitel im Erklärvideo (nur bei Videos mit Sprecherstimme) */
+.vid-cap { position: absolute; left: 50%; bottom: 58px; z-index: 22; transform: translateX(-50%); width: max-content; max-width: calc(100% - 28px); padding: 4px 10px; text-align: center; font: 500 12.5px/1.35 var(--grot); color: #fff; background: rgba(30, 30, 30, .55); pointer-events: none; }
+.vid-cap[hidden] { display: none; }
+
 </style>
 </head>
 <body>
@@ -16899,7 +16903,7 @@ window.LERNRAUM_I18N = {
     "∞ Aufgaben": "∞ tasks", "{a} gelöst · {b} perfekt · Serie {c}": "{a} solved · {b} perfect · streak {c}",
     "Immer neue Aufgaben – üben, bis es sitzt.": "Always new tasks – practise until you’ve got it.",
     "bald": "soon", "✓ erledigt": "✓ done", "ca. {m} min": "approx. {m} min", "{a}/{b} Schritte": "{a}/{b} steps", "{p} % richtig": "{p} % correct",
-    "{n} Schritte": "{n} steps", "Lernpfad": "Learning path", "Thema zurücksetzen": "Reset topic", "Nochmal durchgehen": "Go through again",
+    "Lernpfad": "Learning path", "Thema zurücksetzen": "Reset topic", "Nochmal durchgehen": "Go through again",
     "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "Really delete everything in this topic? Tap again.", "Thema zurückgesetzt": "Topic reset",
 
     "Pfad": "Path", "Vorherige Aufgabe": "Previous task", "Gespeichert": "Saved",
@@ -16953,7 +16957,7 @@ window.LERNRAUM_I18N = {
 
     "Min. empfohlen": "min. recommended", "Aufgaben": "Tasks", "So läuft es ab": "How it works", "bitte lesen": "please read", "Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.": "Before every task, 2–3 slides explain what it is about and how to approach it.", "Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.": "After every task you immediately see what was right. The ? button helps with tips, summary and the explanation.", "Es gibt keinen Timer. Plane etwa {m} Minuten ein.": "There is no timer. Plan about {m} minutes.", "Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.": "At the end you get points, a grade and the model answers – like in the real exam.", "Hilfsmittel": "Allowed aids", "Ausgangssituation": "Starting situation", "für alle Aufgaben": "for all tasks", "Ergebnis ansehen": "View result", "Neu schreiben": "Write again", "Ergebnis löschen und neu starten?": "Delete result and start again?", "Probeklausur starten": "Start the practice exam",
 
-    "Zurück": "Back", "Schon benutzt? Lerncode einlesen": "Used it before? Enter your code", "Fortschritt sichern (Lerncode)": "Back up progress (code)", "Lerncode": "Code", "Fortschritt sichern.": "Back up your progress.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "Your progress is only stored on this phone. With the code you can back it up or move it to a new phone. No account needed.", "Lerncode erstellen": "Create code", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "Keep the code safe, for example as a message to yourself.", "Kopieren": "Copy", "Als Datei speichern": "Save as file", "Lerncode einlesen": "Enter code", "Code hier einfügen": "Paste code here", "Einlesen": "Read", "Datei auswählen": "Choose file", "Der Code konnte nicht erstellt werden.": "The code could not be created.", "Dieser Browser kann den Code nicht lesen.": "This browser cannot read the code.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "The code is not valid. Please copy it completely.", "Gefunden:": "Found:", "{n} Themen mit Fortschritt": "{n} topics with progress", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "Your progress is merged with the code. Nothing gets lost.", "Übernehmen": "Apply", "Fortschritt übernommen": "Progress restored", "Fortschritt sichern": "Back up progress", "Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.": "Your progress is only stored on this phone. Copy the code and send it to yourself, then nothing gets lost.", "Code kopieren": "Copy code", "Code kopiert": "Code copied", "App auf den Startbildschirm": "App on your home screen", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "Start with one tap, and your progress stays stored more reliably.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "Tap “Share” at the bottom, then “Add to Home Screen”.", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "Tap Install – or open the browser menu (⋮) and choose “Add to Home screen”.", "Installieren": "Install", "Später": "Later", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "Open the browser menu (⋮) and choose “Add to Home screen”.",
+    "Zurück": "Back", "Schon benutzt? Lerncode einlesen": "Used it before? Enter your code", "Fortschritt sichern (Lerncode)": "Back up progress (code)", "Lerncode": "Code", "Fortschritt sichern.": "Back up your progress.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "Your progress is only stored on this phone. With the code you can back it up or move it to a new phone. No account needed.", "Lerncode erstellen": "Create code", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "Keep the code safe, for example as a message to yourself.", "Kopieren": "Copy", "Als Datei speichern": "Save as file", "Lerncode einlesen": "Enter code", "Code hier einfügen": "Paste code here", "Einlesen": "Read", "Datei auswählen": "Choose file", "Der Code konnte nicht erstellt werden.": "The code could not be created.", "Dieser Browser kann den Code nicht lesen.": "This browser cannot read the code.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "The code is not valid. Please copy it completely.", "Gefunden:": "Found:", "{n} Themen mit Fortschritt": "{n} topics with progress", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "Your progress is merged with the code. Nothing gets lost.", "Übernehmen": "Apply", "Fortschritt übernommen": "Progress restored", "Fortschritt sichern": "Back up progress", "Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.": "Your progress is only stored on this phone. Copy the code and send it to yourself, then nothing gets lost.", "Nochmal üben": "Practise again", "{n} Schritte": "{n} steps", "{c} von {n} richtig": "{c} of {n} correct", "Code kopieren": "Copy code", "Code kopiert": "Code copied", "App auf den Startbildschirm": "App on your home screen", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "Start with one tap, and your progress stays stored more reliably.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "Tap “Share” at the bottom, then “Add to Home Screen”.", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "Tap Install – or open the browser menu (⋮) and choose “Add to Home screen”.", "Installieren": "Install", "Später": "Later", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "Open the browser menu (⋮) and choose “Add to Home screen”.",
 
     howto: {
       slides: "Tap ‹ › or swipe left to go to the next slide. Read every slide carefully – the tasks afterwards build on it.",
@@ -17023,7 +17027,7 @@ window.LERNRAUM_I18N = {
     "∞ Aufgaben": "∞ مهام", "{a} gelöst · {b} perfekt · Serie {c}": "{a} محلولة · {b} ممتازة · سلسلة {c}",
     "Immer neue Aufgaben – üben, bis es sitzt.": "مهام جديدة دائمًا – تدرّب حتى تتقن.",
     "bald": "قريبًا", "✓ erledigt": "✓ تم", "ca. {m} min": "حوالي {m} دقيقة", "{a}/{b} Schritte": "{a}/{b} خطوات", "{p} % richtig": "{p}٪ صحيح",
-    "{n} Schritte": "{n} خطوات", "Lernpfad": "مسار التعلّم", "Thema zurücksetzen": "إعادة تعيين الموضوع", "Nochmal durchgehen": "راجع من جديد",
+    "Lernpfad": "مسار التعلّم", "Thema zurücksetzen": "إعادة تعيين الموضوع", "Nochmal durchgehen": "راجع من جديد",
     "Wirklich alles in diesem Thema löschen? Nochmal tippen.": "هل تريد حقًا حذف كل شيء في هذا الموضوع؟ اضغط مرة أخرى.", "Thema zurückgesetzt": "تمت إعادة تعيين الموضوع",
 
     "Pfad": "المسار", "Vorherige Aufgabe": "المهمة السابقة", "Gespeichert": "تم الحفظ",
@@ -17077,7 +17081,7 @@ window.LERNRAUM_I18N = {
 
     "Min. empfohlen": "دقيقة موصى بها", "Aufgaben": "المهام", "So läuft es ab": "كيف تسير الأمور", "bitte lesen": "يرجى القراءة", "Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.": "قبل كل مهمة، تشرح لك 2–3 شرائح ما الموضوع وكيف تحلّه.", "Nach jeder Aufgabe siehst du sofort, was richtig war. Der ?-Knopf hilft mit Tipps, Merkkasten und der Erklärung.": "بعد كل مهمة ترى فورًا ما هو الصحيح. زر ؟ يساعدك بالنصائح والملخّص والشرح.", "Es gibt keinen Timer. Plane etwa {m} Minuten ein.": "لا يوجد مؤقّت. خصّص حوالي {m} دقيقة.", "Am Ende bekommst du Punkte, Note und Erwartungshorizont – wie in der echten Klausur.": "في النهاية تحصل على النقاط والدرجة والإجابات النموذجية – كما في الامتحان الحقيقي.", "Hilfsmittel": "الوسائل المسموحة", "Ausgangssituation": "الوضع الأولي", "für alle Aufgaben": "لكل المهام", "Ergebnis ansehen": "عرض النتيجة", "Neu schreiben": "اكتب من جديد", "Ergebnis löschen und neu starten?": "حذف النتيجة والبدء من جديد؟", "Probeklausur starten": "ابدأ الامتحان التجريبي",
 
-    "Zurück": "رجوع", "Schon benutzt? Lerncode einlesen": "استخدمت التطبيق من قبل؟ أدخل رمزك", "Fortschritt sichern (Lerncode)": "حفظ التقدّم (رمز)", "Lerncode": "الرمز", "Fortschritt sichern.": "احفظ تقدّمك.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "تقدّمك محفوظ على هذا الهاتف فقط. بالرمز يمكنك حفظه أو نقله إلى هاتف جديد. لا حاجة إلى حساب.", "Lerncode erstellen": "إنشاء رمز", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "احتفظ بالرمز جيدًا، مثلًا كرسالة إلى نفسك.", "Kopieren": "نسخ", "Als Datei speichern": "حفظ كملف", "Lerncode einlesen": "إدخال الرمز", "Code hier einfügen": "الصق الرمز هنا", "Einlesen": "قراءة", "Datei auswählen": "اختيار ملف", "Der Code konnte nicht erstellt werden.": "تعذّر إنشاء الرمز.", "Dieser Browser kann den Code nicht lesen.": "هذا المتصفح لا يستطيع قراءة الرمز.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "الرمز غير صالح. يرجى نسخه كاملًا.", "Gefunden:": "تم العثور على:", "{n} Themen mit Fortschritt": "{n} مواضيع مع تقدّم", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "سيُدمج تقدّمك مع الرمز. لن يضيع شيء.", "Übernehmen": "تطبيق", "Fortschritt übernommen": "تمت استعادة التقدّم", "Fortschritt sichern": "حفظ التقدّم", "Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.": "تقدّمك محفوظ على هذا الهاتف فقط. انسخ الرمز وأرسله لنفسك، فلا يضيع شيء.", "Code kopieren": "نسخ الرمز", "Code kopiert": "تم نسخ الرمز", "App auf den Startbildschirm": "التطبيق على الشاشة الرئيسية", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "تبدأ بنقرة واحدة ويبقى تقدّمك محفوظًا بشكل أكثر أمانًا.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "اضغط «مشاركة» في الأسفل ثم «إضافة إلى الشاشة الرئيسية».", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "اضغط «تثبيت» – أو افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».", "Installieren": "تثبيت", "Später": "لاحقًا", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».",
+    "Zurück": "رجوع", "Schon benutzt? Lerncode einlesen": "استخدمت التطبيق من قبل؟ أدخل رمزك", "Fortschritt sichern (Lerncode)": "حفظ التقدّم (رمز)", "Lerncode": "الرمز", "Fortschritt sichern.": "احفظ تقدّمك.", "Dein Fortschritt liegt nur auf diesem Handy. Mit dem Lerncode sicherst du ihn oder nimmst ihn auf ein neues Handy mit. Kein Konto nötig.": "تقدّمك محفوظ على هذا الهاتف فقط. بالرمز يمكنك حفظه أو نقله إلى هاتف جديد. لا حاجة إلى حساب.", "Lerncode erstellen": "إنشاء رمز", "Bewahre den Code gut auf, zum Beispiel als Nachricht an dich selbst.": "احتفظ بالرمز جيدًا، مثلًا كرسالة إلى نفسك.", "Kopieren": "نسخ", "Als Datei speichern": "حفظ كملف", "Lerncode einlesen": "إدخال الرمز", "Code hier einfügen": "الصق الرمز هنا", "Einlesen": "قراءة", "Datei auswählen": "اختيار ملف", "Der Code konnte nicht erstellt werden.": "تعذّر إنشاء الرمز.", "Dieser Browser kann den Code nicht lesen.": "هذا المتصفح لا يستطيع قراءة الرمز.", "Der Code ist ungültig. Kopiere ihn bitte vollständig.": "الرمز غير صالح. يرجى نسخه كاملًا.", "Gefunden:": "تم العثور على:", "{n} Themen mit Fortschritt": "{n} مواضيع مع تقدّم", "Dein Fortschritt wird mit dem Code zusammengeführt. Nichts geht verloren.": "سيُدمج تقدّمك مع الرمز. لن يضيع شيء.", "Übernehmen": "تطبيق", "Fortschritt übernommen": "تمت استعادة التقدّم", "Fortschritt sichern": "حفظ التقدّم", "Dein Fortschritt liegt nur auf diesem Handy. Kopiere den Lerncode und schicke ihn dir selbst, dann geht nichts verloren.": "تقدّمك محفوظ على هذا الهاتف فقط. انسخ الرمز وأرسله لنفسك، فلا يضيع شيء.", "Nochmal üben": "تمرّن مرة أخرى", "{n} Schritte": "{n} خطوات", "{c} von {n} richtig": "{c} من {n} صحيحة", "Code kopieren": "نسخ الرمز", "Code kopiert": "تم نسخ الرمز", "App auf den Startbildschirm": "التطبيق على الشاشة الرئيسية", "So startest du mit einem Tipp und dein Fortschritt bleibt zuverlässiger gespeichert.": "تبدأ بنقرة واحدة ويبقى تقدّمك محفوظًا بشكل أكثر أمانًا.", "Tippe unten auf „Teilen“ und dann auf „Zum Home-Bildschirm“.": "اضغط «مشاركة» في الأسفل ثم «إضافة إلى الشاشة الرئيسية».", "Tippe auf Installieren – oder im Browser-Menü (⋮) auf „Zum Startbildschirm hinzufügen“.": "اضغط «تثبيت» – أو افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».", "Installieren": "تثبيت", "Später": "لاحقًا", "Öffne das Browser-Menü (⋮) und wähle „Zum Startbildschirm hinzufügen“.": "افتح قائمة المتصفح (⋮) واختر «إضافة إلى الشاشة الرئيسية».",
 
     howto: {
       slides: "اضغط على ‹ › أو اسحب إلى اليسار للانتقال إلى الشريحة التالية. اقرأ كل شريحة بهدوء – المهام بعدها تعتمد عليها.",
@@ -19833,6 +19837,7 @@ window.LERNRAUM_I18N = {
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
       ${installCard(false)}
       ${backupCard()}
+      ${practiceCard(courses)}
       <input type="search" class="search-in" id="sq" placeholder="${esc(tr("Thema suchen …"))}" aria-label="${esc(tr("Thema suchen …"))}" autocomplete="off">
       <div class="list" id="sres" hidden></div>
       <div id="list"></div>
@@ -20338,6 +20343,16 @@ window.LERNRAUM_I18N = {
       let seen = false, started = false, noMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const muted = !!store.get("vidmute", false);
       inst.setMuted(muted);
+      /* Dezente Untertitel: der gesprochene Text (`voice:` je Szene) erscheint klein unten im Bild, solange er gesprochen wird */
+      const caps = info.scenes.filter((x) => x.voice).map((x) => ({ a: x.start + (x.type === "scene" ? 0.6 : 0.4), b: x.start + x.dur - 0.2, t: x.voice.replace(/<[^>]+>/g, "") }));
+      const cap = h(`<div class="vid-cap" aria-hidden="true" hidden></div>`);
+      inst.el.append(cap);
+      const showCap = (t) => {
+        const c = caps.find((x) => t >= x.a && t < x.b);
+        if (!c) { cap.hidden = true; return; }
+        if (cap.textContent !== c.t) cap.textContent = c.t;
+        cap.hidden = false;
+      };
       inst.seek(Math.min(2.6, inst.total - 0.1));
       ctl.hidden = false;
       inst.el.append(ctl); ctl.classList.add("over");                       // Steuerung liegt als Leiste im Bild (mehr Platz fürs Video)
@@ -20373,7 +20388,7 @@ window.LERNRAUM_I18N = {
       inst.on("state", (st) => {
         setPP(); showCtl();
         if (st === "end") markSeen();
-      }).on("time", (t, total) => { ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
+      }).on("time", (t, total) => { showCap(t); ctx.setProgress(t / total); if (t / total >= 0.9) markSeen(); })
         .on("audio-error", () => { toast("› " + tr("Kein Ton – das Video läuft ohne Musik.")); });
 
       /* Tippen ins Bild: links = Szene zurück, rechts = Szene vor, Mitte = Pause/Weiter */
@@ -22598,6 +22613,25 @@ window.LERNRAUM_I18N = {
     v.querySelector("#readBtn").onclick = () => check(inp.value);
     v.querySelector("#fileIn").onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then((t) => { inp.value = t; check(t); }); };
     return v;
+  }
+
+  /* ── „Nochmal üben“: Schritte, die nicht ganz richtig waren (Quiz, Zuordnen, Rechnen …), die schwächsten zuerst ── */
+  function practiceCard(subjects) {
+    const all = progress.all(), rows = [];
+    for (const s of subjects) for (const t of courseTopics(s)) {
+      const p = all[s.id + "/" + t.id];
+      if (!p || t.exam || t.drill) continue;
+      t.steps.forEach((st, k) => {
+        const d = (p.done || {})[k];
+        if (d && typeof d === "object" && d.t > 0 && d.c < d.t) rows.push({ s, t, st, k, c: d.c, n: d.t, ts: p.ts || 0 });
+      });
+    }
+    if (!rows.length) return "";
+    rows.sort((a, b) => a.c / a.n - b.c / b.n || a.ts - b.ts);
+    return `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Nochmal üben")}</div>
+      <div class="list" style="border:0">${rows.slice(0, 3).map((r) => `<a class="list-row" href="#/f/${r.s.id}/${r.t.id}/${r.k}" style="min-height:56px">
+        <span style="line-height:1.25"><b>${esc(r.st.title || r.t.title)}</b><br><small style="font:400 12px/1.3 var(--mono);color:var(--ink-2)">${esc(r.t.title)}</small></span>
+        <span class="v">${tr("{c} von {n} richtig", { c: r.c, n: r.n })}</span></a>`).join("")}</div></div>`;
   }
 
   /* ── Erinnerung ans Sichern: Karte auf der Startseite, wenn Fortschritt da ist und der letzte Lerncode über 7 Tage her ist ── */
