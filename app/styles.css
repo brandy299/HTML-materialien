@@ -1048,3 +1048,9 @@ body.vid-lock { overflow: hidden; }
 .intro-steps li::before { content: counter(st); grid-row: span 2; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--ink); background: var(--pink); font: 700 14px/1 var(--mono); }
 .intro-steps b { font: 800 16px/1.2 var(--grot); letter-spacing: -.02em; }
 .intro-steps span { font: 400 13px/1.45 var(--mono); color: var(--ink-2); }
+
+/* Einklappbare Einleitung (Probeklausur): offen beim ersten Besuch, danach zu */
+.fold > summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; list-style: none; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::after { content: "+"; margin-left: 10px; font: 700 16px/1 var(--mono); }
+.fold[open] > summary::after { content: "\2212"; }

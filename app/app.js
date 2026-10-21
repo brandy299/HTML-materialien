@@ -943,8 +943,8 @@
         <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
         <div class="stat"><div class="v">${tasks.length}</div><div class="k">${tr("Aufgaben")}</div></div>
       </div>
-      <div class="win" style="margin-top:22px">
-        <div class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></div>
+      <details class="win fold" style="margin-top:22px" ${started ? "" : "open"}>
+        <summary class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></summary>
         <div class="body merk" style="background:var(--paper)">
           <ul>
             <li>${tr("Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.")}</li>
@@ -954,7 +954,7 @@
             ${t.exam.tools ? `<li>${tr("Hilfsmittel")}: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
           </ul>
         </div>
-      </div>
+      </details>
       ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Ausgangssituation")}<span class="r">${tr("für alle Aufgaben")}</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
       <div class="win" style="margin-top:22px">
         <div class="bar"><span class="d"></span>${tr("Aufgaben")}<span class="r">${examPoints(t)} P</span></div>
