@@ -771,6 +771,16 @@
   }
 
   /* ── Fach / Kurs (bei mehreren Kursen) ──────────────────── */
+  /* Karte „Weiter mit …“ ganz oben im Kurs, sobald dort schon etwas gelernt wurde (kein Suchen nach dem Stand) */
+  function courseResume(s) {
+    const r = resumeTarget([s]);
+    if (!r || r.fresh) return "";
+    const i = nextStepIndex(r.s, r.t);
+    return `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Weiter mit:")}</div>
+      <div class="body"><p class="say" style="margin:0 0 4px;font-weight:800">${esc(r.t.title)}</p>
+        <p class="hint" style="margin:0 0 12px">${tr("Schritt {a} von {b}", { a: i + 1, b: r.t.steps.length })}</p>
+        <a class="btn block" href="#/f/${r.s.id}/${r.t.id}/${i}">${tr("Weitermachen")} ${ICON.arrow}</a></div></div>`;
+  }
   function viewSubject(sid) {
     const s = findSubject(sid);
     if (!s || SINGLE) { location.hash = "#/"; return h("<div></div>"); }
@@ -781,6 +791,7 @@
         ${isTeacher() ? `<button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button>` : ""}</div>
       <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       ${artImg(s, "big")}
+      ${courseResume(s)}
       <div id="list"></div>
     </main>`);
     const qb = v.querySelector("#qrBtn"); if (qb) qb.onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");

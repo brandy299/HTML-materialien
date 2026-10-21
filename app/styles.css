@@ -1286,3 +1286,6 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
   .topic-win .body > .art { max-height: 84px; margin-bottom: 4px; }
   .topic-win:not(.exam-win) .body > .meta { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 }
+
+/* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
+@media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }
