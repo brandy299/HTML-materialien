@@ -60,7 +60,7 @@
 
 </style>
   <style>
-/* ============================================================
+/* =====================================================
    LERNRAUM — Stil „Typesafe"
    Papierweiß, Tinte, Pink. Fenster mit Titelleiste, harte Schatten,
    Terminal-Rückmeldungen, gerasterte Pixelwolken.
@@ -604,8 +604,13 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
   margin: 26px calc(var(--gutter) * -1) 0; padding: 2px var(--gutter) 6px;
 }
 .fach-chips::-webkit-scrollbar { display: none; }
-.fach-chips .tag-box { flex: none; height: 38px; padding: 0 14px; box-shadow: 2px 2px 0 var(--ink); }
+.fach-chips .tag-box { flex: none; height: 44px; padding: 0 14px; box-shadow: 2px 2px 0 var(--ink); }
 .fach-chips .tag-box:active { background: var(--pink-fill); }
+/* Startseite auf dem Handy: kleineres Titelbild, damit Fächer und Kurse früher sichtbar sind */
+@media (max-width: 520px) {
+  .hero .big-art { max-width: 190px; margin-top: 14px; }
+  .hero .display { margin-top: 22px; }
+}
 .fach-head { scroll-margin-top: 16px; }
 .mat-win .bar .d { background: var(--paper); }
 .mat-list { box-shadow: var(--shadow); border-width: 2px; }
@@ -1331,6 +1336,12 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
   .wn-win { inset: 24px 8vw 12px; border: 1px solid #aaa; box-shadow: 0 12px 40px rgba(0, 0, 0, .45); border-radius: 8px; overflow: hidden; }
   .wn-pop { left: 8vw; right: 8vw; }
 }
+=======
+/* Einklappbare Einleitung (Probeklausur): offen beim ersten Besuch, danach zu */
+.fold > summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; list-style: none; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::after { content: "+"; margin-left: 10px; font: 700 16px/1 var(--mono); }
+.fold[open] > summary::after { content: "\2212"; }
 
 </style>
 </head>
@@ -20009,8 +20020,8 @@ window.LERNRAUM_I18N = {
         <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
         <div class="stat"><div class="v">${tasks.length}</div><div class="k">${tr("Aufgaben")}</div></div>
       </div>
-      <div class="win" style="margin-top:22px">
-        <div class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></div>
+      <details class="win fold" style="margin-top:22px" ${started ? "" : "open"}>
+        <summary class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></summary>
         <div class="body merk" style="background:var(--paper)">
           <ul>
             <li>${tr("Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.")}</li>
@@ -20020,7 +20031,7 @@ window.LERNRAUM_I18N = {
             ${t.exam.tools ? `<li>${tr("Hilfsmittel")}: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
           </ul>
         </div>
-      </div>
+      </details>
       ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Ausgangssituation")}<span class="r">${tr("für alle Aufgaben")}</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
       <div class="win" style="margin-top:22px">
         <div class="bar"><span class="d"></span>${tr("Aufgaben")}<span class="r">${examPoints(t)} P</span></div>
