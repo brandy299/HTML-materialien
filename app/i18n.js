@@ -12,7 +12,7 @@ window.LERNRAUM_I18N = {
   en: {
     "Start": "Home", "Karten": "Cards", "Hilfe": "Help", "Ich": "Me",
     "Präsentation": "Slides", "Quiz": "Quiz", "Zuordnen": "Sort", "Lückentext": "Fill the gaps", "Rechnen": "Calculate",
-    "Lernkarten": "Flashcards", "Kann-Liste": "Checklist", "Material": "Material", "Antwortsatz": "Answer sentence", "Word üben": "Word practice", "PowerPoint üben": "PowerPoint practice", "Die Simulation konnte nicht geladen werden.": "The simulation could not be loaded.",
+    "Lernkarten": "Flashcards", "Kann-Liste": "Checklist", "Material": "Material", "Antwortsatz": "Answer sentence", "Word üben": "Word practice", "PowerPoint üben": "PowerPoint practice", "Excel üben": "Excel practice", "Windows üben": "Windows practice", "Die Simulation konnte nicht geladen werden.": "The simulation could not be loaded.",
     "{n} Folien": "{n} slides", "{n} Frage": "{n} question", "{n} Fragen": "{n} questions", "{n} Karten": "{n} cards",
     "{n} Lücken": "{n} gaps", "{n} Felder": "{n} fields", "{n} Aussagen": "{n} statements", "{n} Bausteine": "{n} blocks",
     "öffnet sich neu": "opens in a new tab",
@@ -125,7 +125,9 @@ window.LERNRAUM_I18N = {
       sentence: "Tap a gap and choose the matching block below. Step by step you build a complete answer sentence.",
       spot: "Read the letter excerpt, tap the line with the mistake, then tap “Check”. Afterwards you see why.",
       word: "Tap a line – drag the blue handles to extend the selection. Format with the toolbar, add empty lines with Enter (delete: ⌫), shortcuts: Ctrl+A/B/R. “Check” tests your task.",
-      ppt: "Tap a field on the slide to select it (tapping again edits the text). Switch tabs at the top and tap the buttons. “Check” tests your task."
+      ppt: "Tap a field on the slide to select it (tapping again edits the text). Switch tabs at the top and tap the buttons. “Check” tests your task.",
+      xls: "Tap a cell. Tap it again (or the formula bar) to type; confirm with ✓ or Enter. In formulas you can tap cells instead of typing their names. “Check” tests your task.",
+      win: "Tap a file or folder to select it; tap twice quickly to open. The toolbar has New, Copy, Rename, Delete and more. “Check” tests your task."
     }
   },
 
@@ -148,7 +150,7 @@ window.LERNRAUM_I18N = {
     "Thema suchen …": "ابحث عن موضوع …", "Nichts gefunden. Probier ein anderes Wort.": "لم يتم العثور على شيء. جرّب كلمة أخرى.",
     "Start": "الرئيسية", "Karten": "البطاقات", "Hilfe": "مساعدة", "Ich": "أنا",
     "Präsentation": "عرض", "Quiz": "اختبار", "Zuordnen": "تصنيف", "Lückentext": "املأ الفراغات", "Rechnen": "حساب",
-    "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word", "PowerPoint üben": "تدريب PowerPoint", "Die Simulation konnte nicht geladen werden.": "تعذّر تحميل المحاكاة.",
+    "Lernkarten": "بطاقات تعليمية", "Kann-Liste": "قائمة التقييم", "Material": "مادة", "Antwortsatz": "جملة الإجابة", "Word üben": "تدريب Word", "PowerPoint üben": "تدريب PowerPoint", "Excel üben": "تدريب Excel", "Windows üben": "تدريب Windows", "Die Simulation konnte nicht geladen werden.": "تعذّر تحميل المحاكاة.",
     "{n} Folien": "{n} شرائح", "{n} Frage": "{n} سؤال", "{n} Fragen": "{n} أسئلة", "{n} Karten": "{n} بطاقات",
     "{n} Lücken": "{n} فراغات", "{n} Felder": "{n} حقول", "{n} Aussagen": "{n} عبارات", "{n} Bausteine": "{n} أجزاء",
     "öffnet sich neu": "يُفتح في نافذة جديدة",
@@ -247,7 +249,9 @@ window.LERNRAUM_I18N = {
       sentence: "اضغط على فراغ واختر الجزء المناسب في الأسفل. هكذا تبني خطوة بخطوة جملة إجابة كاملة.",
       spot: "اقرأ مقطع الرسالة، اضغط على السطر الذي فيه الخطأ، ثم اضغط على «تحقّق». بعد ذلك ترى السبب.",
       word: "اضغط على سطر – اسحب المقابض الزرقاء لتوسيع التحديد. نسّق باستخدام الشريط، وأضف أسطرًا فارغة بـ Enter (الحذف: ⌫)، والاختصارات: Ctrl+A/B/R. زر «تحقّق» يفحص مهمتك.",
-      ppt: "اضغط على حقل في الشريحة لتحديده (الضغط مرة أخرى يعدّل النص). بدّل بين علامات التبويب في الأعلى واضغط على الأزرار. زر «تحقّق» يفحص مهمتك."
+      ppt: "اضغط على حقل في الشريحة لتحديده (الضغط مرة أخرى يعدّل النص). بدّل بين علامات التبويب في الأعلى واضغط على الأزرار. زر «تحقّق» يفحص مهمتك.",
+      xls: "اضغط على خلية. اضغط عليها مرة أخرى (أو على شريط الصيغة) للكتابة؛ أكّد بـ ✓ أو Enter. في الصيغ يمكنك الضغط على الخلايا بدل كتابة أسمائها. زر «تحقّق» يفحص مهمتك.",
+      win: "اضغط على ملف أو مجلد لتحديده؛ اضغط مرتين بسرعة لفتحه. في الشريط ستجد جديد ونسخ وإعادة تسمية وحذف وغيرها. زر «تحقّق» يفحص مهمتك."
     }
   }
 };

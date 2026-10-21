@@ -225,10 +225,12 @@
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     spot: "Lies den Briefausschnitt, tippe auf die Zeile mit dem Fehler und dann auf „Prüfen“. Danach siehst du, warum.",
     word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe.",
-    ppt: "Tippe auf ein Feld der Folie, um es zu markieren (ein zweites Tippen ändert den Text). Oben wechselst du zwischen den Reitern und tippst die Knöpfe an. Mit „Probe“ prüfst du die Aufgabe."
+    ppt: "Tippe auf ein Feld der Folie, um es zu markieren (ein zweites Tippen ändert den Text). Oben wechselst du zwischen den Reitern und tippst die Knöpfe an. Mit „Probe“ prüfst du die Aufgabe.",
+    xls: "Tippe eine Zelle an. Tippe sie nochmal an (oder die Formelleiste), um etwas einzugeben; mit ✓ oder Enter bestätigst du. Bei Formeln kannst du Zellen antippen statt Namen zu tippen. Mit „Probe“ prüfst du die Aufgabe.",
+    win: "Tippe eine Datei oder einen Ordner an, um sie zu markieren; zweimal schnell tippen öffnet. Oben in der Leiste findest du Neu, Kopieren, Umbenennen, Löschen und mehr. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
-  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", ppt: "PowerPoint üben", spot: "Fehler finden", video: "Erklärvideo" };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", ppt: "PowerPoint üben", xls: "Excel üben", win: "Windows üben", spot: "Fehler finden", video: "Erklärvideo" };
   const STEP_LABEL = {};
   labelsReady = true;
   applyLang(LANG);
@@ -247,12 +249,14 @@
       case "video": return tr("ca. {m} min", { m: st.minutes || 1 });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       case "ppt": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "xls": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "win": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return tr("öffnet sich neu");
     }
   }
   /* Ehrliche Trefferquote: Prozent erst ab 5 bewerteten Antworten, davor „c von n“ (1 von 1 ist keine 100 %) */
   const hitText = (c, n) => (n >= 5 ? tr("{p} % richtig", { p: Math.round((c / n) * 100) }) : tr("{c} von {n} richtig", { c, n }));
-  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word", "ppt"];
+  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word", "ppt", "xls", "win"];
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
 
   function toast(msg) {
@@ -2474,6 +2478,18 @@
     ppt(step, ctx) {
       if (!window.LernraumSim || !window.LernraumSim.ppt) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
       cleanup = window.LernraumSim.ppt(step, ctx, { h, esc, ICON, toast, buzz, reduced });
+    },
+
+    /* Excel-Simulation (app/sim-xls.js): Tabellen, Formeln, Funktionen, Diagramme – auch am Handy */
+    xls(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.xls) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.xls(step, ctx, { h, esc, ICON, toast, buzz, reduced });
+    },
+
+    /* Windows-Simulation (app/sim-win.js): Desktop, Startmenü, Datei-Explorer, Papierkorb – auch am Handy */
+    win(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.win) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.win(step, ctx, { h, esc, ICON, toast, buzz, reduced });
     },
 
     /* Bestehendes Material */
