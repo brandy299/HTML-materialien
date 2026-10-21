@@ -224,10 +224,11 @@
     video: "Tippe auf Start. Mit „Szene“ links und rechts springst du eine Szene zurück oder vor (oder tippe links/rechts ins Bild), in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     spot: "Lies den Briefausschnitt, tippe auf die Zeile mit dem Fehler und dann auf „Prüfen“. Danach siehst du, warum.",
-    word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
+    word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe.",
+    ppt: "Tippe auf ein Feld der Folie, um es zu markieren (ein zweites Tippen ändert den Text). Oben wechselst du zwischen den Reitern und tippst die Knöpfe an. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
-  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", spot: "Fehler finden", video: "Erklärvideo" };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", ppt: "PowerPoint üben", spot: "Fehler finden", video: "Erklärvideo" };
   const STEP_LABEL = {};
   labelsReady = true;
   applyLang(LANG);
@@ -245,12 +246,13 @@
       case "spot": return tr(st.rounds.length === 1 ? "{n} Brief" : "{n} Briefe", { n: st.rounds.length });
       case "video": return tr("ca. {m} min", { m: st.minutes || 1 });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "ppt": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return tr("öffnet sich neu");
     }
   }
   /* Ehrliche Trefferquote: Prozent erst ab 5 bewerteten Antworten, davor „c von n“ (1 von 1 ist keine 100 %) */
   const hitText = (c, n) => (n >= 5 ? tr("{p} % richtig", { p: Math.round((c / n) * 100) }) : tr("{c} von {n} richtig", { c, n }));
-  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word"];
+  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word", "ppt"];
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
 
   function toast(msg) {
@@ -2466,6 +2468,12 @@
       paintDock();
       if (step.intro) simMsg("info", esc(step.intro));
       armGhost();
+    },
+
+    /* PowerPoint-Simulation (app/sim-ppt.js): Folien aufbauen wie in PowerPoint, auch am Handy */
+    ppt(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.ppt) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.ppt(step, ctx, { h, esc, ICON, toast, buzz, reduced });
     },
 
     /* Bestehendes Material */

@@ -57,7 +57,7 @@ for (const f of listed) {
 /* ── 3. Inhalte prüfen ──────────────────────────────────────── */
 const ID = /^[a-z0-9][a-z0-9-]*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "spot", "word", "link", "video"];
+const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "spot", "word", "ppt", "link", "video"];
 const WORDNUM = { ein: 1, eins: 1, eines: 1, einer: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
 const str = (x) => typeof x === "string" && x.trim().length > 0;
 const subjectIds = new Set();
@@ -199,6 +199,46 @@ function checkStep(where, st, topic) {
           else if (ck.op === "align" && !Number.isInteger(ck.block)) err(w2, "align braucht block");
           else if (ck.op === "bold" && !Number.isInteger(ck.block)) err(w2, "bold braucht block");
           else if (ck.op === "margins" && !(ck.value && ["top", "bottom", "left", "right"].every((m) => typeof ck.value[m] === "number"))) err(w2, "margins braucht top/bottom/left/right als Zahlen");
+        });
+      });
+      break;
+    }
+    case "ppt": {
+      if (st.mode !== undefined && st.mode !== "guided" && st.mode !== "free") err(where, 'mode muss "guided" oder "free" sein');
+      const dk = st.deck || {};
+      if (!Array.isArray(dk.slides) || !dk.slides.length) { err(where, "deck.slides ist leer"); break; }
+      const LAY = ["titel", "inhalt", "nur-titel", "leer"], EL = ["title", "body", "pic"];
+      const THEME = ["office", "dunkel", "gruen", "sonne"], TR = ["keine", "blende", "schieben", "wischen", "zoom"], AN = ["keine", "erscheinen", "einfliegen", "verblassen", "zoom"];
+      const PICS = ["fahrrad", "diagramm", "euro", "person"];
+      dk.slides.forEach((sl, k) => {
+        if (sl.layout !== undefined && !LAY.includes(sl.layout)) err(`${where} Folie ${k + 1}`, `layout „${sl.layout}“ unbekannt`);
+        if (sl.pic !== undefined && !PICS.includes(sl.pic)) err(`${where} Folie ${k + 1}`, `pic „${sl.pic}“ unbekannt`);
+      });
+      if (dk.theme !== undefined && !THEME.includes(dk.theme)) err(where, `deck.theme „${dk.theme}“ unbekannt`);
+      if (!Array.isArray(st.criteria) || !st.criteria.length) { err(where, "criteria ist leer"); break; }
+      st.criteria.forEach((c, k) => {
+        const w = `${where} Kriterium ${k + 1}`;
+        if (!str(c.label)) err(w, "label fehlt");
+        if (!Array.isArray(c.checks) || !c.checks.length) { err(w, "checks ist leer"); return; }
+        c.checks.forEach((ck, j) => {
+          const w2 = `${w} Check ${j + 1}`;
+          const needSlide = () => { if (!Number.isInteger(ck.slide) || ck.slide < 0) err(w2, `${ck.op} braucht slide (0-basiert)`); };
+          switch (ck.op) {
+            case "count": if (!Number.isInteger(ck.value) || ck.value < 1) err(w2, "count braucht eine ganze Zahl ≥ 1"); break;
+            case "layout": needSlide(); if (!LAY.includes(ck.value)) err(w2, `layout „${ck.value}“ unbekannt`); break;
+            case "text": needSlide(); if (!["title", "body"].includes(ck.el)) err(w2, 'text braucht el "title" oder "body"'); if (!str(ck.value) && !(Array.isArray(ck.value) && ck.value.length && ck.value.every(str))) err(w2, "text braucht value"); break;
+            case "lines": needSlide(); if (!Number.isInteger(ck.min) || ck.min < 1) err(w2, "lines braucht min ≥ 1"); break;
+            case "fmt": needSlide(); if (!EL.slice(0, 2).includes(ck.el)) err(w2, 'fmt braucht el "title" oder "body"'); if (!["size", "bold", "italic", "align"].includes(ck.prop)) err(w2, "fmt braucht prop size/bold/italic/align"); if (ck.value === undefined) err(w2, "fmt braucht value"); break;
+            case "bullets": needSlide(); break;
+            case "pic": needSlide(); if (ck.value !== undefined && typeof ck.value !== "boolean" && !PICS.includes(ck.value)) err(w2, "pic value muss true/false oder ein Bildname sein"); break;
+            case "anim": needSlide(); if (!EL.includes(ck.el)) err(w2, "anim braucht el"); if (!AN.includes(ck.value)) err(w2, `anim „${ck.value}“ unbekannt`); break;
+            case "trans": if (ck.slide !== "all") needSlide(); if (!TR.includes(ck.value)) err(w2, `trans „${ck.value}“ unbekannt`); break;
+            case "theme": if (!THEME.includes(ck.value)) err(w2, `theme „${ck.value}“ unbekannt`); break;
+            case "master": if (!["titleColor", "titleSize", "titleBold", "font"].includes(ck.prop)) err(w2, "master braucht prop titleColor/titleSize/titleBold/font"); break;
+            case "view": if (!["master", "normal"].includes(ck.value)) err(w2, 'view braucht value "master" oder "normal"'); break;
+            case "pos": if (!str(ck.title) || !Number.isInteger(ck.value) || ck.value < 1) err(w2, "pos braucht title und value (1-basiert)"); break;
+            default: err(w2, `unbekannter op "${ck.op}"`);
+          }
         });
       });
       break;

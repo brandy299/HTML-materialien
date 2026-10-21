@@ -209,6 +209,24 @@ zeigt eine **Geisterhand** den nächsten Klick. Kurztext der Sprechblase: `task.
   - `{ op: "bold", block: 6 }`
 - Bedienung wie in Word: Zeile antippen (am PC Strg+A für alles), dann in der Leiste formatieren – **Start** (Schriftart, Schriftgrad, Fett, Ausrichtung, ¶ Leerzeilen) und **Layout** (Seitenränder). Am PC zusätzlich Strg+B für fett.
 
+**PowerPoint-Simulation** – eine Präsentation bauen wie in PowerPoint; **handytauglich** (Ribbon seitwärts wischbar, Tippflächen ≥ 44 px, Folienleiste unten, am PC links). Code: `app/sim-ppt.js`, Stil: orangefarbene PowerPoint-Umgebung. Automatisch geprüft, `mode: "guided"` (Aufgabe für Aufgabe mit Pulsieren der passenden Knöpfe) oder `"free"` (Live-Checkliste).
+Bedienung: Folie in der Leiste wählen, Feld antippen = markieren, nochmal antippen = Text eingeben. Reiter: Start (Neue Folie, Layout, Duplizieren, Löschen, ▲▼ verschieben, F/K, Größe, Liste, Ausrichtung), Einfügen (Bild), Entwurf (4 Designs), Übergänge, Animationen, Bildschirmpräsentation (Abspielen), Ansicht → Folienmaster (Titelfarbe/-größe/Fett/Schriftart für alle Folien).
+```js
+{ type: "ppt", title: "Folien bauen", mode: "guided", file: "Vorstellung.pptx", intro: "…",
+  deck: { theme: "office", slides: [ { layout: "titel", title: "", body: [] } ] },   // Ausgangszustand
+  criteria: [
+    { label: "Titel „Fly Bike Werke GmbH“", hint: "…",
+      checks: [ { op: "text", slide: 0, el: "title", value: "Fly Bike Werke GmbH" } ],
+      task: { wo: "…", was: "…", probe: "…" } } ] }
+```
+- Layouts: `titel` · `inhalt` · `nur-titel` · `leer`. Designs: `office` · `dunkel` · `gruen` · `sonne`. Bilder: `fahrrad` · `diagramm` · `euro` · `person`. Übergänge: `blende` · `schieben` · `wischen` · `zoom` · `keine`. Animationen: `erscheinen` · `einfliegen` · `verblassen` · `zoom` · `keine`.
+- **Folien zählen ab 0.** Checks (`slide` fehlt nur bei `count`, `theme`, `master`, `view`, `pos`):
+  `{ op: "count", value: 3 }` · `{ op: "layout", slide: 1, value: "inhalt" }` · `{ op: "text", slide: 0, el: "title"|"body", value: "…" }` (Text ohne Groß-/Kleinschreibung und Schlusspunkt; `body`: Text oder Liste von Zeilen) ·
+  `{ op: "lines", slide: 1, min: 3 }` · `{ op: "fmt", slide: 1, el: "title", prop: "bold"|"italic"|"size"|"align", value: … }` · `{ op: "bullets", slide: 1 }` · `{ op: "pic", slide: 1, value: "fahrrad" }` ·
+  `{ op: "anim", slide: 1, el: "body", value: "einfliegen" }` · `{ op: "trans", slide: 0 | "all", value: "schieben" }` · `{ op: "theme", value: "gruen" }` ·
+  `{ op: "master", prop: "titleColor"|"titleSize"|"titleBold"|"font", value: … }` (Blau = `"#1f4e9c"`) · `{ op: "view", value: "master"|"normal" }` · `{ op: "pos", title: "…", value: 2 }` (Folie mit diesem Titel steht an Position 2).
+- Schreibe Aufgaben so, dass der **Zielwert eindeutig im Text steht** (Titel, Größe, Name des Designs).
+
 ### Übungsklausur
 
 Ein Thema mit `exam` wird zur Klausur: Timer, keine Rückmeldung und keine Hilfe während des Schreibens,
