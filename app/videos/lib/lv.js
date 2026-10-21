@@ -586,7 +586,7 @@
             s.items.forEach((b) => { if ((b.words || 0) > 14 && b.el.classList.contains("lv-t")) warn.push(`${label}: Ein Textblock hat ${b.words} Wörter (max. 14).`); });
           }
           const text = [s.def.kicker, s.def.title, s.def.sub, s.def.text, ...(s.def.type === "scene" ? s.items.flatMap((b) => (b.tx ? b.tx() : [])) : [])].filter(Boolean).map(plain);
-          return { start: s.start, dur: s.dur, type: s.def.type, kicker: s.def.kicker || "", words, text };
+          return { start: s.start, dur: s.dur, type: s.def.type, kicker: s.def.kicker || "", words, text, voice: s.def.voice || "" };
         });
         if (total > 90) warn.push(`Das Video ist ${total.toFixed(0)} s lang (Ziel: 20–60 s, maximal 90 s).`);
         return { id: def.id, title: def.title || def.id, bpm: def.bpm || 92, mood: def.mood || "calm", total, scenes: out, warn, poster: def.poster ?? Math.min(total - 0.5, scenes[1] ? scenes[1].start + 2.2 : 1) };
