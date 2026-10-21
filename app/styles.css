@@ -542,8 +542,13 @@ a.win:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
   margin: 26px calc(var(--gutter) * -1) 0; padding: 2px var(--gutter) 6px;
 }
 .fach-chips::-webkit-scrollbar { display: none; }
-.fach-chips .tag-box { flex: none; height: 38px; padding: 0 14px; box-shadow: 2px 2px 0 var(--ink); }
+.fach-chips .tag-box { flex: none; height: 44px; padding: 0 14px; box-shadow: 2px 2px 0 var(--ink); }
 .fach-chips .tag-box:active { background: var(--pink-fill); }
+/* Startseite auf dem Handy: kleineres Titelbild, damit Fächer und Kurse früher sichtbar sind */
+@media (max-width: 520px) {
+  .hero .big-art { max-width: 190px; margin-top: 14px; }
+  .hero .display { margin-top: 22px; }
+}
 .fach-head { scroll-margin-top: 16px; }
 .mat-win .bar .d { background: var(--paper); }
 .mat-list { box-shadow: var(--shadow); border-width: 2px; }
