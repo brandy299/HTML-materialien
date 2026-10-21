@@ -99,7 +99,7 @@ function serve() {
     return wav;
   };
   // Sprecherstimme: je Szene `voice: "..."` → OpenAI-TTS (zwischengespeichert), Musik wird unter der Stimme leiser
-  const VOICE = flag("voice"), VNAME = opt("voice-name", "nova"), VGAIN = opt("voice-gain", "1.0");
+  const VOICE = flag("voice"), VNAME = opt("voice-name", "marin"), VGAIN = opt("voice-gain", "1.0");
   const voiceClips = [];
   const prepareVoice = async () => {
     const cache = path.join(os.tmpdir(), "lv-voice-cache"); fs.mkdirSync(cache, { recursive: true });
@@ -108,7 +108,7 @@ function serve() {
       const f = path.join(cache, crypto.createHash("sha1").update(VNAME + "|" + s.voice).digest("hex") + ".mp3");
       if (!fs.existsSync(f)) {
         const body = JSON.stringify({ model: "gpt-4o-mini-tts", voice: VNAME, input: s.voice.replace(/<[^>]+>/g, ""), response_format: "mp3",
-          instructions: "Sprich deutsch, ruhig, freundlich und deutlich wie eine Lehrerin in einem kurzen Erklärvideo. Nicht zu schnell." });
+          instructions: "Du bist eine junge, sympathische Lehrerin, die einem Freund etwas Spannendes erklärt. Sprich deutsch, locker und lebendig wie in einem Kurzvideo, mit natürlicher Satzmelodie, kleinen Pausen und Betonung auf den wichtigen Wörtern. Nicht vorlesen, sondern erzählen. Gerne leicht lächelnd." });
         const hdr = process.env.OPENAI_API_KEY ? ["-H", "Authorization: Bearer " + process.env.OPENAI_API_KEY] : [];
         // curl statt fetch: curl nutzt den Proxy der Cloud-Umgebung (HTTPS_PROXY) automatisch
         const r = spawnSync("curl", ["-sS", "--fail-with-body", "-o", f, "https://api.openai.com/v1/audio/speech", "-H", "Content-Type: application/json", ...hdr, "-d", body], { encoding: "utf8" });

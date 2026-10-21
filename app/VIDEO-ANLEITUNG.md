@@ -86,7 +86,7 @@ Faustwerte: Text 0,5 s · Kästen 0,5 s je Kasten · Rechenschema 0,85 s je Zeil
 Jede Szene kann ein Feld `voice:` mit dem gesprochenen Text haben (kurze, einfache Sätze, ca. 2 Wörter pro Sekunde, Zahlen ausgeschrieben).
 Rendern mit `node app/tools/render-video.js <id> --voice`: Das Werkzeug erzeugt die Stimme mit der OpenAI-Sprachausgabe (in der Cloud-Umgebung ohne Schlüssel; sonst `OPENAI_API_KEY` setzen),
 legt sie über die Musik (Musik wird unter der Stimme leiser) und mischt sie in `<id>.mp4` **und** `<id>.m4a`. Die App spielt die m4a ab, die Stimme ist also auch dort zu hören.
-Das Werkzeug warnt, wenn ein Sprechtext länger dauert als seine Szene. Schalter: `--voice-name nova` (Stimme), `--voice-gain 1.0` (Lautstärke). Gesprochene Texte werden zwischengespeichert; eine Änderung am Text kostet nur den geänderten Satz.
+Das Werkzeug warnt, wenn ein Sprechtext länger dauert als seine Szene. Schalter: `--voice-name marin` (Stimme, Standard; Alternativen: cedar, coral, shimmer, sage), `--voice-gain 1.0` (Lautstärke). Gesprochene Texte werden zwischengespeichert; eine Änderung am Text kostet nur den geänderten Satz.
 Der Text bleibt zusätzlich in der Textfassung der Szenen sichtbar; das Video muss weiterhin **ohne Ton** verständlich sein.
 
 ## Regeln, die das Werkzeug prüft
