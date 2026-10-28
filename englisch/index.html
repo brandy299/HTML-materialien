@@ -148,7 +148,7 @@ body.show-vi td.vi, body.show-vi th.vi{display:table-cell}
 .pen.on path{animation:draw .5s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 input.gap{font-family:var(--text); font-weight:600; font-size:1rem; color:var(--forest); background:transparent;
-  border:none; border-bottom:1.5px solid var(--line-2); border-radius:0; width:9.5ch; max-width:100%; min-height:2.2rem; padding:0 .25rem; margin:0 .1rem; text-align:center; caret-color:var(--red); vertical-align:baseline}
+  border:none; border-bottom:1.5px solid var(--line-2); border-radius:0; width:9.5ch; max-width:100%; min-height:44px; padding:0 .25rem; margin:0 .1rem; text-align:center; caret-color:var(--red); vertical-align:baseline}
 input.gap:focus{outline:none; border-bottom-color:var(--forest); background:rgba(169,116,31,.08)}
 .fb{margin:.9rem 0 0; font-style:italic; color:var(--muted); min-height:1.3em}
 .fb .pen{display:inline-block; vertical-align:-5px; width:22px; height:22px}
@@ -462,6 +462,18 @@ const SCHEMA = {
       <div class="spell">
         <span><b>a</b> teacher</span><span><b>a</b> driver</span><span><b>an</b> office worker</span></div>
       <p class="schema-note">Beruf: <b>I am a …</b> (vor Vokal <b>an</b>) · arbeiten: <b>work</b> / <b>works</b> + <b>in</b> + Ort.</p>
+    </div>`,
+  travel: `
+    <div class="schema">
+      <div class="schema-row"><span class="chip-label">Frage</span>${ARW}<span class="chip-verb">How do you get to …?</span>
+        <span class="sx">How do you get to work? — I go by bus.</span></div>
+      <div class="schema-row"><span class="chip-label">I · you · we · they</span>${ARW}<span class="chip-verb">go by</span>
+        <span class="sx">We go by train.</span></div>
+      <div class="schema-row"><span class="chip-label he">he · she · it</span>${ARW}<span class="chip-verb">go<span class="add-s">es</span> by</span>
+        <span class="sx">She goes by bike.</span></div>
+      <div class="spell">
+        <span>by <b>bus</b></span><span>by <b>train</b></span><span>by <b>car</b></span><span><b>on</b> foot</span></div>
+      <p class="schema-note">Verkehrsmittel: <b>by</b> + bus / train / car / bike · zu Fuß: <b>on foot</b> · he / she / it: <b>goes</b>.</p>
     </div>`
 };
 
@@ -788,8 +800,43 @@ const UNITS = [
         {q:"Ein Koch arbeitet in der ______.", o:["kitchen","office","hospital"], c:0, e:"cook → kitchen."},
         {q:"Wie fragst du nach dem Beruf?", o:["What do you do?","Where is it?","How much is it?"], c:0, e:"What do you do? = Was machst du beruflich?"}] }
     ],
-    pdfs:[["Vokabeln","downloads/FE_U9_Jobs_and_Work_Vocab.pdf"],["Übungen","downloads/FE_U9_Jobs_and_Work_Practice.pdf"]] }
+    pdfs:[["Vokabeln","downloads/FE_U9_Jobs_and_Work_Vocab.pdf"],["Übungen","downloads/FE_U9_Jobs_and_Work_Practice.pdf"]] },
+  { id:"plate-10", no:"Plate X", title:"Travel &amp; Transport", de:"Verkehr &amp; Reisen",
+    plate:"plates/plate-10.webp", caption:"Bus ticket · bicycle · station clock",
+    lead:"Every morning millions of people travel — by bus, by train, by bike. How do you get to school or work?",
+    schema:"travel",
+    schemaTitle:"How it works · go by …",
+    explain:[ "Nach dem Weg fragst du mit <b>How do you get to …?</b> Die Antwort: <b>I go by bus.</b> Vor dem Verkehrsmittel steht <b>by</b>, ohne a oder the.",
+      "Zu Fuß heißt <b>on foot</b>: <i>I go on foot.</i> Bei he / she / it wird aus <b>go</b> das Wort <b>goes</b>: <i>He goes by train.</i>" ],
+    vocab:[["bus","Bus","xe buýt"],["train","Zug","tàu hỏa"],["bike","Fahrrad","xe đạp"],
+      ["car","Auto","ô tô"],["station","Bahnhof","nhà ga"],["ticket","Fahrkarte","vé"],
+      ["platform","Bahnsteig","sân ga"],["airport","Flughafen","sân bay"],["late","spät / verspätet","muộn"],
+      ["on foot","zu Fuß","đi bộ"],["go by bus","mit dem Bus fahren","đi bằng xe buýt"],["How do you get to work?","Wie kommst du zur Arbeit?","Bạn đi làm bằng gì?"]],
+    exercises:[
+      { id:"p10-a", n:"A", type:"match", title:"Match the words · Paare finden", lead:"Tippe erst das englische Wort, dann das deutsche Wort (oder umgekehrt).",
+        pairs:[["bus","Bus"],["train","Zug"],["bike","Fahrrad"],["station","Bahnhof"],["ticket","Fahrkarte"],["airport","Flughafen"]] },
+      { id:"p10-b", n:"B", type:"cloze", title:"go / goes · Lückentext", lead:"Setze das passende Wort ein.",
+        bank:["go","goes","by","foot","late"], items:[
+          {b:"I ",a:["go"],af:" to school by bus."},
+          {b:"She ",a:["goes"],af:" to work by train."},
+          {b:"We go ",a:["by"],af:" car."},
+          {b:"He goes on ",a:["foot"],af:"."},
+          {b:"The bus is ",a:["late"],af:" today."}] },
+      { id:"p10-c", n:"C", type:"sort", title:"Sort · go or goes?", lead:"Welches Wort passt? Tippe go oder goes.",
+        cats:["go","goes"],
+        items:[["I … by bus.","0"],["She … by bike.","1"],["We … by train.","0"],["He … on foot.","1"],["You … by car.","0"],["My mother … to the station.","1"]] },
+      { id:"p10-d", n:"D", type:"order", title:"Build the sentence · Satzbau", lead:"Tippe die Wörter in der richtigen Reihenfolge an.",
+        answer:"She goes to work by train." },
+      { id:"p10-e", n:"E", type:"quiz", title:"Check · quiz", items:[
+        {q:"How do you get to school? — I ______ by bus.", o:["go","goes","am"], c:0, e:"I → go."},
+        {q:"He ______ by bike.", o:["go","goes","going"], c:1, e:"he → goes."},
+        {q:"Ein Zug fährt vom ______ ab.", o:["station","kitchen","shop"], c:0, e:"station = Bahnhof."},
+        {q:"Wie sagst du „zu Fuß“?", o:["on foot","by foot","with foot"], c:0, e:"on foot = zu Fuß."},
+        {q:"Wie fragst du nach dem Weg zur Arbeit?", o:["How do you get to work?","What do you do?","How much is it?"], c:0, e:"How do you get to work? = Wie kommst du zur Arbeit?"}] }
+    ],
+    pdfs:[["Vokabeln","downloads/FE_U10_Travel_and_Transport_Vocab.pdf"],["Übungen","downloads/FE_U10_Travel_and_Transport_Practice.pdf"]] }
 ];
+
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm = s => String(s).toLowerCase().replace(/[’‘`´]/g,"'").replace(/\s+/g," ").replace(/[.,!?]/g,"").trim();

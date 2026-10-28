@@ -6296,7 +6296,7 @@ LERNRAUM.subjects.push({
   id: "englisch-foerderkurs",
   fach: "Englisch",
   added: "2026-09-28",
-  updated: "2026-09-28",
+  updated: "2026-10-21",
   name: "Förderkurs Englisch",
   course: "Förderkurs Englisch · FE",
   glyph: "E",
@@ -7225,6 +7225,119 @@ LERNRAUM.subjects.push({
           case: "Wähle in jedem Kasten die richtige Form.",
           text: "Every Saturday Harry {*plays|play|played} Quidditch. Right now he {*is flying|flies|flew} over the pitch. Last week he {*fell|has fallen|falls} from his broom. Since then he {*has practised|practised|practises} every day. At eight o’clock last night he {*was training|trained|trains} alone. Next week he {*will play|plays|played} in the big match. And he {*is going to|will|plays} become captain – he has already decided.",
           explain: "Jedes Signalwort verrät die Zeitform: every Saturday, right now, last week, since then, at eight o’clock last night, next week, already decided."
+        }
+      ]
+    },
+
+    /* ══════════════ KLAUSUR · ÜBUNGSKLAUSUR ZEITFORMEN ══════════════ */
+    {
+      id: "uebungsklausur",
+      group: "Klausur",
+      title: "Übungsklausur Zeitformen",
+      kicker: "Klausur · 45 Minuten",
+      exam: {
+        minutes: 45,
+        tools: "keine Hilfsmittel",
+        // Notenschlüssel HBBK (HS/HH/KA einheitlich): 90 / 76 / 63 / 50 / 30 %
+        grading: [[90, "1", "sehr gut"], [76, "2", "gut"], [63, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+      },
+      steps: [
+        {
+          type: "quiz",
+          title: "A1 · Gegenwart",
+          points: 8,
+          review: "simple-present",
+          questions: [
+            {
+              q: "Neville ____ his toad every morning.",
+              options: ["feed", "feeds", "feeding"],
+              answer: 1,
+              explain: "every morning → Simple Present, he → Verb + s: feeds."
+            },
+            {
+              q: "Make a question: ____ Luna like strange animals?",
+              options: ["Do", "Does", "Is"],
+              answer: 1,
+              explain: "Bei he / she / it: Does + Grundform."
+            },
+            {
+              q: "Be quiet! The teacher ____ to us.",
+              options: ["talks", "is talking", "talk"],
+              answer: 1,
+              explain: "Be quiet! → es passiert gerade jetzt: Present Progressive, is talking."
+            },
+            {
+              q: "Which verb does NOT normally take -ing?",
+              options: ["to play", "to know", "to read"],
+              answer: 1,
+              explain: "Zustandsverben wie know, like, want bleiben im Simple Present."
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A2 · Signalwörter",
+          points: 8,
+          review: "zeitformen-mix",
+          prompt: "Welche Zeitform zeigt das Signalwort an?",
+          categories: ["Simple Present", "Present Progressive", "Simple Past", "Present Perfect"],
+          items: [
+            { text: "always", cat: 0 },
+            { text: "on Fridays", cat: 0 },
+            { text: "right now", cat: 1 },
+            { text: "at the moment", cat: 1 },
+            { text: "yesterday", cat: 2 },
+            { text: "two days ago", cat: 2 },
+            { text: "already", cat: 3 },
+            { text: "ever", cat: 3 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A3 · Regeln",
+          points: 8,
+          review: "simple-past",
+          prompt: "Zwei Wörter passen nicht.",
+          text: "Regelmäßige Verben bilden das Simple Past mit {-ed}. „Go“ ist unregelmäßig: Die Form heißt {went}. Fragen und Verneinung im Simple Past bildest du mit {did} + Grundform. Das Present Perfect bildest du mit have / has + {3. Form}.",
+          distractors: ["goed", "does"]
+        },
+        {
+          type: "sentence",
+          title: "A4 · Vergangenheit und Ergebnis",
+          points: 8,
+          review: "present-perfect",
+          case: "Wähle in jedem Kasten die richtige Form.",
+          text: "Last summer Ron {*visited|has visited|visits} his brother in Romania. Hermione {*has already finished|already finishes|already finished} her homework – she is free now. At seven o’clock yesterday I {*was cooking|cooked|am cooking} dinner when my phone {*rang|was ringing|rings}. {*Have you ever|Did you ever|Are you ever} seen a dragon?",
+          explain: "last summer → Simple Past · already + Ergebnis jetzt → Present Perfect · at seven o’clock yesterday → Past Progressive, when + Simple Past · ever → Present Perfect."
+        },
+        {
+          type: "quiz",
+          title: "A5 · Zukunft",
+          points: 4,
+          review: "will-future",
+          questions: [
+            {
+              q: "Look at the sky! It ____ rain.",
+              options: ["will", "is going to", "rains"],
+              answer: 1,
+              explain: "Anzeichen jetzt (dunkle Wolken) → going to: is going to rain."
+            },
+            {
+              q: "The phone is ringing. – I ____ answer it.",
+              options: ["will", "am going to", "answered"],
+              answer: 0,
+              explain: "Spontane Entscheidung → will: I’ll answer."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A6 · Mini-Story",
+          points: 8,
+          review: "zeitformen-mix",
+          case: "Wähle in jedem Kasten die richtige Form.",
+          text: "Every day Harry {*walks|walk|walked} to school. Today he {*is walking|walks|walked} because the bus is late. Last week he {*missed|has missed|misses} the bus twice. Tomorrow he {*will take|takes|took} the earlier bus. He {*has|have|is having} already decided: he {*is going to|will|goes} set two alarms.",
+          explain: "Signalwörter: every day, today / because (jetzt), last week, tomorrow, already decided → going to."
         }
       ]
     },
@@ -13688,7 +13801,40 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "الكلمات الدالة على going to",
 
     "Plan (already decided) · Beweis (Look! …)":
-      "خطة (already decided) · دليل (Look! …)"
+      "خطة (already decided) · دليل (Look! …)",
+
+    "Weiter geht's: Telephoning":
+      "",
+
+    "Ausblick":
+      "",
+
+    "Weiter":
+      "",
+
+    "<h3>Weiterlernen</h3>\n             <p>Die Zeitformen sitzen? Dann geht es an echte Gespräche: höflich telefonieren, Namen und Nummern buchstabieren, Termine machen und ein Hotel buchen.</p>\n             <p class=\"formula\">Nächster Kurs: <b>Telephoning</b> (Fach Englisch).</p>":
+      "",
+
+    "Dranbleiben":
+      "",
+
+    "Grammatik sitzt? Dann kommt der Alltag.":
+      "",
+
+    "<p>Mit den Zeitformen kannst du Sätze bilden. Im echten Büro telefoniert man aber auch auf Englisch – höflich, klar und sicher.</p>":
+      "",
+
+    "Nächster Kurs":
+      "",
+
+    "Telephoning":
+      "",
+
+    "<p>Redemittel, Buchstabieren, Termine machen und ein Hotel buchen – mit Dr Kiesbauer und Wilkinson and Friends Ltd.</p>":
+      "",
+
+    "Zum Kurs „Telephoning“":
+      ""
 
 } });
 
