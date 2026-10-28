@@ -88,7 +88,7 @@ keine System-Display-Schrift.
 
 ## Bild-Assets
 
-Die sechs Tafelbilder sind erzeugte Aquarell-Stillleben (OpenAI `gpt-image-1-mini`, Skript `englisch/plates/src/make-plate.py`), als WebP 1200 px (~100 KB). Provenance je Datei in `plates/plate-N.webp.json`. Die früheren Kupferstich-Bilder (Tafeln I–III) und die selbstgezeichneten SVGs (IV–VI) sind ersetzt und nur noch in der Git-Historie.
+Die Tafelbilder IV–X sind erzeugte Aquarell-Stillleben (OpenAI `gpt-image-1-mini`, Skript `englisch/plates/src/make-plate.py`), als WebP 1200 px (~100 KB). Provenance je Datei in `plates/plate-N.webp.json`. Die früheren Kupferstich-Bilder (Tafeln I–III) und die selbstgezeichneten SVGs (IV–VI) sind ersetzt und nur noch in der Git-Historie.
 
 
 ## Handy-Regeln (Pflicht)
@@ -115,7 +115,7 @@ Der Hub wird am Beamer gezeigt **und** zwischen den Stunden auf dem Handy wieder
 
 ## Arbeitsblätter (PDF)
 
-Der **Reihenplan** für die Lehrkraft entsteht mit `node app/tools/render-englisch-pdf.js --overview` (eine A4-Seite, alle Tafeln). Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Việt) und **Übungen** (ohne Lösungen, zum Ausfüllen). Tafeln IV–IX werden **aus den Daten erzeugt**: `NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js 4 5 6` → `englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf` / `_Practice.pdf` (Hub-Schriften, Waldgrün/Ocker auf Weiß, keine Lösungen). Die PDFs der Tafeln I–III und der Reihenplan stammen aus dem Quell-Workspace der Lehrkraft und werden nicht neu erzeugt. Nach Änderungen an Vokabeln oder Übungen das Blatt neu erzeugen.
+Der **Reihenplan** für die Lehrkraft entsteht mit `node app/tools/render-englisch-pdf.js --overview` (eine A4-Seite, alle Tafeln). Zu jeder Tafel gehören zwei A4-Blätter: **Vokabeln** (EN · DE · Tiếng Việt) und **Übungen** (ohne Lösungen, zum Ausfüllen). Tafeln IV–X werden **aus den Daten erzeugt**: `NODE_PATH=<playwright> node app/tools/render-englisch-pdf.js 4 5 6` → `englisch/downloads/FE_U<N>_<Titel>_Vocab.pdf` / `_Practice.pdf` (Hub-Schriften, Waldgrün/Ocker auf Weiß, keine Lösungen). Die PDFs der Tafeln I–III und der Reihenplan stammen aus dem Quell-Workspace der Lehrkraft und werden nicht neu erzeugt. Nach Änderungen an Vokabeln oder Übungen das Blatt neu erzeugen.
 
 ## Tafel-Bilder (Stiche)
 

@@ -16,7 +16,7 @@ wiederholen. Kein Login, kein Backend.
 
 ## Product Purpose
 
-Ein Anfänger-Englisch-HUB, der neun Einheiten Alltagsenglisch auf Basis des Simple Present
+Ein Anfänger-Englisch-HUB, der zehn Einheiten Alltagsenglisch auf Basis des Simple Present
 bündelt — je mit kurzer Grammatikerklärung, Vokabeln (EN·DE), interaktiven Übungen
 (Lückentext, Quiz) und druckbaren Arbeitsblättern. Er macht fundamentales Anfänger-Englisch
 projizierbar und selbstlernbar. Erfolg heißt: eine Einheit lässt sich in 45 Minuten
@@ -42,7 +42,7 @@ Vietnamesisch-Hilfe. Ergänzt den bestehenden Lernraum-Kurs „Förderkurs Engli
 
 - Statische, **selbstenthaltende** HTML-Seite (kein Build-Schritt), ausgeliefert über
   GitHub Pages unter `lernen.yannikbrand.eu/englisch/`.
-- Neun Einheiten (Tafeln): **My Day**, **People & Family**, **Free Time & Likes**, **Food & Drink**, **Home & Town**, **Shopping & Prices**, **Weather & Clothes**, **Body & Health**, **Jobs & Work** – je Diagramm, 12 Vokabeln (EN·DE·VI) und fünf Übungen. Neue Tafeln: siehe `DESIGN.md` „Neue Tafel anlegen“.
+- Zehn Einheiten (Tafeln): **My Day**, **People & Family**, **Free Time & Likes**, **Food & Drink**, **Home & Town**, **Shopping & Prices**, **Weather & Clothes**, **Body & Health**, **Jobs & Work**, **Travel & Transport** – je Diagramm, 12 Vokabeln (EN·DE·VI) und fünf Übungen. Neue Tafeln: siehe `DESIGN.md` „Neue Tafel anlegen“.
 - Interaktive, **automatisch auswertbare** Übungen (Lückentext, Multiple-Choice) —
   keine Freitext-Aufgaben.
 - **Vietnamesisch-Umschalter** (ein/aus) für Vokabeln.
