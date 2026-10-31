@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Everyday English · Prototyp</title>
+<meta name="description" content="Everyday English: Anfänger-Englisch mit 3D-Grammatik-Animationen. Prototyp, Einheit 1.">
+<meta name="theme-color" content="#E9DFC6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2323402B'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23EFE6D2' font-family='serif'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="fonts/bvp-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fell-1.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --paper:#EFE6D2; --paper-2:#E7DCC2; --card:#F6EEDB; --ink:#23201A; --forest:#23402B; --forest-2:#2F5638;
+  --ochre:#8A5A14; --ochre-2:#A9741F; --sky:#3F6C8C; --red:#9E3B2E; --muted:#6A5F49; --line:#C9BC9C; --line-2:#B4A47E;
+  --serif:"IM Fell English", Georgia, serif;
+  --text:"Be Vietnam Pro", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0; background:var(--paper); color:var(--ink); font:18px/1.55 var(--text); min-height:100vh;
+  background-image:radial-gradient(120% 80% at 50% -10%, rgba(255,250,235,.7), transparent 60%)}
+button{font:inherit; color:inherit; cursor:pointer; touch-action:manipulation}
+:focus-visible{outline:3px solid var(--forest); outline-offset:2px}
+::selection{background:var(--forest); color:#fff}
+.wrap{width:min(100% - 2rem, 520px); margin:0 auto}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* Kopf */
+.top{position:sticky; top:0; z-index:5; background:rgba(239,230,210,.94); backdrop-filter:blur(6px); border-bottom:1.5px solid var(--ink)}
+.top .wrap{display:flex; align-items:center; gap:.5rem; min-height:56px}
+.brand{font:italic 400 1.3rem/1 var(--serif); margin-right:auto; background:none; border:0; padding:0 .2rem; min-height:44px; text-align:left}
+.tool{min-height:44px; min-width:44px; padding:0 .8rem; border:1.5px solid var(--ink); border-radius:999px; background:transparent; font-size:.85rem; font-weight:600}
+.tool[aria-pressed="true"]{background:var(--forest); color:#fff; border-color:var(--forest)}
+
+h1,h2,h3{font-family:var(--serif); font-weight:400; line-height:1.15; margin:0}
+h1{font-size:2.3rem} h2{font-size:1.6rem} h3{font-size:1.25rem}
+.lead{color:var(--muted); margin:.4rem 0 0}
+.view{padding:1.4rem 0 7rem}
+[hidden]{display:none !important}
+
+/* Karte */
+.map{list-style:none; margin:1.4rem 0 0; padding:0; position:relative}
+.map li{position:relative; padding:0 0 1.1rem 4.2rem; min-height:68px}
+.map li::before{content:""; position:absolute; left:1.45rem; top:2.9rem; bottom:-.3rem; width:0; border-left:2px dashed var(--line-2)}
+.map li:last-child::before{display:none}
+.stop{position:absolute; left:0; top:0; width:2.95rem; height:2.95rem; border-radius:50%; display:grid; place-items:center;
+  font:italic 1.2rem var(--serif); background:var(--card); border:2px solid var(--line-2); color:var(--muted)}
+.map li.open .stop{background:var(--forest); border-color:var(--forest); color:#fff}
+.map li.done .stop{background:var(--ochre-2); border-color:var(--ochre-2); color:#fff}
+.place{display:block; width:100%; text-align:left; border:1.5px solid var(--line-2); background:var(--card); border-radius:12px; padding:.55rem .8rem; min-height:56px; box-shadow:2px 3px 0 rgba(35,32,26,.12)}
+.map li:not(.open):not(.done) .place{opacity:.6; box-shadow:none; cursor:default}
+.map li.open .place{border-color:var(--forest); border-width:2px}
+.place b{display:block; font-family:var(--serif); font-weight:400; font-size:1.2rem; line-height:1.2}
+.place small{color:var(--muted); font-size:.82rem}
+.place .tag{float:right; font-size:.75rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ochre); margin-top:.2rem}
+
+/* Einheit */
+.steps{display:flex; gap:.35rem; margin:.2rem 0 1.2rem}
+.steps i{flex:1; height:6px; border-radius:3px; background:var(--line)}
+.steps i.on{background:var(--ochre-2)} .steps i.cur{background:var(--forest)}
+.kicker{font:700 .78rem/1 var(--text); letter-spacing:.08em; text-transform:uppercase; color:var(--ochre); margin:0 0 .45rem}
+.card{background:var(--card); border:1.5px solid var(--ink); border-radius:14px; padding:1rem; box-shadow:3px 4px 0 rgba(35,32,26,.14); margin-top:1rem}
+.btn{display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 1.3rem; border-radius:999px; border:2px solid var(--forest); background:var(--forest); color:#fff; font-weight:700}
+.btn.ghost{background:transparent; color:var(--forest)}
+.btn[disabled]{opacity:.4; cursor:default}
+.bar{position:fixed; left:0; right:0; bottom:0; background:rgba(239,230,210,.96); border-top:1.5px solid var(--ink); padding:.6rem 0 calc(.6rem + env(safe-area-inset-bottom)); z-index:4}
+.bar .wrap{display:flex; gap:.6rem; justify-content:space-between}
+.bar .btn{flex:1}
+
+/* Szene: Dialog */
+.bubble{max-width:88%; padding:.6rem .9rem; border-radius:14px; margin:.55rem 0; border:1.5px solid var(--line-2); background:#fff9ea; font-size:1.1rem}
+.bubble.r{margin-left:auto; background:#e8efe6; border-color:var(--forest-2)}
+.bubble .who{display:block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.w-am{color:var(--ochre-2); font-weight:700} .w-is{color:var(--forest-2); font-weight:700} .w-are{color:var(--sky); font-weight:700}
+.hl .w-am,.hl .w-is,.hl .w-are{background:rgba(255,255,255,.7); border-radius:4px; padding:0 .15rem}
+.vocab{width:100%; border-collapse:collapse; margin-top:.4rem; font-size:.95rem}
+.vocab td{padding:.35rem .3rem; border-bottom:1px solid var(--line)}
+.vocab td:first-child{font-weight:700}
+.vi{display:none; color:var(--ochre)}
+body.show-vi .vi{display:table-cell}
+body.show-vi span.vi{display:inline}
+
+/* Bühne */
+#stage{position:relative; width:100%; min-height:300px; border:1.5px solid var(--ink); border-radius:14px; overflow:hidden; background:linear-gradient(#fbf5e4,#efe4c8)}
+.dstage{padding:1rem .6rem}
+.drow,.dtray div{display:flex; gap:.5rem; justify-content:center; margin:.5rem 0}
+.dblock{display:inline-grid; place-items:center; min-width:5.2rem; min-height:48px; padding:0 .8rem; border-radius:8px; border:0; background:#8c8068; color:#fff; font-weight:700; font-size:1.1rem}
+.dpick{background:var(--card); color:var(--ink); border:1.5px solid var(--line-2)}
+.dslot:not(.on){background:transparent; border:2px dashed var(--line-2); color:var(--muted)}
+.dready{background:var(--muted)}
+.pick-row{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.7rem}
+.pick-row .chip{min-height:44px; min-width:44px; padding:0 .8rem; border-radius:999px; border:1.5px solid var(--line-2); background:var(--card); font-weight:700}
+.pick-row .chip[aria-pressed="true"]{background:var(--forest); color:#fff; border-color:var(--forest)}
+.say{font-size:1.5rem; font-weight:700; text-align:center; margin:.8rem 0 .2rem; min-height:2.2rem}
+.say-de{text-align:center; color:var(--muted); margin:0; min-height:3.2rem}
+.groups{display:flex; gap:.5rem; margin-top:.6rem}
+.groups span{flex:1; text-align:center; padding:.35rem; border-radius:8px; border:1.5px solid var(--line-2); font-size:.85rem; font-weight:600}
+.groups span.ok{background:var(--forest); border-color:var(--forest); color:#fff}
+
+/* Übungen */
+.q{font-size:1.45rem; margin:.2rem 0 1rem; font-weight:600}
+.q .gap{display:inline-block; min-width:3.2rem; border-bottom:2.5px solid var(--ink); text-align:center; color:var(--forest)}
+.opts{display:grid; gap:.6rem}
+.opt{min-height:56px; border-radius:12px; border:2px solid var(--line-2); background:#fff9ea; font-size:1.2rem; font-weight:700; text-align:left; padding:0 1rem; display:flex; align-items:center; justify-content:space-between}
+.opt.right{border-color:var(--forest); background:#e1ecdf}
+.opt.wrong{border-color:var(--red); background:#f3dfda}
+.opt .pen{width:26px; height:26px; fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round}
+.opt.right .pen{stroke:var(--forest)} .opt.wrong .pen{stroke:var(--red)}
+.pen path{stroke-dasharray:40; stroke-dashoffset:40; animation:draw .5s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.explain{margin-top:.9rem; padding:.7rem .9rem; border-radius:10px; background:#fff9ea; border:1.5px dashed var(--line-2)}
+.words{display:flex; flex-wrap:wrap; gap:.5rem; margin:.4rem 0 1rem}
+.words button{min-height:48px; padding:0 1rem; border-radius:10px; border:2px solid var(--line-2); background:#fff9ea; font-size:1.15rem; font-weight:700}
+.words button[disabled]{opacity:.3}
+.target{min-height:60px; border-bottom:2.5px solid var(--ink); display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; padding:.3rem 0}
+.target button{min-height:44px; padding:0 .8rem; border-radius:10px; border:2px solid var(--forest); background:#e1ecdf; font-size:1.15rem; font-weight:700}
+.stamp{display:grid; place-items:center; width:8rem; height:8rem; margin:1rem auto; border-radius:50%; border:4px double var(--red); color:var(--red); font:italic 1.4rem/1.1 var(--serif); text-align:center; transform:rotate(-8deg)}
+.beamer .view{font-size:1.25rem}
+body.beamer{font-size:22px}
+body.beamer #stage{min-height:420px}
+@media (prefers-reduced-motion:reduce){.pen path{animation:none; stroke-dashoffset:0}}
+@media (max-width:360px){.brand{font-size:1.05rem; white-space:nowrap} .tool{padding:0 .6rem; font-size:.78rem}}
+@media (min-width:700px){ .wrap{width:min(100% - 3rem, 640px)} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <button class="brand" id="home" type="button">Everyday English</button>
+  <button class="tool" id="viBtn" type="button" aria-pressed="false" title="Vietnamesisch einblenden">Tiếng Việt</button>
+  <button class="tool" id="beamBtn" type="button" aria-pressed="false" title="Beamer-Modus">Beamer</button>
+</div></header>
+
+<main class="wrap view" id="view" aria-live="polite"></main>
+<div class="bar" id="bar" hidden><div class="wrap">
+  <button class="btn ghost" id="prev" type="button">Zurück</button>
+  <button class="btn" id="next" type="button">Weiter</button>
+</div></div>
+
+<script type="module">
+import { FORM, TRAY, createDomStage, createThreeStage } from "./scenes/be.js";
+
+/* ---------- Inhalte (Einheit 1) ---------- */
+const MAP = [
+  ["Station", "be: am · is · are", "open"], ["Café", "have und has"], ["Markt", "Simple Present: I, you, we, they"],
+  ["Schule", "Simple Present: he, she, it"], ["Praxis", "Fragen und Verneinung"], ["Bäckerei", "some, any, a, an"],
+  ["Park", "there is, there are · in, on, under"], ["Sportplatz", "can"], ["Straße", "Present Progressive"],
+  ["Kaufhaus", "Einkaufen und Preise"], ["Museum", "Simple Past"], ["Bahnsteig", "going to"]
+];
+const DIALOG = [
+  ["Linh", "Hello! I <b class='w-am'>am</b> Linh.", 0],
+  ["Sam", "Hi, Linh! I <b class='w-am'>am</b> Sam. <b class='w-are'>Are</b> you ready?", 1],
+  ["Linh", "Yes, I <b class='w-am'>am</b>. We <b class='w-are'>are</b> ready.", 0],
+  ["Sam", "Look! Mr Brown <b class='w-is'>is</b> here. He <b class='w-is'>is</b> ready, too.", 1]
+];
+const VOCAB = [["I", "ich", "tôi"], ["you", "du / ihr", "bạn"], ["he / she / it", "er / sie / es", "anh ấy / cô ấy / nó"],
+  ["we", "wir", "chúng tôi"], ["they", "sie (Mehrzahl)", "họ"], ["ready", "bereit", "sẵn sàng"], ["I am", "ich bin", "tôi là"]];
+const SEE = [
+  { de: "Das Wort <b>be</b> (sein) ist wie ein Chamäleon: Es ändert seine Form. Tippe auf „Weiter“.", en: "be → ?" },
+  { de: "Bei <b>I</b> heißt es <b>am</b>.", en: "I am ready.", seq: ["I"] },
+  { de: "Bei <b>you, we, they</b> heißt es <b>are</b>.", en: "They are ready.", seq: ["you", "we", "they"] },
+  { de: "Bei <b>he, she, it</b> heißt es <b>is</b>.", en: "She is ready.", seq: ["he", "she", "it"] },
+  { de: "Du bist dran: Tippe auf alle drei Gruppen (I · you, we, they · he, she, it).", en: "Your turn!", free: true }
+];
+const GROUP = { I: 0, you: 1, we: 1, they: 1, he: 2, she: 2, it: 2 };
+const CHOICE = [
+  { s: "I ___ ready.", o: ["am", "is", "are"], a: 0, e: "I → am. (Nur „I“ bekommt am.)" },
+  { s: "She ___ ready.", o: ["am", "is", "are"], a: 1, e: "he / she / it → is." },
+  { s: "We ___ here.", o: ["am", "is", "are"], a: 2, e: "we → are." },
+  { s: "It ___ a bus.", o: ["am", "is", "are"], a: 1, e: "it → is." },
+  { s: "You ___ my friend.", o: ["am", "is", "are"], a: 2, e: "you → are." },
+  { s: "They ___ in the café.", o: ["am", "is", "are"], a: 2, e: "they → are." }
+];
+const BUILD = [
+  { words: ["She", "is", "ready."], de: "Sie ist bereit." },
+  { words: ["We", "are", "here."], de: "Wir sind hier." }
+];
+const LISTEN = [
+  { say: "I am ready.", o: ["I am ready.", "I is ready.", "I are ready."] },
+  { say: "They are here.", o: ["They is here.", "They are here.", "They am here."] },
+  { say: "He is a teacher.", o: ["He is a teacher.", "He are a teacher.", "He am a teacher."] }
+];
+const CHECK = [
+  { s: "He ___ ready.", o: ["am", "is", "are"], a: 1, e: "he → is." },
+  { s: "I ___ Linh.", o: ["am", "is", "are"], a: 0, e: "I → am." },
+  { s: "You ___ right.", o: ["am", "is", "are"], a: 2, e: "you → are." },
+  { s: "Wie sagst du „Wir sind bereit“?", o: ["We is ready.", "We are ready.", "We am ready."], a: 1, e: "we → are." },
+  { s: "Welcher Satz ist richtig?", o: ["It are here.", "It am here.", "It is here."], a: 2, e: "it → is." }
+];
+const STATIONS = ["Szene", "Sehen", "Üben", "Hören", "Check"];
+
+/* ---------- Zustand ---------- */
+const KEY = "ee.proto.u1";
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } };
+const save = (o) => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* ohne Speicher geht es auch */ } };
+let saved = load();
+let station = 0, stage = null, voice = null;
+
+const $ = (s) => document.querySelector(s);
+const view = $("#view"), bar = $("#bar"), prev = $("#prev"), next = $("#next");
+const PEN_OK = `<svg class="pen" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13l5 6L20 5"/></svg>`;
+const PEN_NO = `<svg class="pen" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+const SPEAKER = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7"/></svg>`;
+
+/* Vietnamesisch und Beamer */
+$("#viBtn").addEventListener("click", (e) => { const on = document.body.classList.toggle("show-vi"); e.currentTarget.setAttribute("aria-pressed", on); });
+$("#beamBtn").addEventListener("click", (e) => { const on = document.body.classList.toggle("beamer"); e.currentTarget.setAttribute("aria-pressed", on); if (stage && stage.resize) stage.resize(); });
+$("#home").addEventListener("click", showMap);
+
+/* englische Stimme (nur Anhören; ohne Stimme wird die Station übersprungen) */
+function findVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const vs = speechSynthesis.getVoices();
+  return vs.find((v) => /^en[-_]GB/i.test(v.lang)) || vs.find((v) => /^en/i.test(v.lang)) || null;
+}
+if ("speechSynthesis" in window) { voice = findVoice(); speechSynthesis.onvoiceschanged = () => { voice = findVoice(); }; }
+function speak(text) {
+  if (!voice) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.voice = voice; u.lang = voice.lang; u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- Karte ---------- */
+function showMap() {
+  disposeStage();
+  bar.hidden = true;
+  view.innerHTML = `
+    <p class="kicker">Prototyp · Einheit 1 von 12</p>
+    <h1>Welcome to Everyday English</h1>
+    <p class="lead">Englisch Schritt für Schritt. Jeder Ort auf der Karte ist eine Einheit. Fertige Orte bekommen einen Stempel.</p>
+    <ol class="map">${MAP.map(([name, topic], i) => {
+      const open = i === 0, done = i === 0 && saved.done;
+      return `<li class="${done ? "done" : open ? "open" : ""}"><span class="stop" aria-hidden="true">${done ? "✓" : i + 1}</span>
+        ${open ? `<button class="place" type="button" data-go="1"><span class="tag">${done ? "Geschafft" : "Start"}</span><b>${i + 1} · ${name}</b><small lang="en">${topic}</small></button>`
+               : `<div class="place" aria-disabled="true"><span class="tag">Bald</span><b>${i + 1} · ${name}</b><small>${topic}</small></div>`}</li>`; }).join("")}</ol>`;
+  view.querySelector("[data-go]").addEventListener("click", () => openStation(saved.station || 0));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Einheit ---------- */
+function stepsBar() { return `<div class="steps" role="img" aria-label="Station ${station + 1} von ${STATIONS.length}: ${STATIONS[station]}">${STATIONS.map((_, i) => `<i class="${i < station ? "on" : i === station ? "cur" : ""}"></i>`).join("")}</div>`; }
+function disposeStage() { if (stage) { stage.dispose(); stage = null; } }
+function setBar(prevOk, nextLabel, nextOk) {
+  bar.hidden = false;
+  prev.disabled = !prevOk; next.textContent = nextLabel; next.disabled = !nextOk;
+}
+function goNext() { if (station < STATIONS.length - 1) openStation(station + 1); else finish(); }
+function openStation(i) {
+  disposeStage();
+  prev.onclick = () => (station > 0 ? openStation(station - 1) : showMap());
+  next.onclick = () => goNext();
+  station = i; saved.station = i; save(saved);
+  window.scrollTo(0, 0);
+  [scene, see, practice, listen, check][i]();
+}
+prev.onclick = () => { if (station > 0) openStation(station - 1); else showMap(); };
+next.onclick = () => goNext();
+
+/* 1 · Szene */
+function scene() {
+  view.innerHTML = `${stepsBar()}<p class="kicker">1 · Szene</p><h2>Im Klassenzimmer</h2>
+    <p class="lead">Lies das Gespräch. Achte auf die farbigen Wörter.</p>
+    <div id="dlg" lang="en">${DIALOG.map(([who, t, r]) => `<div class="bubble${r ? " r" : ""}"><span class="who">${who}</span>${t}</div>`).join("")}</div>
+    <div class="card"><h3>Wörter</h3><table class="vocab">${VOCAB.map(([en, de, vi]) => `<tr><td lang="en">${en}</td><td>${de}</td><td class="vi" lang="vi">${vi}</td></tr>`).join("")}</table>
+    <p class="lead" style="font-size:.8rem">Vietnamesisch ist eine Lernhilfe und noch nicht gegengelesen.</p></div>`;
+  setBar(true, "Weiter: Sehen", true);
+}
+
+/* 2 · Sehen (3D) */
+async function see() {
+  let idx = 0; const seen = new Set();
+  view.innerHTML = `${stepsBar()}<p class="kicker">2 · Sehen</p><h2>am · is · are</h2>
+    <div id="stage" aria-label="Animation: Wortblöcke"><p style="padding:1rem">Animation lädt …</p></div>
+    <div class="say" id="say" lang="en" aria-live="polite"></div><p class="say-de" id="sayde"></p>
+    <div class="pick-row" id="picks" role="group" aria-label="Pronomen wählen">${TRAY.flat().map((p) => `<button class="chip" type="button" data-p="${p}" lang="en" aria-pressed="false">${p}</button>`).join("")}</div>
+    <div class="groups" id="groups"><span>I → am</span><span>you · we · they → are</span><span>he · she · it → is</span></div>`;
+  setBar(true, "Weiter", true);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  try {
+    const gl = !!document.createElement("canvas").getContext("webgl");
+    stage = (!reduce && gl) ? await createThreeStage($("#stage")) : createDomStage($("#stage"));
+  } catch (e) { stage = createDomStage($("#stage")); }
+  if (stage.kind === "dom") $("#picks").hidden = true;
+  const say = $("#say"), sayde = $("#sayde");
+  const speakNow = (p) => { say.textContent = `${p[0].toUpperCase() + p.slice(1)} ${FORM[p]} ready.`.replace(/^i /, "I "); };
+  const mark = (p) => { seen.add(GROUP[p]); [...$("#groups").children].forEach((el, i) => el.classList.toggle("ok", seen.has(i))); };
+  const choose = (p) => {
+    $("#picks").querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.p === p)));
+    speakNow(p); sayde.innerHTML = `Bei <b>${p}</b> heißt es <b>${FORM[p]}</b>.`; mark(p);
+    stage.place(p);
+    if (SEE[idx].free && seen.size === 3) next.disabled = false;
+  };
+  stage.onPick(choose);
+  $("#picks").addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (b) choose(b.dataset.p); });
+  async function show(i) {
+    idx = i; const s = SEE[i];
+    sayde.innerHTML = s.de; say.textContent = s.en;
+    next.textContent = i === SEE.length - 1 ? "Weiter: Üben" : "Weiter";
+    next.disabled = !!s.free && seen.size < 3;
+    if (i === 0) { await stage.reset(); $("#picks").querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "false")); }
+    if (s.seq) for (const p of s.seq) { say.textContent = `${p[0].toUpperCase() + p.slice(1)} ${FORM[p]} ready.`.replace(/^i /, "I "); mark(p); await stage.place(p); await new Promise((r) => setTimeout(r, 350)); }
+    if (s.seq) sayde.innerHTML = s.de;
+  }
+  prev.onclick = () => { if (idx > 0) show(idx - 1); else openStation(0); };
+  next.onclick = () => { if (idx < SEE.length - 1) show(idx + 1); else openStation(2); };
+  show(0);
+}
+
+/* gemeinsame Auswahl-Aufgabe: eine Aufgabe pro Bildschirm */
+function choiceRun(items, kicker, onDone, opts = {}) {
+  let i = 0, right = 0, answered = false; const errors = [];
+  function render() {
+    const it = items[i]; answered = false;
+    view.innerHTML = `${stepsBar()}<p class="kicker">${kicker} · ${i + 1} von ${items.length}</p>
+      <p class="q" lang="${/[a-z]/i.test(it.s) && !/Wie|Welcher/.test(it.s) ? "en" : "de"}">${it.s.replace("___", '<span class="gap">&nbsp;</span>')}</p>
+      <div class="opts" lang="en">${it.o.map((o, k) => `<button class="opt" type="button" data-k="${k}"><span>${o}</span></button>`).join("")}</div>
+      <div id="fb"></div>`;
+    setBar(!opts.noBack, "Weiter", false);
+    prev.onclick = () => (opts.noBack ? null : (i > 0 ? (i--, render()) : openStation(station - 1)));
+    next.onclick = () => { if (i < items.length - 1) { i++; render(); } else onDone({ right, errors, total: items.length }); };
+    view.querySelector(".opts").onclick = (e) => {
+      const b = e.target.closest(".opt"); if (!b || answered) return;
+      answered = true; const k = +b.dataset.k, ok = k === it.a;
+      if (ok) right++; else errors.push(it.s);
+      b.classList.add(ok ? "right" : "wrong"); b.insertAdjacentHTML("beforeend", ok ? PEN_OK : PEN_NO);
+      if (!ok) { const rb = view.querySelector(`.opt[data-k="${it.a}"]`); rb.classList.add("right"); }
+      if (!opts.silent) $("#fb").innerHTML = `<div class="explain">${ok ? "Richtig. " : "Fast. "}${it.e}</div>`;
+      next.disabled = false; next.textContent = i < items.length - 1 ? "Weiter" : (opts.last || "Weiter");
+    };
+  }
+  render();
+}
+
+/* 3 · Üben */
+function practice() {
+  choiceRun(CHOICE, "3 · Üben", () => build(0), { last: "Weiter: Satzbau" });
+}
+function build(n) {
+  const it = BUILD[n]; let chosen = [];
+  const pool = it.words.slice().sort(() => Math.random() - 0.5);
+  view.innerHTML = `${stepsBar()}<p class="kicker">3 · Üben · Satzbau ${n + 1} von ${BUILD.length}</p>
+    <p class="q">${it.de}</p><div class="target" id="tg" lang="en" aria-label="Dein Satz"></div>
+    <div class="words" id="wd" lang="en"></div><div id="fb"></div>`;
+  const draw = () => {
+    $("#tg").innerHTML = chosen.map((w, k) => `<button type="button" data-k="${k}">${w}</button>`).join("");
+    $("#wd").innerHTML = pool.map((w, k) => `<button type="button" data-k="${k}" ${chosen.includes(w) && chosen.filter((x) => x === w).length >= pool.filter((x) => x === w).length ? "disabled" : ""}>${w}</button>`).join("");
+    next.disabled = chosen.length !== it.words.length;
+  };
+  setBar(true, "Prüfen", false);
+  let checked = false;
+  $("#wd").onclick = (e) => { const b = e.target.closest("button"); if (!b || checked) return; chosen.push(pool[+b.dataset.k]); draw(); };
+  $("#tg").onclick = (e) => { const b = e.target.closest("button"); if (!b || checked) return; chosen.splice(+b.dataset.k, 1); draw(); };
+  prev.onclick = () => (n > 0 ? build(n - 1) : openStation(1));
+  next.onclick = () => {
+    if (!checked) {
+      checked = true; const ok = chosen.join(" ") === it.words.join(" ");
+      $("#fb").innerHTML = `<div class="explain" lang="en">${ok ? "Richtig: " : "Richtig wäre: "}<b>${it.words.join(" ")}</b></div>`;
+      next.textContent = n < BUILD.length - 1 ? "Weiter" : "Weiter: Hören";
+    } else if (n < BUILD.length - 1) build(n + 1); else openStation(3);
+  };
+  draw();
+}
+
+/* 4 · Hören */
+function listen() {
+  if (!voice) {
+    view.innerHTML = `${stepsBar()}<p class="kicker">4 · Hören</p><h2>Hören</h2>
+      <div class="card"><p>Auf diesem Gerät gibt es keine englische Stimme. Diese Station wird übersprungen.</p></div>`;
+    setBar(true, "Weiter: Check", true); return;
+  }
+  let i = 0, answered = false;
+  const render = () => {
+    const it = LISTEN[i]; answered = false;
+    view.innerHTML = `${stepsBar()}<p class="kicker">4 · Hören · ${i + 1} von ${LISTEN.length}</p>
+      <p class="q">Was hörst du?</p>
+      <button class="btn" id="play" type="button" style="gap:.5rem">${SPEAKER} Anhören</button>
+      <div class="opts" lang="en" style="margin-top:1rem">${it.o.map((o, k) => `<button class="opt" type="button" data-k="${k}"><span>${o}</span></button>`).join("")}</div>`;
+    setBar(true, "Weiter", false);
+    $("#play").onclick = () => speak(it.say);
+    view.querySelector(".opts").onclick = (e) => {
+      const b = e.target.closest(".opt"); if (!b || answered) return; answered = true;
+      const ok = it.o[+b.dataset.k] === it.say;
+      b.classList.add(ok ? "right" : "wrong"); b.insertAdjacentHTML("beforeend", ok ? PEN_OK : PEN_NO);
+      if (!ok) [...view.querySelectorAll(".opt")].find((x) => x.textContent === it.say).classList.add("right");
+      next.disabled = false; next.textContent = i < LISTEN.length - 1 ? "Weiter" : "Weiter: Check";
+    };
+    prev.onclick = () => (i > 0 ? (i--, render()) : openStation(2));
+    next.onclick = () => { if (i < LISTEN.length - 1) { i++; render(); } else openStation(4); };
+  };
+  render();
+}
+
+/* 5 · Check */
+function check() {
+  choiceRun(CHECK, "5 · Check", (res) => {
+    const pass = res.right >= 4;
+    if (pass) { saved.done = true; save(saved); }
+    view.innerHTML = `${stepsBar()}<p class="kicker">Ergebnis</p><h2>${res.right} von ${res.total} richtig</h2>
+      ${pass ? `<div class="stamp">Station<br>geschafft</div><p class="lead" style="text-align:center">Gut gemacht. Der Ort auf der Karte hat jetzt einen Stempel.</p>`
+             : `<p class="lead">Du brauchst mindestens 4 richtige Antworten. Schau dir die Animation noch einmal an.</p>`}`;
+    setBar(true, pass ? "Zur Karte" : "Nochmal", true);
+    prev.onclick = () => openStation(1);
+    next.onclick = () => (pass ? showMap() : openStation(4));
+  }, { silent: false, last: "Ergebnis" });
+}
+function finish() { showMap(); }
+
+showMap();
+</script>
+</body>
+</html>
