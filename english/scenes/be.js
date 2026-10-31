@@ -6,7 +6,7 @@
    über die Ersatz-Tasten unter der Bühne bedienbar. */
 
 export const FORM = { I: "am", you: "are", we: "are", they: "are", he: "is", she: "is", it: "is" };
-export const COLOR = { am: "#A9741F", is: "#2F5638", are: "#3F6C8C" };
+export const COLOR = { am: "#FF8A3D", is: "#7BE08A", are: "#4DB8FF" };
 export const TRAY = [["I", "you", "we", "they"], ["he", "she", "it"]];
 const PRON_COLOR = (p) => COLOR[FORM[p]];
 
@@ -67,7 +67,7 @@ export async function createThreeStage(container) {
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
   camera.position.set(0, 7.2, 7.4);
   camera.lookAt(0, 0, 0.55);
-  scene.add(new THREE.HemisphereLight(0xfff6e0, 0xc9bc9c, 1.5));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.6));
   const sun = new THREE.DirectionalLight(0xffffff, 1.2);
   sun.position.set(-3, 8, 5);
   scene.add(sun);
@@ -117,10 +117,10 @@ export async function createThreeStage(container) {
     trayPos[p] = new THREE.Vector3(x0 + i * gap, 0, 1.25 + r * 1.35);
   }));
 
-  const beBlock = block("be", "#8c8068", "#ffffff"); beBlock.position.copy(SLOT.be);
-  const ready = block("ready", "#6A5F49", "#ffffff"); ready.position.copy(SLOT.ready);
+  const beBlock = block("be", "#4A5568", "#F2F4F8"); beBlock.position.copy(SLOT.be);
+  const ready = block("ready", "#3A4453", "#F2F4F8"); ready.position.copy(SLOT.ready);
   const pron = {};
-  Object.keys(trayPos).forEach((p) => { pron[p] = block(p, "#F6EEDB", "#23201A"); pron[p].position.copy(trayPos[p]); });
+  Object.keys(trayPos).forEach((p) => { pron[p] = block(p, "#2A3240", "#F2F4F8"); pron[p].position.copy(trayPos[p]); });
 
   /* kleine Tween-Verwaltung: gerendert wird nur, solange sich etwas bewegt */
   const tweens = [];
@@ -167,19 +167,19 @@ export async function createThreeStage(container) {
     current = p;
     if (prev && prev !== p) {
       await move(pron[prev], trayPos[prev], 450, 0.6);
-      retext(pron[prev], prev, "#F6EEDB", "#23201A");
+      retext(pron[prev], prev, "#2A3240", "#F2F4F8");
     }
-    retext(pron[p], p, PRON_COLOR(p), "#ffffff");
+    retext(pron[p], p, PRON_COLOR(p), "#12161D");
     const going = move(pron[p], SLOT.p, 650);
     const form = FORM[p];
-    beBlock.userData.swap = () => retext(beBlock, form, COLOR[form], "#ffffff");
+    beBlock.userData.swap = () => retext(beBlock, form, COLOR[form], "#12161D");
     if (beBlock.userData.text !== form) await Promise.all([going, hop(beBlock)]);
     else await going;
     beBlock.rotation.y = 0;
   }
   async function doReset() {
-    if (current) { const p = current; current = null; await move(pron[p], trayPos[p], 450, 0.6); retext(pron[p], p, "#F6EEDB", "#23201A"); }
-    retext(beBlock, "be", "#8c8068", "#ffffff"); beBlock.userData.swap = null;
+    if (current) { const p = current; current = null; await move(pron[p], trayPos[p], 450, 0.6); retext(pron[p], p, "#2A3240", "#F2F4F8"); }
+    retext(beBlock, "be", "#4A5568", "#F2F4F8"); beBlock.userData.swap = null;
     renderer.render(scene, camera);
   }
 
