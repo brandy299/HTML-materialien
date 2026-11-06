@@ -134,6 +134,8 @@
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  /* Wie esc(), lässt aber <b>…</b> als Fettdruck stehen (Fragetexte) */
+  const escB = (s) => esc(s).replace(/&lt;(\/?)b&gt;/g, "<$1b>");
   const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch { /* egal */ } };
   /* Kursinhalte in der gewählten Sprache (app/uebersetzungen/*.js); fehlt ein Text, bleibt das Deutsche */
@@ -329,7 +331,7 @@
   /* Erwartungshorizont je Aufgabe */
   function solutionHTML(st) {
     switch (st.type) {
-      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${esc(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
+      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${escB(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
       case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
       case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value, r.dec ?? st.decimals) : num(r.value, r.dec ?? st.decimals)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
@@ -418,21 +420,10 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>${langSwitch()}</div>
-        <div class="win">
-          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
-          <div class="body">
-            <p class="kick">${tr("Neu hier?")}</p>
-            <p class="say">${tr("Lernen, wann es dir passt.")}</p>
-            <p class="sub">${tr("Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.")}</p>
-          </div>
-        </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
-      <ol class="intro-steps" aria-label="${tr("So funktioniert's")}">
-        <li><b>${tr("Kurze Aufgaben")}</b><span>${tr("Antwort antippen, auf „Prüfen“ tippen, fertig.")}</span></li>
-        <li><b>${tr("Videos und Lernkarten")}</b><span>${tr("Wenn du etwas nochmal brauchst – jederzeit.")}</span></li>
-        <li><b>${tr("Alles auf deinem Handy")}</b><span>${tr("Dein Fortschritt bleibt hier. Kein Konto, kein Passwort.")}</span></li>
-      </ol>
+      <p class="intro-tag">${tr("Lernen, wann es dir passt.")}</p>
+      <p class="intro-line"><span>${tr("Kurze Aufgaben")}</span> · <span>${tr("Videos und Lernkarten")}</span> · <span>${tr("Alles auf deinem Handy")}</span></p>
       <form style="margin-top:24px">
         <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
           <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>
@@ -1406,7 +1397,7 @@
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
           <p class="q-count">${tr("Frage {a} von {b}", { a: k + 1, b: qs.length })}</p>
-          <p class="q-text">${esc(q.q)}</p>
+          <p class="q-text">${escB(q.q)}</p>
           <div class="options"></div>
         </div>`);
         const opts = node.querySelector(".options");

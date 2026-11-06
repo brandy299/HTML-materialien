@@ -1,5 +1,5 @@
 /* ============================================================
-   KURS: PBP · HS1 – Bewerbung
+   KURS: PBP · HS1 – Personalbeschaffung (Bewerbung)
    Fach PBP · Lernfeld 8.1 · Modellunternehmen Mediaworld e. K.
    Teil 1: Stellenanzeige & Profil (LS 2.2). Teil 2 (Bewerbung &
    Auswahl, LS 2.3) folgt.
@@ -11,7 +11,7 @@ LERNRAUM.subjects.push({
   fach: "PBP",
   added: "2026-10-08",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
   updated: "2026-11-02",        // Neue Themen K2.2e–h (Azubi-Anzeige, Berufe, Markt, Erwartungen)
-  name: "Bewerbung",
+  name: "Personalbeschaffung",
   course: "PBP · HS1",
   glyph: "B",
   color: "#F386A1",
