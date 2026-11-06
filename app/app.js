@@ -420,21 +420,10 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>${langSwitch()}</div>
-        <div class="win">
-          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
-          <div class="body">
-            <p class="kick">${tr("Neu hier?")}</p>
-            <p class="say">${tr("Lernen, wann es dir passt.")}</p>
-            <p class="sub">${tr("Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.")}</p>
-          </div>
-        </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
-      <ol class="intro-steps" aria-label="${tr("So funktioniert's")}">
-        <li><b>${tr("Kurze Aufgaben")}</b><span>${tr("Antwort antippen, auf „Prüfen“ tippen, fertig.")}</span></li>
-        <li><b>${tr("Videos und Lernkarten")}</b><span>${tr("Wenn du etwas nochmal brauchst – jederzeit.")}</span></li>
-        <li><b>${tr("Alles auf deinem Handy")}</b><span>${tr("Dein Fortschritt bleibt hier. Kein Konto, kein Passwort.")}</span></li>
-      </ol>
+      <p class="intro-tag">${tr("Lernen, wann es dir passt.")}</p>
+      <p class="intro-line"><span>${tr("Kurze Aufgaben")}</span> · <span>${tr("Videos und Lernkarten")}</span> · <span>${tr("Alles auf deinem Handy")}</span></p>
       <form style="margin-top:24px">
         <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
           <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>

@@ -1318,3 +1318,8 @@ body.sim-win { --sim-blue: #0067c0; --sim-blue-soft: #dbeafa; --sim-sel: #cce4f7
 
 /* Kursansicht auf dem Handy: Bild kleiner, damit „Weiter mit …“ ohne Scrollen sichtbar ist */
 @media (max-width: 520px) { .art.big { max-height: 130px; margin-top: 14px; } }
+
+/* Willkommensbildschirm: ruhiger Start */
+.intro-tag { margin: 6px 0 0; font: 800 22px/1.2 var(--grot); letter-spacing: -.02em; }
+.intro-line { margin: 8px 0 0; font: 500 13px/1.5 var(--mono); color: var(--ink-2); }
+@media (max-width: 520px) { .hero .big-art { display: none; } }
