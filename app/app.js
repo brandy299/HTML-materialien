@@ -134,6 +134,8 @@
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  /* Wie esc(), lässt aber <b>…</b> als Fettdruck stehen (Fragetexte) */
+  const escB = (s) => esc(s).replace(/&lt;(\/?)b&gt;/g, "<$1b>");
   const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch { /* egal */ } };
   /* Kursinhalte in der gewählten Sprache (app/uebersetzungen/*.js); fehlt ein Text, bleibt das Deutsche */
@@ -329,7 +331,7 @@
   /* Erwartungshorizont je Aufgabe */
   function solutionHTML(st) {
     switch (st.type) {
-      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${esc(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
+      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${escB(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
       case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
       case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value, r.dec ?? st.decimals) : num(r.value, r.dec ?? st.decimals)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
@@ -1406,7 +1408,7 @@
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
           <p class="q-count">${tr("Frage {a} von {b}", { a: k + 1, b: qs.length })}</p>
-          <p class="q-text">${esc(q.q)}</p>
+          <p class="q-text">${escB(q.q)}</p>
           <div class="options"></div>
         </div>`);
         const opts = node.querySelector(".options");
