@@ -101,6 +101,7 @@ mark { background: var(--pink-fill); color: var(--ink); padding: 0 .12em; }
   font: 600 14px/1 var(--grot); letter-spacing: -.01em; white-space: nowrap;
 }
 .tag-box.ink { background: var(--ink); color: var(--paper); }
+a.tag-box.ink { min-height: 44px; display: inline-flex; align-items: center; }
 .sq { width: 10px; height: 10px; background: var(--pink-fill); border: 1.5px solid var(--ink); flex: none; }
 .tag-box.ink .sq { border-color: var(--paper); }
 .icon-btn {
