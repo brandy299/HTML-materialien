@@ -8,10 +8,10 @@ LV.video({
   poster: 34.5,
   bpm: 96, mood: "calm",
   scenes: [
-    LV.title({ kicker: "GPU · Bezugskalkulation", title: "Was kostet die Ware wirklich?", sub: "Mediaworld, in einer Minute.", dur: 4.5 }),
+    LV.title({ kicker: "GPU · Bezugskalkulation", title: "Was kostet die Ware wirklich?", sub: "Mediaworld, in einer Minute.", dur: 4.5, voice: "Was kostet die Ware wirklich?" }),
 
     LV.scene({
-      kicker: "01 · Die Frage", dur: 7,
+      kicker: "01 · Die Frage", dur: 7, voice: "Eine Soundbar für vierhundert Euro. Doch es kommt noch etwas dazu.",
       items: [
         LV.text("Eine <mark>Soundbar</mark> für 400 €.", { size: "xl", at: 0.5 }),
         LV.text("So steht es im Angebot.", { size: "m", at: 2.2, tone: "mut" }),
@@ -21,7 +21,7 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "02 · Erst der Rabatt", dur: 8,
+      kicker: "02 · Erst der Rabatt", dur: 8, voice: "Zuerst der Rabatt: zehn Prozent, also vierzig Euro weniger.",
       items: [
         LV.scheme([
           { label: "Listeneinkaufspreis", sub: "Katalogpreis", value: "400,00 €" },
@@ -33,7 +33,7 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "03 · Dann das Skonto", dur: 9,
+      kicker: "03 · Dann das Skonto", dur: 9, voice: "Dann das Skonto: zwei Prozent, immer vom Zieleinkaufspreis.",
       items: [
         LV.scheme([
           { label: "Zieleinkaufspreis", value: "360,00 €" },
@@ -45,7 +45,7 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "04 · Die Lieferung", dur: 9.5,
+      kicker: "04 · Die Lieferung", dur: 9.5, voice: "Jetzt die Lieferung. Fracht und Verpackung kommen dazu. So kostet die Soundbar wirklich dreihundertsiebzig Euro.",
       items: [
         LV.scheme([
           { label: "Bareinkaufspreis", value: "352,80 €" },
@@ -58,12 +58,12 @@ LV.video({
     }),
 
     LV.scene({
-      kicker: "05 · Kurz testen", dur: 9,
+      kicker: "05 · Kurz testen", dur: 9, voice: "Kurz testen: Von welchem Preis wird das Skonto berechnet?",
       items: [
         LV.quiz("Skonto 2 %: Von welchem Preis wird es <b>berechnet</b>?", ["Listeneinkaufspreis", "Zieleinkaufspreis", "Bezugspreis"], 1, { at: 0.4, reveal: 6.4 })
       ]
     }),
 
-    LV.outro({ text: "Jetzt <mark>selbst</mark> rechnen.", url: "lernen.yannikbrand.eu", dur: 3.5 })
+    LV.outro({ text: "Jetzt <mark>selbst</mark> rechnen.", url: "lernen.yannikbrand.eu", dur: 3.5, voice: "Jetzt selbst rechnen." })
   ]
 });
