@@ -1,6 +1,6 @@
 # Prüfbogen Arabisch · Kurs „Bewerbung“ (pbp-bewerbung)
 
-Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 25 Minuten). Fachbegriffe bleiben absichtlich deutsch und stehen beim ersten Vorkommen mit arabischer Erklärung in Klammern. Auswahl aus 599 Texten (Teil 1: 279, Teil 2: 320); die Begriffsliste steht in `docs/ARABISCH-PRUEFLISTE.md`.
+Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 25 Minuten). Fachbegriffe bleiben absichtlich deutsch und stehen beim ersten Vorkommen mit arabischer Erklärung in Klammern. Auswahl aus 807 Texten (Teil 1: 279, Teil 2: 320, K2.2e–h: 209); die Begriffsliste steht in `docs/ARABISCH-PRUEFLISTE.md`.
 
 | # | Deutsch | Arabisch | OK / Korrektur |
 |---|---|---|---|
@@ -79,3 +79,22 @@ Bitte pro Zeile **OK** oder eine **Korrektur** eintragen (ca. 25 Minuten). Fachb
 | 65 | Mediaworld gibt {*Elif\|Jonas} die Zusage, weil sie mit {*390\|370} Punkten die {*höchste\|niedrigste} Summe hat. Das bessere Auftreten von Jonas {*reicht nicht aus\|entscheidet allein}, weil alle Kriterien zählen. | تعطي Mediaworld {*Elif\|Jonas} Zusage (القبول)، لأنها حصلت على {*390\|370} نقطة، وهو المجموع {*höchste\|niedrigste}. Auftreten (الحضور) الأفضل لـ Jonas {*reicht nicht aus\|entscheidet allein}، لأن كل المعايير مهمة. | |
 | 66 | A: einladen · B: Reserve · C: Absage, weil eine Muss-Anforderung fehlt. | A: دعوة · B: احتياطي · C: رفض، لأن هناك متطلبًا أساسيًا مفقودًا. | |
 | 67 | Der Code im Zeugnis: „stets zu unserer vollsten Zufriedenheit“ = sehr gut, „zu unserer Zufriedenheit“ = ausreichend. | الرمز في Arbeitszeugnis: „stets zu unserer vollsten Zufriedenheit“ = ممتاز، „zu unserer Zufriedenheit“ = مقبول. | |
+
+## Teil 1b · Azubi-Anzeige, Berufe, Ausbildungsmarkt, Erwartungen (K2.2e–h) – neu am 08.11.2026
+
+209 neue Texte, maschinell übersetzt, Rückübersetzung geprüft; die Zeilen unten wurden dabei korrigiert. **AGG** = قانون المساواة في المعاملة.
+
+| # | Deutsch | Arabisch | OK / Korrektur |
+|---|---|---|---|
+| 68 | Eine Anzeige, die passt | إعلان مناسب | |
+| 69 | Das AGG | قانون AGG (قانون المساواة في المعاملة) | |
+| 70 | Prüfe die Formulierungen mit dem AGG. | افحص الصياغات حسب AGG (قانون المساواة في المعاملة). | |
+| 71 | Aufgaben und Eigenschaften beschreiben ist erlaubt. Eine Altersgrenze ist es nicht. | وصف المهام والصفات مسموح. تحديد حد أقصى للعمر غير مسموح. | |
+| 72 | Duale Ausbildung Zwei Lernorte: Betrieb (Praxis) + Berufsschule (Theorie). Meist 3 Jahre, Prüfung vor der Kammer. Die Berufsfamilie Büro: Büromanagement – Organisation, Personal, Rechnungen. Verkauf: Einzelhandel – Waren, Beratung, Kasse. Zahlen: Bank, Versicherung, Steuern – Konten, Verträge, Buchhaltung. Industrie & Logistik: Industrie, Spedition – Beschaffung, Produktion, Transport. Drei Wege nach der Schule Duale Ausbildung: Betrieb + Berufsschule, Geld von Anfang an. Schulische Ausbildung: nur Schule, oft mit Praktika. Studium: Universität oder Fachhochschule. Häufige Fehler „Kaufmännisch“ mit „Büro“ gleichsetzen – es gibt viele kaufmännische Berufe. Die duale Ausbildung für „nur Schule“ halten – der Betrieb gehört dazu. | التدريب المهني المزدوج مكانان للتعلم: الشركة (التطبيق العملي) + المدرسة المهنية (النظرية). غالبًا 3 سنوات، امتحان أمام الغرفة المختصة. عائلة المهن المكتب: Büromanagement – التنظيم، شؤون الموظفين، الفواتير. البيع: تجارة التجزئة – البضائع، الاستشارة، الصندوق. الأرقام: البنك، التأمين، الضرائب – الحسابات، العقود، المحاسبة. الصناعة واللوجستيات: الصناعة، Spedition (شركات الشحن) – التوريد، الإنتاج، النقل. ثلاث طرق بعد المدرسة التدريب المهني المزدوج: الشركة + المدرسة المهنية، أجر من البداية. التدريب المهني المدرسي: فقط المدرسة، غالبًا مع تدريب عملي. الدراسة: الجامعة أو الكلية التقنية. أخطاء شائعة مساواة "kaufmännisch" مع "المكتب" – هناك العديد من المهن التجارية (kaufmännisch). الاعتقاد أن التدريب المهني المزدوج هو "مدرسة فقط" – الشركة جزء منه. | |
+| 73 | Büromanagement Büro in fast jedem Betrieb – Organisation, Personal, Rechnungen. Einzelhandel Laden, Kaufhaus, Onlineshop – Verkauf und Beratung. Bank / Versicherung Konten, Kredite, Verträge – Beratung mit Zahlen. Steuern Steuerbüro oder Kanzlei – Buchhaltung und Fristen. Industrie / Logistik Beschaffung, Produktion, Transport – planen und steuern. | Büromanagement مكتب في معظم الشركات – تنظيم، شؤون الموظفين، فواتير. Einzelhandel محل، مركز تسوق، متجر إلكتروني – بيع واستشارة. Bank / Versicherung حسابات، قروض، عقود – استشارة بالأرقام. Steuern مكتب ضرائب أو مكتب محاماة – محاسبة ومواعيد نهائية. Industrie / Logistik توفير، إنتاج، نقل – تخطيط وتوجيه. | |
+| 74 | In einem Steuerbüro. | في Steuerbüro (مكتب استشارات ضريبية). | |
+| 75 | Dual erklären | اشرح النظام المزدوج (dual) | |
+| 76 | Wer flexibel ist, findet leichter eine Stelle. | من يكون مرنًا، يجد وظيفة بسهولة أكبر. | |
+| 77 | Vor Ort | في المكان (حضوريًا) | |
+| 78 | Ich kann aus Marktzahlen eine Schlussfolgerung ziehen. | أستطيع أن أستنتج نتيجة من أرقام السوق. | |
+| 79 | sicher lesen und schreiben Grundrechenarten Deutsch in Wort und Schrift Grundkenntnisse Englisch Grundlagen am PC Ordnung am Arbeitsplatz Die wichtigste Haltung: Lernbereitschaft – Fragen stellen, Notizen machen, Fehler nicht wiederholen. | القراءة والكتابة بثقة العمليات الحسابية الأساسية الألمانية كتابة وشفويًا معرفة أساسية بالإنجليزية أساسيات استخدام الحاسوب النظام في مكان العمل أهم سلوك: الاستعداد للتعلم – طرح الأسئلة، تدوين الملاحظات، عدم تكرار الأخطاء. | |

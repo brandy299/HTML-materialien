@@ -87,4 +87,8 @@ Spalte "Variante": abweichende Übersetzung an anderer Stelle. Bitte je Zeile: O
 | 62 | Auftreten | الحضور والتصرف | LS 2.3 |
 | 63 | Bewertungstabelle | جدول التقييم الموزون | LS 2.3 |
 | 64 | Zusage / Absage | القبول / الرفض | LS 2.3 |
-| 65 | AGG (Benachteiligung) | تمييز ضد الشخص | LS 2.3 |
+| 65 | AGG (Allgemeines Gleichbehandlungsgesetz) | قانون المساواة في المعاملة | LS 2.2/2.3 |
+| 66 | Benachteiligung | تمييز ضد الشخص | LS 2.3 |
+| 67 | Duale Ausbildung | التدريب المهني المزدوج | LS 2.2 |
+| 68 | Ausbildungsberuf | مهنة تدريبية | LS 2.2 |
+| 69 | Steuerbüro | مكتب استشارات ضريبية | LS 2.2 |
