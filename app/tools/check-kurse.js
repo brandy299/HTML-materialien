@@ -57,7 +57,7 @@ for (const f of listed) {
 /* ── 3. Inhalte prüfen ──────────────────────────────────────── */
 const ID = /^[a-z0-9][a-z0-9-]*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "spot", "word", "link", "video"];
+const TYPES = ["slides", "quiz", "sort", "cloze", "calc", "cards", "selfcheck", "sentence", "spot", "word", "ppt", "xls", "win", "link", "video"];
 const WORDNUM = { ein: 1, eins: 1, eines: 1, einer: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
 const str = (x) => typeof x === "string" && x.trim().length > 0;
 const subjectIds = new Set();
@@ -199,6 +199,109 @@ function checkStep(where, st, topic) {
           else if (ck.op === "align" && !Number.isInteger(ck.block)) err(w2, "align braucht block");
           else if (ck.op === "bold" && !Number.isInteger(ck.block)) err(w2, "bold braucht block");
           else if (ck.op === "margins" && !(ck.value && ["top", "bottom", "left", "right"].every((m) => typeof ck.value[m] === "number"))) err(w2, "margins braucht top/bottom/left/right als Zahlen");
+        });
+      });
+      break;
+    }
+    case "ppt": {
+      if (st.mode !== undefined && st.mode !== "guided" && st.mode !== "free") err(where, 'mode muss "guided" oder "free" sein');
+      const dk = st.deck || {};
+      if (!Array.isArray(dk.slides) || !dk.slides.length) { err(where, "deck.slides ist leer"); break; }
+      const LAY = ["titel", "inhalt", "nur-titel", "leer"], EL = ["title", "body", "pic"];
+      const THEME = ["office", "dunkel", "gruen", "sonne"], TR = ["keine", "blende", "schieben", "wischen", "zoom"], AN = ["keine", "erscheinen", "einfliegen", "verblassen", "zoom"];
+      const PICS = ["fahrrad", "diagramm", "euro", "person"];
+      dk.slides.forEach((sl, k) => {
+        if (sl.layout !== undefined && !LAY.includes(sl.layout)) err(`${where} Folie ${k + 1}`, `layout „${sl.layout}“ unbekannt`);
+        if (sl.pic !== undefined && !PICS.includes(sl.pic)) err(`${where} Folie ${k + 1}`, `pic „${sl.pic}“ unbekannt`);
+      });
+      if (dk.theme !== undefined && !THEME.includes(dk.theme)) err(where, `deck.theme „${dk.theme}“ unbekannt`);
+      if (!Array.isArray(st.criteria) || !st.criteria.length) { err(where, "criteria ist leer"); break; }
+      st.criteria.forEach((c, k) => {
+        const w = `${where} Kriterium ${k + 1}`;
+        if (!str(c.label)) err(w, "label fehlt");
+        if (!Array.isArray(c.checks) || !c.checks.length) { err(w, "checks ist leer"); return; }
+        c.checks.forEach((ck, j) => {
+          const w2 = `${w} Check ${j + 1}`;
+          const needSlide = () => { if (!Number.isInteger(ck.slide) || ck.slide < 0) err(w2, `${ck.op} braucht slide (0-basiert)`); };
+          switch (ck.op) {
+            case "count": if (!Number.isInteger(ck.value) || ck.value < 1) err(w2, "count braucht eine ganze Zahl ≥ 1"); break;
+            case "layout": needSlide(); if (!LAY.includes(ck.value)) err(w2, `layout „${ck.value}“ unbekannt`); break;
+            case "text": needSlide(); if (!["title", "body"].includes(ck.el)) err(w2, 'text braucht el "title" oder "body"'); if (!str(ck.value) && !(Array.isArray(ck.value) && ck.value.length && ck.value.every(str))) err(w2, "text braucht value"); break;
+            case "lines": needSlide(); if (!Number.isInteger(ck.min) || ck.min < 1) err(w2, "lines braucht min ≥ 1"); break;
+            case "fmt": needSlide(); if (!EL.slice(0, 2).includes(ck.el)) err(w2, 'fmt braucht el "title" oder "body"'); if (!["size", "bold", "italic", "align"].includes(ck.prop)) err(w2, "fmt braucht prop size/bold/italic/align"); if (ck.value === undefined) err(w2, "fmt braucht value"); break;
+            case "bullets": needSlide(); break;
+            case "pic": needSlide(); if (ck.value !== undefined && typeof ck.value !== "boolean" && !PICS.includes(ck.value)) err(w2, "pic value muss true/false oder ein Bildname sein"); break;
+            case "anim": needSlide(); if (!EL.includes(ck.el)) err(w2, "anim braucht el"); if (!AN.includes(ck.value)) err(w2, `anim „${ck.value}“ unbekannt`); break;
+            case "trans": if (ck.slide !== "all") needSlide(); if (!TR.includes(ck.value)) err(w2, `trans „${ck.value}“ unbekannt`); break;
+            case "theme": if (!THEME.includes(ck.value)) err(w2, `theme „${ck.value}“ unbekannt`); break;
+            case "master": if (!["titleColor", "titleSize", "titleBold", "font"].includes(ck.prop)) err(w2, "master braucht prop titleColor/titleSize/titleBold/font"); break;
+            case "view": if (!["master", "normal"].includes(ck.value)) err(w2, 'view braucht value "master" oder "normal"'); break;
+            case "pos": if (!str(ck.title) || !Number.isInteger(ck.value) || ck.value < 1) err(w2, "pos braucht title und value (1-basiert)"); break;
+            default: err(w2, `unbekannter op "${ck.op}"`);
+          }
+        });
+      });
+      break;
+    }
+    case "xls": {
+      if (st.mode !== undefined && st.mode !== "guided" && st.mode !== "free") err(where, 'mode muss "guided" oder "free" sein');
+      const sh = st.sheet || {}, COLS = sh.cols || 6, ROWS = sh.rows || 12;
+      const A1 = /^([A-Z]{1,2})(\d+)$/;
+      const inGrid = (a) => { const m = A1.exec(a); if (!m) return false; let c = 0; for (const ch of m[1]) c = c * 26 + ch.charCodeAt(0) - 64; return c >= 1 && c <= COLS && +m[2] >= 1 && +m[2] <= ROWS; };
+      const colNo = (t) => [...t].reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
+      const cellCount = (r) => { const [x, y] = r.split(":"), a = A1.exec(x), b = A1.exec(y || x); return (Math.abs(colNo(b[1]) - colNo(a[1])) + 1) * (Math.abs(+b[2] - +a[2]) + 1); };
+      const okRange = (r) => typeof r === "string" && r.split(":").length <= 2 && r.split(":").every(inGrid);
+      if (!sh.cells || typeof sh.cells !== "object") { err(where, "sheet.cells fehlt"); break; }
+      Object.keys(sh.cells).forEach((a) => { if (!inGrid(a)) err(where, `Zelle ${a} liegt außerhalb der Tabelle (${COLS} Spalten × ${ROWS} Zeilen)`); if (typeof sh.cells[a] !== "string") err(where, `Zelle ${a} muss Text sein (auch Zahlen als "12,5")`); });
+      Object.keys(sh.fmt || {}).forEach((a) => { if (!okRange(a)) err(where, `fmt-Bereich ${a} ungültig`); });
+      if (!Array.isArray(st.criteria) || !st.criteria.length) { err(where, "criteria ist leer"); break; }
+      const NF = ["standard", "zahl", "euro", "prozent"], FILL = ["keine", "gelb", "gruen", "blau", "rot"], CH = ["saeule", "linie", "kreis"];
+      st.criteria.forEach((c, k) => {
+        const w = `${where} Kriterium ${k + 1}`;
+        if (!str(c.label)) err(w, "label fehlt");
+        if (!Array.isArray(c.checks) || !c.checks.length) { err(w, "checks ist leer"); return; }
+        c.checks.forEach((ck, j) => {
+          const w2 = `${w} Check ${j + 1}`;
+          const needCell = () => { if (!okRange(ck.cell)) err(w2, `${ck.op} braucht cell (Zelle oder Bereich innerhalb der Tabelle)`); };
+          switch (ck.op) {
+            case "value": needCell(); if (ck.value === undefined) err(w2, "value fehlt"); else if (Array.isArray(ck.value) && okRange(ck.cell) && ck.value.length !== cellCount(ck.cell)) err(w2, "value-Liste passt nicht zur Zellenzahl"); break;
+            case "text": needCell(); if (!str(ck.value)) err(w2, "text braucht value"); break;
+            case "formula": needCell(); if (ck.uses !== undefined && (!Array.isArray(ck.uses) || !ck.uses.every(str))) err(w2, "uses muss eine Liste von Funktionsnamen sein"); break;
+            case "formulas": if (!okRange(ck.range)) err(w2, "formulas braucht range"); break;
+            case "fmt": needCell(); if (!["bold", "align", "numfmt", "dec", "fill"].includes(ck.prop)) err(w2, "fmt braucht prop bold/align/numfmt/dec/fill"); else if (ck.prop === "numfmt" && !NF.includes(ck.value)) err(w2, "numfmt unbekannt"); else if (ck.prop === "fill" && !FILL.includes(ck.value)) err(w2, "fill unbekannt"); else if (ck.prop === "align" && !["left", "center", "right"].includes(ck.value)) err(w2, "align unbekannt"); else if (ck.prop === "dec" && !Number.isInteger(ck.value)) err(w2, "dec braucht ganze Zahl"); break;
+            case "chart": if (!CH.includes(ck.type)) err(w2, "chart braucht type saeule/linie/kreis"); if (ck.range !== undefined && !okRange(ck.range)) err(w2, "chart range ungültig"); break;
+            case "sorted": if (!okRange(ck.range)) err(w2, "sorted braucht range"); if (!["asc", "desc"].includes(ck.dir)) err(w2, 'sorted braucht dir "asc" oder "desc"'); break;
+            default: err(w2, `unbekannter op "${ck.op}"`);
+          }
+        });
+      });
+      break;
+    }
+    case "win": {
+      if (st.mode !== undefined && st.mode !== "guided" && st.mode !== "free") err(where, 'mode muss "guided" oder "free" sein');
+      const ROOTS = ["Desktop", "Dokumente", "Downloads", "Bilder"];
+      Object.keys(st.fs || {}).forEach((k) => { if (!ROOTS.includes(k)) err(where, `fs-Ordner „${k}“ unbekannt (erlaubt: ${ROOTS.join(", ")})`); });
+      const walk = (list, w) => (list || []).forEach((e) => { if (typeof e === "string") { if (!e.trim()) err(w, "leerer Name"); } else if (e && str(e.n)) { if (e.k !== undefined) walk(e.k, w); } else err(w, "Eintrag braucht Namen (Text oder { n, k })"); });
+      Object.entries(st.fs || {}).forEach(([k, v]) => walk(v, `${where} fs.${k}`));
+      if (!Array.isArray(st.criteria) || !st.criteria.length) { err(where, "criteria ist leer"); break; }
+      st.criteria.forEach((c, k) => {
+        const w = `${where} Kriterium ${k + 1}`;
+        if (!str(c.label)) err(w, "label fehlt");
+        if (!Array.isArray(c.checks) || !c.checks.length) { err(w, "checks ist leer"); return; }
+        c.checks.forEach((ck, j) => {
+          const w2 = `${w} Check ${j + 1}`;
+          switch (ck.op) {
+            case "exists": case "notExists": case "count": case "at": if (!str(ck.path ?? "")) err(w2, `${ck.op} braucht path`); if (ck.op === "count" && !Number.isInteger(ck.value)) err(w2, "count braucht value (ganze Zahl)"); break;
+            case "inTrash": if (!str(ck.name)) err(w2, "inTrash braucht name"); break;
+            case "atTrash": break;
+            case "view": if (!["symbole", "details"].includes(ck.value)) err(w2, 'view braucht value "symbole" oder "details"'); break;
+            case "sort": if (!["name", "datum", "typ", "groesse"].includes(ck.by)) err(w2, "sort braucht by name/datum/typ/groesse"); break;
+            case "ext": break;
+            case "search": if (!str(ck.query)) err(w2, "search braucht query"); break;
+            case "clip": if (!["cut", "copy"].includes(ck.mode) || !str(ck.name)) err(w2, "clip braucht mode cut/copy und name"); break;
+            case "explorer": if (!["open", "closed"].includes(ck.value)) err(w2, 'explorer braucht value "open" oder "closed"'); break;
+            default: err(w2, `unbekannter op "${ck.op}"`);
+          }
         });
       });
       break;

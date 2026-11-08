@@ -1,5 +1,5 @@
 /* ============================================================
-   KURS: PBP · HS1 – Bewerbung
+   KURS: PBP · HS1 – Personalbeschaffung (Bewerbung)
    Fach PBP · Lernfeld 8.1 · Modellunternehmen Mediaworld e. K.
    Teil 1: Stellenanzeige & Profil (LS 2.2).
    Teil 2: Bewerbung & Auswahl (LS 2.3) – ohne Arbeitsblatt nach Standard-Lehrplan erstellt.
@@ -10,8 +10,8 @@ LERNRAUM.subjects.push({
   id: "pbp-bewerbung",
   fach: "PBP",
   added: "2026-10-08",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-10-19",        // neu: Teil 2 Bewerbung & Auswahl (LS 2.3)
-  name: "Bewerbung",
+  updated: "2026-11-08",        // neu: Teil 2 Bewerbung & Auswahl (LS 2.3); davor K2.2e–h
+  name: "Personalbeschaffung",
   course: "PBP · HS1",
   glyph: "B",
   color: "#F386A1",
@@ -21,7 +21,7 @@ LERNRAUM.subjects.push({
     {
       id: "stellenanzeige", group: "Stellenanzeige & Profil", kicker: "Ordner · LS 2.2",
       title: "Stellenanzeige & Profil",
-      description: "Personalbeschaffung, Anforderungsprofil, Anzeigen-Sprache, Anzeigen-Check und das eigene Stärkenprofil."
+      description: "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt und Erwartungen."
     },
     {
       id: "auswahl", group: "Bewerbung & Auswahl", kicker: "Ordner · LS 2.3",
@@ -553,6 +553,576 @@ LERNRAUM.subjects.push({
     },
 
     {
+      id: "azubi-anzeige",
+      folder: "stellenanzeige",
+      help: `<h3>Fünf Bausteine einer Azubi-Anzeige</h3>
+             <p class="formula">1. Aufmerksamkeit · 2. Der Betrieb · 3. Das Angebot · 4. Das Profil · 5. Der Weg</p>
+             <h3>Das AGG</h3>
+             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung auszuschließen.</li>
+             <li>Nicht erlaubt: „junges, dynamisches Team“, „deutschsprachig“, „Alter bis 25“, „nur weibliche Bewerber“.</li>
+             <li>Erlaubt ist der Zusatz „(m/w/d)“.</li></ul>
+             <h3>Gute Sprache</h3>
+             <ul><li>Kurz, aktiv, konkret – und in der Du-Form.</li>
+             <li>Beschreibe Aufgaben und Eigenschaften, nicht die Person.</li></ul>
+             <h3>Häufige Fehler</h3>
+             <ul><li>Floskeln wie „dynamisches Umfeld“ statt konkreter Angaben.</li>
+             <li>Eine Altersgrenze oder Herkunft nennen – das ist diskriminierend.</li></ul>`,
+      group: "Stellenanzeige & Profil",
+      title: "Werkstatt: Die Azubi-Anzeige der Mediaworld",
+      kicker: "LS 2.2 · Teil 5",
+      minutes: 20,
+      steps: [
+        {
+          type: "slides",
+          title: "Eine Anzeige, die passt",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Freitag ist Abgabe",
+              title: "Tara soll die Anzeige schreiben.",
+              body: `<p>Sofia hat einen Termin mit der Zeitung: Am Freitag muss die Anzeige raus.</p>
+                     <p>„Tara, du kennst unsere Azubi-Stelle aus dem Anforderungsprofil – schreib mir die Abschnitte <strong>Dein Profil</strong> und <strong>Was wir bieten</strong>.“</p>
+                     <p>Melike schiebt ihr den Stift zu: „Wer selbst Azubi ist, weiß am besten, was andere Azubis anspricht. Ich korrigiere am Ende.“</p>`
+            },
+            {
+              kicker: "Die fünf Bausteine",
+              title: "So ist eine Azubi-Anzeige aufgebaut",
+              body: `<ol>
+                       <li><strong>Aufmerksamkeit</strong> – Beruf und Betrieb im Titel.</li>
+                       <li><strong>Der Betrieb</strong> – Branche, Standort, Größe, Besonderheit.</li>
+                       <li><strong>Das Angebot</strong> – Dauer, Vergütung, Übernahme, Betreuung.</li>
+                       <li><strong>Das Profil</strong> – Muss- und Kann-Anforderungen.</li>
+                       <li><strong>Der Weg</strong> – Unterlagen, Kontakt und Frist.</li>
+                     </ol>`
+            },
+            {
+              kicker: "Das AGG",
+              title: "Diese Sätze schließen Menschen aus.",
+              body: `<p>Das <strong>Allgemeine Gleichbehandlungsgesetz (AGG)</strong> schützt Bewerbende vor Benachteiligung.</p>
+                     <ul class="pm">
+                       <li class="m">„Junges, dynamisches Team“</li>
+                       <li class="m">„Deutschsprachig“</li>
+                       <li class="m">„Alter bis 25“</li>
+                       <li class="p">„Du arbeitest sorgfältig und freundlich.“</li>
+                       <li class="p">Der Zusatz „(m/w/d)“.</li>
+                     </ul>`
+            },
+            {
+              kicker: "Gute Sprache",
+              title: "Floskel oder klarer Satz?",
+              body: `<dl class="terms">
+                       <dt>Floskel</dt><dd>„Wir bieten ein dynamisches Umfeld.“</dd>
+                       <dt>Klar</dt><dd>„Du arbeitest in einem Team von 21 Kolleginnen und Kollegen.“</dd>
+                       <dt>Floskel</dt><dd>„Du bringst Flexibilität mit.“</dd>
+                       <dt>Klar</dt><dd>„Du springst auch mal ein, wenn im Verkauf viel los ist.“</dd>
+                     </dl>
+                     <p class="note">Kurz, aktiv, konkret – und in der Du-Form.</p>`
+            },
+            {
+              kicker: "Beispiel Mediaworld",
+              title: "So könnte die Anzeige aussehen",
+              body: `<p class="box"><strong>Azubi (m/w/d) für Büromanagement</strong> – Mediaworld e. K., Oberhausen</p>
+                     <p><strong>Der Betrieb:</strong> 21 Beschäftigte, eigene Reparaturwerkstatt, Einzelhandel für Unterhaltungselektronik.</p>
+                     <p><strong>Das Angebot:</strong> 3 Jahre, Vergütung nach Ausbildungsvertrag, Übernahmechance, feste Ansprechpartner.</p>
+                     <p><strong>Das Profil:</strong> Hauptschulabschluss, Deutsch, Grundrechenarten, PC-Grundlagen, Sorgfalt, Freundlichkeit.</p>
+                     <p><strong>Der Weg:</strong> Anschreiben, Lebenslauf, Zeugnisse – E-Mail – Frist 30.11.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Beschreibe die Aufgabe – nicht die Person.",
+              body: `<p>Eine gute Anzeige wirbt um passende Bewerbende. Sie schließt niemanden aus und versteckt sich nicht hinter Floskeln.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Erlaubt oder nicht erlaubt?",
+          prompt: "Prüfe die Formulierungen mit dem AGG.",
+          hints: ["Frage bei jedem Satz: Schließt er Menschen wegen Alter, Herkunft oder Geschlecht aus?",
+                  "Aufgaben und Eigenschaften beschreiben ist erlaubt. Eine Altersgrenze ist es nicht."],
+          categories: ["Erlaubt", "Nicht erlaubt"],
+          items: [
+            { text: "Du arbeitest sorgfältig und freundlich.", cat: 0 },
+            { text: "Wir suchen ein junges, dynamisches Team.", cat: 1 },
+            { text: "Der Zusatz (m/w/d).", cat: 0 },
+            { text: "Alter bis 25.", cat: 1 },
+            { text: "Du sprichst und schreibst gut Deutsch.", cat: 0 },
+            { text: "Nur weibliche Bewerber.", cat: 1 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Die bessere Anzeige",
+          questions: [
+            {
+              q: "Welcher Satz gehört in eine Azubi-Anzeige?",
+              hint: "Beschreibt der Satz eine Aufgabe oder eine Eigenschaft – oder schließt er Menschen aus?",
+              options: [
+                "Du arbeitest sorgfältig und freundlich.",
+                "Wir suchen ein junges, dynamisches Team.",
+                "Alter bis 25."
+              ],
+              answer: 0,
+              explain: "Der erste Satz beschreibt Eigenschaften für die Aufgabe. Die anderen beiden schließen ältere Bewerbende aus."
+            },
+            {
+              q: "In welchem Baustein steht, was du mitbringen musst?",
+              hint: "Die fünf Bausteine stehen im Merkkasten.",
+              options: [
+                "Im Profil.",
+                "Im Betrieb.",
+                "Im Weg."
+              ],
+              answer: 0,
+              explain: "Das Profil nennt die Muss- und Kann-Anforderungen. Der Weg nennt Unterlagen, Kontakt und Frist."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Dein Anzeigentext",
+          case: "Setze die passenden Bausteine ein.",
+          text: "Du hast den {*Hauptschulabschluss|Führerschein}, sprichst gut {*Deutsch|Chinesisch} und arbeitest {*sorgfältig|unfreundlich}.",
+          explain: "So beschreibst du Aufgaben und Eigenschaften – ohne jemanden auszuschließen."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann die fünf Bausteine einer Azubi-Anzeige nennen.",
+            "Ich kann Formulierungen erkennen, die gegen das AGG verstoßen.",
+            "Ich kann einen kurzen Anzeigentext in der Du-Form schreiben."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "ausbildungsberufe",
+      folder: "stellenanzeige",
+      help: `<h3>Duale Ausbildung</h3>
+             <p class="formula">Zwei Lernorte: Betrieb (Praxis) + Berufsschule (Theorie). Meist 3 Jahre, Prüfung vor der Kammer.</p>
+             <h3>Die Berufsfamilie</h3>
+             <ul><li><strong>Büro:</strong> Büromanagement – Organisation, Personal, Rechnungen.</li>
+             <li><strong>Verkauf:</strong> Einzelhandel – Waren, Beratung, Kasse.</li>
+             <li><strong>Zahlen:</strong> Bank, Versicherung, Steuern – Konten, Verträge, Buchhaltung.</li>
+             <li><strong>Industrie & Logistik:</strong> Industrie, Spedition – Beschaffung, Produktion, Transport.</li></ul>
+             <h3>Drei Wege nach der Schule</h3>
+             <ul><li>Duale Ausbildung: Betrieb + Berufsschule, Geld von Anfang an.</li>
+             <li>Schulische Ausbildung: nur Schule, oft mit Praktika.</li>
+             <li>Studium: Universität oder Fachhochschule.</li></ul>
+             <h3>Häufige Fehler</h3>
+             <ul><li>„Kaufmännisch“ mit „Büro“ gleichsetzen – es gibt viele kaufmännische Berufe.</li>
+             <li>Die duale Ausbildung für „nur Schule“ halten – der Betrieb gehört dazu.</li></ul>`,
+      group: "Stellenanzeige & Profil",
+      title: "Ausbildungsberufe in Wirtschaft und Verwaltung",
+      kicker: "LS 2.2 · Teil 6",
+      minutes: 20,
+      steps: [
+        {
+          type: "slides",
+          title: "Kaufmännisch ist nicht gleich kaufmännisch",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Tara trifft Lea",
+              title: "„Ich dachte, kaufmännisch ist immer gleich.“",
+              body: `<p>Tara trifft nach der Berufsschule ihre Freundin Lea. „Und, was machst du da eigentlich den ganzen Tag?“</p>
+                     <p>„Ich lerne Büromanagement – Angebote, Rechnungen, Personal, Kunden.“ Lea staunt: „Ich dachte, kaufmännisch ist immer gleich.“</p>
+                     <p>Tara lacht: „Überhaupt nicht. Es gibt Dutzende kaufmännische Berufe – Einzelhandel, Bank, Versicherung, Logistik, Steuern …“</p>`
+            },
+            {
+              kicker: "Duale Ausbildung",
+              title: "Zwei Lernorte, ein Ziel",
+              body: `<div class="pair">
+                       <div><b>Betrieb</b>Praxis: Du arbeitest mit und lernst den Alltag.</div>
+                       <div><b>Berufsschule</b>Theorie: Du lernst die Grundlagen.</div>
+                     </div>
+                     <p class="note">Meist 3 Jahre · Prüfung vor der Kammer · du verdienst von Anfang an Geld.</p>`
+            },
+            {
+              kicker: "Die Berufsfamilie",
+              title: "Viele Berufe – viele Arbeitsorte",
+              body: `<dl class="terms">
+                       <dt>Büromanagement</dt><dd>Büro in fast jedem Betrieb – Organisation, Personal, Rechnungen.</dd>
+                       <dt>Einzelhandel</dt><dd>Laden, Kaufhaus, Onlineshop – Verkauf und Beratung.</dd>
+                       <dt>Bank / Versicherung</dt><dd>Konten, Kredite, Verträge – Beratung mit Zahlen.</dd>
+                       <dt>Steuern</dt><dd>Steuerbüro oder Kanzlei – Buchhaltung und Fristen.</dd>
+                       <dt>Industrie / Logistik</dt><dd>Beschaffung, Produktion, Transport – planen und steuern.</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Büromanagement",
+              title: "Der Allrounder-Beruf",
+              body: `<p>In drei Jahren lernst du die wichtigsten Bürobereiche kennen:</p>
+                     <ul>
+                       <li>Beschaffung und Materialwirtschaft</li>
+                       <li>Personal</li>
+                       <li>Buchhaltung und Controlling</li>
+                       <li>Assistenz und Sekretariat</li>
+                       <li>Marketing und Kundenkommunikation</li>
+                     </ul>
+                     <p class="note">Danach: Weiterbildung zum Fachwirt oder Studium (BWL).</p>`
+            },
+            {
+              kicker: "Nach der Schule",
+              title: "Drei Wege im Vergleich",
+              body: `<ul>
+                       <li><strong>Dual:</strong> Betrieb + Berufsschule, meist 3 Jahre, Geld von Anfang an.</li>
+                       <li><strong>Schulisch:</strong> nur Schule, oft mit Praktika, z. B. Berufsfachschule.</li>
+                       <li><strong>Studium:</strong> Universität oder Fachhochschule, meist mit Abitur oder Fachhochschulreife.</li>
+                     </ul>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Dual heißt: Betrieb + Berufsschule.",
+              body: `<p>Für viele ist die duale Ausbildung der beste Einstieg: Du verdienst Geld und lernst den echten Arbeitsalltag.</p>`
+            }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Berufe und Wege",
+          questions: [
+            {
+              q: "Was bedeutet „dual“ bei einer Ausbildung?",
+              hint: "Dual = zwei. Welche zwei Lernorte gibt es?",
+              options: [
+                "Du lernst im Betrieb und in der Berufsschule.",
+                "Du lernst in zwei verschiedenen Betrieben.",
+                "Du lernst nur in der Berufsschule."
+              ],
+              answer: 0,
+              explain: "Dual heißt: zwei Lernorte – Betrieb für die Praxis, Berufsschule für die Theorie."
+            },
+            {
+              q: "Wo arbeitet eine Bankkauffrau hauptsächlich?",
+              hint: "Der Beruf steht in der Berufsfamilie.",
+              options: [
+                "In einer Bank oder Sparkasse.",
+                "In einem Lager oder einer Spedition.",
+                "In einem Steuerbüro."
+              ],
+              answer: 0,
+              explain: "Bankkaufleute arbeiten in Banken und Sparkassen – mit Konten, Krediten und Beratung."
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Welcher Beruf gehört wohin?",
+          prompt: "Sortiere die Ausbildungsberufe nach ihrem Schwerpunkt.",
+          hints: ["Büro = organisieren. Verkauf = beraten. Zahlen = rechnen und Verträge. Industrie/Logistik = planen und transportieren.",
+                  "Büromanagement ist der Allrounder im Büro."],
+          categories: ["Büro", "Verkauf", "Zahlen", "Industrie & Logistik"],
+          items: [
+            { text: "Kaufmann/-frau für Büromanagement", cat: 0 },
+            { text: "Kaufmann/-frau im Einzelhandel", cat: 1 },
+            { text: "Bankkaufmann/-frau", cat: 2 },
+            { text: "Steuerfachangestellte/-r", cat: 2 },
+            { text: "Industriekaufmann/-frau", cat: 3 },
+            { text: "Kaufmann/-frau für Spedition und Logistikdienstleistung", cat: 3 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Dual erklären",
+          case: "Baue den Merksatz.",
+          text: "Dual heißt: Ich lerne im {*Betrieb|Urlaub} die Praxis und in der {*Berufsschule|Bibliothek} die Theorie.",
+          explain: "Dual = zwei Lernorte. Der Betrieb zeigt die Praxis, die Berufsschule die Theorie."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann fünf kaufmännische Ausbildungsberufe nennen.",
+            "Ich kann erklären, was eine duale Ausbildung ist.",
+            "Ich kann zwei Berufe vergleichen und begründet zuordnen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "ausbildungsmarkt",
+      folder: "stellenanzeige",
+      help: `<h3>Angebot und Nachfrage</h3>
+             <p class="formula">Angebot = Ausbildungsplätze der Betriebe · Nachfrage = Jugendliche, die eine Ausbildung suchen.</p>
+             <h3>Vier Wege zur Ausbildungsstelle</h3>
+             <ul><li><strong>Berufsberatung/BIZ:</strong> persönliche Beratung und Informationen.</li>
+             <li><strong>Online:</strong> Ausbildungsbörsen, IHK-Ausbildungsatlas, Firmenwebsites.</li>
+             <li><strong>Vor Ort:</strong> Ausbildungsmessen, Jobbörsen, Praktika.</li>
+             <li><strong>Persönlich:</strong> Familie, Freunde, Lehrkräfte, Nachbarn fragen.</li></ul>
+             <h3>Der beste Türöffner</h3>
+             <ul><li>Ein Praktikum: Wer schon mitgearbeitet hat, wird oft eingeladen.</li>
+             <li>Früh anfangen: Viele Betriebe vergeben ihre Plätze ein Jahr vorher.</li></ul>
+             <h3>Häufige Fehler</h3>
+             <ul><li>Nur auf einen Beruf schauen – wer flexibel ist, findet leichter eine Stelle.</li>
+             <li>Zu spät suchen – im Frühjahr sind viele Plätze schon weg.</li></ul>`,
+      group: "Stellenanzeige & Profil",
+      title: "Der regionale Ausbildungsmarkt im Ruhrgebiet",
+      kicker: "LS 2.2 · Teil 7",
+      minutes: 20,
+      steps: [
+        {
+          type: "slides",
+          title: "Angebot und Nachfrage",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Melike zeigt Zahlen",
+              title: "60 Bewerbungen. Letztes Jahr nur 14.",
+              body: `<p>Melike zeigt Tara die Bewerberzahlen der letzten Jahre: „Vor fünf Jahren hatten wir 60 Bewerbungen auf eine Azubi-Stelle. Letztes Jahr waren es 14.“</p>
+                     <p>Tara ist erstaunt: „Aber viele aus meiner Klasse finden keinen Platz. Wie passt das zusammen?“</p>
+                     <p>Melike erklärt: „Das ist der <strong>Ausbildungsmarkt</strong>: Angebot und Nachfrage passen oft nicht zusammen – nach Beruf, Ort und Zeit.“</p>`
+            },
+            {
+              kicker: "Angebot und Nachfrage",
+              title: "So funktioniert der Ausbildungsmarkt",
+              body: `<div class="pair">
+                       <div><b>Angebot</b>Die Ausbildungsplätze, die Betriebe anbieten.</div>
+                       <div><b>Nachfrage</b>Die Jugendlichen, die eine Ausbildung suchen.</div>
+                     </div>
+                     <p class="note">Beispielzahlen (didaktisch): Einzelhandel – 100 Plätze, 60 Bewerber. Büromanagement – 40 Plätze, 90 Bewerber.</p>`
+            },
+            {
+              kicker: "Vier Wege",
+              title: "Wo findest du Ausbildungsstellen?",
+              body: `<ol>
+                       <li><strong>Berufsberatung/BIZ:</strong> persönliche Beratung und viele Informationen.</li>
+                       <li><strong>Online:</strong> Ausbildungsbörsen, IHK-Ausbildungsatlas, Firmenwebsites.</li>
+                       <li><strong>Vor Ort:</strong> Ausbildungsmessen, Jobbörsen, Praktika.</li>
+                       <li><strong>Persönlich:</strong> Familie, Freunde, Lehrkräfte, Nachbarn fragen.</li>
+                     </ol>`
+            },
+            {
+              kicker: "Betriebe werben",
+              title: "Warum sich Betriebe anstrengen müssen",
+              body: `<p>Weil sich immer weniger Jugendliche bewerben, müssen Betriebe um Azubis werben – wie Mediaworld.</p>
+                     <ul>
+                       <li>Praktikumsplätze anbieten</li>
+                       <li>auf Ausbildungsmessen gehen</li>
+                       <li>mit Schulen zusammenarbeiten</li>
+                       <li>in sozialen Medien werben</li>
+                       <li>Mitarbeitende empfehlen lassen</li>
+                     </ul>
+                     <p class="note">Mediaworld plant: Tara erzählt auf der Messe in der Stadthalle von ihrer Ausbildung.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Wer flexibel ist, findet leichter eine Stelle.",
+              body: `<p>Schau nicht nur auf einen Beruf und einen Ort. Früh suchen, Praktika nutzen, mehrere Wege probieren.</p>`
+            }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Marktzahlen lesen",
+          questions: [
+            {
+              q: "Im Einzelhandel gibt es 100 Ausbildungsplätze und 60 Bewerber. Was passiert?",
+              hint: "Rechne: Plätze minus Bewerber.",
+              options: [
+                "40 Plätze bleiben frei.",
+                "40 Bewerber finden keinen Platz.",
+                "Alle Bewerber bekommen einen Platz, und es bleiben keine Plätze frei."
+              ],
+              answer: 0,
+              explain: "100 Plätze – 60 Bewerber = 40 freie Plätze. Im Büromanagement ist es umgekehrt: 40 Plätze, 90 Bewerber."
+            },
+            {
+              q: "Was ist der beste Türöffner für eine Ausbildung?",
+              hint: "Denk an den Merkkasten: Wer den Betrieb schon kennt, wird oft eingeladen.",
+              options: [
+                "Ein Praktikum im Betrieb.",
+                "Nur zu Hause warten.",
+                "Eine teure Bewerbungsmappe ohne Inhalt."
+              ],
+              answer: 0,
+              explain: "Ein Praktikum ist der beste Türöffner: Der Betrieb kennt dich schon, und du kennst den Alltag."
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Welcher Weg ist das?",
+          prompt: "Ordne die Möglichkeiten den vier Wegen zu.",
+          hints: ["BIZ = Berufsberatung. Online = Internet. Vor Ort = Messe oder Praktikum. Persönlich = Menschen fragen.",
+                  "Ein Praktikum ist ein Weg vor Ort – du bist im Betrieb."],
+          categories: ["Berufsberatung", "Online", "Vor Ort", "Persönlich"],
+          items: [
+            { text: "BIZ der Agentur für Arbeit", cat: 0 },
+            { text: "IHK-Ausbildungsatlas", cat: 1 },
+            { text: "Ausbildungsmesse", cat: 2 },
+            { text: "Praktikum im Betrieb", cat: 2 },
+            { text: "Familie und Freunde fragen", cat: 3 },
+            { text: "Firmenwebsite", cat: 1 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Marktzahlen auswerten",
+          case: "Setze die richtigen Zahlen ein.",
+          text: "Bei 3 Plätzen und 12 Bewerbern sind {*9|15} Bewerber zu viel. Bei 5 Plätzen und 2 Bewerbern bleiben {*3|7} Plätze frei.",
+          explain: "12 − 3 = 9 Bewerber zu viel. 5 − 2 = 3 Plätze bleiben frei. Der zweite Betrieb muss mehr werben."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann Angebot und Nachfrage am Ausbildungsmarkt erklären.",
+            "Ich kann vier Wege zur Ausbildungsstelle nennen.",
+            "Ich kann aus Marktzahlen eine Schlussfolgerung ziehen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "erwartungen",
+      folder: "stellenanzeige",
+      help: `<h3>Fachliche Erwartungen</h3>
+             <p class="formula">Lesen, Schreiben, Rechnen, Deutsch, Englisch-Grundlagen, PC-Grundlagen – und Lernbereitschaft.</p>
+             <h3>Persönliche Erwartungen</h3>
+             <ul><li><strong>Pünktlichkeit:</strong> andere planen mit dir.</li>
+             <li><strong>Zuverlässigkeit:</strong> Aufgaben erledigen und wichtige Informationen sofort weitergeben.</li>
+             <li><strong>Höflichkeit:</strong> freundlicher Umgang mit Kunden und Kollegen.</li>
+             <li><strong>Sorgfalt:</strong> Fehler kosten Zeit und Geld.</li>
+             <li><strong>Teamfähigkeit:</strong> zusammenarbeiten und Informationen teilen.</li>
+             <li><strong>Verschwiegenheit:</strong> Kundendaten bleiben im Betrieb.</li></ul>
+             <h3>Der Ausbildungsvertrag</h3>
+             <ul><li>Der Betrieb gibt: Ausbildungsplan, Anleitung, Vergütung, Urlaub, Freistellung für die Berufsschule, Zeugnis.</li>
+             <li>Die Auszubildende gibt: Interesse, Lernbereitschaft, gewissenhafte Mitarbeit, Teilnahme am Berufsschulunterricht, Betriebsregeln.</li></ul>
+             <h3>Häufige Fehler</h3>
+             <ul><li>Zuverlässigkeit mit „nur keine Fehler machen“ verwechseln – auch Informationen weitergeben gehört dazu.</li>
+             <li>Pünktlichkeit als Kleinigkeit abtun – andere warten auf dich.</li></ul>`,
+      group: "Stellenanzeige & Profil",
+      title: "Was erwarten Unternehmen von Auszubildenden?",
+      kicker: "LS 2.2 · Teil 8",
+      minutes: 20,
+      steps: [
+        {
+          type: "slides",
+          title: "Was erwartet der Betrieb?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Melike ruft Tara ins Büro",
+              title: "„Was erwarten Sie eigentlich genau von mir?“",
+              body: `<p>Melike ruft Tara ins Büro: „Deine erste Zwischenbilanz. Was läuft gut?“</p>
+                     <p>Tara zählt auf: „Ich bin immer pünktlich, ich grüße alle, ich arbeite sorgfältig.“</p>
+                     <p>„Stimmt“, sagt Melike. „Aber gestern hast du eine Telefonnachricht für Jan nicht weitergegeben. Der Kunde stand vor verschlossener Tür.“</p>
+                     <p>Tara wird rot. „Was erwarten Sie eigentlich genau von mir?“ Melike lächelt: „Gute Frage.“</p>`
+            },
+            {
+              kicker: "Fachlich",
+              title: "Wissen und Können",
+              body: `<ul>
+                       <li>sicher lesen und schreiben</li>
+                       <li>Grundrechenarten</li>
+                       <li>Deutsch in Wort und Schrift</li>
+                       <li>Grundkenntnisse Englisch</li>
+                       <li>Grundlagen am PC</li>
+                       <li>Ordnung am Arbeitsplatz</li>
+                     </ul>
+                     <p class="note">Die wichtigste Haltung: Lernbereitschaft – Fragen stellen, Notizen machen, Fehler nicht wiederholen.</p>`
+            },
+            {
+              kicker: "Persönlich",
+              title: "Die sechs wichtigsten Eigenschaften",
+              body: `<ol>
+                       <li><strong>Pünktlichkeit</strong> – andere planen mit dir.</li>
+                       <li><strong>Zuverlässigkeit</strong> – Aufgaben und Meldungen laufen weiter.</li>
+                       <li><strong>Höflichkeit</strong> – Kunden und Kollegen sind der Ruf des Betriebs.</li>
+                       <li><strong>Sorgfalt</strong> – Fehler kosten Zeit und Geld.</li>
+                       <li><strong>Teamfähigkeit</strong> – zusammen geht mehr.</li>
+                       <li><strong>Verschwiegenheit</strong> – Kundendaten bleiben im Betrieb.</li>
+                     </ol>`
+            },
+            {
+              kicker: "Ausbildungsvertrag",
+              title: "Geben und Nehmen",
+              body: `<div class="pair">
+                       <div><b>Der Betrieb gibt</b>Ausbildungsplan, Anleitung, Vergütung, Urlaub, Freistellung für die Berufsschule, Zeugnis.</div>
+                       <div><b>Die Auszubildende gibt</b>Interesse, Lernbereitschaft, gewissenhafte Mitarbeit, Teilnahme am Berufsschulunterricht, Betriebsregeln.</div>
+                     </div>
+                     <p class="note">Ausbildung ist kein Geschenk in eine Richtung – beide Seiten profitieren.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Zuverlässigkeit heißt: Aufgaben erledigen und Infos weitergeben.",
+              body: `<p>Die Telefonnotiz für Jan hätte sofort auf seinen Schreibtisch gehört. Kleine Versäumnisse können bei Kunden großen Schaden anrichten.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Fachlich oder persönlich?",
+          prompt: "Sortiere die Erwartungen.",
+          hints: ["Fachlich = Wissen und Können. Persönlich = Verhalten und Eigenschaften.",
+                  "Rechnen, Deutsch und PC kann man lernen. Sorgfalt und Höflichkeit zeigt man im Verhalten."],
+          categories: ["Fachlich", "Persönlich"],
+          items: [
+            { text: "Grundrechenarten", cat: 0 },
+            { text: "Sorgfalt", cat: 1 },
+            { text: "Deutsch in Wort und Schrift", cat: 0 },
+            { text: "Höflichkeit", cat: 1 },
+            { text: "PC-Grundlagen", cat: 0 },
+            { text: "Teamfähigkeit", cat: 1 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "Situationen beurteilen",
+          questions: [
+            {
+              q: "Tara kommt 15 Minuten zu spät und sagt nichts. Welche Erwartung verletzt sie?",
+              hint: "Denk an die sechs persönlichen Erwartungen.",
+              options: [
+                "Pünktlichkeit und Zuverlässigkeit.",
+                "Sorgfalt.",
+                "Verschwiegenheit."
+              ],
+              answer: 0,
+              explain: "Zu spät kommen ohne Information verletzt die Pünktlichkeit; andere warten und planen mit ihr."
+            },
+            {
+              q: "Warum ist Zuverlässigkeit im Büro so wichtig?",
+              hint: "Denk an die Telefonnotiz für Jan.",
+              options: [
+                "Weil wichtige Informationen sofort weitergegeben werden müssen.",
+                "Weil man dann früher gehen kann.",
+                "Weil man keine Pausen machen muss."
+              ],
+              answer: 0,
+              explain: "Eine nicht weitergegebene Nachricht kann dazu führen, dass ein Kunde vor verschlossener Tür steht."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Zuverlässigkeit erklären",
+          case: "Baue den Merksatz.",
+          text: "Zuverlässigkeit heißt: Aufgaben {*vollständig|halb} und {*rechtzeitig|irgendwann} erledigen und wichtige Informationen {*sofort|gar nicht} weitergeben.",
+          explain: "Zuverlässigkeit hat drei Teile: vollständig, rechtzeitig und Informationen sofort weitergeben."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann fachliche und persönliche Erwartungen unterscheiden.",
+            "Ich kann erklären, warum Pünktlichkeit und Zuverlässigkeit wichtig sind.",
+            "Ich kann Situationen von Auszubildenden beurteilen."
+          ]
+        }
+      ]
+    },
+
+    {
       id: "staerkenprofil",
       folder: "stellenanzeige",
       help: `<h3>Warum ein Stärkenprofil?</h3>
@@ -567,7 +1137,7 @@ LERNRAUM.subjects.push({
              <li>Eigene Stärken kleinreden – jede Stärke mit einem kleinen Beispiel belegen.</li></ul>`,
       group: "Stellenanzeige & Profil",
       title: "Meine Stärken und die Stelle",
-      kicker: "LS 2.2 · Teil 5",
+      kicker: "LS 2.2 · Teil 9",
       minutes: 15,
       steps: [
         {
@@ -690,7 +1260,8 @@ LERNRAUM.subjects.push({
         minutes: 20,
         graded: true,    // Kürzel + Klassen-PIN vor dem Start, Ergebnis-Code am Ende (app/lehrer.html liest ihn ein)
         tools: "keine",
-        grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+        // Notenschlüssel Handelsschule
+        grading: [[87, "1", "sehr gut"], [73, "2", "gut"], [59, "3", "befriedigend"], [45, "4", "ausreichend"], [18, "5", "mangelhaft"], [0, "6", "ungenügend"]]
       },
       steps: [
         {
@@ -802,7 +1373,16 @@ LERNRAUM.subjects.push({
             { front: "Kann-Anforderung", back: "Wunsch: schön, aber nicht zwingend. Wer sie mitbringt, hat einen Vorteil – z. B. ein Praktikum." },
             { front: "Stellenanzeige", back: "Die öffentliche Ausschreibung einer offenen Stelle – sie informiert über Betrieb, Aufgaben, Profil und Bewerbungsweg." },
             { front: "Seriöse Anzeige", back: "Vollständiger Firmenname, Adresse, klare Aufgaben, Profil und erreichbare Kontaktperson – keine Vorauszahlung." },
-            { front: "Warnsignale", back: "Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung." }
+            { front: "Warnsignale", back: "Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung." },
+            { front: "AGG", back: "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung." },
+            { front: "Azubi-Anzeige", back: "Anzeige für einen Ausbildungsplatz: fünf Bausteine – Aufmerksamkeit, Betrieb, Angebot, Profil, Weg." },
+            { front: "Duale Ausbildung", back: "Ausbildung an zwei Lernorten: im Betrieb (Praxis) und in der Berufsschule (Theorie), meist drei Jahre." },
+            { front: "Ausbildungsmarkt", back: "Zusammentreffen von Angebot (Ausbildungsplätze) und Nachfrage (Jugendliche, die eine Ausbildung suchen)." },
+            { front: "Angebot und Nachfrage", back: "Angebot = Plätze der Betriebe; Nachfrage = Bewerbende. Passen sie nicht zusammen, bleiben Plätze frei oder Bewerber ohne Stelle." },
+            { front: "Lernbereitschaft", back: "Die wichtigste fachliche Haltung: Fragen stellen, Notizen machen und Fehler nicht wiederholen." },
+            { front: "Zuverlässigkeit", back: "Aufgaben vollständig und rechtzeitig erledigen und wichtige Informationen sofort weitergeben." },
+            { front: "Verschwiegenheit", back: "Kundendaten und interne Informationen bleiben im Betrieb – sie gehören nicht nach außen." },
+            { front: "Ausbildungsvertrag", back: "Regelt Rechte und Pflichten beider Seiten: Der Betrieb gibt Ausbildung und Vergütung, die Auszubildende bringt Lernbereitschaft und Mitarbeit." }
           ]
         }
       ]

@@ -209,6 +209,48 @@ zeigt eine **Geisterhand** den nächsten Klick. Kurztext der Sprechblase: `task.
   - `{ op: "bold", block: 6 }`
 - Bedienung wie in Word: Zeile antippen (am PC Strg+A für alles), dann in der Leiste formatieren – **Start** (Schriftart, Schriftgrad, Fett, Ausrichtung, ¶ Leerzeilen) und **Layout** (Seitenränder). Am PC zusätzlich Strg+B für fett.
 
+**PowerPoint-Simulation** – eine Präsentation bauen wie in PowerPoint; **handytauglich** (Ribbon seitwärts wischbar, Tippflächen ≥ 44 px, Folienleiste unten, am PC links). Code: `app/sim-ppt.js`, Stil: orangefarbene PowerPoint-Umgebung. Automatisch geprüft, `mode: "guided"` (Aufgabe für Aufgabe mit Pulsieren der passenden Knöpfe) oder `"free"` (Live-Checkliste).
+Bedienung: Folie in der Leiste wählen, Feld antippen = markieren, nochmal antippen = Text eingeben. Reiter: Start (Neue Folie, Layout, Duplizieren, Löschen, ▲▼ verschieben, F/K, Größe, Liste, Ausrichtung), Einfügen (Bild), Entwurf (4 Designs), Übergänge, Animationen, Bildschirmpräsentation (Abspielen), Ansicht → Folienmaster (Titelfarbe/-größe/Fett/Schriftart für alle Folien).
+```js
+{ type: "ppt", title: "Folien bauen", mode: "guided", file: "Vorstellung.pptx", intro: "…",
+  deck: { theme: "office", slides: [ { layout: "titel", title: "", body: [] } ] },   // Ausgangszustand
+  criteria: [
+    { label: "Titel „Fly Bike Werke GmbH“", hint: "…",
+      checks: [ { op: "text", slide: 0, el: "title", value: "Fly Bike Werke GmbH" } ],
+      task: { wo: "…", was: "…", probe: "…" } } ] }
+```
+- Layouts: `titel` · `inhalt` · `nur-titel` · `leer`. Designs: `office` · `dunkel` · `gruen` · `sonne`. Bilder: `fahrrad` · `diagramm` · `euro` · `person`. Übergänge: `blende` · `schieben` · `wischen` · `zoom` · `keine`. Animationen: `erscheinen` · `einfliegen` · `verblassen` · `zoom` · `keine`.
+- **Folien zählen ab 0.** Checks (`slide` fehlt nur bei `count`, `theme`, `master`, `view`, `pos`):
+  `{ op: "count", value: 3 }` · `{ op: "layout", slide: 1, value: "inhalt" }` · `{ op: "text", slide: 0, el: "title"|"body", value: "…" }` (Text ohne Groß-/Kleinschreibung und Schlusspunkt; `body`: Text oder Liste von Zeilen) ·
+  `{ op: "lines", slide: 1, min: 3 }` · `{ op: "fmt", slide: 1, el: "title", prop: "bold"|"italic"|"size"|"align", value: … }` · `{ op: "bullets", slide: 1 }` · `{ op: "pic", slide: 1, value: "fahrrad" }` ·
+  `{ op: "anim", slide: 1, el: "body", value: "einfliegen" }` · `{ op: "trans", slide: 0 | "all", value: "schieben" }` · `{ op: "theme", value: "gruen" }` ·
+  `{ op: "master", prop: "titleColor"|"titleSize"|"titleBold"|"font", value: … }` (Blau = `"#1f4e9c"`) · `{ op: "view", value: "master"|"normal" }` · `{ op: "pos", title: "…", value: 2 }` (Folie mit diesem Titel steht an Position 2).
+- Schreibe Aufgaben so, dass der **Zielwert eindeutig im Text steht** (Titel, Größe, Name des Designs).
+
+**Excel-Simulation** – Tabellenkalkulation wie in Excel; **handytauglich** (Tippflächen ≥ 44 px, Formelleiste mit Sondertasten, Bereich per Griff ziehen). Code: `app/sim-xls.js` (mit eigener Formel-Maschine: deutsche Funktionsnamen, `;` als Trenner, Dezimalkomma). `mode: "guided"` oder `"free"`.
+Bedienung: Zelle antippen = markieren, nochmal antippen (oder Formelleiste) = eingeben, ✓/Enter bestätigt; in Formeln Zellen antippen statt tippen; F4 $ macht Bezüge absolut. Reiter: Start (Kopieren/Einfügen, Fett, Füllfarbe, Ausrichtung, Zahlenformat, Dezimalstellen, AutoSumme, Ausfüllen), Einfügen (Diagramm Säule/Linie/Kreis), Formeln (fx), Daten (Sortieren).
+Funktionen: SUMME, MITTELWERT, MIN, MAX, ANZAHL, ANZAHL2, PRODUKT, RUNDEN, AUFRUNDEN, ABRUNDEN, BETRAG, WENN, WENNFEHLER, UND, ODER, NICHT, VERKETTEN, ZÄHLENWENN, SUMMEWENN, SVERWEIS.
+```js
+{ type: "xls", title: "Umsatz berechnen", mode: "guided", file: "Umsatz.xlsx", intro: "…",
+  sheet: { cols: 4, rows: 9, wideA: true,                       // Spalten A–D, 9 Zeilen; wideA = erste Spalte breiter
+           cells: { A1: "Artikel", B1: "Menge", B2: "12", C2: "1899" },   // alles als Text, Zahlen mit Dezimalkomma ("12,5")
+           fmt: { "A1:D1": { bold: true }, "C2:C5": { numfmt: "euro" } } }, // bold · align · numfmt (standard|zahl|euro|prozent) · dec · fill (gelb|gruen|blau|rot)
+  criteria: [ { label: "D2: Menge · Preis", hint: "…",
+                checks: [ { op: "formula", cell: "D2", refs: ["B2", "C2"] }, { op: "value", cell: "D2", value: 22788 } ],
+                task: { wo: "…", was: "…", probe: "…" } } ] }
+```
+Checks: `{ op: "value", cell: "D2" | "D2:D5", value: 22788 | [..], tol? }` (berechneter Wert; Text ohne Groß-/Kleinschreibung) · `{ op: "text", cell, value }` (angezeigter Text) · `{ op: "formula", cell, uses?: ["SUMME"], refs?: ["B2:B7"], abs?: true }` (Formel muss mit = beginnen) · `{ op: "formulas", range }` (alle Zellen sind Formeln) · `{ op: "fmt", cell, prop: "bold"|"align"|"numfmt"|"dec"|"fill", value }` · `{ op: "chart", type: "saeule"|"linie"|"kreis", range?: "A1:B6" }` · `{ op: "sorted", range: "B2:B6", dir: "asc"|"desc", col?: 0 }`.
+Aufgaben so schreiben, dass der **Zielwert eindeutig im Text steht**. Immer Formel **und** Wert prüfen (sonst reicht eine eingetippte Zahl).
+
+**Windows-Simulation** – Desktop mit Startmenü, Taskleiste und **Datei-Explorer** (Ordner anlegen, umbenennen, kopieren, verschieben, löschen, Papierkorb, Ansicht, Sortieren, Dateiendungen, Suche); **handytauglich**. Code: `app/sim-win.js`. Doppelklick = zweimal schnell tippen.
+```js
+{ type: "win", title: "Ordner anlegen", mode: "guided", start: "desktop" /* optional: Explorer zu Beginn geschlossen */, intro: "…",
+  fs: { Desktop: ["Info.txt"], Dokumente: [ { n: "Fly Bike", k: [ "Preisliste.xlsx", { n: "Rechnungen", k: [] } ] } ], Downloads: [], Bilder: [] },
+  criteria: [ { label: "Ordner „Rechnungen“ anlegen", hint: "…", checks: [ { op: "exists", path: "Dokumente/Fly Bike/Rechnungen", type: "folder" } ], task: { wo: "…", was: "…", probe: "…" } } ] }
+```
+Ordner im `fs`: `Desktop`, `Dokumente`, `Downloads`, `Bilder` (Datei = Text, Ordner = `{ n, k: [...] }`, optional `s` Größe in KB und `d` Datum JJJJ-MM-TT). Dateiendungen sind anfangs ausgeblendet (wie in Windows 11).
+Checks: `{ op: "exists"|"notExists", path, type? }` · `{ op: "count", path, value }` · `{ op: "inTrash", name }` · `{ op: "at", path }` (aktueller Ordner) · `{ op: "atTrash" }` · `{ op: "view", value: "symbole"|"details" }` · `{ op: "sort", by: "name"|"datum"|"typ"|"groesse", dir? }` · `{ op: "ext" }` (Endungen sichtbar) · `{ op: "search", query }` · `{ op: "clip", mode: "cut"|"copy", name }` · `{ op: "explorer", value: "open"|"closed" }`.
+
 ### Übungsklausur
 
 Ein Thema mit `exam` wird zur Klausur: Timer, keine Rückmeldung und keine Hilfe während des Schreibens,
