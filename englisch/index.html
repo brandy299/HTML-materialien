@@ -897,7 +897,11 @@ const UNITS = [
         {q:"He ______ by bike.", o:["go","goes","going"], c:1, e:"he → goes."},
         {q:"Ein Zug fährt vom ______ ab.", o:["station","kitchen","shop"], c:0, e:"station = Bahnhof."},
         {q:"Wie sagst du „zu Fuß“?", o:["on foot","by foot","with foot"], c:0, e:"on foot = zu Fuß."},
-        {q:"Wie fragst du nach dem Weg zur Arbeit?", o:["How do you get to work?","What do you do?","How much is it?"], c:0, e:"How do you get to work? = Wie kommst du zur Arbeit?"}] }
+        {q:"Wie fragst du nach dem Weg zur Arbeit?", o:["How do you get to work?","What do you do?","How much is it?"], c:0, e:"How do you get to work? = Wie kommst du zur Arbeit?"}] },
+      { id:"p10-f", n:"F", type:"find", title:"Spot it · im Bild finden", lead:"Tippe im Bild auf den Gegenstand.",
+        find:{"targets":[{"w":"bike","de":"Fahrrad","spots":[[21,51,9.5],[54,53,10],[34,30,8]]},{"w":"clock","de":"Uhr","spots":[[73,20,8.5]]},{"w":"ticket","de":"Fahrkarte","spots":[[21,75,7]]},{"w":"cup","de":"Tasse","spots":[[40,77,11]]},{"w":"train","de":"Zug","spots":[[69,74,12.5]]}]} },
+      { id:"p10-g", n:"G", type:"memory", title:"Memory · Wörter-Paare", lead:"Decke zwei Karten auf. Finde die Paare Englisch – Deutsch.",
+        pairs:[["train","Zug"],["bike","Fahrrad"],["ticket","Fahrkarte"],["platform","Bahnsteig"],["airport","Flughafen"],["on foot","zu Fuß"]] }
     ],
     pdfs:[["Vokabeln","downloads/FE_U10_Travel_and_Transport_Vocab.pdf"],["Übungen","downloads/FE_U10_Travel_and_Transport_Practice.pdf"]] }
 ];
