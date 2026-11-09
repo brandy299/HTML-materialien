@@ -9,13 +9,13 @@ LERNRAUM.subjects.push({
   id: "gpu-preiskalkulation",
   fach: "GPU",
   added: "2026-09-25",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-10-12",        // neu: AB 6 Rückwärtskalkulation
+  updated: "2026-11-09",        // neu: Vertiefung AB 17–20 (Einflussgrößen, Zuschlag/Faktor, Markt, Preisauszeichnung)
   name: "Preiskalkulation",
   course: "GPU · HS1Y",
   glyph: "P",
   color: "#10b981",
   company: "Mediaworld e. K.",
-  description: "Lernfeld 4 · Leistungsprogrammplanung. Vom Listeneinkaufspreis über den Bezugspreis bis zum Listenverkaufspreis – rechnen am Modellunternehmen Mediaworld e. K.",
+  description: "Lernfeld 4 · Leistungsprogrammplanung. Vom Listeneinkaufspreis über den Bezugspreis bis zum Listenverkaufspreis – und in der Vertiefung von den Einflussgrößen über Zuschlag/Faktor und Marktpreise bis zur Preisauszeichnung. Rechnen am Modellunternehmen Mediaworld e. K.",
   topics: [
 
     /* ══════════════ AB 4 · DER BEZUGSPREIS ══════════════ */
@@ -605,6 +605,724 @@ LERNRAUM.subjects.push({
       ]
     },
 
+    /* ══════════════ VERTIEFUNG · AB 17 EINFLUSSGRÖSSEN ══════════════ */
+    {
+      id: "einflussgroessen",
+      group: "Vertiefung · Einflussgrößen (AB 17)",
+      title: "Was den Preis bestimmt",
+      kicker: "Lernfeld 4 · Vertiefung",
+      minutes: 18,
+      help: `<h3>Zwei Seiten des Preises</h3>
+             <p><strong>Betriebsintern</strong> ist alles, was das Unternehmen selbst beeinflussen kann: Kosten, Gewinnziel, Auslastung, Service und Image.</p>
+             <p><strong>Betriebsextern</strong> kommt von außen: Nachfrage, Konkurrenz, Lieferantenpreise, Steuern und Konjunktur.</p>
+             <h3>Drei Grundrichtungen</h3>
+             <ul>
+               <li><strong>kostenorientiert:</strong> Preis = Selbstkosten + Gewinnzuschlag.</li>
+               <li><strong>nachfrageorientiert:</strong> Preis nach der Zahlungsbereitschaft der Kundschaft.</li>
+               <li><strong>konkurrenzorientiert:</strong> Preis am Wettbewerb ausrichten.</li>
+             </ul>
+             <h3>Merke</h3>
+             <p>Die Kosten setzen die <strong>Untergrenze</strong>, der Wettbewerb die <strong>Obergrenze</strong>. Dazwischen entscheidet die Nachfrage.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Der Fall: Zwei Preise",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vertiefung",
+              title: "1.487,50 € oder 1.399,00 €?",
+              body: `<p>Die Mediaworld verkauft den <strong>CINEMA 43</strong> für <strong>1.487,50 €</strong>. Der Wettbewerber 300 Meter weiter verlangt für ein vergleichbares Gerät <strong>1.399,00 €</strong>.</p>
+                     <p>Sofia fragt: <mark>Warum ist unser Preis höher – und ist das ein Fehler?</mark></p>`
+            },
+            {
+              kicker: "Lernziel · Operator AFB I/II",
+              title: "Ich kann <mark>Einflussgrößen</mark> unterscheiden und den drei <mark>Grundrichtungen</mark> zuordnen.",
+              body: `<p class="box"><strong>unterscheiden</strong> heißt: Du sagst, ob eine Größe von innen kommt oder von außen – und welche Preisstrategie dahintersteht.</p>`
+            },
+            {
+              kicker: "Grundwissen · 1 von 2",
+              title: "Der Preis hat zwei Seiten.",
+              body: `<dl class="terms">
+                       <dt>Betriebsintern</dt><dd>Kosten, Gewinnziel, Auslastung, Service, Image – das kann die Mediaworld selbst beeinflussen.</dd>
+                       <dt>Betriebsextern</dt><dd>Nachfrage, Konkurrenz, Lieferantenpreise, Steuern, Konjunktur – das kommt von außen.</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Grundwissen · 2 von 2",
+              title: "Drei Wege zum Preis.",
+              body: `${ablauf([
+                       { text: "Kosten", note: "Selbstkosten + Gewinnzuschlag" },
+                       { text: "Nachfrage", note: "Zahlungsbereitschaft der Kundschaft" },
+                       { text: "Konkurrenz", note: "Preis des Wettbewerbers" },
+                       { text: "Preisentscheidung", hi: true }
+                     ])}
+                     <p class="note">In der Praxis werden die drei Wege kombiniert.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Kosten unten, Konkurrenz oben.",
+              body: `<p>Die Selbstkosten sind die Untergrenze. Der Wettbewerbspreis ist die Obergrenze. Dazwischen entscheidet die Nachfrage.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A1 · Betriebsintern oder betriebsextern?",
+          prompt: "Woher kommt die Einflussgröße?",
+          hints: [
+            "Betriebsintern ist alles, was die Mediaworld selbst steuern kann.",
+            "Betriebsextern kommt von Kunden, Wettbewerbern, Lieferanten oder Staat."
+          ],
+          categories: ["betriebsintern", "betriebsextern"],
+          items: [
+            { text: "Personalkosten", cat: 0 },
+            { text: "Zahlungsbereitschaft der Kundschaft", cat: 1 },
+            { text: "Mietkosten für die Verkaufsfläche", cat: 0 },
+            { text: "Preis des Wettbewerbers", cat: 1 },
+            { text: "Gewinnziel der Inhaberin", cat: 0 },
+            { text: "Lieferantenrabatt beim Einkauf", cat: 1 },
+            { text: "Auslastung der eigenen Werkstatt", cat: 0 },
+            { text: "Umsatzsteuer", cat: 1 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A2 · Fachbegriffe sichern",
+          prompt: "Drei Wörter passen nicht.",
+          hints: [
+            "Kosten, Personal und Miete kann das Unternehmen selbst beeinflussen.",
+            "Der Preis des Wettbewerbers kommt von außen.",
+            "Wer aus Selbstkosten und Gewinn rechnet, arbeitet kostenorientiert."
+          ],
+          text: "Der Preis für den Fernseher hängt von vielen Größen ab. Kosten für Einkauf, Personal und Miete sind {betriebsinterne} Einflussgrößen. Die Zahlungsbereitschaft der Kundschaft und der Preis des {Wettbewerbers} sind betriebsexterne Einflussgrößen. Wer den Preis aus Selbstkosten und Gewinnzuschlag berechnet, arbeitet {kostenorientiert}. Wer den Preis am Wettbewerb ausrichtet, arbeitet {konkurrenzorientiert}.",
+          distractors: ["nachfrageorientiert", "Lieferanten", "Staat"]
+        },
+        {
+          type: "quiz",
+          title: "A3 · Welche Grundrichtung?",
+          questions: [
+            {
+              q: "Mediaworld senkt Kopfhörer auf 49,99 €, weil der Wettbewerber sie für 49,99 € anbietet. Welche Grundrichtung ist das?",
+              hint: "Der eigene Preis richtet sich nach dem Preis des Wettbewerbers.",
+              options: ["kostenorientiert", "nachfrageorientiert", "konkurrenzorientiert"],
+              answer: 2,
+              explain: "Der Preis des Wettbewerbers ist der Maßstab – also konkurrenzorientiert."
+            },
+            {
+              q: "Vor Weihnachten erhöht Mediaworld den Preis für die Spielkonsole um 30 €, weil die Nachfrage groß ist. Welche Grundrichtung ist das?",
+              hint: "Es geht um die Zahlungsbereitschaft der Kundschaft.",
+              options: ["kostenorientiert", "nachfrageorientiert", "konkurrenzorientiert"],
+              answer: 1,
+              explain: "Die hohe Nachfrage erlaubt einen höheren Preis – nachfrageorientiert."
+            },
+            {
+              q: "Sofia berechnet den Preis aus Bezugspreis, Handlungskosten und Gewinnzuschlag. Welche Grundrichtung ist das?",
+              hint: "Der Preis entsteht aus den eigenen Kosten.",
+              options: ["kostenorientiert", "nachfrageorientiert", "konkurrenzorientiert"],
+              answer: 0,
+              explain: "Selbstkosten plus Gewinnzuschlag – kostenorientiert."
+            },
+            {
+              q: "Welche Aussage beschreibt die kostenorientierte Preisgestaltung?",
+              options: [
+                "Der Preis richtet sich nach dem Wettbewerber.",
+                "Der Preis wird aus den Selbstkosten und dem Gewinnzuschlag berechnet.",
+                "Der Preis richtet sich nach der Zahlungsbereitschaft der Kundschaft."
+              ],
+              answer: 1,
+              explain: "Kostenorientiert heißt: Selbstkosten + Gewinnzuschlag."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A4 · Beurteilen",
+          case: "Welche Grundrichtung passt für die Mediaworld am besten? Bau den Antwortsatz.",
+          text: "Für die Mediaworld passt am besten eine {*konkurrenzorientierte|kostenorientierte|nachfrageorientierte} Grundrichtung. Der Preis des Wettbewerbers setzt die {*Obergrenze|Untergrenze}, die Selbstkosten setzen die {*Untergrenze|Obergrenze}. Dazwischen entscheidet die {*Zahlungsbereitschaft|Mehrwertsteuer} der Kundschaft.",
+          hints: [
+            "Die Mediaworld ist Einzelhändler in einer umkämpften Lage.",
+            "Rein kostenorientiert reicht nicht, weil die Kundschaft sonst zum Wettbewerber geht.",
+            "Rein konkurrenzorientiert kann die Kosten nicht decken – eine Kombination ist sinnvoll."
+          ],
+          explain: "Gute Beurteilung: Wettbewerbspreis als Obergrenze, Selbstkosten als Untergrenze, Nachfrage dazwischen."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann betriebsinterne und betriebsexterne Einflussgrößen unterscheiden.",
+            "Ich kann die drei Grundrichtungen der Preisbildung erklären.",
+            "Ich kann einen Fall der richtigen Grundrichtung zuordnen.",
+            "Ich kann eine Preisentscheidung mit zwei Argumenten beurteilen."
+          ]
+        }
+      ]
+    },
+
+    /* ══════════════ VERTIEFUNG · AB 18 ZUSCHLAG & FAKTOR ══════════════ */
+    {
+      id: "zuschlag-faktor",
+      group: "Vertiefung · Zuschlag & Faktor (AB 18)",
+      title: "Die Kette in einer Zahl",
+      kicker: "Lernfeld 4 · Vertiefung",
+      minutes: 20,
+      help: `<h3>Zuschlag und Faktor</h3>
+             <p class="formula">Kalkulationszuschlag = (LVP − BP) ÷ BP × 100<br>Kalkulationsfaktor = LVP ÷ BP<br>Faktor = 1 + Zuschlag ÷ 100</p>
+             <h3>Beispiel SOUND 300</h3>
+             <p>Bezugspreis 150,00 €, Listenverkaufspreis 240,00 €.<br>
+             Zuschlag: (240 − 150) ÷ 150 × 100 = <strong>60 %</strong>.<br>
+             Faktor: 240 ÷ 150 = <strong>1,60</strong>.</p>
+             <h3>Häufiger Fehler</h3>
+             <p class="note">Faktor 1,60 bedeutet 60 % Aufschlag – nicht 160 %. 160 % Aufschlag wäre der Faktor 2,60.</p>
+             <h3>Wofür?</h3>
+             <p>Mit dem Faktor rechnest du in einem Schritt: <strong>LVP = BP × Faktor</strong>.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Der Fall: SOUND 300",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vertiefung",
+              title: "150 € Einkauf, 240 € Verkauf. Wie viel Aufschlag ist das?",
+              body: `<p>Jan Weber hat die Soundbar <strong>SOUND 300</strong> für <strong>150,00 €</strong> eingekauft. Im Verkauf soll sie <strong>240,00 €</strong> kosten.</p>
+                     <p>Sofia will wissen: <mark>Wie viel Prozent Aufschlag ist das – und wie rechne ich das schnell für andere Geräte?</mark></p>`
+            },
+            {
+              kicker: "Lernziel · Operator AFB II",
+              title: "Ich kann <mark>Zuschlag und Faktor</mark> berechnen und ineinander <mark>umrechnen</mark>.",
+              body: `<p class="box"><strong>umrechnen</strong> heißt: aus einem Zuschlag den Faktor machen – und umgekehrt.</p>`
+            },
+            {
+              kicker: "Grundwissen",
+              title: "Zwei Abkürzungen – eine Idee.",
+              body: `<dl class="terms">
+                       <dt>Kalkulationszuschlag</dt><dd>Der Aufschlag in Prozent, bezogen auf den Bezugspreis. (LVP − BP) ÷ BP × 100.</dd>
+                       <dt>Kalkulationsfaktor</dt><dd>Der Verkaufspreis als Vielfaches des Bezugspreises. LVP ÷ BP.</dd>
+                       <dt>Zusammenhang</dt><dd>Faktor = 1 + Zuschlag ÷ 100. Zuschlag 60 % → Faktor 1,60.</dd>
+                     </dl>`
+            },
+            {
+              kicker: "So rechnest du",
+              title: "Vom Bezugspreis zum Verkaufspreis.",
+              body: `<table class="scheme">
+                       <tr><td>Bezugspreis</td><td>150,00 €</td></tr>
+                       <tr><td>+ Zuschlag</td><td>____</td></tr>
+                       <tr class="sum"><td>= Listenverkaufspreis</td><td>____</td></tr>
+                     </table>
+                     <p class="note">Der Zuschlag ist die Differenz zwischen Verkaufspreis und Bezugspreis.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Faktor 1,60 heißt 60 %.",
+              body: `<p>Nicht 160 %! Der Faktor sagt, das Wievielfache des Bezugspreises der Verkaufspreis ist.</p>`
+            }
+          ]
+        },
+        {
+          type: "calc",
+          title: "A1 · Zuschlag in Euro",
+          decimals: 2,
+          case: `Die Soundbar <b>SOUND 300</b> hat einen <b>Bezugspreis von 150,00 €</b> und soll für <b>240,00 €</b> verkauft werden.<br><br>Berechne den Zuschlag in Euro.`,
+          rows: [
+            { label: "Bezugspreis", value: 150 },
+            { label: "+ Zuschlag", value: 90 },
+            { label: "= Listenverkaufspreis", value: 240, sum: true }
+          ],
+          hints: [
+            "Der Zuschlag ist der Unterschied zwischen Verkaufspreis und Bezugspreis.",
+            "240,00 − 150,00 = 90,00 €.",
+            "In Prozent: 90 ÷ 150 × 100 = 60 %."
+          ],
+          result: "Der Zuschlag beträgt 90,00 €. Das sind 60 % des Bezugspreises; der Faktor ist 1,60."
+        },
+        {
+          type: "quiz",
+          title: "A2 · Zuschlag und Faktor",
+          questions: [
+            {
+              q: "Wie hoch ist der Kalkulationszuschlag bei BP 150,00 € und LVP 240,00 €?",
+              hint: "(240 − 150) ÷ 150 × 100",
+              options: ["60 %", "80 %", "160 %", "37,5 %"],
+              answer: 0,
+              explain: "90 ÷ 150 × 100 = 60 %."
+            },
+            {
+              q: "Wie hoch ist der Kalkulationsfaktor bei BP 150,00 € und LVP 240,00 €?",
+              hint: "LVP ÷ BP",
+              options: ["0,60", "1,60", "2,60", "160"],
+              answer: 1,
+              explain: "240 ÷ 150 = 1,60."
+            },
+            {
+              q: "Zuschlag 25 % – welcher Faktor gehört dazu?",
+              hint: "Faktor = 1 + Zuschlag ÷ 100",
+              options: ["0,25", "1,25", "2,50", "25"],
+              answer: 1,
+              explain: "1 + 25 ÷ 100 = 1,25."
+            },
+            {
+              q: "Was bedeutet Faktor 1,60?",
+              hint: "Faktor = 1 + Zuschlag ÷ 100",
+              options: ["60 % Aufschlag", "160 % Aufschlag", "160 € Aufschlag", "60 € Aufschlag"],
+              answer: 0,
+              explain: "1,60 = 1 + 0,60 → 60 % Aufschlag. 160 % Aufschlag wäre Faktor 2,60."
+            }
+          ]
+        },
+        {
+          type: "calc",
+          title: "A3 · Mit dem Faktor rechnen",
+          decimals: 2,
+          case: `Der Beamer <b>BEAM 100</b> hat einen <b>Bezugspreis von 275,00 €</b>. Sofia rechnet mit dem <b>Kalkulationsfaktor 1,60</b>.<br><br>Berechne den Listenverkaufspreis und den Zuschlag in Euro.`,
+          rows: [
+            { label: "Bezugspreis", value: 275 },
+            { label: "+ Zuschlag", value: 165 },
+            { label: "= Listenverkaufspreis", value: 440, sum: true }
+          ],
+          hints: [
+            "LVP = BP × Faktor: 275,00 × 1,60.",
+            "275,00 × 1,60 = 440,00 €.",
+            "Zuschlag = 440,00 − 275,00 = 165,00 €. Probe: 165 ÷ 275 × 100 = 60 %."
+          ],
+          result: "Der Listenverkaufspreis beträgt 440,00 €, der Zuschlag 165,00 € (60 %)."
+        },
+        {
+          type: "sentence",
+          title: "A4 · Beurteilen",
+          case: "Kopfhörer: Bezugspreis 85,00 €, geplanter Verkaufspreis 120,00 €. Sofia wollte 70 % Zuschlag. Bau den Antwortsatz.",
+          text: "Der Zuschlag beträgt {*41,18 %|70 %|60 %}. Der Faktor ist {*1,41|1,70|1,60}. Das Ziel von 70 % ist {*nicht erreicht|erreicht}, weil der Listenverkaufspreis bei 70 % {*144,50 €|120,00 €|85,00 €} betragen müsste.",
+          hints: [
+            "Zuschlag: (120 − 85) ÷ 85 × 100.",
+            "Faktor: 120 ÷ 85.",
+            "Bei 70 %: 85,00 × 1,70 = 144,50 €. Es fehlen 24,50 €."
+          ],
+          explain: "41,18 % statt 70 %: Der Preis von 120,00 € reicht nicht. Bei 70 % wären 144,50 € nötig."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann den Kalkulationszuschlag aus BP und LVP berechnen.",
+            "Ich kann den Kalkulationsfaktor berechnen.",
+            "Ich kann Zuschlag und Faktor ineinander umrechnen.",
+            "Ich kann mit dem Faktor einen Listenverkaufspreis berechnen.",
+            "Ich weiß, dass Faktor 1,60 nicht 160 % bedeutet."
+          ]
+        }
+      ]
+    },
+
+    /* ══════════════ VERTIEFUNG · AB 19 NACHFRAGE & KONKURRENZ ══════════════ */
+    {
+      id: "nachfrage-konkurrenz",
+      group: "Vertiefung · Nachfrage & Konkurrenz (AB 19)",
+      title: "Preise am Markt prüfen",
+      kicker: "Lernfeld 4 · Vertiefung",
+      minutes: 20,
+      help: `<h3>Umsatz und Gewinn</h3>
+             <p class="formula">Umsatz = Preis × Menge<br>Gewinn = (Preis − Selbstkosten) × Menge</p>
+             <p>Mehr Umsatz heißt nicht mehr Gewinn. Bei einer Preissenkung sinkt der Gewinn pro Stück – die Menge muss den Unterschied ausgleichen.</p>
+             <h3>Break-even-Menge</h3>
+             <p class="formula">Break-even-Menge = alter Gewinn ÷ neuer Stückgewinn</p>
+             <p>Das Ergebnis wird aufgerundet, weil es ganze Geräte sind.</p>
+             <h3>Konkurrenz</h3>
+             <ul>
+               <li><strong>mitgehen:</strong> gleicher Preis wie der Wettbewerber.</li>
+               <li><strong>unterbieten:</strong> bewusst niedriger – Achtung, der Gewinn sinkt.</li>
+               <li><strong>halten + Service:</strong> Preis bleibt, dafür Lieferung oder Beratung.</li>
+             </ul>
+             <h3>Merke</h3>
+             <p>Die Konkurrenz setzt die Obergrenze, die Selbstkosten die Untergrenze.</p>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Der Fall: 599 € oder 549 €?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vertiefung",
+              title: "Mehr Umsatz – weniger Gewinn?",
+              body: `<p>Der <strong>CINEMA 43</strong> kostet bei der Mediaworld <strong>599,00 €</strong>. Der Wettbewerber verlangt <strong>559,00 €</strong>.</p>
+                     <p>Sofia überlegt: „Wenn ich auf <strong>549,00 €</strong> gehe, verkaufe ich mehr Geräte.“ Jan rechnet nach: <mark>„Mehr Umsatz heißt nicht mehr Gewinn.“</mark></p>`
+            },
+            {
+              kicker: "Lernziel · Operator AFB II/III",
+              title: "Ich kann <mark>Umsatz und Gewinn</mark> vergleichen und eine <mark>Preissenkung beurteilen</mark>.",
+              body: `<p class="box"><strong>beurteilen</strong> heißt: Du nennst die Zahlen, vergleichst sie und ziehst eine begründete Schlussfolgerung.</p>`
+            },
+            {
+              kicker: "Grundwissen · 1 von 2",
+              title: "Zwei Größen – zwei Rechnungen.",
+              body: `<dl class="terms">
+                       <dt>Umsatz</dt><dd>Preis × Menge. Hier: 599,00 € × 40 Stück = 23.960,00 €.</dd>
+                       <dt>Gewinn</dt><dd>(Preis − Selbstkosten) × Menge. Selbstkosten hier: 480,00 € pro Gerät.</dd>
+                       <dt>Gewinn pro Stück</dt><dd>599,00 − 480,00 = 119,00 € (bisher), 549,00 − 480,00 = 69,00 € (neu).</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Grundwissen · 2 von 2",
+              title: "Die Break-even-Menge.",
+              body: `<p class="formula">Break-even-Menge = alter Gewinn ÷ neuer Stückgewinn</p>
+                     <p>4.760,00 € ÷ 69,00 € = 68,99 → <strong>69 Stück</strong>.</p>
+                     <p class="note">Bei 52 Stück fehlen 17 Stück – der Gewinn sinkt trotz höherem Umsatz.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Umsatz ist nicht Gewinn.",
+              body: `<p>Rechne immer beide Seiten: Umsatz und Gewinn. Die Menge muss den niedrigeren Stückgewinn ausgleichen.</p>`
+            }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "A1 · Zahlen lesen",
+          questions: [
+            {
+              q: "CINEMA 43: bisher 599,00 € und 40 Stück. Wie hoch ist der Umsatz?",
+              hint: "Preis × Menge",
+              options: ["23.960,00 €", "28.548,00 €", "4.760,00 €"],
+              answer: 0,
+              explain: "599,00 × 40 = 23.960,00 €."
+            },
+            {
+              q: "Neu: 549,00 € und 52 Stück. Wie hoch ist der Umsatz?",
+              hint: "Preis × Menge",
+              options: ["23.960,00 €", "28.548,00 €", "3.588,00 €"],
+              answer: 1,
+              explain: "549,00 × 52 = 28.548,00 €."
+            },
+            {
+              q: "Selbstkosten 480,00 €. Wie hoch ist der Gewinn pro Stück bei 549,00 €?",
+              hint: "Preis − Selbstkosten",
+              options: ["69,00 €", "119,00 €", "49,00 €"],
+              answer: 0,
+              explain: "549,00 − 480,00 = 69,00 €."
+            },
+            {
+              q: "Alter Gewinn 4.760,00 €, neuer Stückgewinn 69,00 €. Wie viele Geräte braucht Sofia mindestens?",
+              hint: "4.760 ÷ 69, aufrunden",
+              options: ["52 Stück", "69 Stück", "85 Stück"],
+              answer: 1,
+              explain: "4.760 ÷ 69 = 68,99 → 69 Stück. Bei 52 Stück fehlen 17 Stück."
+            },
+            {
+              q: "Was folgt aus dem Vergleich?",
+              options: [
+                "Der Umsatz steigt, der Gewinn sinkt – die Preissenkung lohnt sich so nicht.",
+                "Der Umsatz steigt, der Gewinn steigt – alles ist gut.",
+                "Der Umsatz sinkt, der Gewinn steigt."
+              ],
+              answer: 0,
+              explain: "Umsatz +4.588,00 €, Gewinn −1.172,00 €. Die Menge reicht nicht."
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A2 · Drei Konkurrenz-Optionen",
+          prompt: "Ordne die Aussage der passenden Option zu.",
+          hints: [
+            "Mitgehen = gleicher Preis. Unterbieten = niedrigerer Preis. Halten + Service = Preis bleibt, Zusatzleistung kommt dazu."
+          ],
+          categories: ["mitgehen", "unterbieten", "Preis halten + Service"],
+          items: [
+            { text: "Preis auf 529,00 € senken", cat: 0 },
+            { text: "Preis auf 519,00 € senken", cat: 1 },
+            { text: "Bei 549,00 € bleiben und kostenlose Lieferung anbieten", cat: 2 },
+            { text: "Gewinn pro Gerät sinkt auf 49,00 €", cat: 0 },
+            { text: "Gewinn pro Gerät sinkt auf 39,00 €", cat: 1 },
+            { text: "Service und Beratung als Argument nutzen", cat: 2 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A3 · Stellung nehmen",
+          case: "Beurteile: „Eine Preissenkung ist immer gut, weil der Umsatz steigt.“ Bau den Antwortsatz.",
+          text: "Die Aussage ist {*falsch|richtig}. Der Umsatz steigt von 14.940,00 € auf {*17.175,00 €|14.940,00 €|3.675,00 €}, der Gewinn sinkt aber von 4.140,00 € auf {*3.675,00 €|4.140,00 €|17.175,00 €}. Entscheidend ist der {*Gewinn|Umsatz} pro Stück mal Menge.",
+          hints: [
+            "Vergleiche Umsatz und Gewinn getrennt.",
+            "Der Umsatz steigt, der Gewinn sinkt – die Aussage ist falsch.",
+            "Rechne mit dem Gewinn pro Stück: 69,00 € × 60 = 4.140,00 €; 49,00 € × 75 = 3.675,00 €."
+          ],
+          explain: "Die Aussage ist falsch: Der Umsatz steigt, aber der Gewinn sinkt. Eine Preissenkung lohnt nur, wenn die zusätzliche Menge den niedrigeren Stückgewinn ausgleicht."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann Umsatz und Gewinn bei zwei Preisen vergleichen.",
+            "Ich kann den Gewinn pro Stück berechnen.",
+            "Ich kann die Break-even-Menge berechnen und aufrunden.",
+            "Ich kann Preisoptionen im Wettbewerb mit Zahlen beurteilen."
+          ]
+        }
+      ]
+    },
+
+    /* ══════════════ VERTIEFUNG · AB 20 PREISAUSZEICHNUNG ══════════════ */
+    {
+      id: "preisauszeichnung",
+      group: "Vertiefung · Preisauszeichnung (AB 20)",
+      title: "Was auf das Preisschild gehört",
+      kicker: "Lernfeld 4 · Vertiefung",
+      minutes: 18,
+      help: `<h3>Preisangabenverordnung (PAngV)</h3>
+             <ul>
+               <li><strong>Endpreis:</strong> immer inklusive Umsatzsteuer und aller Nebenkosten – der Preis, der an der Kasse gilt.</li>
+               <li><strong>Preisklarheit:</strong> eindeutig, gut lesbar, direkt am Artikel oder im Regal.</li>
+               <li><strong>Preiswahrheit:</strong> Der ausgezeichnete Preis muss gelten. Lockvogelpreise sind unzulässig.</li>
+               <li><strong>Grundpreis:</strong> bei Waren nach Gewicht, Volumen, Länge oder Fläche – z. B. pro 100 ml, pro Meter, pro 100 Blatt.</li>
+             </ul>
+             <h3>Grundpreis rechnen</h3>
+             <p class="formula">Grundpreis = Preis ÷ Menge × 100 (bei 100 ml/g/Blatt)</p>
+             <p>12,99 € für 200 ml → 12,99 ÷ 2 = 6,50 € pro 100 ml.</p>
+             <h3>Häufige Fehler</h3>
+             <ul>
+               <li>Nettopreis auf das Schild schreiben – falsch.</li>
+               <li>„zzgl. MwSt.“ auf einem Endpreisschild – falsch.</li>
+               <li>Grundpreis weglassen, obwohl er vorgeschrieben ist.</li>
+             </ul>`,
+      steps: [
+        {
+          type: "slides",
+          title: "Der Fall: 4,99 € oder 5,94 €?",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vertiefung",
+              title: "Auf dem Schild 4,99 € – an der Kasse 5,94 €?",
+              body: `<p>Ein Kunde beschwert sich: „Auf dem Schild steht <strong>4,99 €</strong> – und jetzt soll ich <strong>5,94 €</strong> zahlen.“</p>
+                     <p>Sofia schaut nach: Das Schild zeigt den <strong>Nettopreis</strong>. Der Kunde hat recht. <mark>So darf ein Preis nicht ausgezeichnet werden.</mark></p>`
+            },
+            {
+              kicker: "Lernziel · Operator AFB I/II",
+              title: "Ich kann die <mark>Pflichtangaben</mark> eines Preisschilds nennen und einen <mark>Grundpreis</mark> berechnen.",
+              body: `<p class="box"><strong>berechnen</strong> heißt: Preis durch Menge teilen und auf die Vergleichseinheit beziehen.</p>`
+            },
+            {
+              kicker: "Grundwissen",
+              title: "Vier Regeln – ein Ziel.",
+              body: `<dl class="terms">
+                       <dt>Endpreis</dt><dd>Inklusive Umsatzsteuer und aller Nebenkosten. Das ist der Preis an der Kasse.</dd>
+                       <dt>Preisklarheit</dt><dd>Eindeutig, gut lesbar, direkt am Artikel oder im Regal.</dd>
+                       <dt>Preiswahrheit</dt><dd>Der ausgezeichnete Preis muss gelten. Keine Lockvogelpreise.</dd>
+                       <dt>Grundpreis</dt><dd>Preis pro kg, l, m oder 100 g/ml – macht Packungsgrößen vergleichbar.</dd>
+                     </dl>`
+            },
+            {
+              kicker: "Grundpreis",
+              title: "Erst der Grundpreis zeigt, was günstig ist.",
+              body: `<p class="formula">Grundpreis = Preis ÷ Menge × 100</p>
+                     <p>12,99 € für 200 ml → 6,50 € pro 100 ml.<br>
+                     19,99 € für 500 ml → 4,00 € pro 100 ml.</p>
+                     <p class="note">Das zweite Angebot ist pro 100 ml günstiger – obwohl der Packungspreis höher ist.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Das Schild zeigt den Endpreis.",
+              body: `<p>Kein Nettopreis, kein „zzgl. MwSt.“. Und wo es vorgeschrieben ist, gehört der Grundpreis dazu.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A1 · Pflichtangabe oder nicht?",
+          prompt: "Gehört die Angabe auf ein korrektes Preisschild?",
+          hints: [
+            "Der Endpreis inklusive Umsatzsteuer ist Pflicht.",
+            "Nettopreis, Lagerplatz und Herstellername sind keine Pflichtangaben."
+          ],
+          categories: ["Pflichtangabe", "keine Pflichtangabe"],
+          items: [
+            { text: "Artikelbezeichnung", cat: 0 },
+            { text: "Endpreis inklusive Umsatzsteuer", cat: 0 },
+            { text: "Grundpreis (wenn vorgeschrieben)", cat: 0 },
+            { text: "Nettopreis ohne Umsatzsteuer", cat: 1 },
+            { text: "Lagerplatz im Regal", cat: 1 },
+            { text: "Name des Herstellers", cat: 1 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "A2 · Grundpreise berechnen",
+          questions: [
+            {
+              q: "Tinte COLOR: 12,99 € für 200 ml. Wie hoch ist der Grundpreis pro 100 ml?",
+              hint: "12,99 ÷ 2",
+              options: ["6,50 €", "12,99 €", "2,60 €"],
+              answer: 0,
+              explain: "12,99 ÷ 2 = 6,495 → 6,50 € pro 100 ml."
+            },
+            {
+              q: "USB-Kabel: 8,49 € für 2 m. Wie hoch ist der Grundpreis pro Meter?",
+              hint: "8,49 ÷ 2",
+              options: ["4,25 €", "8,49 €", "2,12 €"],
+              answer: 0,
+              explain: "8,49 ÷ 2 = 4,245 → 4,25 € pro Meter."
+            },
+            {
+              q: "Druckerpapier: 4,29 € für 500 Blatt. Wie hoch ist der Grundpreis pro 100 Blatt?",
+              hint: "4,29 ÷ 5",
+              options: ["0,86 €", "4,29 €", "1,07 €"],
+              answer: 0,
+              explain: "4,29 ÷ 5 = 0,858 → 0,86 € pro 100 Blatt."
+            },
+            {
+              q: "Welches Preisschild ist korrekt?",
+              options: [
+                "Fernseher · 1.399,00 € zzgl. MwSt.",
+                "Tinte 200 ml · 12,99 €",
+                "USB-Kabel 2 m · 8,49 € · 4,25 €/m"
+              ],
+              answer: 2,
+              explain: "C nennt den Endpreis und den Grundpreis. A ist kein Endpreis, B lässt den Grundpreis weg."
+            }
+          ]
+        },
+        {
+          type: "spot",
+          title: "A3 · Finde den Fehler",
+          prompt: "Zwei Preisschilder sind fehlerhaft. Tippe die falsche Zeile an.",
+          rounds: [
+            {
+              lines: [
+                "Preisschild A – Mediaworld",
+                "Fernseher CINEMA 43",
+                "1.399,00 € zzgl. MwSt.",
+                "Grundpreis: nicht erforderlich"
+              ],
+              error: 2,
+              hint: "Auf ein Endpreisschild gehört kein „zzgl. MwSt.“.",
+              explain: "„zzgl. MwSt.“ ist kein Endpreis. Richtig wäre der Bruttopreis, z. B. 1.399,00 € inklusive 19 % Umsatzsteuer."
+            },
+            {
+              lines: [
+                "Preisschild B – Mediaworld",
+                "Tinte COLOR, 200 ml",
+                "12,99 €",
+                "Endpreis inklusive Umsatzsteuer"
+              ],
+              error: 2,
+              hint: "Bei Tinte wird der Grundpreis pro 100 ml gebraucht.",
+              explain: "Der Grundpreis fehlt. Richtig: 12,99 € pro 200 ml = 6,50 € pro 100 ml."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A4 · Beurteilen",
+          case: "Beurteile: „Grundpreise sind nur Bürokratie – für die Kundschaft bringen sie nichts.“ Bau den Antwortsatz.",
+          text: "Die Aussage ist {*falsch|richtig}. Der Grundpreis macht unterschiedlich große Packungen {*vergleichbar|teurer}. 12,99 € für 200 ml sind pro 100 ml {*6,50 €|4,00 €}, 19,99 € für 500 ml sind pro 100 ml {*4,00 €|6,50 €}. Das zweite Angebot ist also {*günstiger|teurer}.",
+          hints: [
+            "Vergleiche die beiden Angebote pro 100 ml.",
+            "12,99 ÷ 2 = 6,50 €; 19,99 ÷ 5 = 4,00 €.",
+            "Der Grundpreis schafft Vergleichbarkeit – die Aussage ist falsch."
+          ],
+          explain: "Der Grundpreis verhindert Scheinvorteile: Das größere Paket ist pro 100 ml günstiger, obwohl es insgesamt mehr kostet."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann den Unterschied zwischen Netto- und Endpreis erklären.",
+            "Ich kann die Pflichtangaben eines Preisschilds nennen.",
+            "Ich kann einen Grundpreis berechnen.",
+            "Ich kann ein fehlerhaftes Preisschild erkennen und korrigieren."
+          ]
+        }
+      ]
+    },
+
+    /* ══════════════ VERTIEFUNG · KLAUSURCHECK ══════════════ */
+    {
+      id: "vertiefung-check",
+      group: "Vertiefung · Klausurcheck",
+      title: "Gemischter Check",
+      kicker: "AB 17–20 · Wiederholung",
+      minutes: 15,
+      help: `<h3>Alles auf einen Blick</h3>
+             <ul>
+               <li><strong>Einflussgrößen:</strong> innen (Kosten, Gewinnziel) und außen (Nachfrage, Konkurrenz).</li>
+               <li><strong>Grundrichtungen:</strong> kosten-, nachfrage-, konkurrenzorientiert.</li>
+               <li><strong>Zuschlag:</strong> (LVP − BP) ÷ BP × 100. <strong>Faktor:</strong> LVP ÷ BP.</li>
+               <li><strong>Umsatz:</strong> Preis × Menge. <strong>Gewinn:</strong> (Preis − Selbstkosten) × Menge.</li>
+               <li><strong>Break-even:</strong> alter Gewinn ÷ neuer Stückgewinn.</li>
+               <li><strong>Endpreis:</strong> inklusive Umsatzsteuer. <strong>Grundpreis:</strong> pro 100 ml/m/Blatt.</li>
+             </ul>`,
+      steps: [
+        {
+          type: "quiz",
+          title: "Klausurcheck · 6 Fragen",
+          questions: [
+            {
+              q: "Welche Einflussgröße ist betriebsintern?",
+              options: ["Preis des Wettbewerbers", "Personalkosten", "Zahlungsbereitschaft der Kundschaft", "Lieferantenrabatt"],
+              answer: 1,
+              explain: "Personalkosten kann das Unternehmen selbst beeinflussen – betriebsintern."
+            },
+            {
+              q: "Der Wettbewerber verkauft für 49,99 €. Mediaworld senkt auf 49,99 €. Welche Grundrichtung ist das?",
+              options: ["kostenorientiert", "nachfrageorientiert", "konkurrenzorientiert"],
+              answer: 2,
+              explain: "Der Preis richtet sich nach dem Wettbewerber – konkurrenzorientiert."
+            },
+            {
+              q: "BP 200,00 €, LVP 320,00 €. Wie hoch sind Zuschlag und Faktor?",
+              options: ["60 % / 1,60", "120 % / 2,20", "37,5 % / 1,375"],
+              answer: 0,
+              explain: "(320 − 200) ÷ 200 × 100 = 60 %; 320 ÷ 200 = 1,60."
+            },
+            {
+              q: "Alter Gewinn 4.760,00 €, neuer Stückgewinn 69,00 €. Wie hoch ist die Break-even-Menge?",
+              options: ["52 Stück", "69 Stück", "85 Stück"],
+              answer: 1,
+              explain: "4.760 ÷ 69 = 68,99 → 69 Stück."
+            },
+            {
+              q: "Welcher Preis gehört auf das Preisschild?",
+              options: ["1.250,00 € netto", "1.250,00 € zzgl. MwSt.", "1.487,50 € inklusive Umsatzsteuer"],
+              answer: 2,
+              explain: "Der Endpreis inklusive Umsatzsteuer ist der Preis an der Kasse."
+            },
+            {
+              q: "Tinte: 12,99 € für 200 ml. Wie hoch ist der Grundpreis pro 100 ml?",
+              options: ["6,50 €", "12,99 €", "4,00 €"],
+              answer: 0,
+              explain: "12,99 ÷ 2 = 6,495 → 6,50 € pro 100 ml."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Klausurcheck · Antwortsatz",
+          case: "Bringe die Begriffe in den richtigen Zusammenhang.",
+          text: "Der {*Kalkulationsfaktor|Kalkulationszuschlag} ist der Verkaufspreis geteilt durch den Bezugspreis. Der {*Kalkulationszuschlag|Kalkulationsfaktor} ist der Aufschlag in Prozent. Beim Vergleich zweier Preise zählt nicht der Umsatz, sondern der {*Gewinn|Rabatt}.",
+          hints: [
+            "Faktor = LVP ÷ BP. Zuschlag = (LVP − BP) ÷ BP × 100.",
+            "Mehr Umsatz heißt nicht mehr Gewinn."
+          ],
+          explain: "Faktor 1,60 = 60 % Aufschlag. Der Gewinn entscheidet, nicht der Umsatz."
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste · Klausurvorbereitung",
+          items: [
+            "Ich kann Einflussgrößen und Grundrichtungen sicher zuordnen.",
+            "Ich kann Zuschlag und Faktor berechnen und umrechnen.",
+            "Ich kann Umsatz und Gewinn vergleichen sowie die Break-even-Menge bestimmen.",
+            "Ich kann Endpreis und Grundpreis prüfen.",
+            "Ich kann meine Ergebnisse in einem Antwortsatz erklären."
+          ]
+        }
+      ]
+    },
+
     /* ══════════════ ENDLOS-TRAINING RÜCKWÄRTSKALKULATION ══════════════ */
     {
       id: "training-rueckwaerts",
@@ -658,7 +1376,21 @@ LERNRAUM.subjects.push({
             { front: "Skonto rückwärts", back: "Barverkaufspreis = Zielverkaufspreis × 0,96 (bei 4 % Skonto)." },
             { front: "Gewinn rückwärts", back: "Selbstkosten = Barverkaufspreis ÷ 1,25 (bei 25 % Aufschlag) – teilen, nicht abziehen!" },
             { front: "Gemeinkosten rückwärts", back: "Bezugspreis = Selbstkosten ÷ 1,20 (bei 20 %). Gewinn und Gemeinkosten sind beides Aufschläge." },
-            { front: "Höchster Einkaufspreis", back: "Der Bezugspreis ist der höchste Preis, den die Ware beim Einkauf kosten darf." }
+            { front: "Höchster Einkaufspreis", back: "Der Bezugspreis ist der höchste Preis, den die Ware beim Einkauf kosten darf." },
+            { front: "Betriebsinterne Einflussgrößen", back: "Kosten, Gewinnziel, Auslastung, Service und Image – das kann das Unternehmen selbst beeinflussen." },
+            { front: "Betriebsexterne Einflussgrößen", back: "Nachfrage, Konkurrenz, Lieferantenpreise, Steuern und Konjunktur – das kommt von außen." },
+            { front: "Kostenorientierte Preisgestaltung", back: "Preis = Selbstkosten + Gewinnzuschlag." },
+            { front: "Nachfrageorientierte Preisgestaltung", back: "Der Preis richtet sich nach der Zahlungsbereitschaft der Kundschaft." },
+            { front: "Konkurrenzorientierte Preisgestaltung", back: "Der Preis richtet sich nach dem Preis des Wettbewerbers." },
+            { front: "Kalkulationszuschlag", back: "(LVP − BP) ÷ BP × 100. Beispiel: (240 − 150) ÷ 150 × 100 = 60 %." },
+            { front: "Kalkulationsfaktor", back: "LVP ÷ BP. Beispiel: 240 ÷ 150 = 1,60. Faktor = 1 + Zuschlag ÷ 100." },
+            { front: "Faktor 1,60", back: "60 % Aufschlag – nicht 160 %. 160 % Aufschlag wäre der Faktor 2,60." },
+            { front: "Umsatz", back: "Preis × Menge. Umsatz ist nicht Gewinn." },
+            { front: "Gewinn", back: "(Preis − Selbstkosten) × Menge." },
+            { front: "Break-even-Menge", back: "Alter Gewinn ÷ neuer Stückgewinn, aufgerundet. Beispiel: 4.760 ÷ 69 = 68,99 → 69 Stück." },
+            { front: "Endpreis", back: "Preis inklusive Umsatzsteuer und aller Nebenkosten – der Preis an der Kasse." },
+            { front: "Grundpreis", back: "Preis pro kg, l, m oder 100 g/ml. Beispiel: 12,99 € für 200 ml = 6,50 € pro 100 ml." },
+            { front: "Preisangabenverordnung (PAngV)", back: "Regelt Endpreis, Preisklarheit, Preiswahrheit und Grundpreis." }
           ]
         }
       ]
