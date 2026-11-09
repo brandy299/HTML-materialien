@@ -645,6 +645,12 @@ LERNRAUM.subjects.push({
           ]
         },
         {
+          type: "link",
+          title: "Extra: Lenas Gehalt in 3D",
+          text: "Interaktives Modell: Segmente antippen, auseinanderziehen und die Abgabenquote sehen. Dazu ein Denkmodell zu Sicherheit und Gerechtigkeit.",
+          href: "materialien/VW/Sozialpolitik/sozialpolitik-werkstatt.html"
+        },
+        {
           type: "selfcheck",
           title: "Kann-Liste",
           items: [
@@ -1026,7 +1032,7 @@ LERNRAUM.subjects.push({
              <p><strong>Argument 1 + Beispiel</strong> · <strong>Argument 2 + Beispiel</strong></p>
              <p><strong>Gegenargument:</strong> Allerdings …</p>
              <p><strong>Fazit:</strong> Im Sinne des Ziels … und des …prinzips …</p>
-             <p>Die beiden Meinungstexte sind <strong>fiktive, zugespitzte Positionen</strong>. Es gibt keine Richtig-Falsch-Lösung – die Begründung muss schlüssig sein.</p>`,
+             <p>Die beiden Meinungstexte sind <strong>fiktive, zugespitzte Positionen</strong> – keine echten Verbände oder Parteien. Es gibt keine Richtig-Falsch-Lösung; die Begründung muss schlüssig sein.</p>`,
       steps: [
         {
           type: "slides",
