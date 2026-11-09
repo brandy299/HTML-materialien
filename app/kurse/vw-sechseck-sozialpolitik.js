@@ -100,12 +100,6 @@ LERNRAUM.subjects.push({
         },
         {
           type: "link",
-          title: "Noch tiefer: der ganze Sechseck-Kurs",
-          text: "Wenn du ein Thema ausführlicher wiederholen willst, öffne den Kurs „Magisches Sechseck“ mit allen sechs Stunden.",
-          href: "#/f/vw-magisches-sechseck"
-        },
-        {
-          type: "link",
           title: "Extra: Das Sechseck in 3D",
           text: "Interaktives Modell: Ziele mit Reglern einstellen und Harmonien und Konflikte in Oberhausen beobachten.",
           href: "materialien/VW/Magisches Sechseck/magisches-sechseck.html"
