@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FEFEFE">
+  <title>Lenas Gehalt – wohin geht das Geld? · VW · HBBK Oberhausen</title>
+  <meta name="description" content="Interaktives Modell zur Sozialpolitik: Lenas Abrechnung in 3D, Abgabenquote und ein Denkmodell zu Sicherheit und Gerechtigkeit.">
+  <script src="../../../app/theme.js"></script>
+  <link rel="icon" href="../../../app/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../app/fonts/fonts.css">
+  <style>
+    :root {
+      --paper: #FEFEFE;
+      --paper-2: #F4F4F2;
+      --panel: #E9E9E6;
+      --panel-2: #DCDCD8;
+      --ink: #1E1E1E;
+      --ink-2: #4A4A4A;
+      --ink-3: #8A8A86;
+      --pink: #F386A1;
+      --pink-deep: #D45BB6;
+      --pink-soft: #FBDDE3;
+      --pink-ink: #A3186E;
+      --good: #0A8F57;
+      --good-soft: #DCF3E6;
+      --bad: #C1354F;
+      --bad-soft: #FBDDE3;
+      --shadow: 4px 4px 0 var(--ink);
+      --grot: "Archivo", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+    :root[data-theme="dark"] {
+      --paper: #141414;
+      --paper-2: #1B1B1B;
+      --panel: #242424;
+      --panel-2: #343434;
+      --ink: #F2F2EF;
+      --ink-2: #BDBDB9;
+      --ink-3: #85857F;
+      --pink: #F386A1;
+      --pink-deep: #E06BC4;
+      --pink-soft: #3A1F2B;
+      --pink-ink: #F7A3D4;
+      --good: #34C085;
+      --good-soft: #12301F;
+      --bad: #FF7088;
+      --bad-soft: #3A1822;
+      --shadow: 4px 4px 0 #5C2A43;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--grot);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: var(--pink-ink); }
+    :focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 3px; }
+    .shell {
+      width: min(100%, 1040px);
+      margin-inline: auto;
+      padding: 18px 14px 34px;
+      display: grid;
+      gap: 18px;
+    }
+    .head { display: grid; gap: 10px; }
+    .back { justify-self: start; color: var(--ink-2); font: 600 11px/1.3 var(--mono); text-decoration: none; }
+    .back:hover { color: var(--pink-ink); }
+    .eyebrow {
+      display: flex; align-items: center; gap: 8px;
+      margin: 0; color: var(--ink-2);
+      font: 600 11px/1.3 var(--mono);
+      letter-spacing: .08em; text-transform: uppercase;
+    }
+    .dot { width: 8px; height: 8px; background: var(--pink); border: 1.5px solid var(--ink); }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 6vw, 2.9rem);
+      font-weight: 800;
+      letter-spacing: -.045em;
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+    .lead { margin: 0; max-width: 62ch; color: var(--ink-2); font-size: .98rem; }
+    .badge {
+      justify-self: start;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 10px;
+      border: 2px solid var(--ink);
+      background: var(--pink-soft);
+      box-shadow: 3px 3px 0 var(--ink);
+      font: 700 12px/1 var(--mono);
+      text-transform: uppercase;
+    }
+    .win {
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .bar {
+      display: flex; align-items: center; gap: 8px;
+      min-height: 38px; padding: 7px 10px;
+      background: var(--ink); color: var(--paper);
+      font: 700 12px/1 var(--mono);
+      letter-spacing: .07em; text-transform: uppercase;
+    }
+    .bar .d { width: 9px; height: 9px; background: var(--pink); flex: none; }
+    .bar .r { margin-left: auto; color: var(--pink); font-weight: 700; }
+    .body { padding: 14px; display: grid; gap: 14px; }
+    .stage {
+      position: relative;
+      height: clamp(320px, 54vh, 520px);
+      border: 2px solid var(--ink);
+      background:
+        linear-gradient(90deg, transparent 0 96%, var(--panel) 96% 100%),
+        linear-gradient(0deg, transparent 0 96%, var(--panel) 96% 100%),
+        var(--paper-2);
+      background-size: 28px 28px, 28px 28px, auto;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+    #scene { display: block; width: 100%; height: 100%; }
+    .hint {
+      position: absolute; left: 10px; bottom: 10px;
+      padding: 6px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 2px 2px 0 var(--ink);
+      font: 600 10px/1.25 var(--mono);
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .fallback {
+      padding: 18px 14px;
+      display: grid;
+      gap: 10px;
+      min-height: inherit;
+      align-content: center;
+    }
+    .fb-bar {
+      display: grid; gap: 6px;
+      width: min(100%, 420px); margin-inline: auto;
+    }
+    .fb-seg {
+      display: flex; align-items: center; gap: 8px;
+      min-height: 38px; padding: 6px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 2px 2px 0 var(--ink);
+      font: 600 11px/1.2 var(--mono);
+    }
+    .fb-seg b { margin-left: auto; font-family: var(--grot); font-size: 12px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+    .btn {
+      min-height: 46px; padding: 10px 13px;
+      border: 2px solid var(--ink);
+      background: var(--pink);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      font: 700 12px/1 var(--mono);
+      letter-spacing: .05em; text-transform: uppercase;
+      cursor: pointer;
+    }
+    .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+    .btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .btn.ghost { background: var(--paper); }
+    .legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+    .legend button {
+      display: flex; align-items: center; gap: 8px;
+      min-height: 46px; padding: 7px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      text-align: left; cursor: pointer;
+      font: 600 11px/1.2 var(--mono);
+    }
+    .legend button[aria-pressed="true"] { background: var(--pink-soft); box-shadow: 2px 2px 0 var(--ink); }
+    .sw { width: 13px; height: 13px; flex: none; border: 1.5px solid var(--ink); background: var(--sw); }
+    .legend button span:last-child { min-width: 0; overflow-wrap: anywhere; }
+    .legend small { display: block; color: var(--ink-2); font-weight: 500; }
+    .detail {
+      border: 2px solid var(--ink);
+      background: var(--paper-2);
+      padding: 12px;
+      display: grid; gap: 4px;
+    }
+    .detail-kicker { margin: 0; font: 700 10px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+    .detail h2 { margin: 0; font-size: 1.25rem; letter-spacing: -.03em; }
+    .detail p { margin: 0; color: var(--ink-2); font-size: .94rem; }
+    .detail .num { color: var(--ink); font: 700 1.05rem/1.2 var(--mono); }
+    .quote-body { grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+    .ring { width: 128px; height: 128px; position: relative; flex: none; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring .track { fill: none; stroke: var(--panel-2); stroke-width: 13; }
+    .ring .val { fill: none; stroke: var(--pink-deep); stroke-width: 13; stroke-linecap: butt; transition: stroke-dashoffset 900ms cubic-bezier(.2,.7,.2,1); }
+    .ring .lbl {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      font: 800 1.15rem/1 var(--mono); letter-spacing: -.04em;
+    }
+    .quote-copy { display: grid; gap: 6px; }
+    .quote-copy p { margin: 0; color: var(--ink-2); font-size: .94rem; }
+    .quote-copy strong { color: var(--ink); }
+    .scale-wrap { display: grid; gap: 12px; }
+    .scale {
+      position: relative;
+      height: 210px;
+      border: 2px solid var(--ink);
+      background: var(--paper-2);
+      overflow: hidden;
+    }
+    .scale::before {
+      content: "";
+      position: absolute; left: 50%; bottom: 0; width: 2px; height: 82px;
+      background: var(--ink);
+      transform: translateX(-50%);
+    }
+    .stand {
+      position: absolute; left: 50%; bottom: 0; width: 0; height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 76px solid var(--ink-2);
+      transform: translateX(-50%);
+    }
+    .beam {
+      position: absolute; left: 50%; top: 78px;
+      width: min(78%, 360px); height: 8px;
+      background: var(--ink);
+      transform: translateX(-50%) rotate(0deg);
+      transform-origin: 50% 50%;
+      transition: transform 420ms cubic-bezier(.2,.7,.2,1);
+    }
+    .pan {
+      position: absolute; top: 100%; width: 84px;
+      transform: translateX(-50%);
+      text-align: center;
+      font: 700 10px/1.2 var(--mono);
+      text-transform: uppercase;
+    }
+    .pan::before {
+      content: ""; display: block; width: 1px; height: 16px;
+      margin: 0 auto 4px; background: var(--ink);
+    }
+    .pan.left { left: 0; }
+    .pan.right { left: 100%; }
+    .pan .dish {
+      display: block;
+      height: 22px;
+      margin-top: 6px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+    .pan.left .dish { background: var(--good-soft); }
+    .pan.right .dish { background: var(--pink-soft); }
+    .slider { display: grid; gap: 4px; font: 700 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+    .slider input { width: 100%; accent-color: var(--pink-deep); min-height: 44px; }
+    .slider-ends { display: flex; justify-content: space-between; gap: 8px; color: var(--ink-3); font: 600 9px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+    .scale-text { margin: 0; color: var(--ink-2); font-size: .94rem; min-height: 2.8em; }
+    .scale-text strong { color: var(--ink); }
+    .foot { margin: 0; color: var(--ink-3); font: 500 11px/1.4 var(--mono); }
+    .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 520px) {
+      .legend { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 380px) {
+      .quote-body { grid-template-columns: 1fr; }
+      .ring { margin-inline: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="head">
+    <a class="back" href="../../../app/#/f/vw-sechseck-sozialpolitik">← Zurück zum Kurs</a>
+    <p class="eyebrow"><span class="dot"></span>VW · LS 14 · Sozialpolitik</p>
+    <h1>Lenas Gehalt – wohin geht das Geld?</h1>
+    <p class="lead">Ein Modell zum Drehen, Tippen und Nachrechnen. Lenas Werte sind fiktiv und gerundet.</p>
+    <p class="badge">3.000,00 € brutto · 2.038,50 € netto</p>
+  </header>
+
+  <section class="win" aria-labelledby="scene-title">
+    <div class="bar"><span class="d"></span><span id="scene-title">Gehaltsmodell</span><span class="r">3D</span></div>
+    <div class="body">
+      <div class="stage">
+        <canvas id="scene" role="img" aria-label="3D-Modell von Lenas Gehalt: Ein Balken aus sechs Segmenten zeigt Lohnsteuer, vier Sozialversicherungsbeiträge und das Nettoentgelt."></canvas>
+        <div class="hint">Ziehen zum Drehen · Segment antippen</div>
+        <div id="fallback" class="fallback" hidden>
+          <p class="sr">Statische Ersatzansicht, falls 3D im Browser nicht verfügbar ist.</p>
+          <div class="fb-bar" aria-hidden="true" id="fb-bar"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="explode" aria-pressed="false">Auseinanderziehen</button>
+        <button class="btn ghost" id="reset">Zurücksetzen</button>
+      </div>
+      <div class="legend" id="legend" aria-label="Segmente auswählen"></div>
+      <div class="detail" id="detail" aria-live="polite">
+        <p class="detail-kicker">Segment wählen</p>
+        <h2 id="detail-title">Lohnsteuer</h2>
+        <p class="num" id="detail-num">315,00 € · 10,50 % vom Brutto</p>
+        <p id="detail-text">Steuer ohne direkten Anspruch auf eine Gegenleistung.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="quote-title">
+    <div class="bar"><span class="d"></span><span id="quote-title">Abgabenquote</span><span class="r">32,05 %</span></div>
+    <div class="body quote-body">
+      <div class="ring" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <circle class="track" cx="60" cy="60" r="48"></circle>
+          <circle class="val" id="ring-val" cx="60" cy="60" r="48" stroke-dasharray="301.59" stroke-dashoffset="301.59"></circle>
+        </svg>
+        <span class="lbl">32,05 %</span>
+      </div>
+      <div class="quote-copy">
+        <p><strong>961,50 €</strong> von <strong>3.000,00 €</strong> gehen als Abzüge weg.</p>
+        <p>Davon sind <strong>646,50 €</strong> Sozialversicherungsbeiträge – das sind <strong>67,2 %</strong> der Abzüge.</p>
+        <p>Beiträge begründen Ansprüche. Steuern finanzieren Aufgaben für alle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="scale-title">
+    <div class="bar"><span class="d"></span><span id="scale-title">Denkmodell: Sicherheit ↔ Gerechtigkeit</span><span class="r">keine Messung</span></div>
+    <div class="body scale-wrap">
+      <div class="scale" aria-hidden="true">
+        <div class="stand"></div>
+        <div class="beam" id="beam">
+          <span class="pan left">Sicherheit<span class="dish"></span></span>
+          <span class="pan right">Gerechtigkeit<span class="dish"></span></span>
+        </div>
+      </div>
+      <label class="slider" for="balance">Mehr Umverteilung
+        <input id="balance" type="range" min="0" max="100" value="50" step="1" aria-describedby="scale-text">
+      </label>
+      <div class="slider-ends" aria-hidden="true"><span>mehr Sicherheit</span><span>mehr Gerechtigkeit</span></div>
+      <p class="scale-text" id="scale-text"><strong>Balance:</strong> Mehr Schutz kostet Beiträge. Mehr Umverteilung kann Leistungsanreize schwächen. Die Politik muss abwägen.</p>
+    </div>
+  </section>
+
+  <p class="foot">Fiktive, gerundete Beispielwerte · HBBK Oberhausen · VW · LS 14</p>
+</main>
+
+<script src="../../../site/vendor/three.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var css = function (name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  };
+  var col = function (name) {
+    return new THREE.Color(css(name)).convertSRGBToLinear();
+  };
+  var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ── Daten ─────────────────────────────────────────────── */
+  var SEGMENTS = [
+    { key: "lohnsteuer", label: "Lohnsteuer", amount: 315, color: "--pink", note: "Steuer ohne direkten Anspruch auf eine Gegenleistung." },
+    { key: "kranken", label: "Krankenversicherung", amount: 256.5, color: "--ink", note: "Beitrag mit Anspruch auf Leistungen bei Krankheit." },
+    { key: "pflege", label: "Pflegeversicherung", amount: 72, color: "--ink-2", note: "Beitrag mit Anspruch auf Pflegeleistungen." },
+    { key: "rente", label: "Rentenversicherung", amount: 279, color: "--ink-3", note: "Beitrag mit Anspruch auf Rente." },
+    { key: "arbeitslos", label: "Arbeitslosenversicherung", amount: 39, color: "--panel-2", note: "Beitrag mit Anspruch auf Arbeitslosengeld." },
+    { key: "netto", label: "Nettoentgelt", amount: 2038.5, color: "--good", note: "Das bleibt Lena nach allen Abzügen." }
+  ];
+  var BRUTTO = 3000;
+  var TOTAL = SEGMENTS.reduce(function (s, x) { return s + x.amount; }, 0);
+  var euro = function (v) { return v.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; };
+  var pct = function (v) { return (v / BRUTTO * 100).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " %"; };
+
+  /* ── Legende + Detail ──────────────────────────────────── */
+  var legend = document.getElementById("legend");
+  var detailTitle = document.getElementById("detail-title");
+  var detailNum = document.getElementById("detail-num");
+  var detailText = document.getElementById("detail-text");
+  var selected = 0;
+
+  function select(i, fromMesh) {
+    selected = i;
+    var s = SEGMENTS[i];
+    detailTitle.textContent = s.label;
+    detailNum.textContent = euro(s.amount) + " · " + pct(s.amount) + " vom Brutto";
+    detailText.textContent = s.note;
+    Array.prototype.forEach.call(legend.querySelectorAll("button"), function (b, k) {
+      b.setAttribute("aria-pressed", k === i ? "true" : "false");
+    });
+    if (window.__vwSelect && !fromMesh) window.__vwSelect(i);
+  }
+
+  SEGMENTS.forEach(function (s, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.innerHTML = '<span class="sw" style="--sw:var(' + s.color + ')"></span><span>' + s.label + '<small>' + euro(s.amount) + " · " + pct(s.amount) + "</small></span>";
+    b.addEventListener("click", function () { select(i); });
+    legend.appendChild(b);
+  });
+
+  var fb = document.getElementById("fb-bar");
+  SEGMENTS.forEach(function (s) {
+    var row = document.createElement("div");
+    row.className = "fb-seg";
+    row.innerHTML = '<span class="sw" style="--sw:var(' + s.color + ')"></span><span>' + s.label + '</span><b>' + euro(s.amount) + '</b>';
+    fb.appendChild(row);
+  });
+
+  /* ── Abgabenquote-Ring ─────────────────────────────────── */
+  var ring = document.getElementById("ring-val");
+  var CIRC = 2 * Math.PI * 48;
+  ring.setAttribute("stroke-dasharray", String(CIRC));
+  ring.setAttribute("stroke-dashoffset", String(CIRC));
+  var quoteTarget = 961.5 / 3000;
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      ring.style.strokeDashoffset = String(CIRC * (1 - quoteTarget));
+    });
+  });
+
+  /* ── Gerechtigkeits-Waage ──────────────────────────────── */
+  var balance = document.getElementById("balance");
+  var beam = document.getElementById("beam");
+  var scaleText = document.getElementById("scale-text");
+  function updateScale() {
+    var v = Number(balance.value);
+    var angle = (v - 50) * 0.14;
+    beam.style.transform = "translateX(-50%) rotate(" + angle + "deg)";
+    var text;
+    if (v < 34) text = "<strong>Mehr Sicherheit:</strong> Der Schutz vor Lebensrisiken wird stärker gewichtet. Das kostet höhere Beiträge.";
+    else if (v > 66) text = "<strong>Mehr Gerechtigkeit:</strong> Der Ausgleich zwischen Einkommen wird stärker gewichtet. Das kann Leistungsanreize schwächen.";
+    else text = "<strong>Balance:</strong> Mehr Schutz kostet Beiträge. Mehr Umverteilung kann Leistungsanreize schwächen. Die Politik muss abwägen.";
+    scaleText.innerHTML = text;
+  }
+  balance.addEventListener("input", updateScale);
+  updateScale();
+
+  /* ── 3D ────────────────────────────────────────────────── */
+  var canvas = document.getElementById("scene");
+  var fallback = document.getElementById("fallback");
+  var hasThree = typeof THREE !== "undefined";
+
+  if (!hasThree) {
+    canvas.hidden = true;
+    fallback.hidden = false;
+    return;
+  }
+
+  var renderer, scene, camera, root, meshes = [], edges = [], plinth, contact;
+  var drag = null;
+  var exploded = false;
+  var raycaster, pointer;
+  var autoSpeed = 0.0032;
+
+  function build() {
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    } catch (e) {
+      canvas.hidden = true;
+      fallback.hidden = false;
+      return;
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+    if ("outputEncoding" in renderer) renderer.outputEncoding = THREE.sRGBEncoding;
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    camera.position.set(7.2, 6.8, 9.8);
+    camera.lookAt(0, 2.6, 0);
+
+    root = new THREE.Group();
+    scene.add(root);
+
+    var hemi = new THREE.HemisphereLight(0xffffff, 0x555555, 1.15);
+    scene.add(hemi);
+    var dir = new THREE.DirectionalLight(0xffffff, 1.45);
+    dir.position.set(4.5, 8, 6.5);
+    scene.add(dir);
+    var fill = new THREE.DirectionalLight(0xffffff, 0.35);
+    fill.position.set(-6, 3, -4);
+    scene.add(fill);
+
+    plinth = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.35, 2.5, 0.16, 6),
+      new THREE.MeshStandardMaterial({ color: col("--panel"), roughness: 0.85, metalness: 0.02 })
+    );
+    plinth.rotation.y = Math.PI / 6;
+    plinth.position.y = -0.08;
+    root.add(plinth);
+    root.add(new THREE.LineSegments(
+      new THREE.EdgesGeometry(plinth.geometry),
+      new THREE.LineBasicMaterial({ color: col("--ink"), transparent: true, opacity: 0.35 })
+    ));
+
+    contact = new THREE.Mesh(
+      new THREE.CircleGeometry(2.3, 48),
+      new THREE.MeshBasicMaterial({ color: col("--ink"), transparent: true, opacity: 0.06, depthWrite: false })
+    );
+    contact.rotation.x = -Math.PI / 2;
+    contact.position.y = 0.005;
+    root.add(contact);
+
+    var y = 0;
+    var gap = 0.03;
+    var scale = 5.4 / TOTAL;
+    SEGMENTS.map(function (_, i) { return i; }).reverse().forEach(function (idx) {
+      var s = SEGMENTS[idx];
+      var h = Math.max(0.12, s.amount * scale);
+      var mat = new THREE.MeshStandardMaterial({
+        color: col(s.color),
+        roughness: 0.62,
+        metalness: 0.04
+      });
+      var mesh = new THREE.Mesh(new THREE.BoxGeometry(2.1, h - gap, 2.1), mat);
+      mesh.position.y = y + h / 2;
+      mesh.userData.index = idx;
+      mesh.userData.homeY = mesh.position.y;
+      mesh.userData.height = h;
+      root.add(mesh);
+      meshes.push(mesh);
+
+      var line = new THREE.LineSegments(
+        new THREE.EdgesGeometry(mesh.geometry),
+        new THREE.LineBasicMaterial({ color: col("--ink"), transparent: true, opacity: 0.45 })
+      );
+      line.position.copy(mesh.position);
+      root.add(line);
+      edges.push(line);
+      y += h;
+    });
+
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2();
+    applySelection(selected);
+    resize();
+  }
+
+  function meshOf(i) {
+    for (var k = 0; k < meshes.length; k++) {
+      if (meshes[k].userData.index === i) return meshes[k];
+    }
+    return null;
+  }
+
+  function applySelection(i) {
+    edges.forEach(function (line, k) {
+      var on = meshes[k] && meshes[k].userData.index === i;
+      line.material.color.copy(on ? col("--pink-deep") : col("--ink"));
+      line.material.opacity = on ? 1 : 0.35;
+      line.material.needsUpdate = true;
+    });
+  }
+  window.__vwSelect = applySelection;
+
+  function resize() {
+    if (!renderer || !camera) return;
+    var w = canvas.clientWidth || canvas.parentElement.clientWidth;
+    var h = canvas.clientHeight || 420;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  function theme() {
+    if (!scene) return;
+    var ink = col("--ink");
+    var panel = col("--panel");
+    if (plinth) plinth.material.color.copy(panel);
+    if (contact) contact.material.color.copy(ink);
+    meshes.forEach(function (m) {
+      m.material.color.copy(col(SEGMENTS[m.userData.index].color));
+    });
+    edges.forEach(function (l) { l.material.color.copy(ink); });
+    applySelection(selected);
+  }
+
+  function onPointerDown(e) {
+    drag = { x: e.clientX, y: e.clientY, rx: root.rotation.y, moved: 0 };
+    canvas.setPointerCapture(e.pointerId);
+  }
+  function onPointerMove(e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x;
+    drag.moved = Math.max(drag.moved, Math.abs(dx));
+    root.rotation.y = drag.rx + dx * 0.008;
+  }
+  function onPointerUp(e) {
+    if (!drag) return;
+    var moved = drag.moved;
+    drag = null;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (x) { /* egal */ }
+    if (moved > 8) return;
+    var r = canvas.getBoundingClientRect();
+    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    var hits = raycaster.intersectObjects(meshes, false);
+    if (hits.length) select(hits[0].object.userData.index, true);
+  }
+  canvas.addEventListener("pointerdown", onPointerDown);
+  canvas.addEventListener("pointermove", onPointerMove);
+  canvas.addEventListener("pointerup", onPointerUp);
+  canvas.addEventListener("pointercancel", onPointerUp);
+
+  document.getElementById("explode").addEventListener("click", function () {
+    exploded = !exploded;
+    this.setAttribute("aria-pressed", exploded ? "true" : "false");
+    this.textContent = exploded ? "Zusammenklappen" : "Auseinanderziehen";
+    meshes.forEach(function (m, i) {
+      m.userData.targetY = m.userData.homeY + (exploded && i > 0 ? i * 0.09 : 0);
+    });
+    edges.forEach(function (l, i) {
+      l.userData = l.userData || {};
+      l.userData.targetY = meshes[i].userData.targetY;
+    });
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    exploded = false;
+    document.getElementById("explode").setAttribute("aria-pressed", "false");
+    document.getElementById("explode").textContent = "Auseinanderziehen";
+    root.rotation.y = 0;
+    meshes.forEach(function (m) { m.userData.targetY = m.userData.homeY; });
+    edges.forEach(function (l, i) { l.userData = l.userData || {}; l.userData.targetY = meshes[i].userData.homeY; });
+    select(0);
+  });
+
+  var last = 0;
+  function tick(t) {
+    requestAnimationFrame(tick);
+    if (!renderer || !scene) return;
+    var dt = Math.min(0.05, (t - last) / 1000 || 0.016);
+    last = t;
+    if (!drag && !reduced) root.rotation.y += autoSpeed * dt * 60;
+    meshes.forEach(function (m) {
+      if (m.userData.targetY === undefined) return;
+      m.position.y += (m.userData.targetY - m.position.y) * Math.min(1, dt * 12);
+    });
+    edges.forEach(function (l, i) {
+      if (l.userData && l.userData.targetY !== undefined) l.position.y += (l.userData.targetY - l.position.y) * Math.min(1, dt * 12);
+    });
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener("resize", resize);
+  window.addEventListener("lernraum-theme", theme);
+  build();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
