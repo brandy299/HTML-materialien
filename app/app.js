@@ -689,7 +689,7 @@
           <div class="bar"><span class="d"></span>${esc(DATA.school)}<span class="r">${new Date().getFullYear()}</span></div>
           <div class="body">${courses.length ? resumeBody(target, name, "") : `<p class="kick">${tr("Hallo {n}", { n: esc(name) })}</p><p class="say">${tr("Wähle dein Fach.")}</p>`}</div>
         </div>
-        <h1 class="display">Lernraum.<small>${tr(filtered ? "Deine Fächer, deine Kurse – gemacht fürs Handy." : "Übungen und Lernpfade für deine Fächer – gemacht fürs Handy.")}</small></h1>
+        <h1 class="display">Lernraum.</h1>
         ${bigArt("hero-phone", "hero-art")}
       </section>
       <div class="fach-chips" role="navigation" aria-label="Fächer"></div>
@@ -754,10 +754,10 @@
     }
     const tops = courseTopics(x).filter((t) => t.steps.length);
     const done = tops.filter((t) => progress.ratio(x, t) >= 1).length;
-    return h(`<a class="win topic-win" href="#/f/${x.id}">
+    return h(`<a class="win topic-win course-card" href="#/f/${x.id}">
       <div class="bar"><span class="d"></span>Kurs · ${esc(x.course || x.fach || "")}${isNew(x) ? ` <span class="badge-new">${tr("Neu")}</span>` : ""}<span class="r">${tr("{a}/{b} Themen", { a: done, b: tops.length })}</span></div>
-      <div class="body">${artImg(x)}<span class="title">${esc(x.name)}</span>
-        <div class="blocks">${tops.map((t) => `<i class="${progress.ratio(x, t) >= 1 ? "on" : ""}"></i>`).join("")}</div>
+      <div class="body"><span class="title">${esc(x.name)}</span>
+        <div class="cc-bar" aria-hidden="true"><i style="width:${tops.length ? Math.round(100 * done / tops.length) : 0}%"></i></div>
         <span class="meta">${esc(x.description || "")}</span></div></a>`);
   }
 
