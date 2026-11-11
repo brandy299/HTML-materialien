@@ -1,7 +1,7 @@
 /* ============================================================
    KURS: PBP · HS1 – Lebenslauf schreiben (Extra-Kurs)
    Fach PBP · Ergänzt LS 2.3 „Bewerbung & Auswahl“ (Thema „Die Bewerbungsmappe“)
-   Modellunternehmen Mediaworld e. K. · Beispiel-Bewerber: Jonas Kaya (erfunden)
+   Modellunternehmen Mediaworld e. K. · Beispiel-Bewerberin: Lena Muster (Vorbild: Arbeitsblatt „So ist ein Lebenslauf aufgebaut“)
    Download: app/downloads/Lebenslauf-Muster.docx (ausgefüllt) und Lebenslauf-Vorlage.docx (zum Ausfüllen)
    Aufbau und alle Aufgabentypen: app/README.md
    ============================================================ */
@@ -9,18 +9,18 @@
 /* Der Rohtext für die Word-Übung – Zeile für Zeile. */
 const PBP_LL_BLOCKS = [
   { text: "Lebenslauf" },                                                        // 0
-  { text: "Jonas Kaya" },                                                        // 1
-  { text: "Hauptstraße 12 · 46045 Oberhausen" },                                 // 2
-  { text: "0151 1234567 · jonas.kaya@beispiel.de" },                             // 3
+  { text: "Lena Muster" },                                                        // 1
+  { text: "Musterstraße 12 · 12345 Musterstadt" },                                 // 2
+  { text: "0151 23456789 · lena.muster@email.de" },                             // 3
   { text: "Schulbildung" },                                                      // 4
-  { text: "seit 08/2025 · Berufskolleg Oberhausen, Höhere Handelsschule" },      // 5
-  { text: "08/2019 – 07/2025 · Gesamtschule Oberhausen, Fachoberschulreife" },   // 6
-  { text: "Praktikum" },                                                         // 7
-  { text: "03/2023 · Elektro Brandt, Oberhausen: Kunden beraten" },              // 8
+  { text: "seit 08/2021 · Realschule Musterstadt, Mittlere Reife (07/2027)" },      // 5
+  { text: "08/2017 – 07/2021 · Grundschule am Park, Musterstadt" },   // 6
+  { text: "Praktische Erfahrungen" },                                                         // 7
+  { text: "02/2026 · Praktikum im Autohaus Beispiel: Rechnungen prüfen" },              // 8
   { text: "Kenntnisse" },                                                        // 9
-  { text: "Word und Excel: gute Kenntnisse · Englisch: gute Kenntnisse" },       // 10
-  { text: "Oberhausen, 11.11.2026" },                                            // 11
-  { text: "Jonas Kaya" }                                                         // 12
+  { text: "Word, PowerPoint: gute Kenntnisse · Englisch: B1" },       // 10
+  { text: "Musterstadt, 01.11.2026" },                                            // 11
+  { text: "Lena Muster" }                                                         // 12
 ];
 
 const PBP_LL_KRITERIEN = [
@@ -45,7 +45,7 @@ const PBP_LL_KRITERIEN = [
   {
     label: "Name fett",
     checks: [{ op: "bold", block: 1 }],
-    task: { wo: "Start → F oder Strg+B", was: "Markiere „Jonas Kaya“ (zweite Zeile) und mache ihn fett.", probe: "Der Name ist auf einen Blick zu finden.", kurz: "Name antippen → Strg+B" },
+    task: { wo: "Start → F oder Strg+B", was: "Markiere „Lena Muster“ (zweite Zeile) und mache ihn fett.", probe: "Der Name ist auf einen Blick zu finden.", kurz: "Name antippen → Strg+B" },
     hint: "Tippe auf die Zeile mit dem Namen und dann auf F."
   },
   {
@@ -55,16 +55,16 @@ const PBP_LL_KRITERIEN = [
     hint: "Die Leerzeile kommt nach der Zeile mit Telefon und E-Mail."
   },
   {
-    label: "Überschriften fett: Schulbildung, Praktikum, Kenntnisse",
+    label: "Überschriften fett: Schulbildung, Praktische Erfahrungen, Kenntnisse",
     checks: [{ op: "bold", block: 4 }, { op: "bold", block: 7 }, { op: "bold", block: 9 }],
-    task: { wo: "Start → F oder Strg+B", was: "Mache die drei Überschriften „Schulbildung“, „Praktikum“ und „Kenntnisse“ fett.", probe: "Man findet jeden Abschnitt sofort.", kurz: "3 Überschriften antippen → Strg+B" },
-    hint: "Es sind drei Zeilen: Schulbildung, Praktikum, Kenntnisse. Jede einzeln fett machen."
+    task: { wo: "Start → F oder Strg+B", was: "Mache die drei Überschriften „Schulbildung“, „Praktische Erfahrungen“ und „Kenntnisse“ fett.", probe: "Man findet jeden Abschnitt sofort.", kurz: "3 Überschriften antippen → Strg+B" },
+    hint: "Es sind drei Zeilen: Schulbildung, Praktische Erfahrungen, Kenntnisse. Jede einzeln fett machen."
   },
   {
-    label: "Leerzeile vor „Praktikum“ und vor „Kenntnisse“",
+    label: "Leerzeile vor „Praktische Erfahrungen“ und vor „Kenntnisse“",
     checks: [{ op: "gap", block: 6, value: 1 }, { op: "gap", block: 8, value: 1 }],
     task: { wo: "Zeile antippen, dann Enter ↵", was: "Füge eine Leerzeile unter dem letzten Schuleintrag und unter dem Praktikumseintrag ein.", probe: "Jeder Abschnitt steht für sich.", kurz: "Zeile 7 und 9 antippen → je 1 × ↵" },
-    hint: "Leerzeile nach „Gesamtschule …“ und nach „Elektro Brandt …“."
+    hint: "Leerzeile nach „Grundschule …“ und nach „Praktikum im Autohaus …“."
   },
   {
     label: "Ort und Datum: zwei Leerzeilen davor",
@@ -75,7 +75,7 @@ const PBP_LL_KRITERIEN = [
   {
     label: "Platz für die Unterschrift: zwei Leerzeilen unter dem Datum",
     checks: [{ op: "gap", block: 11, value: 2 }],
-    task: { wo: "Datumszeile antippen", was: "Füge unter „Oberhausen, 11.11.2026“ zwei Leerzeilen für die Unterschrift ein.", probe: "Ausgedruckt unterschreibst du dort mit der Hand. Als PDF reicht der getippte Name.", kurz: "Datum antippen → 2 × ↵" },
+    task: { wo: "Datumszeile antippen", was: "Füge unter „Musterstadt, 01.11.2026“ zwei Leerzeilen für die Unterschrift ein.", probe: "Ausgedruckt unterschreibst du dort mit der Hand. Als PDF reicht der getippte Name.", kurz: "Datum antippen → 2 × ↵" },
     hint: "Nach Ort und Datum folgen zwei Leerzeilen, dann der Name."
   }
 ];
@@ -104,9 +104,9 @@ LERNRAUM.subjects.push({
              <h3>Die fünf Blöcke</h3>
              <ul><li><strong>Persönliche Daten:</strong> Name, Anschrift, Telefon, E-Mail, Geburtsdatum</li>
              <li><strong>Schulbildung:</strong> Schule und Abschluss</li>
-             <li><strong>Praktika und Erfahrungen:</strong> Praktikum, Nebenjob, Ehrenamt</li>
+             <li><strong>Praktische Erfahrungen:</strong> Praktikum, Nebenjob, Ehrenamt</li>
              <li><strong>Kenntnisse:</strong> PC, Sprachen</li>
-             <li><strong>Interessen:</strong> zwei bis drei, die zur Stelle passen</li></ul>
+             <li><strong>Interessen und Engagement:</strong> Ehrenamt und Hobbys, lieber konkret</li></ul>
              <h3>Am Ende</h3>
              <ul><li>Ort und Datum von heute, dazu die Unterschrift.</li></ul>
              <h3>Gehört nicht hinein</h3>
@@ -135,9 +135,9 @@ LERNRAUM.subjects.push({
               body: `<ol>
                        <li><strong>Persönliche Daten</strong> – Name, Anschrift, Telefon, E-Mail</li>
                        <li><strong>Schulbildung</strong> – Schule und Abschluss</li>
-                       <li><strong>Praktika und Erfahrungen</strong> – Praktikum, Nebenjob, Ehrenamt</li>
+                       <li><strong>Praktische Erfahrungen</strong> – Praktikum, Nebenjob, Ehrenamt</li>
                        <li><strong>Kenntnisse</strong> – PC und Sprachen</li>
-                       <li><strong>Interessen</strong> – zwei bis drei</li>
+                       <li><strong>Interessen und Engagement</strong> – Ehrenamt, Hobbys</li>
                      </ol>`
             },
             {
@@ -185,13 +185,13 @@ LERNRAUM.subjects.push({
             {
               q: "In welchen Block gehört „Word und Excel: gute Kenntnisse“?",
               hint: "Es geht um das, was du am Computer kannst.",
-              options: ["Schulbildung", "Kenntnisse", "Interessen"],
+              options: ["Schulbildung", "Kenntnisse", "Interessen und Engagement"],
               answer: 1,
               explain: "PC-Programme und Sprachen stehen im Block „Kenntnisse“."
             },
             {
               q: "Wo steht „Nachhilfe für Mitschüler, 2 Std. pro Woche“?",
-              options: ["Praktika und Erfahrungen", "Persönliche Daten", "Kenntnisse"],
+              options: ["Praktische Erfahrungen", "Persönliche Daten", "Kenntnisse"],
               answer: 0,
               explain: "Nebenjob, Ehrenamt und Nachhilfe zeigen, was du schon getan hast. Das gehört zu den Erfahrungen."
             },
@@ -235,9 +235,10 @@ LERNRAUM.subjects.push({
              <li><strong>Keine Lücken:</strong> Jeder Monat ist erklärt, z. B. Praktikum, Ferien, Jobben.</li></ul>
              <h3>Kenntnisse</h3>
              <ul><li>Mit Stufe: Grundkenntnisse, gute Kenntnisse, sehr gute Kenntnisse.</li>
-             <li>Muttersprache: „Muttersprache“ oder „fließend“.</li></ul>
+             <li>Sprachen mit Niveau: A1 bis C2, oder „fließend“.</li>
+             <li>Höchstens zwei Seiten.</li></ul>
              <h3>E-Mail-Adresse</h3>
-             <ul><li>Seriös: <strong>jonas.kaya@…</strong>, nicht <strong>coolerjonas99@…</strong></li></ul>`,
+             <ul><li>Seriös: <strong>lena.muster@…</strong>, nicht <strong>coolerlena99@…</strong></li></ul>`,
       steps: [
         {
           type: "slides",
@@ -248,8 +249,8 @@ LERNRAUM.subjects.push({
               title: "Das Neueste kommt zuerst.",
               body: `<p>Der Betrieb will wissen, <strong>was du jetzt machst</strong>. Darum steht der jüngste Eintrag ganz oben.</p>
                      <div class="pair">
-                       <div><b>Richtig</b>seit 08/2025 Berufskolleg<br>08/2019 – 07/2025 Gesamtschule</div>
-                       <div><b>Falsch</b>08/2019 – 07/2025 Gesamtschule<br>seit 08/2025 Berufskolleg</div>
+                       <div><b>Richtig</b>seit 08/2021 Realschule<br>08/2017 – 07/2021 Grundschule</div>
+                       <div><b>Falsch</b>08/2017 – 07/2021 Grundschule<br>seit 08/2021 Realschule</div>
                      </div>`
             },
             {
@@ -270,13 +271,14 @@ LERNRAUM.subjects.push({
               kicker: "Kenntnisse",
               title: "Mit Stufe, ohne Übertreibung.",
               body: `<ul><li><strong>Word, Excel:</strong> Grundkenntnisse · gute Kenntnisse · sehr gute Kenntnisse</li>
-                     <li><strong>Sprachen:</strong> Deutsch (Muttersprache) · Englisch (gute Kenntnisse)</li></ul>
+                     <li><strong>Sprachen:</strong> Deutsch (Muttersprache) · Englisch (B1) · Türkisch (fließend)</li></ul>
+                     <p>Sprachniveau von A1 (Anfänger) bis C2 (fast perfekt), oder „fließend“.</p>
                      <p class="note">Schreibe nur Stufen, die du im Gespräch zeigen kannst.</p>`
             },
             {
               kicker: "E-Mail",
               title: "Die Adresse ist Teil der Bewerbung.",
-              body: `<ul class="pm"><li class="p">jonas.kaya@beispiel.de</li><li class="m">coolerjonas99@beispiel.de</li><li class="m">xX_gamer_Xx@beispiel.de</li></ul>
+              body: `<ul class="pm"><li class="p">lena.muster@email.de</li><li class="m">coolerlena99@beispiel.de</li><li class="m">xX_gamer_Xx@beispiel.de</li></ul>
                      <p>Eine seriöse Adresse enthält <strong>deinen Namen</strong>. Spitznamen wirken unsicher.</p>`
             },
             {
@@ -292,15 +294,15 @@ LERNRAUM.subjects.push({
           title: "Welche Zeile steht oben?",
           questions: [
             {
-              q: "Jonas hat seit 08/2025 das Berufskolleg besucht. Vorher war er auf der Gesamtschule. Was steht im Block „Schulbildung“ oben?",
+              q: "Lena besucht seit 08/2021 die Realschule. Davor war sie auf der Grundschule (08/2017 – 07/2021). Was steht im Block „Schulbildung“ oben?",
               hint: "Das Neueste kommt zuerst.",
-              options: ["Gesamtschule, 08/2019 – 07/2025", "Berufskolleg, seit 08/2025"],
+              options: ["Grundschule, 08/2017 – 07/2021", "Realschule, seit 08/2021"],
               answer: 1,
-              explain: "Der jüngste Eintrag steht oben: also das Berufskolleg."
+              explain: "Der jüngste Eintrag steht oben: also die Realschule."
             },
             {
               q: "Welche Zeitangabe ist richtig?",
-              options: ["Gesamtschule, Sommer bis Sommer", "Gesamtschule, 2019 – 2025", "Gesamtschule, 08/2019 – 07/2025"],
+              options: ["Grundschule, Sommer bis Sommer", "Grundschule, 2017 – 2021", "Grundschule, 08/2017 – 07/2021"],
               answer: 2,
               explain: "Monat und Jahr machen die Angabe genau. So sieht der Betrieb sofort, ob etwas fehlt."
             },
@@ -326,19 +328,19 @@ LERNRAUM.subjects.push({
           rounds: [
             {
               lines: [
-                { t: "Schulbildung", bold: true },
-                "seit 08/2025 · Berufskolleg Oberhausen",
-                "08/2015 – 07/2019 · Grundschule Am Park",
-                "08/2019 – 07/2025 · Gesamtschule Oberhausen"
+                { t: "Praktische Erfahrungen", bold: true },
+                "seit 09/2025 · Kassenwartin im Schülercafé",
+                "Februar 2026 · Praktikum im Autohaus Beispiel",
+                "seit 09/2024 · Zeitungen austragen"
               ],
               error: 2,
-              explain: "Die Reihenfolge stimmt nicht: Die Grundschule (bis 07/2019) ist älter als die Gesamtschule und muss darunter stehen.",
-              hint: "Vergleiche die Jahreszahlen von oben nach unten: Es muss immer älter werden."
+              explain: "Das Datumsformat ist nicht einheitlich. Überall steht Monat/Jahr, hier ausgeschrieben: besser 02/2026.",
+              hint: "Vergleiche, wie das Datum in den Zeilen geschrieben ist."
             },
             {
               lines: [
                 { t: "Kenntnisse", bold: true },
-                "Word und Excel: gute Kenntnisse",
+                "Word und PowerPoint: gute Kenntnisse",
                 "Englisch: super",
                 "Deutsch: Muttersprache"
               ],
@@ -349,25 +351,26 @@ LERNRAUM.subjects.push({
             {
               lines: [
                 { t: "Persönliche Daten", bold: true },
-                "Jonas Kaya",
-                "Hauptstraße 12 · 46045 Oberhausen",
+                "Lena Muster",
+                "Musterstraße 12 · 12345 Musterstadt",
                 "0151 1234567",
-                "coolerjonas99@beispiel.de"
+                "coolerlena99@beispiel.de"
               ],
               error: 4,
-              explain: "Die E-Mail-Adresse ist nicht seriös. Besser: jonas.kaya@beispiel.de.",
+              explain: "Die E-Mail-Adresse ist nicht seriös. Besser: lena.muster@email.de.",
               hint: "Welche Angabe würde ein Betrieb unseriös finden?"
             },
             {
               lines: [
-                { t: "Praktika und Erfahrungen", bold: true },
-                "03/2023 · Elektro Brandt: Kunden beraten",
-                "seit 2022 · Nachhilfe in Mathe",
-                "Fußball im Verein"
+                { t: "Persönliche Daten", bold: true },
+                "Lena Muster",
+                "Musterstraße 12 · 12345 Musterstadt",
+                "Religion: katholisch",
+                "0151 23456789"
               ],
-              error: 2,
-              explain: "„seit 2022“ ist ungenau: Es fehlt der Monat. Besser: seit 09/2022.",
-              hint: "Schau auf die Zeitangaben: Wo fehlt der Monat?"
+              error: 3,
+              explain: "Religion gehört nicht in den Lebenslauf. Das ist privat, und der Betrieb darf danach nicht entscheiden.",
+              hint: "Welche Angabe ist privat?"
             }
           ]
         },
@@ -486,7 +489,7 @@ LERNRAUM.subjects.push({
               kicker: "Dein Lebenslauf",
               title: "Drei Schritte zum eigenen Lebenslauf.",
               body: `<ol>
-                       <li><strong>Muster ansehen.</strong> Jonas Kaya ist erfunden. Du siehst, wie ein fertiger Lebenslauf aussieht.</li>
+                       <li><strong>Muster ansehen.</strong> Lena Muster ist erfunden. Du siehst, wie ein fertiger Lebenslauf aussieht.</li>
                        <li><strong>Vorlage ausfüllen.</strong> Ersetze alles in [eckigen Klammern] durch deine Angaben.</li>
                        <li><strong>Als PDF speichern</strong> und prüfen.</li>
                      </ol>`
@@ -513,7 +516,7 @@ LERNRAUM.subjects.push({
         {
           type: "link",
           title: "Download: Muster (ausgefüllt)",
-          text: "Der Lebenslauf von Jonas Kaya (erfunden) als Word-Datei: zum Ansehen und Vergleichen.",
+          text: "Der Lebenslauf von Lena Muster (erfunden) als Word-Datei: zum Ansehen und Vergleichen.",
           href: "downloads/Lebenslauf-Muster.docx"
         },
         {
@@ -531,8 +534,8 @@ LERNRAUM.subjects.push({
           items: [
             { text: "seit 08/2025 steht über 08/2019 – 07/2025", cat: 0 },
             { text: "Die Zeit zwischen Schule und Praktikum ist nicht erklärt", cat: 1 },
-            { text: "E-Mail: jonas.kaya@beispiel.de", cat: 0 },
-            { text: "E-Mail: coolerjonas99@beispiel.de", cat: 1 },
+            { text: "E-Mail: lena.muster@email.de", cat: 0 },
+            { text: "E-Mail: coolerlena99@beispiel.de", cat: 1 },
             { text: "Schrift: Calibri 11 im ganzen Dokument", cat: 0 },
             { text: "Jeder Block hat eine andere Schriftart", cat: 1 },
             { text: "Datei: Lebenslauf_Kaya.pdf", cat: 0 },
