@@ -1457,6 +1457,39 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
       "الكلمات الدالة على going to",
 
     "Plan (already decided) · Beweis (Look! …)":
-      "خطة (already decided) · دليل (Look! …)"
+      "خطة (already decided) · دليل (Look! …)",
+
+    "Weiter geht's: Telephoning":
+      "",
+
+    "Ausblick":
+      "",
+
+    "Weiter":
+      "",
+
+    "<h3>Weiterlernen</h3>\n             <p>Die Zeitformen sitzen? Dann geht es an echte Gespräche: höflich telefonieren, Namen und Nummern buchstabieren, Termine machen und ein Hotel buchen.</p>\n             <p class=\"formula\">Nächster Kurs: <b>Telephoning</b> (Fach Englisch).</p>":
+      "",
+
+    "Dranbleiben":
+      "",
+
+    "Grammatik sitzt? Dann kommt der Alltag.":
+      "",
+
+    "<p>Mit den Zeitformen kannst du Sätze bilden. Im echten Büro telefoniert man aber auch auf Englisch – höflich, klar und sicher.</p>":
+      "",
+
+    "Nächster Kurs":
+      "",
+
+    "Telephoning":
+      "",
+
+    "<p>Redemittel, Buchstabieren, Termine machen und ein Hotel buchen – mit Dr Kiesbauer und Wilkinson and Friends Ltd.</p>":
+      "",
+
+    "Zum Kurs „Telephoning“":
+      ""
 
 } });

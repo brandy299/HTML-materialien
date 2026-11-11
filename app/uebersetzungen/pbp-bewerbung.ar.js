@@ -1,4 +1,4 @@
-/* Bewerbung (pbp-bewerbung) – Übersetzung: ar
+/* Personalbeschaffung (pbp-bewerbung) – Übersetzung: ar
    Erzeugt mit: node app/tools/texte.js pbp-bewerbung ar  (erneut ausführen, wenn sich der Kurs ändert)
    Links steht der deutsche Text (NICHT ändern), rechts die Übersetzung. "" = noch nicht übersetzt.
    Regeln: app/AGENT-ANLEITUNG.md → „Übersetzungen“ */
@@ -13,8 +13,17 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "Ordner · LS 2.2":
       "مجلد · LS 2.2",
 
-    "Personalbeschaffung, Anforderungsprofil, Anzeigen-Sprache, Anzeigen-Check und das eigene Stärkenprofil.":
-      "توفير موظفين، Anforderungsprofil (ملف المتطلبات)، لغة الإعلان، فحص الإعلان وملف نقاط القوة الشخصية.",
+    "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt und Erwartungen.":
+      "من توفير الموظفين حتى إعلان Azubi (المتدرّب/ة) الخاص بك – مع المهن، سوق التدريب المهني (Ausbildungsmarkt) وتوقعات الشركة والمتدرّب/ة.",
+
+    "Bewerbung & Auswahl":
+      "التقديم والاختيار",
+
+    "Ordner · LS 2.3":
+      "مجلد · LS 2.3",
+
+    "Bewerbungsmappe, Vorauswahl, Zeugnisse lesen, Vorstellungsgespräch, Bewertungstabelle, Zusage und Absage – Mediaworld wählt aus.":
+      "ب Bewerbungsmappe (ملف التقديم)، Vorauswahl (الاختيار المبدئي)، Zeugnisse (شهادات)، Vorstellungsgespräch (مقابلة العمل)، Bewertungstabelle (جدول التقييم)، Zusage (قبول) und Absage (رفض) – Mediaworld تختار.",
 
     "Personal beschaffen: intern oder extern?":
       "توفير موظفين: داخلي أم خارجي؟",
@@ -619,11 +628,599 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "Ich kann begründet beurteilen, ob eine Anzeige seriös ist.":
       "أستطيع تقييم ما إذا كان الإعلان جادًا مع ذكر السبب.",
 
-    "Meine Stärken und die Stelle":
-      "نقاط قوتي والStelle (الوظيفة)",
+    "Werkstatt: Die Azubi-Anzeige der Mediaworld":
+      "ورشة العمل: إعلان Azubi (المتدرّب/ة) لشركة Mediaworld",
 
     "LS 2.2 · Teil 5":
       "LS 2.2 · Teil 5",
+
+    "<h3>Fünf Bausteine einer Azubi-Anzeige</h3>\n             <p class=\"formula\">1. Aufmerksamkeit · 2. Der Betrieb · 3. Das Angebot · 4. Das Profil · 5. Der Weg</p>\n             <h3>Das AGG</h3>\n             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung auszuschließen.</li>\n             <li>Nicht erlaubt: „junges, dynamisches Team“, „deutschsprachig“, „Alter bis 25“, „nur weibliche Bewerber“.</li>\n             <li>Erlaubt ist der Zusatz „(m/w/d)“.</li></ul>\n             <h3>Gute Sprache</h3>\n             <ul><li>Kurz, aktiv, konkret – und in der Du-Form.</li>\n             <li>Beschreibe Aufgaben und Eigenschaften, nicht die Person.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Floskeln wie „dynamisches Umfeld“ statt konkreter Angaben.</li>\n             <li>Eine Altersgrenze oder Herkunft nennen – das ist diskriminierend.</li></ul>":
+      "<h3>خمسة عناصر لإعلان Azubi (المتدرّب/ة)</h3>\n             <p class=\"formula\">1. جذب الانتباه · 2. الشركة · 3. العرض · 4. الملف الشخصي · 5. طريقة التقديم</p>\n             <h3>AGG (قانون المساواة في المعاملة)</h3>\n             <ul><li>القانون العام للمساواة يمنع استبعاد الأشخاص بسبب العمر أو الجنس أو الأصل أو الدين أو الإعاقة أو التوجه الجنسي.</li>\n             <li>غير مسموح: „فريق شاب وديناميكي“، „يتحدث الألمانية“، „العمر حتى 25“، „فقط المتقدمات الإناث“.</li>\n             <li>مسموح إضافة „(m/w/d)“.</li></ul>\n             <h3>لغة جيدة</h3>\n             <ul><li>قصيرة، فعالة، واضحة – وبأسلوب المخاطب أنت.</li>\n             <li>صف المهام والصفات، وليس الشخص نفسه.</li></ul>\n             <h3>أخطاء شائعة</h3>\n             <ul><li>عبارات عامة مثل „بيئة ديناميكية“ بدلاً من معلومات واضحة.</li>\n             <li>ذكر حد للعمر أو الأصل – هذا تمييز.</li></ul>",
+
+    "Eine Anzeige, die passt":
+      "إعلان مناسب",
+
+    "Mediaworld e. K. · Freitag ist Abgabe":
+      "Mediaworld e. K. · يوم الجمعة هو موعد التسليم",
+
+    "Tara soll die Anzeige schreiben.":
+      "يجب على Tara كتابة الإعلان.",
+
+    "<p>Sofia hat einen Termin mit der Zeitung: Am Freitag muss die Anzeige raus.</p>\n                     <p>„Tara, du kennst unsere Azubi-Stelle aus dem Anforderungsprofil – schreib mir die Abschnitte <strong>Dein Profil</strong> und <strong>Was wir bieten</strong>.“</p>\n                     <p>Melike schiebt ihr den Stift zu: „Wer selbst Azubi ist, weiß am besten, was andere Azubis anspricht. Ich korrigiere am Ende.“</p>":
+      "<p>لدى Sofia موعد مع الصحيفة: يوم الجمعة يجب إرسال الإعلان.</p>\n                     <p>„Tara، أنت تعرفين وظيفة Azubi (المتدرّب/ة) من ملف المتطلبات – اكتبي لي قسمي <strong>ملفك الشخصي</strong> و<strong>ما نقدمه</strong>.“</p>\n                     <p>Melike تعطيها القلم: „من هو نفسه Azubi (المتدرّب/ة)، يعرف جيدًا ما يجذب الآخرين. سأصحح في النهاية.“</p>",
+
+    "Die fünf Bausteine":
+      "العناصر الخمسة",
+
+    "So ist eine Azubi-Anzeige aufgebaut":
+      "هكذا يتم بناء Stellenanzeige (إعلان وظيفي) للـ Azubi (المتدرّب/ة)",
+
+    "<ol>\n                       <li><strong>Aufmerksamkeit</strong> – Beruf und Betrieb im Titel.</li>\n                       <li><strong>Der Betrieb</strong> – Branche, Standort, Größe, Besonderheit.</li>\n                       <li><strong>Das Angebot</strong> – Dauer, Vergütung, Übernahme, Betreuung.</li>\n                       <li><strong>Das Profil</strong> – Muss- und Kann-Anforderungen.</li>\n                       <li><strong>Der Weg</strong> – Unterlagen, Kontakt und Frist.</li>\n                     </ol>":
+      "<ol>\n                       <li><strong>الانتباه</strong> – المهنة والشركة في العنوان.</li>\n                       <li><strong>الشركة</strong> – القطاع، الموقع، الحجم، الميزة الخاصة.</li>\n                       <li><strong>العرض</strong> – المدة، Ausbildungsvergütung (أجر التدريب)، إمكانية التوظيف بعد التدريب، الإشراف.</li>\n                       <li><strong>الملف الشخصي</strong> – المتطلبات الأساسية والإضافية.</li>\n                       <li><strong>الطريقة</strong> – المستندات، جهة الاتصال والموعد النهائي.</li>\n                     </ol>",
+
+    "Das AGG":
+      "قانون AGG (قانون المساواة في المعاملة)",
+
+    "Diese Sätze schließen Menschen aus.":
+      "هذه الجمل تستبعد بعض الأشخاص.",
+
+    "<p>Das <strong>Allgemeine Gleichbehandlungsgesetz (AGG)</strong> schützt Bewerbende vor Benachteiligung.</p>\n                     <ul class=\"pm\">\n                       <li class=\"m\">„Junges, dynamisches Team“</li>\n                       <li class=\"m\">„Deutschsprachig“</li>\n                       <li class=\"m\">„Alter bis 25“</li>\n                       <li class=\"p\">„Du arbeitest sorgfältig und freundlich.“</li>\n                       <li class=\"p\">Der Zusatz „(m/w/d)“.</li>\n                     </ul>":
+      "<p><strong>Allgemeines Gleichbehandlungsgesetz (AGG) (قانون المساواة العامة)</strong> يحمي المتقدمين من التمييز.</p>\n                     <ul class=\"pm\">\n                       <li class=\"m\">„فريق شاب وديناميكي“</li>\n                       <li class=\"m\">„يتحدث الألمانية“</li>\n                       <li class=\"m\">„العمر حتى 25“</li>\n                       <li class=\"p\">„تعمل بدقة وبشكل ودود.“</li>\n                       <li class=\"p\">الإضافة „(m/w/d)“.</li>\n                     </ul>",
+
+    "Gute Sprache":
+      "لغة جيدة",
+
+    "Floskel oder klarer Satz?":
+      "عبارة عامة أم جملة واضحة؟",
+
+    "<dl class=\"terms\">\n                       <dt>Floskel</dt><dd>„Wir bieten ein dynamisches Umfeld.“</dd>\n                       <dt>Klar</dt><dd>„Du arbeitest in einem Team von 21 Kolleginnen und Kollegen.“</dd>\n                       <dt>Floskel</dt><dd>„Du bringst Flexibilität mit.“</dd>\n                       <dt>Klar</dt><dd>„Du springst auch mal ein, wenn im Verkauf viel los ist.“</dd>\n                     </dl>\n                     <p class=\"note\">Kurz, aktiv, konkret – und in der Du-Form.</p>":
+      "<dl class=\"terms\">\n                       <dt>عبارة عامة</dt><dd>„نقدم بيئة عمل ديناميكية.“</dd>\n                       <dt>واضح</dt><dd>„تعمل ضمن فريق مكوّن من 21 زميل وزميلة.“</dd>\n                       <dt>عبارة عامة</dt><dd>„لديك مرونة.“</dd>\n                       <dt>واضح</dt><dd>„تساعد أحيانًا عندما يكون هناك ضغط في قسم المبيعات.“</dd>\n                     </dl>\n                     <p class=\"note\">قصير، فعال، محدد – وبأسلوب المخاطب.</p>",
+
+    "Beispiel Mediaworld":
+      "مثال Mediaworld",
+
+    "So könnte die Anzeige aussehen":
+      "هكذا يمكن أن يكون شكل Stellenanzeige (إعلان وظيفي)",
+
+    "<p class=\"box\"><strong>Azubi (m/w/d) für Büromanagement</strong> – Mediaworld e. K., Oberhausen</p>\n                     <p><strong>Der Betrieb:</strong> 21 Beschäftigte, eigene Reparaturwerkstatt, Einzelhandel für Unterhaltungselektronik.</p>\n                     <p><strong>Das Angebot:</strong> 3 Jahre, Vergütung nach Ausbildungsvertrag, Übernahmechance, feste Ansprechpartner.</p>\n                     <p><strong>Das Profil:</strong> Hauptschulabschluss, Deutsch, Grundrechenarten, PC-Grundlagen, Sorgfalt, Freundlichkeit.</p>\n                     <p><strong>Der Weg:</strong> Anschreiben, Lebenslauf, Zeugnisse – E-Mail – Frist 30.11.</p>":
+      "<p class=\"box\"><strong>Azubi (المتدرّب/ة) (m/w/d) في Büromanagement (إدارة المكاتب)</strong> – Mediaworld e. K., Oberhausen</p>\n                     <p><strong>Der Betrieb:</strong> 21 Beschäftigte (موظف)، ورشة إصلاح خاصة، تجارة تجزئة للإلكترونيات الترفيهية.</p>\n                     <p><strong>Das Angebot:</strong> 3 سنوات، Ausbildungsvergütung (أجر التدريب) حسب Ausbildungsvertrag (عقد التدريب)، فرصة للتوظيف بعد التدريب، أشخاص مسؤولون ثابتون.</p>\n                     <p><strong>Das Profil:</strong> شهادة المدرسة Hauptschule (المدرسة الأساسية)، اللغة الألمانية، العمليات الحسابية الأساسية، أساسيات الكمبيوتر، الدقة، اللطف.</p>\n                     <p><strong>Der Weg:</strong> رسالة التقديم، السيرة الذاتية، الشهادات – بريد إلكتروني – الموعد النهائي 30.11.</p>",
+
+    "Beschreibe die Aufgabe – nicht die Person.":
+      "صف المهمة – وليس الشخص.",
+
+    "<p>Eine gute Anzeige wirbt um passende Bewerbende. Sie schließt niemanden aus und versteckt sich nicht hinter Floskeln.</p>":
+      "<p>Stellenanzeige (إعلان وظيفي) جيدة تجذب Bewerbende (المتقدمين) المناسبين. لا تستبعد أحدًا ولا تستخدم عبارات غامضة.</p>",
+
+    "Erlaubt oder nicht erlaubt?":
+      "مسموح أو غير مسموح؟",
+
+    "Prüfe die Formulierungen mit dem AGG.":
+      "افحص الصياغات حسب AGG (قانون المساواة في المعاملة).",
+
+    "Frage bei jedem Satz: Schließt er Menschen wegen Alter, Herkunft oder Geschlecht aus?":
+      "اسأل في كل جملة: هل تستبعد أشخاصًا بسبب العمر أو الأصل أو الجنس؟",
+
+    "Aufgaben und Eigenschaften beschreiben ist erlaubt. Eine Altersgrenze ist es nicht.":
+      "وصف المهام والصفات مسموح. تحديد حد أقصى للعمر غير مسموح.",
+
+    "Erlaubt":
+      "مسموح",
+
+    "Nicht erlaubt":
+      "غير مسموح",
+
+    "Du arbeitest sorgfältig und freundlich.":
+      "أنت تعمل بدقة وبأسلوب ودود.",
+
+    "Wir suchen ein junges, dynamisches Team.":
+      "نبحث عن فريق شاب وديناميكي.",
+
+    "Der Zusatz (m/w/d).":
+      "الإضافة (m/w/d).",
+
+    "Alter bis 25.":
+      "العمر حتى 25.",
+
+    "Du sprichst und schreibst gut Deutsch.":
+      "أنت تتحدث وتكتب الألمانية بشكل جيد.",
+
+    "Nur weibliche Bewerber.":
+      "فقط المتقدمات الإناث.",
+
+    "Die bessere Anzeige":
+      "الإعلان الأفضل",
+
+    "Welcher Satz gehört in eine Azubi-Anzeige?":
+      "أي جملة تناسب إعلان Azubi (المتدرّب/ة)؟",
+
+    "Der erste Satz beschreibt Eigenschaften für die Aufgabe. Die anderen beiden schließen ältere Bewerbende aus.":
+      "الجملة الأولى تصف صفات مطلوبة للمهمة. الجملتان الأخريان تستبعدان المتقدمين الأكبر سنًا.",
+
+    "Beschreibt der Satz eine Aufgabe oder eine Eigenschaft – oder schließt er Menschen aus?":
+      "هل تصف الجملة مهمة أو صفة – أم تستبعد أشخاصًا؟",
+
+    "In welchem Baustein steht, was du mitbringen musst?":
+      "في أي جزء مكتوب ما يجب أن تملكه؟",
+
+    "Im Profil.":
+      "في الملف الشخصي (Profil).",
+
+    "Im Betrieb.":
+      "في الشركة (Betrieb).",
+
+    "Im Weg.":
+      "في الطريق (Weg).",
+
+    "Das Profil nennt die Muss- und Kann-Anforderungen. Der Weg nennt Unterlagen, Kontakt und Frist.":
+      "Das Profil يذكر المتطلبات الأساسية (Muss-Anforderungen) والمتطلبات الممكنة (Kann-Anforderungen). Der Weg يذكر المستندات المطلوبة، جهة الاتصال والموعد النهائي.",
+
+    "Die fünf Bausteine stehen im Merkkasten.":
+      "Die fünf Bausteine موجودة في مربع الملاحظات.",
+
+    "Dein Anzeigentext":
+      "نص إعلانك",
+
+    "Setze die passenden Bausteine ein.":
+      "ضع العناصر المناسبة.",
+
+    "So beschreibst du Aufgaben und Eigenschaften – ohne jemanden auszuschließen.":
+      "هكذا تصف المهام والصفات – دون استبعاد أي شخص.",
+
+    "Du hast den {*Hauptschulabschluss|Führerschein}, sprichst gut {*Deutsch|Chinesisch} und arbeitest {*sorgfältig|unfreundlich}.":
+      "لديك {*Hauptschulabschluss|Führerschein}، وتتحدث {*Deutsch|Chinesisch} بشكل جيد وتعمل {*sorgfältig|unfreundlich}.",
+
+    "Ich kann die fünf Bausteine einer Azubi-Anzeige nennen.":
+      "أستطيع ذكر العناصر الخمسة لإعلان المتدرّب/ة (Azubi-Anzeige).",
+
+    "Ich kann Formulierungen erkennen, die gegen das AGG verstoßen.":
+      "أستطيع التعرف على العبارات التي تخالف AGG (قانون المساواة في المعاملة).",
+
+    "Ich kann einen kurzen Anzeigentext in der Du-Form schreiben.":
+      "أستطيع كتابة نص إعلان قصير بصيغة المخاطب.",
+
+    "Ausbildungsberufe in Wirtschaft und Verwaltung":
+      "المهن التدريبية في الاقتصاد والإدارة",
+
+    "LS 2.2 · Teil 6":
+      "LS 2.2 · الجزء 6",
+
+    "<h3>Duale Ausbildung</h3>\n             <p class=\"formula\">Zwei Lernorte: Betrieb (Praxis) + Berufsschule (Theorie). Meist 3 Jahre, Prüfung vor der Kammer.</p>\n             <h3>Die Berufsfamilie</h3>\n             <ul><li><strong>Büro:</strong> Büromanagement – Organisation, Personal, Rechnungen.</li>\n             <li><strong>Verkauf:</strong> Einzelhandel – Waren, Beratung, Kasse.</li>\n             <li><strong>Zahlen:</strong> Bank, Versicherung, Steuern – Konten, Verträge, Buchhaltung.</li>\n             <li><strong>Industrie & Logistik:</strong> Industrie, Spedition – Beschaffung, Produktion, Transport.</li></ul>\n             <h3>Drei Wege nach der Schule</h3>\n             <ul><li>Duale Ausbildung: Betrieb + Berufsschule, Geld von Anfang an.</li>\n             <li>Schulische Ausbildung: nur Schule, oft mit Praktika.</li>\n             <li>Studium: Universität oder Fachhochschule.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>„Kaufmännisch“ mit „Büro“ gleichsetzen – es gibt viele kaufmännische Berufe.</li>\n             <li>Die duale Ausbildung für „nur Schule“ halten – der Betrieb gehört dazu.</li></ul>":
+      "<h3>التدريب المهني المزدوج</h3>\n             <p class=\"formula\">مكانان للتعلم: الشركة (التطبيق العملي) + المدرسة المهنية (النظرية). غالبًا 3 سنوات، امتحان أمام الغرفة المختصة.</p>\n             <h3>عائلة المهن</h3>\n             <ul><li><strong>المكتب:</strong> Büromanagement – التنظيم، شؤون الموظفين، الفواتير.</li>\n             <li><strong>البيع:</strong> تجارة التجزئة – البضائع، الاستشارة، الصندوق.</li>\n             <li><strong>الأرقام:</strong> البنك، التأمين، الضرائب – الحسابات، العقود، المحاسبة.</li>\n             <li><strong>الصناعة واللوجستيات:</strong> الصناعة، Spedition (شركات الشحن) – التوريد، الإنتاج، النقل.</li></ul>\n             <h3>ثلاث طرق بعد المدرسة</h3>\n             <ul><li>التدريب المهني المزدوج: الشركة + المدرسة المهنية، أجر من البداية.</li>\n             <li>التدريب المهني المدرسي: فقط المدرسة، غالبًا مع تدريب عملي.</li>\n             <li>الدراسة: الجامعة أو الكلية التقنية.</li></ul>\n             <h3>أخطاء شائعة</h3>\n             <ul><li>مساواة \"kaufmännisch\" مع \"المكتب\" – هناك العديد من المهن التجارية (kaufmännisch).</li>\n             <li>الاعتقاد أن التدريب المهني المزدوج هو \"مدرسة فقط\" – الشركة جزء منه.</li></ul>",
+
+    "Kaufmännisch ist nicht gleich kaufmännisch":
+      "kaufmännisch ليس دائمًا kaufmännisch",
+
+    "Mediaworld e. K. · Tara trifft Lea":
+      "Mediaworld e. K. · تارا تلتقي ليا",
+
+    "„Ich dachte, kaufmännisch ist immer gleich.“":
+      "„كنت أظن أن kaufmännisch دائمًا نفس الشيء.“",
+
+    "<p>Tara trifft nach der Berufsschule ihre Freundin Lea. „Und, was machst du da eigentlich den ganzen Tag?“</p>\n                     <p>„Ich lerne Büromanagement – Angebote, Rechnungen, Personal, Kunden.“ Lea staunt: „Ich dachte, kaufmännisch ist immer gleich.“</p>\n                     <p>Tara lacht: „Überhaupt nicht. Es gibt Dutzende kaufmännische Berufe – Einzelhandel, Bank, Versicherung, Logistik, Steuern …“</p>":
+      "<p>تارا تلتقي صديقتها ليا بعد المدرسة المهنية. „وماذا تفعلين هناك طوال اليوم؟“</p>\n                     <p>„أتعلم Büromanagement – العروض، الفواتير، الموظفون، العملاء.“ ليا تتعجب: „كنت أظن أن kaufmännisch دائمًا نفس الشيء.“</p>\n                     <p>تارا تضحك: „أبدًا. هناك عشرات المهن kaufmännisch – تجارة التجزئة، البنك، التأمين، اللوجستيات، الضرائب …“</p>",
+
+    "Duale Ausbildung":
+      "التدريب المهني المزدوج",
+
+    "Zwei Lernorte, ein Ziel":
+      "مكانان للتعلم، هدف واحد",
+
+    "<div class=\"pair\">\n                       <div><b>Betrieb</b>Praxis: Du arbeitest mit und lernst den Alltag.</div>\n                       <div><b>Berufsschule</b>Theorie: Du lernst die Grundlagen.</div>\n                     </div>\n                     <p class=\"note\">Meist 3 Jahre · Prüfung vor der Kammer · du verdienst von Anfang an Geld.</p>":
+      "<div class=\"pair\">\n                       <div><b>Betrieb</b>تطبيق عملي: تعمل وتتعلم الحياة اليومية.</div>\n                       <div><b>Berufsschule</b>نظرية: تتعلم الأساسيات.</div>\n                     </div>\n                     <p class=\"note\">غالبًا 3 سنوات · امتحان أمام الغرفة المختصة · تكسب المال من البداية.</p>",
+
+    "Die Berufsfamilie":
+      "عائلة المهن",
+
+    "Viele Berufe – viele Arbeitsorte":
+      "كثير من المهن – كثير من أماكن العمل",
+
+    "<dl class=\"terms\">\n                       <dt>Büromanagement</dt><dd>Büro in fast jedem Betrieb – Organisation, Personal, Rechnungen.</dd>\n                       <dt>Einzelhandel</dt><dd>Laden, Kaufhaus, Onlineshop – Verkauf und Beratung.</dd>\n                       <dt>Bank / Versicherung</dt><dd>Konten, Kredite, Verträge – Beratung mit Zahlen.</dd>\n                       <dt>Steuern</dt><dd>Steuerbüro oder Kanzlei – Buchhaltung und Fristen.</dd>\n                       <dt>Industrie / Logistik</dt><dd>Beschaffung, Produktion, Transport – planen und steuern.</dd>\n                     </dl>":
+      "<dl class=\"terms\">\n                       <dt>Büromanagement</dt><dd>مكتب في معظم الشركات – تنظيم، شؤون الموظفين، فواتير.</dd>\n                       <dt>Einzelhandel</dt><dd>محل، مركز تسوق، متجر إلكتروني – بيع واستشارة.</dd>\n                       <dt>Bank / Versicherung</dt><dd>حسابات، قروض، عقود – استشارة بالأرقام.</dd>\n                       <dt>Steuern</dt><dd>مكتب ضرائب أو مكتب محاماة – محاسبة ومواعيد نهائية.</dd>\n                       <dt>Industrie / Logistik</dt><dd>توفير، إنتاج، نقل – تخطيط وتوجيه.</dd>\n                     </dl>",
+
+    "Büromanagement":
+      "Büromanagement",
+
+    "Der Allrounder-Beruf":
+      "مهنة شاملة",
+
+    "<p>In drei Jahren lernst du die wichtigsten Bürobereiche kennen:</p>\n                     <ul>\n                       <li>Beschaffung und Materialwirtschaft</li>\n                       <li>Personal</li>\n                       <li>Buchhaltung und Controlling</li>\n                       <li>Assistenz und Sekretariat</li>\n                       <li>Marketing und Kundenkommunikation</li>\n                     </ul>\n                     <p class=\"note\">Danach: Weiterbildung zum Fachwirt oder Studium (BWL).</p>":
+      "<p>خلال ثلاث سنوات، تتعرف على أهم أقسام المكتب:</p>\n                     <ul>\n                       <li>Beschaffung und Materialwirtschaft (المشتريات وإدارة المواد)</li>\n                       <li>Personal (الموظفون)</li>\n                       <li>Buchhaltung und Controlling (المحاسبة والرقابة)</li>\n                       <li>Assistenz und Sekretariat (المساعدة والأمانة)</li>\n                       <li>Marketing und Kundenkommunikation (التسويق والتواصل مع العملاء)</li>\n                     </ul>\n                     <p class=\"note\">بعد ذلك: Weiterbildung zum Fachwirt (التأهيل إلى العامل المؤهَّل) أو Studium (BWL) (الدراسة الجامعية في إدارة الأعمال).</p>",
+
+    "Nach der Schule":
+      "بعد المدرسة",
+
+    "Drei Wege im Vergleich":
+      "مقارنة بين ثلاث طرق",
+
+    "<ul>\n                       <li><strong>Dual:</strong> Betrieb + Berufsschule, meist 3 Jahre, Geld von Anfang an.</li>\n                       <li><strong>Schulisch:</strong> nur Schule, oft mit Praktika, z. B. Berufsfachschule.</li>\n                       <li><strong>Studium:</strong> Universität oder Fachhochschule, meist mit Abitur oder Fachhochschulreife.</li>\n                     </ul>":
+      "<ul>\n                       <li><strong>Dual:</strong> Betrieb (شركة) + Berufsschule (مدرسة مهنية)، غالبًا 3 سنوات، تحصل على المال من البداية.</li>\n                       <li><strong>Schulisch:</strong> فقط مدرسة، غالبًا مع Praktika (تدريب عملي)، مثل Berufsfachschule (مدرسة مهنية متخصصة).</li>\n                       <li><strong>Studium:</strong> Universität (جامعة) أو Fachhochschule (كلية تقنية)، غالبًا مع Abitur (الثانوية العامة) أو Fachhochschulreife (شهادة الكلية التقنية).</li>\n                     </ul>",
+
+    "Dual heißt: Betrieb + Berufsschule.":
+      "Dual يعني: Betrieb (شركة) + Berufsschule (مدرسة مهنية).",
+
+    "<p>Für viele ist die duale Ausbildung der beste Einstieg: Du verdienst Geld und lernst den echten Arbeitsalltag.</p>":
+      "<p>بالنسبة للكثيرين، تعتبر Ausbildung (التدريب المهني) المزدوجة أفضل بداية: تكسب المال وتتعلم الحياة العملية الحقيقية.</p>",
+
+    "Berufe und Wege":
+      "المهن والطرق",
+
+    "Was bedeutet „dual“ bei einer Ausbildung?":
+      "ماذا يعني \"dual\" في Ausbildung (التدريب المهني)؟",
+
+    "Du lernst im Betrieb und in der Berufsschule.":
+      "تتعلّم في الشركة وفي المدرسة المهنية.",
+
+    "Du lernst in zwei verschiedenen Betrieben.":
+      "تتعلّم في شركتين مختلفتين.",
+
+    "Du lernst nur in der Berufsschule.":
+      "تتعلّم فقط في المدرسة المهنية.",
+
+    "Dual heißt: zwei Lernorte – Betrieb für die Praxis, Berufsschule für die Theorie.":
+      "مزدوج (Dual) يعني: مكانان للتعلّم – الشركة للتطبيق العملي، المدرسة المهنية للنظرية.",
+
+    "Dual = zwei. Welche zwei Lernorte gibt es?":
+      "مزدوج (Dual) = اثنان. ما هما مكانا التعلّم؟",
+
+    "Wo arbeitet eine Bankkauffrau hauptsächlich?":
+      "أين تعمل موظفة البنك (Bankkauffrau) بشكل رئيسي؟",
+
+    "In einer Bank oder Sparkasse.":
+      "في بنك أو مصرف ادخار (Sparkasse).",
+
+    "In einem Lager oder einer Spedition.":
+      "في مستودع أو شركة نقل (Spedition).",
+
+    "In einem Steuerbüro.":
+      "في Steuerbüro (مكتب استشارات ضريبية).",
+
+    "Bankkaufleute arbeiten in Banken und Sparkassen – mit Konten, Krediten und Beratung.":
+      "Bankkaufleute يعملون في البنوك وSparkassen – مع الحسابات، القروض والاستشارات.",
+
+    "Der Beruf steht in der Berufsfamilie.":
+      "المهنة تنتمي إلى عائلة المهن.",
+
+    "Welcher Beruf gehört wohin?":
+      "أي مهنة تنتمي إلى أين؟",
+
+    "Sortiere die Ausbildungsberufe nach ihrem Schwerpunkt.":
+      "رتب المهن التدريبية حسب تركيزها الرئيسي.",
+
+    "Büro = organisieren. Verkauf = beraten. Zahlen = rechnen und Verträge. Industrie/Logistik = planen und transportieren.":
+      "Büro = التنظيم. Verkauf = الاستشارة. Zahlen = الحساب والعقود. Industrie/Logistik = التخطيط والنقل.",
+
+    "Büromanagement ist der Allrounder im Büro.":
+      "Büromanagement هو الشامل في المكتب.",
+
+    "Büro":
+      "Büro",
+
+    "Verkauf":
+      "المبيعات",
+
+    "Zahlen":
+      "الأرقام",
+
+    "Industrie & Logistik":
+      "الصناعة واللوجستيك",
+
+    "Kaufmann/-frau für Büromanagement":
+      "Kaufmann/-frau für Büromanagement (موظف/ة إدارة المكاتب)",
+
+    "Kaufmann/-frau im Einzelhandel":
+      "Kaufmann/-frau im Einzelhandel (موظف/ة مبيعات التجزئة)",
+
+    "Bankkaufmann/-frau":
+      "Bankkaufmann/-frau (موظف/ة بنك)",
+
+    "Steuerfachangestellte/-r":
+      "Steuerfachangestellte/-r (موظف/ة مختص بالضرائب)",
+
+    "Industriekaufmann/-frau":
+      "Industriekaufmann/-frau (موظف/ة إداري/ة صناعي/ة)",
+
+    "Kaufmann/-frau für Spedition und Logistikdienstleistung":
+      "Kaufmann/-frau für Spedition und Logistikdienstleistung (تاجر/تاجرة في خدمات الشحن واللوجستيك)",
+
+    "Dual erklären":
+      "اشرح النظام المزدوج (dual)",
+
+    "Baue den Merksatz.":
+      "كوِّن جملة التذكّر.",
+
+    "Dual = zwei Lernorte. Der Betrieb zeigt die Praxis, die Berufsschule die Theorie.":
+      "Dual (الثنائي) = مكانان للتعلم. الشركة (Betrieb) تشرح الجانب العملي، والمدرسة المهنية (Berufsschule) تشرح الجانب النظري.",
+
+    "Dual heißt: Ich lerne im {*Betrieb|Urlaub} die Praxis und in der {*Berufsschule|Bibliothek} die Theorie.":
+      "Dual (الثنائي) يعني: أتعلم في {*Betrieb|Urlaub} الجانب العملي وفي {*Berufsschule|Bibliothek} الجانب النظري.",
+
+    "Ich kann fünf kaufmännische Ausbildungsberufe nennen.":
+      "أستطيع ذكر خمسة مهن تدريبية تجارية.",
+
+    "Ich kann erklären, was eine duale Ausbildung ist.":
+      "أستطيع شرح ما هي Ausbildung (التدريب المهني) بنظام Dual (الثنائي).",
+
+    "Ich kann zwei Berufe vergleichen und begründet zuordnen.":
+      "أستطيع مقارنة مهنتين وتوضيح السبب في التصنيف.",
+
+    "Der regionale Ausbildungsmarkt im Ruhrgebiet":
+      "سوق التدريب المهني الإقليمي في منطقة الرور",
+
+    "LS 2.2 · Teil 7":
+      "LS 2.2 · الجزء 7",
+
+    "<h3>Angebot und Nachfrage</h3>\n             <p class=\"formula\">Angebot = Ausbildungsplätze der Betriebe · Nachfrage = Jugendliche, die eine Ausbildung suchen.</p>\n             <h3>Vier Wege zur Ausbildungsstelle</h3>\n             <ul><li><strong>Berufsberatung/BIZ:</strong> persönliche Beratung und Informationen.</li>\n             <li><strong>Online:</strong> Ausbildungsbörsen, IHK-Ausbildungsatlas, Firmenwebsites.</li>\n             <li><strong>Vor Ort:</strong> Ausbildungsmessen, Jobbörsen, Praktika.</li>\n             <li><strong>Persönlich:</strong> Familie, Freunde, Lehrkräfte, Nachbarn fragen.</li></ul>\n             <h3>Der beste Türöffner</h3>\n             <ul><li>Ein Praktikum: Wer schon mitgearbeitet hat, wird oft eingeladen.</li>\n             <li>Früh anfangen: Viele Betriebe vergeben ihre Plätze ein Jahr vorher.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Nur auf einen Beruf schauen – wer flexibel ist, findet leichter eine Stelle.</li>\n             <li>Zu spät suchen – im Frühjahr sind viele Plätze schon weg.</li></ul>":
+      "<h3>العرض والطلب</h3>\n             <p class=\"formula\">العرض = أماكن التدريب المهني في الشركات · الطلب = الشباب الذين يبحثون عن Ausbildung (التدريب المهني).</p>\n             <h3>أربعة طرق للحصول على Ausbildungsstelle (مكان تدريب مهني)</h3>\n             <ul><li><strong>Berufsberatung/BIZ:</strong> استشارة شخصية ومعلومات.</li>\n             <li><strong>Online:</strong> بورصات التدريب المهني على الإنترنت، IHK-Ausbildungsatlas، مواقع الشركات.</li>\n             <li><strong>Vor Ort:</strong> معارض التدريب المهني، بورصات العمل، Praktika (تدريب عملي).</li>\n             <li><strong>Persönlich:</strong> سؤال العائلة، الأصدقاء، المعلمين، الجيران.</li></ul>\n             <h3>أفضل طريقة للدخول</h3>\n             <ul><li>Praktikum (تدريب عملي): من عمل مسبقًا غالبًا تتم دعوته.</li>\n             <li>البدء مبكرًا: كثير من الشركات تعطي أماكنها قبل سنة.</li></ul>\n             <h3>أخطاء شائعة</h3>\n             <ul><li>النظر فقط إلى مهنة واحدة – من كان مرنًا يجد مكانًا أسهل.</li>\n             <li>البحث متأخرًا – في الربيع كثير من الأماكن تكون قد انتهت.</li></ul>",
+
+    "Angebot und Nachfrage":
+      "العرض والطلب",
+
+    "Mediaworld e. K. · Melike zeigt Zahlen":
+      "Mediaworld e. K. · Melike تعرض الأرقام",
+
+    "60 Bewerbungen. Letztes Jahr nur 14.":
+      "60 طلب توظيف. السنة الماضية فقط 14.",
+
+    "<p>Melike zeigt Tara die Bewerberzahlen der letzten Jahre: „Vor fünf Jahren hatten wir 60 Bewerbungen auf eine Azubi-Stelle. Letztes Jahr waren es 14.“</p>\n                     <p>Tara ist erstaunt: „Aber viele aus meiner Klasse finden keinen Platz. Wie passt das zusammen?“</p>\n                     <p>Melike erklärt: „Das ist der <strong>Ausbildungsmarkt</strong>: Angebot und Nachfrage passen oft nicht zusammen – nach Beruf, Ort und Zeit.“</p>":
+      "<p>Melike تعرض على Tara أعداد المتقدمين في السنوات الماضية: „قبل خمس سنوات كان لدينا 60 Bewerbung (طلب توظيف) على Azubi-Stelle (مكان تدريب مهني). السنة الماضية كانوا 14 فقط.“</p>\n                     <p>Tara مندهشة: „لكن كثير من زملائي في الصف لا يجدون مكانًا. كيف يحدث هذا؟“</p>\n                     <p>Melike تشرح: „هذا هو <strong>Ausbildungsmarkt (سوق التدريب المهني)</strong>: العرض والطلب غالبًا لا يتطابقان – حسب المهنة، المكان والوقت.“</p>",
+
+    "So funktioniert der Ausbildungsmarkt":
+      "هكذا يعمل Ausbildungsmarkt (سوق التدريب المهني)",
+
+    "<div class=\"pair\">\n                       <div><b>Angebot</b>Die Ausbildungsplätze, die Betriebe anbieten.</div>\n                       <div><b>Nachfrage</b>Die Jugendlichen, die eine Ausbildung suchen.</div>\n                     </div>\n                     <p class=\"note\">Beispielzahlen (didaktisch): Einzelhandel – 100 Plätze, 60 Bewerber. Büromanagement – 40 Plätze, 90 Bewerber.</p>":
+      "<div class=\"pair\">\n                       <div><b>Angebot</b>أماكن التدريب المهني التي تقدمها الشركات.</div>\n                       <div><b>Nachfrage</b>الشباب الذين يبحثون عن Ausbildung (التدريب المهني).</div>\n                     </div>\n                     <p class=\"note\">أرقام كمثال (للتوضيح): Einzelhandel – 100 مكان تدريب، 60 متقدم. Büromanagement – 40 مكان تدريب، 90 متقدم.</p>",
+
+    "Vier Wege":
+      "أربعة طرق",
+
+    "Wo findest du Ausbildungsstellen?":
+      "أين تجد Ausbildungsstellen (أماكن التدريب المهني)؟",
+
+    "<ol>\n                       <li><strong>Berufsberatung/BIZ:</strong> persönliche Beratung und viele Informationen.</li>\n                       <li><strong>Online:</strong> Ausbildungsbörsen, IHK-Ausbildungsatlas, Firmenwebsites.</li>\n                       <li><strong>Vor Ort:</strong> Ausbildungsmessen, Jobbörsen, Praktika.</li>\n                       <li><strong>Persönlich:</strong> Familie, Freunde, Lehrkräfte, Nachbarn fragen.</li>\n                     </ol>":
+      "<ol>\n                       <li><strong>Berufsberatung/BIZ:</strong> استشارة شخصية ومعلومات كثيرة.</li>\n                       <li><strong>Online:</strong> منصات التدريب المهني على الإنترنت، IHK-Ausbildungsatlas، مواقع الشركات.</li>\n                       <li><strong>Vor Ort:</strong> معارض التدريب المهني، معارض الوظائف، Praktika (تدريب عملي).</li>\n                       <li><strong>Persönlich:</strong> اسأل العائلة، الأصدقاء، المعلمين، الجيران.</li>\n                     </ol>",
+
+    "Betriebe werben":
+      "الشركات تروّج لنفسها",
+
+    "Warum sich Betriebe anstrengen müssen":
+      "لماذا يجب أن تبذل الشركات جهدًا",
+
+    "<p>Weil sich immer weniger Jugendliche bewerben, müssen Betriebe um Azubis werben – wie Mediaworld.</p>\n                     <ul>\n                       <li>Praktikumsplätze anbieten</li>\n                       <li>auf Ausbildungsmessen gehen</li>\n                       <li>mit Schulen zusammenarbeiten</li>\n                       <li>in sozialen Medien werben</li>\n                       <li>Mitarbeitende empfehlen lassen</li>\n                     </ul>\n                     <p class=\"note\">Mediaworld plant: Tara erzählt auf der Messe in der Stadthalle von ihrer Ausbildung.</p>":
+      "<p>لأن عدد الشباب الذين يتقدمون أقل، يجب على الشركات أن تروّج لـ Azubis (المتدرّبين) – مثل Mediaworld.</p>\n                     <ul>\n                       <li>تقديم أماكن Praktikum (تدريب عملي)</li>\n                       <li>الذهاب إلى Ausbildungsmessen (معارض التدريب المهني)</li>\n                       <li>التعاون مع المدارس</li>\n                       <li>الإعلان في وسائل التواصل الاجتماعي</li>\n                       <li>طلب توصية من الموظفين</li>\n                     </ul>\n                     <p class=\"note\">Mediaworld تخطط: Tara تحكي في المعرض في Stadthalle عن تدريبها المهني.</p>",
+
+    "Wer flexibel ist, findet leichter eine Stelle.":
+      "من يكون مرنًا، يجد وظيفة بسهولة أكبر.",
+
+    "<p>Schau nicht nur auf einen Beruf und einen Ort. Früh suchen, Praktika nutzen, mehrere Wege probieren.</p>":
+      "<p>لا تركز فقط على مهنة واحدة أو مكان واحد. ابحث مبكرًا، استفد من التدريب العملي، جرّب عدة طرق.</p>",
+
+    "Marktzahlen lesen":
+      "قراءة أرقام السوق",
+
+    "Im Einzelhandel gibt es 100 Ausbildungsplätze und 60 Bewerber. Was passiert?":
+      "في تجارة التجزئة يوجد 100 Ausbildungsplätze (أماكن تدريب مهني) و60 Bewerber (متقدمين). ماذا يحدث؟",
+
+    "40 Plätze bleiben frei.":
+      "يبقى 40 مكانًا شاغرًا.",
+
+    "40 Bewerber finden keinen Platz.":
+      "40 متقدمًا لا يجدون مكانًا.",
+
+    "Alle Bewerber bekommen einen Platz, und es bleiben keine Plätze frei.":
+      "جميع المتقدمين يحصلون على مكان، ولا يبقى أي مكان شاغر.",
+
+    "100 Plätze – 60 Bewerber = 40 freie Plätze. Im Büromanagement ist es umgekehrt: 40 Plätze, 90 Bewerber.":
+      "100 مكان – 60 متقدم = 40 مكانًا شاغرًا. في إدارة المكاتب العكس: 40 مكانًا، 90 متقدم.",
+
+    "Rechne: Plätze minus Bewerber.":
+      "احسب: الأماكن ناقص المتقدمين.",
+
+    "Was ist der beste Türöffner für eine Ausbildung?":
+      "ما هو أفضل مفتاح للدخول إلى التدريب المهني؟",
+
+    "Ein Praktikum im Betrieb.":
+      "تدريب عملي (Praktikum) في الشركة.",
+
+    "Nur zu Hause warten.":
+      "الانتظار في المنزل فقط.",
+
+    "Eine teure Bewerbungsmappe ohne Inhalt.":
+      "Bewerbungsmappe (ملف طلب التوظيف) غالية بدون محتوى.",
+
+    "Ein Praktikum ist der beste Türöffner: Der Betrieb kennt dich schon, und du kennst den Alltag.":
+      "Praktikum هو أفضل مفتاح للدخول: الشركة تعرفك مسبقًا، وأنت تعرف الحياة اليومية.",
+
+    "Denk an den Merkkasten: Wer den Betrieb schon kennt, wird oft eingeladen.":
+      "تذكّر صندوق الملاحظات: من يعرف الشركة مسبقًا غالبًا ما تتم دعوته.",
+
+    "Welcher Weg ist das?":
+      "أي طريق هو هذا؟",
+
+    "Ordne die Möglichkeiten den vier Wegen zu.":
+      "رتب الخيارات حسب الطرق الأربعة.",
+
+    "BIZ = Berufsberatung. Online = Internet. Vor Ort = Messe oder Praktikum. Persönlich = Menschen fragen.":
+      "BIZ = الإرشاد المهني. Online = الإنترنت. Vor Ort = في مكان الحدث مثل معرض أو تدريب عملي. Persönlich = تسأل الناس مباشرة.",
+
+    "Ein Praktikum ist ein Weg vor Ort – du bist im Betrieb.":
+      "Praktikum هو طريق Vor Ort – أنت في الشركة.",
+
+    "Berufsberatung":
+      "الإرشاد المهني",
+
+    "Online":
+      "الإنترنت",
+
+    "Vor Ort":
+      "في المكان (حضوريًا)",
+
+    "BIZ der Agentur für Arbeit":
+      "BIZ لوكالة العمل",
+
+    "IHK-Ausbildungsatlas":
+      "دليل التدريب المهني لغرفة الصناعة والتجارة (IHK-Ausbildungsatlas)",
+
+    "Ausbildungsmesse":
+      "معرض التدريب المهني (Ausbildungsmesse)",
+
+    "Praktikum im Betrieb":
+      "تدريب عملي في الشركة",
+
+    "Familie und Freunde fragen":
+      "اسأل العائلة والأصدقاء",
+
+    "Firmenwebsite":
+      "موقع الشركة الإلكتروني",
+
+    "Marktzahlen auswerten":
+      "تحليل أرقام السوق",
+
+    "Setze die richtigen Zahlen ein.":
+      "أدخل الأرقام الصحيحة.",
+
+    "12 − 3 = 9 Bewerber zu viel. 5 − 2 = 3 Plätze bleiben frei. Der zweite Betrieb muss mehr werben.":
+      "12 − 3 = 9 متقدمين أكثر من اللازم. 5 − 2 = 3 أماكن تدريب مهني تبقى فارغة. يجب على الشركة الثانية أن تعلن أكثر.",
+
+    "Bei 3 Plätzen und 12 Bewerbern sind {*9|15} Bewerber zu viel. Bei 5 Plätzen und 2 Bewerbern bleiben {*3|7} Plätze frei.":
+      "مع 3 أماكن تدريب مهني و12 متقدمًا يوجد {*9|15} متقدمين أكثر من اللازم. مع 5 أماكن تدريب مهني و2 متقدمين تبقى {*3|7} أماكن تدريب مهني فارغة.",
+
+    "Ich kann Angebot und Nachfrage am Ausbildungsmarkt erklären.":
+      "أستطيع شرح العرض والطلب في سوق التدريب المهني.",
+
+    "Ich kann vier Wege zur Ausbildungsstelle nennen.":
+      "أستطيع ذكر أربعة طرق للوصول إلى Ausbildungsstelle (مكان تدريب مهني).",
+
+    "Ich kann aus Marktzahlen eine Schlussfolgerung ziehen.":
+      "أستطيع أن أستنتج نتيجة من أرقام السوق.",
+
+    "Was erwarten Unternehmen von Auszubildenden?":
+      "ماذا تتوقع الشركات من المتدرّبين؟",
+
+    "LS 2.2 · Teil 8":
+      "LS 2.2 · الجزء 8",
+
+    "<h3>Fachliche Erwartungen</h3>\n             <p class=\"formula\">Lesen, Schreiben, Rechnen, Deutsch, Englisch-Grundlagen, PC-Grundlagen – und Lernbereitschaft.</p>\n             <h3>Persönliche Erwartungen</h3>\n             <ul><li><strong>Pünktlichkeit:</strong> andere planen mit dir.</li>\n             <li><strong>Zuverlässigkeit:</strong> Aufgaben erledigen und wichtige Informationen sofort weitergeben.</li>\n             <li><strong>Höflichkeit:</strong> freundlicher Umgang mit Kunden und Kollegen.</li>\n             <li><strong>Sorgfalt:</strong> Fehler kosten Zeit und Geld.</li>\n             <li><strong>Teamfähigkeit:</strong> zusammenarbeiten und Informationen teilen.</li>\n             <li><strong>Verschwiegenheit:</strong> Kundendaten bleiben im Betrieb.</li></ul>\n             <h3>Der Ausbildungsvertrag</h3>\n             <ul><li>Der Betrieb gibt: Ausbildungsplan, Anleitung, Vergütung, Urlaub, Freistellung für die Berufsschule, Zeugnis.</li>\n             <li>Die Auszubildende gibt: Interesse, Lernbereitschaft, gewissenhafte Mitarbeit, Teilnahme am Berufsschulunterricht, Betriebsregeln.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Zuverlässigkeit mit „nur keine Fehler machen“ verwechseln – auch Informationen weitergeben gehört dazu.</li>\n             <li>Pünktlichkeit als Kleinigkeit abtun – andere warten auf dich.</li></ul>":
+      "<h3>التوقعات المهنية</h3>\n             <p class=\"formula\">القراءة، الكتابة، الحساب، اللغة الألمانية، أساسيات اللغة الإنجليزية، أساسيات الكمبيوتر – والاستعداد للتعلم.</p>\n             <h3>التوقعات الشخصية</h3>\n             <ul><li><strong>الالتزام بالمواعيد:</strong> الآخرون يخططون معك.</li>\n             <li><strong>الموثوقية:</strong> إنجاز المهام وتمرير المعلومات المهمة فورًا.</li>\n             <li><strong>الأدب:</strong> التعامل بلطف مع العملاء والزملاء.</li>\n             <li><strong>الدقة:</strong> الأخطاء تكلّف وقتًا ومالًا.</li>\n             <li><strong>القدرة على العمل الجماعي:</strong> التعاون ومشاركة المعلومات.</li>\n             <li><strong>السرية:</strong> بيانات العملاء تبقى في الشركة.</li></ul>\n             <h3>عقد التدريب المهني</h3>\n             <ul><li>الشركة تقدّم: خطة التدريب، الإشراف، أجر التدريب، إجازة، إعفاء من العمل لحضور المدرسة المهنية، شهادة.</li>\n             <li>المتدرّبة تقدّم: الاهتمام، الاستعداد للتعلم، العمل بجدية، حضور دروس المدرسة المهنية، الالتزام بقواعد الشركة.</li></ul>\n             <h3>أخطاء شائعة</h3>\n             <ul><li>الخلط بين الموثوقية و\"عدم ارتكاب أخطاء فقط\" – تمرير المعلومات أيضًا جزء منها.</li>\n             <li>التقليل من أهمية الالتزام بالمواعيد – الآخرون ينتظرونك.</li></ul>",
+
+    "Was erwartet der Betrieb?":
+      "ماذا يتوقع Betrieb (الشركة)؟",
+
+    "Mediaworld e. K. · Melike ruft Tara ins Büro":
+      "Mediaworld e. K. · Melike تدعو Tara إلى المكتب",
+
+    "„Was erwarten Sie eigentlich genau von mir?“":
+      "„ماذا تتوقعون بالضبط مني؟“",
+
+    "<p>Melike ruft Tara ins Büro: „Deine erste Zwischenbilanz. Was läuft gut?“</p>\n                     <p>Tara zählt auf: „Ich bin immer pünktlich, ich grüße alle, ich arbeite sorgfältig.“</p>\n                     <p>„Stimmt“, sagt Melike. „Aber gestern hast du eine Telefonnachricht für Jan nicht weitergegeben. Der Kunde stand vor verschlossener Tür.“</p>\n                     <p>Tara wird rot. „Was erwarten Sie eigentlich genau von mir?“ Melike lächelt: „Gute Frage.“</p>":
+      "<p>تتصل ميليكه بتارا إلى المكتب: \"أول تقييم مرحلي لك. ما الذي يسير بشكل جيد؟\"</p>\n                     <p>تارا تعدد: \"أنا دائمًا أكون في الوقت المحدد، أحيي الجميع، أعمل بدقة.\"</p>\n                     <p>\"صحيح\"، تقول ميليكه. \"لكن البارحة لم تنقلي رسالة هاتفية ليان. كان العميل واقفًا أمام باب مغلق.\"</p>\n                     <p>تارا تحمر خجلًا. \"ما الذي تتوقعينه مني بالضبط؟\" تبتسم ميليكه: \"سؤال جيد.\"</p>",
+
+    "Wissen und Können":
+      "المعرفة والمهارات",
+
+    "<ul>\n                       <li>sicher lesen und schreiben</li>\n                       <li>Grundrechenarten</li>\n                       <li>Deutsch in Wort und Schrift</li>\n                       <li>Grundkenntnisse Englisch</li>\n                       <li>Grundlagen am PC</li>\n                       <li>Ordnung am Arbeitsplatz</li>\n                     </ul>\n                     <p class=\"note\">Die wichtigste Haltung: Lernbereitschaft – Fragen stellen, Notizen machen, Fehler nicht wiederholen.</p>":
+      "<ul>\n                       <li>القراءة والكتابة بثقة</li>\n                       <li>العمليات الحسابية الأساسية</li>\n                       <li>الألمانية كتابة وشفويًا</li>\n                       <li>معرفة أساسية بالإنجليزية</li>\n                       <li>أساسيات استخدام الحاسوب</li>\n                       <li>النظام في مكان العمل</li>\n                     </ul>\n                     <p class=\"note\">أهم سلوك: الاستعداد للتعلم – طرح الأسئلة، تدوين الملاحظات، عدم تكرار الأخطاء.</p>",
+
+    "Die sechs wichtigsten Eigenschaften":
+      "أهم ست صفات",
+
+    "<ol>\n                       <li><strong>Pünktlichkeit</strong> – andere planen mit dir.</li>\n                       <li><strong>Zuverlässigkeit</strong> – Aufgaben und Meldungen laufen weiter.</li>\n                       <li><strong>Höflichkeit</strong> – Kunden und Kollegen sind der Ruf des Betriebs.</li>\n                       <li><strong>Sorgfalt</strong> – Fehler kosten Zeit und Geld.</li>\n                       <li><strong>Teamfähigkeit</strong> – zusammen geht mehr.</li>\n                       <li><strong>Verschwiegenheit</strong> – Kundendaten bleiben im Betrieb.</li>\n                     </ol>":
+      "<ol>\n                       <li><strong>الالتزام بالمواعيد</strong> – الآخرون يخططون معك.</li>\n                       <li><strong>الموثوقية</strong> – المهام والرسائل تستمر.</li>\n                       <li><strong>الأدب</strong> – العملاء والزملاء هم سمعة الشركة.</li>\n                       <li><strong>الدقة</strong> – الأخطاء تكلف وقتًا ومالًا.</li>\n                       <li><strong>العمل الجماعي</strong> – معًا ننجز أكثر.</li>\n                       <li><strong>السرية</strong> – بيانات العملاء تبقى في الشركة.</li>\n                     </ol>",
+
+    "Ausbildungsvertrag":
+      "عقد التدريب المهني",
+
+    "Geben und Nehmen":
+      "العطاء والأخذ",
+
+    "<div class=\"pair\">\n                       <div><b>Der Betrieb gibt</b>Ausbildungsplan, Anleitung, Vergütung, Urlaub, Freistellung für die Berufsschule, Zeugnis.</div>\n                       <div><b>Die Auszubildende gibt</b>Interesse, Lernbereitschaft, gewissenhafte Mitarbeit, Teilnahme am Berufsschulunterricht, Betriebsregeln.</div>\n                     </div>\n                     <p class=\"note\">Ausbildung ist kein Geschenk in eine Richtung – beide Seiten profitieren.</p>":
+      "<div class=\"pair\">\n                       <div><b>الشركة تعطي</b>خطة التدريب، الإرشاد، الأجر، الإجازة، الإعفاء لحضور المدرسة المهنية، شهادة.</div>\n                       <div><b>المتدرّبة تعطي</b>الاهتمام، الاستعداد للتعلم، العمل بضمير، المشاركة في دروس المدرسة المهنية، الالتزام بقواعد الشركة.</div>\n                     </div>\n                     <p class=\"note\">التدريب المهني ليس هدية من طرف واحد – كلا الطرفين يستفيد.</p>",
+
+    "Zuverlässigkeit heißt: Aufgaben erledigen und Infos weitergeben.":
+      "الاعتمادية تعني: إنجاز المهام ونقل المعلومات.",
+
+    "<p>Die Telefonnotiz für Jan hätte sofort auf seinen Schreibtisch gehört. Kleine Versäumnisse können bei Kunden großen Schaden anrichten.</p>":
+      "<p>كان يجب أن توضع مذكرة الهاتف الخاصة بـ Jan فورًا على مكتبه. يمكن أن تتسبب الأخطاء الصغيرة في أضرار كبيرة للعملاء.</p>",
+
+    "Sortiere die Erwartungen.":
+      "رتب التوقعات.",
+
+    "Fachlich = Wissen und Können. Persönlich = Verhalten und Eigenschaften.":
+      "مهني = المعرفة والمهارات. شخصي = السلوك والصفات.",
+
+    "Rechnen, Deutsch und PC kann man lernen. Sorgfalt und Höflichkeit zeigt man im Verhalten.":
+      "يمكن تعلم الرياضيات، اللغة الألمانية والحاسوب. الدقة والأدب تظهر في السلوك.",
+
+    "Höflichkeit":
+      "الأدب",
+
+    "PC-Grundlagen":
+      "أساسيات الحاسوب",
+
+    "Teamfähigkeit":
+      "القدرة على العمل ضمن فريق",
+
+    "Situationen beurteilen":
+      "تقييم المواقف",
+
+    "Tara kommt 15 Minuten zu spät und sagt nichts. Welche Erwartung verletzt sie?":
+      "تأخرت Tara لمدة 15 دقيقة ولم تقل شيئًا. أي توقع خالفت؟",
+
+    "Pünktlichkeit und Zuverlässigkeit.":
+      "الالتزام بالمواعيد والموثوقية.",
+
+    "Sorgfalt.":
+      "الدقة.",
+
+    "Verschwiegenheit.":
+      "السرية.",
+
+    "Zu spät kommen ohne Information verletzt die Pünktlichkeit; andere warten und planen mit ihr.":
+      "التأخر بدون إبلاغ يخالف الالتزام بالمواعيد؛ الآخرون ينتظرون ويخططون معها.",
+
+    "Denk an die sechs persönlichen Erwartungen.":
+      "تذكّر التوقعات الشخصية الستة.",
+
+    "Warum ist Zuverlässigkeit im Büro so wichtig?":
+      "لماذا الموثوقية مهمة جدًا في المكتب؟",
+
+    "Weil wichtige Informationen sofort weitergegeben werden müssen.":
+      "لأن المعلومات المهمة يجب أن تُنقل فورًا.",
+
+    "Weil man dann früher gehen kann.":
+      "لأن الشخص يمكنه المغادرة في وقت أبكر.",
+
+    "Weil man keine Pausen machen muss.":
+      "لأن الشخص لا يحتاج إلى أخذ استراحات.",
+
+    "Eine nicht weitergegebene Nachricht kann dazu führen, dass ein Kunde vor verschlossener Tür steht.":
+      "رسالة لم تُنقل قد تؤدي إلى أن يقف زبون أمام باب مغلق.",
+
+    "Denk an die Telefonnotiz für Jan.":
+      "تذكّر مذكرة الهاتف لـ Jan.",
+
+    "Zuverlässigkeit erklären":
+      "شرح معنى Zuverlässigkeit (الموثوقية)",
+
+    "Zuverlässigkeit hat drei Teile: vollständig, rechtzeitig und Informationen sofort weitergeben.":
+      "Zuverlässigkeit (الموثوقية) لها ثلاثة أجزاء: أن تكون كاملة، وفي الوقت المناسب، وأن تُنقل المعلومات المهمة فورًا.",
+
+    "Zuverlässigkeit heißt: Aufgaben {*vollständig|halb} und {*rechtzeitig|irgendwann} erledigen und wichtige Informationen {*sofort|gar nicht} weitergeben.":
+      "تعني Zuverlässigkeit: إنجاز المهام {*vollständig|halb} و {*rechtzeitig|irgendwann}، وتمرير المعلومات المهمة {*sofort|gar nicht}.",
+
+    "Ich kann fachliche und persönliche Erwartungen unterscheiden.":
+      "أستطيع التمييز بين التوقعات المهنية والشخصية.",
+
+    "Ich kann erklären, warum Pünktlichkeit und Zuverlässigkeit wichtig sind.":
+      "أستطيع شرح لماذا الالتزام بالمواعيد والموثوقية مهمان.",
+
+    "Ich kann Situationen von Auszubildenden beurteilen.":
+      "أستطيع تقييم مواقف المتدرّبين.",
+
+    "Meine Stärken und die Stelle":
+      "نقاط قوتي والStelle (الوظيفة)",
+
+    "LS 2.2 · Teil 9":
+      "LS 2.2 · Teil 9",
 
     "<h3>Warum ein Stärkenprofil?</h3>\n             <p class=\"formula\">Bewerbung = dein Profil trifft das Anforderungsprofil der Stelle.</p>\n             <h3>Der Abgleich</h3>\n             <ul><li><strong>Muss-Anforderungen:</strong> erst prüfen – erfülle ich die K.O.-Kriterien?</li>\n             <li><strong>Kann-Anforderungen:</strong> hier kannst du punkten – Praktika, Englisch, PC-Kenntnisse, Hobbys.</li></ul>\n             <h3>Deine Chance als externe Kraft</h3>\n             <ul><li>Neue Ideen, Erfahrungen aus Praktika, Schule und Hobbys, Lernbereitschaft – Dinge, die eine betriebsinterne Kraft nicht mitbringt.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Sich größer machen als man ist – ehrlich bleiben, sonst fliegt es im Gespräch auf.</li>\n             <li>Eigene Stärken kleinreden – jede Stärke mit einem kleinen Beispiel belegen.</li></ul>":
       "<h3>لماذا ملف نقاط القوة؟</h3>\n             <p class=\"formula\">Bewerbung (طلب التوظيف) = ملفك الشخصي يطابق Anforderungsprofil (ملف المتطلبات) للStelle (الوظيفة).</p>\n             <h3>المقارنة</h3>\n             <ul><li><strong>المتطلبات الأساسية:</strong> تحقق أولاً – هل أحقق معايير القبول الأساسية؟</li>\n             <li><strong>المتطلبات الإضافية:</strong> هنا يمكنك التميز – تدريب عملي، الإنجليزية، مهارات الحاسوب، الهوايات.</li></ul>\n             <h3>فرصتك كقوة externe (خارجية)</h3>\n             <ul><li>أفكار جديدة، خبرات من التدريب العملي، المدرسة والهوايات، الاستعداد للتعلم – أشياء لا يمتلكها موظف intern (داخلي).</li></ul>\n             <h3>الأخطاء الشائعة</h3>\n             <ul><li>تضخيم نفسك أكثر مما أنت عليه – كن صادقًا، وإلا سيظهر ذلك في المقابلة.</li>\n             <li>التقليل من نقاط قوتك – ادعم كل نقطة قوة بمثال صغير.</li></ul>",
@@ -839,6 +1436,993 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
       "إشارات تحذيرية",
 
     "Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung.":
-      "لا يوجد اسم شركة، فقط رقم هاتف محمول، ضغط وسرعة، أخطاء إملائية، طلب دفع مقدمًا."
+      "لا يوجد اسم شركة، فقط رقم هاتف محمول، ضغط وسرعة، أخطاء إملائية، طلب دفع مقدمًا.",
+
+    "AGG":
+      "AGG",
+
+    "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung.":
+      "قانون المعاملة المتساوية العام: يمنع التمييز بسبب العمر أو الجنس أو الأصل أو الدين أو الإعاقة أو التوجه الجنسي.",
+
+    "Azubi-Anzeige":
+      "إعلان Azubi",
+
+    "Anzeige für einen Ausbildungsplatz: fünf Bausteine – Aufmerksamkeit, Betrieb, Angebot, Profil, Weg.":
+      "إعلان لمكان تدريب مهني: خمسة عناصر – جذب الانتباه، الشركة، العرض، الملف الشخصي، الطريق.",
+
+    "Ausbildung an zwei Lernorten: im Betrieb (Praxis) und in der Berufsschule (Theorie), meist drei Jahre.":
+      "التدريب المهني في مكانين: في الشركة (تطبيق عملي) وفي المدرسة المهنية (نظرية)، غالبًا ثلاث سنوات.",
+
+    "Ausbildungsmarkt":
+      "سوق العمل للتدريب المهني",
+
+    "Zusammentreffen von Angebot (Ausbildungsplätze) und Nachfrage (Jugendliche, die eine Ausbildung suchen).":
+      "التقاء العرض (أماكن التدريب المهني) والطلب (الشباب الذين يبحثون عن تدريب مهني).",
+
+    "Angebot = Plätze der Betriebe; Nachfrage = Bewerbende. Passen sie nicht zusammen, bleiben Plätze frei oder Bewerber ohne Stelle.":
+      "العرض = أماكن الشركات؛ الطلب = المتقدمون. إذا لم يتطابقا، تبقى أماكن شاغرة أو يبقى المتقدمون بلا وظيفة.",
+
+    "Lernbereitschaft":
+      "الاستعداد للتعلم",
+
+    "Die wichtigste fachliche Haltung: Fragen stellen, Notizen machen und Fehler nicht wiederholen.":
+      "أهم سلوك مهني: طرح الأسئلة، تدوين الملاحظات وعدم تكرار الأخطاء.",
+
+    "Aufgaben vollständig und rechtzeitig erledigen und wichtige Informationen sofort weitergeben.":
+      "إنجاز المهام بشكل كامل وفي الوقت المناسب، وتمرير المعلومات المهمة فورًا.",
+
+    "Verschwiegenheit":
+      "السرية",
+
+    "Kundendaten und interne Informationen bleiben im Betrieb – sie gehören nicht nach außen.":
+      "بيانات العملاء والمعلومات الداخلية تبقى في الشركة – لا يجوز إخراجها للخارج.",
+
+    "Regelt Rechte und Pflichten beider Seiten: Der Betrieb gibt Ausbildung und Vergütung, die Auszubildende bringt Lernbereitschaft und Mitarbeit.":
+      "ينظّم حقوق وواجبات الطرفين: الشركة تقدّم التدريب المهني (التدريب المهني) والأجر (أجر التدريب)، والمتدرّب/ة يُظهر الاستعداد للتعلّم ويشارك في العمل.",
+
+    "Die Bewerbungsmappe":
+      "ملف التقديم",
+
+    "LS 2.3 · Teil 1":
+      "LS 2.3 · الجزء 1",
+
+    "<h3>Bewerbungsmappe</h3>\n             <p class=\"formula\">Anschreiben + Lebenslauf + Zeugnisse + Nachweise</p>\n             <ul><li><strong>Anschreiben:</strong> Warum diese Stelle? Warum passe ich?</li>\n             <li><strong>Lebenslauf:</strong> Daten, Schule, Praktika, Kenntnisse – tabellarisch, lückenlos, aktuell.</li>\n             <li><strong>Zeugnisse:</strong> das letzte Schulzeugnis.</li>\n             <li><strong>Nachweise:</strong> Praktikumsbescheinigungen, Kurse, Zertifikate.</li></ul>\n             <h3>Gehört nicht hinein</h3>\n             <ul><li>Ausweis-Kopie, Kontoauszug, Krankmeldung, private Fotos.</li></ul>\n             <p class=\"note\">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>":
+      "<h3>ب Bewerbungsmappe</h3>\n             <p class=\"formula\">Anschreiben (خطاب التقديم) + Lebenslauf (السيرة الذاتية) + Zeugnisse (الشهادات) + Nachweise (إثباتات)</p>\n             <ul><li><strong>Anschreiben:</strong> لماذا هذه Stelle (وظيفة)؟ لماذا أكون مناسبًا؟</li>\n             <li><strong>Lebenslauf:</strong> بيانات، مدرسة، Praktika (تدريبات عملية)، مهارات – جدول، بدون فراغات، حديث.</li>\n             <li><strong>Zeugnisse:</strong> آخر شهادة مدرسية.</li>\n             <li><strong>Nachweise:</strong> إثباتات التدريب العملي، الدورات، الشهادات.</li></ul>\n             <h3>لا يجب أن يكون في الملف</h3>\n             <ul><li>نسخة من الهوية، كشف حساب بنكي، تقرير مرضي، صور خاصة.</li></ul>\n             <p class=\"note\">الصورة اختيارية. الشركة لا يحق لها طلبها.</p>",
+
+    "Die Post ist da":
+      "وصل البريد",
+
+    "Mediaworld e. K. · Zwei Wochen nach der Anzeige":
+      "Mediaworld e. K. · بعد أسبوعين من الإعلان",
+
+    "„Fünf Bewerbungen – und jetzt?“":
+      "„خمس Bewerbungen (طلبات التوظيف) – وماذا الآن؟“",
+
+    "<p>Die Anzeige für die Azubi-Stelle war online. Jetzt liegen <strong>fünf Bewerbungen</strong> im Postfach.</p>\n                     <p>Melike sagt zu Tara: „Bevor wir lesen, prüfen wir: Ist jede <strong>Bewerbungsmappe</strong> vollständig?“</p>":
+      "<p>Die Anzeige (إعلان وظيفي) لوظيفة Azubi (المتدرّب/ة) كانت على الإنترنت. الآن يوجد <strong>خمس Bewerbungen</strong> في صندوق البريد.</p>\n                     <p>Melike تقول لـ Tara: „قبل أن نقرأ، نتحقق: هل كل <strong>Bewerbungsmappe (ملف التقديم)</strong> كاملة؟“</p>",
+
+    "Was gehört hinein?":
+      "ما الذي يجب أن يكون داخل الملف؟",
+
+    "Vier Teile machen die Mappe komplett.":
+      "أربعة أجزاء تجعل الملف كاملاً.",
+
+    "<ol>\n                       <li><strong>Anschreiben</strong> – Warum diese Stelle? Warum passe ich?</li>\n                       <li><strong>Lebenslauf</strong> – Daten, Schule, Praktika, Kenntnisse</li>\n                       <li><strong>Zeugnisse</strong> – das letzte Schulzeugnis</li>\n                       <li><strong>Nachweise</strong> – Praktikumsbescheinigungen, Kurse</li>\n                     </ol>\n                     <p class=\"note\">Heute kommt die Mappe meist als <strong>eine PDF-Datei</strong> per E-Mail oder über ein Online-Formular.</p>":
+      "<ol>\n                       <li><strong>Anschreiben (خطاب التقديم)</strong> – لماذا هذه Stelle (وظيفة)؟ لماذا أنا مناسب/ة؟</li>\n                       <li><strong>Lebenslauf (السيرة الذاتية)</strong> – بيانات، مدرسة، Praktika (تدريبات عملية)، مهارات</li>\n                       <li><strong>Zeugnisse (الشهادات)</strong> – آخر شهادة مدرسية</li>\n                       <li><strong>Nachweise (إثباتات)</strong> – شهادات Praktikum (تدريب عملي)، دورات</li>\n                     </ol>\n                     <p class=\"note\">اليوم، يأتي الملف غالباً كـ <strong>ملف PDF واحد</strong> عبر البريد الإلكتروني أو من خلال نموذج إلكتروني.</p>",
+
+    "Der Lebenslauf":
+      "السيرة الذاتية",
+
+    "Tabellarisch, lückenlos, aktuell.":
+      "جدولية، بدون فراغات، حديثة.",
+
+    "<ul><li><strong>tabellarisch:</strong> kurze Zeilen mit Datum, keine langen Sätze</li>\n                       <li><strong>lückenlos:</strong> keine Monate, die einfach fehlen</li>\n                       <li><strong>aktuell:</strong> mit Ort und Datum von heute</li></ul>\n                     <p class=\"note\">Ein Foto ist freiwillig. Der Betrieb darf es nicht verlangen.</p>":
+      "<ul><li><strong>جدولية:</strong> أسطر قصيرة مع تاريخ، بدون جمل طويلة</li>\n                       <li><strong>بدون فراغات:</strong> لا يوجد أشهر مفقودة</li>\n                       <li><strong>حديثة:</strong> مع المكان والتاريخ اليوم</li></ul>\n                     <p class=\"note\">الصورة اختيارية. الشركة لا يحق لها أن تطلبها.</p>",
+
+    "Achtung":
+      "انتباه",
+
+    "Das gehört nicht in die Mappe.":
+      "هذا لا ينتمي إلى الملف.",
+
+    "<ul class=\"pm\"><li class=\"m\">Kopie vom Personalausweis</li><li class=\"m\">Kontoauszug</li><li class=\"m\">Krankmeldung</li><li class=\"m\">Fotos von der Party</li></ul>\n                     <p>Solche Unterlagen sind privat. Der Betrieb braucht sie für die Auswahl nicht.</p>":
+      "<ul class=\"pm\"><li class=\"m\">نسخة من بطاقة الهوية الشخصية</li><li class=\"m\">كشف حساب بنكي</li><li class=\"m\">تقرير مرضي</li><li class=\"m\">صور من الحفلة</li></ul>\n                     <p>هذه المستندات خاصة. الشركة لا تحتاجها للاختيار.</p>",
+
+    "Vollständig – sonst wird es schwer.":
+      "كامل – وإلا سيكون الأمر صعبًا.",
+
+    "<p>Fehlt ein wichtiger Teil, wirkt die Bewerbung <strong>unsorgfältig</strong>. Das kostet Punkte, bevor jemand den Inhalt liest.</p>":
+      "<p>إذا كان جزء مهم مفقود، تبدو Bewerbung <strong>غير مرتبة</strong>. هذا يقلل النقاط قبل أن يقرأ أحد المحتوى.</p>",
+
+    "Rein oder raus?":
+      "يدخل أم لا؟",
+
+    "Gehört das in die Bewerbungsmappe für Mediaworld?":
+      "هل هذا ينتمي إلى ملف Bewerbung لـ Mediaworld؟",
+
+    "In die Mappe gehört alles, was zeigt: Ich passe zur Stelle.":
+      "في الملف يجب أن يكون كل شيء يوضح: أنا مناسب لـ Stelle.",
+
+    "Private Unterlagen wie Kontoauszüge oder Krankmeldungen gehören nicht hinein.":
+      "المستندات الخاصة مثل كشوف الحساب البنكي أو تقارير المرض لا توضع هنا.",
+
+    "Gehört hinein":
+      "يجب وضعه",
+
+    "Gehört nicht hinein":
+      "لا يجب وضعه",
+
+    "Anschreiben":
+      "خطاب التقديم",
+
+    "Kopie vom Personalausweis":
+      "نسخة من بطاقة الهوية",
+
+    "Lebenslauf":
+      "السيرة الذاتية",
+
+    "Kontoauszug":
+      "كشف الحساب البنكي",
+
+    "letztes Schulzeugnis":
+      "آخر شهادة مدرسية",
+
+    "Krankmeldung vom Arzt":
+      "تقرير مرضي من الطبيب",
+
+    "Praktikumsbescheinigung":
+      "شهادة التدريب العملي",
+
+    "Wo steht was?":
+      "أين يوجد ماذا؟",
+
+    "Wo erklärt die Bewerberin, <b>warum</b> sie gut zur Stelle passt?":
+      "أين تشرح المتقدمة <b>لماذا</b> تناسب الوظيفة جيدًا؟",
+
+    "im Anschreiben":
+      "في خطاب التقديم",
+
+    "im Lebenslauf":
+      "في السيرة الذاتية",
+
+    "im Schulzeugnis":
+      "في الشهادة المدرسية",
+
+    "Das Anschreiben ist der Brief: Warum diese Stelle? Warum passe ich?":
+      "خطاب التقديم هو الرسالة: لماذا هذه الوظيفة؟ لماذا أنا مناسبة؟",
+
+    "Ein Teil der Mappe ist ein Brief an den Betrieb.":
+      "جزء من المجلد هو رسالة إلى الشركة.",
+
+    "Wo stehen Schule, Praktika und Kenntnisse kurz mit Datum?":
+      "أين توجد معلومات عن المدرسة، التدريب العملي والمعارف بشكل مختصر مع التاريخ؟",
+
+    "in der Praktikumsbescheinigung":
+      "في شهادة التدريب العملي.",
+
+    "Der Lebenslauf ist tabellarisch: kurze Zeilen mit Datum.":
+      "السيرة الذاتية تكون في جدول: أسطر قصيرة مع التاريخ.",
+
+    "Ein Lebenslauf zeigt: Schule bis Juni, dann nichts bis Dezember. Was fehlt?":
+      "السيرة الذاتية تظهر: المدرسة حتى يونيو، ثم لا شيء حتى ديسمبر. ماذا ينقص؟",
+
+    "Er ist nicht tabellarisch.":
+      "ليست في جدول.",
+
+    "Er ist nicht lückenlos.":
+      "ليست كاملة بدون فراغات.",
+
+    "Er hat kein Foto.":
+      "لا يوجد صورة.",
+
+    "Lückenlos heißt: Auch Juli bis November müssen erklärt sein (z. B. Praktikum, Jobben, Ferien).":
+      "بدون فجوات يعني: يجب توضيح الفترة من يوليو حتى نوفمبر أيضًا (مثلاً: تدريب عملي، عمل مؤقت، عطلة).",
+
+    "Denk an die drei Regeln für den Lebenslauf.":
+      "تذكّر القواعد الثلاثة للسيرة الذاتية.",
+
+    "Darf Mediaworld ein Bewerbungsfoto verlangen?":
+      "هل يمكن لشركة Mediaworld أن تطلب صورة شخصية في Bewerbung (طلب التوظيف)؟",
+
+    "Ja, immer.":
+      "نعم، دائمًا.",
+
+    "Nein, das Foto ist freiwillig.":
+      "لا، الصورة اختيارية.",
+
+    "Nur von Frauen.":
+      "فقط من النساء.",
+
+    "Das Foto ist freiwillig. Der Betrieb darf niemanden ohne Foto schlechter behandeln.":
+      "الصورة اختيارية. لا يجوز للشركة أن تعامل أي شخص بشكل أسوأ بسبب عدم وجود صورة.",
+
+    "Ich kann die vier Teile einer Bewerbungsmappe nennen.":
+      "أستطيع ذكر الأجزاء الأربعة من Bewerbungsmappe (حافظة التقديم).",
+
+    "Ich kann erklären, wie ein guter Lebenslauf aussieht.":
+      "أستطيع أن أشرح كيف تبدو السيرة الذاتية الجيدة.",
+
+    "Ich weiß, welche Unterlagen nicht in die Mappe gehören.":
+      "أعرف أي مستندات لا يجب أن تكون في الملف.",
+
+    "Die Vorauswahl":
+      "الفرز الأولي",
+
+    "LS 2.3 · Teil 2":
+      "LS 2.3 · الجزء 2",
+
+    "<h3>Vorauswahl</h3>\n             <p class=\"formula\">Formal prüfen → Inhalt mit dem Anforderungsprofil vergleichen → A, B oder C</p>\n             <h3>Formal</h3>\n             <ul><li>vollständig, ordentlich, ohne Rechtschreibfehler, richtiger Betriebsname</li></ul>\n             <h3>Inhaltlich</h3>\n             <ul><li>Muss-Anforderungen erfüllt? Wie viele Kann-Anforderungen?</li>\n             <li>Lebenslauf: Lücken? Schulzeugnis: Noten in Deutsch und Mathe, Fehltage</li></ul>\n             <h3>Drei Stapel</h3>\n             <ul><li><strong>A:</strong> passt gut → zum Gespräch einladen</li>\n             <li><strong>B:</strong> passt teilweise → Reserve</li>\n             <li><strong>C:</strong> eine Muss-Anforderung fehlt → Absage</li></ul>":
+      "<h3>الفرز الأولي</h3>\n             <p class=\"formula\">فحص الشروط الشكلية → مقارنة المحتوى مع ملف المتطلبات → A أو B أو C</p>\n             <h3>الشروط الشكلية</h3>\n             <ul><li>كامل، مرتب، بدون أخطاء إملائية، اسم الشركة صحيح</li></ul>\n             <h3>من حيث المحتوى</h3>\n             <ul><li>هل تم تحقيق المتطلبات الأساسية؟ كم عدد المتطلبات الإضافية؟</li>\n             <li>السيرة الذاتية: هل هناك فجوات؟ الشهادة المدرسية: الدرجات في اللغة الألمانية والرياضيات، أيام الغياب</li></ul>\n             <h3>ثلاث مجموعات</h3>\n             <ul><li><strong>A:</strong> مناسب جداً → دعوة للمقابلة</li>\n             <li><strong>B:</strong> مناسب جزئياً → احتياطي</li>\n             <li><strong>C:</strong> متطلب أساسي مفقود → رفض</li></ul>",
+
+    "Fünf Mappen, drei Stapel":
+      "خمسة ملفات، ثلاث مجموعات",
+
+    "Mediaworld e. K. · Vorauswahl":
+      "Mediaworld e. K. · الفرز الأولي",
+
+    "„Wir können nicht alle einladen.“":
+      "„لا يمكننا دعوة الجميع.“",
+
+    "<p>Melike: „Gespräche kosten Zeit. Deshalb machen wir eine <strong>Vorauswahl</strong>. Der Maßstab ist unser <strong>Anforderungsprofil</strong>.“</p>":
+      "<p>Melike: „المقابلات تحتاج إلى وقت. لذلك نقوم بعمل <strong>Vorauswahl (الاختيار المبدئي)</strong>. المعيار هو <strong>Anforderungsprofil (ملف المتطلبات)</strong> الخاص بنا.“</p>",
+
+    "Formal prüfen":
+      "الفحص الشكلي",
+
+    "Ist die Mappe in Ordnung?":
+      "هل الملف منظم؟",
+
+    "<ul><li>vollständig?</li><li>ordentlich und übersichtlich?</li><li>ohne Rechtschreibfehler?</li><li>richtiger Betriebsname – nicht „Sehr geehrte Firma Mediamarkt“?</li></ul>":
+      "<ul><li>كامل؟</li><li>مرتب وواضح؟</li><li>بدون أخطاء إملائية؟</li><li>اسم الشركة صحيح – ليس „Sehr geehrte Firma Mediamarkt“؟</li></ul>",
+
+    "1.":
+      "1.",
+
+    "Inhalt prüfen":
+      "فحص المحتوى",
+
+    "Passt die Person zum Profil?":
+      "هل الشخص مناسب للملف؟",
+
+    "<ul><li><strong>Muss-Anforderungen</strong> erfüllt? Fehlt eine, ist die Bewerbung raus.</li>\n                       <li>Wie viele <strong>Kann-Anforderungen</strong>?</li>\n                       <li>Lebenslauf lückenlos? Schulzeugnis: Deutsch, Mathe, <strong>Fehltage</strong>?</li></ul>":
+      "<ul><li><strong>Muss-Anforderungen (المتطلبات الأساسية)</strong> متوفرة؟ إذا كان هناك نقص، يتم رفض الطلب.</li>\n                       <li>كم عدد <strong>Kann-Anforderungen (المتطلبات الإضافية)</strong>؟</li>\n                       <li>السيرة الذاتية بدون فجوات؟ الشهادة المدرسية: اللغة الألمانية، الرياضيات، <strong>Fehltage (أيام الغياب)</strong>؟</li></ul>",
+
+    "2.":
+      "2.",
+
+    "Sortieren":
+      "الفرز",
+
+    "A, B oder C?":
+      "A أو B أو C؟",
+
+    "<dl class=\"terms\">\n                       <dt>A-Stapel</dt><dd>passt gut → zum Vorstellungsgespräch einladen</dd>\n                       <dt>B-Stapel</dt><dd>passt teilweise → Reserve, falls A nicht klappt</dd>\n                       <dt>C-Stapel</dt><dd>eine Muss-Anforderung fehlt → freundliche Absage</dd>\n                     </dl>":
+      "<dl class=\"terms\">\n                       <dt>مجموعة A</dt><dd>يناسب جيدًا → دعوة لمقابلة العمل</dd>\n                       <dt>مجموعة B</dt><dd>يناسب جزئيًا → احتياطي، إذا لم تنجح مجموعة A</dd>\n                       <dt>مجموعة C</dt><dd>شرط أساسي مفقود → رفض ودّي</dd>\n                     </dl>",
+
+    "3.":
+      "3.",
+
+    "Erst Muss, dann Kann.":
+      "أولاً الشروط الأساسية، ثم الشروط الإضافية.",
+
+    "<p>Wer eine Muss-Anforderung nicht erfüllt, landet auf C – egal wie gut der Rest ist. Kann-Anforderungen entscheiden zwischen A und B.</p>":
+      "<p>من لا يحقق شرطًا أساسيًا، يوضع في مجموعة C – مهما كانت بقية الأمور جيدة. الشروط الإضافية تحدد الفرق بين مجموعة A وB.</p>",
+
+    "Formal oder inhaltlich?":
+      "رسمي أم من حيث المحتوى؟",
+
+    "Tara notiert Auffälligkeiten. Ist das ein formaler oder ein inhaltlicher Punkt?":
+      "تسجّل Tara الملاحظات. هل هذا جانب شكلي أم جانب مضموني؟",
+
+    "Formal heißt: Wie sieht die Mappe aus? Ist sie vollständig und fehlerfrei?":
+      "شكلي يعني: كيف تبدو الحقيبة؟ هل هي كاملة وخالية من الأخطاء؟",
+
+    "Inhaltlich heißt: Passt die Person zum Anforderungsprofil?":
+      "مضموني يعني: هل تناسب هذه الشخص المواصفات المطلوبة؟",
+
+    "Formal":
+      "شكلي",
+
+    "Inhaltlich":
+      "مضموني",
+
+    "Im Anschreiben stehen viele Rechtschreibfehler.":
+      "يوجد الكثير من أخطاء الإملاء في خطاب التقديم.",
+
+    "Der Schulabschluss fehlt noch.":
+      "شهادة التخرج المدرسية غير موجودة بعد.",
+
+    "Das Schulzeugnis liegt nicht bei.":
+      "شهادة المدرسة غير مرفقة.",
+
+    "Praktikum im Büro – eine Kann-Anforderung.":
+      "تدريب عملي في المكتب – هذا من المتطلبات الممكنة (Kann-Anforderung).",
+
+    "Im Anschreiben steht ein falscher Betriebsname.":
+      "في خطاب التقديم يوجد اسم شركة خاطئ.",
+
+    "Note 5 in Deutsch.":
+      "درجة 5 في مادة اللغة الألمانية.",
+
+    "Welcher Stapel?":
+      "أي رزمة؟",
+
+    "Muss-Anforderungen für die Azubi-Stelle: Hauptschulabschluss, Deutsch mindestens ausreichend. Kann: Praktikum im Büro, Führerschein. Sortiere die Bewerbungen.":
+      "المتطلبات الأساسية (Muss-Anforderungen) لوظيفة المتدرّب/ة: شهادة المدرسة الإعدادية، اللغة الألمانية على الأقل بدرجة مقبول. المتطلبات الممكنة (Kann): تدريب عملي في المكتب، رخصة قيادة. رتّب الطلبات.",
+
+    "Prüfe zuerst die Muss-Anforderungen. Fehlt eine, ist es C.":
+      "تحقّق أولاً من Muss-Anforderungen (المتطلبات الإلزامية). إذا نقص واحد منها، يكون التصنيف C.",
+
+    "Alle Muss erfüllt? Dann entscheiden die Kann-Anforderungen: viele → A, keine → B.":
+      "هل كل متطلبات Muss متوفرة؟ عندها تقرّر Kann-Anforderungen (المتطلبات الإضافية): كثيرة → A، لا شيء → B.",
+
+    "A · einladen":
+      "A · يدعو",
+
+    "B · Reserve":
+      "B · الاحتياطي",
+
+    "C · Absage":
+      "C · الرفض",
+
+    "Elif: Abschluss, Deutsch 3, Praktikum im Büro":
+      "Elif: شهادة التخرج، اللغة الألمانية 3، تدريب عملي في المكتب",
+
+    "Jonas: Abschluss, Deutsch 2, Praktikum im Büro, Führerschein":
+      "Jonas: شهادة التخرج، اللغة الألمانية 2، تدريب عملي في المكتب، رخصة قيادة",
+
+    "Mia: Abschluss, Deutsch 4, keine Kann-Anforderung":
+      "Mia: شهادة التخرج، اللغة الألمانية 4، لا توجد أي Kann-Anforderung (متطلب إضافي)",
+
+    "Luca: Schulabschluss fehlt, Praktikum im Büro":
+      "Luca: شهادة التخرج مفقودة، تدريب عملي في المكتب",
+
+    "Sara: Abschluss, Deutsch 5, Führerschein":
+      "Sara: شهادة التخرج، اللغة الألمانية 5، رخصة قيادة",
+
+    "Sara hat einen Führerschein (Kann-Anforderung), aber in Deutsch die Note 5. Deutsch mindestens ausreichend ist eine Muss-Anforderung.":
+      "Sara لديها رخصة قيادة (Kann-Anforderung)، لكن لديها في اللغة الألمانية درجة 5. اللغة الألمانية بدرجة كافية على الأقل هي Muss-Anforderung.",
+
+    "Deutsch mindestens ausreichend ist Muss. Mit Note 5 ist sie nicht erfüllt → C. Kann-Anforderungen gleichen ein fehlendes Muss nicht aus.":
+      "اللغة الألمانية بدرجة „ausreichend“ (مقبول) على الأقل هي شرط Muss (إلزامي). مع الدرجة 5 هذا الشرط غير متحقق → C. متطلبات Kann (إضافية) لا تعوّض شرط Muss الناقص.",
+
+    "Sara erfüllt eine {*Muss-Anforderung|Kann-Anforderung} nicht. Deshalb kommt ihre Bewerbung auf den {*C-Stapel|A-Stapel}. Der Führerschein {*ändert daran nichts|gleicht das aus}.":
+      "Sara لم تحقق {*Muss-Anforderung|Kann-Anforderung} واحدًا. لذلك يوضع طلبها على {*C-Stapel|A-Stapel}. رخصة القيادة {*ändert daran nichts|gleicht das aus}.",
+
+    "Note 5 ist schlechter als ausreichend (4).":
+      "الدرجة 5 أقل من كافية (4).",
+
+    "Eine fehlende Muss-Anforderung kann keine Kann-Anforderung ausgleichen.":
+      "لا يمكن لأي Kann-Anforderung (شرط اختياري) أن تعوّض غياب Muss-Anforderung (شرط أساسي).",
+
+    "Ich kann eine Bewerbung formal prüfen.":
+      "أستطيع فحص طلب التوظيف من الناحية الشكلية.",
+
+    "Ich kann eine Bewerbung mit dem Anforderungsprofil vergleichen.":
+      "أستطيع مقارنة طلب التوظيف مع ملف المتطلبات.",
+
+    "Ich kann Bewerbungen begründet dem A-, B- oder C-Stapel zuordnen.":
+      "أستطيع أن أضع طلبات التوظيف في مجموعة A أو B أو C مع ذكر السبب.",
+
+    "Zeugnisse lesen":
+      "قراءة الشهادات.",
+
+    "LS 2.3 · Teil 3":
+      "LS 2.3 · الجزء 3",
+
+    "<h3>Zeugnissprache</h3>\n             <p>Arbeits- und Praktikumszeugnisse müssen freundlich klingen. Die Note steckt in der <strong>Zufriedenheitsformel</strong>.</p>\n             <ul><li><strong>stets zu unserer vollsten Zufriedenheit</strong> = sehr gut</li>\n             <li><strong>stets zu unserer vollen Zufriedenheit</strong> = gut</li>\n             <li><strong>zu unserer vollen Zufriedenheit</strong> = befriedigend</li>\n             <li><strong>zu unserer Zufriedenheit</strong> = ausreichend</li>\n             <li><strong>im Großen und Ganzen zu unserer Zufriedenheit</strong> = mangelhaft</li></ul>\n             <h3>Signalwörter</h3>\n             <ul><li><strong>stets</strong> = immer → besser</li><li><strong>bemühte sich</strong> = hat es versucht, aber nicht geschafft</li></ul>":
+      "<h3>لغة الشهادات (Zeugnissprache)</h3>\n             <p>شهادات العمل والتدريب يجب أن تكون بصيغة ودية. التقييم يكون في <strong>صيغة الرضا (Zufriedenheitsformel)</strong>.</p>\n             <ul><li><strong>stets zu unserer vollsten Zufriedenheit</strong> = ممتاز</li>\n             <li><strong>stets zu unserer vollen Zufriedenheit</strong> = جيد جدًا</li>\n             <li><strong>zu unserer vollen Zufriedenheit</strong> = جيد</li>\n             <li><strong>zu unserer Zufriedenheit</strong> = مقبول</li>\n             <li><strong>im Großen und Ganzen zu unserer Zufriedenheit</strong> = ضعيف</li></ul>\n             <h3>كلمات إشارة (Signalwörter)</h3>\n             <ul><li><strong>stets</strong> = دائمًا → أفضل</li><li><strong>bemühte sich</strong> = حاول، لكنه لم ينجح</li></ul>",
+
+    "Was steht zwischen den Zeilen?":
+      "ماذا تعني الجمل بين السطور؟",
+
+    "Mediaworld e. K. · Jonas’ Praktikumszeugnis":
+      "Mediaworld e. K. · شهادة تدريب Jonas",
+
+    "„Klingt doch alles gut?“":
+      "„هل يبدو كل شيء جيدًا؟“",
+
+    "<p>Tara liest: „Jonas erledigte seine Aufgaben <strong>zu unserer Zufriedenheit</strong>.“ – „Super, oder?“</p>\n                     <p>Melike lächelt: „Zeugnisse haben einen eigenen <strong>Code</strong>. Das hier ist nur eine Vier.“</p>":
+      "<p>تقرأ Tara: „Jonas erledigte seine Aufgaben <strong>zu unserer Zufriedenheit</strong>.“ – „جيد، أليس كذلك؟“</p>\n                     <p>Melike تبتسم: „الشهادات لها <strong>رمز (Code)</strong> خاص بها. هذه الجملة تعني فقط درجة أربعة.“</p>",
+
+    "Warum ein Code?":
+      "لماذا يوجد رمز (Code)؟",
+
+    "Zeugnisse müssen freundlich klingen.":
+      "يجب أن تكون الشهادات بصيغة ودية.",
+
+    "<p>Ein Betrieb darf in ein Zeugnis nichts Böses schreiben. Deshalb steckt die Note in festen <strong>Formeln</strong>.</p>\n                     <p class=\"note\">Wer den Code kennt, liest die Note sofort.</p>":
+      "<p>لا يجوز للشركة أن تكتب شيئًا سيئًا في شهادة العمل. لذلك، تكون الدرجة في <strong>صيغ ثابتة</strong>.</p>\n                     <p class=\"note\">من يعرف الشيفرة، يقرأ الدرجة فورًا.</p>",
+
+    "Die Zufriedenheitsformel":
+      "صيغة الرضا",
+
+    "Ein Wort macht eine Note.":
+      "كلمة واحدة تعطي درجة.",
+
+    "<dl class=\"terms\">\n                       <dt>stets zu unserer vollsten Zufriedenheit</dt><dd>1 · sehr gut</dd>\n                       <dt>stets zu unserer vollen Zufriedenheit</dt><dd>2 · gut</dd>\n                       <dt>zu unserer vollen Zufriedenheit</dt><dd>3 · befriedigend</dd>\n                       <dt>zu unserer Zufriedenheit</dt><dd>4 · ausreichend</dd>\n                       <dt>im Großen und Ganzen zu unserer Zufriedenheit</dt><dd>5 · mangelhaft</dd>\n                     </dl>":
+      "<dl class=\"terms\">\n                       <dt>stets zu unserer vollsten Zufriedenheit</dt><dd>1 · ممتاز</dd>\n                       <dt>stets zu unserer vollen Zufriedenheit</dt><dd>2 · جيد جدًا</dd>\n                       <dt>zu unserer vollen Zufriedenheit</dt><dd>3 · جيد</dd>\n                       <dt>zu unserer Zufriedenheit</dt><dd>4 · مقبول</dd>\n                       <dt>im Großen und Ganzen zu unserer Zufriedenheit</dt><dd>5 · ضعيف</dd>\n                     </dl>",
+
+    "Signalwörter":
+      "كلمات الإشارة",
+
+    "Achte auf diese Wörter.":
+      "انتبه لهذه الكلمات.",
+
+    "<ul><li><strong>stets</strong> heißt immer – das macht die Note besser.</li>\n                       <li><strong>bemühte sich</strong> heißt: hat es versucht, aber nicht geschafft.</li></ul>":
+      "<ul><li><strong>stets</strong> تعني دائمًا – هذا يجعل الدرجة أفضل.</li>\n                       <li><strong>bemühte sich</strong> تعني: حاول، لكنه لم ينجح.</li></ul>",
+
+    "„Stets“ und „vollsten“ – dann ist es eine Eins.":
+      "إذا وجدت „stets“ و„vollsten“ – إذًا الدرجة هي واحد.",
+
+    "<p>Je mehr Lob in der Formel steckt, desto besser die Note.</p>":
+      "<p>كلما زاد المدح في الصياغة، كانت الدرجة أفضل.</p>",
+
+    "Code knacken":
+      "اكسر الشيفرة",
+
+    "„Sie erledigte ihre Aufgaben <b>stets zu unserer vollsten Zufriedenheit</b>.“ Welche Note ist das?":
+      "„Sie erledigte ihre Aufgaben <b>stets zu unserer vollsten Zufriedenheit</b>.“ (أنجزت مهامها دائمًا لرضانا الأقصى.) أي درجة هذه؟",
+
+    "sehr gut":
+      "ممتاز",
+
+    "gut":
+      "جيد جدًا",
+
+    "befriedigend":
+      "جيد",
+
+    "ausreichend":
+      "مقبول",
+
+    "„stets“ + „vollsten“ = die beste Formel = sehr gut.":
+      "„دائمًا“ + „تمامًا“ = أفضل صياغة = ممتاز.",
+
+    "„Er erledigte seine Aufgaben <b>zu unserer Zufriedenheit</b>.“ Welche Note ist das?":
+      "„Er erledigte seine Aufgaben <b>zu unserer Zufriedenheit</b>.“ (أنجز مهامه لرضانا.) أي درجة هذه؟",
+
+    "Ohne „stets“ und ohne „vollen“ = ausreichend (4).":
+      "بدون „دائمًا“ وبدون „الكامل“ = مقبول (4).",
+
+    "Hier fehlen „stets“ und „vollen“.":
+      "هنا ينقص „دائمًا“ و„الكامل“.",
+
+    "„Sie <b>bemühte sich</b>, die Aufgaben zu erledigen.“ Was bedeutet das?":
+      "„لقد <b>اجتهدت</b> في إنجاز المهام.“ ماذا يعني ذلك؟",
+
+    "Sie war sehr fleißig.":
+      "كانت مجتهدة جدًا.",
+
+    "Sie hat es versucht, aber nicht geschafft.":
+      "حاولت، لكنها لم تنجح.",
+
+    "Sie war immer pünktlich.":
+      "كانت دائمًا في الوقت المحدد.",
+
+    "„bemühte sich“ ist ein Warnsignal: versucht, aber nicht geschafft.":
+      "„اجتهدت“ هي إشارة تحذير: حاولت، لكنها لم تنجح.",
+
+    "Welches Wort macht die Note besser?":
+      "أي كلمة تجعل التقييم أفضل؟",
+
+    "stets":
+      "دائمًا (stets)",
+
+    "im Großen und Ganzen":
+      "بشكل عام (im Großen und Ganzen)",
+
+    "bemühte sich":
+      "كان يحاول (bemühte sich)",
+
+    "„stets“ heißt immer – das lobt.":
+      "„stets“ تعني دائمًا – هذا مدح.",
+
+    "Gut oder schwach?":
+      "جيد أم ضعيف؟",
+
+    "Sortiere die Sätze aus Praktikumszeugnissen.":
+      "رتب الجمل من شهادات التدريب العملي.",
+
+    "Gut: „stets“ und „vollen/vollsten“. Schwach: „im Großen und Ganzen“, „bemühte sich“, nur „zu unserer Zufriedenheit“.":
+      "جيد: „stets“ و „vollen/vollsten“. ضعيف: „im Großen und Ganzen“، „bemühte sich“، فقط „zu unserer Zufriedenheit“.",
+
+    "sehr gut / gut":
+      "ممتاز / جيد جدًا",
+
+    "schwach (4 oder schlechter)":
+      "ضعيف (4 أو أقل)",
+
+    "stets zu unserer vollen Zufriedenheit":
+      "stets zu unserer vollen Zufriedenheit (دائمًا لرضانا التام)",
+
+    "im Großen und Ganzen zu unserer Zufriedenheit":
+      "im Großen und Ganzen zu unserer Zufriedenheit (بشكل عام لرضانا)",
+
+    "stets zu unserer vollsten Zufriedenheit":
+      "stets zu unserer vollsten Zufriedenheit (دائمًا لرضانا الأقصى)",
+
+    "bemühte sich um Pünktlichkeit":
+      "كان يسعى للالتزام بالمواعيد",
+
+    "zu unserer Zufriedenheit":
+      "zu unserer Zufriedenheit (لرضانا)",
+
+    "Ich weiß, warum Zeugnisse einen eigenen Code haben.":
+      "أعرف لماذا الشهادات لها رموز خاصة بها.",
+
+    "Ich kann die Zufriedenheitsformel einer Note zuordnen.":
+      "أستطيع ربط صيغة الرضا بدرجة.",
+
+    "Ich erkenne Signalwörter wie „stets“ und „bemühte sich“.":
+      "أتعرف على كلمات الإشارة مثل „دائمًا“ و„بذل جهدًا“.",
+
+    "Das Vorstellungsgespräch":
+      "مقابلة العمل (مقابلة التوظيف)",
+
+    "LS 2.3 · Teil 4":
+      "LS 2.3 · الجزء 4",
+
+    "<h3>Ablauf</h3>\n             <p class=\"formula\">Begrüßung → Bewerber stellt sich vor → Fragen an den Bewerber → Infos und Fragen des Bewerbers → Abschluss</p>\n             <h3>Zulässige Fragen</h3>\n             <ul><li>Schule und Noten, Praktika, Stärken und Schwächen, Motivation („Warum Mediaworld?“)</li></ul>\n             <h3>Unzulässige Fragen (AGG)</h3>\n             <ul><li>Schwangerschaft und Kinderwunsch, Religion, Partei, Gewerkschaft, Herkunft, sexuelle Orientierung</li></ul>\n             <p class=\"note\">Bei unzulässigen Fragen musst du nicht ehrlich antworten („Recht zur Lüge“). Du darfst auch freundlich ausweichen.</p>\n             <h3>Andere Auswahlverfahren</h3>\n             <ul><li><strong>Einstellungstest:</strong> Aufgaben zu Wissen und Logik</li><li><strong>Assessment-Center:</strong> Gruppen- und Rollenspiele, eher in großen Firmen</li></ul>":
+      "<h3>سير المقابلة</h3>\n             <p class=\"formula\">الترحيب → المتقدّم يعرّف بنفسه → أسئلة للمتقدّم → معلومات وأسئلة من المتقدّم → الختام</p>\n             <h3>الأسئلة المسموح بها</h3>\n             <ul><li>المدرسة والدرجات، التدريب العملي، نقاط القوة والضعف، الدافع („لماذا Mediaworld؟“)</li></ul>\n             <h3>الأسئلة غير المسموح بها (AGG)</h3>\n             <ul><li>الحمل والرغبة في الإنجاب، الدين، الحزب، النقابة، الأصل، التوجه الجنسي</li></ul>\n             <p class=\"note\">في حالة الأسئلة غير المسموح بها، لا يجب أن تجيب بصدق („الحق في الكذب“). يمكنك أيضًا الرد بلطف دون إجابة مباشرة.</p>\n             <h3>طرق اختيار أخرى</h3>\n             <ul><li><strong>اختبار التوظيف:</strong> مهام حول المعرفة والمنطق</li><li><strong>مركز التقييم:</strong> ألعاب جماعية وأدوار، غالبًا في الشركات الكبيرة</li></ul>",
+
+    "Jetzt wird es persönlich":
+      "الآن يصبح الأمر شخصيًا",
+
+    "Mediaworld e. K. · Gesprächstermine":
+      "Mediaworld e. K. · مواعيد المقابلات",
+
+    "„Elif und Jonas laden wir ein.“":
+      "„ندعو Elif وJonas.“",
+
+    "<p>Der A-Stapel steht. Melike plant zwei <strong>Vorstellungsgespräche</strong>. Tara darf dabei sein und mitschreiben.</p>":
+      "<p>تم تجهيز مجموعة A. تخطط Melike لإجراء مقابلتي <strong>Vorstellungsgespräch (مقابلة عمل)</strong>. Tara يمكنها الحضور وتدوين الملاحظات.</p>",
+
+    "Der Ablauf":
+      "سير العملية",
+
+    "Fünf Phasen":
+      "خمس مراحل",
+
+    "<ol><li><strong>Begrüßung</strong> – kurzer Small Talk</li>\n                       <li><strong>Vorstellung</strong> – die Bewerberin erzählt von sich</li>\n                       <li><strong>Fragen an die Bewerberin</strong> – Schule, Praktikum, Stärken</li>\n                       <li><strong>Infos zur Stelle</strong> – und Fragen der Bewerberin</li>\n                       <li><strong>Abschluss</strong> – wie geht es weiter?</li></ol>":
+      "<ol><li><strong>الترحيب</strong> – حديث قصير</li>\n                       <li><strong>التعريف بالنفس</strong> – تتحدث المتقدمة عن نفسها</li>\n                       <li><strong>أسئلة للمتقدمة</strong> – المدرسة، التدريب العملي، نقاط القوة</li>\n                       <li><strong>معلومات عن Stelle (الوظيفة)</strong> – وأسئلة من المتقدمة</li>\n                       <li><strong>الختام</strong> – ما هي الخطوة التالية؟</li></ol>",
+
+    "Zulässige Fragen":
+      "الأسئلة المسموح بها",
+
+    "<p>Alles, was mit der <strong>Stelle</strong> zu tun hat:</p>\n                     <ul><li>„Warum möchten Sie zu Mediaworld?“</li><li>„Was haben Sie im Praktikum gemacht?“</li><li>„Was ist Ihre größte Stärke?“</li></ul>":
+      "<p>كل ما يتعلق بـ <strong>Stelle (الوظيفة)</strong>:</p>\n                     <ul><li>\"لماذا تريدين العمل في Mediaworld؟\"</li><li>\"ماذا فعلتِ في التدريب العملي؟\"</li><li>\"ما هي أكبر نقطة قوة لديكِ؟\"</li></ul>",
+
+    "Verboten":
+      "ممنوع",
+
+    "Unzulässige Fragen":
+      "أسئلة غير مسموح بها",
+
+    "<p>Das <strong>AGG</strong> (Allgemeines Gleichbehandlungsgesetz) schützt vor Benachteiligung, z. B. wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität.</p>\n                     <ul class=\"pm\"><li class=\"m\">„Sind Sie schwanger?“</li><li class=\"m\">„Welcher Religion gehören Sie an?“</li><li class=\"m\">„In welcher Partei sind Sie?“</li></ul>":
+      "<p>يحمي <strong>AGG</strong> (قانون المساواة العامة) من التمييز، مثلاً بسبب الأصل أو الجنس أو الدين أو الإعاقة أو العمر أو الهوية الجنسية.</p>\n                     <ul class=\"pm\"><li class=\"m\">„هل أنتِ حامل؟“</li><li class=\"m\">„ما هو دينك؟“</li><li class=\"m\">„في أي حزب أنت؟“</li></ul>",
+
+    "Dein Recht":
+      "حقك",
+
+    "Was tun bei unzulässigen Fragen?":
+      "ماذا تفعل عند أسئلة غير مسموح بها؟",
+
+    "<p>Du musst <strong>nicht ehrlich</strong> antworten – das nennt man das <strong>„Recht zur Lüge“</strong>. Du darfst auch freundlich ausweichen: „Das hat mit der Stelle nichts zu tun.“</p>":
+      "<p>لا يجب أن <strong>تجيب بصدق</strong> – هذا يسمى <strong>„حق الكذب“</strong>. يمكنك أيضاً الرد بلطف: „هذا لا يتعلق بالوظيفة.“</p>",
+
+    "Gefragt wird nur, was zur Stelle gehört.":
+      "يُسأل فقط عما يخص الوظيفة.",
+
+    "<p>Neben dem Gespräch gibt es weitere Verfahren: den <strong>Einstellungstest</strong> und – eher in großen Firmen – das <strong>Assessment-Center</strong>.</p>":
+      "<p>بالإضافة إلى المقابلة، هناك طرق أخرى: <strong>Einstellungstest</strong> (اختبار التوظيف) وأيضاً – غالباً في الشركات الكبيرة – <strong>Assessment-Center</strong> (مركز التقييم).</p>",
+
+    "Zulässig oder unzulässig?":
+      "مسموح أم غير مسموح؟",
+
+    "Darf Mediaworld diese Frage im Vorstellungsgespräch stellen?":
+      "هل يحق لـ Mediaworld أن تطرح هذا السؤال في مقابلة العمل؟",
+
+    "Zulässig ist, was mit der Stelle zu tun hat.":
+      "مسموح ما له علاقة بالوظيفة.",
+
+    "Schwangerschaft, Religion, Partei und Gewerkschaft sind privat – das schützt das AGG.":
+      "الحمل، الدين، الحزب والنقابة أمور خاصة – يحميها قانون AGG.",
+
+    "zulässig":
+      "مسموح",
+
+    "unzulässig":
+      "غير مسموح",
+
+    "Warum möchten Sie bei uns eine Ausbildung machen?":
+      "لماذا تريد أن تقوم بالتدريب المهني لدينا؟",
+
+    "Planen Sie, bald Kinder zu bekommen?":
+      "هل تخطط/تخططين لإنجاب أطفال قريبًا؟",
+
+    "Was haben Sie im Praktikum gelernt?":
+      "ماذا تعلمت في التدريب العملي؟",
+
+    "Sind Sie in einer Gewerkschaft?":
+      "هل أنت عضو في نقابة عمالية؟",
+
+    "Welche Stärken bringen Sie mit?":
+      "ما هي نقاط القوة التي تملكها؟",
+
+    "Gehen Sie regelmäßig in die Kirche oder Moschee?":
+      "هل تذهب بانتظام إلى الكنيسة أو المسجد؟",
+
+    "Im Gespräch":
+      "في المقابلة",
+
+    "In welcher Phase fragt die Bewerberin nach den Arbeitszeiten?":
+      "في أي مرحلة تسأل المتقدمة عن أوقات العمل؟",
+
+    "Begrüßung":
+      "الترحيب",
+
+    "Infos zur Stelle und Fragen der Bewerberin":
+      "معلومات عن الوظيفة وأسئلة المتقدمة",
+
+    "Abschluss":
+      "الختام",
+
+    "Nach den Fragen des Betriebs gibt es Infos zur Stelle – dann darf die Bewerberin fragen.":
+      "بعد أسئلة الشركة، تأتي معلومات عن الوظيفة (وظيفة). بعد ذلك، يمكن للمتقدّمة أن تسأل.",
+
+    "Die Bewerberin darf auch selbst fragen – wann ist dafür Platz?":
+      "يمكن للمتقدّمة أيضًا أن تسأل بنفسها. متى يكون هناك وقت لذلك؟",
+
+    "Jonas wird gefragt: „Welcher Partei gehören Sie an?“ Was darf er tun?":
+      "يُسأل Jonas: „إلى أي حزب تنتمي؟“ ماذا يمكنه أن يفعل؟",
+
+    "Er muss ehrlich antworten.":
+      "يجب عليه أن يجيب بصدق.",
+
+    "Er darf ausweichen oder nicht ehrlich antworten.":
+      "يمكنه أن يتهرّب أو لا يجيب بصدق.",
+
+    "Er muss das Gespräch abbrechen.":
+      "يجب عليه أن يوقف المقابلة.",
+
+    "Die Frage ist unzulässig. Jonas darf ausweichen oder die Unwahrheit sagen („Recht zur Lüge“).":
+      "السؤال غير مسموح به. يمكن لـ Jonas أن يتهرّب أو يقول شيئًا غير صحيح (\"حق الكذب\").",
+
+    "Wofür steht AGG?":
+      "ما معنى AGG؟",
+
+    "Allgemeines Gleichbehandlungsgesetz":
+      "قانون المعاملة المتساوية العام (Allgemeines Gleichbehandlungsgesetz)",
+
+    "Arbeits- und Gesundheitsgesetz":
+      "قانون العمل والصحة",
+
+    "Ausbildungs- und Gehaltsgesetz":
+      "قانون التدريب المهني والرواتب",
+
+    "Das Allgemeine Gleichbehandlungsgesetz schützt vor Benachteiligung.":
+      "قانون المعاملة المتساوية العام (Allgemeines Gleichbehandlungsgesetz) يحمي من التمييز.",
+
+    "Gruppenaufgaben und Rollenspiele an einem ganzen Tag – welches Verfahren ist das?":
+      "مهام جماعية وأدوار تمثيلية طوال اليوم – ما هو هذا الإجراء؟",
+
+    "Einstellungstest":
+      "اختبار التوظيف",
+
+    "Assessment-Center":
+      "Assessment-Center (مركز التقييم)",
+
+    "Vorauswahl":
+      "الفرز الأولي",
+
+    "Im Assessment-Center lösen mehrere Bewerber Aufgaben in Gruppen und Rollenspielen.":
+      "في مركز التقييم (Assessment-Center)، يقوم عدة متقدمين بحل مهام في مجموعات وأدوار تمثيلية.",
+
+    "Ich kann die Phasen eines Vorstellungsgesprächs nennen.":
+      "أستطيع ذكر مراحل مقابلة العمل (Vorstellungsgespräch).",
+
+    "Ich kann zulässige und unzulässige Fragen unterscheiden.":
+      "أستطيع التمييز بين الأسئلة المسموح بها وغير المسموح بها.",
+
+    "Ich weiß, was ich bei einer unzulässigen Frage tun darf.":
+      "أعرف ما الذي يُسمح لي فعله عند سؤال غير مسموح به.",
+
+    "Die Entscheidung: Bewertungstabelle":
+      "القرار: جدول التقييم (Bewertungstabelle)",
+
+    "LS 2.3 · Teil 5":
+      "LS 2.3 · الجزء 5",
+
+    "<h3>Gewichtete Bewertungstabelle</h3>\n             <p class=\"formula\">Gewicht (%) × Punkte = gewichtete Punkte<br>Alle gewichteten Punkte addieren → die höchste Summe gewinnt</p>\n             <ul><li><strong>Kriterien</strong> kommen aus dem Anforderungsprofil.</li>\n             <li><strong>Gewicht:</strong> Wie wichtig ist das Kriterium? Alle Gewichte zusammen = 100 %.</li>\n             <li><strong>Punkte:</strong> 1 (schwach) bis 5 (sehr gut).</li></ul>\n             <p class=\"note\">Beispiel: Gewicht 40 %, Punkte 3 → 40 × 3 = 120.</p>":
+      "<h3>جدول التقييم الموزون (Bewertungstabelle)</h3>\n             <p class=\"formula\">الوزن (%) × النقاط = النقاط الموزونة<br>يتم جمع جميع النقاط الموزونة → المجموع الأعلى هو الفائز</p>\n             <ul><li><strong>المعايير</strong> تأتي من ملف المتطلبات (Anforderungsprofil).</li>\n             <li><strong>الوزن:</strong> ما مدى أهمية المعيار؟ مجموع الأوزان = 100 %.</li>\n             <li><strong>النقاط:</strong> 1 (ضعيف) إلى 5 (ممتاز).</li></ul>\n             <p class=\"note\">مثال: الوزن 40 %، النقاط 3 → 40 × 3 = 120.</p>",
+
+    "Elif oder Jonas?":
+      "إليف أم يوناس؟",
+
+    "Mediaworld e. K. · Nach den Gesprächen":
+      "Mediaworld e. K. · بعد المحادثات",
+
+    "„Beide waren gut. Und jetzt?“":
+      "„كلاهما كان جيدًا. وماذا الآن؟“",
+
+    "<p>Tara mag Jonas, Melike findet Elif stark. Damit die Entscheidung <strong>fair</strong> ist, nutzen sie eine <strong>Bewertungstabelle</strong>.</p>":
+      "<p>تارا تحب يوناس، ميليك ترى أن إليف قوية. لكي يكون القرار <strong>عادلًا</strong>، يستخدمون <strong>Bewertungstabelle (جدول التقييم)</strong>.</p>",
+
+    "So geht’s":
+      "هكذا يتم الأمر",
+
+    "Kriterien, Gewicht, Punkte":
+      "المعايير، الوزن، النقاط",
+
+    "<ol><li><strong>Kriterien</strong> aus dem Anforderungsprofil wählen</li>\n                       <li>jedes Kriterium <strong>gewichten</strong> – zusammen 100 %</li>\n                       <li>jede Person bekommt <strong>Punkte</strong> von 1 bis 5</li>\n                       <li><strong>Gewicht × Punkte</strong> rechnen und alles addieren</li></ol>":
+      "<ol><li>اختيار <strong>المعايير</strong> من ملف المتطلبات</li>\n                       <li>تحديد <strong>وزن</strong> لكل معيار – المجموع 100%</li>\n                       <li>كل شخص يحصل على <strong>نقاط</strong> من 1 إلى 5</li>\n                       <li>حساب <strong>الوزن × النقاط</strong> وجمع الكل</li></ol>",
+
+    "Beispiel":
+      "مثال",
+
+    "Gewicht × Punkte":
+      "الوزن × النقاط",
+
+    "<table class=\"scheme\">\n                       <tr><td>Deutsch (40 %) · 3 Punkte</td><td>40 × 3 = 120</td></tr>\n                       <tr><td>Mathe (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>\n                       <tr><td>Auftreten (30 %) · 4 Punkte</td><td>30 × 4 = 120</td></tr>\n                       <tr class=\"sum\"><td>= Summe</td><td>360</td></tr>\n                     </table>\n                     <p class=\"note\">Die Person mit der höchsten Summe bekommt die Zusage.</p>":
+      "<table class=\"scheme\">\n                       <tr><td>الألمانية (40 %) · 3 نقاط</td><td>40 × 3 = 120</td></tr>\n                       <tr><td>الرياضيات (30 %) · 4 نقاط</td><td>30 × 4 = 120</td></tr>\n                       <tr><td>Auftreten (الحضور والتصرف) (30 %) · 4 نقاط</td><td>30 × 4 = 120</td></tr>\n                       <tr class=\"sum\"><td>= المجموع</td><td>360</td></tr>\n                     </table>\n                     <p class=\"note\">الشخص صاحب أعلى مجموع يحصل على Zusage (القبول).</p>",
+
+    "Erst rechnen, dann entscheiden.":
+      "أولاً احسب، ثم قرر.",
+
+    "<p>Die Tabelle macht die Entscheidung <strong>nachvollziehbar</strong>: Nicht Sympathie entscheidet, sondern die Kriterien.</p>":
+      "<p>الجدول يجعل القرار <strong>واضحًا</strong>: ليست المشاعر هي التي تقرر، بل المعايير.</p>",
+
+    "A1 · Bewertung Jonas":
+      "A1 · تقييم Jonas",
+
+    "Kriterien und Gewichte bei Mediaworld:<br><b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten im Gespräch 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 Punkte für <b>Jonas</b>: Deutsch 4 · Mathe 3 · Auftreten 5 · Praktikum 2<br>Rechne Gewicht × Punkte und addiere.":
+      "المعايير والأوزان في Mediaworld:<br><b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten im Gespräch 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 النقاط لـ <b>Jonas</b>: Deutsch 4 · Mathe 3 · Auftreten 5 · Praktikum 2<br>احسب الوزن × النقاط واجمع.",
+
+    "Jonas erreicht 370 gewichtete Punkte.":
+      "Jonas حصل على 370 نقطة موزونة.",
+
+    "Rechne jede Zeile einzeln: Gewicht mal Punkte.":
+      "احسب كل سطر على حدة: الوزن مضروبًا في النقاط.",
+
+    "Zum Schluss alle vier Ergebnisse addieren: 120 + 60 + 150 + 40.":
+      "في النهاية اجمع النتائج الأربعة: 120 + 60 + 150 + 40.",
+
+    "Deutsch: 30 × 4":
+      "ألماني: 30 × 4",
+
+    "Mathe: 20 × 3":
+      "رياضيات: 20 × 3",
+
+    "Auftreten: 30 × 5":
+      "Auftreten (الحضور والتصرف): 30 × 5",
+
+    "Praktikum: 20 × 2":
+      "تدريب عملي: 20 × 2",
+
+    "= Summe Jonas":
+      "= المجموع Jonas",
+
+    "A2 · Bewertung Elif":
+      "A2 · تقييم Elif",
+
+    "Gleiche Kriterien und Gewichte: <b>Deutsch 30 %</b> · <b>Mathe 20 %</b> · <b>Auftreten 30 %</b> · <b>Praktikum 20 %</b><br><br>\n                 Punkte für <b>Elif</b>: Deutsch 3 · Mathe 5 · Auftreten 4 · Praktikum 4":
+      "نفس المعايير والأوزان: <b>ألماني 30 %</b> · <b>رياضيات 20 %</b> · <b>Auftreten (الحضور والتصرف) 30 %</b> · <b>تدريب عملي 20 %</b><br><br>\n                 النقاط لـ <b>Elif</b>: ألماني 3 · رياضيات 5 · Auftreten 4 · تدريب عملي 4",
+
+    "Elif erreicht 390 gewichtete Punkte.":
+      "Elif حصلت على 390 نقطة موزونة.",
+
+    "Wie bei Jonas: Gewicht mal Punkte, dann addieren.":
+      "مثل ما فعل Jonas: الوزن مضروب في النقاط، ثم نجمع النتائج.",
+
+    "90 + 100 + 120 + 80 – rechne die Summe in Ruhe aus.":
+      "90 + 100 + 120 + 80 – احسب المجموع بهدوء.",
+
+    "Deutsch: 30 × 3":
+      "Deutsch: 30 × 3",
+
+    "Mathe: 20 × 5":
+      "Mathe: 20 × 5",
+
+    "Auftreten: 30 × 4":
+      "Auftreten: 30 × 4",
+
+    "Praktikum: 20 × 4":
+      "Praktikum: 20 × 4",
+
+    "= Summe Elif":
+      "= Summe Elif",
+
+    "Jonas: 370 Punkte · Elif: 390 Punkte. Jonas war im Gespräch am stärksten (Auftreten 5).":
+      "Jonas: 370 Punkte · Elif: 390 Punkte. Jonas كان الأقوى في المقابلة (Auftreten 5).",
+
+    "Elif hat mit 390 die höchste Summe. Jonas punktet beim Auftreten, verliert aber bei Mathe und Praktikum.":
+      "إليف لديها أعلى مجموع وهو 390. يحقق جوناس نقاطًا في الظهور، لكنه يخسر في الرياضيات والتدريب العملي.",
+
+    "Mediaworld gibt {*Elif|Jonas} die Zusage, weil sie mit {*390|370} Punkten die {*höchste|niedrigste} Summe hat. Das bessere Auftreten von Jonas {*reicht nicht aus|entscheidet allein}, weil alle Kriterien zählen.":
+      "تعطي Mediaworld {*Elif|Jonas} Zusage (القبول)، لأنها حصلت على {*390|370} نقطة، وهو المجموع {*höchste|niedrigste}. Auftreten (الحضور) الأفضل لـ Jonas {*reicht nicht aus|entscheidet allein}، لأن كل المعايير مهمة.",
+
+    "Vergleiche die beiden Summen.":
+      "قارن بين المجموعين.",
+
+    "In der Tabelle zählt die Summe aller Kriterien – nicht ein einzelnes.":
+      "في الجدول، يُحسب مجموع جميع المعايير – وليس معيارًا واحدًا فقط.",
+
+    "Ich kann eine gewichtete Bewertungstabelle ausrechnen.":
+      "أستطيع حساب جدول تقييم موزون.",
+
+    "Ich kann erklären, was das Gewicht bedeutet.":
+      "أستطيع شرح ماذا يعني الوزن.",
+
+    "Ich kann eine Auswahlentscheidung mit der Tabelle begründen.":
+      "أستطيع تبرير قرار الاختيار باستخدام الجدول.",
+
+    "Zusage, Absage und Datenschutz":
+      "الموافقة، الرفض وحماية البيانات",
+
+    "LS 2.3 · Teil 6":
+      "LS 2.3 · الجزء 6",
+
+    "<h3>Zusage</h3>\n             <ul><li>Einladung zur Unterschrift unter den Ausbildungsvertrag.</li></ul>\n             <h3>Absage</h3>\n             <ul><li>freundlich, kurz, mit Dank für die Bewerbung</li>\n             <li>keine Gründe nennen, die benachteiligen (AGG) – z. B. Alter, Herkunft, Religion</li></ul>\n             <h3>Datenschutz</h3>\n             <ul><li>Bewerberdaten nur für die Auswahl nutzen, nur die Entscheider sehen sie.</li>\n             <li>Nach der Absage: Papier zurückschicken, Dateien löschen – meist nach einigen Monaten (oft 6).</li></ul>":
+      "<h3>القبول (Zusage)</h3>\n             <ul><li>دعوة لتوقيع عقد التدريب المهني (Ausbildungsvertrag).</li></ul>\n             <h3>الرفض (Absage)</h3>\n             <ul><li>بأسلوب ودود، مختصر، مع الشكر على التقديم.</li>\n             <li>لا تذكر أسبابًا قد تضر (AGG) – مثل العمر، الأصل، الدين.</li></ul>\n             <h3>حماية البيانات (Datenschutz)</h3>\n             <ul><li>يتم استخدام بيانات المتقدمين فقط للاختيار، ويطلع عليها فقط أصحاب القرار.</li>\n             <li>بعد الرفض: إعادة الأوراق الورقية، حذف الملفات – غالبًا بعد عدة أشهر (غالبًا 6).</li></ul>",
+
+    "Ja für Elif – und die anderen?":
+      "نعم لإليف – وماذا عن الآخرين؟",
+
+    "Mediaworld e. K. · Die Entscheidung steht":
+      "Mediaworld e. K. · القرار جاهز",
+
+    "„Jetzt schreiben wir allen.“":
+      "„الآن سنكتب للجميع.“",
+
+    "<p>Elif bekommt die <strong>Zusage</strong>. Alle anderen bekommen eine <strong>Absage</strong>. Melike: „Auch eine Absage muss fair und freundlich sein.“</p>":
+      "<p>إليف تحصل على <strong>القبول (Zusage)</strong>. جميع الآخرين يحصلون على <strong>الرفض (Absage)</strong>. ميليك: „حتى الرفض يجب أن يكون عادلًا وودودًا.“</p>",
+
+    "Die Absage":
+      "الرفض (Absage)",
+
+    "Freundlich, kurz, ohne falsche Gründe.":
+      "ودود، مختصر، بدون أسباب غير صحيحة.",
+
+    "<ul><li>für die Bewerbung <strong>danken</strong></li><li>kurz absagen</li><li>alles Gute wünschen</li></ul>\n                     <p class=\"note\">Keine Gründe, die benachteiligen – z. B. Alter, Herkunft oder Religion. Das verbietet das AGG.</p>":
+      "<ul><li><strong>نشكر</strong> على Bewerbung (طلب التوظيف)</li><li>رفض قصير</li><li>تمنيات بالتوفيق</li></ul>\n                     <p class=\"note\">لا يجوز ذكر أسباب فيها تمييز ضد الشخص – مثل العمر أو الأصل أو الدين. هذا ممنوع حسب AGG.</p>",
+
+    "Datenschutz":
+      "حماية البيانات",
+
+    "Bewerbungen sind vertraulich.":
+      "طلبات التوظيف (Bewerbungen) سرية.",
+
+    "<ul><li>Nur die Personen, die entscheiden, lesen die Unterlagen.</li>\n                       <li>Die Daten werden nur für die Auswahl genutzt – nicht für Werbung.</li>\n                       <li>Nach der Absage: Papier zurückschicken, Dateien <strong>löschen</strong> – meist nach einigen Monaten.</li></ul>":
+      "<ul><li>فقط الأشخاص الذين يقررون يطّلعون على المستندات.</li>\n                       <li>تُستخدم البيانات فقط للاختيار – وليس للإعلانات.</li>\n                       <li>بعد الرفض: إعادة الأوراق الورقية، حذف <strong>الملفات</strong> – غالبًا بعد عدة أشهر.</li></ul>",
+
+    "Fair bis zum letzten Brief.":
+      "الإنصاف حتى آخر رسالة.",
+
+    "<p>Zusage, Absage, Datenschutz: Auch wer nicht genommen wird, soll Mediaworld in guter Erinnerung behalten.</p>":
+      "<p>القبول، الرفض، حماية البيانات: حتى من لم يتم قبوله يجب أن يتذكر Mediaworld بشكل جيد.</p>",
+
+    "Darf Mediaworld das?":
+      "هل يحق لـ Mediaworld ذلك؟",
+
+    "Was ist erlaubt – und was nicht?":
+      "ما هو المسموح – وما هو غير المسموح؟",
+
+    "Bewerbungen sind vertraulich: nur für die Auswahl, nur für die Entscheider.":
+      "الطلبات سرية: فقط للاختيار، فقط للمسؤولين عن القرار.",
+
+    "Gründe wie Alter, Herkunft oder Religion dürfen in keiner Absage stehen.":
+      "أسباب مثل العمر أو الأصل أو الدين لا يجوز ذكرها في أي رفض.",
+
+    "erlaubt":
+      "مسموح",
+
+    "nicht erlaubt":
+      "غير مسموح",
+
+    "Die Unterlagen nach der Absage zurückschicken.":
+      "إرجاع المستندات بعد الرفض.",
+
+    "Bewerbungen in der Pause herumzeigen.":
+      "عرض الطلبات على الآخرين أثناء الاستراحة.",
+
+    "Die E-Mail-Adressen der Bewerber für Werbung nutzen.":
+      "استخدام عناوين البريد الإلكتروني للمتقدمين في الإعلانات.",
+
+    "Nur die Ausbilderin und die Chefin lesen die Unterlagen.":
+      "فقط المدربة والمديرة يقرأن المستندات.",
+
+    "In die Absage schreiben: „Sie sind uns zu alt.“":
+      "في الرفض schreiben: „Sie sind uns zu alt.“",
+
+    "Die Dateien nach einigen Monaten löschen.":
+      "حذف الملفات بعد عدة أشهر.",
+
+    "Finde den Fehler":
+      "اكتشف الخطأ",
+
+    "Tara hat Briefe vorbereitet. In jedem Brief ist eine Zeile nicht in Ordnung – tippe sie an.":
+      "حضّرت Tara رسائل. في كل رسالة هناك سطر غير صحيح – اضغط عليه.",
+
+    "Ich weiß, was in eine faire Absage gehört.":
+      "أعرف ما يجب أن يكون في رفض عادل.",
+
+    "Ich kann erklären, wie ein Betrieb mit Bewerberdaten umgehen muss.":
+      "أستطيع أن أشرح كيف يجب أن تتعامل الشركة مع بيانات المتقدمين.",
+
+    "Ich erkenne Gründe, die in einer Absage nicht stehen dürfen.":
+      "أستطيع أن أتعرف على الأسباب التي لا يجوز ذكرها في الرفض.",
+
+    "Fachbegriffe: Bewerbung & Auswahl":
+      "مصطلحات: Bewerbung (التقديم على وظيفة) & Auswahl (الاختيار)",
+
+    "Lernkarten Bewerbung & Auswahl":
+      "بطاقات تعليمية حول Bewerbung & Auswahl",
+
+    "Bewerbungsmappe":
+      "Bewerbungsmappe",
+
+    "Anschreiben, Lebenslauf, Zeugnisse und Nachweise – heute meist als eine PDF-Datei.":
+      "Anschreiben، Lebenslauf، Zeugnisse und Nachweise – غالبًا اليوم في ملف PDF واحد.",
+
+    "Der Brief in der Bewerbung: Warum diese Stelle? Warum passe ich?":
+      "الرسالة في Bewerbung: لماذا هذه Stelle؟ لماذا أنا مناسب؟",
+
+    "Tabellarisch, lückenlos und aktuell: Daten, Schule, Praktika, Kenntnisse.":
+      "بشكل جدولي، بدون فجوات وحديث: بيانات، مدرسة، Praktika، مهارات.",
+
+    "Bewerbungen formal und inhaltlich prüfen und auf den A-, B- oder C-Stapel legen.":
+      "فحص Bewerbungen من الناحية الشكلية والمحتوى ووضعها على كومة A أو B أو C.",
+
+    "A-, B-, C-Stapel":
+      "A-، B-، C-Stapel",
+
+    "A: einladen · B: Reserve · C: Absage, weil eine Muss-Anforderung fehlt.":
+      "A: دعوة · B: احتياطي · C: رفض، لأن هناك متطلبًا أساسيًا مفقودًا.",
+
+    "Zufriedenheitsformel":
+      "Zufriedenheitsformel (صيغة الرضا)",
+
+    "Der Code im Zeugnis: „stets zu unserer vollsten Zufriedenheit“ = sehr gut, „zu unserer Zufriedenheit“ = ausreichend.":
+      "الرمز في Arbeitszeugnis: „stets zu unserer vollsten Zufriedenheit“ = ممتاز، „zu unserer Zufriedenheit“ = مقبول.",
+
+    "Vorstellungsgespräch":
+      "Vorstellungsgespräch (مقابلة العمل)",
+
+    "Begrüßung, Vorstellung, Fragen an die Bewerberin, Infos und Fragen der Bewerberin, Abschluss.":
+      "الترحيب، التعريف بالنفس، أسئلة إلى المتقدمة، معلومات وأسئلة من المتقدمة، الختام.",
+
+    "Unzulässige Frage":
+      "سؤال غير مسموح",
+
+    "Frage ohne Bezug zur Stelle, z. B. nach Schwangerschaft, Religion, Partei oder Gewerkschaft.":
+      "سؤال ليس له علاقة بالوظيفة، مثل سؤال عن الحمل، الدين، الحزب أو النقابة.",
+
+    "Recht zur Lüge":
+      "حق الكذب",
+
+    "Bei einer unzulässigen Frage muss man nicht ehrlich antworten.":
+      "عند سؤال غير مسموح، لا يجب أن يجيب الشخص بصدق.",
+
+    "Allgemeines Gleichbehandlungsgesetz: schützt vor Benachteiligung wegen Herkunft, Geschlecht, Religion, Behinderung, Alter oder sexueller Identität.":
+      "قانون المعاملة المتساوية العام (AGG): يحمي من التمييز بسبب الأصل أو الجنس أو الدين أو الإعاقة أو العمر أو الهوية الجنسية.",
+
+    "Schriftliche Aufgaben zu Wissen und Logik.":
+      "مهام كتابية حول المعرفة والمنطق.",
+
+    "Auswahltag mit Gruppenaufgaben und Rollenspielen, eher in großen Firmen.":
+      "يوم الاختيار مع مهام جماعية ولعب أدوار، غالبًا في الشركات الكبيرة.",
+
+    "Bewertungstabelle":
+      "جدول التقييم",
+
+    "Gewicht × Punkte für jedes Kriterium, dann addieren – die höchste Summe gewinnt.":
+      "الوزن × النقاط لكل معيار، ثم نجمع – المجموع الأعلى يفوز.",
+
+    "Datenschutz bei Bewerbungen":
+      "حماية البيانات في التقديمات",
+
+    "Nur für die Auswahl, nur für die Entscheider; nach der Absage Unterlagen zurück und Dateien löschen.":
+      "فقط للاختيار، فقط للمسؤولين عن القرار؛ بعد الرفض تُعاد المستندات وتُحذف الملفات."
 
 } });

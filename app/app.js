@@ -134,6 +134,8 @@
   /* ── Helfer ─────────────────────────────────────────────── */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  /* Wie esc(), lässt aber <b>…</b> als Fettdruck stehen (Fragetexte) */
+  const escB = (s) => esc(s).replace(/&lt;(\/?)b&gt;/g, "<$1b>");
   const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch { /* egal */ } };
   /* Kursinhalte in der gewählten Sprache (app/uebersetzungen/*.js); fehlt ein Text, bleibt das Deutsche */
@@ -224,10 +226,13 @@
     video: "Tippe auf Start. Mit „Szene“ links und rechts springst du eine Szene zurück oder vor (oder tippe links/rechts ins Bild), in die Mitte für Pause. „Text“ zeigt alles zum Lesen.",
     sentence: "Tippe eine Lücke an und wähle unten den passenden Baustein. So entsteht Schritt für Schritt ein vollständiger Antwortsatz.",
     spot: "Lies den Briefausschnitt, tippe auf die Zeile mit dem Fehler und dann auf „Prüfen“. Danach siehst du, warum.",
-    word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe."
+    word: "Tippe eine Zeile an – an den blauen Griffen ziehst du die Markierung größer. Formatiere mit der Leiste, Leerzeilen setzt du mit Enter (löschen: ⌫), Kürzel: Strg+A/B/R. Mit „Probe“ prüfst du die Aufgabe.",
+    ppt: "Tippe auf ein Feld der Folie, um es zu markieren (ein zweites Tippen ändert den Text). Oben wechselst du zwischen den Reitern und tippst die Knöpfe an. Mit „Probe“ prüfst du die Aufgabe.",
+    xls: "Tippe eine Zelle an. Tippe sie nochmal an (oder die Formelleiste), um etwas einzugeben; mit ✓ oder Enter bestätigst du. Bei Formeln kannst du Zellen antippen statt Namen zu tippen. Mit „Probe“ prüfst du die Aufgabe.",
+    win: "Tippe eine Datei oder einen Ordner an, um sie zu markieren; zweimal schnell tippen öffnet. Oben in der Leiste findest du Neu, Kopieren, Umbenennen, Löschen und mehr. Mit „Probe“ prüfst du die Aufgabe."
   };
   const HOWTO_DE = { ...HOWTO };
-  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", spot: "Fehler finden", video: "Erklärvideo" };
+  const STEP_LABEL_DE = { slides: "Präsentation", quiz: "Quiz", sort: "Zuordnen", cloze: "Lückentext", calc: "Rechnen", cards: "Lernkarten", selfcheck: "Kann-Liste", link: "Material", sentence: "Antwortsatz", word: "Word üben", ppt: "PowerPoint üben", xls: "Excel üben", win: "Windows üben", spot: "Fehler finden", video: "Erklärvideo" };
   const STEP_LABEL = {};
   labelsReady = true;
   applyLang(LANG);
@@ -245,12 +250,15 @@
       case "spot": return tr(st.rounds.length === 1 ? "{n} Brief" : "{n} Briefe", { n: st.rounds.length });
       case "video": return tr("ca. {m} min", { m: st.minutes || 1 });
       case "word": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "ppt": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "xls": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
+      case "win": return st.mode === "free" ? st.criteria.length + " Prüfpunkte" : st.criteria.length + " Aufgaben";
       default: return tr("öffnet sich neu");
     }
   }
   /* Ehrliche Trefferquote: Prozent erst ab 5 bewerteten Antworten, davor „c von n“ (1 von 1 ist keine 100 %) */
   const hitText = (c, n) => (n >= 5 ? tr("{p} % richtig", { p: Math.round((c / n) * 100) }) : tr("{c} von {n} richtig", { c, n }));
-  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word"];
+  const GRADED = ["quiz", "sort", "cloze", "calc", "sentence", "spot", "word", "ppt", "xls", "win"];
   const scoreText = (v) => (v && typeof v === "object" ? `${v.c}/${v.t}` : v ? "✓" : "");
 
   function toast(msg) {
@@ -323,7 +331,7 @@
   /* Erwartungshorizont je Aufgabe */
   function solutionHTML(st) {
     switch (st.type) {
-      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${esc(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
+      case "quiz": return `<ol class="sol-list">${st.questions.map((q) => `<li>${escB(q.q)}<br><b>→ ${esc(q.options[q.answer])}</b></li>`).join("")}</ol>`;
       case "sort": return st.categories.map((c, k) => `<p><b>${esc(c)}:</b> ${st.items.filter((it) => it.cat === k).map((it) => esc(it.text)).join(" · ")}</p>`).join("");
       case "cloze": return `<p>${esc(st.text).replace(/\{([^}]+)\}/g, (_, w) => `<mark>${w}</mark>`)}</p>`;
       case "calc": return `<table class="scheme">${st.rows.map((r) => `<tr class="${r.sum ? "sum" : ""}"><td>${esc(r.label)}</td><td>${r.signed ? signed(r.value, r.dec ?? st.decimals) : num(r.value, r.dec ?? st.decimals)}</td></tr>`).join("")}</table>` + (st.result ? `<p class="note">${esc(st.result)}</p>` : "");
@@ -412,21 +420,10 @@
       <section class="hero">
         <canvas aria-hidden="true"></canvas>
         <div class="topstrip"><span class="tag-box"><span class="sq"></span>${esc(s ? s.course || s.name : "Lernraum")}</span>${langSwitch()}</div>
-        <div class="win">
-          <div class="bar"><span class="d"></span>${esc(s && s.company ? s.company : DATA.school)}<span class="r">v0.1</span></div>
-          <div class="body">
-            <p class="kick">${tr("Neu hier?")}</p>
-            <p class="say">${tr("Lernen, wann es dir passt.")}</p>
-            <p class="sub">${tr("Präsentationen, Übungen und Lernkarten aus dem Unterricht. Auf deinem Handy.")}</p>
-          </div>
-        </div>
         <h1 class="display">${s ? esc(s.name).replace("bedarf", "&shy;bedarf") + "." : "Lernraum."}</h1>
       </section>
-      <ol class="intro-steps" aria-label="${tr("So funktioniert's")}">
-        <li><b>${tr("Kurze Aufgaben")}</b><span>${tr("Antwort antippen, auf „Prüfen“ tippen, fertig.")}</span></li>
-        <li><b>${tr("Videos und Lernkarten")}</b><span>${tr("Wenn du etwas nochmal brauchst – jederzeit.")}</span></li>
-        <li><b>${tr("Alles auf deinem Handy")}</b><span>${tr("Dein Fortschritt bleibt hier. Kein Konto, kein Passwort.")}</span></li>
-      </ol>
+      <p class="intro-tag">${tr("Lernen, wann es dir passt.")}</p>
+      <p class="intro-line"><span>${tr("Kurze Aufgaben")}</span> · <span>${tr("Videos und Lernkarten")}</span> · <span>${tr("Alles auf deinem Handy")}</span></p>
       <form style="margin-top:24px">
         <label class="field" for="n"><span>${tr("Wie heißt du?")}</span>
           <input class="input" id="n" name="n" autocomplete="given-name" placeholder="${tr("Vorname")}" maxlength="24" required></label>
@@ -765,6 +762,16 @@
   }
 
   /* ── Fach / Kurs (bei mehreren Kursen) ──────────────────── */
+  /* Karte „Weiter mit …“ ganz oben im Kurs, sobald dort schon etwas gelernt wurde (kein Suchen nach dem Stand) */
+  function courseResume(s) {
+    const r = resumeTarget([s]);
+    if (!r || r.fresh) return "";
+    const i = nextStepIndex(r.s, r.t);
+    return `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Weiter mit:")}</div>
+      <div class="body"><p class="say" style="margin:0 0 4px;font-weight:800">${esc(r.t.title)}</p>
+        <p class="hint" style="margin:0 0 12px">${tr("Schritt {a} von {b}", { a: i + 1, b: r.t.steps.length })}</p>
+        <a class="btn block" href="#/f/${r.s.id}/${r.t.id}/${i}">${tr("Weitermachen")} ${ICON.arrow}</a></div></div>`;
+  }
   function viewSubject(sid) {
     const s = findSubject(sid);
     if (!s || SINGLE) { location.hash = "#/"; return h("<div></div>"); }
@@ -775,6 +782,7 @@
         ${isTeacher() ? `<button class="icon-btn" id="qrBtn" aria-label="QR-Code für diesen Kurs">${ICON.qr}</button>` : ""}</div>
       <h1 class="display" style="margin-top:24px;${fitDisplay(s.name.replace("bedarf", "-bedarf"))}">${esc(s.name).replace("bedarf", "&shy;bedarf")}.<small>${esc(s.description || "")}</small></h1>
       ${artImg(s, "big")}
+      ${courseResume(s)}
       <div id="list"></div>
     </main>`);
     const qb = v.querySelector("#qrBtn"); if (qb) qb.onclick = () => openQR(s.name, appUrl(`#/f/${s.id}`), s.course || s.fach || "");
@@ -943,8 +951,8 @@
         <div class="stat"><div class="v">${examPoints(t)}</div><div class="k">${tr("Punkte")}</div></div>
         <div class="stat"><div class="v">${tasks.length}</div><div class="k">${tr("Aufgaben")}</div></div>
       </div>
-      <div class="win" style="margin-top:22px">
-        <div class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></div>
+      <details class="win fold" style="margin-top:22px" ${started ? "" : "open"}>
+        <summary class="bar"><span class="d"></span>${tr("So läuft es ab")}<span class="r">${tr("bitte lesen")}</span></summary>
         <div class="body merk" style="background:var(--paper)">
           <ul>
             <li>${tr("Vor jeder Aufgabe erklären dir 2–3 Folien, worum es geht und wie du vorgehst.")}</li>
@@ -954,7 +962,7 @@
             ${t.exam.tools ? `<li>${tr("Hilfsmittel")}: <strong>${esc(t.exam.tools)}</strong></li>` : ""}
           </ul>
         </div>
-      </div>
+      </details>
       ${t.exam.situation ? `<div class="win" style="margin-top:22px"><div class="bar"><span class="d"></span>${tr("Ausgangssituation")}<span class="r">${tr("für alle Aufgaben")}</span></div><div class="body merk" style="background:var(--paper)">${t.exam.situation}</div></div>` : ""}
       <div class="win" style="margin-top:22px">
         <div class="bar"><span class="d"></span>${tr("Aufgaben")}<span class="r">${examPoints(t)} P</span></div>
@@ -1389,7 +1397,7 @@
         ctx.setProgress(k / qs.length);
         const node = h(`<div style="animation:enter .3s var(--ease) both">
           <p class="q-count">${tr("Frage {a} von {b}", { a: k + 1, b: qs.length })}</p>
-          <p class="q-text">${esc(q.q)}</p>
+          <p class="q-text">${escB(q.q)}</p>
           <div class="options"></div>
         </div>`);
         const opts = node.querySelector(".options");
@@ -1930,8 +1938,8 @@
 
     /* Word-Simulation: einen Brief wie in Word formatieren – geführt oder frei */
     word(step, ctx) {
-      /* Auf dem Handy ist die Simulation zu eng: Hinweis statt Simulator (Tablet/PC ab 700 px; step.phone = true erzwingt sie) */
-      if (window.innerWidth < 700 && !step.phone) {
+      /* Nur auf winzigen Bildschirmen (< 340 px) Hinweis statt Simulator; ab Handybreite läuft die Simulation (step.phone = true erzwingt sie immer) */
+      if (window.innerWidth < 340 && !step.phone) {
         const note = h(`<div class="win"><div class="bar"><span class="d"></span>${tr("Das übst du am PC")}</div>
           <div class="body"><p>${tr("Die Word-Simulation braucht einen größeren Bildschirm. Öffne diese Aufgabe am Tablet oder PC – am Handy geht es mit dem Video und den Fragen weiter.")}</p></div></div>`);
         ctx.body.append(note);
@@ -2466,6 +2474,24 @@
       paintDock();
       if (step.intro) simMsg("info", esc(step.intro));
       armGhost();
+    },
+
+    /* PowerPoint-Simulation (app/sim-ppt.js): Folien aufbauen wie in PowerPoint, auch am Handy */
+    ppt(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.ppt) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.ppt(step, ctx, { h, esc, ICON, toast, buzz, reduced });
+    },
+
+    /* Excel-Simulation (app/sim-xls.js): Tabellen, Formeln, Funktionen, Diagramme – auch am Handy */
+    xls(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.xls) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.xls(step, ctx, { h, esc, ICON, toast, buzz, reduced });
+    },
+
+    /* Windows-Simulation (app/sim-win.js): Desktop, Startmenü, Datei-Explorer, Papierkorb – auch am Handy */
+    win(step, ctx) {
+      if (!window.LernraumSim || !window.LernraumSim.win) { ctx.body.append(h(`<p>${tr("Die Simulation konnte nicht geladen werden.")}</p>`)); ctx.action(`${tr("Weiter")} ${ICON.arrow}`, () => ctx.finish(true)); return; }
+      cleanup = window.LernraumSim.win(step, ctx, { h, esc, ICON, toast, buzz, reduced });
     },
 
     /* Bestehendes Material */

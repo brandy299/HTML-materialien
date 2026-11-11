@@ -77,3 +77,18 @@ Spalte "Variante": abweichende Übersetzung an anderer Stelle. Bitte je Zeile: O
 | 52 | Antwortsatz | جملة الإجابة | – |
 | 53 | positiv / negativ | موجب / سالب | – |
 | 54 | Erfahrungswerte | أرقام من سنوات سابقة / قيمة من الخبرة | 2 Formulierungen |
+| 55 | Bewerbungsmappe | Bewerbungsmappe (ملف طلب التوظيف) | LS 2.3 |
+| 56 | Vorauswahl | الفرز الأولي | LS 2.3 |
+| 57 | A-/B-/C-Stapel | كومة A / B / C | LS 2.3 |
+| 58 | Arbeitszeugnis / Zeugnissprache | شهادة العمل / لغة الشهادات | LS 2.3 |
+| 59 | Zufriedenheitsformel | صيغة الرضا | LS 2.3 |
+| 60 | Noten 1–5 | ممتاز · جيد جدًا · جيد · مقبول · ضعيف | LS 2.3 |
+| 61 | Vorstellungsgespräch | مقابلة العمل | LS 2.3 |
+| 62 | Auftreten | الحضور والتصرف | LS 2.3 |
+| 63 | Bewertungstabelle | جدول التقييم الموزون | LS 2.3 |
+| 64 | Zusage / Absage | القبول / الرفض | LS 2.3 |
+| 65 | AGG (Allgemeines Gleichbehandlungsgesetz) | قانون المساواة في المعاملة | LS 2.2/2.3 |
+| 66 | Benachteiligung | تمييز ضد الشخص | LS 2.3 |
+| 67 | Duale Ausbildung | التدريب المهني المزدوج | LS 2.2 |
+| 68 | Ausbildungsberuf | مهنة تدريبية | LS 2.2 |
+| 69 | Steuerbüro | مكتب استشارات ضريبية | LS 2.2 |
