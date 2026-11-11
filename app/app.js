@@ -391,7 +391,7 @@
     // Wer per Link/QR in einen Kurs kommt, bekommt dessen Fach automatisch zu „Meine Fächer“
     const deep = hash.match(/^#\/f\/([\w-]+)/), ds = deep && findSubject(deep[1]);
     if (ds && !ds.materials) addFach(ds.fach || ds.name);
-    if (!SINGLE && myFaecher() === null && /^#?\/?$/.test(hash) && allFachs().length > 1) return mount(viewPickFach(true), null);
+    /* Kein Pflichtschritt mehr: ohne Auswahl (faecher = null) zeigt die Startseite alle Fächer; Auswahl jederzeit über „Meine Fächer“ */
     for (const [re, fn, tab] of routes) {
       const m = hash.match(re);
       if (m) return mount(fn(...m.slice(1)), tab);
