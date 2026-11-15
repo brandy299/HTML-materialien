@@ -881,7 +881,8 @@ LERNRAUM.subjects.push({
         tools: "Taschenrechner, Heft für Nebenrechnungen",
         situation: `<p><strong>Sporthaus Lindner e. K.</strong> hat <strong>28 Beschäftigte</strong> in Verkauf, Lager, Fahrradwerkstatt und Büro. Inhaberin ist Frau Lindner.</p>
                     <p>Im nächsten Jahr startet ein <strong>Online-Shop</strong> und die <strong>Werkstatt wird erweitert</strong>. Frau Lindner braucht dafür einen Personalplan. Alle Aufgaben gehören zu diesem Betrieb.</p>`,
-        grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+        // Notenschlüssel Handelsschule (HS): 90/76/63/50/30
+        grading: [[90, "1", "sehr gut"], [76, "2", "gut"], [63, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
       },
       steps: [
         /* ── A1 · Fachbegriffe ── */
@@ -1388,8 +1389,8 @@ LERNRAUM.subjects.push({
       exam: {
         minutes: 45,
         tools: "Taschenrechner, Heft für Nebenrechnungen",
-        // Notenschlüssel: [ab Prozent, Note, Bezeichnung] – bei Bedarf an den eigenen Schlüssel anpassen
-        grading: [[92, "1", "sehr gut"], [81, "2", "gut"], [67, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+        // Notenschlüssel Handelsschule (HS): 90/76/63/50/30
+        grading: [[90, "1", "sehr gut"], [76, "2", "gut"], [63, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
       },
       steps: [
         {
