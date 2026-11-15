@@ -10,7 +10,7 @@ LERNRAUM.subjects.push({
   id: "pbp-bewerbung",
   fach: "PBP",
   added: "2026-10-08",          // Datum der Veröffentlichung (für „Neu“ auf der Startseite)
-  updated: "2026-11-08",        // neu: Teil 2 Bewerbung & Auswahl (LS 2.3); davor K2.2e–h
+  updated: "2026-11-15",        // neu: Fremdbild/Abgleich und Fit für KA 2; davor Teil 2 (LS 2.3)
   name: "Personalbeschaffung",
   course: "PBP · HS1",
   glyph: "B",
@@ -21,7 +21,7 @@ LERNRAUM.subjects.push({
     {
       id: "stellenanzeige", group: "Stellenanzeige & Profil", kicker: "Ordner · LS 2.2",
       title: "Stellenanzeige & Profil",
-      description: "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt und Erwartungen."
+      description: "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt, Erwartungen, Fremdbild und Klausurtraining."
     },
     {
       id: "auswahl", group: "Bewerbung & Auswahl", kicker: "Ordner · LS 2.3",
@@ -303,6 +303,8 @@ LERNRAUM.subjects.push({
       folder: "stellenanzeige",
       help: `<h3>Die sechs Bausteine</h3>
              <p class="formula">1. Wer wir sind · 2. Was wir bieten · 3. Wen wir suchen · 4. Deine Aufgaben · 5. Dein Profil · 6. So bewirbst du dich</p>
+             <h3>Fünf oder sechs Bausteine?</h3>
+             <p>Für die Analyse nutzt du die sechs Bausteine. Für das Schreiben reichen die fünf Bausteine aus „Azubi-Anzeige“: Aufmerksamkeit, Betrieb, Angebot, Profil, Weg. Die fünf sind die Kurzfassung – wichtig ist, dass keine Information fehlt.</p>
              <h3>Floskeln entschlüsselt</h3>
              <ul><li><strong>belastbar:</strong> hält Stress aus, auch wenn viel gleichzeitig kommt.</li>
              <li><strong>flexibel:</strong> springt auch mal ein oder bleibt länger.</li>
@@ -423,7 +425,7 @@ LERNRAUM.subjects.push({
               options: [
                 "BüroCenter Ruhr GmbH, Marktstraße 12, Oberhausen – sucht Azubi (m/w/d) Büromanagement.",
                 "„Junge Leute gesucht! Gute Bezahlung, melde dich per WhatsApp: 0176-xxxxxxx. Nur heute!“",
-                "Die Mediaworld e. K. sucht eine Auszubildende – Bewerbung an bewerbung@mediaworld.de."
+                "Die Mediaworld e. K. sucht eine Auszubildende – Bewerbung an bewerbung@mediaworld-oberhausen.de."
               ],
               answer: 1,
               explain: "Kein Firmenname, keine Aufgaben, kein Profil, nur Handynummer und Druck: typische Warnsignale."
@@ -558,7 +560,7 @@ LERNRAUM.subjects.push({
       help: `<h3>Fünf Bausteine einer Azubi-Anzeige</h3>
              <p class="formula">1. Aufmerksamkeit · 2. Der Betrieb · 3. Das Angebot · 4. Das Profil · 5. Der Weg</p>
              <h3>Das AGG</h3>
-             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung auszuschließen.</li>
+             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Identität auszuschließen.</li>
              <li>Nicht erlaubt: „junges, dynamisches Team“, „deutschsprachig“, „Alter bis 25“, „nur weibliche Bewerber“.</li>
              <li>Erlaubt ist der Zusatz „(m/w/d)“.</li></ul>
              <h3>Gute Sprache</h3>
@@ -1250,6 +1252,262 @@ LERNRAUM.subjects.push({
     },
 
     {
+      id: "fremdbild-abgleich",
+      folder: "stellenanzeige",
+      help: `<h3>Selbstbild und Fremdbild</h3>
+             <p><strong>Selbstbild:</strong> So sehe ich mich. <strong>Fremdbild:</strong> So sehen mich andere.</p>
+             <h3>Feedback-Regeln</h3>
+             <ul><li><strong>Geben:</strong> Situation beschreiben, ein konkretes Beispiel, eine Sache, einen Wunsch.</li>
+             <li><strong>Nehmen:</strong> zuhören, nachfragen, danken, dann entscheiden.</li></ul>
+             <h3>Beleg</h3>
+             <p class="formula">Situation – Handlung – Ergebnis</p>
+             <p>Eine Stärke ohne Beleg ist nur eine Behauptung.</p>
+             <h3>Abgleich mit der Stelle</h3>
+             <ul><li>Muss zuerst prüfen. Kann bringt Vorteile.</li>
+             <li>Ampel: Grün = Beleg. Gelb = teilweise. Rot = noch nicht.</li>
+             <li>Bei Gelb oder Rot bei Muss: Maßnahme planen (was, wie oft, bis wann).</li></ul>`,
+      group: "Stellenanzeige & Profil",
+      title: "Was andere an mir sehen",
+      kicker: "LS 2.2 · Teil 10",
+      minutes: 20,
+      steps: [
+        {
+          type: "slides",
+          title: "Selbstbild und Fremdbild",
+          slides: [
+            {
+              style: "dark",
+              kicker: "Mediaworld e. K. · Vor der Bewerbung",
+              title: "„Wie sehen mich andere?“",
+              body: `<p>Melike liest Taras Stärkenliste. „Gut. Aber eine Bewerbung ist kein Wunschzettel. Frag zwei Menschen, die dich jeden Tag erleben: Was sehen sie?“</p>
+                     <p>Tara zögert: „Und wenn die etwas ganz anderes sagen?“ Melike: „Dann weißt du mehr als vorher.“</p>`
+            },
+            {
+              kicker: "Zwei Bilder",
+              title: "Selbstbild und Fremdbild",
+              body: `<div class="pair">
+                       <div><b>Selbstbild</b>So sehe ich mich.</div>
+                       <div><b>Fremdbild</b>So sehen mich andere.</div>
+                     </div>
+                     <p class="note">Beide sind wichtig. Sie müssen nicht gleich sein.</p>`
+            },
+            {
+              kicker: "Feedback geben",
+              title: "So hilft dein Feedback.",
+              body: `<ul>
+                       <li>Beschreibe die <strong>Situation</strong>, nicht die Person.</li>
+                       <li>Nenne ein <strong>konkretes Beispiel</strong>.</li>
+                       <li>Sag <strong>eine Sache</strong> auf einmal.</li>
+                       <li>Sag, was du dir <strong>wünschst</strong>.</li>
+                     </ul>`
+            },
+            {
+              kicker: "Feedback nehmen",
+              title: "So nimmst du Feedback an.",
+              body: `<ul>
+                       <li><strong>Zuhören</strong>, nicht sofort rechtfertigen.</li>
+                       <li><strong>Nachfragen:</strong> Wann genau? Was war die Wirkung?</li>
+                       <li><strong>Danken</strong> – auch wenn es unbequem ist.</li>
+                       <li><strong>Entscheiden:</strong> Nehme ich es an?</li>
+                     </ul>`
+            },
+            {
+              kicker: "Beleg",
+              title: "Eine Stärke braucht einen Beleg.",
+              body: `<p class="formula">Situation – Handlung – Ergebnis</p>
+                     <p>Beispiel: Im Praktikum habe ich die Post jeden Tag pünktlich verteilt. Meine Chefin hat mir deshalb die Termine übertragen.</p>
+                     <p class="note">Ohne Beleg ist eine Stärke nur eine Behauptung.</p>`
+            },
+            {
+              kicker: "Abgleich",
+              title: "Anforderung, Beleg, Ampel.",
+              body: `<p>Prüfe jede Anforderung der Stelle:</p>
+                     <ol><li>Was verlangt die Stelle? Muss oder Kann?</li>
+                     <li>Welchen Beleg habe ich – aus Selbstbild und Fremdbild?</li>
+                     <li>Wie stehe ich da? Grün, Gelb oder Rot?</li></ol>
+                     <p class="note">Gelb oder Rot bei Muss: Maßnahme planen.</p>`
+            },
+            {
+              style: "accent",
+              kicker: "Merke",
+              title: "Ehrlich + konkret = überzeugend.",
+              body: `<p>Frage nach Beispielen, nicht nach einem Gesamturteil. Und schreibe nur Stärken auf, die du belegen kannst.</p>`
+            }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Feedback geben oder nehmen?",
+          prompt: "Ordne jede Aussage zu.",
+          hints: ["Geben heißt: Du beschreibst eine Situation und sagst, was du dir wünschst.",
+                  "Nehmen heißt: Du hörst zu, fragst nach und bedankst dich."],
+          categories: ["Feedback geben", "Feedback nehmen"],
+          items: [
+            { text: "Beschreibe die Situation, nicht die Person.", cat: 0 },
+            { text: "Zuhören, nicht sofort rechtfertigen.", cat: 1 },
+            { text: "Ein konkretes Beispiel statt eines Etiketts.", cat: 0 },
+            { text: "Nachfragen: Wann genau? Was war die Wirkung?", cat: 1 },
+            { text: "Eine Sache auf einmal.", cat: 0 },
+            { text: "Danken – auch wenn es unbequem ist.", cat: 1 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "Die wichtigsten Sätze",
+          case: "Setze die richtigen Begriffe ein.",
+          text: "Eine Stärke ohne Beleg ist nur eine {*Behauptung|Tatsache}. Das {*Fremdbild|Selbstbild} zeigt, wie andere mich sehen. Bei Gelb oder Rot bei einer Muss-Anforderung brauche ich eine {*Maßnahme|Pause}.",
+          explain: "Beleg = Situation – Handlung – Ergebnis. Fremdbild = Sicht der anderen. Bei Muss zählt am Ende die Maßnahme."
+        },
+        {
+          type: "quiz",
+          title: "Was hilft dir weiter?",
+          questions: [
+            {
+              q: "Was ist ein Fremdbild?",
+              hint: "Fremd = von anderen.",
+              options: ["So sehe ich mich selbst.", "So sehen mich andere.", "Das Bild auf meinem Zeugnis."],
+              answer: 1,
+              explain: "Das Fremdbild ist die Sicht der anderen. Das Selbstbild ist deine eigene Sicht."
+            },
+            {
+              q: "Welche Rückmeldung hilft dir am meisten?",
+              hint: "Konkret heißt: Situation und Beispiel.",
+              options: ["„Du bist nett.“", "„Am Montag hast du die Telefonliste doppelt geprüft – dadurch ging kein Termin verloren.“", "„Du bist einfach nicht gut genug.“"],
+              answer: 1,
+              explain: "Eine gute Rückmeldung nennt eine Situation, eine Handlung und die Wirkung."
+            },
+            {
+              q: "Du bist bei „Deutsch“ (Muss) auf Gelb. Was tust du?",
+              hint: "Gelb heißt: teilweise. Bei Muss brauchst du einen Plan.",
+              options: ["Nichts, Gelb ist okay.", "Eine Maßnahme planen: was, wie oft, bis wann.", "Die Anforderung streichen."],
+              answer: 1,
+              explain: "Bei einer Muss-Anforderung musst du besser werden. Eine Maßnahme macht den Weg konkret."
+            }
+          ]
+        },
+        {
+          type: "selfcheck",
+          title: "Kann-Liste",
+          items: [
+            "Ich kann Selbstbild und Fremdbild unterscheiden.",
+            "Ich kann Feedback geben und annehmen.",
+            "Ich kann eine Stärke mit Situation – Handlung – Ergebnis belegen.",
+            "Ich kann eine Anforderung mit einem Beleg und einer Ampel prüfen."
+          ]
+        }
+      ]
+    },
+
+    {
+      id: "fit-ka2",
+      folder: "stellenanzeige",
+      group: "Klausurvorbereitung",
+      title: "Fit für KA 2",
+      kicker: "Fit für KA 2 · Übungsklausur",
+      minutes: 45,
+      help: `<h3>Das brauchst du für KA 2</h3>
+             <ul><li>Personalbeschaffung: intern/extern, „Das Loch wandert“.</li>
+             <li>Anforderungsprofil: fachlich/persönlich, Muss/Kann.</li>
+             <li>Stellenanzeige: fünf Bausteine, Klartext, AGG, seriös.</li>
+             <li>Profil: Stärke mit Beleg, Abgleich, Ampel, Maßnahme.</li></ul>
+             <p class="formula">Muss = K.o. · Kann = Vorteil<br>Beleg = Situation – Handlung – Ergebnis</p>`,
+      exam: {
+        minutes: 45,
+        tools: "keine",
+        situation: `<p>Die <strong>Mediaworld e. K.</strong> sucht eine Auszubildende oder einen Auszubildenden für Büromanagement. Alle Aufgaben gehören zu diesem Fall.</p>`,
+        grading: [[90, "1", "sehr gut"], [76, "2", "gut"], [63, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+      },
+      steps: [
+        {
+          type: "quiz",
+          title: "A1 · Fachbegriffe",
+          points: 5,
+          review: "intern-extern",
+          questions: [
+            { q: "Alle Maßnahmen, mit denen ein Betrieb offene Stellen besetzt.", options: ["Personalbeschaffung", "Personalabbau", "Personalplanung", "Lohnabrechnung"], answer: 0 },
+            { q: "Die neue Kraft kommt aus dem eigenen Betrieb.", options: ["Externe Beschaffung", "Interne Beschaffung", "Stellenanzeige", "Personalberater"], answer: 1 },
+            { q: "Wer eine Muss-Anforderung nicht erfüllt, …", options: ["hat trotzdem einen Vorteil.", "kommt in der Regel nicht in die Auswahl.", "wird immer eingeladen.", "braucht kein Profil."], answer: 1 },
+            { q: "Eine Kann-Anforderung ist …", options: ["ein K.o.-Kriterium.", "ein Vorteil, aber kein Ausschlussgrund.", "immer wichtiger als Muss.", "eine persönliche Anforderung."], answer: 1 },
+            { q: "Eine Stärke ohne Beleg ist …", options: ["ein Beweis.", "nur eine Behauptung.", "ein Zeugnis.", "ein Muss."], answer: 1 }
+          ]
+        },
+        {
+          type: "sort",
+          title: "A2 · Intern oder extern?",
+          points: 4,
+          review: "intern-extern",
+          prompt: "Ordne jede Maßnahme zu.",
+          categories: ["intern", "extern"],
+          items: [
+            { text: "Eine Verkäuferin wird Abteilungsleiterin.", cat: 0 },
+            { text: "Die Mediaworld schaltet eine Anzeige.", cat: 1 },
+            { text: "Ein Azubi wird nach der Prüfung übernommen.", cat: 0 },
+            { text: "Die Arbeitsagentur schlägt eine Fachkraft vor.", cat: 1 },
+            { text: "Eine Lagerkraft wechselt in den Verkauf.", cat: 0 },
+            { text: "Ein Personalberater sucht eine Kraft.", cat: 1 }
+          ]
+        },
+        {
+          type: "cloze",
+          title: "A3 · Anforderungsprofil",
+          points: 4,
+          review: "anforderungsprofil",
+          prompt: "Setze die passenden Wörter ein. Zwei Wörter passen nicht.",
+          text: "Das {Anforderungsprofil} beschreibt, welche Person gesucht wird. {Fachliche} Anforderungen kann man lernen, z. B. Rechnen. {Persönliche} Anforderungen zeigen sich im Verhalten, z. B. Sorgfalt. Eine {Muss-Anforderung} ist ein K.o.-Kriterium. Eine {Kann-Anforderung} ist nur ein Vorteil.",
+          distractors: ["Betriebsrat", "Umsatz"]
+        },
+        {
+          type: "quiz",
+          title: "A4 · Anzeige prüfen",
+          points: 4,
+          review: "anzeigen-check",
+          questions: [
+            { q: "Welches Merkmal spricht für eine seriöse Anzeige?", options: ["Nur eine Handynummer", "Vollständiger Firmenname und Adresse", "Vorauszahlung", "„Nur heute!“"], answer: 1 },
+            { q: "Welches Merkmal ist ein Warnsignal?", options: ["Klare Aufgaben", "Erreichbare Kontaktperson", "Druck und Eile", "Genaues Profil"], answer: 2 },
+            { q: "Welcher Satz verstößt gegen das AGG?", options: ["Du arbeitest sorgfältig.", "Wir suchen ein junges Team.", "Du sprichst gut Deutsch.", "Die Stelle ist (m/w/d)."], answer: 1 },
+            { q: "Welche Formulierung ist Klartext?", options: ["Dynamisches Umfeld", "Tolle Vergütung", "Du arbeitest in einem Team von 21 Personen.", "Flexible Persönlichkeit"], answer: 2 }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "A5 · Bewerberfall",
+          points: 4,
+          review: "staerkenprofil",
+          questions: [
+            {
+              q: "A erfüllt alle Muss-Anforderungen, hat aber keine Kann-Anforderung. B fehlt Deutsch (Muss), hat aber drei Kann-Anforderungen. Wen lädt die Mediaworld ein?",
+              hint: "Prüfe zuerst die Muss-Anforderungen.",
+              options: ["A", "B", "Beide", "Keinen"],
+              answer: 0,
+              explain: "A erfüllt alle Muss-Anforderungen. B fehlt eine Muss-Anforderung; Kann gleicht das nicht aus."
+            },
+            {
+              q: "Warum wird B nicht eingeladen?",
+              options: ["Weil B zu viele Kann-Anforderungen hat.", "Weil B eine Muss-Anforderung nicht erfüllt.", "Weil B kein Praktikum hat."],
+              answer: 1,
+              explain: "Deutsch ist eine Muss-Anforderung. Wer sie nicht erfüllt, wird in der Regel nicht eingeladen."
+            },
+            {
+              q: "Was bedeutet „Das Loch wandert“?",
+              options: ["Die neue Kraft bringt ein Loch mit.", "Die alte Stelle wird frei und muss neu besetzt werden.", "Der Betrieb schließt eine Abteilung.", "Die Anzeige hat ein Loch."],
+              answer: 1,
+              explain: "Bei interner Besetzung ist die neue Stelle besetzt – aber an der alten Stelle fehlt jetzt jemand."
+            }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A6 · Mein Profil",
+          points: 4,
+          review: "fremdbild-abgleich",
+          case: "Baue einen Satz für deine Bewerbung.",
+          text: "Ich passe zur Stelle, weil ich {*zuverlässig|unfreundlich} bin. Mit {*einem Praktikum im Büro|einer Spielekonsole} kann ich zusätzlich punkten.",
+          explain: "Erst die Muss-Anforderungen absichern, dann mit Kann-Anforderungen punkten – immer ehrlich und mit Beispiel."
+        }
+      ]
+    },
+
+    {
       id: "leistungsabfrage",
       folder: "stellenanzeige",
       group: "Leistungsabfrage",
@@ -1260,8 +1518,8 @@ LERNRAUM.subjects.push({
         minutes: 20,
         graded: true,    // Kürzel + Klassen-PIN vor dem Start, Ergebnis-Code am Ende (app/lehrer.html liest ihn ein)
         tools: "keine",
-        // Notenschlüssel Handelsschule
-        grading: [[87, "1", "sehr gut"], [73, "2", "gut"], [59, "3", "befriedigend"], [45, "4", "ausreichend"], [18, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+        // Notenschlüssel Handelsschule (HS): 90/76/63/50/30
+        grading: [[90, "1", "sehr gut"], [76, "2", "gut"], [63, "3", "befriedigend"], [50, "4", "ausreichend"], [30, "5", "mangelhaft"], [0, "6", "ungenügend"]]
       },
       steps: [
         {
@@ -1374,7 +1632,7 @@ LERNRAUM.subjects.push({
             { front: "Stellenanzeige", back: "Die öffentliche Ausschreibung einer offenen Stelle – sie informiert über Betrieb, Aufgaben, Profil und Bewerbungsweg." },
             { front: "Seriöse Anzeige", back: "Vollständiger Firmenname, Adresse, klare Aufgaben, Profil und erreichbare Kontaktperson – keine Vorauszahlung." },
             { front: "Warnsignale", back: "Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung." },
-            { front: "AGG", back: "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung." },
+            { front: "AGG", back: "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Identität." },
             { front: "Azubi-Anzeige", back: "Anzeige für einen Ausbildungsplatz: fünf Bausteine – Aufmerksamkeit, Betrieb, Angebot, Profil, Weg." },
             { front: "Duale Ausbildung", back: "Ausbildung an zwei Lernorten: im Betrieb (Praxis) und in der Berufsschule (Theorie), meist drei Jahre." },
             { front: "Ausbildungsmarkt", back: "Zusammentreffen von Angebot (Ausbildungsplätze) und Nachfrage (Jugendliche, die eine Ausbildung suchen)." },
@@ -1382,7 +1640,13 @@ LERNRAUM.subjects.push({
             { front: "Lernbereitschaft", back: "Die wichtigste fachliche Haltung: Fragen stellen, Notizen machen und Fehler nicht wiederholen." },
             { front: "Zuverlässigkeit", back: "Aufgaben vollständig und rechtzeitig erledigen und wichtige Informationen sofort weitergeben." },
             { front: "Verschwiegenheit", back: "Kundendaten und interne Informationen bleiben im Betrieb – sie gehören nicht nach außen." },
-            { front: "Ausbildungsvertrag", back: "Regelt Rechte und Pflichten beider Seiten: Der Betrieb gibt Ausbildung und Vergütung, die Auszubildende bringt Lernbereitschaft und Mitarbeit." }
+            { front: "Ausbildungsvertrag", back: "Regelt Rechte und Pflichten beider Seiten: Der Betrieb gibt Ausbildung und Vergütung, die Auszubildende bringt Lernbereitschaft und Mitarbeit." },
+            { front: "Selbstbild", back: "So sehe ich mich selbst." },
+            { front: "Fremdbild", back: "So sehen mich andere – z. B. durch eine Rückmeldung." },
+            { front: "Feedback", back: "Eine Rückmeldung: Situation beschreiben, Beispiel nennen, Wirkung sagen, Wunsch formulieren." },
+            { front: "Beleg", back: "Situation – Handlung – Ergebnis. Ohne Beleg ist eine Stärke nur eine Behauptung." },
+            { front: "Ampel", back: "Grün = erfüllt mit Beleg · Gelb = teilweise · Rot = noch nicht." },
+            { front: "SMART-Maßnahme", back: "Konkret, messbar, attraktiv, realistisch, terminiert: was, wie oft, bis wann." }
           ]
         }
       ]

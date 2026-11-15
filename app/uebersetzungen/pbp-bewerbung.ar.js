@@ -13,8 +13,8 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "Ordner · LS 2.2":
       "مجلد · LS 2.2",
 
-    "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt und Erwartungen.":
-      "من توفير الموظفين حتى إعلان Azubi (المتدرّب/ة) الخاص بك – مع المهن، سوق التدريب المهني (Ausbildungsmarkt) وتوقعات الشركة والمتدرّب/ة.",
+    "Von der Personalbeschaffung bis zur eigenen Azubi-Anzeige – mit Berufen, Ausbildungsmarkt, Erwartungen, Fremdbild und Klausurtraining.":
+      "",
 
     "Bewerbung & Auswahl":
       "التقديم والاختيار",
@@ -355,8 +355,8 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "LS 2.2 · Teil 3":
       "LS 2.2 · الجزء 3",
 
-    "<h3>Die sechs Bausteine</h3>\n             <p class=\"formula\">1. Wer wir sind · 2. Was wir bieten · 3. Wen wir suchen · 4. Deine Aufgaben · 5. Dein Profil · 6. So bewirbst du dich</p>\n             <h3>Floskeln entschlüsselt</h3>\n             <ul><li><strong>belastbar:</strong> hält Stress aus, auch wenn viel gleichzeitig kommt.</li>\n             <li><strong>flexibel:</strong> springt auch mal ein oder bleibt länger.</li>\n             <li><strong>Teamplayer:</strong> arbeitet gern mit anderen und teilt Informationen.</li>\n             <li><strong>selbstständig:</strong> fragt nicht bei jedem kleinen Schritt nach.</li>\n             <li><strong>flache Hierarchien:</strong> kurze Wege – du sprichst direkt mit der Chefin.</li></ul>\n             <h3>Abkürzungen</h3>\n             <ul><li><strong>m/w/d</strong> männlich/weiblich/divers – die Stelle ist für alle Geschlechter offen · <strong>VZ/TZ</strong> Vollzeit/Teilzeit · <strong>ggf.</strong> gegebenenfalls.</li></ul>\n             <h3>Warnsignale</h3>\n             <ul><li>Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung oder Ausweiskopie per Chat.</li></ul>":
-      "<h3>العناصر الستة</h3>\n             <p class=\"formula\">1. من نحن · 2. ماذا نقدّم · 3. من نبحث عنه · 4. مهامك · 5. ملفك الشخصي · 6. كيف تتقدّم للوظيفة</p>\n             <h3>توضيح العبارات الشائعة</h3>\n             <ul><li><strong>قادر على التحمّل:</strong> يتحمّل الضغط حتى عند وجود عدة مهام في نفس الوقت.</li>\n             <li><strong>مرن:</strong> يمكنه العمل أحيانًا في أوقات إضافية أو البقاء لفترة أطول.</li>\n             <li><strong>يحب العمل الجماعي:</strong> يعمل مع الآخرين بسرور ويشارك المعلومات.</li>\n             <li><strong>يعمل بشكل مستقل:</strong> لا يسأل عن كل خطوة صغيرة.</li>\n             <li><strong>هرمية مسطحة:</strong> طرق تواصل قصيرة – تتحدث مباشرة مع المديرة.</li></ul>\n             <h3>الاختصارات</h3>\n             <ul><li><strong>m/w/d</strong> ذكر/أنثى/متنوع – الوظيفة مفتوحة لجميع الأجناس (ذكر/أنثى/آخر) الجنسـيات · <strong>VZ/TZ</strong> دوام كامل/دوام جزئي · <strong>ggf.</strong> إذا لزم الأمر.</li></ul>\n             <h3>إشارات تحذيرية</h3>\n             <ul><li>لا يوجد اسم شركة، فقط رقم جوال، ضغط وسرعة، أخطاء إملائية، طلب دفع مقدمًا أو إرسال صورة الهوية عبر الدردشة.</li></ul>",
+    "<h3>Die sechs Bausteine</h3>\n             <p class=\"formula\">1. Wer wir sind · 2. Was wir bieten · 3. Wen wir suchen · 4. Deine Aufgaben · 5. Dein Profil · 6. So bewirbst du dich</p>\n             <h3>Fünf oder sechs Bausteine?</h3>\n             <p>Für die Analyse nutzt du die sechs Bausteine. Für das Schreiben reichen die fünf Bausteine aus „Azubi-Anzeige“: Aufmerksamkeit, Betrieb, Angebot, Profil, Weg. Die fünf sind die Kurzfassung – wichtig ist, dass keine Information fehlt.</p>\n             <h3>Floskeln entschlüsselt</h3>\n             <ul><li><strong>belastbar:</strong> hält Stress aus, auch wenn viel gleichzeitig kommt.</li>\n             <li><strong>flexibel:</strong> springt auch mal ein oder bleibt länger.</li>\n             <li><strong>Teamplayer:</strong> arbeitet gern mit anderen und teilt Informationen.</li>\n             <li><strong>selbstständig:</strong> fragt nicht bei jedem kleinen Schritt nach.</li>\n             <li><strong>flache Hierarchien:</strong> kurze Wege – du sprichst direkt mit der Chefin.</li></ul>\n             <h3>Abkürzungen</h3>\n             <ul><li><strong>m/w/d</strong> männlich/weiblich/divers – die Stelle ist für alle Geschlechter offen · <strong>VZ/TZ</strong> Vollzeit/Teilzeit · <strong>ggf.</strong> gegebenenfalls.</li></ul>\n             <h3>Warnsignale</h3>\n             <ul><li>Kein Firmenname, nur eine Handynummer, Druck und Eile, Rechtschreibfehler, Vorauszahlung oder Ausweiskopie per Chat.</li></ul>":
+      "",
 
     "Den Code der Anzeigen knacken":
       "فهم رموز الإعلانات",
@@ -499,8 +499,8 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "„Junge Leute gesucht! Gute Bezahlung, melde dich per WhatsApp: 0176-xxxxxxx. Nur heute!“":
       "„نبحث عن شباب! أجر جيد، تواصل عبر WhatsApp: 0176-xxxxxxx. فقط اليوم!“",
 
-    "Die Mediaworld e. K. sucht eine Auszubildende – Bewerbung an bewerbung@mediaworld.de.":
-      "تبحث Mediaworld e. K. عن متدرّبة – يرجى إرسال Bewerbung (طلب التوظيف) إلى bewerbung@mediaworld.de.",
+    "Die Mediaworld e. K. sucht eine Auszubildende – Bewerbung an bewerbung@mediaworld-oberhausen.de.":
+      "",
 
     "Kein Firmenname, keine Aufgaben, kein Profil, nur Handynummer und Druck: typische Warnsignale.":
       "لا يوجد اسم شركة، لا مهام، لا Profil (ملف المتطلبات)، فقط رقم جوال وضغط: هذه إشارات تحذيرية نموذجية.",
@@ -634,8 +634,8 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "LS 2.2 · Teil 5":
       "LS 2.2 · Teil 5",
 
-    "<h3>Fünf Bausteine einer Azubi-Anzeige</h3>\n             <p class=\"formula\">1. Aufmerksamkeit · 2. Der Betrieb · 3. Das Angebot · 4. Das Profil · 5. Der Weg</p>\n             <h3>Das AGG</h3>\n             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung auszuschließen.</li>\n             <li>Nicht erlaubt: „junges, dynamisches Team“, „deutschsprachig“, „Alter bis 25“, „nur weibliche Bewerber“.</li>\n             <li>Erlaubt ist der Zusatz „(m/w/d)“.</li></ul>\n             <h3>Gute Sprache</h3>\n             <ul><li>Kurz, aktiv, konkret – und in der Du-Form.</li>\n             <li>Beschreibe Aufgaben und Eigenschaften, nicht die Person.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Floskeln wie „dynamisches Umfeld“ statt konkreter Angaben.</li>\n             <li>Eine Altersgrenze oder Herkunft nennen – das ist diskriminierend.</li></ul>":
-      "<h3>خمسة عناصر لإعلان Azubi (المتدرّب/ة)</h3>\n             <p class=\"formula\">1. جذب الانتباه · 2. الشركة · 3. العرض · 4. الملف الشخصي · 5. طريقة التقديم</p>\n             <h3>AGG (قانون المساواة في المعاملة)</h3>\n             <ul><li>القانون العام للمساواة يمنع استبعاد الأشخاص بسبب العمر أو الجنس أو الأصل أو الدين أو الإعاقة أو التوجه الجنسي.</li>\n             <li>غير مسموح: „فريق شاب وديناميكي“، „يتحدث الألمانية“، „العمر حتى 25“، „فقط المتقدمات الإناث“.</li>\n             <li>مسموح إضافة „(m/w/d)“.</li></ul>\n             <h3>لغة جيدة</h3>\n             <ul><li>قصيرة، فعالة، واضحة – وبأسلوب المخاطب أنت.</li>\n             <li>صف المهام والصفات، وليس الشخص نفسه.</li></ul>\n             <h3>أخطاء شائعة</h3>\n             <ul><li>عبارات عامة مثل „بيئة ديناميكية“ بدلاً من معلومات واضحة.</li>\n             <li>ذكر حد للعمر أو الأصل – هذا تمييز.</li></ul>",
+    "<h3>Fünf Bausteine einer Azubi-Anzeige</h3>\n             <p class=\"formula\">1. Aufmerksamkeit · 2. Der Betrieb · 3. Das Angebot · 4. Das Profil · 5. Der Weg</p>\n             <h3>Das AGG</h3>\n             <ul><li>Das Allgemeine Gleichbehandlungsgesetz verbietet, Menschen wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Identität auszuschließen.</li>\n             <li>Nicht erlaubt: „junges, dynamisches Team“, „deutschsprachig“, „Alter bis 25“, „nur weibliche Bewerber“.</li>\n             <li>Erlaubt ist der Zusatz „(m/w/d)“.</li></ul>\n             <h3>Gute Sprache</h3>\n             <ul><li>Kurz, aktiv, konkret – und in der Du-Form.</li>\n             <li>Beschreibe Aufgaben und Eigenschaften, nicht die Person.</li></ul>\n             <h3>Häufige Fehler</h3>\n             <ul><li>Floskeln wie „dynamisches Umfeld“ statt konkreter Angaben.</li>\n             <li>Eine Altersgrenze oder Herkunft nennen – das ist diskriminierend.</li></ul>":
+      "",
 
     "Eine Anzeige, die passt":
       "إعلان مناسب",
@@ -1357,6 +1357,183 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "Ich kann begründen, warum ich mich auf die Stelle bewerbe.":
       "أستطيع توضيح سبب تقدمي للوظيفة.",
 
+    "Was andere an mir sehen":
+      "",
+
+    "LS 2.2 · Teil 10":
+      "",
+
+    "<h3>Selbstbild und Fremdbild</h3>\n             <p><strong>Selbstbild:</strong> So sehe ich mich. <strong>Fremdbild:</strong> So sehen mich andere.</p>\n             <h3>Feedback-Regeln</h3>\n             <ul><li><strong>Geben:</strong> Situation beschreiben, ein konkretes Beispiel, eine Sache, einen Wunsch.</li>\n             <li><strong>Nehmen:</strong> zuhören, nachfragen, danken, dann entscheiden.</li></ul>\n             <h3>Beleg</h3>\n             <p class=\"formula\">Situation – Handlung – Ergebnis</p>\n             <p>Eine Stärke ohne Beleg ist nur eine Behauptung.</p>\n             <h3>Abgleich mit der Stelle</h3>\n             <ul><li>Muss zuerst prüfen. Kann bringt Vorteile.</li>\n             <li>Ampel: Grün = Beleg. Gelb = teilweise. Rot = noch nicht.</li>\n             <li>Bei Gelb oder Rot bei Muss: Maßnahme planen (was, wie oft, bis wann).</li></ul>":
+      "",
+
+    "Selbstbild und Fremdbild":
+      "",
+
+    "Mediaworld e. K. · Vor der Bewerbung":
+      "",
+
+    "„Wie sehen mich andere?“":
+      "",
+
+    "<p>Melike liest Taras Stärkenliste. „Gut. Aber eine Bewerbung ist kein Wunschzettel. Frag zwei Menschen, die dich jeden Tag erleben: Was sehen sie?“</p>\n                     <p>Tara zögert: „Und wenn die etwas ganz anderes sagen?“ Melike: „Dann weißt du mehr als vorher.“</p>":
+      "",
+
+    "Zwei Bilder":
+      "",
+
+    "<div class=\"pair\">\n                       <div><b>Selbstbild</b>So sehe ich mich.</div>\n                       <div><b>Fremdbild</b>So sehen mich andere.</div>\n                     </div>\n                     <p class=\"note\">Beide sind wichtig. Sie müssen nicht gleich sein.</p>":
+      "",
+
+    "Feedback geben":
+      "",
+
+    "So hilft dein Feedback.":
+      "",
+
+    "<ul>\n                       <li>Beschreibe die <strong>Situation</strong>, nicht die Person.</li>\n                       <li>Nenne ein <strong>konkretes Beispiel</strong>.</li>\n                       <li>Sag <strong>eine Sache</strong> auf einmal.</li>\n                       <li>Sag, was du dir <strong>wünschst</strong>.</li>\n                     </ul>":
+      "",
+
+    "Feedback nehmen":
+      "",
+
+    "So nimmst du Feedback an.":
+      "",
+
+    "<ul>\n                       <li><strong>Zuhören</strong>, nicht sofort rechtfertigen.</li>\n                       <li><strong>Nachfragen:</strong> Wann genau? Was war die Wirkung?</li>\n                       <li><strong>Danken</strong> – auch wenn es unbequem ist.</li>\n                       <li><strong>Entscheiden:</strong> Nehme ich es an?</li>\n                     </ul>":
+      "",
+
+    "Beleg":
+      "",
+
+    "Eine Stärke braucht einen Beleg.":
+      "",
+
+    "<p class=\"formula\">Situation – Handlung – Ergebnis</p>\n                     <p>Beispiel: Im Praktikum habe ich die Post jeden Tag pünktlich verteilt. Meine Chefin hat mir deshalb die Termine übertragen.</p>\n                     <p class=\"note\">Ohne Beleg ist eine Stärke nur eine Behauptung.</p>":
+      "",
+
+    "Abgleich":
+      "",
+
+    "Anforderung, Beleg, Ampel.":
+      "",
+
+    "<p>Prüfe jede Anforderung der Stelle:</p>\n                     <ol><li>Was verlangt die Stelle? Muss oder Kann?</li>\n                     <li>Welchen Beleg habe ich – aus Selbstbild und Fremdbild?</li>\n                     <li>Wie stehe ich da? Grün, Gelb oder Rot?</li></ol>\n                     <p class=\"note\">Gelb oder Rot bei Muss: Maßnahme planen.</p>":
+      "",
+
+    "<p>Frage nach Beispielen, nicht nach einem Gesamturteil. Und schreibe nur Stärken auf, die du belegen kannst.</p>":
+      "",
+
+    "Feedback geben oder nehmen?":
+      "",
+
+    "Ordne jede Aussage zu.":
+      "",
+
+    "Geben heißt: Du beschreibst eine Situation und sagst, was du dir wünschst.":
+      "",
+
+    "Nehmen heißt: Du hörst zu, fragst nach und bedankst dich.":
+      "",
+
+    "Beschreibe die Situation, nicht die Person.":
+      "",
+
+    "Zuhören, nicht sofort rechtfertigen.":
+      "",
+
+    "Ein konkretes Beispiel statt eines Etiketts.":
+      "",
+
+    "Nachfragen: Wann genau? Was war die Wirkung?":
+      "",
+
+    "Eine Sache auf einmal.":
+      "",
+
+    "Danken – auch wenn es unbequem ist.":
+      "",
+
+    "Die wichtigsten Sätze":
+      "",
+
+    "Setze die richtigen Begriffe ein.":
+      "",
+
+    "Beleg = Situation – Handlung – Ergebnis. Fremdbild = Sicht der anderen. Bei Muss zählt am Ende die Maßnahme.":
+      "",
+
+    "Eine Stärke ohne Beleg ist nur eine {*Behauptung|Tatsache}. Das {*Fremdbild|Selbstbild} zeigt, wie andere mich sehen. Bei Gelb oder Rot bei einer Muss-Anforderung brauche ich eine {*Maßnahme|Pause}.":
+      "",
+
+    "Was hilft dir weiter?":
+      "",
+
+    "Was ist ein Fremdbild?":
+      "",
+
+    "So sehe ich mich selbst.":
+      "",
+
+    "So sehen mich andere.":
+      "",
+
+    "Das Bild auf meinem Zeugnis.":
+      "",
+
+    "Das Fremdbild ist die Sicht der anderen. Das Selbstbild ist deine eigene Sicht.":
+      "",
+
+    "Fremd = von anderen.":
+      "",
+
+    "Welche Rückmeldung hilft dir am meisten?":
+      "",
+
+    "„Du bist nett.“":
+      "",
+
+    "„Am Montag hast du die Telefonliste doppelt geprüft – dadurch ging kein Termin verloren.“":
+      "",
+
+    "„Du bist einfach nicht gut genug.“":
+      "",
+
+    "Eine gute Rückmeldung nennt eine Situation, eine Handlung und die Wirkung.":
+      "",
+
+    "Konkret heißt: Situation und Beispiel.":
+      "",
+
+    "Du bist bei „Deutsch“ (Muss) auf Gelb. Was tust du?":
+      "",
+
+    "Nichts, Gelb ist okay.":
+      "",
+
+    "Eine Maßnahme planen: was, wie oft, bis wann.":
+      "",
+
+    "Die Anforderung streichen.":
+      "",
+
+    "Bei einer Muss-Anforderung musst du besser werden. Eine Maßnahme macht den Weg konkret.":
+      "",
+
+    "Gelb heißt: teilweise. Bei Muss brauchst du einen Plan.":
+      "",
+
+    "Ich kann Selbstbild und Fremdbild unterscheiden.":
+      "",
+
+    "Ich kann Feedback geben und annehmen.":
+      "",
+
+    "Ich kann eine Stärke mit Situation – Handlung – Ergebnis belegen.":
+      "",
+
+    "Ich kann eine Anforderung mit einem Beleg und einer Ampel prüfen.":
+      "",
+
     "Fachbegriffe nachschlagen":
       "البحث عن Fachbegriffe (مصطلحات متخصصة).",
 
@@ -1441,8 +1618,8 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
     "AGG":
       "AGG",
 
-    "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Orientierung.":
-      "قانون المعاملة المتساوية العام: يمنع التمييز بسبب العمر أو الجنس أو الأصل أو الدين أو الإعاقة أو التوجه الجنسي.",
+    "Allgemeines Gleichbehandlungsgesetz: verbietet Benachteiligung wegen Alter, Geschlecht, Herkunft, Religion, Behinderung oder sexueller Identität.":
+      "",
 
     "Azubi-Anzeige":
       "إعلان Azubi",
@@ -1479,6 +1656,36 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
 
     "Regelt Rechte und Pflichten beider Seiten: Der Betrieb gibt Ausbildung und Vergütung, die Auszubildende bringt Lernbereitschaft und Mitarbeit.":
       "ينظّم حقوق وواجبات الطرفين: الشركة تقدّم التدريب المهني (التدريب المهني) والأجر (أجر التدريب)، والمتدرّب/ة يُظهر الاستعداد للتعلّم ويشارك في العمل.",
+
+    "Selbstbild":
+      "",
+
+    "Fremdbild":
+      "",
+
+    "So sehen mich andere – z. B. durch eine Rückmeldung.":
+      "",
+
+    "Feedback":
+      "",
+
+    "Eine Rückmeldung: Situation beschreiben, Beispiel nennen, Wirkung sagen, Wunsch formulieren.":
+      "",
+
+    "Situation – Handlung – Ergebnis. Ohne Beleg ist eine Stärke nur eine Behauptung.":
+      "",
+
+    "Ampel":
+      "",
+
+    "Grün = erfüllt mit Beleg · Gelb = teilweise · Rot = noch nicht.":
+      "",
+
+    "SMART-Maßnahme":
+      "",
+
+    "Konkret, messbar, attraktiv, realistisch, terminiert: was, wie oft, bis wann.":
+      "",
 
     "Die Bewerbungsmappe":
       "ملف التقديم",
@@ -2423,6 +2630,6 @@ LERNRAUM.translations.push({ course: "pbp-bewerbung", lang: "ar", strings: {
       "حماية البيانات في التقديمات",
 
     "Nur für die Auswahl, nur für die Entscheider; nach der Absage Unterlagen zurück und Dateien löschen.":
-      "فقط للاختيار، فقط للمسؤولين عن القرار؛ بعد الرفض تُعاد المستندات وتُحذف الملفات."
+      "فقط للاختيار، فقط للمسؤولين عن القرار؛ بعد الرفض تُعاد المستندات وتُحذف الملفات.",
 
 } });
