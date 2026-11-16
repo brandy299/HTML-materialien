@@ -67,7 +67,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   padding: .375rem; margin-bottom: 1.25rem;
 }
 .mode-btn {
-  flex: 1; padding: .5rem .75rem; border-radius: 10px;
+  flex: 1; padding: .5rem .75rem; min-height: 44px; border-radius: 10px;
   font-size: .8rem; font-weight: 600; color: var(--text-muted);
   transition: all .2s;
   white-space: nowrap;
@@ -120,7 +120,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .btn-ghost {
   color: var(--text-muted); font-size: .8rem;
-  padding: .4rem .8rem; border-radius: 8px;
+  padding: .4rem .8rem; min-height: 44px; border-radius: 8px;
   border: 1px solid var(--border);
   transition: all .15s;
 }
