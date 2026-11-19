@@ -8,20 +8,17 @@
   "use strict";
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-  /* Pferd, 20 × 13 Pixel. B = Fellfarbe, D = Mähne/Hufe, W = Auge, J = Reiter */
-  const BODY = [
-    ".........JJ.....DD..",
-    ".........JJ....BBDD.",
-    ".........JJ...BBBBB.",
-    "........JJJJ.BBBBWB.",
-    "..DD.BBBBBBBBBBBBBB.",
-    ".DDDBBBBBBBBBBBBBBB.",
-    "..DDBBBBBBBBBBBBBB..",
-    "....BBBBBBBBBBBBB...",
-    "....BBBBBBBBBBBBB..."
-  ];
-  const LEGS_A = ["...BBB.......BBB....", "..BB.BB.....BB.BB...", ".BB...DD...DD...BB..", ".DD.........D...DD.."];
-  const LEGS_B = ["....BB.BB....BB.BB..", "....BB.BB....BB.BB..", "....DD.DD....DD.DD..", "...................."];
+  /* Pferd mit Reiter im Galopp, 36 × 28 Pixel, zwei Bilder (gestreckt / gesammelt).
+     B Fell (Farbe der Bahn), S/F Schatten, L Licht, D Mähne/Schweif/Hufe, M Maul, W/E Auge, K Haut, G Satteldecke, T Stiefel,
+     J Jacke und H Helm (Farbe des Reiters) */
+  const FRAME_A = ["..................HHHH.....DDB......", "..................HJJH.....DDB......", "..................HHHHH..DDDBBBB....", "..................KKKKHHDDDBBBBB....", "..................KKKKKDDDBBBBBBB...", "..............JJJJJKKKDDDDBBBBWEB...", ".............JJJJJJJJDDDDBBBBBBEBB..", ".......BBBBBJJJJJJJJJJJJBBBBBBBBBBB.", "......BBBBBJJJJJJJJBDJJJKBBB..BBBMM.", "...DDBBLLLLBGJTTGGBBLDLJKBBB...BMME.", ".DDDBBLLLLLLGGTTTGBLLLLLBBB.........", "DDDDBBBLLLLBBBBTTBBBLLLBBB..........", "DDDDBBBBBBBBBBBTTTBBBBBBBB..........", "DDDDSBBBBBBBBBBBTTBBBBBBBS..........", "DDD..SBBBBBBBBBBTTBBBBBBB...........", "DD....SBBSBBSSSSSSSSBBBBB...........", "DD.....SSBBBSSSSSS.SBBBBBF..........", "......FFBBBB.........BBBBBF.FDD.....", ".....FFBBBB...........BBBBBBFDDDD...", "....FFBBBB..............BBBBBDDDD...", "...FFFBBB...................BDDDD...", "..FFFBBB.......................DD...", ".DDFBBB.............................", "DDDDDB..............................", "DD.DD...............................", "D.DD................................", "..DD................................", "...................................."];
+  const FRAME_B = ["..................HHHH.....DDB......", "..................HJJH.....DDB......", "..................HHHHH..DDDBBBB....", "..................KKKKHHDDDBBBBB....", "..................KKKKKDDDBBBBBBB...", "..............JJJJJKKKDDDDBBBBWEB...", ".............JJJJJJJJDDDDBBBBBBEBB..", ".......BBBBBJJJJJJJJJJJJBBBBBBBBBBB.", "......BBBBBJJJJJJJJBDJJJKBBB..BBBMM.", "...DDBBLLLLBGJTTGGBBLDLJKBBB...BMME.", ".DDDBBLLLLLLGGTTTGBLLLLLBBB.........", "DDDDBBBLLLLBBBBTTBBBLLLBBB..........", "DDDDBBBBBBBBBBBTTTBBBBBBBB..........", "DDDDSBBBBBBBBBBBTTBBBBBBBS..........", "DDD..SBBBBBBBBBBTTBBBBBBB...........", "DD....SSSBBBBSSSSSSBBBBBS...........", "DD.....SSSSBBBSSSS.BBBSS............", ".........FFBBB.....BBBBF............", ".........FFFBBB.....BBBF............", ".........FFFBBB......BBF............", "..........FF.BB......FBB............", "..........FFFBBB.....DDDD...........", "...........DD.DD.....DDDD...........", "...........DD.DD.....DDDD...........", "...........DD.DD.....DDDD...........", "............D.DD......DDD...........", "...............D........D...........", "...................................."];
+  const MIX = (c, pct, to) => `color-mix(in srgb, ${c} ${pct}%, ${to})`;
+  const PAL = {
+    B: ["currentColor"], S: ["currentColor", MIX("currentColor", 72, "#000")], F: ["currentColor", MIX("currentColor", 50, "#000")],
+    L: ["currentColor", MIX("currentColor", 78, "#fff")], D: ["#2e1b0e"], M: ["#e0bf94"], W: ["#fff"], E: ["#111"],
+    K: ["#f2c9a0"], G: ["#fff"], T: ["#222"], J: ["var(--jc)"], H: ["var(--jc)", MIX("var(--jc)", 70, "#000")]
+  };
   function rects(rows) {
     let out = "";
     rows.forEach((row, y) => {
@@ -30,16 +27,16 @@
         const c = row[x];
         if (c === ".") { x++; continue; }
         let e = x; while (e < row.length && row[e] === c) e++;
-        const fill = c === "B" ? "currentColor" : c === "D" ? "#3a2314" : c === "W" ? "#fff" : "var(--jc)";
-        out += `<rect x="${x}" y="${y}" width="${e - x}" height="1" fill="${fill}"/>`;
+        const p = PAL[c] || ["#f0f"];
+        out += `<rect x="${x}" y="${y}" width="${e - x}" height="1.02" fill="${p[0]}"${p[1] ? ` style="fill:${p[1]}"` : ""}/>`;
         x = e;
       }
     });
     return out;
   }
   const SYMBOLS = `<svg class="r-defs" width="0" height="0" aria-hidden="true"><defs>
-    <symbol id="rh-a" viewBox="0 0 20 13">${rects(BODY)}${rects(LEGS_A).replace(/y="(\d+)"/g, (_, y) => `y="${+y + 9}"`)}</symbol>
-    <symbol id="rh-b" viewBox="0 0 20 13">${rects(BODY)}${rects(LEGS_B).replace(/y="(\d+)"/g, (_, y) => `y="${+y + 9}"`)}</symbol>
+    <symbol id="rh-a" viewBox="0 0 36 28">${rects(FRAME_A)}</symbol>
+    <symbol id="rh-b" viewBox="0 0 36 28">${rects(FRAME_B)}</symbol>
     <symbol id="rh-crown" viewBox="0 0 9 6"><path d="M0 6V1l2 2 2.5-3L7 3l2-2v5z" fill="#FFD84D" stroke="#1E1E1E" stroke-width=".8" stroke-linejoin="round"/></symbol>
   </defs></svg>`;
 
@@ -59,7 +56,7 @@
           <div class="goal"></div><div class="dots">${Array.from({ length: n }, () => "<i></i>").join("")}</div>
           <div class="runner" style="--p:0">
             <svg class="crown" width="21" height="14"><use href="#rh-crown"/></svg>
-            <svg class="horse" viewBox="0 0 20 13" width="60" height="39"><use class="fa" href="#rh-a"/><use class="fb" href="#rh-b"/></svg>
+            <svg class="horse" viewBox="0 0 36 28" width="59" height="46"><use class="fa" href="#rh-a"/><use class="fb" href="#rh-b"/></svg>
           </div></div>
         <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span><span class="okc"></span></div>
       </div>`).join("");
