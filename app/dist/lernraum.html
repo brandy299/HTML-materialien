@@ -6553,7 +6553,7 @@ LERNRAUM.subjects.push({
 /* ============================================================
    KURS: GPU · HS1Y – Preisbildung
    Lernfeld 4 · Modellunternehmen Mediaworld e. K.
-   AB 17–20 (baut auf „Preiskalkulation“ auf)
+   AB 17–20 + Übungsmodul (baut auf „Preiskalkulation“ auf)
    Aufbau und alle Aufgabentypen: app/README.md
    ============================================================ */
 
@@ -6566,7 +6566,17 @@ LERNRAUM.subjects.push({
   glyph: "E",
   color: "#0ea5e9",
   company: "Mediaworld e. K.",
-  description: "Lernfeld 4 · Nach der Preiskalkulation: Was bestimmt den Preis außerdem? Einflussgrößen, Zuschlag und Faktor, Nachfrage und Konkurrenz, Preisauszeichnung.",
+  description: "Lernfeld 4 · Nach der Preiskalkulation: Was bestimmt den Preis außerdem? Einflussgrößen, Zuschlag und Faktor, Nachfrage und Konkurrenz, Preisauszeichnung – plus Übungsmodul.",
+  updated: "2026-11-19",
+  folders: [
+    {
+      id: "uebungsmodul",
+      group: "Übungsmodul",
+      kicker: "Ordner · Übungsmodul",
+      title: "Übungsmodul",
+      description: "Einflussgrößen und kostenorientiertes Kalkulieren üben – mit geführten Aufgaben, typischen Fehlern und Lernstandskontrolle."
+    }
+  ],
   topics: [
     {
       id: "einflussgroessen",
@@ -7125,52 +7135,12 @@ LERNRAUM.subjects.push({
           ]
         }
       ]
-    }
-
-  ]
-});
-
-</script>
-  <script>
-/* ============================================================
-   KURS: GPU · HS1Y – Übungsmodul Preisbildung
-   Lernfeld 4 · Modellunternehmen Mediaworld e. K.
-   Schwerpunkt: Einflussgrößen + kostenorientiertes Kalkulieren
-   Aufbau und alle Aufgabentypen: app/README.md
-   ============================================================ */
-
-LERNRAUM.subjects.push({
-  id: "gpu-uebungsmodul",
-  fach: "GPU",
-  added: "2026-11-19",
-  name: "Übungsmodul Preisbildung",
-  course: "GPU · HS1Y",
-  glyph: "Ü",
-  color: "#10b981",
-  company: "Mediaworld e. K.",
-  description: "Übungsmodul zu Einflussgrößen und kostenorientiertem Kalkulieren. Mit geführten Aufgaben, typischen Fehlern und einer Lernstandskontrolle.",
-  folders: [
-    {
-      id: "einflussgroessen",
-      group: "Einflussgrößen",
-      kicker: "Ordner · Einflussgrößen",
-      title: "Einflussgrößen",
-      description: "Was den Preis bestimmt: innen und außen, drei Grundrichtungen, Preis-Spielraum."
     },
-    {
-      id: "kalkulation",
-      group: "Kostenorientiert kalkulieren",
-      kicker: "Ordner · Kalkulation",
-      title: "Kostenorientiert kalkulieren",
-      description: "Bezugspreis, Verkaufspreis, Zuschlag und Faktor – Schritt für Schritt üben."
-    }
-  ],
-  topics: [
 
     /* ══════════════ EINFLUSSGRÖSSEN · ERKENNEN ══════════════ */
     {
       id: "einfluss-erkennen",
-      folder: "einflussgroessen",
+      folder: "uebungsmodul",
       group: "Einflussgrößen",
       title: "Einflussgrößen erkennen",
       kicker: "Übungsmodul · Einflussgrößen 1",
@@ -7330,7 +7300,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ EINFLUSSGRÖSSEN · TRAINIEREN ══════════════ */
     {
       id: "einfluss-trainieren",
-      folder: "einflussgroessen",
+      folder: "uebungsmodul",
       group: "Einflussgrößen",
       title: "Einflussgrößen trainieren",
       kicker: "Übungsmodul · Einflussgrößen 2",
@@ -7481,7 +7451,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ KALKULATION · BEZUGSPREIS ══════════════ */
     {
       id: "bezugspreis-trainieren",
-      folder: "kalkulation",
+      folder: "uebungsmodul",
       group: "Kostenorientiert kalkulieren",
       title: "Bezugspreis trainieren",
       kicker: "Übungsmodul · Kalkulation 1",
@@ -7668,7 +7638,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ KALKULATION · VERKAUFSPREIS ══════════════ */
     {
       id: "verkaufspreis-trainieren",
-      folder: "kalkulation",
+      folder: "uebungsmodul",
       group: "Kostenorientiert kalkulieren",
       title: "Verkaufspreis trainieren",
       kicker: "Übungsmodul · Kalkulation 2",
@@ -7864,7 +7834,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ KALKULATION · GEMISCHT ENTSCHEIDEN ══════════════ */
     {
       id: "gemischt-entscheiden",
-      folder: "kalkulation",
+      folder: "uebungsmodul",
       group: "Kostenorientiert kalkulieren",
       title: "Gemischt entscheiden",
       kicker: "Übungsmodul · Anwenden",
@@ -8034,6 +8004,7 @@ LERNRAUM.subjects.push({
     /* ══════════════ LERNSTANDKONTROLLE ══════════════ */
     {
       id: "uebungscheck",
+      folder: "uebungsmodul",
       group: "Lernstandskontrolle",
       title: "Übungscheck Preisbildung",
       kicker: "Lernstandskontrolle · mit Erklärungen",
@@ -8281,7 +8252,6 @@ LERNRAUM.subjects.push({
         }
       ]
     }
-
   ]
 });
 
