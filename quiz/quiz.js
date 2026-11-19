@@ -9,7 +9,7 @@
   "use strict";
   const root = document.getElementById("qz");
   /* Selbstheilung bei altem Stylesheet aus dem Browser-Cache (GitHub Pages cached bis ~10 Min.) */
-  const CSS_NEED = "5";
+  const CSS_NEED = "6";
   if (getComputedStyle(document.documentElement).getPropertyValue("--quiz-css").trim() !== CSS_NEED) {
     const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `quiz.css?fresh=${Date.now()}`; document.head.appendChild(l);
   }
