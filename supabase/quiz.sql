@@ -1,6 +1,6 @@
 -- ============================================================
 -- LERNRAUM · Live-Quiz  (lernen.yannikbrand.eu/quiz/)
--- Einmal im Supabase-SQL-Editor ausführen (Projekt in Frankfurt).
+-- Einmal im Supabase-SQL-Editor ausführen (EU-Region).
 -- Danach: Lehrer-PIN setzen (letzter Abschnitt), Adresse + anon-Key in quiz/config.js eintragen.
 --
 -- Datensparsamkeit:

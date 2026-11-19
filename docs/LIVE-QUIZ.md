@@ -14,7 +14,8 @@ Technik: reine statische Seite (`quiz/index.html`, `quiz.js`, `quiz.css`), Echtz
 ## Subdomain?
 GitHub Pages erlaubt pro Repository nur **eine** eigene Domain (hier `lernen.yannikbrand.eu`). Eine zweite Subdomain wie `quiz.yannikbrand.eu` wäre nur mit einem eigenen Repository möglich. Deshalb liegt das Quiz unter dem **Pfad `/quiz/`**. Wer später doch eine Subdomain möchte: neues Repo mit dem Ordner `quiz/`, dort `CNAME`-Datei, bei netcup einen CNAME-Eintrag `quiz` → `brandy299.github.io`.
 
-## Einrichtung (einmalig, ca. 10 Minuten)
+## Einrichtung
+**Stand 19.11.2026: erledigt.** Läuft im bestehenden Supabase-Projekt (Irland, eu-west-1), `supabase/quiz.sql` ausgeführt, Lehrer-PIN gesetzt (nicht im Repo), `quiz/config.js` eingetragen. Zum Ändern der PIN den SQL-Befehl unten erneut ausführen. Für ein neues Projekt:
 1. Auf supabase.com ein Projekt anlegen, Region **Frankfurt (eu-central-1)**. (Das Projekt der geplanten Leistungsabfrage kann mitgenutzt werden.)
 2. Im **SQL Editor** den ganzen Inhalt von `supabase/quiz.sql` einfügen und „Run“ drücken. Das Skript darf mehrfach laufen.
 3. Im SQL Editor die **Lehrer-PIN** setzen (nur wer sie kennt, kann Räume anlegen):
