@@ -1,5 +1,8 @@
 # Live-Quiz (`/quiz/`)
 
+> **Umgezogen (19.11.2026):** Das Live-Quiz hat ein eigenes Repository (`brandy299/lernraum-quiz`) und die Adresse **https://quiz.yannikbrand.eu/**. Code, `supabase/quiz.sql` und aktuelle Doku stehen dort. Hier liegt nur noch `quiz/index.html` als Weiterleitung (Code `#/CODE` bleibt erhalten). Der folgende Text ist der Stand vor dem Umzug; Pfade `quiz/…` und `supabase/quiz.sql` beziehen sich auf das neue Repo.
+
+
 Quiz am Stundenende, ähnlich wie Socrative, im Lernraum-Design. Adresse: **https://lernen.yannikbrand.eu/quiz/**
 
 ## So läuft es im Unterricht
