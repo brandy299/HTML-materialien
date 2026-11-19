@@ -195,6 +195,25 @@ begin
                             'players', v_players, 'created', r.created_at, 'bonus', r.bonus);
 end $$;
 
+-- Zuschauer-Ansicht für fertige Schüler/innen: nur Spitzname und Fortschritt, keine Antworten ------
+create or replace function quiz_watch_state(p_code text, p_pid uuid, p_token text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare r quiz_rooms; v_players jsonb;
+begin
+  select * into r from quiz_rooms where code = p_code;
+  if not found then raise exception 'NO_ROOM'; end if;
+  if not exists (select 1 from quiz_players where id = p_pid and code = p_code and token = p_token) then
+    raise exception 'NO_PLAYER'; end if;
+  select coalesce(jsonb_agg(jsonb_build_object(
+      'id', p.n::text, 'me', p.id = p_pid, 'nick', p.nick,
+      'done', (select count(*) from quiz_answers a where a.player_id = p.id),
+      'bn', (select count(*) from quiz_answers a where a.player_id = p.id and a.bonus)
+    ) order by p.n), '[]'::jsonb)
+  into v_players
+  from (select q.*, row_number() over (order by q.joined_at) as n from quiz_players q where q.code = p_code) p;
+  return jsonb_build_object('status', r.status, 'n', jsonb_array_length(r.questions), 'bonus', r.bonus, 'players', v_players);
+end $$;
+
 -- Quiz beenden / wieder öffnen / Teilnehmer entfernen (Lehrkraft) ----------------
 create or replace function quiz_set_status(p_code text, p_secret text, p_status text)
 returns void language plpgsql security definer set search_path = public as $$
@@ -232,6 +251,7 @@ grant execute on function
   quiz_answer(text, uuid, text, int, jsonb),
   quiz_player_state(text, uuid, text),
   quiz_teacher_state(text, text),
+  quiz_watch_state(text, uuid, text),
   quiz_set_status(text, text, text),
   quiz_set_bonus(text, text, boolean),
   quiz_remove_player(text, text, uuid),

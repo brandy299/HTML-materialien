@@ -58,7 +58,7 @@
     const fan = (i, back) => `<span class="fan${back ? " back" : ""}" style="--c:${SHIRT[(i * 5 + (back ? 3 : 0)) % SHIRT.length]};--hr:${HAIR[(i * 7 + 2) % HAIR.length]};--sk:${SKIN[(i * 3 + (back ? 1 : 0)) % SKIN.length]};--d:${((i * 37) % 10) / 10}s"><svg viewBox="0 0 11 9"><use class="fa" href="#fan-a"/><use class="fb" href="#fan-b"/></svg></span>`;
     const crowd = `<div class="row back">${Array.from({ length: 12 }, (_, i) => fan(i + 20, true)).join("")}</div><div class="row">${Array.from({ length: 12 }, (_, i) => fan(i, false)).join("")}</div>`;
     const lanes = ps.map((p) => `
-      <div class="lane" data-id="${esc(p.id)}" style="--c:${HORSE[p.i % HORSE.length]};--jc:${JOCKEY[(p.i + 3) % JOCKEY.length]}">
+      <div class="lane${o.me && String(o.me) === String(p.id) ? " me" : ""}" data-id="${esc(p.id)}" style="--c:${HORSE[p.i % HORSE.length]};--jc:${JOCKEY[(p.i + 3) % JOCKEY.length]}">
         <div class="plate"><b>${p.i + 1}</b><span>${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><em class="streak"></em></div>
         <div class="dirt"><div class="gate"></div>${Array.from({ length: Math.max(0, n - 1) }, (_, k) => `<i class="post" style="left:${(((k + 1) / n) * 100).toFixed(2)}%"></i>`).join("")}
           <div class="goal"></div><div class="dots">${Array.from({ length: n }, () => "<i></i>").join("")}</div>
@@ -68,7 +68,7 @@
           </div></div>
         <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span><span class="okc"></span></div>
       </div>`).join("");
-    return `<div class="race${ps.length > 10 ? " many" : ""}" id="race" data-sig="${esc(sig(ps, n, o))}">${SYMBOLS}
+    return `<div class="race${ps.length > 10 ? " many" : ""}${o.watch ? " watch" : ""}" id="race" data-sig="${esc(sig(ps, n, o))}">${SYMBOLS}
       <div class="win"><div class="bar"><span class="d"></span><span class="id">RENNBAHN</span><span class="r">Gesamtfortschritt: jede beantwortete Frage bringt ein Stück näher ans Ziel</span></div>
         <div class="stand"><div class="crowd">${crowd}</div></div>
         <div class="r-toasts" aria-live="polite"></div>

@@ -33,13 +33,15 @@ Solange `quiz/config.js` leer ist, läuft das Quiz im **Demo-Modus** (nur im eig
 
 5. **Aufholbonus** (Knopf im Warteraum und während des Rennens, standardmäßig aus): Ab 4 Personen bekommen alle im hinteren Drittel für eine richtige Antwort **doppelte Punkte** (zwei Schritte, „TURBO +2“, Meldung „holt auf“). Berechnung serverseitig in `quiz_answer`; schaltbar mit `quiz_set_bonus`. Bei Neuanlage der Tabellen/Funktionen `supabase/quiz.sql` erneut ausführen (idempotent).
 
+6. **Zuschauer-Ansicht**: Wer fertig ist, sieht auf dem eigenen Handy das Rennen live mit (eigene Bahn gelb umrandet). Dafür gibt es `quiz_watch_state`: liefert nur Spitzname, Anzahl beantworteter Fragen und Bonus, keine Antworten und keine Raum-Geheimnisse; Zugriff nur mit eigenem Token. Bei Updates `supabase/quiz.sql` erneut ausführen.
+
 ## Brauchen Lehrkräfte Supabase?
 Nein. Lehrkräfte brauchen **kein Konto**, nur die gemeinsame Lehrer-PIN. Supabase läuft einmal im Hintergrund (von dir eingerichtet) und überträgt nur den Live-Stand zwischen Handys und Lehrkraft. Das Laden einer Datei braucht gar kein Backend.
 
 ## Datenschutz und Datensparsamkeit
 - Keine Konten, keine echten Namen: nur ein **selbst gewählter Spitzname** (Hinweis dazu steht im Formular). Wer die Zuordnung braucht, spricht sie in der Klasse ab.
 - Gespeichert werden pro Raum: Code, Titel, Fragen, Spitznamen, Antworten. **Alles wird nach 24 Stunden gelöscht** (beim Anlegen eines neuen Raums), sofort mit „Raum löschen“.
-- Die Tabellen sind für den öffentlichen Schlüssel gesperrt (Row Level Security ohne Regeln). Zugriff nur über acht Funktionen; Lehrkraft-Funktionen brauchen ein zufälliges Geheimnis, das nur im Browser der Lehrkraft liegt.
+- Die Tabellen sind für den öffentlichen Schlüssel gesperrt (Row Level Security ohne Regeln). Zugriff nur über wenige Funktionen; Lehrkraft-Funktionen brauchen ein zufälliges Geheimnis, das nur im Browser der Lehrkraft liegt.
 - Höchstens 80 Personen pro Raum, 40 Fragen. Bei Betrieb mit Schülern: Abstimmung mit Schulleitung/Datenschutz und Auftragsverarbeitungsvertrag mit Supabase wie bei der Leistungsabfrage.
 - Zusätzlich lohnt sich im Supabase-Dashboard: Authentication → „Allow new users to sign up“ **aus**, da kein Login genutzt wird.
 
