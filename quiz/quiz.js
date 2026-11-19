@@ -343,6 +343,7 @@
     return rows.filter((r) => r.some((x) => x.trim()));
   }
   function importFile(name, txt) {
+    txt = txt.replace(/^\s*```[a-z]*\s*$/gim, "").trim();
     const out = [], problems = []; let title = "";
     const add = (q, e, i) => { const bad = checkQ(q); if (bad) problems.push(`Zeile/Frage ${i}: ${bad}`); else out.push(q); };
     function checkQ(q) {
@@ -380,6 +381,28 @@
     "Die Erde ist eine Scheibe.;Richtig;Falsch;;;B;;Sie ist (fast) eine Kugel.\n" +
     "Wie heißt die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | ordentliche Kündigung;;;;TEXT;;Bei TEXT stehen mehrere richtige Schreibweisen in Spalte B, getrennt mit |.\n";
 
+  const KI_PROMPT = `Du bist Lehrkraft-Assistenz und erstellst ein kurzes Wiederholungsquiz für den Stundenende-Check.
+
+THEMA / MATERIAL: [hier Thema nennen oder Text, Arbeitsblatt, Stichpunkte einfügen]
+KLASSE / NIVEAU: [z. B. Berufskolleg, 1. Ausbildungsjahr, einfaches Leseniveau]
+ANZAHL FRAGEN: [z. B. 8]
+
+Regeln:
+- Alle Fragen müssen sich allein aus dem genannten Material beantworten lassen.
+- Kurze Sätze, einfache Sprache, keine Tricksfragen, keine Mehrdeutigkeit.
+- Pro Frage genau EINE richtige Antwort und 2 bis 4 Antwortmöglichkeiten. Falsche Antworten sollen typische Fehler zeigen.
+- Keine Antworten wie "alle richtig" oder "keine richtig". Die richtige Antwort nicht immer an dieselbe Stelle setzen.
+- Spalte "Erklärung": ein kurzer Satz, warum die Antwort stimmt.
+- Für Fachbegriffe oder Zahlen darfst du einzelne Kurzantwort-Fragen einbauen (Richtig = TEXT, richtige Schreibweisen in Spalte B, getrennt mit |).
+
+Ausgabeformat: NUR eine CSV-Tabelle in einem Codeblock, Trennzeichen Semikolon, keine Zusatztexte. Erste Zeile genau so:
+Frage;Antwort A;Antwort B;Antwort C;Antwort D;Richtig;;Erklärung
+Danach eine Zeile pro Frage. In der Spalte "Richtig" steht A, B, C oder D (bei Kurzantwort TEXT). Die siebte Spalte bleibt leer.
+
+Beispiel:
+Was ist die Hauptstadt von Deutschland?;Berlin;München;Hamburg;Köln;A;;Berlin ist seit 1990 Hauptstadt.
+Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | ordentliche Kündigung;;;;TEXT;;Der Arbeitgeber beendet das Arbeitsverhältnis.`;
+
   function viewSetup() {
     let draft = store.get("quiz.draft", { title: "", qs: [] });
     const save = () => store.set("quiz.draft", draft);
@@ -393,6 +416,7 @@
         <h3 class="section-head">Fragen · <span id="cnt"></span></h3>
         <ol class="chosen" id="chosen"></ol>
         <details class="add" id="dCourse"><summary>Aus einem Kurs wählen</summary><div class="in" id="courseBox"><p class="hint">Lade Kurse …</p></div></details>
+        <details class="add" id="dKi"><summary>Anleitung: Quiz mit KI erstellen</summary><div class="in" id="kiBox"></div></details>
         <details class="add" id="dFile"><summary>Quiz aus Datei laden</summary><div class="in" id="fileBox"></div></details>
         <details class="add" id="dOwn"><summary>Eigene Frage schreiben</summary><div class="in" id="ownBox"></div></details>
         <div id="err"></div>
@@ -430,6 +454,33 @@
         if (sel.length) { add(sel); pk.querySelectorAll("input").forEach((b) => { b.checked = false; }); }
       };
     });
+
+    /* KI-Anleitung */
+    const ki = el.querySelector("#kiBox");
+    ki.innerHTML = `<ol class="guide" style="padding-left:20px;display:grid;gap:8px;font-size:14.5px;line-height:1.4">
+        <li><b>Prompt kopieren</b> und in ChatGPT, Claude oder eine andere KI einfügen.</li>
+        <li>Die drei Angaben in <b>[eckigen Klammern]</b> ersetzen: Thema oder Material (Text vom Arbeitsblatt einfügen), Niveau, Anzahl.</li>
+        <li>Die KI antwortet mit einer Tabelle. <b>Fragen durchlesen und prüfen</b> (stimmt die markierte Antwort?).</li>
+        <li>Tabelle unten einfügen und auf <b>Fragen übernehmen</b> tippen. Alternativ als .csv speichern und über „Quiz aus Datei laden“ öffnen.</li></ol>
+      <textarea class="input" id="kiPrompt" readonly rows="8" style="font:400 12.5px/1.45 var(--mono);min-height:150px"></textarea>
+      <button class="btn pink sm" id="kiCopy" type="button">Prompt kopieren</button>
+      <label class="field"><span>Antwort der KI hier einfügen</span><textarea class="input" id="kiIn" placeholder="Frage;Antwort A;Antwort B; …"></textarea></label>
+      <button class="btn sm" id="kiGo" type="button">Fragen übernehmen</button><div id="kiErr"></div>
+      <p class="hint" style="margin:0">Tipp: Gib keine Namen oder Daten von Schüler/innen in die KI ein. Das Material der Stunde reicht.</p>`;
+    ki.querySelector("#kiPrompt").value = KI_PROMPT;
+    ki.querySelector("#kiCopy").onclick = async function () {
+      try { await navigator.clipboard.writeText(KI_PROMPT); this.textContent = "Kopiert ✓"; }
+      catch { const t = ki.querySelector("#kiPrompt"); t.focus(); t.select(); this.textContent = "Markiert: jetzt kopieren"; }
+    };
+    ki.querySelector("#kiGo").onclick = () => {
+      const box = ki.querySelector("#kiErr"), v = ki.querySelector("#kiIn").value;
+      if (!v.trim()) { box.innerHTML = `<p class="msg">Füge zuerst die Antwort der KI ein.</p>`; return; }
+      const r = importFile("ki.csv", v);
+      if (r.error) { box.innerHTML = `<p class="msg">${esc(r.error)}</p>`; return; }
+      if (r.qs.length) { add(r.qs); ki.querySelector("#kiIn").value = ""; }
+      box.innerHTML = `<p class="hint">${r.qs.length} Fragen übernommen${r.problems.length ? `, ${r.problems.length} übersprungen:` : ". Sie stehen oben in der Liste."}</p>` +
+        (r.problems.length ? `<p class="msg">${r.problems.slice(0, 5).map(esc).join("<br>")}</p>` : "");
+    };
 
     /* Datei */
     const fb = el.querySelector("#fileBox");

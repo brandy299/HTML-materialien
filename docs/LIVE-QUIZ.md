@@ -11,6 +11,9 @@ Quiz am Stundenende, ähnlich wie Socrative, im Lernraum-Design. Adresse: **http
 
 Technik: reine statische Seite (`quiz/index.html`, `quiz.js`, `quiz.css`), Echtzeit über Supabase-Funktionen (Abfrage alle 2 s). Keine Zusatzbibliothek außer dem vorhandenen QR-Code. Bewertung der Antworten läuft **auf dem Server**: die Lösungen verlassen den Server erst nach der Antwort.
 
+## Quiz mit KI erstellen (Anleitung im Quiz)
+Im Quiz-Editor gibt es „Anleitung: Quiz mit KI erstellen“: ein fertiger **Prompt zum Kopieren** (Thema/Material, Niveau und Anzahl eintragen), der eine CSV-Tabelle im richtigen Format erzeugt, plus ein Feld zum Einfügen der KI-Antwort. Der Prompt steht als `KI_PROMPT` in `quiz/quiz.js`; bei Formatänderungen der Datei-Import dort mitpflegen. Die Lehrkraft muss die Fragen vor dem Einsatz prüfen.
+
 ## Subdomain?
 GitHub Pages erlaubt pro Repository nur **eine** eigene Domain (hier `lernen.yannikbrand.eu`). Eine zweite Subdomain wie `quiz.yannikbrand.eu` wäre nur mit einem eigenen Repository möglich. Deshalb liegt das Quiz unter dem **Pfad `/quiz/`**. Wer später doch eine Subdomain möchte: neues Repo mit dem Ordner `quiz/`, dort `CNAME`-Datei, bei netcup einen CNAME-Eintrag `quiz` → `brandy299.github.io`.
 
