@@ -48,3 +48,6 @@ Nein. Lehrkräfte brauchen **kein Konto**, nur die gemeinsame Lehrer-PIN. Supaba
 
 ## Wartung
 Fehlermeldungen des Servers: `NO_PIN` (PIN nicht gesetzt), `BAD_PIN`, `NO_ROOM` (Code falsch oder Raum nach 24 h gelöscht), `NICK_TAKEN`, `FULL`, `CLOSED`.
+
+## Hinweis für Updates
+GitHub Pages liefert Dateien bis zu 10 Minuten aus dem Browser-Cache. Darum haben die Dateien in `quiz/index.html` eine Versionsnummer (`?v=…`). Bei Änderungen an `quiz.js`, `race.js`, `quiz.css` oder `config.js` die Nummer erhöhen, sonst sieht man zeitweise Alt/Neu gemischt (z. B. Namen im Warteraum ohne Kästchen).
