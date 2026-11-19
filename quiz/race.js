@@ -2,7 +2,7 @@
    LERNRAUM · Live-Quiz – Rennbahn (Lehreransicht)
    Gezeichnete Pferde (Pixel-Grafik als SVG), Sandbahn mit Startboxen und Zielflagge,
    Tribüne, Siegerpodest, Staub, Konfetti, Überhol-Meldungen.
-   Strecke = richtige Antworten. Wird von quiz.js benutzt: QuizRace.html / QuizRace.update
+   Strecke = Gesamtfortschritt (beantwortete Fragen); richtig/falsch nur mit o.detail. Wird von quiz.js benutzt: QuizRace.html / QuizRace.update
    ============================================================ */
 (() => {
   "use strict";
@@ -55,17 +55,17 @@
       <div class="lane" data-id="${esc(p.id)}" style="--c:${HORSE[p.i % HORSE.length]};--jc:${JOCKEY[(p.i + 3) % JOCKEY.length]}">
         <div class="plate"><b>${p.i + 1}</b><span>${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><em class="streak"></em></div>
         <div class="dirt"><div class="gate"></div>${Array.from({ length: Math.max(0, n - 1) }, (_, k) => `<i class="post" style="left:${(((k + 1) / n) * 100).toFixed(2)}%"></i>`).join("")}
-          <div class="goal"></div>
+          <div class="goal"></div><div class="dots">${Array.from({ length: n }, () => "<i></i>").join("")}</div>
           <div class="runner" style="--p:0">
             <svg class="crown"><use href="#rh-crown"/></svg>
             <svg class="horse" viewBox="0 0 20 13"><use class="fa" href="#rh-a"/><use class="fb" href="#rh-b"/></svg>
           </div></div>
-        <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span></div>
+        <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span><span class="okc"></span></div>
       </div>`).join("");
     return `<div class="race${ps.length > 10 ? " many" : ""}" id="race" data-sig="${esc(sig(ps, n, o))}">${SYMBOLS}
-      <div class="win"><div class="bar"><span class="d"></span><span class="id">RENNBAHN</span><span class="r">Jede richtige Antwort: ein Stück näher ans Ziel</span></div>
+      <div class="win"><div class="bar"><span class="d"></span><span class="id">RENNBAHN</span><span class="r">Gesamtfortschritt: jede beantwortete Frage bringt ein Stück näher ans Ziel</span></div>
         <div class="stand"><div class="crowd">${crowd}</div></div>
-        <div class="toasts" aria-live="polite"></div>
+        <div class="r-toasts" aria-live="polite"></div>
         <div class="course">${lanes}</div>
         <div class="grass"></div>
       </div>
@@ -74,12 +74,12 @@
 
   function rank(ps, fin) {
     const fo = (id) => { const k = fin.indexOf(id); return k < 0 ? 1e9 : k; };
-    return [...ps].sort((a, b) => b.ok - a.ok || fo(a.id) - fo(b.id) || a.done - b.done || a.i - b.i);
+    return [...ps].sort((a, b) => b.done - a.done || fo(a.id) - fo(b.id) || b.ok - a.ok || a.i - b.i);
   }
   function el(cls, parent, text) { const e = document.createElement("i"); e.className = cls; if (text) e.textContent = text; parent.appendChild(e); return e; }
   function toast(box, text) {
-    const t = document.createElement("div"); t.className = "toast"; t.textContent = text;
-    const w = box.querySelector(".toasts"); w.prepend(t);
+    const t = document.createElement("div"); t.className = "r-toast"; t.textContent = text;
+    const w = box.querySelector(".r-toasts"); w.prepend(t);
     while (w.children.length > 2) w.lastChild.remove();
     setTimeout(() => t.remove(), 3400);
   }
@@ -95,14 +95,17 @@
 
   function update(box, ps, n, o) {
     if (!box) return;
+    box.classList.toggle("detail", !!o.detail);
     const S = box._s || (box._s = { prev: {}, ok: {}, fin: [], rank: {}, first: true, run: {} });
     ps.forEach((p) => {
       const lane = box.querySelector(`.lane[data-id="${CSS.escape(p.id)}"]`); if (!lane) return;
       const runner = lane.querySelector(".runner"), dirt = lane.querySelector(".dirt");
       const old = S.ok[p.id] ?? 0;
-      runner.style.setProperty("--p", n ? p.ok / n : 0);
-      lane.querySelector(".num").textContent = p.ok;
-      if (p.ok > old && !S.first) {
+      runner.style.setProperty("--p", n ? p.done / n : 0);
+      lane.querySelector(".num").textContent = p.done;
+      lane.querySelector(".okc").textContent = `${p.ok} ✓`;
+      lane.querySelectorAll(".dots i").forEach((d, k) => { d.className = p.r[k] === true ? "ok" : p.r[k] === false ? "no" : ""; });
+      if (p.done > old && !S.first) {
         runner.classList.add("run"); clearTimeout(S.run[p.id]);
         S.run[p.id] = setTimeout(() => runner.classList.remove("run"), 1150);
         for (let k = 0; k < 4; k++) { const d = el("dust", dirt); d.style.left = `calc(${n ? old / n : 0} * (100% - var(--w) - 22px) + 12px + ${k * 6}px)`; d.style.animationDelay = `${k * .07}s`; setTimeout(() => d.remove(), 1100); }
@@ -110,30 +113,30 @@
         setTimeout(() => runner.querySelector(".pop") && runner.querySelector(".pop").remove(), 1300);
         box.classList.add("cheer"); clearTimeout(box._cheer); box._cheer = setTimeout(() => box.classList.remove("cheer"), 1400);
       }
-      S.ok[p.id] = p.ok;
-      if (p.ok === n && n > 0 && !S.fin.includes(p.id)) {
+      S.ok[p.id] = p.done;
+      if (p.done === n && n > 0 && !S.fin.includes(p.id)) {
         S.fin.push(p.id); lane.classList.add("win");
         if (!S.first) { confetti(dirt); toast(box, `${o.hide ? `SuS ${p.i + 1}` : p.nick} ist im Ziel!`); }
       }
       let streak = 0; for (let k = p.r.length - 1; k >= 0; k--) { if (p.r[k] === true) streak++; else if (p.r[k] === false) break; }
-      const st = lane.querySelector(".streak"); st.textContent = streak >= 3 ? `Serie ${streak}` : "";
+      const st = lane.querySelector(".streak"); st.textContent = o.detail && streak >= 3 ? `Serie ${streak}` : "";
     });
     const rk = rank(ps, S.fin), pos = {};
     rk.forEach((p, k) => { pos[p.id] = k; });
-    const lead = rk.length && rk[0].ok > 0 ? rk[0].id : null;
+    const lead = rk.length && rk[0].done > 0 ? rk[0].id : null;
     ps.forEach((p) => {
       const lane = box.querySelector(`.lane[data-id="${CSS.escape(p.id)}"]`); if (!lane) return;
       lane.classList.toggle("lead", p.id === lead);
       const pl = lane.querySelector(".place"), k = pos[p.id];
-      pl.textContent = p.ok > 0 && k < 3 ? PLACE[k] : ""; pl.dataset.k = k;
+      pl.textContent = p.done > 0 && k < 3 ? PLACE[k] : ""; pl.dataset.k = k;
     });
     /* Überholt? */
     if (!S.first) {
       let said = false;
       for (const p of rk) {
-        if (said || p.ok === 0) continue;
+        if (said || p.done === 0) continue;
         const a = S.rank[p.id]; if (a === undefined || pos[p.id] >= a) continue;
-        const passed = rk.find((q) => q.id !== p.id && S.rank[q.id] !== undefined && S.rank[q.id] < a && pos[q.id] > pos[p.id] && q.ok > 0);
+        const passed = rk.find((q) => q.id !== p.id && S.rank[q.id] !== undefined && S.rank[q.id] < a && pos[q.id] > pos[p.id] && q.done > 0);
         if (passed) {
           const nm = (x) => (o.hide ? `SuS ${x.i + 1}` : x.nick);
           toast(box, pos[p.id] === 0 ? `${nm(p)} übernimmt die Spitze!` : `${nm(p)} überholt ${nm(passed)}!`); said = true;
@@ -142,12 +145,12 @@
     }
     S.rank = pos; S.first = false;
     /* Podest */
-    const pod = box.querySelector(".podium"), top = rk.slice(0, 3).filter((p) => p.ok > 0);
+    const pod = box.querySelector(".podium"), top = rk.slice(0, 3).filter((p) => p.done > 0);
     box.querySelector(".podium-title").textContent = o.closed ? "Siegerehrung" : "Spitzenreiter";
     box.querySelector(".podium-wrap").style.display = top.length ? "" : "none";
     const order = [1, 0, 2];
     pod.innerHTML = order.map((k) => { const p = top[k]; return p
-      ? `<div class="step s${k + 1}"><span class="who" style="--c:${HORSE[p.i % HORSE.length]}">${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><span class="pts">${p.ok} richtig</span><div class="blk"><b>${k + 1}</b></div></div>`
+      ? `<div class="step s${k + 1}"><span class="who" style="--c:${HORSE[p.i % HORSE.length]}">${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><span class="pts">${p.done} von ${n}${o.detail ? ` · ${p.ok} richtig` : ""}</span><div class="blk"><b>${k + 1}</b></div></div>`
       : `<div class="step s${k + 1} none"><div class="blk"><b>${k + 1}</b></div></div>`; }).join("");
   }
 

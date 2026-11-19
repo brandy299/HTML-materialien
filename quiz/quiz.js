@@ -25,6 +25,7 @@
   const ERR = {
     NO_ROOM: "Diesen Raum gibt es nicht (mehr). Prüfe den Code.",
     CLOSED: "Das Quiz ist schon beendet.",
+    NOT_STARTED: "Das Quiz hat noch nicht begonnen.",
     NICK_TAKEN: "Dieser Spitzname ist schon vergeben. Nimm einen anderen.",
     BAD_NICK: "Der Spitzname braucht mindestens 2 Zeichen.",
     FULL: "Der Raum ist voll (80 Personen).",
@@ -79,7 +80,7 @@
       }
       case "quiz_join": {
         const r = room(a.p_code);
-        if (r.status !== "open") throw new Error("CLOSED");
+        if (r.status === "closed") throw new Error("CLOSED");
         const nick = String(a.p_nick || "").trim().slice(0, 20);
         if (nick.length < 2) throw new Error("BAD_NICK");
         if (db.players.some((p) => p.code === a.p_code && p.nick.toLowerCase() === nick.toLowerCase())) throw new Error("NICK_TAKEN");
@@ -90,6 +91,7 @@
       }
       case "quiz_answer": {
         const r = room(a.p_code); player(a.p_code, a.p_pid, a.p_token);
+        if (r.status === "lobby") throw new Error("NOT_STARTED");
         if (r.status !== "open") throw new Error("CLOSED");
         const q = r.questions[a.p_q]; if (!q) throw new Error("BAD_Q");
         let ex = db.answers.find((x) => x.pid === a.p_pid && x.q === a.p_q);
@@ -103,7 +105,7 @@
         const r = room(a.p_code); player(a.p_code, a.p_pid, a.p_token);
         const answers = db.answers.filter((x) => x.pid === a.p_pid).sort((x, y) => x.q - y.q)
           .map((x) => ({ q: x.q, ok: x.ok, given: x.given, a: solution(r.questions[x.q]), e: r.questions[x.q].e || null }));
-        return { status: r.status, title: r.title, questions: strip(r.questions), answers };
+        return { status: r.status, title: r.title, questions: strip(r.questions), answers, count: db.players.filter((p) => p.code === a.p_code).length };
       }
       case "quiz_teacher_state": {
         const r = room(a.p_code, a.p_secret);
@@ -201,7 +203,7 @@
     let busy = false, note = "";
 
     const apply = (s) => {
-      state.status = s.status; state.questions = s.questions; state.title = s.title;
+      state.status = s.status; state.questions = s.questions; state.title = s.title; state.count = s.count;
       const m = {}; s.answers.forEach((x) => { m[x.q] = x; }); state.answers = m;
     };
     try { apply(await rpc("quiz_player_state", { p_code: code, p_pid: me.pid, p_token: me.token })); }
@@ -220,6 +222,7 @@
     function render() {
       clearTimer();
       if (state.status === "closed") return renderEnd();
+      if (state.status === "lobby") return renderLobby();
       const idx = cur != null ? cur : nextIdx();
       if (idx === -1) return renderWait();
       const q = state.questions[idx], ans = state.answers[idx];
@@ -260,6 +263,28 @@
         if (String(e.message) === "CLOSED") state.status = "closed"; else note = errText(e);
       }
       busy = false; render();
+    }
+    function renderLobby() {
+      show(`${head}<div class="win lobby"><div class="bar"><span class="d"></span><span class="id">WARTERAUM</span></div>
+        <div class="body"><p class="kick">${esc(state.title)}</p><p class="say">Du bist dabei, ${esc(me.nick)}.</p>
+        <p class="sub" style="margin-top:8px">Gleich geht es los. Die Lehrkraft startet das Quiz.</p>
+        <div class="waitdots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p class="sub"><b id="cnt">${state.count ?? 1}</b> <span id="cntl">${(state.count ?? 1) === 1 ? "Person" : "Personen"}</span> im Raum · ${total()} Fragen</p></div></div>`);
+      every(2000, async () => {
+        const s2 = await rpc("quiz_player_state", { p_code: code, p_pid: me.pid, p_token: me.token });
+        if (s2.status === "lobby") { const c = root.querySelector("#cnt"), l = root.querySelector("#cntl"); if (c) c.textContent = s2.count; if (l) l.textContent = s2.count === 1 ? "Person" : "Personen"; return; }
+        clearTimer(); apply(s2); countdown();
+      });
+    }
+    function countdown() {
+      if (state.status !== "open") { render(); return; }
+      let k = 3;
+      const tick = () => {
+        show(`<div class="countdown" aria-live="assertive"><span>${k > 0 ? k : "Los!"}</span></div>`);
+        if (k-- < 0) { render(); return; }
+        setTimeout(tick, k < 0 ? 600 : 800);
+      };
+      tick();
     }
     function ownScore() { const v = Object.values(state.answers); return { ok: v.filter((x) => x.ok).length, n: total() }; }
     function renderWait() {
@@ -544,6 +569,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       const secret = rid(16);
       try {
         const code = await rpc("quiz_create", { p_pin: pinV, p_title: draft.title.trim() || "Quiz", p_questions: draft.qs, p_secret: secret });
+        await rpc("quiz_set_status", { p_code: code, p_secret: secret, p_status: "lobby" });
         if (LIVE) store.set("quiz.pin", pinV);
         store.set(`quiz.teacher.${code}`, secret);
         location.hash = `#/raum/${code}`;
@@ -555,7 +581,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
   async function viewRoom(code) {
     const secret = store.get(`quiz.teacher.${code}`);
     if (!secret) { show(`<header class="top"><a class="tag-box" href="#/lehrer">← Neues Quiz</a></header><p class="msg">Dieser Raum wurde auf einem anderen Gerät angelegt. Öffne ihn dort, oder lege ein neues Quiz an.</p>`); return; }
-    let st = null, hide = store.get("quiz.hideNames", false), view = store.get("quiz.view", "tiles"), sortBy = store.get("quiz.sort", "join"), beamer = false;
+    let st = null, hide = store.get("quiz.hideNames", false), view = store.get("quiz.view", "race"), detail = store.get("quiz.detail", false), sortBy = store.get("quiz.sort", "join"), beamer = false;
     const qrSvg = () => {
       if (typeof qrcode !== "function") return "";
       const q = qrcode(0, "M"); q.addData(joinUrl(code)); q.make(); return q.createSvgTag({ cellSize: 8, margin: 1, scalable: true });
@@ -576,7 +602,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
     }
     onFsExit = () => { if (beamer) { beamer = false; document.body.classList.remove("beamer"); if (st) paint(); } };
     /* Rennbahn: Darstellung und Animationen in race.js */
-    const raceOpts = () => ({ hide, beamer, closed: st.status === "closed" });
+    const raceOpts = () => ({ hide, beamer, detail, closed: st.status === "closed" });
     const raceSig = (ps, n) => QuizRace.sig(ps, n, raceOpts());
     function raceHtml(ps, n) { return QuizRace.html(ps, n, raceOpts()); }
     function raceUpdate(ps, n) { QuizRace.update(root.querySelector("#race"), ps, n, raceOpts()); }
@@ -589,7 +615,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       const answered = ps.reduce((s, p) => s + p.done, 0), right = ps.reduce((s, p) => s + p.ok, 0);
       const avg = answered ? Math.round((100 * right) / answered) : 0;
       const list = sortBy === "join" ? ps : [...ps].sort((a, b) => b.done - a.done || b.ok - a.ok || a.i - b.i);
-      const closed = st.status === "closed";
+      const closed = st.status === "closed", lobby = st.status === "lobby";
       const qstat = st.questions.map((q, i) => {
         const a = ps.filter((p) => p.r[i] !== null); const k = a.filter((p) => p.r[i] === true).length;
         return { q, n: a.length, k, pc: a.length ? Math.round((100 * k) / a.length) : null };
@@ -597,16 +623,21 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       const keep = document.scrollingElement.scrollTop;
       const oldRace = root.querySelector("#race");
       show(`
-        <header class="top no-beamer"><a class="tag-box" href="#/lehrer">← Neues Quiz</a><span class="tag-box ink">${closed ? "Beendet" : "Läuft"}</span></header>
+        <header class="top no-beamer"><a class="tag-box" href="#/lehrer">← Neues Quiz</a><span class="tag-box ink">${closed ? "Beendet" : lobby ? "Warteraum" : "Läuft"}</span></header>
         <div class="win"><div class="bar"><span class="d"></span><span class="id">${esc(st.title)}</span><span class="r beamer-only" ><button id="bOff" style="color:var(--paper)">✕ Beamer aus</button></span></div>
           <div class="body join-grid"><div><p class="kick">Raumcode · ${esc(baseUrl().replace(/^https?:\/\//, ""))}</p><p class="code-big">${code}</p>
-          ${closed ? `<p class="sub">Quiz beendet. Neue Teilnehmer können nicht mehr beitreten.</p>` : `<p class="sub">Schüler/innen scannen den QR-Code oder geben den Code auf der Quiz-Seite ein.</p>`}</div>
+          ${closed ? `<p class="sub">Quiz beendet. Neue Teilnehmer können nicht mehr beitreten.</p>` : lobby ? `<p class="sub">Warteraum: Das Quiz beginnt erst, wenn du auf „Quiz starten“ tippst.</p>` : `<p class="sub">Schüler/innen scannen den QR-Code oder geben den Code auf der Quiz-Seite ein.</p>`}</div>
           <div class="qr" aria-label="QR-Code zum Beitreten">${qrSvg()}</div></div></div>
+        ${lobby ? `
+        <h3 class="section-head">Warteraum · ${ps.length} dabei</h3>
+        ${ps.length ? `<div class="chips">${ps.map((p) => `<span class="chip">${esc(hide ? `SuS ${p.i + 1}` : p.nick)}${beamer ? "" : `<button data-rm="${esc(p.id)}" aria-label="Entfernen" title="Entfernen">×</button>`}</span>`).join("")}</div>` : `<p class="empty">Noch niemand im Raum. Zeige den Code oder den QR-Code.</p>`}
+        <div class="row no-beamer" style="margin-top:16px"><button class="btn sm ${hide ? "on" : "ghost"}" id="bHide">Namen ${hide ? "zeigen" : "ausblenden"}</button><button class="btn sm ghost" id="bBeam">Beamer-Ansicht</button><button class="btn sm ghost" id="bDel">Raum löschen</button></div>
+        <button class="btn pink block startbtn" id="bStart" style="margin-top:18px" ${ps.length ? "" : "disabled"}>Quiz starten (${ps.length})</button>` : `
         <div class="stats" style="margin-top:16px"><div><div class="v">${ps.length}</div><div class="k">Dabei</div></div><div><div class="v">${finished}</div><div class="k">Fertig</div></div><div><div class="v">${avg}%</div><div class="k">Ø richtig</div></div></div>
         <div class="row no-beamer" style="margin-top:16px">
           <button class="btn sm ${hide ? "on" : "ghost"}" id="bHide">Namen ${hide ? "zeigen" : "ausblenden"}</button>
-          <button class="btn sm ghost" id="bView">Ansicht: ${view === "race" ? "Rennen" : "Kacheln"}</button>
-          ${view === "race" ? "" : `<button class="btn sm ghost" id="bSort">Sortierung: ${sortBy === "join" ? "Beitritt" : "Fortschritt"}</button>`}
+          <button class="btn sm ghost" id="bView">Ansicht: ${view === "race" ? "Rennen" : "Einzeln"}</button>
+          ${view === "race" ? `<button class="btn sm ${detail ? "on" : "ghost"}" id="bDetail">Einzelantworten: ${detail ? "an" : "aus"}</button>` : `<button class="btn sm ghost" id="bSort">Sortierung: ${sortBy === "join" ? "Beitritt" : "Fortschritt"}</button>`}
           <button class="btn sm ghost" id="bBeam">Beamer-Ansicht</button>
           <span class="grow"></span>
           ${closed ? `<button class="btn sm ghost" id="bOpen">Wieder öffnen</button><button class="btn sm ghost" id="bDel">Raum löschen</button>` : `<button class="btn sm" id="bEnd">Quiz beenden</button>`}
@@ -618,7 +649,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
           <div class="sc"><span>${p.ok} richtig</span><span>${p.done}/${n}</span></div></div></div>`).join("")}</div>`
           : `<p class="empty">Noch niemand im Raum. Zeige den Code oder den QR-Code.</p>`}
         <h3 class="section-head">Fragen im Überblick</h3>
-        <ol class="qbars" style="list-style:none">${qstat.map((s, i) => `<li><b class="q-count">${i + 1}</b><div>${esc(s.q.q)}<div class="bar2"><i style="width:${s.pc ?? 0}%"></i></div></div><span class="pc">${s.pc === null ? "–" : s.pc + "%"}</span></li>`).join("")}</ol>`, true, true);
+        <ol class="qbars" style="list-style:none">${qstat.map((s, i) => `<li><b class="q-count">${i + 1}</b><div>${esc(s.q.q)}<div class="bar2"><i style="width:${s.pc ?? 0}%"></i></div></div><span class="pc">${s.pc === null ? "–" : s.pc + "%"}</span></li>`).join("")}</ol>`}`, true, true);
       if (view === "race") root.firstElementChild.classList.add("is-race");
       const slot = root.querySelector("#raceSlot");
       if (slot) {
@@ -628,6 +659,8 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       document.scrollingElement.scrollTop = keep;
       const $ = (id) => root.querySelector(id);
       if ($("#bView")) $("#bView").onclick = () => { view = view === "race" ? "tiles" : "race"; store.set("quiz.view", view); paint(); };
+      if ($("#bStart")) $("#bStart").onclick = async () => { $("#bStart").disabled = true; await rpc("quiz_set_status", { p_code: code, p_secret: secret, p_status: "open" }); pull(); };
+      if ($("#bDetail")) $("#bDetail").onclick = () => { detail = !detail; store.set("quiz.detail", detail); paint(); };
       if ($("#bHide")) $("#bHide").onclick = () => { hide = !hide; store.set("quiz.hideNames", hide); paint(); };
       if ($("#bSort")) $("#bSort").onclick = () => { sortBy = sortBy === "join" ? "progress" : "join"; store.set("quiz.sort", sortBy); paint(); };
       if ($("#bBeam")) $("#bBeam").onclick = () => setBeamer(true);

@@ -138,10 +138,10 @@ body.beamer .qz .stand { height: 58px; } body.beamer .qz .crowd i { width: 14px;
 .qz .lsc .place { position: absolute; top: 2px; right: 3px; font: 800 10px/1 var(--mono); color: #FFD84D; }
 .qz .lsc .place[data-k="1"] { color: #D8DEE6; } .qz .lsc .place[data-k="2"] { color: #E0A070; }
 .qz .grass { height: 12px; background: repeating-linear-gradient(90deg, #5BB26A 0 8px, #4FA35E 8px 16px); border-top: 3px solid var(--ink); }
-.qz .toasts { position: absolute; left: 0; right: 0; top: 44px; display: grid; gap: 6px; justify-items: center; z-index: 8; pointer-events: none; }
-.qz .toast { padding: 8px 12px; background: var(--ink); color: #FFD84D; border: 2px solid #FFD84D; font: 700 13px/1.2 var(--mono); animation: toast 3.4s ease both; box-shadow: 3px 3px 0 rgba(0,0,0,.35); }
-@keyframes toast { 0% { transform: translateY(-14px) scale(.9); opacity: 0; } 8% { transform: none; opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
-body.beamer .qz .toast { font-size: 24px; padding: 12px 20px; } body.beamer .qz .toasts { top: 70px; }
+.qz .r-toasts { position: absolute; left: 0; right: 0; top: 44px; display: grid; gap: 6px; justify-items: center; z-index: 8; pointer-events: none; }
+.qz .r-toast { max-width: 94%; padding: 8px 12px; background: var(--ink); color: #FFD84D; border: 2px solid #FFD84D; font: 700 13px/1.2 var(--mono); animation: rtoast 3.4s ease both; box-shadow: 3px 3px 0 rgba(0,0,0,.35); }
+@keyframes rtoast { 0% { transform: translateY(-14px) scale(.9); opacity: 0; } 8% { transform: none; opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
+body.beamer .qz .r-toast { font-size: 24px; padding: 12px 20px; } body.beamer .qz .r-toasts { top: 70px; }
 body.beamer .qz .plate { font-size: 20px; padding: 0 10px; } body.beamer .qz .plate b { min-width: 30px; height: 30px; font-size: 18px; }
 body.beamer .qz .lane { grid-template-columns: 220px 1fr 84px; } body.beamer .qz .lsc { font-size: 30px; }
 body.beamer .qz .streak { font-size: 13px; } body.beamer .qz .lsc small { font-size: 15px; margin-bottom: 14px; }
@@ -166,3 +166,28 @@ body.beamer .qz.is-race .code-big { font-size: 64px; } body.beamer .qz.is-race .
 body.beamer .qz.is-race .join-grid .sub { display: none; }
 body.beamer .qz.is-race .win .body { padding: 10px 16px; }
 body.beamer .qz.is-race .race { --lh: 70px; } body.beamer .qz.is-race .race.many { --lh: 52px; }
+
+/* Detail-Modus der Rennbahn */
+.qz .dots { position: absolute; left: 14px; right: 20px; bottom: 3px; display: none; gap: 3px; z-index: 1; }
+.qz .race.detail .dots { display: flex; }
+.qz .dots i { flex: 1; height: 6px; background: rgba(255, 255, 255, .45); border: 1px solid rgba(0,0,0,.25); }
+.qz .dots i.ok { background: var(--good); border-color: var(--ink); } .qz .dots i.no { background: var(--bad); border-color: var(--ink); }
+.qz .okc { display: none; position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font: 600 9px/1 var(--mono); color: #5CE0A8; }
+.qz .race.detail .okc { display: block; }
+body.beamer .qz .dots i { height: 9px; } body.beamer .qz .okc { font-size: 13px; }
+
+/* Warteraum */
+.qz .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.qz .chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 10px; background: var(--paper); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font: 700 14px/1 var(--mono); animation: chipIn .4s cubic-bezier(.3, 1.6, .5, 1) both; }
+.qz .chip button { width: 28px; height: 28px; opacity: .5; font-size: 16px; }
+@keyframes chipIn { from { transform: scale(.5); opacity: 0; } }
+body.beamer .qz .chip { font-size: 26px; min-height: 60px; padding: 0 18px; }
+.qz .startbtn { min-height: 64px; font-size: 20px; }
+body.beamer .qz .startbtn { min-height: 90px; font-size: 32px; }
+.qz .waitdots { display: flex; gap: 8px; margin: 18px 0; }
+.qz .waitdots i { width: 14px; height: 14px; background: var(--pink-fill); border: 2px solid var(--ink); animation: wd 1.2s ease-in-out infinite; }
+.qz .waitdots i:nth-child(2) { animation-delay: .2s; } .qz .waitdots i:nth-child(3) { animation-delay: .4s; }
+@keyframes wd { 50% { transform: translateY(-10px); background: var(--ink); } }
+.qz .countdown { min-height: 70dvh; display: grid; place-items: center; }
+.qz .countdown span { font: 800 clamp(120px, 40vw, 260px)/1 var(--grot); letter-spacing: -.06em; animation: cd .8s ease-out both; }
+@keyframes cd { from { transform: scale(.3); opacity: 0; } 30% { transform: scale(1.15); opacity: 1; } to { transform: scale(1); } }
