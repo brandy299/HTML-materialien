@@ -1,4 +1,5 @@
 /* Live-Quiz – ergänzt app/styles.css (Typesafe-Stil) */
+:root { --quiz-css: 5; }
 .qz { max-width: 560px; margin: 0 auto; padding: calc(var(--safe-t) + 14px) var(--gutter) calc(var(--safe-b) + 60px); animation: enter .35s var(--ease) both; }
 .qz.still { animation: none; }
 .qz .row > .btn.sm { flex: 1 1 calc(50% - 10px); }
@@ -191,3 +192,10 @@ body.beamer .qz .startbtn { min-height: 90px; font-size: 32px; }
 .qz .countdown { min-height: 70dvh; display: grid; place-items: center; }
 .qz .countdown span { font: 800 clamp(120px, 40vw, 260px)/1 var(--grot); letter-spacing: -.06em; animation: cd .8s ease-out both; }
 @keyframes cd { from { transform: scale(.3); opacity: 0; } 30% { transform: scale(1.15); opacity: 1; } to { transform: scale(1); } }
+
+/* Aufholbonus / Turbo */
+.qz .pop.turbo { color: #FFD84D; font-size: calc(5px * var(--s) + 8px); animation-duration: 1.6s; }
+.qz .runner.boost { animation: boost .5s ease-out 3; }
+.qz .runner.boost::before { content: ""; position: absolute; left: calc(-14px * var(--s)); right: 60%; top: 25%; bottom: 25%; background: repeating-linear-gradient(0deg, #FFD84D 0 3px, transparent 3px 7px); opacity: .9; animation: streaks .25s linear infinite; }
+@keyframes boost { 50% { filter: drop-shadow(0 0 8px #FFD84D) brightness(1.2); } }
+@keyframes streaks { from { transform: translateX(8px); opacity: 0; } 50% { opacity: .9; } to { transform: translateX(-8px); opacity: 0; } }

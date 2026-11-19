@@ -8,6 +8,11 @@
 (() => {
   "use strict";
   const root = document.getElementById("qz");
+  /* Selbstheilung bei altem Stylesheet aus dem Browser-Cache (GitHub Pages cached bis ~10 Min.) */
+  const CSS_NEED = "5";
+  if (getComputedStyle(document.documentElement).getPropertyValue("--quiz-css").trim() !== CSS_NEED) {
+    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `quiz.css?fresh=${Date.now()}`; document.head.appendChild(l);
+  }
   const CFG = window.QUIZ_CONFIG || {};
   const LIVE = !!(CFG.url && CFG.key);
   const MAX_Q = 40;
@@ -75,7 +80,7 @@
       case "quiz_create": {
         if (!a.p_questions.length || a.p_questions.length > MAX_Q) throw new Error("BAD_QUESTIONS");
         let code; do { code = String(10000 + Math.floor(Math.random() * 90000)); } while (db.rooms[code]);
-        db.rooms[code] = { code, secret: a.p_secret, title: (a.p_title || "Quiz").slice(0, 80), questions: a.p_questions, status: "open", created: new Date().toISOString() };
+        db.rooms[code] = { code, secret: a.p_secret, title: (a.p_title || "Quiz").slice(0, 80), questions: a.p_questions, status: "open", bonus: false, created: new Date().toISOString() };
         save(); return code;
       }
       case "quiz_join": {
@@ -97,24 +102,32 @@
         let ex = db.answers.find((x) => x.pid === a.p_pid && x.q === a.p_q);
         if (!ex) {
           const ok = q.t === "text" ? q.a.some((x) => norm(x) === norm(a.p_given)) : String(a.p_given) === String(q.a);
-          ex = { pid: a.p_pid, q: a.p_q, given: a.p_given, ok }; db.answers.push(ex); save();
+          let bonus = false;
+          if (ok && r.bonus) {
+            const ps = db.players.filter((p) => p.code === a.p_code);
+            const steps = (id) => db.answers.filter((x) => x.pid === id).length + db.answers.filter((x) => x.pid === id && x.bonus).length;
+            const mine = steps(a.p_pid), ahead = ps.filter((p) => steps(p.id) > mine).length;
+            bonus = ps.length >= 4 && ahead >= Math.ceil((ps.length * 2) / 3);
+          }
+          ex = { pid: a.p_pid, q: a.p_q, given: a.p_given, ok, bonus }; db.answers.push(ex); save();
         }
-        return { ok: ex.ok, a: solution(q), e: q.e || null };
+        return { ok: ex.ok, a: solution(q), e: q.e || null, bonus: !!ex.bonus };
       }
       case "quiz_player_state": {
         const r = room(a.p_code); player(a.p_code, a.p_pid, a.p_token);
         const answers = db.answers.filter((x) => x.pid === a.p_pid).sort((x, y) => x.q - y.q)
-          .map((x) => ({ q: x.q, ok: x.ok, given: x.given, a: solution(r.questions[x.q]), e: r.questions[x.q].e || null }));
+          .map((x) => ({ q: x.q, ok: x.ok, given: x.given, a: solution(r.questions[x.q]), e: r.questions[x.q].e || null, bonus: !!x.bonus }));
         return { status: r.status, title: r.title, questions: strip(r.questions), answers, count: db.players.filter((p) => p.code === a.p_code).length };
       }
       case "quiz_teacher_state": {
         const r = room(a.p_code, a.p_secret);
         const players = db.players.filter((p) => p.code === a.p_code).map((p) => ({
-          id: p.id, nick: p.nick,
+          id: p.id, nick: p.nick, bn: db.answers.filter((x) => x.pid === p.id && x.bonus).length,
           r: r.questions.map((_, i) => { const x = db.answers.find((y) => y.pid === p.id && y.q === i); return x ? x.ok : null; })
         }));
-        return { status: r.status, title: r.title, questions: r.questions, players, created: r.created };
+        return { status: r.status, title: r.title, questions: r.questions, players, created: r.created, bonus: !!r.bonus };
       }
+      case "quiz_set_bonus": room(a.p_code, a.p_secret).bonus = !!a.p_bonus; save(); return null;
       case "quiz_set_status": room(a.p_code, a.p_secret).status = a.p_status; save(); return null;
       case "quiz_remove_player": room(a.p_code, a.p_secret); db.players = db.players.filter((p) => p.id !== a.p_pid); save(); return null;
       case "quiz_delete_room": delete db.rooms[a.p_code]; db.players = db.players.filter((p) => p.code !== a.p_code); save(); return null;
@@ -240,6 +253,7 @@
       let fb = "";
       if (ans) {
         fb = `<div class="term"><span class="ln ${ans.ok ? "ok" : "no"}">${ans.ok ? "✓ Richtig." : "✗ Leider falsch."}</span>` +
+          (ans.bonus ? `<span class="ln ok">★ Aufholbonus: doppelte Punkte!</span>` : "") +
           (q.t === "text" && !ans.ok ? `<span class="ln">Richtig wäre: ${esc(ans.a)}</span>` : "") +
           (ans.e ? `<span class="ln mut">${esc(ans.e)}</span>` : "") + `</div>
           <button class="btn block" id="next" style="margin-top:14px">${nextIdx() === -1 ? "Fertig" : "Weiter"}</button>`;
@@ -257,7 +271,7 @@
       if (busy) return; busy = true;
       try {
         const r = await rpc("quiz_answer", { p_code: code, p_pid: me.pid, p_token: me.token, p_q: idx, p_given: given });
-        state.answers[idx] = { q: idx, ok: r.ok, given, a: r.a, e: r.e };
+        state.answers[idx] = { q: idx, ok: r.ok, given, a: r.a, e: r.e, bonus: !!r.bonus };
         cur = idx;
       } catch (e) {
         if (String(e.message) === "CLOSED") state.status = "closed"; else note = errText(e);
@@ -286,13 +300,13 @@
       };
       tick();
     }
-    function ownScore() { const v = Object.values(state.answers); return { ok: v.filter((x) => x.ok).length, n: total() }; }
+    function ownScore() { const v = Object.values(state.answers); return { ok: v.filter((x) => x.ok).length, b: v.filter((x) => x.bonus).length, n: total() }; }
     function renderWait() {
       const s = ownScore();
       show(`${head}${segs(-1)}
         <div class="win" style="margin-top:20px"><div class="bar"><span class="d"></span><span class="id">FERTIG</span></div>
         <div class="body"><p class="kick">Dein Ergebnis</p><p class="score">${s.ok}<span style="font-size:.5em;color:var(--ink-2)"> / ${s.n}</span></p>
-        <p class="sub" style="margin-top:12px">Warte, bis die Lehrkraft das Quiz beendet. Dann siehst du alle Antworten.</p></div></div>
+        ${s.b ? `<p class="sub" style="margin-top:8px">+ ${s.b} Bonuspunkt${s.b > 1 ? "e" : ""} durch den Aufholbonus</p>` : ""}<p class="sub" style="margin-top:12px">Warte, bis die Lehrkraft das Quiz beendet. Dann siehst du alle Antworten.</p></div></div>
         <p style="margin-top:16px"><button class="btn ghost block" id="rev">Meine Antworten ansehen</button></p>`);
       root.querySelector("#rev").onclick = () => { cur = 0; renderReview(); };
       every(POLL_S, async () => {
@@ -312,7 +326,7 @@
       const s = ownScore();
       show(`${head}<div class="win"><div class="bar"><span class="d"></span><span class="id">QUIZ BEENDET</span></div>
         <div class="body"><p class="kick">${esc(state.title)}</p><p class="score">${s.ok}<span style="font-size:.5em;color:var(--ink-2)"> / ${s.n}</span></p>
-        <p class="sub" style="margin-top:10px">${answeredN() < s.n ? `Du hast ${answeredN()} von ${s.n} Fragen beantwortet.` : "Gut gemacht."}</p></div></div>
+        <p class="sub" style="margin-top:10px">${s.b ? `+ ${s.b} Bonuspunkt${s.b > 1 ? "e" : ""} durch den Aufholbonus. ` : ""}${answeredN() < s.n ? `Du hast ${answeredN()} von ${s.n} Fragen beantwortet.` : "Gut gemacht."}</p></div></div>
         <h3 class="section-head">Alle Fragen</h3>
         <ul class="review">${state.questions.map((q, i) => { const x = state.answers[i];
           return `<li class="${x ? (x.ok ? "ok" : "no") : ""}"><b>${x ? (x.ok ? "✓" : "✗") : "–"}</b><span>${esc(q.q)}${x && !x.ok ? `<br><span class="hint">Richtig: ${esc(q.t === "text" ? x.a : q.o[Number(x.a)])}</span>` : ""}${x && x.e ? `<br><span class="hint">${esc(x.e)}</span>` : ""}</span></li>`; }).join("")}</ul>
@@ -602,7 +616,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
     }
     onFsExit = () => { if (beamer) { beamer = false; document.body.classList.remove("beamer"); if (st) paint(); } };
     /* Rennbahn: Darstellung und Animationen in race.js */
-    const raceOpts = () => ({ hide, beamer, detail, closed: st.status === "closed" });
+    const raceOpts = () => ({ hide, beamer, detail, bonus: !!st.bonus, closed: st.status === "closed" });
     const raceSig = (ps, n) => QuizRace.sig(ps, n, raceOpts());
     function raceHtml(ps, n) { return QuizRace.html(ps, n, raceOpts()); }
     function raceUpdate(ps, n) { QuizRace.update(root.querySelector("#race"), ps, n, raceOpts()); }
@@ -632,6 +646,8 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
         <h3 class="section-head">Warteraum · ${ps.length} dabei</h3>
         ${ps.length ? `<div class="chips">${ps.map((p) => `<span class="chip">${esc(hide ? `SuS ${p.i + 1}` : p.nick)}${beamer ? "" : `<button data-rm="${esc(p.id)}" aria-label="Entfernen" title="Entfernen">×</button>`}</span>`).join("")}</div>` : `<p class="empty">Noch niemand im Raum. Zeige den Code oder den QR-Code.</p>`}
         <div class="row no-beamer" style="margin-top:16px"><button class="btn sm ${hide ? "on" : "ghost"}" id="bHide">Namen ${hide ? "zeigen" : "ausblenden"}</button><button class="btn sm ghost" id="bBeam">Beamer-Ansicht</button><button class="btn sm ghost" id="bDel">Raum löschen</button></div>
+        <div class="row no-beamer" style="margin-top:10px"><button class="btn sm ${st.bonus ? "on" : "ghost"} grow" id="bBonus">Aufholbonus: ${st.bonus ? "an" : "aus"}</button></div>
+        <p class="hint no-beamer" style="margin-top:8px">Aufholbonus: Wer im letzten Drittel liegt (ab 4 Personen), bekommt für eine richtige Antwort doppelte Punkte und springt zwei Schritte.</p>
         <button class="btn pink block startbtn" id="bStart" style="margin-top:18px" ${ps.length ? "" : "disabled"}>Quiz starten (${ps.length})</button>` : `
         <div class="stats" style="margin-top:16px"><div><div class="v">${ps.length}</div><div class="k">Dabei</div></div><div><div class="v">${finished}</div><div class="k">Fertig</div></div><div><div class="v">${avg}%</div><div class="k">Ø richtig</div></div></div>
         <div class="row no-beamer" style="margin-top:16px">
@@ -640,6 +656,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
           ${view === "race" ? `<button class="btn sm ${detail ? "on" : "ghost"}" id="bDetail">Einzelantworten: ${detail ? "an" : "aus"}</button>` : `<button class="btn sm ghost" id="bSort">Sortierung: ${sortBy === "join" ? "Beitritt" : "Fortschritt"}</button>`}
           <button class="btn sm ghost" id="bBeam">Beamer-Ansicht</button>
           <span class="grow"></span>
+          ${closed ? "" : `<button class="btn sm ${st.bonus ? "on" : "ghost"}" id="bBonus">Aufholbonus: ${st.bonus ? "an" : "aus"}</button>`}
           ${closed ? `<button class="btn sm ghost" id="bOpen">Wieder öffnen</button><button class="btn sm ghost" id="bDel">Raum löschen</button>` : `<button class="btn sm" id="bEnd">Quiz beenden</button>`}
         </div>
         <h3 class="section-head">${view === "race" ? "Rennen" : "Fortschritt"}</h3>
@@ -659,6 +676,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       document.scrollingElement.scrollTop = keep;
       const $ = (id) => root.querySelector(id);
       if ($("#bView")) $("#bView").onclick = () => { view = view === "race" ? "tiles" : "race"; store.set("quiz.view", view); paint(); };
+      if ($("#bBonus")) $("#bBonus").onclick = async () => { await rpc("quiz_set_bonus", { p_code: code, p_secret: secret, p_bonus: !st.bonus }); pull(); };
       if ($("#bStart")) $("#bStart").onclick = async () => { $("#bStart").disabled = true; await rpc("quiz_set_status", { p_code: code, p_secret: secret, p_status: "open" }); pull(); };
       if ($("#bDetail")) $("#bDetail").onclick = () => { detail = !detail; store.set("quiz.detail", detail); paint(); };
       if ($("#bHide")) $("#bHide").onclick = () => { hide = !hide; store.set("quiz.hideNames", hide); paint(); };

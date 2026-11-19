@@ -31,6 +31,8 @@ GitHub Pages erlaubt pro Repository nur **eine** eigene Domain (hier `lernen.yan
 
 Solange `quiz/config.js` leer ist, läuft das Quiz im **Demo-Modus** (nur im eigenen Browser, zum Ausprobieren mit zwei Tabs, kein Server nötig).
 
+5. **Aufholbonus** (Knopf im Warteraum und während des Rennens, standardmäßig aus): Ab 4 Personen bekommen alle im hinteren Drittel für eine richtige Antwort **doppelte Punkte** (zwei Schritte, „TURBO +2“, Meldung „holt auf“). Berechnung serverseitig in `quiz_answer`; schaltbar mit `quiz_set_bonus`. Bei Neuanlage der Tabellen/Funktionen `supabase/quiz.sql` erneut ausführen (idempotent).
+
 ## Brauchen Lehrkräfte Supabase?
 Nein. Lehrkräfte brauchen **kein Konto**, nur die gemeinsame Lehrer-PIN. Supabase läuft einmal im Hintergrund (von dir eingerichtet) und überträgt nur den Live-Stand zwischen Handys und Lehrkraft. Das Laden einer Datei braucht gar kein Backend.
 
@@ -48,3 +50,6 @@ Nein. Lehrkräfte brauchen **kein Konto**, nur die gemeinsame Lehrer-PIN. Supaba
 
 ## Wartung
 Fehlermeldungen des Servers: `NO_PIN` (PIN nicht gesetzt), `BAD_PIN`, `NO_ROOM` (Code falsch oder Raum nach 24 h gelöscht), `NICK_TAKEN`, `FULL`, `CLOSED`.
+
+## Hinweis für Updates
+GitHub Pages liefert Dateien bis zu 10 Minuten aus dem Browser-Cache. Darum haben die Dateien in `quiz/index.html` eine Versionsnummer (`?v=…`). Bei Änderungen an `quiz.js`, `race.js`, `quiz.css` oder `config.js` die Nummer erhöhen, sonst sieht man zeitweise Alt/Neu gemischt (z. B. Namen im Warteraum ohne Kästchen).
