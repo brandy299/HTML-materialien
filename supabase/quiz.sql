@@ -10,8 +10,6 @@
 -- Der Skript ist wiederholbar (kann erneut ausgeführt werden, z. B. nach Updates).
 -- ============================================================
 
-create extension if not exists pgcrypto;
-
 create table if not exists quiz_config (
   id int primary key default 1 check (id = 1),
   teacher_pin text not null
@@ -101,7 +99,7 @@ begin
   if (select count(*) from quiz_players where code = p_code) >= 80 then raise exception 'FULL'; end if;
   if exists (select 1 from quiz_players where code = p_code and lower(nick) = lower(v_nick)) then
     raise exception 'NICK_TAKEN'; end if;
-  v_tok := encode(gen_random_bytes(16), 'hex');
+  v_tok := replace(gen_random_uuid()::text, '-', '');
   insert into quiz_players(code, nick, token) values (p_code, v_nick, v_tok) returning id into v_id;
   return jsonb_build_object('pid', v_id, 'token', v_tok, 'nick', v_nick, 'title', r.title,
                             'questions', quiz_strip(r.questions), 'status', r.status);
