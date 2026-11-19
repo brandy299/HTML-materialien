@@ -8,6 +8,11 @@
 (() => {
   "use strict";
   const root = document.getElementById("qz");
+  /* Selbstheilung bei altem Stylesheet aus dem Browser-Cache (GitHub Pages cached bis ~10 Min.) */
+  const CSS_NEED = "3";
+  if (getComputedStyle(document.documentElement).getPropertyValue("--quiz-css").trim() !== CSS_NEED) {
+    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `quiz.css?fresh=${Date.now()}`; document.head.appendChild(l);
+  }
   const CFG = window.QUIZ_CONFIG || {};
   const LIVE = !!(CFG.url && CFG.key);
   const MAX_Q = 40;

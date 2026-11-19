@@ -57,8 +57,8 @@
         <div class="dirt"><div class="gate"></div>${Array.from({ length: Math.max(0, n - 1) }, (_, k) => `<i class="post" style="left:${(((k + 1) / n) * 100).toFixed(2)}%"></i>`).join("")}
           <div class="goal"></div><div class="dots">${Array.from({ length: n }, () => "<i></i>").join("")}</div>
           <div class="runner" style="--p:0">
-            <svg class="crown"><use href="#rh-crown"/></svg>
-            <svg class="horse" viewBox="0 0 20 13"><use class="fa" href="#rh-a"/><use class="fb" href="#rh-b"/></svg>
+            <svg class="crown" width="21" height="14"><use href="#rh-crown"/></svg>
+            <svg class="horse" viewBox="0 0 20 13" width="60" height="39"><use class="fa" href="#rh-a"/><use class="fb" href="#rh-b"/></svg>
           </div></div>
         <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span><span class="okc"></span></div>
       </div>`).join("");
