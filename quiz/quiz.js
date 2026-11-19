@@ -135,7 +135,7 @@
     stopTimer = () => { alive = false; clearTimeout(t); };
   }
   function show(html, wide, still) {
-    root.innerHTML = `<main class="qz${wide ? " wide" : ""}${still ? " still" : ""}">${LIVE ? "" : `<p class="demo">DEMO-MODUS · Läuft nur in diesem Browser (zum Ausprobieren mit zwei Tabs). Für echte Klassen: docs/LIVE-QUIZ.md.</p>`}${html}</main>`;
+    root.innerHTML = `<main class="qz${wide ? " wide" : ""}${still ? " still" : ""}">${LIVE ? "" : `<p class="demo no-beamer">DEMO-MODUS · Läuft nur in diesem Browser (zum Ausprobieren mit zwei Tabs). Für echte Klassen: docs/LIVE-QUIZ.md.</p>`}${html}</main>`;
     return root.firstElementChild;
   }
   const baseUrl = () => location.origin + location.pathname.replace(/index\.html$/, "");
@@ -555,7 +555,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
   async function viewRoom(code) {
     const secret = store.get(`quiz.teacher.${code}`);
     if (!secret) { show(`<header class="top"><a class="tag-box" href="#/lehrer">← Neues Quiz</a></header><p class="msg">Dieser Raum wurde auf einem anderen Gerät angelegt. Öffne ihn dort, oder lege ein neues Quiz an.</p>`); return; }
-    let st = null, hide = store.get("quiz.hideNames", false), sortBy = store.get("quiz.sort", "join"), beamer = false;
+    let st = null, hide = store.get("quiz.hideNames", false), view = store.get("quiz.view", "tiles"), sortBy = store.get("quiz.sort", "join"), beamer = false;
     const qrSvg = () => {
       if (typeof qrcode !== "function") return "";
       const q = qrcode(0, "M"); q.addData(joinUrl(code)); q.make(); return q.createSvgTag({ cellSize: 8, margin: 1, scalable: true });
@@ -575,6 +575,25 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       paint();
     }
     onFsExit = () => { if (beamer) { beamer = false; document.body.classList.remove("beamer"); if (st) paint(); } };
+    /* Rennbahn: jede Person läuft mit jeder richtigen Antwort ein Stück zum Ziel */
+    const raceSig = (ps, n) => `${n}|${hide}|${beamer}|` + ps.map((p) => p.id).join(",");
+    function raceHtml(ps, n) {
+      return `<div class="race" id="race" data-sig="${esc(raceSig(ps, n))}">${ps.map((p) => `
+        <div class="lane" data-id="${esc(p.id)}"><span class="lname">${esc(hide ? `SuS ${p.i + 1}` : p.nick)}</span>
+        <div class="track">${Array.from({ length: n - 1 }, (_, k) => `<i class="tick" style="left:${((k + 1) / n) * 100}%"></i>`).join("")}
+        <div class="runner"><span>${p.i + 1}</span></div><div class="goal"></div></div><span class="lsc"></span></div>`).join("")}</div>`;
+    }
+    function raceUpdate(ps, n) {
+      const box = root.querySelector("#race"); if (!box) return;
+      const lead = Math.max(0, ...ps.map((p) => p.ok));
+      ps.forEach((p) => {
+        const lane = box.querySelector(`.lane[data-id="${CSS.escape(p.id)}"]`); if (!lane) return;
+        lane.querySelector(".runner").style.setProperty("--p", n ? p.ok / n : 0);
+        lane.classList.toggle("fin", p.done === n);
+        lane.classList.toggle("lead", lead > 0 && p.ok === lead);
+        lane.querySelector(".lsc").textContent = `${p.ok}/${n}`;
+      });
+    }
     function paint() {
       const n = st.questions.length, ps = st.players.map((p, i) => {
         const done = p.r.filter((x) => x !== null).length, ok = p.r.filter((x) => x === true).length;
@@ -590,6 +609,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
         return { q, n: a.length, k, pc: a.length ? Math.round((100 * k) / a.length) : null };
       });
       const keep = document.scrollingElement.scrollTop;
+      const oldRace = root.querySelector("#race");
       show(`
         <header class="top no-beamer"><a class="tag-box" href="#/lehrer">← Neues Quiz</a><span class="tag-box ink">${closed ? "Beendet" : "Läuft"}</span></header>
         <div class="win"><div class="bar"><span class="d"></span><span class="id">${esc(st.title)}</span><span class="r beamer-only" ><button id="bOff" style="color:var(--paper)">✕ Beamer aus</button></span></div>
@@ -599,21 +619,28 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
         <div class="stats" style="margin-top:16px"><div><div class="v">${ps.length}</div><div class="k">Dabei</div></div><div><div class="v">${finished}</div><div class="k">Fertig</div></div><div><div class="v">${avg}%</div><div class="k">Ø richtig</div></div></div>
         <div class="row no-beamer" style="margin-top:16px">
           <button class="btn sm ${hide ? "on" : "ghost"}" id="bHide">Namen ${hide ? "zeigen" : "ausblenden"}</button>
-          <button class="btn sm ghost" id="bSort">Sortierung: ${sortBy === "join" ? "Beitritt" : "Fortschritt"}</button>
+          <button class="btn sm ghost" id="bView">Ansicht: ${view === "race" ? "Rennen" : "Kacheln"}</button>
+          ${view === "race" ? "" : `<button class="btn sm ghost" id="bSort">Sortierung: ${sortBy === "join" ? "Beitritt" : "Fortschritt"}</button>`}
           <button class="btn sm ghost" id="bBeam">Beamer-Ansicht</button>
           <span class="grow"></span>
           ${closed ? `<button class="btn sm ghost" id="bOpen">Wieder öffnen</button><button class="btn sm ghost" id="bDel">Raum löschen</button>` : `<button class="btn sm" id="bEnd">Quiz beenden</button>`}
         </div>
-        <h3 class="section-head">Fortschritt</h3>
-        ${ps.length ? `<div class="tiles">${list.map((p) => `
+        <h3 class="section-head">${view === "race" ? "Rennen" : "Fortschritt"}</h3>
+        ${ps.length && view === "race" ? `<div id="raceSlot"></div>` : ps.length ? `<div class="tiles">${list.map((p) => `
           <div class="tile ${p.done === n ? "done" : ""}"><div class="nm"><span>${esc(hide ? `SuS ${p.i + 1}` : p.nick)}</span>${beamer ? "" : `<button data-rm="${esc(p.id)}" aria-label="Entfernen" title="Entfernen">×</button>`}</div>
           <div class="bd"><div class="seg">${p.r.map((x) => `<i class="${x === true ? "ok" : x === false ? "no" : ""}"></i>`).join("")}</div>
           <div class="sc"><span>${p.ok} richtig</span><span>${p.done}/${n}</span></div></div></div>`).join("")}</div>`
           : `<p class="empty">Noch niemand im Raum. Zeige den Code oder den QR-Code.</p>`}
         <h3 class="section-head">Fragen im Überblick</h3>
         <ol class="qbars" style="list-style:none">${qstat.map((s, i) => `<li><b class="q-count">${i + 1}</b><div>${esc(s.q.q)}<div class="bar2"><i style="width:${s.pc ?? 0}%"></i></div></div><span class="pc">${s.pc === null ? "–" : s.pc + "%"}</span></li>`).join("")}</ol>`, true, true);
+      const slot = root.querySelector("#raceSlot");
+      if (slot) {
+        if (oldRace && oldRace.dataset.sig === raceSig(ps, n)) { slot.replaceWith(oldRace); raceUpdate(ps, n); }
+        else { slot.outerHTML = raceHtml(ps, n); raceUpdate(ps, n); }
+      }
       document.scrollingElement.scrollTop = keep;
       const $ = (id) => root.querySelector(id);
+      if ($("#bView")) $("#bView").onclick = () => { view = view === "race" ? "tiles" : "race"; store.set("quiz.view", view); paint(); };
       if ($("#bHide")) $("#bHide").onclick = () => { hide = !hide; store.set("quiz.hideNames", hide); paint(); };
       if ($("#bSort")) $("#bSort").onclick = () => { sortBy = sortBy === "join" ? "progress" : "join"; store.set("quiz.sort", sortBy); paint(); };
       if ($("#bBeam")) $("#bBeam").onclick = () => setBeamer(true);
