@@ -42,6 +42,10 @@ create table if not exists quiz_answers (
   primary key (player_id, q)
 );
 
+-- Status: lobby (Warteraum) -> open (läuft) -> closed (beendet). Auch für bestehende Installationen:
+alter table quiz_rooms drop constraint if exists quiz_rooms_status_check;
+alter table quiz_rooms add constraint quiz_rooms_status_check check (status in ('lobby','open','closed'));
+
 alter table quiz_config  enable row level security;
 alter table quiz_rooms   enable row level security;
 alter table quiz_players enable row level security;
@@ -94,7 +98,7 @@ declare r quiz_rooms; v_id uuid; v_tok text; v_nick text := left(btrim(coalesce(
 begin
   select * into r from quiz_rooms where code = p_code;
   if not found then raise exception 'NO_ROOM'; end if;
-  if r.status <> 'open' then raise exception 'CLOSED'; end if;
+  if r.status = 'closed' then raise exception 'CLOSED'; end if;
   if length(v_nick) < 2 then raise exception 'BAD_NICK'; end if;
   if (select count(*) from quiz_players where code = p_code) >= 80 then raise exception 'FULL'; end if;
   if exists (select 1 from quiz_players where code = p_code and lower(nick) = lower(v_nick)) then
@@ -114,6 +118,7 @@ begin
   if not found then raise exception 'NO_ROOM'; end if;
   if not exists (select 1 from quiz_players where id = p_pid and code = p_code and token = p_token) then
     raise exception 'NO_PLAYER'; end if;
+  if r.status = 'lobby' then raise exception 'NOT_STARTED'; end if;
   if r.status <> 'open' then raise exception 'CLOSED'; end if;
   if p_q < 0 or p_q >= jsonb_array_length(r.questions) then raise exception 'BAD_Q'; end if;
   if length(p_given::text) > 300 then raise exception 'TOO_LONG'; end if;
@@ -147,7 +152,8 @@ begin
            'e', r.questions->a.q->'e') order by a.q), '[]'::jsonb)
     into v_answers from quiz_answers a where a.player_id = p_pid;
   return jsonb_build_object('status', r.status, 'title', r.title,
-                            'questions', quiz_strip(r.questions), 'answers', v_answers);
+                            'questions', quiz_strip(r.questions), 'answers', v_answers,
+                            'count', (select count(*) from quiz_players where code = p_code));
 end $$;
 
 -- Live-Stand (Lehrkraft) ------------------------------------------------------
@@ -171,7 +177,7 @@ end $$;
 create or replace function quiz_set_status(p_code text, p_secret text, p_status text)
 returns void language plpgsql security definer set search_path = public as $$
 begin
-  if p_status not in ('open','closed') then raise exception 'BAD_STATUS'; end if;
+  if p_status not in ('lobby','open','closed') then raise exception 'BAD_STATUS'; end if;
   update quiz_rooms set status = p_status where code = p_code and secret = p_secret;
   if not found then raise exception 'NO_ROOM'; end if;
 end $$;
