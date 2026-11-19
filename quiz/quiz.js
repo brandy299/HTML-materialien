@@ -325,6 +325,61 @@
     return (courseCache = out);
   }
 
+  /* Datei-Import: CSV (Excel, Semikolon) oder JSON */
+  function parseCsv(txt) {
+    txt = txt.replace(/^\uFEFF/, "");
+    const first = txt.split(/\r?\n/)[0] || "";
+    const d = [";", "\t", ","].map((c) => [c, first.split(c).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const rows = []; let row = [], cell = "", q = false;
+    for (let i = 0; i < txt.length; i++) {
+      const c = txt[i];
+      if (q) { if (c === '"') { if (txt[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+      else if (c === '"') q = true;
+      else if (c === d) { row.push(cell); cell = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && txt[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+      else cell += c;
+    }
+    row.push(cell); rows.push(row);
+    return rows.filter((r) => r.some((x) => x.trim()));
+  }
+  function importFile(name, txt) {
+    const out = [], problems = []; let title = "";
+    const add = (q, e, i) => { const bad = checkQ(q); if (bad) problems.push(`Zeile/Frage ${i}: ${bad}`); else out.push(q); };
+    function checkQ(q) {
+      if (!q.q || q.q.length < 3) return "Frage fehlt";
+      if (q.t === "text") return q.a.length ? "" : "Antwort fehlt";
+      if (q.o.length < 2) return "mindestens 2 Antworten";
+      return Number.isInteger(q.a) && q.a >= 0 && q.a < q.o.length ? "" : "richtige Antwort fehlt oder passt nicht";
+    }
+    if (/\.json$/i.test(name) || /^\s*[\[{]/.test(txt)) {
+      let j; try { j = JSON.parse(txt); } catch { return { error: "Die JSON-Datei ist kaputt (Kommas oder Klammern prüfen)." }; }
+      if (!Array.isArray(j)) { title = j.title || ""; j = j.questions || j.fragen || []; }
+      j.forEach((x, i) => {
+        const q = String(x.q ?? x.frage ?? "").trim(), e = String(x.e ?? x.explain ?? x.erklaerung ?? "").trim();
+        const o = x.o ?? x.options ?? x.antworten, a = x.a ?? x.answer ?? x.richtig;
+        if (Array.isArray(o)) add({ t: "mc", q, o: o.map((v) => String(v).trim()), a: Number(a), e }, e, i + 1);
+        else add({ t: "text", q, a: [].concat(a ?? []).map((v) => String(v).trim()).filter(Boolean), e }, e, i + 1);
+      });
+    } else {
+      let rows = parseCsv(txt);
+      if (rows.length && /^frage$/i.test(rows[0][0].trim())) rows.shift();
+      rows.forEach((r, i) => {
+        const c = r.map((v) => v.trim()), q = c[0], e = c[7] || "", key = (c[5] || "").toUpperCase();
+        if (key === "TEXT" || key === "KURZ") add({ t: "text", q, a: (c[1] || "").split("|").map((v) => v.trim()).filter(Boolean), e }, e, i + 1);
+        else {
+          const o = c.slice(1, 5).filter(Boolean), k = "ABCD".indexOf(key[0] || "?");
+          const idx = k >= 0 ? k : Number(key) - 1;
+          add({ t: "mc", q, o, a: idx, e }, e, i + 1);
+        }
+      });
+    }
+    return { qs: out, problems, title };
+  }
+  const TEMPLATE = "Frage;Antwort A;Antwort B;Antwort C;Antwort D;Richtig;;Erklärung\n" +
+    "Was ist die Hauptstadt von Deutschland?;Berlin;München;Hamburg;Köln;A;;Berlin ist seit 1990 Hauptstadt.\n" +
+    "Die Erde ist eine Scheibe.;Richtig;Falsch;;;B;;Sie ist (fast) eine Kugel.\n" +
+    "Wie heißt die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | ordentliche Kündigung;;;;TEXT;;Bei TEXT stehen mehrere richtige Schreibweisen in Spalte B, getrennt mit |.\n";
+
   function viewSetup() {
     let draft = store.get("quiz.draft", { title: "", qs: [] });
     const save = () => store.set("quiz.draft", draft);
@@ -338,6 +393,7 @@
         <h3 class="section-head">Fragen · <span id="cnt"></span></h3>
         <ol class="chosen" id="chosen"></ol>
         <details class="add" id="dCourse"><summary>Aus einem Kurs wählen</summary><div class="in" id="courseBox"><p class="hint">Lade Kurse …</p></div></details>
+        <details class="add" id="dFile"><summary>Quiz aus Datei laden</summary><div class="in" id="fileBox"></div></details>
         <details class="add" id="dOwn"><summary>Eigene Frage schreiben</summary><div class="in" id="ownBox"></div></details>
         <div id="err"></div>
         <button class="btn pink block" id="go">Raum öffnen</button>
@@ -374,6 +430,24 @@
         if (sel.length) { add(sel); pk.querySelectorAll("input").forEach((b) => { b.checked = false; }); }
       };
     });
+
+    /* Datei */
+    const fb = el.querySelector("#fileBox");
+    fb.innerHTML = `<p class="hint" style="margin:0">Excel-Datei als <b>CSV</b> speichern (Spalten: Frage, Antwort A–D, Richtig als A–D, Erklärung) oder eine <b>JSON</b>-Datei. Die Vorlage zeigt das Format.</p>
+      <div class="row"><button class="btn ghost sm" id="tpl" type="button">Vorlage (CSV)</button><label class="btn pink sm grow" style="cursor:pointer">Datei wählen<input type="file" id="fi" accept=".csv,.json,.txt,text/csv,application/json" hidden></label></div><div id="ferr"></div>`;
+    fb.querySelector("#tpl").onclick = () => {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\uFEFF" + TEMPLATE], { type: "text/csv" })); a.download = "quiz-vorlage.csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    };
+    fb.querySelector("#fi").onchange = async (ev) => {
+      const f = ev.target.files[0]; if (!f) return; ev.target.value = "";
+      const box = fb.querySelector("#ferr");
+      if (f.size > 500000) { box.innerHTML = `<p class="msg">Die Datei ist zu groß.</p>`; return; }
+      const r = importFile(f.name, await f.text());
+      if (r.error) { box.innerHTML = `<p class="msg">${esc(r.error)}</p>`; return; }
+      if (r.qs.length) { if (r.title && !draft.title) { draft.title = r.title; el.querySelector("#title").value = r.title; } add(r.qs); }
+      box.innerHTML = `<p class="hint">${r.qs.length} Fragen übernommen${r.problems.length ? `, ${r.problems.length} übersprungen:` : "."}</p>` +
+        (r.problems.length ? `<p class="msg">${r.problems.slice(0, 5).map(esc).join("<br>")}</p>` : "");
+    };
 
     /* Eigene Frage */
     const own = el.querySelector("#ownBox");

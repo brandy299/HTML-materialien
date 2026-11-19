@@ -3,7 +3,7 @@
 Quiz am Stundenende, ähnlich wie Socrative, im Lernraum-Design. Adresse: **https://lernen.yannikbrand.eu/quiz/**
 
 ## So läuft es im Unterricht
-1. Lehrkraft öffnet `/quiz/` → „Lehrkraft“ → Fragen aus einem Kurs wählen (alle Kurs-Quizfragen stehen zur Verfügung) und/oder eigene Fragen schreiben (Mehrfachauswahl, Richtig/Falsch, Kurzantwort) → „Raum öffnen“.
+1. Lehrkraft öffnet `/quiz/` → „Lehrkraft“ → Fragen aus einem Kurs wählen (alle Kurs-Quizfragen stehen zur Verfügung) und/oder eigene Fragen schreiben (Mehrfachauswahl, Richtig/Falsch, Kurzantwort) und/oder ein **Quiz per Datei laden** (CSV aus Excel oder JSON, Vorlage zum Herunterladen im Quiz). Die Datei wird nur im Browser gelesen, hochgeladen wird erst der fertige Raum → „Raum öffnen“.
 2. Es erscheint ein **5-stelliger Raumcode mit QR-Code**. Schüler/innen scannen ihn oder tippen den Code unter `/quiz/` ein und wählen einen **Spitznamen**.
 3. Jede Person beantwortet die Fragen im eigenen Tempo und sieht sofort „richtig/falsch“ mit Erklärung.
 4. Die Lehrkraft sieht **für jeden Spitznamen einen Fortschrittsbalken** (grün richtig, rot falsch), dazu „Ø richtig“ und je Frage die Trefferquote. Knöpfe: Namen ausblenden (zeigt „SuS 1, 2 …“), Sortierung, **Beamer-Ansicht** (Vollbild, große Schrift, Bedienknöpfe weg; Beenden mit „✕ Beamer aus“ oder Esc).
@@ -26,6 +26,9 @@ GitHub Pages erlaubt pro Repository nur **eine** eigene Domain (hier `lernen.yan
 5. Beim ersten Anlegen eines Quiz die PIN eingeben (wird nur auf diesem Gerät gemerkt).
 
 Solange `quiz/config.js` leer ist, läuft das Quiz im **Demo-Modus** (nur im eigenen Browser, zum Ausprobieren mit zwei Tabs, kein Server nötig).
+
+## Brauchen Lehrkräfte Supabase?
+Nein. Lehrkräfte brauchen **kein Konto**, nur die gemeinsame Lehrer-PIN. Supabase läuft einmal im Hintergrund (von dir eingerichtet) und überträgt nur den Live-Stand zwischen Handys und Lehrkraft. Das Laden einer Datei braucht gar kein Backend.
 
 ## Datenschutz und Datensparsamkeit
 - Keine Konten, keine echten Namen: nur ein **selbst gewählter Spitzname** (Hinweis dazu steht im Formular). Wer die Zuordnung braucht, spricht sie in der Klasse ab.
