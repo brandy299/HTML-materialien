@@ -24,6 +24,8 @@ create table if not exists quiz_rooms (
   created_at timestamptz not null default now()
 );
 
+alter table quiz_rooms add column if not exists bonus boolean not null default false;
+
 create table if not exists quiz_players (
   id uuid primary key default gen_random_uuid(),
   code text not null references quiz_rooms(code) on delete cascade,
@@ -41,6 +43,7 @@ create table if not exists quiz_answers (
   at timestamptz not null default now(),
   primary key (player_id, q)
 );
+alter table quiz_answers add column if not exists bonus boolean not null default false;
 
 -- Status: lobby (Warteraum) -> open (läuft) -> closed (beendet). Auch für bestehende Installationen:
 alter table quiz_rooms drop constraint if exists quiz_rooms_status_check;
@@ -112,7 +115,8 @@ end $$;
 -- Antworten (Schüler/in) --------------------------------------------------
 create or replace function quiz_answer(p_code text, p_pid uuid, p_token text, p_q int, p_given jsonb)
 returns jsonb language plpgsql security definer set search_path = public as $$
-declare r quiz_rooms; qq jsonb; v_ok boolean := false; v_a jsonb;
+declare r quiz_rooms; qq jsonb; v_ok boolean := false; v_a jsonb; ex quiz_answers;
+        v_bonus boolean := false; v_tot int; v_my int; v_ahead int;
 begin
   select * into r from quiz_rooms where code = p_code;
   if not found then raise exception 'NO_ROOM'; end if;
@@ -124,17 +128,34 @@ begin
   if length(p_given::text) > 300 then raise exception 'TOO_LONG'; end if;
   qq := r.questions -> p_q;
   if qq->>'t' = 'text' then
-    v_ok := exists (select 1 from jsonb_array_elements_text(qq->'a') x where quiz_norm(x) = quiz_norm(p_given #>> '{}'));
     v_a := qq->'a'->0;
   else
-    v_ok := (p_given #>> '{}') = (qq->>'a');
     v_a := qq->'a';
   end if;
-  insert into quiz_answers(player_id, q, given, ok) values (p_pid, p_q, p_given, v_ok)
+  -- erste Antwort zählt
+  select * into ex from quiz_answers where player_id = p_pid and q = p_q;
+  if found then
+    return jsonb_build_object('ok', ex.ok, 'a', v_a, 'e', qq->'e', 'bonus', ex.bonus);
+  end if;
+  if qq->>'t' = 'text' then
+    v_ok := exists (select 1 from jsonb_array_elements_text(qq->'a') x where quiz_norm(x) = quiz_norm(p_given #>> '{}'));
+  else
+    v_ok := (p_given #>> '{}') = (qq->>'a');
+  end if;
+  -- Aufholbonus: richtige Antwort im letzten Drittel (ab 4 Personen) zählt doppelt
+  if v_ok and r.bonus then
+    select count(*) into v_tot from quiz_players where code = p_code;
+    select (select count(*) from quiz_answers a where a.player_id = p_pid)
+         + (select count(*) from quiz_answers a where a.player_id = p_pid and a.bonus) into v_my;
+    select count(*) into v_ahead from (
+      select (select count(*) from quiz_answers a where a.player_id = p.id)
+           + (select count(*) from quiz_answers a where a.player_id = p.id and a.bonus) as s
+      from quiz_players p where p.code = p_code) t where t.s > v_my;
+    v_bonus := v_tot >= 4 and v_ahead >= ceil(v_tot * 2.0 / 3.0)::int;
+  end if;
+  insert into quiz_answers(player_id, q, given, ok, bonus) values (p_pid, p_q, p_given, v_ok, v_bonus)
   on conflict (player_id, q) do nothing;
-  -- erste Antwort zählt: Ergebnis aus der Tabelle lesen
-  select a.ok into v_ok from quiz_answers a where a.player_id = p_pid and a.q = p_q;
-  return jsonb_build_object('ok', v_ok, 'a', v_a, 'e', qq->'e');
+  return jsonb_build_object('ok', v_ok, 'a', v_a, 'e', qq->'e', 'bonus', v_bonus);
 end $$;
 
 -- Stand abfragen (Schüler/in: Wiedereinstieg + Raum beendet?) ------------------
@@ -149,7 +170,7 @@ begin
   select coalesce(jsonb_agg(jsonb_build_object(
            'q', a.q, 'ok', a.ok, 'given', a.given,
            'a', case when r.questions->a.q->>'t' = 'text' then r.questions->a.q->'a'->0 else r.questions->a.q->'a' end,
-           'e', r.questions->a.q->'e') order by a.q), '[]'::jsonb)
+           'e', r.questions->a.q->'e', 'bonus', a.bonus) order by a.q), '[]'::jsonb)
     into v_answers from quiz_answers a where a.player_id = p_pid;
   return jsonb_build_object('status', r.status, 'title', r.title,
                             'questions', quiz_strip(r.questions), 'answers', v_answers,
@@ -165,12 +186,13 @@ begin
   if not found then raise exception 'NO_ROOM'; end if;
   select coalesce(jsonb_agg(jsonb_build_object(
       'id', p.id, 'nick', p.nick,
+      'bn', (select count(*) from quiz_answers a where a.player_id = p.id and a.bonus),
       'r', (select jsonb_agg((select a.ok from quiz_answers a where a.player_id = p.id and a.q = g) order by g)
             from generate_series(0, jsonb_array_length(r.questions) - 1) g)
     ) order by p.joined_at), '[]'::jsonb)
   into v_players from quiz_players p where p.code = p_code;
   return jsonb_build_object('status', r.status, 'title', r.title, 'questions', r.questions,
-                            'players', v_players, 'created', r.created_at);
+                            'players', v_players, 'created', r.created_at, 'bonus', r.bonus);
 end $$;
 
 -- Quiz beenden / wieder öffnen / Teilnehmer entfernen (Lehrkraft) ----------------
@@ -179,6 +201,13 @@ returns void language plpgsql security definer set search_path = public as $$
 begin
   if p_status not in ('lobby','open','closed') then raise exception 'BAD_STATUS'; end if;
   update quiz_rooms set status = p_status where code = p_code and secret = p_secret;
+  if not found then raise exception 'NO_ROOM'; end if;
+end $$;
+
+create or replace function quiz_set_bonus(p_code text, p_secret text, p_bonus boolean)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  update quiz_rooms set bonus = coalesce(p_bonus, false) where code = p_code and secret = p_secret;
   if not found then raise exception 'NO_ROOM'; end if;
 end $$;
 
@@ -204,6 +233,7 @@ grant execute on function
   quiz_player_state(text, uuid, text),
   quiz_teacher_state(text, text),
   quiz_set_status(text, text, text),
+  quiz_set_bonus(text, text, boolean),
   quiz_remove_player(text, text, uuid),
   quiz_delete_room(text, text)
 to anon, authenticated;
