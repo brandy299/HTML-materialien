@@ -2,7 +2,7 @@
    LERNRAUM · Live-Quiz – Rennbahn (Lehreransicht)
    Gezeichnete Pferde (Pixel-Grafik als SVG), Sandbahn mit Startboxen und Zielflagge,
    Tribüne, Siegerpodest, Staub, Konfetti, Überhol-Meldungen.
-   Strecke = Gesamtfortschritt (beantwortete Fragen); richtig/falsch nur mit o.detail. Wird von quiz.js benutzt: QuizRace.html / QuizRace.update
+   Strecke = richtige Antworten (+ Aufholbonus); falsche Antworten bewegen das Pferd nicht, mit o.detail zeigen Punkte richtig/falsch. Wird von quiz.js benutzt: QuizRace.html / QuizRace.update
    ============================================================ */
 (() => {
   "use strict";
@@ -50,7 +50,7 @@
   const HORSE = ["#8B5A2B", "#F386A1", "#E9E9E6", "#555555", "#D9A21B", "#C1354F", "#3B82C4", "#0A8F57", "#9B5DE5", "#FF8C42"];
   const JOCKEY = ["#C1354F", "#3B82C4", "#FFD84D", "#0A8F57", "#9B5DE5", "#FF8C42", "#F386A1", "#1E1E1E", "#E9E9E6", "#4DD0E1"];
 
-  const stp = (p) => p.done + (p.bn || 0);   /* Schritte = beantwortete Fragen + Aufholbonus */
+  const stp = (p) => p.ok + (p.bn || 0);   /* Schritte = richtige Antworten + Aufholbonus (falsche Antworten bewegen nicht) */
   const sig = (ps, n, o) => `${n}|${o.hide}|${o.beamer}|${ps.length > 10}|` + ps.map((p) => p.id).join(",");
 
   function html(ps, n, o) {
@@ -69,7 +69,7 @@
         <div class="lsc"><span class="num">0</span><small>/${n}</small><span class="place"></span><span class="okc"></span></div>
       </div>`).join("");
     return `<div class="race${ps.length > 10 ? " many" : ""}${o.watch ? " watch" : ""}" id="race" data-sig="${esc(sig(ps, n, o))}">${SYMBOLS}
-      <div class="win"><div class="bar"><span class="d"></span><span class="id">RENNBAHN</span><span class="r">Gesamtfortschritt: jede beantwortete Frage bringt ein Stück näher ans Ziel</span></div>
+      <div class="win"><div class="bar"><span class="d"></span><span class="id">RENNBAHN</span><span class="r">Jede richtige Antwort bringt ein Stück näher ans Ziel</span></div>
         <div class="stand"><div class="crowd">${crowd}</div></div>
         <div class="r-toasts" aria-live="polite"></div>
         <div class="course">${lanes}</div>
@@ -158,7 +158,7 @@
     box.querySelector(".podium-wrap").style.display = top.length ? "" : "none";
     const order = [1, 0, 2];
     pod.innerHTML = order.map((k) => { const p = top[k]; return p
-      ? `<div class="step s${k + 1}"><span class="who" style="--c:${HORSE[p.i % HORSE.length]}">${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><span class="pts">${o.bonus ? `${stp(p)} Punkte` : `${p.done} von ${n}`}${o.detail ? ` · ${p.ok} richtig` : ""}</span><div class="blk"><b>${k + 1}</b></div></div>`
+      ? `<div class="step s${k + 1}"><span class="who" style="--c:${HORSE[p.i % HORSE.length]}">${esc(o.hide ? `SuS ${p.i + 1}` : p.nick)}</span><span class="pts">${o.bonus ? `${stp(p)} Punkte` : `${p.ok} von ${n} richtig`}</span><div class="blk"><b>${k + 1}</b></div></div>`
       : `<div class="step s${k + 1} none"><div class="blk"><b>${k + 1}</b></div></div>`; }).join("");
   }
 

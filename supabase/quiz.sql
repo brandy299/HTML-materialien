@@ -145,10 +145,10 @@ begin
   -- Aufholbonus: richtige Antwort im letzten Drittel (ab 4 Personen) zählt doppelt
   if v_ok and r.bonus then
     select count(*) into v_tot from quiz_players where code = p_code;
-    select (select count(*) from quiz_answers a where a.player_id = p_pid)
+    select (select count(*) from quiz_answers a where a.player_id = p_pid and a.ok)
          + (select count(*) from quiz_answers a where a.player_id = p_pid and a.bonus) into v_my;
     select count(*) into v_ahead from (
-      select (select count(*) from quiz_answers a where a.player_id = p.id)
+      select (select count(*) from quiz_answers a where a.player_id = p.id and a.ok)
            + (select count(*) from quiz_answers a where a.player_id = p.id and a.bonus) as s
       from quiz_players p where p.code = p_code) t where t.s > v_my;
     v_bonus := v_tot >= 4 and v_ahead >= ceil(v_tot * 2.0 / 3.0)::int;
@@ -207,6 +207,7 @@ begin
   select coalesce(jsonb_agg(jsonb_build_object(
       'id', p.n::text, 'me', p.id = p_pid, 'nick', p.nick,
       'done', (select count(*) from quiz_answers a where a.player_id = p.id),
+      'ok', (select count(*) from quiz_answers a where a.player_id = p.id and a.ok),
       'bn', (select count(*) from quiz_answers a where a.player_id = p.id and a.bonus)
     ) order by p.n), '[]'::jsonb)
   into v_players

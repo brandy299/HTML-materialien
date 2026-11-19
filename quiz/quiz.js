@@ -9,7 +9,7 @@
   "use strict";
   const root = document.getElementById("qz");
   /* Selbstheilung bei altem Stylesheet aus dem Browser-Cache (GitHub Pages cached bis ~10 Min.) */
-  const CSS_NEED = "8";
+  const CSS_NEED = "9";
   if (getComputedStyle(document.documentElement).getPropertyValue("--quiz-css").trim() !== CSS_NEED) {
     const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `quiz.css?fresh=${Date.now()}`; document.head.appendChild(l);
   }
@@ -105,7 +105,7 @@
           let bonus = false;
           if (ok && r.bonus) {
             const ps = db.players.filter((p) => p.code === a.p_code);
-            const steps = (id) => db.answers.filter((x) => x.pid === id).length + db.answers.filter((x) => x.pid === id && x.bonus).length;
+            const steps = (id) => db.answers.filter((x) => x.pid === id && x.ok).length + db.answers.filter((x) => x.pid === id && x.bonus).length;
             const mine = steps(a.p_pid), ahead = ps.filter((p) => steps(p.id) > mine).length;
             bonus = ps.length >= 4 && ahead >= Math.ceil((ps.length * 2) / 3);
           }
@@ -123,7 +123,7 @@
         const r = room(a.p_code); player(a.p_code, a.p_pid, a.p_token);
         const players = db.players.filter((p) => p.code === a.p_code).map((p, k) => ({
           id: String(k + 1), me: p.id === a.p_pid, nick: p.nick,
-          done: db.answers.filter((x) => x.pid === p.id).length, bn: db.answers.filter((x) => x.pid === p.id && x.bonus).length }));
+          done: db.answers.filter((x) => x.pid === p.id).length, ok: db.answers.filter((x) => x.pid === p.id && x.ok).length, bn: db.answers.filter((x) => x.pid === p.id && x.bonus).length }));
         return { status: r.status, n: r.questions.length, bonus: !!r.bonus, players };
       }
       case "quiz_teacher_state": {
@@ -318,7 +318,7 @@
         <p style="margin-top:16px"><button class="btn ghost block" id="rev">Meine Antworten ansehen</button></p>`);
       root.querySelector("#rev").onclick = () => { cur = 0; renderReview(); };
       const paintWatch = (w) => {
-        const ps = w.players.map((p, i) => ({ ...p, i, ok: 0, r: Array(w.n).fill(null) }));
+        const ps = w.players.map((p, i) => ({ ...p, i, r: Array(w.n).fill(null) }));
         const o = { hide: false, beamer: false, detail: false, bonus: !!w.bonus, closed: false, watch: true, me: (ps.find((p) => p.me) || {}).id };
         const cur0 = root.querySelector("#race");
         if (cur0 && cur0.dataset.sig === QuizRace.sig(ps, w.n, o)) { QuizRace.update(cur0, ps, w.n, o); return; }
