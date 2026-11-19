@@ -575,25 +575,11 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
       paint();
     }
     onFsExit = () => { if (beamer) { beamer = false; document.body.classList.remove("beamer"); if (st) paint(); } };
-    /* Rennbahn: jede Person läuft mit jeder richtigen Antwort ein Stück zum Ziel */
-    const raceSig = (ps, n) => `${n}|${hide}|${beamer}|` + ps.map((p) => p.id).join(",");
-    function raceHtml(ps, n) {
-      return `<div class="race" id="race" data-sig="${esc(raceSig(ps, n))}">${ps.map((p) => `
-        <div class="lane" data-id="${esc(p.id)}"><span class="lname">${esc(hide ? `SuS ${p.i + 1}` : p.nick)}</span>
-        <div class="track">${Array.from({ length: n - 1 }, (_, k) => `<i class="tick" style="left:${((k + 1) / n) * 100}%"></i>`).join("")}
-        <div class="runner"><span>${p.i + 1}</span></div><div class="goal"></div></div><span class="lsc"></span></div>`).join("")}</div>`;
-    }
-    function raceUpdate(ps, n) {
-      const box = root.querySelector("#race"); if (!box) return;
-      const lead = Math.max(0, ...ps.map((p) => p.ok));
-      ps.forEach((p) => {
-        const lane = box.querySelector(`.lane[data-id="${CSS.escape(p.id)}"]`); if (!lane) return;
-        lane.querySelector(".runner").style.setProperty("--p", n ? p.ok / n : 0);
-        lane.classList.toggle("fin", p.done === n);
-        lane.classList.toggle("lead", lead > 0 && p.ok === lead);
-        lane.querySelector(".lsc").textContent = `${p.ok}/${n}`;
-      });
-    }
+    /* Rennbahn: Darstellung und Animationen in race.js */
+    const raceOpts = () => ({ hide, beamer, closed: st.status === "closed" });
+    const raceSig = (ps, n) => QuizRace.sig(ps, n, raceOpts());
+    function raceHtml(ps, n) { return QuizRace.html(ps, n, raceOpts()); }
+    function raceUpdate(ps, n) { QuizRace.update(root.querySelector("#race"), ps, n, raceOpts()); }
     function paint() {
       const n = st.questions.length, ps = st.players.map((p, i) => {
         const done = p.r.filter((x) => x !== null).length, ok = p.r.filter((x) => x === true).length;
@@ -633,6 +619,7 @@ Wie nennt man die Kündigung durch den Arbeitgeber?;Arbeitgeberkündigung | orde
           : `<p class="empty">Noch niemand im Raum. Zeige den Code oder den QR-Code.</p>`}
         <h3 class="section-head">Fragen im Überblick</h3>
         <ol class="qbars" style="list-style:none">${qstat.map((s, i) => `<li><b class="q-count">${i + 1}</b><div>${esc(s.q.q)}<div class="bar2"><i style="width:${s.pc ?? 0}%"></i></div></div><span class="pc">${s.pc === null ? "–" : s.pc + "%"}</span></li>`).join("")}</ol>`, true, true);
+      if (view === "race") root.firstElementChild.classList.add("is-race");
       const slot = root.querySelector("#raceSlot");
       if (slot) {
         if (oldRace && oldRace.dataset.sig === raceSig(ps, n)) { slot.replaceWith(oldRace); raceUpdate(ps, n); }
