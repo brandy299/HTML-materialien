@@ -83,3 +83,21 @@ body.beamer .qz .qbars li { font-size: 20px; } body.beamer .qz .qbars .bar2 { he
 .qz .beamer-only { display: none; }
 body.beamer .qz .beamer-only { display: inline-flex; }
 @media (max-width: 420px) { .qz .join-grid { grid-template-columns: 1fr; } .qz .qr { width: 160px; height: 160px; } }
+
+/* Rennbahn */
+.qz .race { display: grid; gap: 8px; }
+.qz .lane { display: grid; grid-template-columns: minmax(70px, 110px) 1fr 40px; gap: 10px; align-items: center; min-height: 44px; }
+.qz .lname { font: 700 13px/1.15 var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qz .lsc { font: 700 13px/1 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.qz .track { position: relative; height: 36px; border: 2px solid var(--ink); background: repeating-linear-gradient(90deg, var(--paper) 0 10px, var(--paper-2) 10px 20px); }
+.qz .track .tick { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--ink-3); }
+.qz .goal { position: absolute; right: 0; top: 0; bottom: 0; width: 14px; background: conic-gradient(var(--ink) 25%, var(--paper) 0 50%, var(--ink) 0 75%, var(--paper) 0) 0 0 / 14px 14px; border-left: 2px solid var(--ink); }
+.qz .runner { --p: 0; position: absolute; top: 2px; bottom: 2px; width: 34px; left: calc((100% - 48px) * var(--p) + 2px); background: var(--pink-fill); border: 2px solid var(--ink); display: grid; place-items: center; font: 800 14px/1 var(--mono); transition: left .9s var(--ease); box-shadow: 2px 2px 0 var(--ink); }
+.qz .lane.lead .runner { background: #FFD84D; }
+.qz .lane.fin .runner { background: var(--good); color: var(--paper); }
+.qz .lane.fin .lname::after { content: " ✓"; color: var(--good); }
+body.beamer .qz .lane { grid-template-columns: 200px 1fr 70px; min-height: 58px; }
+body.beamer .qz .lname, body.beamer .qz .lsc { font-size: 20px; }
+body.beamer .qz .track { height: 50px; } body.beamer .qz .runner { width: 48px; font-size: 20px; left: calc((100% - 66px) * var(--p) + 2px); }
+@media (max-width: 420px) { .qz .lane { grid-template-columns: 64px 1fr 34px; gap: 6px; } }
+@media (prefers-reduced-motion: reduce) { .qz .runner { transition: none; } }
