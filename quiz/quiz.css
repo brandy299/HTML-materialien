@@ -1,5 +1,5 @@
 /* Live-Quiz – ergänzt app/styles.css (Typesafe-Stil) */
-:root { --quiz-css: 6; }
+:root { --quiz-css: 9; }
 .qz { max-width: 560px; margin: 0 auto; padding: calc(var(--safe-t) + 14px) var(--gutter) calc(var(--safe-b) + 60px); animation: enter .35s var(--ease) both; }
 .qz.still { animation: none; }
 .qz .row > .btn.sm { flex: 1 1 calc(50% - 10px); }
@@ -93,19 +93,26 @@ body.beamer .qz .race.many { --s: 3.4; --lh: 58px; }
 .qz .r-defs { position: absolute; }
 .qz .race .win { overflow: hidden; position: relative; }
 .qz .race .bar .r { font-size: 11px; opacity: .75; white-space: normal; text-align: right; }
-.qz .stand { height: 38px; background: linear-gradient(#26324a, #3a4a6b); border-bottom: 3px solid var(--ink); display: flex; align-items: flex-end; overflow: hidden; }
-.qz .crowd { display: flex; width: 100%; justify-content: space-between; padding: 0 4px; align-items: flex-end; }
-.qz .crowd i { display: block; width: 9px; height: 9px; background: var(--c); border: 1.5px solid var(--ink); margin-bottom: 4px; animation: sway 2.4s ease-in-out infinite; animation-delay: var(--d); }
-.qz .crowd i:nth-child(3n) { height: 12px; }
-.qz .race.cheer .crowd i { animation: jump .32s ease-in-out infinite; animation-delay: var(--d); }
+.qz .stand { position: relative; height: 50px; background: linear-gradient(#26324a, #3a4a6b); border-bottom: 3px solid var(--ink); overflow: hidden; }
+.qz .crowd { position: absolute; inset: 0; }
+.qz .crowd .row { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; padding: 0 6px; align-items: flex-end; }
+.qz .crowd .row.back { bottom: 16px; padding: 0 22px 0 14px; filter: brightness(.72); }
+.qz .fan { display: block; width: 26px; height: 21px; margin-bottom: -3px; animation: sway 2.4s ease-in-out infinite; animation-delay: var(--d); }
+.qz .back .fan { width: 20px; height: 16px; }
+.qz .fan svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; overflow: visible; }
+.qz .fan .fb { opacity: 0; }
+.qz .race.cheer .fan { animation: jump .32s ease-in-out infinite; animation-delay: var(--d); }
+.qz .race.cheer .fan .fa { opacity: 0; } .qz .race.cheer .fan .fb { opacity: 1; }
 @keyframes sway { 50% { transform: translateY(-2px); } }
 @keyframes jump { 50% { transform: translateY(-9px); } }
-body.beamer .qz .stand { height: 58px; } body.beamer .qz .crowd i { width: 14px; height: 14px; }
+body.beamer .qz .stand { height: 84px; } body.beamer .qz .fan { width: 42px; height: 34px; } body.beamer .qz .back .fan { width: 32px; height: 26px; } body.beamer .qz .crowd .row.back { bottom: 26px; }
 .qz .course { background: #E7C998; }
 .qz .lane { display: grid; grid-template-columns: minmax(66px, 118px) 1fr 52px; align-items: stretch; height: var(--lh); border-top: 2px dashed rgba(255, 255, 255, .8); background: repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 6px, transparent 6px 12px), #D9A86C; }
 .qz .lane:nth-child(even) { background: repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 6px, transparent 6px 12px), #CF9C5E; }
 .qz .lane:first-child { border-top: 0; }
 .qz .plate { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0 6px; background: var(--ink); color: var(--paper); border-right: 3px solid var(--c); font: 700 12.5px/1.1 var(--mono); position: relative; }
+.qz .lane.me .plate { box-shadow: inset 0 0 0 2px #FFD84D; }
+.qz .race.watch .podium-wrap { display: none; }
 .qz .plate b { flex: none; min-width: 20px; height: 20px; display: grid; place-items: center; background: var(--c); color: var(--ink); font: 800 12px/1 var(--mono); }
 .qz .plate span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .qz .streak { position: absolute; right: 3px; bottom: 2px; font: 700 9px/1 var(--mono); font-style: normal; color: #FFD84D; letter-spacing: .02em; }
@@ -158,7 +165,7 @@ body.beamer .qz .streak { font-size: 13px; } body.beamer .qz .lsc small { font-s
 @keyframes rise { from { transform: scaleY(.1); } }
 body.beamer .qz .podium { max-width: 900px; } body.beamer .qz .step .who { font-size: 24px; } body.beamer .qz .step .pts { font-size: 16px; }
 body.beamer .qz .s1 .blk { height: 160px; font-size: 48px; } body.beamer .qz .s2 .blk { height: 118px; font-size: 48px; } body.beamer .qz .s3 .blk { height: 84px; font-size: 48px; }
-@media (prefers-reduced-motion: reduce) { .qz .runner { transition: none; } .qz .crowd i, .qz .horse { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .qz .runner { transition: none; } .qz .fan, .qz .horse { animation: none !important; } }
 @media (max-width: 420px) { .qz .lane { grid-template-columns: 74px 1fr 46px; } .qz .plate b { display: none; } .qz .plate span { font-size: 13px; } .qz .race .bar .r { display: none; } }
 
 /* Beamer + Rennen: Bahn bekommt den Platz */

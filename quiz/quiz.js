@@ -9,7 +9,7 @@
   "use strict";
   const root = document.getElementById("qz");
   /* Selbstheilung bei altem Stylesheet aus dem Browser-Cache (GitHub Pages cached bis ~10 Min.) */
-  const CSS_NEED = "6";
+  const CSS_NEED = "9";
   if (getComputedStyle(document.documentElement).getPropertyValue("--quiz-css").trim() !== CSS_NEED) {
     const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `quiz.css?fresh=${Date.now()}`; document.head.appendChild(l);
   }
@@ -105,7 +105,7 @@
           let bonus = false;
           if (ok && r.bonus) {
             const ps = db.players.filter((p) => p.code === a.p_code);
-            const steps = (id) => db.answers.filter((x) => x.pid === id).length + db.answers.filter((x) => x.pid === id && x.bonus).length;
+            const steps = (id) => db.answers.filter((x) => x.pid === id && x.ok).length + db.answers.filter((x) => x.pid === id && x.bonus).length;
             const mine = steps(a.p_pid), ahead = ps.filter((p) => steps(p.id) > mine).length;
             bonus = ps.length >= 4 && ahead >= Math.ceil((ps.length * 2) / 3);
           }
@@ -118,6 +118,13 @@
         const answers = db.answers.filter((x) => x.pid === a.p_pid).sort((x, y) => x.q - y.q)
           .map((x) => ({ q: x.q, ok: x.ok, given: x.given, a: solution(r.questions[x.q]), e: r.questions[x.q].e || null, bonus: !!x.bonus }));
         return { status: r.status, title: r.title, questions: strip(r.questions), answers, count: db.players.filter((p) => p.code === a.p_code).length };
+      }
+      case "quiz_watch_state": {
+        const r = room(a.p_code); player(a.p_code, a.p_pid, a.p_token);
+        const players = db.players.filter((p) => p.code === a.p_code).map((p, k) => ({
+          id: String(k + 1), me: p.id === a.p_pid, nick: p.nick,
+          done: db.answers.filter((x) => x.pid === p.id).length, ok: db.answers.filter((x) => x.pid === p.id && x.ok).length, bn: db.answers.filter((x) => x.pid === p.id && x.bonus).length }));
+        return { status: r.status, n: r.questions.length, bonus: !!r.bonus, players };
       }
       case "quiz_teacher_state": {
         const r = room(a.p_code, a.p_secret);
@@ -306,13 +313,27 @@
       show(`${head}${segs(-1)}
         <div class="win" style="margin-top:20px"><div class="bar"><span class="d"></span><span class="id">FERTIG</span></div>
         <div class="body"><p class="kick">Dein Ergebnis</p><p class="score">${s.ok}<span style="font-size:.5em;color:var(--ink-2)"> / ${s.n}</span></p>
-        ${s.b ? `<p class="sub" style="margin-top:8px">+ ${s.b} Bonuspunkt${s.b > 1 ? "e" : ""} durch den Aufholbonus</p>` : ""}<p class="sub" style="margin-top:12px">Warte, bis die Lehrkraft das Quiz beendet. Dann siehst du alle Antworten.</p></div></div>
+        ${s.b ? `<p class="sub" style="margin-top:8px">+ ${s.b} Bonuspunkt${s.b > 1 ? "e" : ""} durch den Aufholbonus</p>` : ""}<p class="sub" style="margin-top:12px">Du bist fertig. Unten siehst du live, wie die anderen noch laufen. Wenn die Lehrkraft beendet, siehst du alle Antworten.</p></div></div>
+        <h3 class="section-head">Das Rennen live</h3><div id="raceSlot"></div>
         <p style="margin-top:16px"><button class="btn ghost block" id="rev">Meine Antworten ansehen</button></p>`);
       root.querySelector("#rev").onclick = () => { cur = 0; renderReview(); };
-      every(POLL_S, async () => {
-        const s2 = await rpc("quiz_player_state", { p_code: code, p_pid: me.pid, p_token: me.token });
-        if (s2.status === "closed") { apply(s2); render(); }
-      });
+      const paintWatch = (w) => {
+        const ps = w.players.map((p, i) => ({ ...p, i, r: Array(w.n).fill(null) }));
+        const o = { hide: false, beamer: false, detail: false, bonus: !!w.bonus, closed: false, watch: true, me: (ps.find((p) => p.me) || {}).id };
+        const cur0 = root.querySelector("#race");
+        if (cur0 && cur0.dataset.sig === QuizRace.sig(ps, w.n, o)) { QuizRace.update(cur0, ps, w.n, o); return; }
+        const holder = cur0 || root.querySelector("#raceSlot");
+        if (!holder) return;
+        holder.outerHTML = QuizRace.html(ps, w.n, o);
+        QuizRace.update(root.querySelector("#race"), ps, w.n, o);
+      };
+      const poll = async () => {
+        const w = await rpc("quiz_watch_state", { p_code: code, p_pid: me.pid, p_token: me.token });
+        if (w.status === "closed") { apply(await rpc("quiz_player_state", { p_code: code, p_pid: me.pid, p_token: me.token })); render(); return; }
+        paintWatch(w);
+      };
+      poll().catch(() => {});
+      every(2000, poll);
     }
     function renderReview() {
       clearTimer();
