@@ -351,7 +351,7 @@ LERNRAUM.subjects.push({
           items: [
             { text: "Solarpark: neue Jobs und weniger CO₂.", cat: 0 },
             { text: "Steuersenkung: mehr Investitionen, aber steigende Preise.", cat: 1 },
-            { text: "Höheres Kindergeld: mehr Gerechtigkeit und mehr Nachfrage.", cat: 0 },
+            { text: "Höheres Kindergeld: mehr Gerechtigkeit und weniger Kinderarmut.", cat: 0 },
             { text: "Mehr Konsum: mehr Wachstum, aber mehr Importe.", cat: 1 },
             { text: "Kostenloser Nahverkehr: Entlastung und Umweltschutz.", cat: 0 },
             { text: "Neue Autobahn: neue Jobs, aber mehr Abgase.", cat: 1 },
@@ -435,7 +435,7 @@ LERNRAUM.subjects.push({
               body: `<ul>
                        <li><strong>Solarpark:</strong> neue Jobs und weniger CO₂.</li>
                        <li><strong>Steuersenkung:</strong> mehr Investitionen, aber möglicherweise steigende Preise.</li>
-                       <li><strong>Höheres Kindergeld:</strong> mehr Gerechtigkeit und mehr Nachfrage.</li>
+                       <li><strong>Höheres Kindergeld:</strong> mehr Gerechtigkeit und weniger Kinderarmut.</li>
                        <li><strong>Mehr Konsum:</strong> mehr Wachstum, aber mehr Importe.</li>
                        <li><strong>Kostenloser Nahverkehr:</strong> Entlastung und Umweltschutz.</li>
                      </ul>`
@@ -1084,10 +1084,10 @@ LERNRAUM.subjects.push({
           title: "A2 · Leitbild und Ziel",
           questions: [
             {
-              q: "Welches Gerechtigkeitsleitbild passt eher zu Position A?",
+              q: "Position A: „Hohe Einkommen geben mehr ab.“ Welches Leitbild passt dazu am besten?",
               options: ["Leistungsprinzip", "Bedürfnis- und Gleichheitsprinzip", "Marktprinzip", "Zufallsprinzip"],
               answer: 1,
-              explain: "Position A betont Schutz für alle und Ausgleich – das passt zum Bedürfnis- und Gleichheitsprinzip."
+              explain: "Wer mehr hat, trägt mehr, damit alle geschützt sind – das ist Ausgleich nach Bedarf (Bedürfnis- und Gleichheitsprinzip). Der Versicherungsgedanke („Beitrag gleich Anspruch“) gehört dagegen zum Leistungsprinzip."
             },
             {
               q: "Welches Gerechtigkeitsleitbild passt eher zu Position B?",
