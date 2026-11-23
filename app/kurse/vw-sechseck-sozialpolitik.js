@@ -24,6 +24,7 @@ LERNRAUM.subjects.push({
   id: "vw-sechseck-sozialpolitik",
   fach: "VW",
   added: "2026-11-09",
+  updated: "2026-11-22",
   name: "Sechseck + Sozialpolitik",
   course: "VW · HHOF/KAOA",
   glyph: "V",
@@ -527,8 +528,8 @@ LERNRAUM.subjects.push({
              ${ablauf([
                { text: "Bruttoentgelt", value: "3.000,00 €" },
                { op: "− Lohnsteuer", value: "315,00 €", note: "Steuer" },
-               { op: "− Sozialversicherung", value: "646,50 €", note: "Beiträge" },
-               { text: "Nettoentgelt", value: "2.038,50 €", hi: true }
+               { op: "− Sozialversicherung", value: "652,50 €", note: "Beiträge" },
+               { text: "Nettoentgelt", value: "2.032,50 €", hi: true }
              ], { title: "Lenas Abrechnung (fiktiv, gerundet)" })}
              <h3>Steuer oder Beitrag?</h3>
              <p><strong>Steuer:</strong> keine direkte Gegenleistung, z. B. Lohnsteuer. <strong>Beitrag:</strong> begründet einen Anspruch, z. B. Rente oder Krankengeld. <strong>Transferleistung:</strong> Zahlung des Staates an Menschen, z. B. Wohngeld oder Kindergeld.</p>`,
@@ -550,8 +551,8 @@ LERNRAUM.subjects.push({
               body: `${ablauf([
                        { text: "Bruttoentgelt", value: "3.000,00 €" },
                        { op: "− Lohnsteuer", value: "315,00 €", note: "Steuer" },
-                       { op: "− Sozialversicherung", value: "646,50 €", note: "Beiträge" },
-                       { text: "Nettoentgelt", value: "2.038,50 €", hi: true }
+                       { op: "− Sozialversicherung", value: "652,50 €", note: "Beiträge" },
+                       { text: "Nettoentgelt", value: "2.032,50 €", hi: true }
                      ], { title: "Lenas Abrechnung (fiktiv, gerundet)" })}
                      <p class="note">Die Abzüge sind echt – aber ein Teil davon sind Beiträge mit Gegenleistung.</p>`
             },
@@ -667,19 +668,19 @@ LERNRAUM.subjects.push({
              <p>Bruttoentgelt: <strong>3.000,00 €</strong></p>
              <ul>
                <li>Lohnsteuer: 315,00 €</li>
-               <li>Krankenversicherung: 256,50 €</li>
+               <li>Krankenversicherung: 262,50 €</li>
                <li>Pflegeversicherung: 72,00 €</li>
                <li>Rentenversicherung: 279,00 €</li>
                <li>Arbeitslosenversicherung: 39,00 €</li>
              </ul>
-             <p>Summe der Abzüge: <strong>961,50 €</strong> · Nettoentgelt: <strong>2.038,50 €</strong></p>
+             <p>Summe der Abzüge: <strong>967,50 €</strong> · Nettoentgelt: <strong>2.032,50 €</strong></p>
              <p class="formula">Abgabenquote = alle Abzüge : Brutto · 100</p>
              <p class="formula">SV-Anteil = SV-Beiträge : alle Abzüge · 100</p>
              ${ablauf([
                { text: "Bruttoentgelt", value: "3.000,00 €" },
                { op: "− Lohnsteuer", value: "315,00 €", note: "10,5 %" },
-               { op: "− Sozialversicherung", value: "646,50 €", note: "21,55 %" },
-               { text: "Nettoentgelt", value: "2.038,50 €", hi: true }
+               { op: "− Sozialversicherung", value: "652,50 €", note: "21,75 %" },
+               { text: "Nettoentgelt", value: "2.032,50 €", hi: true }
              ], { title: "Von Brutto zu Netto" })}`,
       steps: [
         {
@@ -693,12 +694,12 @@ LERNRAUM.subjects.push({
               body: `<p><strong>Brutto:</strong> 3.000,00 €</p>
                      <ul>
                        <li>Lohnsteuer 315,00 €</li>
-                       <li>Krankenversicherung 256,50 €</li>
+                       <li>Krankenversicherung 262,50 €</li>
                        <li>Pflegeversicherung 72,00 €</li>
                        <li>Rentenversicherung 279,00 €</li>
                        <li>Arbeitslosenversicherung 39,00 €</li>
                      </ul>
-                     <p><strong>Netto: 2.038,50 €</strong></p>`
+                     <p><strong>Netto: 2.032,50 €</strong></p>`
             },
             {
               kicker: "Überblick",
@@ -706,8 +707,8 @@ LERNRAUM.subjects.push({
               body: `${ablauf([
                        { text: "Bruttoentgelt", value: "3.000,00 €" },
                        { op: "− Lohnsteuer", value: "315,00 €", note: "Steuer" },
-                       { op: "− Sozialversicherung", value: "646,50 €", note: "Beiträge" },
-                       { text: "Nettoentgelt", value: "2.038,50 €", hi: true }
+                       { op: "− Sozialversicherung", value: "652,50 €", note: "Beiträge" },
+                       { text: "Nettoentgelt", value: "2.032,50 €", hi: true }
                      ], { title: "Lenas Abrechnung (fiktiv, gerundet)" })}`
             },
             {
@@ -721,7 +722,7 @@ LERNRAUM.subjects.push({
               style: "accent",
               kicker: "Merke",
               title: "Fast ein Drittel – und zwei Drittel davon mit Anspruch.",
-              body: `<p>32,05 % des Bruttos gehen ab. Davon sind 67,2 % Sozialversicherungsbeiträge, die Ansprüche begründen.</p>`
+              body: `<p>32,25 % des Bruttos gehen ab. Davon sind 67,4 % Sozialversicherungsbeiträge, die Ansprüche begründen.</p>`
             }
           ]
         },
@@ -733,15 +734,15 @@ LERNRAUM.subjects.push({
           rows: [
             { label: "Bruttoentgelt", value: 3000 },
             { label: "− Lohnsteuer", value: 315 },
-            { label: "− Krankenversicherung", value: 256.5 },
+            { label: "− Krankenversicherung", value: 262.5 },
             { label: "− Pflegeversicherung", value: 72 },
             { label: "− Rentenversicherung", value: 279 },
             { label: "− Arbeitslosenversicherung", value: 39 },
-            { label: "= Summe der Abzüge", value: 961.5, sum: true },
-            { label: "= Nettoentgelt", value: 2038.5, sum: true }
+            { label: "= Summe der Abzüge", value: 967.5, sum: true },
+            { label: "= Nettoentgelt", value: 2032.5, sum: true }
           ],
           hint: "Addiere zuerst die fünf Abzüge. Ziehe die Summe dann vom Brutto ab.",
-          result: "Summe der Abzüge: 961,50 € · Netto: 2.038,50 €"
+          result: "Summe der Abzüge: 967,50 € · Netto: 2.032,50 €"
         },
         {
           type: "calc",
@@ -749,12 +750,12 @@ LERNRAUM.subjects.push({
           decimals: 2,
           case: `Nutze die Werte aus A1. Schreibe den Rechenweg im Kopf mit.`,
           rows: [
-            { label: "Summe der Sozialversicherungsbeiträge", value: 646.5 },
-            { label: "Abgabenquote in % (alle Abzüge : Brutto · 100)", value: 32.05 },
-            { label: "SV-Anteil an allen Abzügen in %", value: 67.2, dec: 1 }
+            { label: "Summe der Sozialversicherungsbeiträge", value: 652.5 },
+            { label: "Abgabenquote in % (alle Abzüge : Brutto · 100)", value: 32.25 },
+            { label: "SV-Anteil an allen Abzügen in %", value: 67.4, dec: 1 }
           ],
-          hint: "Sozialversicherung: Kranken, Pflege, Rente und Arbeitslosenversicherung zusammen. Abgabenquote: 961,50 : 3.000 · 100.",
-          result: "SV-Beiträge: 646,50 € · Abgabenquote: 32,05 % · SV-Anteil: 67,2 %"
+          hint: "Sozialversicherung: Kranken, Pflege, Rente und Arbeitslosenversicherung zusammen. Abgabenquote: 967,50 : 3.000 · 100.",
+          result: "SV-Beiträge: 652,50 € · Abgabenquote: 32,25 % · SV-Anteil: 67,4 %"
         },
         {
           type: "quiz",
@@ -762,29 +763,35 @@ LERNRAUM.subjects.push({
           questions: [
             {
               q: "Wie hoch ist die Summe der Sozialversicherungsbeiträge?",
-              options: ["315,00 €", "646,50 €", "961,50 €", "2.038,50 €"],
+              options: ["315,00 €", "652,50 €", "967,50 €", "2.032,50 €"],
               answer: 1,
-              explain: "256,50 + 72,00 + 279,00 + 39,00 = 646,50 €."
+              explain: "262,50 + 72,00 + 279,00 + 39,00 = 652,50 €."
             },
             {
               q: "Wie hoch ist die Abgabenquote?",
-              options: ["10,5 %", "21,55 %", "32,05 %", "67,2 %"],
+              options: ["10,5 %", "21,75 %", "32,25 %", "67,4 %"],
               answer: 2,
-              explain: "961,50 : 3.000 · 100 = 32,05 %."
+              explain: "967,50 : 3.000 · 100 = 32,25 %."
             },
             {
               q: "Wie hoch ist der Anteil der Sozialversicherung an allen Abzügen?",
-              options: ["32,05 %", "50 %", "67,2 %", "90 %"],
+              options: ["32,25 %", "50 %", "67,4 %", "90 %"],
               answer: 2,
-              explain: "646,50 : 961,50 · 100 = 67,2 %. Etwa zwei Drittel der Abzüge sind Beiträge mit Anspruch."
+              explain: "652,50 : 967,50 · 100 = 67,4 %. Etwa zwei Drittel der Abzüge sind Beiträge mit Anspruch."
             },
             {
               q: "Wie hoch ist Lenas Nettoentgelt?",
-              options: ["2.038,50 €", "2.354,00 €", "3.000,00 €", "1.961,50 €"],
+              options: ["2.032,50 €", "2.347,50 €", "3.000,00 €", "1.967,50 €"],
               answer: 0,
-              explain: "3.000,00 − 961,50 = 2.038,50 €."
+              explain: "3.000,00 − 967,50 = 2.032,50 €."
             }
           ]
+        },
+        {
+          type: "link",
+          title: "Extra: Sozialpolitik interaktiv erkunden",
+          text: "Fünf Versicherungszweige, Prinzipien, Beitragsrechner, Zielkonflikte und Selbsttest – als interaktives Poster.",
+          href: "materialien/VW/Sozialpolitik/sozialpolitik-poster.html"
         },
         {
           type: "selfcheck",
@@ -1286,7 +1293,7 @@ LERNRAUM.subjects.push({
           type: "cloze",
           title: "A2 · Zusammenfassung",
           prompt: "Drei Wörter passen nicht.",
-          text: "Das magische Sechseck hat {sechs} Ziele. Zwischen den Zielen gibt es {Zielharmonien} und Zielkonflikte. Ob eine Maßnahme hilft oder schadet, hängt von der {Maßnahme} ab. In Lenas Abrechnung sind {961,50} € Abzüge enthalten. Die Abgabenquote beträgt {32,05} %. Beiträge zur Sozialversicherung begründen einen {Anspruch}.",
+          text: "Das magische Sechseck hat {sechs} Ziele. Zwischen den Zielen gibt es {Zielharmonien} und Zielkonflikte. Ob eine Maßnahme hilft oder schadet, hängt von der {Maßnahme} ab. In Lenas Abrechnung sind {967,50} € Abzüge enthalten. Die Abgabenquote beträgt {32,25} %. Beiträge zur Sozialversicherung begründen einen {Anspruch}.",
           distractors: ["acht", "Rabatt", "Skonto"]
         },
         {

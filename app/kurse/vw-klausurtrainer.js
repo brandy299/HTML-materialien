@@ -12,6 +12,7 @@ LERNRAUM.subjects.push({
   id: "vw-klausurtrainer",
   fach: "VW",
   added: "2026-11-15",
+  updated: "2026-11-22",
   name: "Klausur-Trainer",
   course: "VW — HHOF/KAOA",
   glyph: "V",
@@ -175,7 +176,7 @@ LERNRAUM.subjects.push({
              <h3>Formeln</h3>
              <p class="formula">Abgabenquote = alle Abzüge ÷ Brutto × 100<br>SV-Anteil = SV-Beiträge ÷ alle Abzüge × 100</p>
              <h3>Lenas Werte</h3>
-             <p>Brutto 3.000,00 € · Lohnsteuer 315,00 € · KV 256,50 € · PV 72,00 € · RV 279,00 € · AV 39,00 €</p>`,
+             <p>Brutto 3.000,00 € · Lohnsteuer 315,00 € · KV 262,50 € · PV 72,00 € · RV 279,00 € · AV 39,00 €</p>`,
       steps: [
         {
           type: "slides",
@@ -184,23 +185,23 @@ LERNRAUM.subjects.push({
             {
               style: "dark",
               kicker: "Familie Thüne",
-              title: "3.000 € brutto, 2.038,50 € netto.",
+              title: "3.000 € brutto, 2.032,50 € netto.",
               body: `${ablauf([
                 { text: "Bruttoarbeitsentgelt", value: "3.000,00 €" },
                 { op: "− Lohnsteuer", value: "315,00 €" },
-                { op: "− Krankenversicherung", value: "256,50 €" },
+                { op: "− Krankenversicherung", value: "262,50 €" },
                 { op: "− Pflegeversicherung", value: "72,00 €" },
                 { op: "− Rentenversicherung", value: "279,00 €" },
                 { op: "− Arbeitslosenversicherung", value: "39,00 €" },
-                { text: "Nettoarbeitsentgelt", value: "2.038,50 €", hi: true }
+                { text: "Nettoarbeitsentgelt", value: "2.032,50 €", hi: true }
               ])}
               <p class="note">Die Lohnsteuer ist die einzige Steuer in dieser Abrechnung. Alles andere sind Sozialversicherungsbeiträge.</p>`
             },
             {
               kicker: "Rechnen",
               title: "Zwei Quoten, zwei Blickwinkel",
-              body: `<p><strong>Abgabenquote:</strong> Wie viel von allen Abzügen am Brutto bleibt? 961,50 € von 3.000,00 € sind 32,05 %.</p>
-                     <p><strong>SV-Anteil:</strong> Wie viel der Abzüge sind Beiträge? 646,50 € von 961,50 € sind 67,2 %.</p>
+              body: `<p><strong>Abgabenquote:</strong> Wie viel von allen Abzügen am Brutto bleibt? 967,50 € von 3.000,00 € sind 32,25 %.</p>
+                     <p><strong>SV-Anteil:</strong> Wie viel der Abzüge sind Beiträge? 652,50 € von 967,50 € sind 67,4 %.</p>
                      <p class="note">Runde auf zwei Nachkommastellen. Schreibe den Rechenweg auf.</p>`
             }
           ]
@@ -209,14 +210,14 @@ LERNRAUM.subjects.push({
           type: "calc",
           title: "A2 · Lenas Abrechnung",
           decimals: 2,
-          case: `Lena Thüne verdient <b>3.000,00 € brutto</b>. Abzüge: Lohnsteuer <b>315,00 €</b>, Krankenversicherung <b>256,50 €</b>, Pflegeversicherung <b>72,00 €</b>, Rentenversicherung <b>279,00 €</b>, Arbeitslosenversicherung <b>39,00 €</b>. Runde auf zwei Nachkommastellen.`,
+          case: `Lena Thüne verdient <b>3.000,00 € brutto</b>. Abzüge: Lohnsteuer <b>315,00 €</b>, Krankenversicherung <b>262,50 €</b>, Pflegeversicherung <b>72,00 €</b>, Rentenversicherung <b>279,00 €</b>, Arbeitslosenversicherung <b>39,00 €</b>. Runde auf zwei Nachkommastellen.`,
           rows: [
-            { label: "Summe der Sozialversicherungsbeiträge in €", value: 646.5 },
-            { label: "Abgabenquote in % (alle Abzüge : Brutto × 100)", value: 32.05 },
-            { label: "Anteil der Sozialversicherung an allen Abzügen in %", value: 67.2 }
+            { label: "Summe der Sozialversicherungsbeiträge in €", value: 652.5 },
+            { label: "Abgabenquote in % (alle Abzüge : Brutto × 100)", value: 32.25 },
+            { label: "Anteil der Sozialversicherung an allen Abzügen in %", value: 67.4 }
           ],
           hint: "SV-Beiträge: KV + PV + RV + AV. Alle Abzüge: SV-Beiträge + Lohnsteuer.",
-          result: "646,50 € · 32,05 % · 67,2 % — etwa zwei Drittel der Abzüge sind Beiträge mit Anspruch."
+          result: "652,50 € · 32,25 % · 67,4 % — etwa zwei Drittel der Abzüge sind Beiträge mit Anspruch."
         },
         {
           type: "cloze",
@@ -406,8 +407,8 @@ LERNRAUM.subjects.push({
             { front: "Gerechte Verteilung → Kennzahl", back: "Gini-Wert der Einkommen. Je niedriger, desto gleicher verteilt." },
             { front: "Umwelt- und Klimaschutz → Kennzahl", back: "CO₂-Ausstoß. Je niedriger, desto besser." },
             { front: "Beitrag oder Steuer?", back: "Beitrag: Sozialversicherung, begründet einen Anspruch. Steuer: finanziert Gemeinschaftsaufgaben, kein direkter Anspruch." },
-            { front: "Abgabenquote", back: "Alle Abzüge ÷ Brutto × 100. Bei Lena: 961,50 ÷ 3.000 × 100 = 32,05 %." },
-            { front: "SV-Anteil an den Abzügen", back: "SV-Beiträge ÷ alle Abzüge × 100. Bei Lena: 646,50 ÷ 961,50 × 100 = 67,2 %." },
+            { front: "Abgabenquote", back: "Alle Abzüge ÷ Brutto × 100. Bei Lena: 967,50 ÷ 3.000 × 100 = 32,25 %." },
+            { front: "SV-Anteil an den Abzügen", back: "SV-Beiträge ÷ alle Abzüge × 100. Bei Lena: 652,50 ÷ 967,50 × 100 = 67,4 %." },
             { front: "Leistungsprinzip", back: "Wer mehr leistet oder einzahlt, bekommt mehr. Beispiel: Rente nach Beitragsjahren." },
             { front: "Bedürfnisprinzip", back: "Wer mehr braucht, bekommt mehr. Beispiel: Wohngeld, Grundsicherung." },
             { front: "Gleichheitsprinzip", back: "Alle bekommen den gleichen Anteil. Beispiel: Kindergeld in gleicher Höhe." },
@@ -492,14 +493,14 @@ LERNRAUM.subjects.push({
           points: 6,
           review: "training-a2",
           decimals: 2,
-          case: `Lena Thüne verdient <b>3.000,00 € brutto</b>. Abzüge: Lohnsteuer <b>315,00 €</b>, Krankenversicherung <b>256,50 €</b>, Pflegeversicherung <b>72,00 €</b>, Rentenversicherung <b>279,00 €</b>, Arbeitslosenversicherung <b>39,00 €</b>. Runde auf zwei Nachkommastellen.`,
+          case: `Lena Thüne verdient <b>3.000,00 € brutto</b>. Abzüge: Lohnsteuer <b>315,00 €</b>, Krankenversicherung <b>262,50 €</b>, Pflegeversicherung <b>72,00 €</b>, Rentenversicherung <b>279,00 €</b>, Arbeitslosenversicherung <b>39,00 €</b>. Runde auf zwei Nachkommastellen.`,
           rows: [
-            { label: "Summe der Sozialversicherungsbeiträge in €", value: 646.5 },
-            { label: "Abgabenquote in % (alle Abzüge : Brutto × 100)", value: 32.05 },
-            { label: "Anteil der Sozialversicherung an allen Abzügen in %", value: 67.2 }
+            { label: "Summe der Sozialversicherungsbeiträge in €", value: 652.5 },
+            { label: "Abgabenquote in % (alle Abzüge : Brutto × 100)", value: 32.25 },
+            { label: "Anteil der Sozialversicherung an allen Abzügen in %", value: 67.4 }
           ],
           hint: "SV-Beiträge: KV + PV + RV + AV. Alle Abzüge: SV-Beiträge + Lohnsteuer.",
-          result: "646,50 € · 32,05 % · 67,2 %"
+          result: "652,50 € · 32,25 % · 67,4 %"
         },
         {
           type: "quiz",
