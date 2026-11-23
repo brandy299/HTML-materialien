@@ -5,7 +5,7 @@ LERNRAUM.subjects.push(...[
   "fach": "VW",
   "name": "Materialsammlung",
   "materials": true,
-  "description": "1 Materialien aus dem Unterricht",
+  "description": "3 Materialien aus dem Unterricht",
   "topics": [
    {
     "id": "magisches-sechseck",
@@ -13,6 +13,22 @@ LERNRAUM.subjects.push(...[
     "title": "Das magische Sechseck · VW · HBBK Oberhausen",
     "kicker": "Magisches Sechseck",
     "href": "materialien/VW/Magisches Sechseck/magisches-sechseck.html",
+    "steps": []
+   },
+   {
+    "id": "sozialpolitik-poster",
+    "group": "Sozialpolitik",
+    "title": "Sozialpolitik im deutschen System · VW · HBBK Oberhausen",
+    "kicker": "Sozialpolitik",
+    "href": "materialien/VW/Sozialpolitik/sozialpolitik-poster.html",
+    "steps": []
+   },
+   {
+    "id": "sozialpolitik-werkstatt",
+    "group": "Sozialpolitik",
+    "title": "Lenas Gehalt – wohin geht das Geld? · VW · HBBK Oberhausen",
+    "kicker": "Sozialpolitik",
+    "href": "materialien/VW/Sozialpolitik/sozialpolitik-werkstatt.html",
     "steps": []
    }
   ]

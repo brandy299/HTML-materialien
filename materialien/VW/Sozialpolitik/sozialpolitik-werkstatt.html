@@ -288,7 +288,7 @@
     <p class="eyebrow"><span class="dot"></span>VW · LS 14 · Sozialpolitik</p>
     <h1>Lenas Gehalt – wohin geht das Geld?</h1>
     <p class="lead">Ein Modell zum Drehen, Tippen und Nachrechnen. Lenas Werte sind fiktiv und gerundet.</p>
-    <p class="badge">3.000,00 € brutto · 2.038,50 € netto</p>
+    <p class="badge">3.000,00 € brutto · 2.032,50 € netto</p>
   </header>
 
   <section class="win" aria-labelledby="scene-title">
@@ -317,18 +317,18 @@
   </section>
 
   <section class="win" aria-labelledby="quote-title">
-    <div class="bar"><span class="d"></span><span id="quote-title">Abgabenquote</span><span class="r">32,05 %</span></div>
+    <div class="bar"><span class="d"></span><span id="quote-title">Abgabenquote</span><span class="r">32,25 %</span></div>
     <div class="body quote-body">
       <div class="ring" aria-hidden="true">
         <svg viewBox="0 0 120 120">
           <circle class="track" cx="60" cy="60" r="48"></circle>
           <circle class="val" id="ring-val" cx="60" cy="60" r="48" stroke-dasharray="301.59" stroke-dashoffset="301.59"></circle>
         </svg>
-        <span class="lbl">32,05 %</span>
+        <span class="lbl">32,25 %</span>
       </div>
       <div class="quote-copy">
-        <p><strong>961,50 €</strong> von <strong>3.000,00 €</strong> gehen als Abzüge weg.</p>
-        <p>Davon sind <strong>646,50 €</strong> Sozialversicherungsbeiträge – das sind <strong>67,2 %</strong> der Abzüge.</p>
+        <p><strong>967,50 €</strong> von <strong>3.000,00 €</strong> gehen als Abzüge weg.</p>
+        <p>Davon sind <strong>652,50 €</strong> Sozialversicherungsbeiträge – das sind <strong>67,4 %</strong> der Abzüge.</p>
         <p>Beiträge begründen Ansprüche. Steuern finanzieren Aufgaben für alle.</p>
       </div>
     </div>
@@ -371,11 +371,11 @@
   /* ── Daten ─────────────────────────────────────────────── */
   var SEGMENTS = [
     { key: "lohnsteuer", label: "Lohnsteuer", amount: 315, color: "--pink", note: "Steuer ohne direkten Anspruch auf eine Gegenleistung." },
-    { key: "kranken", label: "Krankenversicherung", amount: 256.5, color: "--ink", note: "Beitrag mit Anspruch auf Leistungen bei Krankheit." },
+    { key: "kranken", label: "Krankenversicherung", amount: 262.5, color: "--ink", note: "Beitrag mit Anspruch auf Leistungen bei Krankheit." },
     { key: "pflege", label: "Pflegeversicherung", amount: 72, color: "--ink-2", note: "Beitrag mit Anspruch auf Pflegeleistungen." },
     { key: "rente", label: "Rentenversicherung", amount: 279, color: "--ink-3", note: "Beitrag mit Anspruch auf Rente." },
     { key: "arbeitslos", label: "Arbeitslosenversicherung", amount: 39, color: "--panel-2", note: "Beitrag mit Anspruch auf Arbeitslosengeld." },
-    { key: "netto", label: "Nettoentgelt", amount: 2038.5, color: "--good", note: "Das bleibt Lena nach allen Abzügen." }
+    { key: "netto", label: "Nettoentgelt", amount: 2032.5, color: "--good", note: "Das bleibt Lena nach allen Abzügen." }
   ];
   var BRUTTO = 3000;
   var TOTAL = SEGMENTS.reduce(function (s, x) { return s + x.amount; }, 0);
@@ -423,7 +423,7 @@
   var CIRC = 2 * Math.PI * 48;
   ring.setAttribute("stroke-dasharray", String(CIRC));
   ring.setAttribute("stroke-dashoffset", String(CIRC));
-  var quoteTarget = 961.5 / 3000;
+  var quoteTarget = 967.5 / 3000;
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
       ring.style.strokeDashoffset = String(CIRC * (1 - quoteTarget));
