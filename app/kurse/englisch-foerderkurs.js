@@ -1916,9 +1916,9 @@ LERNRAUM.subjects.push({
       group: "Live-Quiz",
       title: "Live-Quiz · Simple Present",
       kicker: "Live-Quiz · Fragen für die Stunde",
-      minutes: 4,
+      minutes: 5,
       help: `<h3>Live-Quiz</h3>
-             <p>8 Fragen zu: Simple Present.</p>
+             <p>10 Fragen zu: Simple Present.</p>
              <p>Du kannst sie hier allein üben. Im Unterricht stellt die Lehrkraft sie im <strong>Live-Quiz</strong> (quiz.yannikbrand.eu).</p>`,
       steps: [
         {
@@ -1972,6 +1972,18 @@ LERNRAUM.subjects.push({
               options: ["Water boils at 100 degrees.", "Water is boiling at 100 degrees.", "Water boil at 100 degrees.", "Water does boils at 100 degrees."],
               answer: 0,
               explain: "Ein Fakt steht im Simple Present. it → boils."
+            },
+            {
+              q: "Which sentence is correct?",
+              options: ["My parents doesn’t work on Sundays.", "My parents don’t works on Sundays.", "My parents not work on Sundays.", "My parents don’t work on Sundays."],
+              answer: 3,
+              explain: "my parents = they → don’t + Grundform: don’t work."
+            },
+            {
+              q: "Mia ____ to school by bus.",
+              options: ["goes", "go", "gos", "going"],
+              answer: 0,
+              explain: "Mia = she → nach o kommt -es: goes."
             }
           ]
         }
@@ -1984,9 +1996,9 @@ LERNRAUM.subjects.push({
       group: "Live-Quiz",
       title: "Live-Quiz · Present Progressive",
       kicker: "Live-Quiz · Fragen für die Stunde",
-      minutes: 4,
+      minutes: 5,
       help: `<h3>Live-Quiz</h3>
-             <p>8 Fragen zu: Present Progressive.</p>
+             <p>10 Fragen zu: Present Progressive.</p>
              <p>Du kannst sie hier allein üben. Im Unterricht stellt die Lehrkraft sie im <strong>Live-Quiz</strong> (quiz.yannikbrand.eu).</p>`,
       steps: [
         {
@@ -2040,6 +2052,18 @@ LERNRAUM.subjects.push({
               options: ["is running", "are runing", "runs", "are running"],
               answer: 3,
               explain: "they → are. run → running (n wird doppelt)."
+            },
+            {
+              q: "Be quiet! The baby ____.",
+              options: ["sleeps", "sleep", "is sleeping", "sleeping"],
+              answer: 2,
+              explain: "Be quiet! → jetzt gerade → is + -ing."
+            },
+            {
+              q: "Which question is correct?",
+              options: ["Does he reading a book?", "Is he reading a book?", "He is reading a book?", "Are he reading a book?"],
+              answer: 1,
+              explain: "is nach vorn: Is he reading …? Kein does."
             }
           ]
         }
@@ -2052,9 +2076,9 @@ LERNRAUM.subjects.push({
       group: "Live-Quiz",
       title: "Live-Quiz · Simple Past",
       kicker: "Live-Quiz · Fragen für die Stunde",
-      minutes: 4,
+      minutes: 5,
       help: `<h3>Live-Quiz</h3>
-             <p>8 Fragen zu: Simple Past.</p>
+             <p>10 Fragen zu: Simple Past.</p>
              <p>Du kannst sie hier allein üben. Im Unterricht stellt die Lehrkraft sie im <strong>Live-Quiz</strong> (quiz.yannikbrand.eu).</p>`,
       steps: [
         {
@@ -2108,6 +2132,18 @@ LERNRAUM.subjects.push({
               options: ["eated", "eats", "ate", "eaten"],
               answer: 2,
               explain: "eat ist unregelmäßig: eat → ate."
+            },
+            {
+              q: "Which question is correct?",
+              options: ["Did she went to the party?", "Did she go to the party?", "Does she went to the party?", "Was she go to the party?"],
+              answer: 1,
+              explain: "Did + Grundform: Did she go …?"
+            },
+            {
+              q: "Last week we ____ our aunt.",
+              options: ["visited", "visit", "visiting", "visits"],
+              answer: 0,
+              explain: "last week → Simple Past: visit + ed = visited."
             }
           ]
         }
@@ -2120,9 +2156,9 @@ LERNRAUM.subjects.push({
       group: "Live-Quiz",
       title: "Live-Quiz · Present Perfect",
       kicker: "Live-Quiz · Fragen für die Stunde",
-      minutes: 4,
+      minutes: 5,
       help: `<h3>Live-Quiz</h3>
-             <p>8 Fragen zu: Present Perfect.</p>
+             <p>10 Fragen zu: Present Perfect.</p>
              <p>Du kannst sie hier allein üben. Im Unterricht stellt die Lehrkraft sie im <strong>Live-Quiz</strong> (quiz.yannikbrand.eu).</p>`,
       steps: [
         {
@@ -2176,6 +2212,18 @@ LERNRAUM.subjects.push({
               options: ["haven’t", "hasn’t", "doesn’t", "isn’t"],
               answer: 1,
               explain: "Frage mit Has → Kurzantwort: No, she hasn’t."
+            },
+            {
+              q: "Which sentence is correct?",
+              options: ["They has never been to Paris.", "They have never be to Paris.", "They have been never to Paris.", "They have never been to Paris."],
+              answer: 3,
+              explain: "they → have. never steht nach have: have never been."
+            },
+            {
+              q: "She has ____ her homework already.",
+              options: ["finish", "finishing", "finished", "finishes"],
+              answer: 2,
+              explain: "has + 3. Form: has finished."
             }
           ]
         }
