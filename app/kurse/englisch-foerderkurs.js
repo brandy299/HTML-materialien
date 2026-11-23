@@ -243,11 +243,11 @@ LERNRAUM.subjects.push({
               explain: "right now → Progressive. Bei I: am + -ing = am reading."
             },
             {
-              q: "Which verb is a state verb (no -ing)?",
+              q: "Which verb does NOT take -ing (no “I am …ing”)?",
               hint: "Zustandsverben beschreiben keinen Vorgang.",
               options: ["run", "know", "fly"],
               answer: 1,
-              explain: "know ist ein Zustandsverb – also „I know“, nicht „I am knowing“."
+              explain: "know bleibt im Simple Present: „I know“, nicht „I am knowing“."
             }
           ]
         },

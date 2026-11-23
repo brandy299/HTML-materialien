@@ -319,7 +319,7 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
     "right now → Progressive. Bei I: am + -ing = am reading.":
       "right now → Progressive. مع I: am + -ing = am reading.",
 
-    "Which verb is a state verb (no -ing)?":
+    "Which verb does NOT take -ing (no “I am …ing”)?":
       "",
 
     "run":
@@ -331,8 +331,8 @@ LERNRAUM.translations.push({ course: "englisch-foerderkurs", lang: "ar", strings
     "fly":
       "",
 
-    "know ist ein Zustandsverb – also „I know“, nicht „I am knowing“.":
-      "know فعل حالة (state verb) – إذن „I know“، وليس „I am knowing“.",
+    "know bleibt im Simple Present: „I know“, nicht „I am knowing“.":
+      "know يبقى في Simple Present: „I know“، وليس „I am knowing“.",
 
     "Zustandsverben beschreiben keinen Vorgang.":
       "أفعال الحالة لا تصف حدثًا أو عملية.",
