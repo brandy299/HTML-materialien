@@ -2705,9 +2705,9 @@
       return {
         q, options, answer: options.indexOf(right),
         hints: stateTrap
-          ? [`${V.b} ist ein Zustandsverb – es bekommt kein -ing, auch nicht bei „${sig}“.`]
+          ? [`${V.b} beschreibt Wissen oder ein Gefühl – es bekommt kein -ing, auch nicht bei „${sig}“.`]
           : [`Achte auf das Signalwort „${sig}“. Welche Zeitform passt?`, `${name}: ${TENSES[tense].build}`],
-        explain: stateTrap ? `${V.b} ist ein Zustandsverb → Simple Present: ${right}.` : `${sig} → ${name}: ${right}.`
+        explain: stateTrap ? `${V.b} bekommt kein -ing → Simple Present: ${right}.` : `${sig} → ${name}: ${right}.`
       };
     });
 
@@ -2850,7 +2850,7 @@
       levels: [
         { n: 1, name: "Signalwörter", text: "Ein Satz, ein Signalwort, die richtige Zeitform. Nur Aussagesätze." },
         { n: 2, name: "Fragen & Verneinung", text: "Jetzt auch mit don’t, didn’t, isn’t … und Fragen mit Do, Did, Is …" },
-        { n: 3, name: "Profi", text: "Mit typischen Fehlern als Falle (doesn’t plays, didn’t went) und Zustandsverben wie know." }
+        { n: 3, name: "Profi", text: "Mit typischen Fehlern als Falle (doesn’t plays, didn’t went) und Verben ohne -ing wie know." }
       ]
     }
   };
