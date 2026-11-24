@@ -353,7 +353,7 @@ LERNRAUM.subjects.push({
             { text: "Steuersenkung: mehr Investitionen, aber steigende Preise.", cat: 1 },
             { text: "Höheres Kindergeld: mehr Gerechtigkeit und weniger Kinderarmut.", cat: 0 },
             { text: "Mehr Konsum: mehr Wachstum, aber mehr Importe.", cat: 1 },
-            { text: "Kostenloser Nahverkehr: Entlastung und Umweltschutz.", cat: 0 },
+            { text: "Kostenloser Nahverkehr: Entlastung und Umweltschutz (Nutzen).", cat: 0 },
             { text: "Neue Autobahn: neue Jobs, aber mehr Abgase.", cat: 1 },
             { text: "Mehr Produktion: mehr Wachstum, aber mehr CO₂.", cat: 1 },
             { text: "Radwege: neue Jobs und weniger Abgase.", cat: 0 }
@@ -437,7 +437,7 @@ LERNRAUM.subjects.push({
                        <li><strong>Steuersenkung:</strong> mehr Investitionen, aber möglicherweise steigende Preise.</li>
                        <li><strong>Höheres Kindergeld:</strong> mehr Gerechtigkeit und weniger Kinderarmut.</li>
                        <li><strong>Mehr Konsum:</strong> mehr Wachstum, aber mehr Importe.</li>
-                       <li><strong>Kostenloser Nahverkehr:</strong> Entlastung und Umweltschutz.</li>
+                       <li><strong>Kostenloser Nahverkehr:</strong> Entlastung und Umweltschutz. Aber: Die Finanzierung (Steuern, Abgaben) kann das Wachstum bremsen – ein Zielkonflikt bei den Kosten.</li>
                      </ul>`
             },
             {
@@ -470,7 +470,7 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · Harmonie oder Konflikt?",
           prompt: "Ordne die fünf Vorschläge aus der Fallakte zu.",
-          hints: ["Ein Vorschlag ist eine Harmonie, wenn zwei Ziele gleichzeitig besser werden.", "Ein Vorschlag ist ein Konflikt, wenn ein Ziel besser und ein anderes schlechter wird."],
+          hints: ["Es geht um den Nutzen der Maßnahme. Bei den Kosten kann es trotzdem einen Konflikt geben, z. B. beim Nahverkehr.", "Ein Vorschlag ist eine Harmonie, wenn zwei Ziele gleichzeitig besser werden.", "Ein Vorschlag ist ein Konflikt, wenn ein Ziel besser und ein anderes schlechter wird."],
           categories: ["Zielharmonie", "Zielkonflikt"],
           items: [
             { text: "Solarpark", cat: 0 },

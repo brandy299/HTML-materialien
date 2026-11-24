@@ -13562,7 +13562,7 @@ LERNRAUM.subjects.push({
             { text: "Steuersenkung: mehr Investitionen, aber steigende Preise.", cat: 1 },
             { text: "Höheres Kindergeld: mehr Gerechtigkeit und weniger Kinderarmut.", cat: 0 },
             { text: "Mehr Konsum: mehr Wachstum, aber mehr Importe.", cat: 1 },
-            { text: "Kostenloser Nahverkehr: Entlastung und Umweltschutz.", cat: 0 },
+            { text: "Kostenloser Nahverkehr: Entlastung und Umweltschutz (Nutzen).", cat: 0 },
             { text: "Neue Autobahn: neue Jobs, aber mehr Abgase.", cat: 1 },
             { text: "Mehr Produktion: mehr Wachstum, aber mehr CO₂.", cat: 1 },
             { text: "Radwege: neue Jobs und weniger Abgase.", cat: 0 }
@@ -13646,7 +13646,7 @@ LERNRAUM.subjects.push({
                        <li><strong>Steuersenkung:</strong> mehr Investitionen, aber möglicherweise steigende Preise.</li>
                        <li><strong>Höheres Kindergeld:</strong> mehr Gerechtigkeit und weniger Kinderarmut.</li>
                        <li><strong>Mehr Konsum:</strong> mehr Wachstum, aber mehr Importe.</li>
-                       <li><strong>Kostenloser Nahverkehr:</strong> Entlastung und Umweltschutz.</li>
+                       <li><strong>Kostenloser Nahverkehr:</strong> Entlastung und Umweltschutz. Aber: Die Finanzierung (Steuern, Abgaben) kann das Wachstum bremsen – ein Zielkonflikt bei den Kosten.</li>
                      </ul>`
             },
             {
@@ -13679,7 +13679,7 @@ LERNRAUM.subjects.push({
           type: "sort",
           title: "A1 · Harmonie oder Konflikt?",
           prompt: "Ordne die fünf Vorschläge aus der Fallakte zu.",
-          hints: ["Ein Vorschlag ist eine Harmonie, wenn zwei Ziele gleichzeitig besser werden.", "Ein Vorschlag ist ein Konflikt, wenn ein Ziel besser und ein anderes schlechter wird."],
+          hints: ["Es geht um den Nutzen der Maßnahme. Bei den Kosten kann es trotzdem einen Konflikt geben, z. B. beim Nahverkehr.", "Ein Vorschlag ist eine Harmonie, wenn zwei Ziele gleichzeitig besser werden.", "Ein Vorschlag ist ein Konflikt, wenn ein Ziel besser und ein anderes schlechter wird."],
           categories: ["Zielharmonie", "Zielkonflikt"],
           items: [
             { text: "Solarpark", cat: 0 },
@@ -14572,8 +14572,8 @@ LERNRAUM.subjects.push({
               title: "25 Punkte. 45 Minuten. Vier Aufgaben.",
               body: `<p>Die Klausur prüft <strong>Magisches Sechseck</strong> und <strong>Sozialpolitik</strong>.</p>
                      <ul><li><strong>A1 Grundwissen:</strong> Ziele und Kennzahlen (6 P, 8 Min).</li>
-                     <li><strong>A2 Anwendung:</strong> Lenas Abrechnung (7 P, 12 Min).</li>
-                     <li><strong>A3 Transfer:</strong> Fall Logistikzentrum (8 P, 15 Min).</li>
+                     <li><strong>A2 Anwendung:</strong> Gehaltsabrechnung (Lena oder Herr Yilmaz, 7 P, 12 Min).</li>
+                     <li><strong>A3 Transfer:</strong> Fall Logistikzentrum oder kostenloser Nahverkehr (8 P, 15 Min).</li>
                      <li><strong>A4 Problemlösung:</strong> Stellungnahme (4 P, 10 Min).</li></ul>
                      <p class="note">Taschenrechner ist erlaubt. Schreibe den Rechenweg auf — nicht nur das Ergebnis.</p>`
             },
@@ -15097,6 +15097,164 @@ LERNRAUM.subjects.push({
           case: "Setze die Bausteine richtig ein. Geprüft wird der Aufbau, nicht deine Position.",
           text: "Eine Stellungnahme beginnt mit {*einer These|einer Frage}. Danach folgen {*zwei Argumente mit Beispiel|zwei Behauptungen ohne Beispiel}. Wichtig ist außerdem {*ein Gegenargument|kein Gegenargument}. Das Fazit nennt {*ein Ziel und ein Leitbild|nur eine Zahl}.",
           explain: "Diese vier Bausteine machen aus einer Meinung eine begründete Stellungnahme. Ob du Text A oder B zustimmst, ist offen — die Begründung muss schlüssig sein."
+        }
+      ]
+    }
+
+    ,
+    /* ---------------------------------------------------------- */
+    /* 8 · ÜBUNGSKLAUSUR 2 · NAHVERKEHR                           */
+    /* ---------------------------------------------------------- */
+    {
+      id: "probeklausur-nahverkehr",
+      folder: "klausur",
+      group: "Probeklausur",
+      title: "Übungsklausur 2 · Nahverkehr",
+      kicker: "Probeklausur · wie die Papier-Übungsklausur",
+      minutes: 45,
+      exam: {
+        guided: true,
+        minutes: 45,
+        tools: "Taschenrechner, Heft für Nebenrechnungen",
+        situation: `<p><strong>Zwei Fälle, eine Klausur.</strong> Die Stadt Oberhausen prüft einen <strong>kostenlosen Nahverkehr</strong>: Alle sollen Busse und Bahnen ohne Fahrschein nutzen können. Die Stadt erhofft sich weniger Autos und mehr Teilhabe. Gleichzeitig kostet der Nahverkehr viel Geld (rund 18 Mio. € pro Jahr), und der Stadtrat streitet über die Finanzierung. In derselben Stadt arbeitet <strong>Herr Yilmaz</strong> in der Verwaltung; seine Gehaltsabrechnung gehört zu A2.</p>
+                    <p>Schreibe bei Rechnungen den Rechenweg auf.</p>`,
+        grading: [[87, "1", "sehr gut"], [74, "2", "gut"], [61, "3", "befriedigend"], [48, "4", "ausreichend"], [24, "5", "mangelhaft"], [0, "6", "ungenügend"]]
+      },
+      help: `<h3>Formeln</h3>
+             <p class="formula">Abgabenquote = alle Abzüge ÷ Brutto × 100<br>SV-Anteil = SV-Beiträge ÷ alle Abzüge × 100</p>
+             <h3>Wichtig bei A3</h3>
+             <p>Ein <strong>Zielkonflikt</strong> heißt nicht „es ist teuer“. Es heißt: Ziel A wird besser, <strong>Ziel B wird schlechter</strong>. Der kostenlose Nahverkehr nützt der gerechten Verteilung und dem Klima, aber seine <strong>Finanzierung</strong> kann das Wirtschaftswachstum bremsen.</p>
+             <h3>Notenschlüssel HH/KA</h3>
+             <p>87 % → 1 · 74 % → 2 · 61 % → 3 · 48 % → 4 · 24 % → 5</p>`,
+      steps: [
+        {
+          type: "cloze",
+          title: "A1 a) · Die sechs Ziele nennen (3 P.)",
+          points: 3,
+          review: "training-a1",
+          prompt: "Setze das passende Ziel ein. Zwei Wörter passen nicht.",
+          text: "Wer arbeiten will, findet eine Stelle: {Vollbeschäftigung}. Die Preise steigen nur langsam: {Preisstabilität}. Export und Import halten sich die Waage: {außenwirtschaftliches Gleichgewicht}. Die Wirtschaft wächst stetig: {Wirtschaftswachstum}. Natur und Klima werden geschützt: {Umwelt- und Klimaschutz}. Einkommen und Vermögen sind fair verteilt: {gerechte Verteilung}.",
+          distractors: ["Gewinnmaximierung", "Staatsverschuldung"]
+        },
+        {
+          type: "sort",
+          title: "A1 b) · Kennzahlen zuordnen (2 P.)",
+          points: 2,
+          review: "training-a1",
+          prompt: "Ordne jede Kennzahl dem Ziel zu. Zwei Kennzahlen bleiben übrig.",
+          categories: ["Vollbeschäftigung", "Preisstabilität", "Wirtschaftswachstum", "Umwelt- und Klimaschutz", "übrig (keins dieser vier Ziele)"],
+          items: [
+            { text: "Arbeitslosenquote", cat: 0 },
+            { text: "Inflationsrate", cat: 1 },
+            { text: "Veränderung des BIP", cat: 2 },
+            { text: "CO₂-Ausstoß", cat: 3 },
+            { text: "Außenhandelssaldo", cat: 4 },
+            { text: "Gini-Wert", cat: 4 }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A1 c) · Warum „magisch“? (1 P.)",
+          points: 1,
+          review: "training-a1",
+          case: "Erkläre in einem Satz, warum das Sechseck „magisch“ heißt.",
+          text: "Das Sechseck heißt magisch, weil {*nicht alle sechs Ziele gleichzeitig optimal erreicht werden können, die Politik muss abwägen|es sechs Ziele sind|alle Ziele leicht zu erreichen sind}.",
+          explain: "Nur „weil es sechs Ziele sind“ reicht nicht. Der Kern: nicht alles gleichzeitig, deshalb Abwägung."
+        },
+        {
+          type: "calc",
+          title: "A2 a–c) · Herrn Yilmaz' Abrechnung (6 P.)",
+          points: 6,
+          review: "training-a2",
+          decimals: 2,
+          case: `Herr Yilmaz verdient <b>2.800,00 € brutto</b>. Abzüge: Lohnsteuer <b>280,00 €</b>, Krankenversicherung <b>238,00 €</b>, Pflegeversicherung <b>67,20 €</b>, Rentenversicherung <b>260,40 €</b>, Arbeitslosenversicherung <b>36,40 €</b>. Netto: <b>1.918,00 €</b>. Runde auf zwei Nachkommastellen.`,
+          rows: [
+            { label: "a) Summe der Sozialversicherungsbeiträge in €", value: 602 },
+            { label: "b) Abgabenquote in % (alle Abzüge : Brutto × 100)", value: 31.5 },
+            { label: "c) Anteil der Sozialversicherung an allen Abzügen in %", value: 68.25 }
+          ],
+          hint: "a) Nur KV + PV + RV + AV, die Lohnsteuer gehört nicht dazu. b) Alle Abzüge sind 882,00 € (SV + Lohnsteuer). c) SV : alle Abzüge × 100.",
+          result: "a) 602,00 € · b) 31,5 % · c) 68,25 %"
+        },
+        {
+          type: "quiz",
+          title: "A2 d) · Lohnsteuer (1 P.)",
+          points: 1,
+          review: "training-a2",
+          questions: [
+            { q: "Die Lohnsteuer ist …", options: ["eine Steuer", "ein Sozialversicherungsbeitrag"], answer: 0, explain: "Die Lohnsteuer begründet keinen direkten Anspruch. Sie gehört nicht zur Sozialversicherung." }
+          ]
+        },
+        {
+          type: "quiz",
+          title: "A3 a) · Welche Ziele werden besser? (2 P.)",
+          points: 2,
+          review: "training-a3",
+          guide: [
+            {
+              style: "dark",
+              kicker: "A3 · Kostenloser Nahverkehr",
+              title: "Erst der Nutzen, dann die Kosten.",
+              body: `<p>Ein kostenloser Nahverkehr hilft <strong>gerechter Verteilung</strong> (alle können mobil sein) und dem <strong>Umwelt- und Klimaschutz</strong> (weniger Autos). Auch <strong>Vollbeschäftigung</strong> ist möglich (mehr Personal).</p>
+                     <p class="note">Bei „nennen und begründen“ gehört immer ein Grund dazu.</p>`
+            },
+            {
+              kicker: "A3 · Der Zielkonflikt",
+              title: "Ziel A besser, Ziel B schlechter.",
+              body: `<p>Die Stadt muss die <strong>18 Mio. €</strong> bezahlen, über Steuern oder Abgaben. Das belastet Betriebe. Dann kann das <strong>Wirtschaftswachstum</strong> schlechter werden.</p>
+                     <p class="note">„Der Nahverkehr ist teuer“ ist noch kein Zielkonflikt. Nenne beide Ziele und die Richtung.</p>`
+            }
+          ],
+          questions: [
+            { q: "Welche zwei Ziele erreicht der kostenlose Nahverkehr besser?", options: ["Gerechte Verteilung und Umwelt- und Klimaschutz", "Preisstabilität und Außenwirtschaft", "Wirtschaftswachstum und Preisstabilität", "Außenwirtschaft und Vollbeschäftigung"], answer: 0, explain: "Alle können mobil sein (Verteilung), weniger Autofahrten (Klima). Auch Vollbeschäftigung durch mehr Personal wäre möglich." },
+            { q: "Welche Begründung passt zum Ziel Umwelt- und Klimaschutz?", options: ["Weniger Autofahrten bedeuten weniger CO₂.", "Mehr Menschen haben einen Job.", "Die Preise bleiben stabil.", "Der Export steigt."], answer: 0, explain: "Wer Bus und Bahn nutzt, fährt weniger Auto, also sinkt der CO₂-Ausstoß." }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A3 b) · Zielkonflikt Finanzierung (2 P.)",
+          points: 2,
+          review: "training-a3",
+          case: "Erkläre den Zielkonflikt zwischen gerechter Verteilung und Wirtschaftswachstum.",
+          text: "Der kostenlose Nahverkehr verbessert die {*gerechte Verteilung|Preisstabilität}, weil alle mobil sein können. Er kostet aber Geld. Wird er über {*Steuern oder Abgaben|Exporte} finanziert, werden Betriebe belastet, und das {*Wirtschaftswachstum|Umwelt- und Klimaschutz} kann {*schlechter|besser} werden.",
+          explain: "Ziel A (Verteilung) wird besser, Ziel B (Wachstum) wird schlechter. Genau das ist ein Zielkonflikt."
+        },
+        {
+          type: "sentence",
+          title: "A3 c) · Kompromiss (2 P.)",
+          points: 2,
+          review: "training-a3",
+          case: "Nenne einen Kompromiss und begründe ihn kurz.",
+          text: "Ein Kompromiss ist: {*kostenlos nur für Schülerinnen, Auszubildende und Senioren|alle Preise verdoppeln|den Nahverkehr abschaffen}. Das ist sinnvoll, weil {*die Kosten sinken und trotzdem Menschen mit wenig Geld mobil bleiben|dann niemand mehr fährt}.",
+          explain: "Weitere gute Kompromisse: gestaffelte Preise, Ausbau nur auf starken Linien, Finanzierung über Parkgebühren oder Arbeitgebertickets."
+        },
+        {
+          type: "quiz",
+          title: "A3 d) · Leitbilder (2 P.)",
+          points: 2,
+          review: "training-a3",
+          questions: [
+            { q: "A: „Mobilität ist Teilhabe. Wer wenig Geld hat, muss trotzdem zur Arbeit, zur Schule und zum Arzt kommen. Der Nahverkehr muss für alle kostenlos sein.“", options: ["Bedürfnis- oder Gleichheitsprinzip", "Leistungsprinzip"], answer: 0, explain: "Mobilität für alle, unabhängig vom Geld: Bedürfnis- oder Gleichheitsprinzip." },
+            { q: "B: „Kostenlos heißt nicht umsonst. Die Steuerzahler finanzieren den Nahverkehr. Wer ihn oft nutzt, soll etwas beitragen.“", options: ["Bedürfnis- oder Gleichheitsprinzip", "Leistungsprinzip"], answer: 1, explain: "Wer nutzt, soll zahlen: Leistungsprinzip." }
+          ]
+        },
+        {
+          type: "sentence",
+          title: "A4 · Stellung nehmen (4 P.)",
+          points: 4,
+          review: "training-a4",
+          guide: [
+            {
+              style: "dark",
+              kicker: "A4 · Problemlösung",
+              title: "A oder B – du entscheidest, aber begründet.",
+              body: `<p>Du brauchst: <strong>These</strong>, <strong>zwei Argumente mit Beispiel</strong>, ein <strong>Gegenargument</strong> und ein <strong>Fazit</strong> mit einem Ziel aus dem Sechseck und einem Leitbild.</p>
+                     <p class="note">Es gibt keine eindeutig richtige Position. Eine Meinung ohne Begründung ist keine Stellungnahme.</p>`
+            }
+          ],
+          case: "Baue eine Stellungnahme zu Aussage A (kostenloser Nahverkehr). Für Aussage B tauschst du die Bausteine gedanklich.",
+          text: "Ich stimme Aussage {*A|B} eher zu, weil {*Mobilität Teilhabe ermöglicht|Steuerzahler den Nahverkehr nicht finanzieren sollen}. Außerdem {*sinken Autofahrten und CO₂-Ausstoß|steigen die Preise für Autos}. Allerdings {*kostet der Nahverkehr viel Geld, das über Steuern finanziert werden muss|ist kostenloser Nahverkehr überflüssig}. Im Sinne des Ziels {*gerechte Verteilung|Preisstabilität} und des {*Bedürfnisprinzips|Leistungsprinzips} überwiegt der Nutzen.",
+          explain: "Beispiel Zustimmung A: Mobilität ermöglicht Teilhabe; weniger Autofahrten; Gegenargument Kosten; Fazit gerechte Verteilung und Bedürfnisprinzip. Bei B: Leistungsprinzip und Wirtschaftswachstum, Gegenargument: Mobilität darf nicht am Geld scheitern."
         }
       ]
     }
