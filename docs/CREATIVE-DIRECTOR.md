@@ -115,6 +115,7 @@ Stilstudie der Lehrkraft war die Vorlage.
 
 ## Offen / Ideen
 
+- [ ] **Scroll-Story (Prototyp, 27.11.2026):** `app/labor/preisbildung-story.html` – nicht verlinkt, `noindex`. Grafik bleibt stehen, Textkarten scrollen darüber, jede Karte setzt einen Zustand (Zoom auf der Preisachse, Gewinn als Fläche Preis × Menge, Zähler für Umsatz/Gewinn, 2 automatisch geprüfte Mini-Fragen). Inhalte aus `gpu-preisbildung` (AB 17/19, CINEMA 43). Idee aus dem Skill „scroll-craft“ (Muster pin/count/reveal), aber eigener kleiner Code im Typesafe-Stil, ohne Fotos/KI-Videos. Bewegung reduzieren: Zustände ohne Übergang. Entscheidung der Lehrkraft offen: als Schritt-Typ `story` für alle Kurse ausbauen?
 - [ ] Arabisch von Muttersprachler/in prüfen lassen (Prüfliste: `docs/ARABISCH-PRUEFLISTE.md`; Blindtest per Rückübersetzung am 30.09.2026 ohne Bedeutungsfehler; die Lehrkraft kennt keine Muttersprachler/in – Idee: arabischsprachige Schüler/innen die Liste bestätigen lassen): Oberfläche (`app/i18n.js`) und Kursinhalte (`app/uebersetzungen/*.ar.js`,
       Stand 29.09.2026: PBP 590/606 (inkl. Probeklausur 2); früher 28.09.: PBP 405/421, GPU 179/205, INWI 197/209, Englisch 266/485 – Rest bewusst deutsch/englisch).
       Unsichere Begriffe u. a.: Fortschreibung, Zieleinkaufspreis, Selbstkosten, hochrechnen, Rücksendeangabe, rechts-/linksbündig.
